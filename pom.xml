@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>me.bechberger</groupId>
+  <artifactId>bcc</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+
+  <name>bcc</name>
+  <url>https://github.com/parttimenerd/hello-ebpf</url>
+
+      <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+      <developers>
+        <developer>
+            <id>parttimenerd</id>
+            <name>Johannes Bechberger</name>
+            <email>me@mostlynerdless.de</email>
+        </developer>
+    </developers>
+
+     <scm>
+        <connection>scm:git:https://github.com/parttimenerd/hello-ebpf.git</connection>
+        <developerConnection>scm:git:https://github.com/parttimenerd/hello-ebpf.git</developerConnection>
+        <url>https://github.com/parttimenerd/hello-ebpf</url>
+    </scm>
+    <inceptionYear>2023</inceptionYear>
+    <description>Java bindings for libbcc (eBPF) modelled after the Python bindings.</description>
+
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+  </properties>
+
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.0</version>
+          <configuration>
+            <release>21</release>
+            <compilerArgs>--enable-preview</compilerArgs>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>3.1.0</version>
+          <executions>
+            <execution>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>exec</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <executable>python3</executable>
+            <workingDirectory>${basedir}</workingDirectory>
+            <arguments>
+              <argument>${basedir}/bin/jextract_bpf.py</argument>
+              <argument>${basedir}/src/main/java</argument>
+              <argument>me.bechberger.raw</argument>
+            </arguments>
+            <environmentVariables>
+              <LANG>en_US</LANG>
+            </environmentVariables>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <configuration>
+            <archive>
+
+            </archive>
+            <descriptorRefs>
+              <descriptorRef>jar-with-dependencies</descriptorRef>
+            </descriptorRefs>
+          </configuration>
+          <executions>
+            <execution>
+              <id>all-assembly</id>
+              <phase>package</phase>
+              <goals>
+                <goal>single</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.2.1</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <goals>
+                <goal>jar-no-fork</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.4.1</version>
+          <executions>
+            <execution>
+              <id>attach-javadoc</id>
+              <phase>deploy</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <additionalJOption>-Xdoclint:none</additionalJOption>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>

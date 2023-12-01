@@ -58,6 +58,7 @@ assert Path(
 
 def download_jextract():
     # download jextract
+    shutil.rmtree(JEXTRACT_PATH, ignore_errors=True)
     print("Downloading jextract")
     url = (f"https://download.java.net/java/early_access/jextract/"
            f"1/openjdk-21-jextract+1-{JEXTRACT_VERSION}_linux-x64_bin.tar.gz")
@@ -96,7 +97,7 @@ def create_combined_bcc_header():
     """ use gcc -C -E to create a combined header file """
     os.makedirs(COMBINED_BPF_HEADER.parent, exist_ok=True)
     subprocess.check_output(
-        "gcc -C -E /usr/include/bcc/libbcc.h -o " + str(
+        "gcc -C -E /usr/include/bcc/libbpf.h -o " + str(
             COMBINED_BPF_HEADER), shell=True)
 
 
