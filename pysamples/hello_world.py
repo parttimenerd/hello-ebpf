@@ -9,7 +9,7 @@
 # sudo ./hello_world.py"
 # see trace_fields.py for a longer example
 
-from pysamples.helpers import trace
+from helpers import trace
 
 trace.setup(r".*bcc.*")
 

@@ -140,7 +140,7 @@ def run_jextract(dest_path: Path, package: str = "", name: str = "BPF",
     create_modified_bcc_header()
     del_path = dest_path
     if package:
-        dest_path = dest_path / package.replace(".", "/")
+        del_path = dest_path / package.replace(".", "/")
     if delete_dest_path:
         shutil.rmtree(del_path, ignore_errors=True)
     os.makedirs(dest_path, exist_ok=True)

@@ -50,10 +50,10 @@ We implement the Java API alongside implementing the examples from the book, so 
 of the implementation by the examples we have implemented. We also use examples from different sources
 like the bcc repository and state this in the first column.
 
-| Chapter<br/>/Source | Example                                    | Status      | Description                                    |
-|---------------------|--------------------------------------------|-------------|------------------------------------------------|
-| bcc                 | [hello_world.py](pysamples/hello_world.py) | not started | most basic hello world example                 |
-| 2                   | [2_hello.py](pysamples/2_hello.py)         | not started | print "Hello World!" for each `execve` syscall |
+| Chapter<br/>/Source | Example                                    | Status              | Description                                    |
+|---------------------|--------------------------------------------|---------------------|------------------------------------------------|
+| bcc                 | [hello_world.py](pysamples/hello_world.py) | started, not tested | most basic hello world example                 |
+| 2                   | [2_hello.py](pysamples/2_hello.py)         | not started         | print "Hello World!" for each `execve` syscall |
 ... more to come from the [books repository](https://github.com/lizrice/learning-ebpf/tree/main)
 
 
