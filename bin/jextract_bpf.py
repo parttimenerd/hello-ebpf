@@ -9,7 +9,7 @@ python3 jextract_bcc.py <destination_path> [package]
 The main libbcc class is BPF.java and is located in the package.
 
 Requirements:
-- Installed JDK 21 via sdkman
+- Running JDK 21
 - bcc https://github.com/iovisor/bcc/blob/master/INSTALL.md
 - Linux system
 - gcc
@@ -47,9 +47,7 @@ BIN_FOLDER = BASE_FOLDER / "bin"
 JEXTRACT_PATH = BIN_FOLDER / "jextract-21"
 JEXTRACT_TOOL_PATH = JEXTRACT_PATH / "bin" / "jextract"
 JEXTRACT_VERSION = 2
-JAVA21_HOME = next(
-    (Path("~").expanduser() / ".sdkman" / "candidates" / "java").glob(
-        "21-*"))
+
 
 assert Path(
     "/usr/include/bcc").exists(), \
@@ -123,15 +121,27 @@ def create_modified_bcc_header():
             f.write(line)
 
 
+def assert_java21():
+    """ assert that we are running JDK 21 by calling java -version """
+    try:
+        output = subprocess.check_output("java -version", shell=True,
+                                         stderr=subprocess.STDOUT).decode()
+        assert "version \"21" in output, \
+            "Please run this script with JDK 21"
+    except FileNotFoundError:
+        print("Please install JDK 21 and run this script with JDK 21")
+        sys.exit(1)
+
+
 def run_jextract(dest_path: Path, package: str = "",
                  delete_dest_path: bool = True):
+    assert_java21()
     print("Running jextract")
     create_modified_bcc_header()
     if delete_dest_path:
         shutil.rmtree(dest_path, ignore_errors=True)
     os.makedirs(dest_path, exist_ok=True)
     subprocess.check_call(
-        f"JAVA_HOME={JAVA21_HOME} "
         f"{JEXTRACT_TOOL_PATH} {MODIFIED_BPF_HEADER} "
         f"--source --output {dest_path} {'-t ' + package if package else ''} "
         f"--header-class-name BPF",
@@ -139,6 +149,7 @@ def run_jextract(dest_path: Path, package: str = "",
 
 
 if __name__ == "__main__":
+
     if 1 < len(sys.argv) <= 3:
         run_jextract(Path(sys.argv[1]),
                      sys.argv[2] if len(sys.argv) == 3 else "")

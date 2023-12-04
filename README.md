@@ -24,7 +24,7 @@ and the API in the [src/main/me/bechberger/bcc](src/main/me/bechberger/bcc) dire
 Prerequisites
 -------------
 - Linux x86_64 (or in a VM)
-- Java 21 (or newer, we need [Project Panama](https://openjdk.org/projects/panama/))
+- Java 21 (exactly this version, as we need [Project Panama](https://openjdk.org/projects/panama/) with is a preview feature)
 - Python 3.8 (or newer)
 - libbcc (see [bcc installation instructions](https://github.com/iovisor/bcc/blob/master/INSTALL.md))
 - root privileges (for eBPF programs)

@@ -43,16 +43,26 @@
 
   <build>
     <finalName>${project.artifactId}</finalName>
-    <pluginManagement>
       <plugins>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
-          <configuration>
-            <release>21</release>
-            <compilerArgs>--enable-preview</compilerArgs>
-          </configuration>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>2.5</version>
+          <executions>
+            <execution>
+              <id>auto-clean</id>
+              <phase>initialize</phase>
+              <goals>
+                <goal>clean</goal>
+              </goals>
+              <configuration>
+                <filesets>
+                  <fileset>
+                    <directory>${basedir}/src/main/java/me.bechberger.ebpf.raw</directory>
+                  </fileset>
+                </filesets>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -72,11 +82,20 @@
             <arguments>
               <argument>${basedir}/bin/jextract_bpf.py</argument>
               <argument>${basedir}/src/main/java</argument>
-              <argument>me.bechberger.raw</argument>
+              <argument>me.bechberger.ebpf.raw</argument>
             </arguments>
             <environmentVariables>
               <LANG>en_US</LANG>
             </environmentVariables>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.0</version>
+          <configuration>
+            <release>21</release>
+            <compilerArgs>--enable-preview</compilerArgs>
           </configuration>
         </plugin>
         <plugin>
@@ -130,6 +149,5 @@
           </configuration>
         </plugin>
       </plugins>
-    </pluginManagement>
   </build>
 </project>
