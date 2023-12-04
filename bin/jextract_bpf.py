@@ -100,24 +100,28 @@ def assert_java21():
         sys.exit(1)
 
 
-def run_jextract(dest_path: Path, package: str = "",
+def run_jextract(dest_path: Path, package: str = "", name: str = "BPF",
                  delete_dest_path: bool = True):
     print("Running jextract")
     if delete_dest_path:
-        shutil.rmtree(dest_path, ignore_errors=True)
+        del_path = dest_path
+        if package:
+            del_path = del_path / package.replace(".", "/")
+        shutil.rmtree(del_path, ignore_errors=True)
     assert_java21()
     os.makedirs(dest_path, exist_ok=True)
     subprocess.check_call(
         f"{JEXTRACT_TOOL_PATH} {BCC_HEADERS} "
         f"--source --output {dest_path} {'-t ' + package if package else ''} "
-        f"--header-class-name BPF",
+        f"--header-class-name {name}",
         shell=True)
 
 
 if __name__ == "__main__":
 
-    if 1 < len(sys.argv) <= 3:
+    if 1 < len(sys.argv) <= 4:
         run_jextract(Path(sys.argv[1]),
-                     sys.argv[2] if len(sys.argv) == 3 else "")
+                     sys.argv[2] if len(sys.argv) >= 3 else "",
+                     sys.argv[3] if len(sys.argv) == 4 else "BPF")
     else:
-        print("Usage: jextract_bcc.py <destination_path> [package]")
+        print("Usage: jextract_bcc.py <destination_path> [package] [name]")
