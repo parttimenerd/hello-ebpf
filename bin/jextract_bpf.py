@@ -32,6 +32,7 @@ License
 -------
 MIT
 """
+
 import subprocess
 import sys
 import time
@@ -46,6 +47,7 @@ BIN_FOLDER = BASE_FOLDER / "bin"
 JEXTRACT_PATH = BIN_FOLDER / "jextract-21"
 JEXTRACT_TOOL_PATH = JEXTRACT_PATH / "bin" / "jextract"
 JEXTRACT_VERSION = 2
+
 
 assert Path(
     "/usr/include/bcc").exists(), \
@@ -86,6 +88,37 @@ def ensure_jextract_in_path():
 ensure_jextract_in_path()
 
 BCC_HEADERS = BASE_FOLDER / "misc" / "bcc_headers.h"
+COMBINED_BPF_HEADER = BASE_FOLDER / "misc" / "combined_bcc.h"
+MODIFIED_BPF_HEADER = BASE_FOLDER / "misc" / "bcc.h"
+
+
+def create_combined_bcc_header():
+    """ use gcc -C -E to create a combined header file """
+    os.makedirs(COMBINED_BPF_HEADER.parent, exist_ok=True)
+    subprocess.check_output(
+        f"clang -C -E {BCC_HEADERS} -o {COMBINED_BPF_HEADER}", shell=True)
+
+
+def create_modified_bcc_header():
+    """
+    Find lines that match regexp
+    "union.* __attribute__\(\(aligned\(8\)\)\);" and
+    replace "__attribute__((aligned(8)))" with
+    "var{counter} __attribute__((aligned(8)))"
+    Store the file in MODIFIED_BPF_HEADER
+    """
+    create_combined_bcc_header()
+    with open(COMBINED_BPF_HEADER) as f:
+        lines = f.readlines()
+    COMBINED_BPF_HEADER.unlink()
+    with open(MODIFIED_BPF_HEADER, "w") as f:
+        counter = 0
+        for line in lines:
+            if "union" in line and "__attribute__((aligned(8)));" in line:
+                line = line.replace("__attribute__((aligned(8)));",
+                                    f"var{counter} __attribute__((aligned(8)));\n")
+                counter += 1
+            f.write(line)
 
 
 def assert_java21():
@@ -102,16 +135,17 @@ def assert_java21():
 
 def run_jextract(dest_path: Path, package: str = "", name: str = "BPF",
                  delete_dest_path: bool = True):
-    print("Running jextract")
-    if delete_dest_path:
-        del_path = dest_path
-        if package:
-            del_path = del_path / package.replace(".", "/")
-        shutil.rmtree(del_path, ignore_errors=True)
     assert_java21()
+    print("Running jextract")
+    create_modified_bcc_header()
+    del_path = dest_path
+    if package:
+        dest_path = dest_path / package.replace(".", "/")
+    if delete_dest_path:
+        shutil.rmtree(del_path, ignore_errors=True)
     os.makedirs(dest_path, exist_ok=True)
     subprocess.check_call(
-        f"{JEXTRACT_TOOL_PATH} {BCC_HEADERS} "
+        f"{JEXTRACT_TOOL_PATH} {MODIFIED_BPF_HEADER} "
         f"--source --output {dest_path} {'-t ' + package if package else ''} "
         f"--header-class-name {name}",
         shell=True)
