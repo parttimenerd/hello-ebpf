@@ -123,7 +123,8 @@ public class BCC implements AutoCloseable {
      * Call registerCleanup afterwards
      */
     private BCC(String text, String fileName, @Nullable Path hdrFile, boolean allowRLimit, int debug) {
-        MemorySegment textNative = MemorySegment.ofArray(text.getBytes());
+        MemorySegment textNative = Arena.global().allocateUtf8String(text);
+        System.out.println(textNative);
         this.debug = debug;
 
         /*
@@ -132,7 +133,7 @@ public class BCC implements AutoCloseable {
                                                           cflags_array, len(cflags_array),
                                                           allow_rlimit, device)
          */
-        module = Lib.bpf_module_create_c_from_string(textNative, debug, null, 0, allowRLimit, null);
+        module = Lib.bpf_module_create_c_from_string(textNative, debug, MemorySegment.NULL, 0, allowRLimit, MemorySegment.NULL);
 
         if (module == null) throw new RuntimeException(STR. "Failed to compile BPF module \{ fileName }" );
 
@@ -227,8 +228,8 @@ public class BCC implements AutoCloseable {
         }
     }
 
-    public Function load_func(String func_name, int prog_type) {
-        return load_func(func_name, prog_type, null, -1);
+    public BPFFunction load_func(String func_name, int prog_type) {
+        return load_func(func_name, prog_type, MemorySegment.NULL, -1);
     }
 
     // incomplete
