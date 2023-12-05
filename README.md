@@ -26,6 +26,7 @@ Prerequisites
 - Linux x86_64 (or in a VM)
 - Java 21 (exactly this version, as we need [Project Panama](https://openjdk.org/projects/panama/) with is a preview feature)
 - Python 3.8 (or newer)
+- clang (for jextract)
 - libbcc (see [bcc installation instructions](https://github.com/iovisor/bcc/blob/master/INSTALL.md))
 - root privileges (for eBPF programs)
 - Maven 3.6.3 (or newer, to build the project)
@@ -37,11 +38,56 @@ To build the project, make sure you have all prerequisites installed and run:
 mvn clean package
 ```
 
+Running the examples
+--------------------
+Be sure to run the following in a shell with root privileges that uses JDK 21:
+```shell
+java --enable-preview -cp target/bcc.jar --enable-native-access=ALL-UNNAMED me.bechberger.ebpf.samples.EXAMPLE_NAME
+```
+
+The following runs the hello world sample from the bcc repository. It currently prints something like:
+```
+> java --enable-preview -cp target/bcc.jar --enable-native-access=ALL-UNNAMED me.bechberger.ebpf.samples.HelloWorld
+           <...>-30325   [042] ...21 10571.161861: bpf_trace_printk: Hello, World!\n
+             zsh-30325   [004] ...21 10571.164091: bpf_trace_printk: Hello, World!\n
+             zsh-30325   [115] ...21 10571.166249: bpf_trace_printk: Hello, World!\n
+             zsh-39907   [127] ...21 10571.167210: bpf_trace_printk: Hello, World!\n
+             zsh-30325   [115] ...21 10572.231333: bpf_trace_printk: Hello, World!\n
+             zsh-30325   [060] ...21 10572.233574: bpf_trace_printk: Hello, World!\n
+             zsh-30325   [099] ...21 10572.235698: bpf_trace_printk: Hello, World!\n
+             zsh-39911   [100] ...21 10572.236664: bpf_trace_printk: Hello, World!\n
+ MediaSu~isor #3-19365   [064] ...21 10573.417254: bpf_trace_printk: Hello, World!\n
+ MediaSu~isor #3-22497   [000] ...21 10573.417254: bpf_trace_printk: Hello, World!\n
+ MediaPD~oder #1-39914   [083] ...21 10573.418197: bpf_trace_printk: Hello, World!\n
+ MediaSu~isor #3-39913   [116] ...21 10573.418249: bpf_trace_printk: Hello, World!\n
+```
+
+The related code is:
+```java
+public class HelloWorld {
+    public static void main(String[] args) {
+        try (BCC bcc = BCC.builder("""
+                int kprobe__sys_clone(void *ctx) {
+                   bpf_trace_printk("Hello, World!\\\\n");
+                   return 0;
+                }
+                """).build()) {
+            bcc.trace_print();
+        }
+    }
+}
+```
+
+
 Blog Posts
 ----------
 Posts covering the development of this project:
 - Dec 1, 2023: [Finding all used Classes, Methods and Functions of a Python Module](https://mostlynerdless.de/blog/2023/12/01/finding-all-used-classes-methods-and-functions-of-a-python-module/)
 
+Planned:
+- Using jextract to generate the Java API for bcc
+- Getting the errno for C calls with Panama
+- Hello eBPF: Running a hello world eBPF program from Java
 
 Examples
 --------
@@ -50,10 +96,10 @@ We implement the Java API alongside implementing the examples from the book, so 
 of the implementation by the examples we have implemented. We also use examples from different sources
 like the bcc repository and state this in the first column.
 
-| Chapter<br/>/Source | Example                                    | Status              | Description                                    |
-|---------------------|--------------------------------------------|---------------------|------------------------------------------------|
-| bcc                 | [hello_world.py](pysamples/hello_world.py) | started, not tested | most basic hello world example                 |
-| 2                   | [2_hello.py](pysamples/2_hello.py)         | not started         | print "Hello World!" for each `execve` syscall |
+| Chapter<br/>/Source | Example                | Java class      | Status      | Description |
+|---------------------|-------------------------------------------|-------------|------------------------------------------------|
+| bcc                 | [hello_world.py](pysamples/hello_world.py) | HelloWorld.java | works       | most basic hello world example                 |
+| 2                   | [2_hello.py](pysamples/2_hello.py) | | not started | print "Hello World!" for each `execve` syscall |
 ... more to come from the [books repository](https://github.com/lizrice/learning-ebpf/tree/main)
 
 

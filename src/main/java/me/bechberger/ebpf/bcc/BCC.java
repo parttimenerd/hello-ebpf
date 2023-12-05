@@ -3,7 +3,6 @@ package me.bechberger.ebpf.bcc;
 import me.bechberger.ebpf.raw.Lib;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.foreign.*;
 import java.lang.invoke.VarHandle;
@@ -116,7 +115,7 @@ public class BCC implements AutoCloseable {
      */
     private final Map<String, Map<String, Integer>> kprobe_fds = new HashMap<>();
 
-    private BufferedReader tracefile = null;
+    private LineReader tracefile = null;
 
 
     /**
@@ -124,7 +123,6 @@ public class BCC implements AutoCloseable {
      */
     private BCC(String text, String fileName, @Nullable Path hdrFile, boolean allowRLimit, int debug) {
         MemorySegment textNative = Arena.global().allocateUtf8String(text);
-        System.out.println(textNative);
         this.debug = debug;
 
         /*
@@ -294,7 +292,7 @@ public class BCC implements AutoCloseable {
     /**
      * Open the trace_pipe if not already open
      */
-    public BufferedReader trace_open(boolean nonblocking) {
+    public LineReader trace_open(boolean nonblocking) {
         /*    def trace_open(self, nonblocking=False):
         """trace_open(nonblocking=False)
 
@@ -309,10 +307,8 @@ public class BCC implements AutoCloseable {
         return self.tracefile*/
         if (tracefile == null) {
             try {
-                tracefile = Files.newBufferedReader(Constants.TRACEFS.resolve("trace_pipe"));
-                if (nonblocking) {
-                    // TODO
-                }
+                var p = Constants.TRACEFS.resolve("trace_pipe");
+                tracefile = new LineReader(p);
             } catch (IOException e) {
                 throw new RuntimeException(STR."Failed to open trace_pipe");
             }
@@ -322,9 +318,6 @@ public class BCC implements AutoCloseable {
 
     /**
      * Read from the kernel debug trace pipe and return a tuple of the
-     *
-     * @param nonblocking
-     * @return
      */
     // complete
     public TraceFields trace_fields(boolean nonblocking) {
@@ -394,29 +387,14 @@ public class BCC implements AutoCloseable {
         }
     }
 
+    /**
+     * Read from the kernel debug trace pipe and return one line, returns null if no line was read and non-blocking
+     */
     public String trace_readline(boolean nonblocking) {
-        /*    def trace_readline(self, nonblocking=False):
-        """trace_readline(nonblocking=False)
-
-        Read from the kernel debug trace pipe and return one line
-        If nonblocking is False, this will block until ctrl-C is pressed.
-        """
-
-        trace = self.trace_open(nonblocking)
-
-        line = None
-        try:
-            line = trace.readline(1024).rstrip()
-        except IOError:
-            pass
-        return line
-        */
-        var trace = trace_open(nonblocking);
-        try {
-            return trace.readLine();
-        } catch (IOException e) {
-            return null;
+        if (nonblocking) {
+            throw new UnsupportedOperationException("Non-blocking trace_readline not implemented");
         }
+        return trace_open(nonblocking).readLine();
     }
 
     /**
@@ -456,6 +434,7 @@ public class BCC implements AutoCloseable {
                 line = fields.format(fmt);
             } else {
                 line = trace_readline(false);
+                if (line == null) continue;
             }
             System.out.println(line);
             System.out.flush();
@@ -871,11 +850,7 @@ public class BCC implements AutoCloseable {
             detach_kprobe_event(k);
         }
         if (tracefile != null) {
-            try {
-                tracefile.close();
-            } catch (IOException e) {
-                // ignore
-            }
+            tracefile.close();
         }
         close_fds();
     }
