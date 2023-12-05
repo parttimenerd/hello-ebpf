@@ -11,7 +11,7 @@ import me.bechberger.ebpf.bcc.BCC;
  * BPF(text = r"""
  * int kprobe__sys_clone(void *ctx) {
  *     bpf_trace_printk("Hello, World!\\n");
- *     return0;
+ *     return 0;
  * }
  * """).trace_print()
  *}
@@ -21,7 +21,7 @@ public class HelloWorld {
         try (BCC bcc = BCC.builder("""
                 int kprobe__sys_clone(void *ctx) {
                    bpf_trace_printk("Hello, World!\\\\n");
-                   return0;
+                   return 0;
                 }
                 """).build()) {
             bcc.trace_print();
