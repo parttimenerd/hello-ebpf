@@ -5,17 +5,33 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.lang.foreign.Arena;
-import java.lang.foreign.MemorySegment;
+import java.lang.foreign.*;
+import java.lang.invoke.VarHandle;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.lang.foreign.ValueLayout.JAVA_INT;
+
 /**
  * Main class for BPF functionality
  */
 public class BCC implements AutoCloseable {
+
+    static {
+        try {
+            System.loadLibrary("bcc");
+        } catch (UnsatisfiedLinkError e) {
+            try {
+                System.load("/lib/x86_64-linux-gnu/libbcc.so");
+            } catch (UnsatisfiedLinkError e2) {
+                System.err.println("Failed to load libbcc.so.0, pass the location of the lib folder " +
+                        "via -Djava.library.path after you installed it");
+                System.exit(1);
+            }
+        }
+    }
 
     /**
      * BPF constructor
