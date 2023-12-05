@@ -2,8 +2,9 @@ package me.bechberger.ebpf.bcc;
 
 import me.bechberger.ebpf.raw.Lib;
 
-import java.lang.foreign.MemorySegment;
-import java.lang.foreign.ValueLayout;
+import java.lang.foreign.*;
+
+import static java.lang.foreign.ValueLayout.JAVA_BYTE;
 
 public class PanamaUtil {
 
@@ -11,16 +12,16 @@ public class PanamaUtil {
         return segment.getUtf8String(0);
     }
 
-    /**
-     * Uses my_errno function to get the errno value
-     * @return errno value
-     */
-    public static int errno() {
-        MemorySegment errno = Lib.my_errno();
-        return errno.get(ValueLayout.JAVA_INT, 0);
+    public static MemorySegment lookup(String symbol) {
+        return Linker.nativeLinker().defaultLookup().find(symbol)
+                .or(() -> SymbolLookup.loaderLookup().find(symbol)).orElseThrow();
     }
 
-    public static String errnoString() {
-        return Lib.strerror(errno()).getUtf8String(0);
+    public static final AddressLayout POINTER = ValueLayout.ADDRESS.withTargetLayout(MemoryLayout.sequenceLayout(JAVA_BYTE));
+
+    public static final int ERRNO_PERM_ERROR = 1;
+
+    public static String errnoString(int error) {
+        return Lib.strerror(error).getUtf8String(0);
     }
 }

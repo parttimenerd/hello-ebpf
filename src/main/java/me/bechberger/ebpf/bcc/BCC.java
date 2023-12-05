@@ -106,7 +106,7 @@ public class BCC implements AutoCloseable {
     private boolean disableCleanup = false;
     private static final Map<Integer, SymbolCache> _sym_caches = new HashMap<>();
 
-    private final Map<String, Function> funcs = new HashMap<>();
+    private final Map<String, BPFFunction> funcs = new HashMap<>();
 
     private static final int DEFAULT_PROBE_LIMIT = 1000;
     private static int _num_open_probes = 0;
@@ -155,7 +155,7 @@ public class BCC implements AutoCloseable {
     /**
      * Loaded ebpf function
      */
-    public record Function(BCC bcc, String name, int fd) {
+    public record BPFFunction(BCC bcc, String name, int fd) {
     }
 
 
@@ -198,7 +198,7 @@ public class BCC implements AutoCloseable {
      * @param prog_type type of the program (Lib.BPF_PROG_TYPE_*)
      */
     // complete
-    public Function load_func(String func_name, int prog_type, @Nullable MemorySegment device, int attach_type) {
+    public BPFFunction load_func(String func_name, int prog_type, MemorySegment device, int attach_type) {
         try (var arena = Arena.ofConfined()) {
             if (funcs.containsKey(func_name)) return funcs.get(func_name);
             MemorySegment funcNameNative = arena.allocateUtf8String(func_name);
@@ -210,21 +210,47 @@ public class BCC implements AutoCloseable {
             } else if ((debug & LogLevel.DEBUG_BPF) != 0) {
                 log_level = 1;
             }
-            int fd = Lib.bcc_func_load(module, prog_type, funcNameNative,
-                    Lib.bpf_function_start(module, funcNameNative),
-                    (int) Lib.bpf_function_size(module, funcNameNative),
-                    Lib.bpf_module_license(module), Lib.bpf_module_kern_version(module),
-                    log_level, null, 0, device, attach_type);
-            if (fd < 0) {
-                disableCleanup = true;
-                if (PanamaUtil.errno() == Lib.MY_EPERM$get())
-                    throw new RuntimeException(STR."Need super-user privileges to run");
-                var errstr = Lib.strerror(PanamaUtil.errno());
-                throw new RuntimeException(STR. "Failed to load BPF program \{ func_name }: \{ errstr }" );
+
+            // possible blog post: capturing errno with Panama
+            StructLayout capturedStateLayout = Linker.Option.captureStateLayout();
+            VarHandle errnoHandle = capturedStateLayout.varHandle(MemoryLayout.PathElement.groupElement("errno"));
+            Linker.Option ccs = Linker.Option.captureCallState("errno");
+            var handler = Linker.nativeLinker().downcallHandle(PanamaUtil.lookup("bcc_func_load"),
+                    FunctionDescriptor.of(JAVA_INT,
+                    ValueLayout.ADDRESS,
+                    JAVA_INT,
+                    ValueLayout.ADDRESS,
+                    ValueLayout.ADDRESS,
+                    JAVA_INT,
+                    ValueLayout.ADDRESS,
+                    JAVA_INT,
+                    JAVA_INT,
+                    ValueLayout.ADDRESS,
+                    JAVA_INT,
+                    ValueLayout.ADDRESS,
+                    JAVA_INT
+            ), ccs);
+            MemorySegment capturedState = arena.allocate(capturedStateLayout);
+            try {
+                int fd = (int)handler.invoke(capturedState, module, prog_type, funcNameNative,
+                        Lib.bpf_function_start(module, funcNameNative),
+                        (int) Lib.bpf_function_size(module, funcNameNative),
+                        Lib.bpf_module_license(module), Lib.bpf_module_kern_version(module),
+                        log_level, MemorySegment.NULL, 0, device, attach_type);
+                int errno = (int) errnoHandle.get(capturedState);
+                if (fd < 0) {
+                    disableCleanup = true;
+                    if (errno == PanamaUtil.ERRNO_PERM_ERROR)
+                         throw new RuntimeException(STR."Need super-user privileges to run");
+                    var errstr = PanamaUtil.errnoString(errno);
+                    throw new RuntimeException(STR. "Failed to load BPF program \{ func_name }: \{ errstr }" );
+                }
+                var fn = new BPFFunction(this, func_name, fd);
+                funcs.put(func_name, fn);
+                return fn;
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
             }
-            var fn = new Function(this, func_name, fd);
-            funcs.put(func_name, fn);
-            return fn;
         }
     }
 

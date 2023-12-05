@@ -391,5 +391,6 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/java,python,intellij,pycharm
 
 misc/*
+!misc/bcc_headers.h
 bin/jextract-*
 src/main/java/me/bechberger/ebpf/raw
