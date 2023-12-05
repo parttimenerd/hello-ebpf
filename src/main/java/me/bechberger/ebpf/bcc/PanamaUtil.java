@@ -1,6 +1,7 @@
 package me.bechberger.ebpf.bcc;
 
 import me.bechberger.ebpf.raw.Lib;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.*;
 
@@ -23,5 +24,12 @@ public class PanamaUtil {
 
     public static String errnoString(int error) {
         return Lib.strerror(error).getUtf8String(0);
+    }
+
+    public static MemorySegment allocateNullOrString(Arena arena, @Nullable String string) {
+        if (string == null) {
+            return MemorySegment.NULL;
+        }
+        return arena.allocateUtf8String(string);
     }
 }

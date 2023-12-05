@@ -2,12 +2,11 @@ package me.bechberger.ebpf.bcc;
 
 import me.bechberger.ebpf.raw.Lib;
 import me.bechberger.ebpf.raw.bcc_symbol;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
-import java.lang.foreign.SegmentAllocator;
 import java.lang.foreign.ValueLayout;
+import java.util.Objects;
 
 /**
 
@@ -67,7 +66,7 @@ public class SymbolCache {
         private final MemorySegment cache;
 
         public SymbolCache(int pid) {
-            this.cache = Lib.bcc_symcache_new(pid, null);
+            this.cache = Lib.bcc_symcache_new(pid, MemorySegment.NULL);
         }
 
     /**
@@ -80,7 +79,7 @@ public class SymbolCache {
      *         address as the offset.
      */
         public ResolveResult resolve(long addr, boolean demangle) {
-            try (Arena arena = Arena.ofAuto()) {
+            try (Arena arena = Arena.ofConfined()) {
                 var sym = bcc_symbol.allocate(arena);
                 int res;
                 if (demangle) {
@@ -107,15 +106,16 @@ public class SymbolCache {
 
         /** returns the kernel address or -1 on error */
         public long resolve_name(String module, String name) {
-            try (Arena arena = Arena.ofAuto()) {
+            Objects.requireNonNull(name);
+            try (Arena arena = Arena.ofConfined()) {
                 var addr = arena.allocate(8);
-                var moduleStr = arena.allocateUtf8String(module);
+                var moduleStr = PanamaUtil.allocateNullOrString(arena, module);
                 var nameStr = arena.allocateUtf8String(name);
                 int res = Lib.bcc_symcache_resolve_name(cache, moduleStr, nameStr, addr);
                 if (res < 0) {
                     return -1;
                 }
-                return addr.get(ValueLayout.JAVA_LONG, 8);
+                return addr.get(ValueLayout.JAVA_LONG, 0);
             }
         }
 
