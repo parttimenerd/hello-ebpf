@@ -122,7 +122,10 @@ syscall |
 
 Classes
 -------
-Mapping of Python classes to Java classes.
+All classes and methods have the name as in the Python API, introducing things like builders only
+for more complex cases (like the constructor of `BPF`).
+
+The comments for all of these entities are copied from the Python API and extended where necessary.
 
 License
 -------

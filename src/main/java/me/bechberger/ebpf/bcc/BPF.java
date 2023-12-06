@@ -9,13 +9,14 @@ import java.lang.invoke.VarHandle;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.lang.foreign.ValueLayout.JAVA_INT;
 
 /**
- * Main class for BPF functionality
+ * Main class for BPF functionality, modelled after the BPF class from the bcc Python bindings
  */
 public class BPF implements AutoCloseable {
 
@@ -34,7 +35,7 @@ public class BPF implements AutoCloseable {
     }
 
     /**
-     * BPF constructor
+     * Construct a BPF object fluently
      */
     public static class BCCBuilder {
 
@@ -84,18 +85,13 @@ public class BPF implements AutoCloseable {
         }
     }
 
-    /*     _syscall_prefixes = [
-        b"sys_",
-        b"__x64_sys_",
-        b"__x32_compat_sys_",
-        b"__ia32_compat_sys_",
-        b"__arm64_sys_",
-        b"__s390x_sys_",
-        b"__s390_sys_",
-    ]*/
+    /**
+     * Prefixes for system calls on different supported platforms (but the Java bindings are only tested on x86_64)
+     */
     private static final List<String> syscallPrefixes = List.of("sys_", "__x64_sys_", "__x32_compat_sys_",
             "__ia32_compat_sys_", "__arm64_sys_", "__s390x_sys_", "__s390_sys_");
 
+    /** eBPF program text */
     private final String text;
 
     /**
@@ -105,9 +101,11 @@ public class BPF implements AutoCloseable {
 
     private MemorySegment module;
 
+    /** Disable the clean-up on close? */
     private boolean disableCleanup = false;
     private static final Map<Integer, SymbolCache> _sym_caches = new HashMap<>();
 
+    /** eBPF program function name -> function */
     private final Map<String, BPFFunction> funcs = new HashMap<>();
 
     private static final int DEFAULT_PROBE_LIMIT = 1000;
@@ -118,10 +116,12 @@ public class BPF implements AutoCloseable {
      */
     private final Map<String, Map<String, Integer>> kprobe_fds = new HashMap<>();
 
-    private LineReader tracefile = null;
+    private LineReader traceFile = null;
 
 
     /**
+     * Construct a BPF object from a string
+     * <p>
      * Call registerCleanup afterwards
      */
     private BPF(String text, String fileName, @Nullable Path hdrFile, boolean allowRLimit, int debug) {
@@ -161,49 +161,21 @@ public class BPF implements AutoCloseable {
     }
 
 
+    /** Does the BPF program contain a the given function?
+     * <p/>
+     * Uses a regex to find the function, so it my be failing.
+     * @param name name of the function
+     */
     public boolean doesFunctionExistInText(String name) {
         return Pattern.compile(" " + name + "\\(.*\\).*\\{").matcher(text).find();
     }
 
-    /*    def load_func(self, func_name, prog_type, device = None, attach_type = -1):
-        func_name = _assert_is_bytes(func_name)
-        if func_name in self.funcs:
-            return self.funcs[func_name]
-        if not lib.bpf_function_start(self.module, func_name):
-            raise Exception("Unknown program %s" % func_name)
-        log_level = 0
-        if (self.debug & DEBUG_BPF_REGISTER_STATE):
-            log_level = 2
-        elif (self.debug & DEBUG_BPF):
-            log_level = 1
-        fd = lib.bcc_func_load(self.module, prog_type, func_name,
-                lib.bpf_function_start(self.module, func_name),
-                lib.bpf_function_size(self.module, func_name),
-                lib.bpf_module_license(self.module),
-                lib.bpf_module_kern_version(self.module),
-                log_level, None, 0, device, attach_type)
-
-        if fd < 0:
-            atexit.register(self.donothing)
-            if ct.get_errno() == errno.EPERM:
-                raise Exception("Need super-user privileges to run")
-
-            errstr = os.strerror(ct.get_errno())
-            raise Exception("Failed to load BPF program %s: %s" %
-                            (func_name, errstr))
-
-        fn = BPF.Function(self, func_name, fd)
-        self.funcs[func_name] = fn
-
-        return fn*/
-
     /**
-     * Load a function from the BPF module
+     * Load a function into the BPF module
      *
      * @param func_name name of the function to load
      * @param prog_type type of the program (Lib.BPF_PROG_TYPE_*)
      */
-    // complete
     public BPFFunction load_func(String func_name, int prog_type, MemorySegment device, int attach_type) {
         if (funcs.containsKey(func_name)) return funcs.get(func_name);
         if (!doesFunctionExistInText(func_name))
@@ -262,24 +234,19 @@ public class BPF implements AutoCloseable {
         }
     }
 
+    /** Load a function into the BPF module
+     * @param func_name name of the function to load
+     * @param prog_type type of the program (Lib.BPF_PROG_TYPE_*)
+     */
     public BPFFunction load_func(String func_name, int prog_type) {
         return load_func(func_name, prog_type, MemorySegment.NULL, -1);
     }
 
     // incomplete
     private void trace_autoload() {
-        /*    def _trace_autoload(self):
-        for i in range(0, lib.bpf_num_functions(self.module)):
-            func_name = lib.bpf_function_name(self.module, i)
-            */
         for (int i = 0; i < Lib.bpf_num_functions(module); i++) {
             var funcName = PanamaUtil.toString(Lib.bpf_function_name(module, i));
             if (funcName.startsWith("kprobe__")) {
-                /*if func_name.startswith(b"kprobe__"):
-                fn = self.load_func(func_name, BPF.KPROBE)
-                self.attach_kprobe(
-                    event=self.fix_syscall_fnname(func_name[8:]),
-                    fn_name=fn.name)*/
                 var fn = load_func(funcName, Lib.BPF_PROG_TYPE_KPROBE());
                 attach_kprobe(fix_syscall_fnname(funcName.substring(8)), 0, fn.name, null);
             }
@@ -301,8 +268,10 @@ public class BPF implements AutoCloseable {
 
     /**
      * Open the trace_pipe if not already open
+     * <p/>
+     * Currently, doesn't support non-blocking mode
      */
-    public LineReader trace_open(boolean nonblocking) {
+    public LineReader trace_open() {
         /*    def trace_open(self, nonblocking=False):
         """trace_open(nonblocking=False)
 
@@ -315,59 +284,26 @@ public class BPF implements AutoCloseable {
                 fl = fcntl.fcntl(fd, fcntl.F_GETFL)
                 fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
         return self.tracefile*/
-        if (tracefile == null) {
+        if (traceFile == null) {
             try {
                 var p = Constants.TRACEFS.resolve("trace_pipe");
-                tracefile = new LineReader(p);
+                traceFile = new LineReader(p);
             } catch (IOException e) {
                 throw new RuntimeException(STR."Failed to open trace_pipe");
             }
         }
-        return tracefile;
+        return traceFile;
     }
 
     /**
-     * Read from the kernel debug trace pipe and return a tuple of the
+     * Read from the kernel debug trace pipe and return the fields.
+     * Returns null if no line was read.
+     * <p/>
+     * Currently, doesn't support non-blocking mode
      */
-    // complete
-    public TraceFields trace_fields(boolean nonblocking) {
-        /*
-    def trace_fields(self, nonblocking=False):
-        """trace_fields(nonblocking=False)
-
-        Read from the kernel debug trace pipe and return a tuple of the
-        fields (task, pid, cpu, flags, timestamp, msg) or None if no
-        line was read (nonblocking=True)
-        """
-        while True:
-            line = self.trace_readline(nonblocking)
-            if not line and nonblocking: return (None,) * 6
-            # don't print messages related to lost events
-            if line.startswith(b"CPU:"): continue
-            task = line[:16].lstrip()
-            line = line[17:]
-            ts_end = line.find(b":")
-            try:
-                pid, cpu, flags, ts = line[:ts_end].split()
-            except Exception as e:
-                continue
-            cpu = cpu[1:-1]
-            # line[ts_end:] will have ": [sym_or_addr]: msgs"
-            # For trace_pipe debug output, the addr typically
-            # is invalid (e.g., 0x1). For kernel 4.12 or earlier,
-            # if address is not able to match a kernel symbol,
-            # nothing will be printed out. For kernel 4.13 and later,
-            # however, the illegal address will be printed out.
-            # Hence, both cases are handled here.
-            line = line[ts_end + 1:]
-            sym_end = line.find(b":")
-            msg = line[sym_end + 2:]
-            try:
-                return (task, int(pid), int(cpu), flags, float(ts), msg)
-            except Exception as e:
-                return ("Unknown", 0, 0, "Unknown", 0.0, "Unknown")*/
+    public TraceFields trace_fields() {
         while (true) {
-            String line = trace_readline(nonblocking);
+            String line = trace_readline();
             if (line == null) return null;
             // don't print messages related to lost events
             if (line.startsWith("CPU:")) continue;
@@ -398,52 +334,27 @@ public class BPF implements AutoCloseable {
     }
 
     /**
-     * Read from the kernel debug trace pipe and return one line, returns null if no line was read and non-blocking
+     * Read from the kernel debug trace pipe and return one line
      */
-    public String trace_readline(boolean nonblocking) {
-        if (nonblocking) {
-            throw new UnsupportedOperationException("Non-blocking trace_readline not implemented");
-        }
-        return trace_open(nonblocking).readLine();
+    public String trace_readline() {
+        return trace_open().readLine();
     }
 
     /**
      * Read from the kernel debug trace pipe and print on stdout.
-     * If fmt is specified, apply as a format string to the output. See
-     * trace_fields for the members of the tuple
-     * example: trace_print(fmt="pid {1}, msg = {5}")
+     * If fmt is specified, apply as a format string to the output.
      *
-     * @param fmt format string
+     * @param format format function
      */
-    // complete
-    public void trace_print(@Nullable String fmt) {
-        /*
-    def trace_print(self, fmt=None):
-        """trace_print(self, fmt=None)
-
-        Read from the kernel debug trace pipe and print on stdout.
-        If fmt is specified, apply as a format string to the output. See
-        trace_fields for the members of the tuple
-        example: trace_print(fmt="pid {1}, msg = {5}")
-        """
-
-        while True:
-            if fmt:
-                fields = self.trace_fields(nonblocking=False)
-                if not fields: continue
-                line = fmt.format(*fields)
-            else:
-                line = self.trace_readline(nonblocking=False)
-            print(line)
-            sys.stdout.flush()*/
+    public void trace_print(@Nullable Function<TraceFields, String> format) {
         while (true) {
             String line;
-            if (fmt != null) {
-                var fields = trace_fields(false);
+            if (format != null) {
+                var fields = trace_fields();
                 if (fields == null) continue;
-                line = fields.format(fmt);
+                line = format.apply(fields);
             } else {
-                line = trace_readline(false);
+                line = trace_readline();
                 if (line == null) continue;
             }
             System.out.println(line);
@@ -451,22 +362,37 @@ public class BPF implements AutoCloseable {
         }
     }
 
-    public void trace_print() {
-        trace_print(null);
+    /**
+     * Read from the kernel debug trace pipe and print on stdout.
+     * If fmt is specified, apply as a format string to the output. See
+     * trace_fields for the members of the tuple
+     * example: trace_print(fmt="pid {1}, msg = {5}")
+     * <p/>
+     * The format string is not as expressive as in Python, therefore, please use
+     * the {@link #trace_print(Function)} method if you need more flexibility.
+     * @param fmt format string
+     */
+    public void trace_print(String fmt) {
+        if (fmt != null) {
+            trace_print(fields -> fields.format(fmt));
+            return;
+        }
+        trace_print((Function<TraceFields, String>)null);
     }
 
-    // complete
-    private String fix_syscall_fnname(String fnName) {
-        /*    # Given a Kernel function name that represents a syscall but already has a
-    # prefix included, transform it to current system's prefix. For example,
-    # if "sys_clone" provided, the helper may translate it to "__x64_sys_clone".
-    def fix_syscall_fnname(self, name):
-        name = _assert_is_bytes(name)
-        for prefix in self._syscall_prefixes:
-            if name.startswith(prefix):
-                return self.get_syscall_fnname(name[len(prefix):])
-        return name*/
+    /**
+     * Read from the kernel debug trace pipe and print on stdout.
+     */
+    public void trace_print() {
+        trace_print((String)null);
+    }
 
+    /**
+     * Given a Kernel function name that represents a syscall but already has a
+     * prefix included, transform it to current system's prefix. For example,
+     * if "sys_clone" provided, the helper may translate it to "__x64_sys_clone".
+     */
+    private String fix_syscall_fnname(String fnName) {
         for (var prefix : syscallPrefixes) {
             if (fnName.startsWith(prefix)) {
                 return get_syscall_fnname(fnName.substring(prefix.length()));
@@ -490,41 +416,6 @@ public class BPF implements AutoCloseable {
      * @param event_re event regex, can be null
      */
     public BPF attach_kprobe(@Nullable String event, int event_off, @Nullable String fn_name, @Nullable String event_re) {
-        /*
-    def attach_kprobe(self, event=b"", event_off=0, fn_name=b"", event_re=b""):
-        event = _assert_is_bytes(event)
-        fn_name = _assert_is_bytes(fn_name)
-        event_re = _assert_is_bytes(event_re)
-
-        # allow the caller to glob multiple functions together
-        if event_re:
-            matches = BPF.get_kprobe_functions(event_re)
-            self._check_probe_quota(len(matches))
-            failed = 0
-            probes = []
-            for line in matches:
-                try:
-                    self.attach_kprobe(event=line, fn_name=fn_name)
-                except:
-                    failed += 1
-                    probes.append(line)
-            if failed == len(matches):
-                raise Exception("Failed to attach BPF program %s to kprobe %s"
-                                ", it's not traceable (either non-existing, inlined, or marked as \"notrace\")" %
-                                (fn_name, '/'.join(probes)))
-            return
-
-        self._check_probe_quota(1)
-        fn = self.load_func(fn_name, BPF.KPROBE)
-        ev_name = b"p_" + event.replace(b"+", b"_").replace(b".", b"_")
-        fd = lib.bpf_attach_kprobe(fn.fd, 0, ev_name, event, event_off, 0)
-        if fd < 0:
-            raise Exception("Failed to attach BPF program %s to kprobe %s"
-                            ", it's not traceable (either non-existing, inlined, or marked as \"notrace\")" %
-                            (fn_name, event))
-        self._add_kprobe_fd(ev_name, fn_name, fd)
-        return self*/
-
         if (event_re != null) {
             var matches = get_kprobe_functions(event_re);
             _check_probe_quota(matches.size());
@@ -569,35 +460,13 @@ public class BPF implements AutoCloseable {
         attach_kprobe(event, 0, fn_name, null);
     }
 
-    /*    def detach_kprobe_event(self, ev_name):
-        ev_name = _assert_is_bytes(ev_name)
-        fn_names = list(self.kprobe_fds[ev_name].keys())
-        for fn_name in fn_names:
-            self.detach_kprobe_event_by_fn(ev_name, fn_name)
-
-    def detach_kprobe_event_by_fn(self, ev_name, fn_name):
-        ev_name = _assert_is_bytes(ev_name)
-        fn_name = _assert_is_bytes(fn_name)
-        if ev_name not in self.kprobe_fds:
-            raise Exception("Kprobe %s is not attached" % ev_name)
-        res = lib.bpf_close_perf_event_fd(self.kprobe_fds[ev_name][fn_name])
-        if res < 0:
-            raise Exception("Failed to close kprobe FD")
-        self._del_kprobe_fd(ev_name, fn_name)
-        if len(self.kprobe_fds[ev_name]) == 0:
-            res = lib.bpf_detach_kprobe(ev_name)
-            if res < 0:
-                raise Exception("Failed to detach BPF from kprobe")*/
-
-    // complete
-    public void detach_kprobe_event(String ev_name) {
+    private void detach_kprobe_event(String ev_name) {
         var fnNames = new ArrayList<>(kprobe_fds.get(ev_name).keySet());
         for (var fnName : fnNames) {
             detach_kprobe_event_by_fn(ev_name, fnName);
         }
     }
 
-    // complete
     private void detach_kprobe_event_by_fn(String ev_name, String fn_name) {
         if (!kprobe_fds.containsKey(ev_name)) throw new RuntimeException(STR. "Kprobe \{ ev_name } is not attached" );
         var res = Lib.bpf_close_perf_event_fd(kprobe_fds.get(ev_name).get(fn_name));
@@ -612,7 +481,11 @@ public class BPF implements AutoCloseable {
         }
     }
 
-    // complete
+    /**
+     * Get allow available kprobe functions that aren't blacklisted
+     * @param event_re regex to match the functions against
+     * @return list of function names
+     */
     public static List<String> get_kprobe_functions(String event_re) {
         /*
         blacklist_file = "%s/kprobes/blacklist" % DEBUGFS
@@ -778,30 +651,12 @@ public class BPF implements AutoCloseable {
         return new ArrayList<>(fns);
     }
 
-    /*
-        def _check_probe_quota(self, num_new_probes):
-        global _num_open_probes
-        if _num_open_probes + num_new_probes > BPF.get_probe_limit():
-            raise Exception("Number of open probes would exceed global quota")
-     */
-    // complete
     private void _check_probe_quota(int num_new_probes) {
         if (_num_open_probes + num_new_probes > get_probe_limit()) {
             throw new RuntimeException("Number of open probes would exceed global quota");
         }
     }
 
-    /*
-
-    @staticmethod
-    def get_probe_limit():
-        env_probe_limit = os.environ.get('BCC_PROBE_LIMIT')
-        if env_probe_limit and env_probe_limit.isdigit():
-            return int(env_probe_limit)
-        else:
-            return _default_probe_limit
-     */
-    // complete
     private static int get_probe_limit() {
         var envProbeLimit = System.getenv("BCC_PROBE_LIMIT");
         if (envProbeLimit != null && envProbeLimit.matches("\\d+")) {
@@ -811,13 +666,6 @@ public class BPF implements AutoCloseable {
         }
     }
 
-    /*    def _add_kprobe_fd(self, ev_name, fn_name, fd):
-        global _num_open_probes
-        if ev_name not in self.kprobe_fds:
-            self.kprobe_fds[ev_name] = {}
-        self.kprobe_fds[ev_name][fn_name] = fd
-        _num_open_probes += 1*/
-    // complete
     private void _add_kprobe_fd(String ev_name, String fn_name, int fd) {
         kprobe_fds.computeIfAbsent(ev_name, k -> new HashMap<>()).put(fn_name, fd);
         _num_open_probes++;
@@ -828,27 +676,21 @@ public class BPF implements AutoCloseable {
         _num_open_probes--;
     }
 
-    // complete
+    /**
+     * Given a syscall's name, return the full Kernel function name with current
+     * system's syscall prefix. For example, given "clone" the helper would
+     * return "sys_clone" or "__x64_sys_clone".
+     */
     public String get_syscall_fnname(String fnName) {
-        /*     # Given a syscall's name, return the full Kernel function name with current
-    # system's syscall prefix. For example, given "clone" the helper would
-    # return "sys_clone" or "__x64_sys_clone".
-    def get_syscall_fnname(self, name):
-        name = _assert_is_bytes(name)
-        return self.get_syscall_prefix() + name*/
         return get_syscall_prefix() + fnName;
     }
 
-    // complete
+    /**
+     * Find current system's syscall prefix by testing on the BPF syscall.
+     * If no valid value found, will return the first possible value which
+     * would probably lead to error in later API calls.
+     */
     private String get_syscall_prefix() {
-        /*    # Find current system's syscall prefix by testing on the BPF syscall.
-    # If no valid value found, will return the first possible value which
-    # would probably lead to error in later API calls.
-    def get_syscall_prefix(self):
-        for prefix in self._syscall_prefixes:
-            if self.ksymname(b"%sbpf" % prefix) != -1:
-                return prefix
-        return self._syscall_prefixes[0]*/
         for (var prefix : syscallPrefixes) {
             if (ksymname(STR. "\{ prefix }bpf" ) != -1) {
                 return prefix;
@@ -867,8 +709,8 @@ public class BPF implements AutoCloseable {
         for (var k : kprobe_fds.keySet()) {
             detach_kprobe_event(k);
         }
-        if (tracefile != null) {
-            tracefile.close();
+        if (traceFile != null) {
+            traceFile.close();
         }
         close_fds();
     }
@@ -879,19 +721,6 @@ public class BPF implements AutoCloseable {
      */
     // complete
     void close_fds() {
-/*
-        """close(self)
-
-        Closes all associated files descriptors. Attached BPF programs are not
-        detached.
-        """
-        for name, fn in list(self.funcs.items()):
-            os.close(fn.fd)
-            del self.funcs[name]
-        if self.module:
-            lib.bpf_module_destroy(self.module)
-            self.module = None
- */
         for (var fn : funcs.values()) {
             Lib.close(fn.fd);
         }
@@ -901,32 +730,19 @@ public class BPF implements AutoCloseable {
         }
     }
 
-    // complete
+    /**
+     * Translate a kernel name into an address. This is the reverse of
+     * {@link #ksymname(String)}. Returns -1 when the function name is unknown.
+     */
     private static long ksymname(String name) {
-        /*    def ksymname(name):
-        """ksymname(name)
-
-        Translate a kernel name into an address. This is the reverse of
-        ksym. Returns -1 when the function name is unknown."""
-        return BPF._sym_cache(-1).resolve_name(None, name)*/
         return _sym_cache(-1).resolve_name(null, name);
     }
 
-    // complete
+    /**
+     * Returns a symbol cache for the specified PID. The kernel symbol cache is
+     * accessed by providing any PID less than zero.
+     */
     private static SymbolCache _sym_cache(int pid) {
-        /*       @staticmethod
-    def _sym_cache(pid):
-        """_sym_cache(pid)
-
-        Returns a symbol cache for the specified PID.
-        The kernel symbol cache is accessed by providing any PID less than zero.
-        """
-        if pid < 0 and pid != -1:
-            pid = -1
-        if not pid in BPF._sym_caches:
-            BPF._sym_caches[pid] = SymbolCache(pid)
-        return BPF._sym_caches[pid]
-         */
         if (pid < 0 && pid != -1) {
             pid = -1;
         }
