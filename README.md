@@ -57,7 +57,7 @@ java --enable-preview -cp target/bcc.jar --enable-native-access=ALL-UNNAMED me.b
 The following runs the hello world sample from the vcc repository. It currently prints something like:
 
 ```
-> ./run.sh HelloWorld
+> ./run.sh bcc.HelloWorld
            <...>-30325   [042] ...21 10571.161861: bpf_trace_printk: Hello, World!\n
              zsh-30325   [004] ...21 10571.164091: bpf_trace_printk: Hello, World!\n
              zsh-30325   [115] ...21 10571.166249: bpf_trace_printk: Hello, World!\n
@@ -111,12 +111,13 @@ We implement the Java API alongside implementing the examples from the book, so 
 of the implementation by the examples we have implemented. We also use examples from different sources
 like the bcc repository and state this in the first column.
 
-| Chapter<br/>/Source | Example | Java class | Status | Description |
-|---------------------|-------------------------------------------|-------------|------------------------------------------------|
-| bcc | [hello_world.py](pysamples/hello_world.py) | HelloWorld | works | print "Hello World!" for each `clone`
-syscall |
-| 2 | [2_hello.py](pysamples/2_hello.py) | chapter2.HelloWorld | works | print "Hello World!" for each `execve`
-syscall |
+
+| Chapter<br/>/Source | Example                                    | Java class                                                                               | Status | Description                                    |
+|---------------------|--------------------------------------------|------------------------------------------------------------------------------------------|--------|------------------------------------------------|
+| bcc                 | [hello_world.py](pysamples/hello_world.py) | [HelloWorld](src/main/java/me/bechberger/ebpf/samples/bcc/HelloWorld.java)               | works  | Basic hello world                              |
+| 2                   | [2_hello.py](pysamples/2_hello.py)         | [chapter2.HelloWorld](src/main/java/me/bechberger/ebpf/samples/chapter2/HelloWorld.java) | works  | print "Hello World!" for each `execve` syscall |
+
+
 ... more to come from the [books' repository](https://github.com/lizrice/learning-ebpf/tree/main)
 
 
