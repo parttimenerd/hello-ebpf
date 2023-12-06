@@ -9,6 +9,7 @@ import java.lang.invoke.VarHandle;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.lang.foreign.ValueLayout.JAVA_INT;
@@ -16,7 +17,7 @@ import static java.lang.foreign.ValueLayout.JAVA_INT;
 /**
  * Main class for BPF functionality
  */
-public class BCC implements AutoCloseable {
+public class BPF implements AutoCloseable {
 
     static {
         try {
@@ -76,8 +77,8 @@ public class BCC implements AutoCloseable {
             return this;
         }
 
-        public BCC build() {
-            BCC bpf = new BCC(text, fileName, hdrFile, allowRLimit, debug);
+        public BPF build() {
+            BPF bpf = new BPF(text, fileName, hdrFile, allowRLimit, debug);
             bpf.registerCleanup();
             return bpf;
         }
@@ -94,6 +95,8 @@ public class BCC implements AutoCloseable {
     ]*/
     private static final List<String> syscallPrefixes = List.of("sys_", "__x64_sys_", "__x32_compat_sys_",
             "__ia32_compat_sys_", "__arm64_sys_", "__s390x_sys_", "__s390_sys_");
+
+    private final String text;
 
     /**
      * debug flags
@@ -121,7 +124,8 @@ public class BCC implements AutoCloseable {
     /**
      * Call registerCleanup afterwards
      */
-    private BCC(String text, String fileName, @Nullable Path hdrFile, boolean allowRLimit, int debug) {
+    private BPF(String text, String fileName, @Nullable Path hdrFile, boolean allowRLimit, int debug) {
+        this.text = text;
         MemorySegment textNative = Arena.global().allocateUtf8String(text);
         this.debug = debug;
 
@@ -146,16 +150,20 @@ public class BCC implements AutoCloseable {
         return new BCCBuilder().withFile(srcFile);
     }
 
-    public void registerCleanup() {
+    private void registerCleanup() {
         Runtime.getRuntime().addShutdownHook(new Thread(this::cleanup));
     }
 
     /**
      * Loaded ebpf function
      */
-    public record BPFFunction(BCC bcc, String name, int fd) {
+    public record BPFFunction(BPF BPF, String name, int fd) {
     }
 
+
+    public boolean doesFunctionExistInText(String name) {
+        return Pattern.compile(" " + name + "\\(.*\\).*\\{").matcher(text).find();
+    }
 
     /*    def load_func(self, func_name, prog_type, device = None, attach_type = -1):
         func_name = _assert_is_bytes(func_name)
@@ -197,8 +205,10 @@ public class BCC implements AutoCloseable {
      */
     // complete
     public BPFFunction load_func(String func_name, int prog_type, MemorySegment device, int attach_type) {
+        if (funcs.containsKey(func_name)) return funcs.get(func_name);
+        if (!doesFunctionExistInText(func_name))
+            throw new RuntimeException(STR. "Trying to use undefined function \{ func_name }" );
         try (var arena = Arena.ofConfined()) {
-            if (funcs.containsKey(func_name)) return funcs.get(func_name);
             MemorySegment funcNameNative = arena.allocateUtf8String(func_name);
             if (Lib.bpf_function_start(module, funcNameNative) == null)
                 throw new RuntimeException(STR. "Unknown program \{ func_name }" );
@@ -241,7 +251,7 @@ public class BCC implements AutoCloseable {
                     if (errno == PanamaUtil.ERRNO_PERM_ERROR)
                          throw new RuntimeException(STR."Need super-user privileges to run");
                     var errstr = PanamaUtil.errnoString(errno);
-                    throw new RuntimeException(STR. "Failed to load BPF program \{ func_name }: \{ errstr }" );
+                    throw new RuntimeException(STR. "Failed to load BPF function \{ func_name }: \{ errstr }" );
                 }
                 var fn = new BPFFunction(this, func_name, fd);
                 funcs.put(func_name, fn);
@@ -475,10 +485,11 @@ public class BCC implements AutoCloseable {
      * Attach a function to a kprobe
      *
      * @param event   name of the event to attach to
+     * @param event_off event offset, can be 0
      * @param fn_name name of the function to attach
+     * @param event_re event regex, can be null
      */
-    // complete
-    public BCC attach_kprobe(@Nullable String event, int event_off, @Nullable String fn_name, @Nullable String event_re) {
+    public BPF attach_kprobe(@Nullable String event, int event_off, @Nullable String fn_name, @Nullable String event_re) {
         /*
     def attach_kprobe(self, event=b"", event_off=0, fn_name=b"", event_re=b""):
         event = _assert_is_bytes(event)
@@ -549,6 +560,13 @@ public class BCC implements AutoCloseable {
         }
         _add_kprobe_fd(ev_name, fn_name, fd);
         return this;
+    }
+
+    /**
+     * Attach a function to a kprobe
+     */
+    public void attach_kprobe(String event, String fn_name) {
+        attach_kprobe(event, 0, fn_name, null);
     }
 
     /*    def detach_kprobe_event(self, ev_name):
@@ -811,7 +829,7 @@ public class BCC implements AutoCloseable {
     }
 
     // complete
-    private String get_syscall_fnname(String fnName) {
+    public String get_syscall_fnname(String fnName) {
         /*     # Given a syscall's name, return the full Kernel function name with current
     # system's syscall prefix. For example, given "clone" the helper would
     # return "sys_clone" or "__x64_sys_clone".
@@ -841,7 +859,7 @@ public class BCC implements AutoCloseable {
 
 
     // incomplete
-    public void cleanup() {
+    private void cleanup() {
         if (disableCleanup) return;
         disableCleanup = true;
         /*        for k, v in list(self.kprobe_fds.items()):
@@ -915,7 +933,7 @@ public class BCC implements AutoCloseable {
         return _sym_caches.computeIfAbsent(pid, SymbolCache::new);
     }
 
-    public int getOpenProbesNum() {
+    private int getOpenProbesNum() {
         return _num_open_probes;
     }
 
