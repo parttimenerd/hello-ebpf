@@ -190,8 +190,6 @@ public class BPF implements AutoCloseable {
             } else if ((debug & LogLevel.DEBUG_BPF) != 0) {
                 log_level = 1;
             }
-
-            // possible blog post: capturing errno with Panama
             StructLayout capturedStateLayout = Linker.Option.captureStateLayout();
             VarHandle errnoHandle = capturedStateLayout.varHandle(MemoryLayout.PathElement.groupElement("errno"));
             Linker.Option ccs = Linker.Option.captureCallState("errno");

@@ -99,10 +99,7 @@ Posts covering the development of this project:
 
 Planned:
 
-- Using jextract to generate the Java API for bcc
-- Getting the errno for C calls with Panama
 - Hello eBPF: Running a hello world eBPF program from Java
-- Creating an interruptible BufferReader in Java
 
 Examples
 --------

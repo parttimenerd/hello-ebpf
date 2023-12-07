@@ -10,9 +10,9 @@ The main libbcc class is BPF.java and is located in the package.
 
 Requirements:
 - Running JDK 21
-- bcc https://github.com/iovisor/bcc/blob/master/INSTALL.md
+- bcc (https://github.com/iovisor/bcc/blob/master/INSTALL.md)
 - Linux system
-- gcc
+- clang
 
 Why do we need this script?
 ---------------------------
@@ -93,7 +93,6 @@ MODIFIED_BPF_HEADER = BASE_FOLDER / "misc" / "bcc.h"
 
 
 def create_combined_bcc_header():
-    """ use gcc -C -E to create a combined header file """
     os.makedirs(COMBINED_BPF_HEADER.parent, exist_ok=True)
     subprocess.check_output(
         f"clang -C -E {BCC_HEADERS} -o {COMBINED_BPF_HEADER}", shell=True)
