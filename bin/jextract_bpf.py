@@ -51,7 +51,7 @@ JEXTRACT_VERSION = 2
 
 assert Path(
     "/usr/include/bcc").exists(), \
-    "Please install bcc: https://github.com/iovisor/bcc"
+    "Please install bcc: https://github.com/iovisor/bcc with the dev package"
 
 
 def download_jextract():

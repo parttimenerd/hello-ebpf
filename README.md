@@ -27,7 +27,7 @@ __We're currently at page 18 of the book.__
 Goals
 -----
 Provide a library (and documentation) for Java developers to explore eBPF and
-write their own eBPF programs, and the examples from the [book](https://cilium.isovalent.com/hubfs/Learning-eBPF%20-%20Full%20book.pdf) without having to Python.
+write their own eBPF programs, and the [examples](https://github.com/lizrice/learning-ebpf) from the [book](https://cilium.isovalent.com/hubfs/Learning-eBPF%20-%20Full%20book.pdf) without having to Python.
 
 The initial goal is to be as close to bcc Python API as possible, so that the examples from the book
 can be ported to Java easily.
@@ -40,14 +40,31 @@ Prerequisites
 
 These might change in the future, but for now you need the following:
 
-- Linux x86_64 (or in a VM)
+Either a Linux machine with the following:
+
+- Linux x64 (or in a VM)
 - Java 21 (exactly this version, as we need [Project Panama](https://openjdk.org/projects/panama/) with is a preview
   feature), we'll switch to Java 22 as soon as it is released
 - Python 3.8 (or newer, for the binding generator
 - clang (for [jextract](https://github.com/openjdk/jextract) to generate the bindings)
-- libbcc (see [bcc installation instructions](https://github.com/iovisor/bcc/blob/master/INSTALL.md))
+- libbcc (see [bcc installation instructions](https://github.com/iovisor/bcc/blob/master/INSTALL.md), be sure to install the libbpfcc-dev package)
 - root privileges (for eBPF programs)
 - Maven 3.6.3 (or newer, to build the project)
+
+On Mac OS you can use the Lima VM (or use `hello-ebpf.yaml` file as a guide to install the prerequisites):
+
+```sh
+limactl start hello-ebpf.yaml
+limactl shell hello-ebpf
+
+# You'll need to be root for most of the examples
+sudo -s
+```
+
+There are only jextract builds for x86_64, therefore arm64 is not supported at the moment.
+
+*This is an area where you can contribute, if you can. Being able to build this project
+on arm64 without running in QEMU would certainly be helpful.*
 
 Build
 -----
