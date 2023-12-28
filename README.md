@@ -8,11 +8,15 @@ So... I decided to write bindings, using [Project Panama](https://openjdk.org/pr
 and [bcc](https://github.com/isovalent/bcc), the first, and widely used, user land library for eBPF. 
 bcc is mainly used with its Python bindings.
 
+Support for [libbpf](https://github.com/libbpf/libbpf) is planned...
+
 Hello eBPF world!
 -----------------
 
 Hello Java world! Let's discover eBPF together, join me on the journey to write
-all examples from the [Learning eBPF book](https://cilium.isovalent.com/hubfs/Learning-eBPF%20-%20Full%20book.pdf) by
+all examples from the [Learning eBPF book](https://cilium.isovalent.com/hubfs/Learning-eBPF%20-%20Full%20book.pdf)
+(get it also from [Bookshop.org](https://bookshop.org/p/books/learning-ebpf-programming-the-linux-kernel-for-enhanced-observability-networking-and-security-liz-rice/19244244?ean=9781098135126),
+[Amazon](https://www.amazon.com/Learning-eBPF-Programming-Observability-Networking/dp/1098135121), or [O'Reilly](https://www.oreilly.com/library/view/learning-ebpf/9781098135119/)), by
 Liz Rice in Java, implementing a Java user land library for eBPF along the way.
 
 This project is still in its early stages
@@ -140,7 +144,7 @@ Plans
 
 A look ahead into the future, so you know what to expect:
 
-- Implement the API so that we can recreate all examples from the book
+- Implement the API so that we can recreate all bcc examples from the book
 - Make it properly available as a library on Maven Central
 - Support the newer [libbpf](https://github.com/libbpf/libbpf) library
 - Allow writing eBPF programs in Java
