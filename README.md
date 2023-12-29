@@ -1,23 +1,28 @@
 Hello eBPF
 ==========
 
-There are [user land libraries](https://ebpf.io/what-is-ebpf/#development-toolchains) for eBPF that allow you to
+There are [user land libraries](https://ebpf.io/what-is-ebpf/#development-toolchains) for [eBPF](https://ebpf.io) that allow you to
 write eBPF applications in Python C++, Rust, Go, Python and even
 Lua. But there are none for Java, which is a pitty.
 So... I decided to write bindings, using [Project Panama](https://openjdk.org/projects/panama/)
-and [bcc](https://github.com/isovalent/bcc), the first, and widely used, user land library for eBPF. 
-bcc is mainly used with its Python bindings.
+and [bcc](https://github.com/isovalent/bcc), the first, and widely used, user land library for eBPF,
+which is typically used with its Python API.
 
-Support for [libbpf](https://github.com/libbpf/libbpf) is planned...
+![Overview images](img/overview.png)
 
-Hello eBPF world!
+_Based on the overview from [ebpf.io](https://ebpf.io/what-is-ebpf/), 
+duke image from [OpenJDK](https://wiki.openjdk.org/display/duke/Gallery),
+and the font for hello logo is [Pacifico](https://fonts.google.com/specimen/Pacifico)._
+
+Hello eBPF world! Hello Java world!
 -----------------
 
-Hello Java world! Let's discover eBPF together, join me on the journey to write
+Let's discover eBPF together, join me on the journey to write
 all examples from the [Learning eBPF book](https://cilium.isovalent.com/hubfs/Learning-eBPF%20-%20Full%20book.pdf)
 (get it also from [Bookshop.org](https://bookshop.org/p/books/learning-ebpf-programming-the-linux-kernel-for-enhanced-observability-networking-and-security-liz-rice/19244244?ean=9781098135126),
 [Amazon](https://www.amazon.com/Learning-eBPF-Programming-Observability-Networking/dp/1098135121), or [O'Reilly](https://www.oreilly.com/library/view/learning-ebpf/9781098135119/)), by
-Liz Rice in Java, implementing a Java user land library for eBPF along the way.
+Liz Rice in Java, implementing a Java user land library for eBPF along the way,
+with a blgo series to document the journey.
 
 This project is still in its early stages
 and a read-along of the book is recommended:
@@ -106,17 +111,38 @@ The related code is:
 
 ```java
 public class HelloWorld {
-    public static void main(String[] args) {
-        try (BPF b = BPF.builder("""
-                int kprobe__sys_clone(void *ctx) {
-                   bpf_trace_printk("Hello, World!\\\\n");
-                   return 0;
-                }
-                """).build()) {
-            b.trace_print();
-        }
+  public static void main(String[] args) {
+    try (BPF b = BPF.builder("""
+            int hello(void *ctx) {
+               bpf_trace_printk("Hello, World!\\\\n");
+               return 0;
+            }
+            """).build()) {
+      var syscall = b.get_syscall_fnname("execve");
+      b.attach_kprobe(syscall, "hello");
+      b.trace_print();
     }
+  }
 }
+```
+
+Which is equivalent to the Python code and prints "Hello, World!" for each `execve` syscall:
+
+```python
+from bcc import BPF
+
+program = r"""
+int hello(void *ctx) {
+    bpf_trace_printk("Hello World!");
+    return 0;
+}
+"""
+
+b = BPF(text=program)
+syscall = b.get_syscall_fnname("execve")
+b.attach_kprobe(event=syscall, fn_name="hello")
+
+b.trace_print()
 ```
 
 You can use the `debug.sh` to run an example with a debugger port open at port 5005.
