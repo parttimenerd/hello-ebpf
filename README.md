@@ -8,11 +8,10 @@ So... I decided to write bindings using [Project Panama](https://openjdk.org/pro
 and [bcc](https://github.com/isovalent/bcc), the first and widely used userland library for eBPF,
 which is typically used with its Python API.
 
-![Overview images](img/overview.png)
+![Overview images](img/overview.svg)
 
 _Based on the overview from [ebpf.io](https://ebpf.io/what-is-ebpf/), 
-duke image from [OpenJDK](https://wiki.openjdk.org/display/duke/Gallery),
-and the font for the hello logo is [Pacifico](https://fonts.google.com/specimen/Pacifico)._
+duke image from [OpenJDK](https://wiki.openjdk.org/display/duke/Gallery)._
 
 Hello eBPF world! Hello Java world!
 -----------------
