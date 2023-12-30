@@ -3,29 +3,28 @@ Hello eBPF
 
 There are [user land libraries](https://ebpf.io/what-is-ebpf/#development-toolchains) for [eBPF](https://ebpf.io) that allow you to
 write eBPF applications in Python C++, Rust, Go, Python and even
-Lua. But there are none for Java, which is a pitty.
-So... I decided to write bindings, using [Project Panama](https://openjdk.org/projects/panama/)
-and [bcc](https://github.com/isovalent/bcc), the first, and widely used, user land library for eBPF,
+Lua. But there are none for Java, which is a pity.
+So... I decided to write bindings using [Project Panama](https://openjdk.org/projects/panama/)
+and [bcc](https://github.com/isovalent/bcc), the first and widely used userland library for eBPF,
 which is typically used with its Python API.
 
 ![Overview images](img/overview.png)
 
 _Based on the overview from [ebpf.io](https://ebpf.io/what-is-ebpf/), 
 duke image from [OpenJDK](https://wiki.openjdk.org/display/duke/Gallery),
-and the font for hello logo is [Pacifico](https://fonts.google.com/specimen/Pacifico)._
+and the font for the hello logo is [Pacifico](https://fonts.google.com/specimen/Pacifico)._
 
 Hello eBPF world! Hello Java world!
 -----------------
 
-Let's discover eBPF together, join me on the journey to write
+Let's discover eBPF together. Join me on the journey to write
 all examples from the [Learning eBPF book](https://cilium.isovalent.com/hubfs/Learning-eBPF%20-%20Full%20book.pdf)
 (get it also from [Bookshop.org](https://bookshop.org/p/books/learning-ebpf-programming-the-linux-kernel-for-enhanced-observability-networking-and-security-liz-rice/19244244?ean=9781098135126),
 [Amazon](https://www.amazon.com/Learning-eBPF-Programming-Observability-Networking/dp/1098135121), or [O'Reilly](https://www.oreilly.com/library/view/learning-ebpf/9781098135119/)), by
-Liz Rice in Java, implementing a Java user land library for eBPF along the way,
-with a blgo series to document the journey.
+Liz Rice in Java, implementing a Java userland library for eBPF along the way,
+with a blog series to document the journey.
 
-This project is still in its early stages
-and a read-along of the book is recommended:
+This project is still in its early stages, and a read-along of the book is recommended:
 
 __We're currently at page 18 of the book.__
 
@@ -34,7 +33,7 @@ Goals
 Provide a library (and documentation) for Java developers to explore eBPF and
 write their own eBPF programs, and the [examples](https://github.com/lizrice/learning-ebpf) from the [book](https://cilium.isovalent.com/hubfs/Learning-eBPF%20-%20Full%20book.pdf) without having to Python.
 
-The initial goal is to be as close to bcc Python API as possible, so that the examples from the book
+The initial goal is to be as close to bcc Python API as possible so that the examples from the book
 can be ported to Java easily.
 
 You can find the Java versions of the examples in the [src/main/me/bechberger/samples](src/main/me/bechberger/samples)
@@ -43,20 +42,20 @@ and the API in the [src/main/me/bechberger/bcc](src/main/me/bechberger/bcc) dire
 Prerequisites
 -------------
 
-These might change in the future, but for now you need the following:
+These might change in the future, but for now, you need the following:
 
 Either a Linux machine with the following:
 
 - Linux x64 (or in a VM)
 - Java 21 (exactly this version, as we need [Project Panama](https://openjdk.org/projects/panama/) with is a preview
   feature), we'll switch to Java 22 as soon as it is released
-- Python 3.8 (or newer, for the binding generator
+- Python 3.8 (or newer for the binding generator
 - clang (for [jextract](https://github.com/openjdk/jextract) to generate the bindings)
 - libbcc (see [bcc installation instructions](https://github.com/iovisor/bcc/blob/master/INSTALL.md), be sure to install the libbpfcc-dev package)
 - root privileges (for eBPF programs)
-- Maven 3.6.3 (or newer, to build the project)
+- Maven 3.6.3 (or newer to build the project)
 
-On Mac OS you can use the Lima VM (or use `hello-ebpf.yaml` file as a guide to install the prerequisites):
+On Mac OS, you can use the Lima VM (or use the `hello-ebpf.yaml` file as a guide to install the prerequisites):
 
 ```sh
 limactl start hello-ebpf.yaml
@@ -66,9 +65,9 @@ limactl shell hello-ebpf
 sudo -s
 ```
 
-There are only jextract builds for x86_64, therefore arm64 is not supported at the moment.
+There are only jextract builds for x86_64. Therefore, arm64 is not supported at the moment.
 
-*This is an area where you can contribute, if you can. Being able to build this project
+*This is an area where you can contribute if you can. Building this project
 on arm64 without running in QEMU would certainly be helpful.*
 
 Build
@@ -108,8 +107,6 @@ The following runs the hello world sample from the vcc repository. It currently 
 ```
 
 The related code is ([chapter2/HelloWorld.java](src/main/java/me/bechberger/ebpf/samples/chapter2/HelloWorld.java)):
-
-```java
 
 ```java
 public class HelloWorld {
@@ -153,7 +150,7 @@ Blog Posts
 ----------
 Posts covering the development of this project:
 
-- Dec 01, 2023: [Finding all used Classes, Methods and Functions of a Python Module](https://mostlynerdless.de/blog/2023/12/01/finding-all-used-classes-methods-and-functions-of-a-python-module/)
+- Dec 01, 2023: [Finding all used Classes, Methods, and Functions of a Python Module](https://mostlynerdless.de/blog/2023/12/01/finding-all-used-classes-methods-and-functions-of-a-python-module/)
 - Dec 11, 2023: [From C to Java Code using Panama](https://mostlynerdless.de/blog/2023/12/11/from-c-to-java-code-using-panama/)
 
 Planned:
@@ -187,7 +184,7 @@ The comments for all of these entities are copied from the Python API and extend
 Plans
 -----
 
-A look ahead into the future, so you know what to expect:
+A look ahead into the future so you know what to expect:
 
 - Implement the API so that we can recreate all bcc examples from the book
 - Make it properly available as a library on Maven Central
@@ -195,21 +192,21 @@ A look ahead into the future, so you know what to expect:
 - Allow writing eBPF programs in Java
 
 These plans might change, but I'll try to keep this up to date.
-I'm open for suggestions, contributions and ideas.
+I'm open to suggestions, contributions, and ideas.
 
 Contributing
 ------------
-Contributions are welcome, just open an 
+Contributions are welcome; just open an 
 [issue](https://github.com/parttimenerd/hello-ebpf/issues/new) or a 
 [pull request](https://github.com/parttimenerd/hello-ebpf/pulls).
 Discussions take place in the [discussions](https://github.com/parttimenerd/hello-ebpf/discussions)
 section of the GitHub repository.
 
-I'm happy to include more example programs, API documentation or helper methods,
+I'm happy to include more example programs, API documentation, or helper methods,
 as well as links to repositories and projects that use this library.
 
 License
 -------
 Apache 2.0, Copyright 2023 SAP SE or an SAP affiliate company, Johannes Bechberger and contributors
 
-_This is a side project. The amount of time that I'm able to invest might vary over time._
+_This is a side project. The amount of time I can invest might vary over time._
