@@ -91,18 +91,18 @@ The following runs the hello world sample from the vcc repository. It currently 
 
 ```
 > ./run.sh bcc.HelloWorld
-           <...>-30325   [042] ...21 10571.161861: bpf_trace_printk: Hello, World!\n
-             zsh-30325   [004] ...21 10571.164091: bpf_trace_printk: Hello, World!\n
-             zsh-30325   [115] ...21 10571.166249: bpf_trace_printk: Hello, World!\n
-             zsh-39907   [127] ...21 10571.167210: bpf_trace_printk: Hello, World!\n
-             zsh-30325   [115] ...21 10572.231333: bpf_trace_printk: Hello, World!\n
-             zsh-30325   [060] ...21 10572.233574: bpf_trace_printk: Hello, World!\n
-             zsh-30325   [099] ...21 10572.235698: bpf_trace_printk: Hello, World!\n
-             zsh-39911   [100] ...21 10572.236664: bpf_trace_printk: Hello, World!\n
- MediaSu~isor #3-19365   [064] ...21 10573.417254: bpf_trace_printk: Hello, World!\n
- MediaSu~isor #3-22497   [000] ...21 10573.417254: bpf_trace_printk: Hello, World!\n
- MediaPD~oder #1-39914   [083] ...21 10573.418197: bpf_trace_printk: Hello, World!\n
- MediaSu~isor #3-39913   [116] ...21 10573.418249: bpf_trace_printk: Hello, World!\n
+           <...>-30325   [042] ...21 10571.161861: bpf_trace_printk: Hello, World!
+             zsh-30325   [004] ...21 10571.164091: bpf_trace_printk: Hello, World!
+             zsh-30325   [115] ...21 10571.166249: bpf_trace_printk: Hello, World!
+             zsh-39907   [127] ...21 10571.167210: bpf_trace_printk: Hello, World!
+             zsh-30325   [115] ...21 10572.231333: bpf_trace_printk: Hello, World!
+             zsh-30325   [060] ...21 10572.233574: bpf_trace_printk: Hello, World!
+             zsh-30325   [099] ...21 10572.235698: bpf_trace_printk: Hello, World!
+             zsh-39911   [100] ...21 10572.236664: bpf_trace_printk: Hello, World!
+ MediaSu~isor #3-19365   [064] ...21 10573.417254: bpf_trace_printk: Hello, World!
+ MediaSu~isor #3-22497   [000] ...21 10573.417254: bpf_trace_printk: Hello, World!
+ MediaPD~oder #1-39914   [083] ...21 10573.418197: bpf_trace_printk: Hello, World!
+ MediaSu~isor #3-39913   [116] ...21 10573.418249: bpf_trace_printk: Hello, World!
 ```
 
 The related code is ([chapter2/HelloWorld.java](src/main/java/me/bechberger/ebpf/samples/chapter2/HelloWorld.java)):
@@ -112,7 +112,7 @@ public class HelloWorld {
   public static void main(String[] args) {
     try (BPF b = BPF.builder("""
             int hello(void *ctx) {
-               bpf_trace_printk("Hello, World!\\\\n");
+               bpf_trace_printk("Hello, World!");
                return 0;
             }
             """).build()) {

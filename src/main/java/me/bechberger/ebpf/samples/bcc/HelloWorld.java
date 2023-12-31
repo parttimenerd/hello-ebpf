@@ -13,7 +13,7 @@ import me.bechberger.ebpf.bcc.BPF;
 
     BPF(text = r"""
     int kprobe__sys_clone(void *ctx) {
-       bpf_trace_printk("Hello, World!\\n");
+       bpf_trace_printk("Hello, World!");
        return 0;
     }
     """).trace_print()
@@ -23,7 +23,7 @@ public class HelloWorld {
     public static void main(String[] args) {
         try (BPF b = BPF.builder("""
                 int kprobe__sys_clone(void *ctx) {
-                   bpf_trace_printk("Hello, World!\\\\n");
+                   bpf_trace_printk("Hello, World!");
                    return 0;
                 }
                 """).build()) {

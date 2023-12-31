@@ -29,7 +29,7 @@ public class HelloWorld {
     public static void main(String[] args) {
         try (BPF b = BPF.builder("""
                 int hello(void *ctx) {
-                   bpf_trace_printk("Hello, World!\\\\n");
+                   bpf_trace_printk("Hello, World!");
                    return 0;
                 }
                 """).build()) {
