@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Navigate to current folder
-cd "$(dirname "$0")" || exit
+cd "$(dirname "$0")"/bcc || exit
 
 # if empty arguments or help flag, print help
 if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then

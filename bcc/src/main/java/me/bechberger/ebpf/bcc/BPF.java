@@ -4,8 +4,10 @@ import me.bechberger.ebpf.raw.Lib;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.lang.foreign.*;
-import java.lang.invoke.VarHandle;
+import java.lang.foreign.Arena;
+import java.lang.foreign.FunctionDescriptor;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.ValueLayout;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -14,6 +16,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.lang.foreign.ValueLayout.JAVA_INT;
+import static me.bechberger.ebpf.bcc.PanamaUtil.HandlerWithErrno;
+import static me.bechberger.ebpf.bcc.PanamaUtil.ResultAndErr;
 
 /**
  * Main class for BPF functionality, modelled after the BPF class from the bcc Python bindings
@@ -91,7 +95,9 @@ public class BPF implements AutoCloseable {
     private static final List<String> syscallPrefixes = List.of("sys_", "__x64_sys_", "__x32_compat_sys_",
             "__ia32_compat_sys_", "__arm64_sys_", "__s390x_sys_", "__s390_sys_");
 
-    /** eBPF program text */
+    /**
+     * eBPF program text
+     */
     private final String text;
 
     /**
@@ -101,12 +107,17 @@ public class BPF implements AutoCloseable {
 
     private MemorySegment module;
 
-    /** Disable the clean-up on close? */
+    /**
+     * Disable the clean-up on close?
+     */
     private boolean disableCleanup = false;
     private static final Map<Integer, SymbolCache> _sym_caches = new HashMap<>();
 
-    /** eBPF program function name -> function */
+    /**
+     * eBPF program function name -> function
+     */
     private final Map<String, BPFFunction> funcs = new HashMap<>();
+    private final Map<String, BPFTable<?, ?>> tables = new HashMap<>();
 
     private static final int DEFAULT_PROBE_LIMIT = 1000;
     private static int _num_open_probes = 0;
@@ -137,7 +148,7 @@ public class BPF implements AutoCloseable {
          */
         module = Lib.bpf_module_create_c_from_string(textNative, debug, MemorySegment.NULL, 0, allowRLimit, MemorySegment.NULL);
 
-        if (module == null) throw new RuntimeException(STR. "Failed to compile BPF module \{ fileName }" );
+        if (module == null) throw new RuntimeException(STR."Failed to compile BPF module \{fileName}");
 
         trace_autoload();
     }
@@ -161,40 +172,19 @@ public class BPF implements AutoCloseable {
     }
 
 
-    /** Does the BPF program contain a the given function?
+    /**
+     * Does the BPF program contain a the given function?
      * <p/>
      * Uses a regex to find the function, so it my be failing.
+     *
      * @param name name of the function
      */
     public boolean doesFunctionExistInText(String name) {
-        return Pattern.compile(" " + name + "\\(.*\\).*\\{").matcher(text).find();
+        return Pattern.compile(STR." \{name}\\(.*\\).*\\{").matcher(text).find();
     }
 
-    /**
-     * Load a function into the BPF module
-     *
-     * @param func_name name of the function to load
-     * @param prog_type type of the program (Lib.BPF_PROG_TYPE_*)
-     */
-    public BPFFunction load_func(String func_name, int prog_type, MemorySegment device, int attach_type) {
-        if (funcs.containsKey(func_name)) return funcs.get(func_name);
-        if (!doesFunctionExistInText(func_name))
-            throw new RuntimeException(STR. "Trying to use undefined function \{ func_name }" );
-        try (var arena = Arena.ofConfined()) {
-            MemorySegment funcNameNative = arena.allocateUtf8String(func_name);
-            if (Lib.bpf_function_start(module, funcNameNative) == null)
-                throw new RuntimeException(STR. "Unknown program \{ func_name }" );
-            int log_level = 0;
-            if ((debug & LogLevel.DEBUG_BPF_REGISTER_STATE) != 0) {
-                log_level = 2;
-            } else if ((debug & LogLevel.DEBUG_BPF) != 0) {
-                log_level = 1;
-            }
-            StructLayout capturedStateLayout = Linker.Option.captureStateLayout();
-            VarHandle errnoHandle = capturedStateLayout.varHandle(MemoryLayout.PathElement.groupElement("errno"));
-            Linker.Option ccs = Linker.Option.captureCallState("errno");
-            var handler = Linker.nativeLinker().downcallHandle(PanamaUtil.lookup("bcc_func_load"),
-                    FunctionDescriptor.of(JAVA_INT,
+    private static HandlerWithErrno<Integer> BCC_FUNC_LOAD = new HandlerWithErrno<>("bcc_func_load",
+            FunctionDescriptor.of(JAVA_INT,
                     ValueLayout.ADDRESS,
                     JAVA_INT,
                     ValueLayout.ADDRESS,
@@ -207,23 +197,48 @@ public class BPF implements AutoCloseable {
                     JAVA_INT,
                     ValueLayout.ADDRESS,
                     JAVA_INT
-            ), ccs);
-            MemorySegment capturedState = arena.allocate(capturedStateLayout);
+            ));
+
+    private static ResultAndErr<Integer> bcc_func_load(Arena arena, MemorySegment module, int prog_type, MemorySegment funcNameNative,
+                                                       MemorySegment funcStart, int funcSize, MemorySegment license, int kernVersion,
+                                                       int logLevel, MemorySegment logBuf, int logSize, MemorySegment device, int attachType) {
+        return BCC_FUNC_LOAD.call(arena, module, prog_type, funcNameNative, funcStart, funcSize, license, kernVersion,
+                logLevel, logBuf, logSize, device, attachType);
+    }
+
+    /**
+     * Load a function into the BPF module
+     *
+     * @param func_name name of the function to load
+     * @param prog_type type of the program (Lib.BPF_PROG_TYPE_*)
+     */
+    public BPFFunction load_func(String func_name, int prog_type, MemorySegment device, int attach_type) {
+        if (funcs.containsKey(func_name)) return funcs.get(func_name);
+        if (!doesFunctionExistInText(func_name))
+            throw new RuntimeException(STR."Trying to use undefined function \{func_name}");
+        try (var arena = Arena.ofConfined()) {
+            MemorySegment funcNameNative = arena.allocateUtf8String(func_name);
+            if (Lib.bpf_function_start(module, funcNameNative) == null)
+                throw new RuntimeException(STR."Unknown program \{func_name}");
+            int log_level = 0;
+            if ((debug & LogLevel.DEBUG_BPF_REGISTER_STATE) != 0) {
+                log_level = 2;
+            } else if ((debug & LogLevel.DEBUG_BPF) != 0) {
+                log_level = 1;
+            }
             try {
-                int fd = (int)handler.invoke(capturedState, module, prog_type, funcNameNative,
+                var res = bcc_func_load(arena, module, prog_type, funcNameNative,
                         Lib.bpf_function_start(module, funcNameNative),
                         (int) Lib.bpf_function_size(module, funcNameNative),
                         Lib.bpf_module_license(module), Lib.bpf_module_kern_version(module),
                         log_level, MemorySegment.NULL, 0, device, attach_type);
-                int errno = (int) errnoHandle.get(capturedState);
-                if (fd < 0) {
+                if (res.result() < 0) {
                     disableCleanup = true;
-                    if (errno == PanamaUtil.ERRNO_PERM_ERROR)
-                         throw new RuntimeException(STR."Need super-user privileges to run");
-                    var errstr = PanamaUtil.errnoString(errno);
-                    throw new RuntimeException(STR. "Failed to load BPF function \{ func_name }: \{ errstr }" );
+                    if (res.err() == PanamaUtil.ERRNO_PERM_ERROR)
+                        throw new BPFCallException("Need to run with root priviledges to load BPF functions, bcc_load_func failed", res.err());
+                    throw new BPFCallException(STR."Failed to load BPF function \{func_name}", res.err());
                 }
-                var fn = new BPFFunction(this, func_name, fd);
+                var fn = new BPFFunction(this, func_name, res.result());
                 funcs.put(func_name, fn);
                 return fn;
             } catch (Throwable e) {
@@ -232,7 +247,9 @@ public class BPF implements AutoCloseable {
         }
     }
 
-    /** Load a function into the BPF module
+    /**
+     * Load a function into the BPF module
+     *
      * @param func_name name of the function to load
      * @param prog_type type of the program (Lib.BPF_PROG_TYPE_*)
      */
@@ -244,6 +261,7 @@ public class BPF implements AutoCloseable {
     private void trace_autoload() {
         for (int i = 0; i < Lib.bpf_num_functions(module); i++) {
             var funcName = PanamaUtil.toString(Lib.bpf_function_name(module, i));
+            assert funcName != null;
             if (funcName.startsWith("kprobe__")) {
                 var fn = load_func(funcName, Lib.BPF_PROG_TYPE_KPROBE());
                 attach_kprobe(fix_syscall_fnname(funcName.substring(8)), 0, fn.name, null);
@@ -287,7 +305,7 @@ public class BPF implements AutoCloseable {
                 var p = Constants.TRACEFS.resolve("trace_pipe");
                 traceFile = new LineReader(p);
             } catch (IOException e) {
-                throw new RuntimeException(STR."Failed to open trace_pipe");
+                throw new RuntimeException("Failed to open trace_pipe");
             }
         }
         return traceFile;
@@ -368,6 +386,7 @@ public class BPF implements AutoCloseable {
      * <p/>
      * The format string is not as expressive as in Python, therefore, please use
      * the {@link #trace_print(Function)} method if you need more flexibility.
+     *
      * @param fmt format string
      */
     public void trace_print(String fmt) {
@@ -375,14 +394,14 @@ public class BPF implements AutoCloseable {
             trace_print(fields -> fields.format(fmt));
             return;
         }
-        trace_print((Function<TraceFields, String>)null);
+        trace_print((Function<TraceFields, String>) null);
     }
 
     /**
      * Read from the kernel debug trace pipe and print on stdout.
      */
     public void trace_print() {
-        trace_print((String)null);
+        trace_print((String) null);
     }
 
     /**
@@ -408,10 +427,10 @@ public class BPF implements AutoCloseable {
     /**
      * Attach a function to a kprobe
      *
-     * @param event   name of the event to attach to
+     * @param event     name of the event to attach to
      * @param event_off event offset, can be 0
-     * @param fn_name name of the function to attach
-     * @param event_re event regex, can be null
+     * @param fn_name   name of the function to attach
+     * @param event_re  event regex, can be null
      */
     public BPF attach_kprobe(@Nullable String event, int event_off, @Nullable String fn_name, @Nullable String event_re) {
         if (event_re != null) {
@@ -429,14 +448,15 @@ public class BPF implements AutoCloseable {
             }
             if (failed == matches.size()) {
                 var probesStr = String.join("/", probes);
-                throw new FailedToAttachException(STR. "Failed to attach BPF program \{ fn_name } to kprobe \{ probesStr }" +
-                        "it's not traceable (either non-existing, inlined, or marked as \"notrace\")" );
+                throw new FailedToAttachException(STR."Failed to attach BPF program \{fn_name} to kprobe \{probesStr}" +
+                        "it's not traceable (either non-existing, inlined, or marked as \"notrace\")");
             }
             return this;
         }
         _check_probe_quota(1);
         var fn = load_func(fn_name, Lib.BPF_PROG_TYPE_KPROBE());
-        var ev_name = STR. "p_\{ event.replace("+", "_").replace(".", "_") }" ;
+        assert event != null;
+        var ev_name = STR."p_\{event.replace("+", "_").replace(".", "_")}";
         int fd;
         try (var arena = Arena.ofConfined()) {
             var evNameNative = arena.allocateUtf8String(ev_name);
@@ -444,8 +464,8 @@ public class BPF implements AutoCloseable {
             fd = Lib.bpf_attach_kprobe(fn.fd, 0, evNameNative, eventNative, event_off, 0);
         }
         if (fd < 0) {
-            throw new FailedToAttachException(STR. "Failed to attach BPF program \{ fn_name } to kprobe \{ event }," +
-                    "it's not traceable (either non-existing, inlined, or marked as \"notrace\")" );
+            throw new FailedToAttachException(STR."Failed to attach BPF program \{fn_name} to kprobe \{event}," +
+                    "it's not traceable (either non-existing, inlined, or marked as \"notrace\")");
         }
         _add_kprobe_fd(ev_name, fn_name, fd);
         return this;
@@ -466,21 +486,68 @@ public class BPF implements AutoCloseable {
     }
 
     private void detach_kprobe_event_by_fn(String ev_name, String fn_name) {
-        if (!kprobe_fds.containsKey(ev_name)) throw new RuntimeException(STR. "Kprobe \{ ev_name } is not attached" );
+        if (!kprobe_fds.containsKey(ev_name)) throw new RuntimeException(STR."Kprobe \{ev_name} is not attached");
         var res = Lib.bpf_close_perf_event_fd(kprobe_fds.get(ev_name).get(fn_name));
-        if (res < 0) throw new RuntimeException(STR."Failed to close kprobe FD");
+        if (res < 0) throw new RuntimeException("Failed to close kprobe FD");
         _del_kprobe_fd(ev_name, fn_name);
         if (kprobe_fds.get(ev_name).isEmpty()) {
             try (var arena = Arena.ofConfined()) {
                 var evNameNative = arena.allocateUtf8String(ev_name);
                 res = Lib.bpf_detach_kprobe(evNameNative);
             }
-            if (res < 0) throw new RuntimeException(STR."Failed to detach BPF from kprobe");
+            if (res < 0) throw new RuntimeException("Failed to detach BPF from kprobe");
         }
     }
 
     /**
+     * get table without caching
+     */
+    public <T extends BPFTable<?, ?>> T get_table(String name, BPFTable.TableProvider<? extends T> provider) {
+        try (var arena = Arena.ofConfined()) {
+            var nameNative = arena.allocateUtf8String(name);
+            var mapId = Lib.bpf_table_id(module, nameNative);
+            var mapFd = Lib.bpf_table_fd(module, nameNative);
+            if (mapFd < 0) throw new RuntimeException(STR."Failed to load BPF Table \{name}");
+            // TODO: error checking
+            return provider.createTable(this, mapId, mapFd, name);
+        }
+    }
+
+
+    /**
+     * get a map
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends BPFTable<?, ?>> T get(String name, BPFTable.TableProvider<? extends T> provider) {
+        return (T) tables.computeIfAbsent(name, k -> get_table(name, provider));
+    }
+
+    /**
+     * Number of maps allocated
+     */
+    public int size() {
+        return tables.size();
+    }
+
+    /**
+     * Remove map from cache
+     */
+    public boolean remove(String name) {
+        var table = tables.remove(name);
+        if (table == null) return false;
+        return true;
+    }
+
+    /**
+     * names of the maps
+     */
+    public Iterable<String> keys() {
+        return tables.keySet();
+    }
+
+    /**
      * Get allow available kprobe functions that aren't blacklisted
+     *
      * @param event_re regex to match the functions against
      * @return list of function names
      */
@@ -690,11 +757,11 @@ public class BPF implements AutoCloseable {
      */
     private String get_syscall_prefix() {
         for (var prefix : syscallPrefixes) {
-            if (ksymname(STR. "\{ prefix }bpf" ) != -1) {
+            if (ksymname(STR."\{prefix}bpf") != -1) {
                 return prefix;
             }
         }
-        return syscallPrefixes.get(0);
+        return syscallPrefixes.getFirst();
     }
 
 
@@ -702,8 +769,6 @@ public class BPF implements AutoCloseable {
     private void cleanup() {
         if (disableCleanup) return;
         disableCleanup = true;
-        /*        for k, v in list(self.kprobe_fds.items()):
-            self.detach_kprobe_event(k)*/
         for (var k : kprobe_fds.keySet()) {
             detach_kprobe_event(k);
         }
@@ -754,5 +819,9 @@ public class BPF implements AutoCloseable {
     @Override
     public void close() {
         cleanup();
+    }
+
+    public MemorySegment getModule() {
+        return module;
     }
 }

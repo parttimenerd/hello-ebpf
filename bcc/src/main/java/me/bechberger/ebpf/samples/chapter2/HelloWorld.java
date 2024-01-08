@@ -6,7 +6,7 @@ package me.bechberger.ebpf.samples.chapter2;
 import me.bechberger.ebpf.bcc.BPF;
 
 /**
- * Basic hello world example from 2_hello_world.py
+ * Basic hello world example from chapter2/hello_world.py
  * <p>
  * {@snippet :
     from bcc import BPF

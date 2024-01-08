@@ -21,11 +21,12 @@ all examples from the [Learning eBPF book](https://cilium.isovalent.com/hubfs/Le
 (get it also from [Bookshop.org](https://bookshop.org/p/books/learning-ebpf-programming-the-linux-kernel-for-enhanced-observability-networking-and-security-liz-rice/19244244?ean=9781098135126),
 [Amazon](https://www.amazon.com/Learning-eBPF-Programming-Observability-Networking/dp/1098135121), or [O'Reilly](https://www.oreilly.com/library/view/learning-ebpf/9781098135119/)), by
 Liz Rice in Java, implementing a Java userland library for eBPF along the way,
-with a blog series to document the journey.
+with a [blog series](https://mostlynerdless.de/blog/tag/hello-ebpf/) to document the journey.
 
 This project is still in its early stages, and a read-along of the book is recommended:
 
-__We're currently at page 18 of the book.__
+__We're currently at page 18 of the book in the [blog series](https://mostlynerdless.de/blog/tag/hello-ebpf/)
+and page 23 with this repo.__
 
 Goals
 -----
@@ -71,10 +72,12 @@ on arm64 without running in QEMU would certainly be helpful.*
 
 Build
 -----
-To build the project, make sure you have all prerequisites installed and run:
+To build the project, make sure you have all prerequisites installed and run in the `bcc` directory:
 
 ```shell
 mvn clean package
+# or in the project directory
+./build.sh
 ```
 
 Running the examples
@@ -83,7 +86,7 @@ Be sure to run the following in a shell with root privileges that uses JDK 21:
 
 ```shell
 java --enable-preview -cp target/bcc.jar --enable-native-access=ALL-UNNAMED me.bechberger.ebpf.samples.EXAMPLE_NAME
-# or
+# or in the project directory
 ./run.sh EXAMPLE_NAME
 ```
 
@@ -151,10 +154,11 @@ Posts covering the development of this project:
 
 - Dec 01, 2023: [Finding all used Classes, Methods, and Functions of a Python Module](https://mostlynerdless.de/blog/2023/12/01/finding-all-used-classes-methods-and-functions-of-a-python-module/)
 - Dec 11, 2023: [From C to Java Code using Panama](https://mostlynerdless.de/blog/2023/12/11/from-c-to-java-code-using-panama/)
+- Jan 01, 2023: [Hello eBPF: Developing eBPF Apps in Java (1)](https://mostlynerdless.de/blog/2023/12/31/hello-ebpf-developing-ebpf-apps-in-java-1/)
 
 Planned:
 
-- Hello eBPF: Developing eBPF Apps in Java (Part 1)
+- Hello eBPF: Working with basic eBPF maps (2)
 
 Examples
 --------
@@ -164,10 +168,11 @@ of the implementation by the examples we have implemented. We also use examples 
 like the bcc repository and state this in the first column.
 
 
-| Chapter<br/>/Source | Example                                          | Java class                                                                               | Status | Description                                    |
-|---------------------|--------------------------------------------------|------------------------------------------------------------------------------------------|--------|------------------------------------------------|
-| bcc                 | [bcc/hello_world.py](pysamples/bcc/hello_world.py) | [HelloWorld](src/main/java/me/bechberger/ebpf/samples/bcc/HelloWorld.java)               | works  | Basic hello world                              |
-| 2                   | [chapter2/hello.py](pysamples/chapter2/hello.py) | [chapter2.HelloWorld](src/main/java/me/bechberger/ebpf/samples/chapter2/HelloWorld.java) | works  | print "Hello World!" for each `execve` syscall |
+| Chapter<br/>/Source | Example                                                  | Java class                                                                               | Status | Description                                    |
+|---------------------|----------------------------------------------------------|------------------------------------------------------------------------------------------|--------|------------------------------------------------|
+| bcc                 | [bcc/hello_world.py](pysamples/bcc/hello_world.py)       | [HelloWorld](src/main/java/me/bechberger/ebpf/samples/bcc/HelloWorld.java)               | works  | Basic hello world                              |
+| 2                   | [chapter2/hello.py](pysamples/chapter2/hello.py)         | [chapter2.HelloWorld](src/main/java/me/bechberger/ebpf/samples/chapter2/HelloWorld.java) | works  | print "Hello World!" for each `execve` syscall |
+| 2                   | [chapter2/hello-map.py](pysamples/chapter2/hello-map.py) | [chapter2.HelloMap](src/main/java/me/bechberger/ebpf/samples/chapter2/HelloMap.java)     | works  | Count and print `execve` calls per user        |
 
 
 ... more to come from the [books' repository](https://github.com/lizrice/learning-ebpf/tree/main)
