@@ -54,7 +54,7 @@ public class BPFTable<K, V> {
         try (var arena = Arena.ofConfined()) {
             var keyInC = arena.allocate(keyType.layout());
             keyType.setMemory(keyInC, key);
-            var leaf = arena.allocate(keyType.layout());
+            var leaf = arena.allocate(leafType.layout());
             var res = Lib.bpf_lookup_elem(mapFd, keyInC, leaf);
             if (res < 0) {
                 return null;
@@ -73,7 +73,7 @@ public class BPFTable<K, V> {
         try (var arena = Arena.ofConfined()) {
             var keyInC = arena.allocate(keyType.layout());
             keyType.setMemory(keyInC, key);
-            var leaf = arena.allocate(keyType.layout());
+            var leaf = arena.allocate(leafType.layout());
             leafType.setMemory(leaf, value);
             var res = bpf_update_elem(arena, mapFd, keyInC, leaf, 0);
             if (res.result() < 0) {
@@ -87,7 +87,7 @@ public class BPFTable<K, V> {
         try (var arena = Arena.ofConfined()) {
             var keyInC = arena.allocate(keyType.layout());
             keyType.setMemory(keyInC, key);
-            var leaf = arena.allocate(keyType.layout());
+            var leaf = arena.allocate(leafType.layout());
             var res = Lib.bpf_lookup_elem(mapFd, keyInC, leaf);
             if (res < 0) {
                 return null;

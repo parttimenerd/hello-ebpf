@@ -36,8 +36,8 @@ write their own eBPF programs, and the [examples](https://github.com/lizrice/lea
 The initial goal is to be as close to bcc Python API as possible so that the examples from the book
 can be ported to Java easily.
 
-You can find the Java versions of the examples in the [src/main/me/bechberger/samples](src/main/me/bechberger/samples)
-and the API in the [src/main/me/bechberger/bcc](src/main/me/bechberger/bcc) directory.
+You can find the Java versions of the examples in the [bcc/src/main/me/bechberger/samples](bcc/src/main/me/bechberger/samples)
+and the API in the [bcc/src/main/me/bechberger/bcc](bcc/src/main/me/bechberger/bcc) directory.
 
 Prerequisites
 -------------
@@ -108,7 +108,7 @@ The following runs the hello world sample from the vcc repository. It currently 
  MediaSu~isor #3-39913   [116] ...21 10573.418249: bpf_trace_printk: Hello, World!
 ```
 
-The related code is ([chapter2/HelloWorld.java](src/main/java/me/bechberger/ebpf/samples/chapter2/HelloWorld.java)):
+The related code is ([chapter2/HelloWorld.java](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloWorld.java)):
 
 ```java
 public class HelloWorld {
@@ -168,14 +168,14 @@ of the implementation by the examples we have implemented. We also use examples 
 like the bcc repository and state this in the first column.
 
 
-| Chapter<br/>/Source | Example                                                  | Java class                                                                               | Status | Description                                    |
-|---------------------|----------------------------------------------------------|------------------------------------------------------------------------------------------|--------|------------------------------------------------|
-| bcc                 | [bcc/hello_world.py](pysamples/bcc/hello_world.py)       | [HelloWorld](src/main/java/me/bechberger/ebpf/samples/bcc/HelloWorld.java)               | works  | Basic hello world                              |
-| 2                   | [chapter2/hello.py](pysamples/chapter2/hello.py)         | [chapter2.HelloWorld](src/main/java/me/bechberger/ebpf/samples/chapter2/HelloWorld.java) | works  | print "Hello World!" for each `execve` syscall |
-| 2                   | [chapter2/hello-map.py](pysamples/chapter2/hello-map.py) | [chapter2.HelloMap](src/main/java/me/bechberger/ebpf/samples/chapter2/HelloMap.java)     | works  | Count and print `execve` calls per user        |
+| Chapter<br/>/Source | Example                                                  | Java class                                                                                   | Status | Description                                    |
+|---------------------|----------------------------------------------------------|----------------------------------------------------------------------------------------------|--------|------------------------------------------------|
+| bcc                 | [bcc/hello_world.py](pysamples/bcc/hello_world.py)       | [HelloWorld](bcc/src/main/java/me/bechberger/ebpf/samples/bcc/HelloWorld.java)               | works  | Basic hello world                              |
+| 2                   | [chapter2/hello.py](pysamples/chapter2/hello.py)         | [chapter2.HelloWorld](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloWorld.java) | works  | print "Hello World!" for each `execve` syscall |
+| 2                   | [chapter2/hello-map.py](pysamples/chapter2/hello-map.py) | [chapter2.HelloMap](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloMap.java)     | works  | Count and print `execve` calls per user        |
 
 
-... more to come from the [books' repository](https://github.com/lizrice/learning-ebpf/tree/main)
+... more to come from the [books' repository](https://github.com/lizrice/learning-ebpf/tree/main).
 
 
 Classes
