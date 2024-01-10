@@ -393,4 +393,4 @@ pyrightconfig.json
 misc/*
 !misc/bcc_headers.h
 bin/jextract-*
-src/main/java/me/bechberger/ebpf/raw
+bcc/src/main/java/me/bechberger/ebpf/raw

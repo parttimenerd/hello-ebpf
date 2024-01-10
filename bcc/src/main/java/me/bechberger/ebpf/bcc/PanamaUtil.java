@@ -101,4 +101,8 @@ public class PanamaUtil {
             }
         }
     }
+
+    public static long padSize(long size) {
+        return (size + 7) & ~7;
+    }
 }

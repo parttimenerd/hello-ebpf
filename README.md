@@ -72,11 +72,9 @@ on arm64 without running in QEMU would certainly be helpful.*
 
 Build
 -----
-To build the project, make sure you have all prerequisites installed and run in the `bcc` directory:
+To build the project, make sure you have all prerequisites installed, then just run:
 
 ```shell
-mvn clean package
-# or in the project directory
 ./build.sh
 ```
 
@@ -168,12 +166,12 @@ of the implementation by the examples we have implemented. We also use examples 
 like the bcc repository and state this in the first column.
 
 
-| Chapter<br/>/Source | Example                                                  | Java class                                                                                   | Status | Description                                    |
-|---------------------|----------------------------------------------------------|----------------------------------------------------------------------------------------------|--------|------------------------------------------------|
-| bcc                 | [bcc/hello_world.py](pysamples/bcc/hello_world.py)       | [HelloWorld](bcc/src/main/java/me/bechberger/ebpf/samples/bcc/HelloWorld.java)               | works  | Basic hello world                              |
-| 2                   | [chapter2/hello.py](pysamples/chapter2/hello.py)         | [chapter2.HelloWorld](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloWorld.java) | works  | print "Hello World!" for each `execve` syscall |
-| 2                   | [chapter2/hello-map.py](pysamples/chapter2/hello-map.py) | [chapter2.HelloMap](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloMap.java)     | works  | Count and print `execve` calls per user        |
-
+| Chapter<br/>/Source | Example                                                  | Java class                                                                                   | Status | Description                                                                       |
+|---------------------|----------------------------------------------------------|----------------------------------------------------------------------------------------------|--------|-----------------------------------------------------------------------------------|
+| bcc                 | [bcc/hello_world.py](pysamples/bcc/hello_world.py)       | [HelloWorld](bcc/src/main/java/me/bechberger/ebpf/samples/bcc/HelloWorld.java)               | works  | Basic hello world                                                                 |
+| 2                   | [chapter2/hello.py](pysamples/chapter2/hello.py)         | [chapter2.HelloWorld](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloWorld.java) | works  | print "Hello World!" for each `execve` syscall                                    |
+| 2                   | [chapter2/hello-map.py](pysamples/chapter2/hello-map.py) | [chapter2.HelloMap](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloMap.java)     | works  | Count and print `execve` calls per user                                           |
+| own                 | -                                                        | [own.HelloStructMap](bcc/src/main/java/me/bechberger/ebpf/samples/own/HelloStructMap.java)   | works  | Count and print `execve` calls per user and store the result as a struct in a map |
 
 ... more to come from the [books' repository](https://github.com/lizrice/learning-ebpf/tree/main).
 

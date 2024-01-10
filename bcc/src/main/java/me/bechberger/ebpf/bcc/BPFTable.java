@@ -266,7 +266,7 @@ public class BPFTable<K, V> {
                 var allocated = alloc_key_values(arena, true, false, keys.size());
                 assert allocated.keySegment() != null;
                 for (int i = 0; i < keys.size(); i++) {
-                    keyType.setMemory(allocated.keySegment().asSlice(i * keyType.size()), keys.get(i));
+                    keyType.setMemory(allocated.keySegment().asSlice(i * keyType.sizePadded()), keys.get(i));
                 }
                 items_delete_batch(arena, allocated.keySegment());
             } else {
@@ -312,6 +312,7 @@ public class BPFTable<K, V> {
     private ResultAndErr<Integer> bpf_lookup_and_delete_batch(Arena arena, int map_fd, @Nullable MemorySegment in_batch, @Nullable MemorySegment out_batch, @Nullable MemorySegment keys, @Nullable MemorySegment values, MemorySegment count) {
         return BPF_LOOKUP_AND_DELETE_BATCH.call(arena, map_fd, in_batch, out_batch, keys, values, count);
     }
+
     private static final HandlerWithErrno<Integer> BPF_LOOKUP_BATCH = new HandlerWithErrno<>("bpf_lookup_batch", FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
 
 
@@ -355,8 +356,8 @@ public class BPFTable<K, V> {
             assert allocated.leafSegment() != null;
             var entries = new ArrayList<Map.Entry<K, V>>();
             for (int i = 0; i < total; i++) {
-                var key = keyType.<K>parseMemory(allocated.keySegment().asSlice(i * keyType.size(), keyType.layout().byteSize()));
-                var value = leafType.<V>parseMemory(allocated.leafSegment().asSlice(i * leafType.size(), leafType.layout().byteSize()));
+                var key = keyType.<K>parseMemory(allocated.keySegment().asSlice(i * keyType.sizePadded(), keyType.layout().byteSize()));
+                var value = leafType.<V>parseMemory(allocated.leafSegment().asSlice(i * leafType.sizePadded(), leafType.layout().byteSize()));
                 entries.add(new AbstractMap.SimpleEntry<>(key, value));
             }
             return entries;

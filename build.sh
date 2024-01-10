@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# Navigate to current folder
-cd "$(dirname "$0")"/bcc || exit
+cd "$(dirname "$0")" || exit
 
-mvn clean package
+(cd annotations && mvn install)
+
+(cd bcc && mvn package)

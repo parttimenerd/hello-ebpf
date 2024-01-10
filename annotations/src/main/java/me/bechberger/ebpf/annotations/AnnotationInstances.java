@@ -7,4 +7,18 @@ public class AnnotationInstances {
             return Unsigned.class;
         }
     };
+
+    public static Size size(int value) {
+        return new Size() {
+            @Override
+            public Class<? extends java.lang.annotation.Annotation> annotationType() {
+                return Size.class;
+            }
+
+            @Override
+            public int value() {
+                return value;
+            }
+        };
+    }
 }
