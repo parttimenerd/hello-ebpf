@@ -207,6 +207,18 @@ section of the GitHub repository.
 I'm happy to include more example programs, API documentation, or helper methods,
 as well as links to repositories and projects that use this library.
 
+Development
+-----------
+The project uses pre-commit hooks to ensure a consistent code style:
+
+```shell
+# install hooks
+mvn install
+
+# run formatting
+mvn spotless:apply
+```
+
 License
 -------
 Apache 2.0, Copyright 2023 SAP SE or an SAP affiliate company, Johannes Bechberger and contributors

@@ -1,8 +1,6 @@
 package me.bechberger.ebpf.bcc;
 
-/**
- * Exception thrown when a BPF call fails (but not always)
- */
+/** Exception thrown when a BPF call fails (but not always) */
 public class BPFCallException extends RuntimeException {
     private final int errno;
 

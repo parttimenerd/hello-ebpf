@@ -1,9 +1,6 @@
 package me.bechberger.ebpf.bcc;
 
-import me.bechberger.ebpf.annotations.Unsigned;
-import me.bechberger.ebpf.raw.Lib;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import static me.bechberger.ebpf.bcc.PanamaUtil.*;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.FunctionDescriptor;
@@ -11,16 +8,19 @@ import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 import java.util.*;
 import java.util.function.UnaryOperator;
-
-import static me.bechberger.ebpf.bcc.PanamaUtil.*;
+import me.bechberger.ebpf.annotations.Unsigned;
+import me.bechberger.ebpf.raw.Lib;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Implementation of BPF maps.
- * <p>
- * "BPF 'maps' provide generic storage of different types for sharing data between kernel and user space."
- * – <a href="https://www.kernel.org/doc/html/latest/bpf/maps.html">Linux documentation</a>
- * <p>
- * Translation of BCC's <code>class BPFTable</code>.
+ *
+ * <p>"BPF 'maps' provide generic storage of different types for sharing data between kernel and
+ * user space." – <a href="https://www.kernel.org/doc/html/latest/bpf/maps.html">Linux
+ * documentation</a>
+ *
+ * <p>Translation of BCC's <code>class BPFTable</code>.
  */
 public class BPFTable<K, V> {
     private final BPF bpf;
@@ -34,7 +34,8 @@ public class BPFTable<K, V> {
     private final int ttype;
     private final int flags;
 
-    public BPFTable(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
+    public BPFTable(
+            BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
         this.bpf = bpf;
         this.mapId = mapId;
         this.mapFd = mapFd;
@@ -63,9 +64,18 @@ public class BPFTable<K, V> {
         }
     }
 
-    private static final HandlerWithErrno<Integer> BPF_UPDATE_ELEM = new HandlerWithErrno<>("bpf_update_elem", FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
+    private static final HandlerWithErrno<Integer> BPF_UPDATE_ELEM =
+            new HandlerWithErrno<>(
+                    "bpf_update_elem",
+                    FunctionDescriptor.of(
+                            ValueLayout.JAVA_INT,
+                            ValueLayout.JAVA_INT,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER));
 
-    private ResultAndErr<Integer> bpf_update_elem(Arena arena, int map_fd, MemorySegment key, MemorySegment value, int flags) {
+    private ResultAndErr<Integer> bpf_update_elem(
+            Arena arena, int map_fd, MemorySegment key, MemorySegment value, int flags) {
         return BPF_UPDATE_ELEM.call(arena, map_fd, key, value, flags);
     }
 
@@ -97,7 +107,14 @@ public class BPFTable<K, V> {
         }
     }
 
-    private static final HandlerWithErrno<Integer> BPF_DELETE_ELEM = new HandlerWithErrno<>("bpf_delete_elem", FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, PanamaUtil.POINTER, PanamaUtil.POINTER));
+    private static final HandlerWithErrno<Integer> BPF_DELETE_ELEM =
+            new HandlerWithErrno<>(
+                    "bpf_delete_elem",
+                    FunctionDescriptor.of(
+                            ValueLayout.JAVA_INT,
+                            ValueLayout.JAVA_INT,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER));
 
     private ResultAndErr<Integer> bpf_delete_elem(Arena arena, int map_fd, MemorySegment key) {
         return BPF_DELETE_ELEM.call(arena, map_fd, key);
@@ -116,12 +133,16 @@ public class BPFTable<K, V> {
 
     @NotNull
     public Set<K> keySet() {
-        return items_lookup_batch().stream().map(Map.Entry::getKey).collect(java.util.stream.Collectors.toSet());
+        return items_lookup_batch().stream()
+                .map(Map.Entry::getKey)
+                .collect(java.util.stream.Collectors.toSet());
     }
 
     @NotNull
     public Collection<V> values() {
-        return items_lookup_batch().stream().map(Map.Entry::getValue).collect(java.util.stream.Collectors.toList());
+        return items_lookup_batch().stream()
+                .map(Map.Entry::getValue)
+                .collect(java.util.stream.Collectors.toList());
     }
 
     @NotNull
@@ -129,9 +150,7 @@ public class BPFTable<K, V> {
         return new HashSet<>(items_lookup_batch());
     }
 
-    /**
-     * very inefficient
-     */
+    /** very inefficient */
     public int size() {
         var iter = keyIterator();
         var size = 0;
@@ -155,32 +174,37 @@ public class BPFTable<K, V> {
         return values().contains((V) value);
     }
 
-    private record AllocatedKeyAndLeafs(int count, @Nullable MemorySegment keySegment,
-                                        @Nullable MemorySegment leafSegment) {
-    }
+    private record AllocatedKeyAndLeafs(
+            int count, @Nullable MemorySegment keySegment, @Nullable MemorySegment leafSegment) {}
 
-    private AllocatedKeyAndLeafs alloc_key_values(Arena arena, boolean allocateKeys, boolean allocateValues) {
+    private AllocatedKeyAndLeafs alloc_key_values(
+            Arena arena, boolean allocateKeys, boolean allocateValues) {
         return alloc_key_values(arena, allocateKeys, allocateValues, -1);
     }
 
     /**
      * Allocates keys and values, useful for bulk operations.
      *
-     * @param arena          arena to allocate memory in
-     * @param allocateKeys   whether to allocate keys
+     * @param arena arena to allocate memory in
+     * @param allocateKeys whether to allocate keys
      * @param allocateValues whether to allocate values
-     * @param count          number of elements to allocate, or -1 to allocate all (@link BPFTable#max_entries)
+     * @param count number of elements to allocate, or -1 to allocate all (@link
+     *     BPFTable#max_entries)
      * @return allocated keys and values
      * @throws AssertionError if count is not -1 and smaller than 1 or larger than max_entries
      */
-    private AllocatedKeyAndLeafs alloc_key_values(Arena arena, boolean allocateKeys, boolean allocateValues, int count) {
+    private AllocatedKeyAndLeafs alloc_key_values(
+            Arena arena, boolean allocateKeys, boolean allocateValues, int count) {
         if (count == -1) {
             count = maxEntries;
         }
         if (count < 1 || count > maxEntries) {
             throw new AssertionError("Invalid count");
         }
-        return new AllocatedKeyAndLeafs(count, allocateKeys ? arena.allocateArray(keyType.layout(), count) : null, allocateValues ? arena.allocateArray(leafType.layout(), count) : null);
+        return new AllocatedKeyAndLeafs(
+                count,
+                allocateKeys ? arena.allocateArray(keyType.layout(), count) : null,
+                allocateValues ? arena.allocateArray(leafType.layout(), count) : null);
     }
 
     /**
@@ -188,7 +212,8 @@ public class BPFTable<K, V> {
      *
      * @return size of the array
      */
-    private int sanity_check_keys_values(@Nullable MemorySegment keys, @Nullable MemorySegment values) {
+    private int sanity_check_keys_values(
+            @Nullable MemorySegment keys, @Nullable MemorySegment values) {
         var arr_len = 0;
         if (keys != null) {
             if (keys.byteSize() != keyType.layout().byteSize()) {
@@ -214,8 +239,8 @@ public class BPFTable<K, V> {
 
     /**
      * Look up all the key-value pairs in the map.
-     * <p>
-     * Notes: lookup batch on a keys subset is not supported by the kernel.
+     *
+     * <p>Notes: lookup batch on a keys subset is not supported by the kernel.
      *
      * @return key-value pairs
      */
@@ -223,22 +248,28 @@ public class BPFTable<K, V> {
         return items_lookup_and_optionally_delete_batch(false);
     }
 
-    private static final HandlerWithErrno<Integer> BPF_DELETE_BATCH = new HandlerWithErrno<>("bpf_delete_batch", FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, PanamaUtil.POINTER, PanamaUtil.POINTER));
+    private static final HandlerWithErrno<Integer> BPF_DELETE_BATCH =
+            new HandlerWithErrno<>(
+                    "bpf_delete_batch",
+                    FunctionDescriptor.of(
+                            ValueLayout.JAVA_INT,
+                            ValueLayout.JAVA_INT,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER));
 
-    private ResultAndErr<Integer> bpf_delete_batch(Arena arena, int map_fd, @Nullable MemorySegment keys, MemorySegment count) {
+    private ResultAndErr<Integer> bpf_delete_batch(
+            Arena arena, int map_fd, @Nullable MemorySegment keys, MemorySegment count) {
         return BPF_DELETE_BATCH.call(arena, map_fd, keys, count);
     }
 
     /**
      * Delete the key-value pairs related to the keys given as parameters.
-     * <p>
-     * Note that if no keys are given, it is faster to call
-     * lib.bpf_lookup_and_delete_batch than create keys array and then call
-     * lib.bpf_delete_batch on these keys.
      *
-     * @param keys keys array to delete. If an array of keys is given then it
-     *             deletes all the related keys-values.
-     *             If keys is None (default) then it deletes all entries.
+     * <p>Note that if no keys are given, it is faster to call lib.bpf_lookup_and_delete_batch than
+     * create keys array and then call lib.bpf_delete_batch on these keys.
+     *
+     * @param keys keys array to delete. If an array of keys is given then it deletes all the
+     *     related keys-values. If keys is None (default) then it deletes all entries.
      */
     public void items_delete_batch(Arena arena, @Nullable MemorySegment keys) {
         if (keys != null) {
@@ -250,8 +281,7 @@ public class BPFTable<K, V> {
                 throw new BPFCallException("BPF_MAP_DELETE_BATCH has failed", res.err());
             }
         } else {
-            items_lookup_and_optionally_delete_batch(true).forEach(e -> {
-            });
+            items_lookup_and_optionally_delete_batch(true).forEach(e -> {});
         }
     }
 
@@ -266,7 +296,8 @@ public class BPFTable<K, V> {
                 var allocated = alloc_key_values(arena, true, false, keys.size());
                 assert allocated.keySegment() != null;
                 for (int i = 0; i < keys.size(); i++) {
-                    keyType.setMemory(allocated.keySegment().asSlice(i * keyType.sizePadded()), keys.get(i));
+                    keyType.setMemory(
+                            allocated.keySegment().asSlice(i * keyType.sizePadded()), keys.get(i));
                 }
                 items_delete_batch(arena, allocated.keySegment());
             } else {
@@ -275,22 +306,35 @@ public class BPFTable<K, V> {
         }
     }
 
-    private static final HandlerWithErrno<Integer> BPF_UPDATE_BATCH = new HandlerWithErrno<>("bpf_update_batch", FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
+    private static final HandlerWithErrno<Integer> BPF_UPDATE_BATCH =
+            new HandlerWithErrno<>(
+                    "bpf_update_batch",
+                    FunctionDescriptor.of(
+                            ValueLayout.JAVA_INT,
+                            ValueLayout.JAVA_INT,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER));
 
-    private static ResultAndErr<Integer> bpf_update_batch(Arena arena, int map_fd, @Nullable MemorySegment keys, @Nullable MemorySegment values, MemorySegment count) {
+    private static ResultAndErr<Integer> bpf_update_batch(
+            Arena arena,
+            int map_fd,
+            @Nullable MemorySegment keys,
+            @Nullable MemorySegment values,
+            MemorySegment count) {
         return BPF_UPDATE_BATCH.call(arena, map_fd, keys, values, count);
     }
 
     /**
      * Update all the key-value pairs in the map provided.
-     * <p>
-     * The arrays must be the same length, between 1 and the maximum number
-     * of entries.
      *
-     * @param keys   keys array to update
+     * <p>The arrays must be the same length, between 1 and the maximum number of entries.
+     *
+     * @param keys keys array to update
      * @param values values array to update
      */
-    public void items_update_batch(Arena arena, @Nullable MemorySegment keys, @Nullable MemorySegment values) {
+    public void items_update_batch(
+            Arena arena, @Nullable MemorySegment keys, @Nullable MemorySegment values) {
         var count = sanity_check_keys_values(keys, values);
         var countRef = arena.allocate(ValueLayout.JAVA_LONG);
         countRef.set(ValueLayout.JAVA_LONG, 0, count);
@@ -300,30 +344,62 @@ public class BPFTable<K, V> {
         }
     }
 
-    /**
-     * Look up and delete all the key-value pairs in the map.
-     */
+    /** Look up and delete all the key-value pairs in the map. */
     public List<Map.Entry<K, V>> items_lookup_and_delete_batch() {
         return items_lookup_and_optionally_delete_batch(true);
     }
 
-    private static final HandlerWithErrno<Integer> BPF_LOOKUP_AND_DELETE_BATCH = new HandlerWithErrno<>("bpf_lookup_and_delete_batch", FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
+    private static final HandlerWithErrno<Integer> BPF_LOOKUP_AND_DELETE_BATCH =
+            new HandlerWithErrno<>(
+                    "bpf_lookup_and_delete_batch",
+                    FunctionDescriptor.of(
+                            ValueLayout.JAVA_INT,
+                            ValueLayout.JAVA_INT,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER));
 
-    private ResultAndErr<Integer> bpf_lookup_and_delete_batch(Arena arena, int map_fd, @Nullable MemorySegment in_batch, @Nullable MemorySegment out_batch, @Nullable MemorySegment keys, @Nullable MemorySegment values, MemorySegment count) {
-        return BPF_LOOKUP_AND_DELETE_BATCH.call(arena, map_fd, in_batch, out_batch, keys, values, count);
+    private ResultAndErr<Integer> bpf_lookup_and_delete_batch(
+            Arena arena,
+            int map_fd,
+            @Nullable MemorySegment in_batch,
+            @Nullable MemorySegment out_batch,
+            @Nullable MemorySegment keys,
+            @Nullable MemorySegment values,
+            MemorySegment count) {
+        return BPF_LOOKUP_AND_DELETE_BATCH.call(
+                arena, map_fd, in_batch, out_batch, keys, values, count);
     }
 
-    private static final HandlerWithErrno<Integer> BPF_LOOKUP_BATCH = new HandlerWithErrno<>("bpf_lookup_batch", FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
+    private static final HandlerWithErrno<Integer> BPF_LOOKUP_BATCH =
+            new HandlerWithErrno<>(
+                    "bpf_lookup_batch",
+                    FunctionDescriptor.of(
+                            ValueLayout.JAVA_INT,
+                            ValueLayout.JAVA_INT,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER,
+                            PanamaUtil.POINTER));
 
-
-    private ResultAndErr<Integer> bpf_lookup_batch(Arena arena, int map_fd, @Nullable MemorySegment in_batch, @Nullable MemorySegment out_batch, @Nullable MemorySegment keys, @Nullable MemorySegment values, MemorySegment count) {
+    private ResultAndErr<Integer> bpf_lookup_batch(
+            Arena arena,
+            int map_fd,
+            @Nullable MemorySegment in_batch,
+            @Nullable MemorySegment out_batch,
+            @Nullable MemorySegment keys,
+            @Nullable MemorySegment values,
+            MemorySegment count) {
         return BPF_LOOKUP_BATCH.call(arena, map_fd, in_batch, out_batch, keys, values, count);
     }
 
     /**
      * Look up and optionally delete all the key-value pairs in the map.
-     * <p>
-     * Note: lookup and delete batch on a keys subset is not supported by
+     *
+     * <p>Note: lookup and delete batch on a keys subset is not supported by
      *
      * @param delete whether to delete the key-value pairs when true, else just look up
      * @return stream of key-value pairs that have been looked up and deleted
@@ -340,7 +416,24 @@ public class BPFTable<K, V> {
             while (true) {
                 count_ref.set(ValueLayout.JAVA_LONG, 0, allocated.count() - total);
                 var in_batch = total == 0 ? MemorySegment.NULL : out_batch;
-                var res = delete ? bpf_lookup_and_delete_batch(arena, mapFd, in_batch, out_batch, allocated.keySegment(), allocated.leafSegment(), count_ref) : bpf_lookup_batch(arena, mapFd, in_batch, out_batch, allocated.keySegment(), allocated.leafSegment(), count_ref);
+                var res =
+                        delete
+                                ? bpf_lookup_and_delete_batch(
+                                        arena,
+                                        mapFd,
+                                        in_batch,
+                                        out_batch,
+                                        allocated.keySegment(),
+                                        allocated.leafSegment(),
+                                        count_ref)
+                                : bpf_lookup_batch(
+                                        arena,
+                                        mapFd,
+                                        in_batch,
+                                        out_batch,
+                                        allocated.keySegment(),
+                                        allocated.leafSegment(),
+                                        count_ref);
                 total += (int) count_ref.get(ValueLayout.JAVA_LONG, 0);
                 if (res.err() != 0 && res.err() != ERRNO_ENOENT) {
                     throw new BPFCallException(bpf_cmd + " failed", res.err());
@@ -356,18 +449,27 @@ public class BPFTable<K, V> {
             assert allocated.leafSegment() != null;
             var entries = new ArrayList<Map.Entry<K, V>>();
             for (int i = 0; i < total; i++) {
-                var key = keyType.<K>parseMemory(allocated.keySegment().asSlice(i * keyType.sizePadded(), keyType.layout().byteSize()));
-                var value = leafType.<V>parseMemory(allocated.leafSegment().asSlice(i * leafType.sizePadded(), leafType.layout().byteSize()));
+                var key =
+                        keyType.<K>parseMemory(
+                                allocated
+                                        .keySegment()
+                                        .asSlice(
+                                                i * keyType.sizePadded(),
+                                                keyType.layout().byteSize()));
+                var value =
+                        leafType.<V>parseMemory(
+                                allocated
+                                        .leafSegment()
+                                        .asSlice(
+                                                i * leafType.sizePadded(),
+                                                leafType.layout().byteSize()));
                 entries.add(new AbstractMap.SimpleEntry<>(key, value));
             }
             return entries;
         }
     }
 
-
-    /**
-     * Store <code>null</code> in every entry
-     */
+    /** Store <code>null</code> in every entry */
     public void zero() {
         try (var arena = Arena.ofConfined()) {
             for (var key : keySet()) {
@@ -422,22 +524,24 @@ public class BPFTable<K, V> {
     // TODO: implement log histrograms
 
     /**
-     * Prints a table as a linear histogram. This is intended to span integer
-     * ranges, eg, from 0 to 100. The val_type argument is optional, and is a
-     * column header.  If the histogram has a secondary key, multiple tables
-     * will print and section_header can be used as a header description for
-     * each.  If section_print_fn is not null, it will be passed the bucket
-     * value to format into a string as it sees fit. If bucket_fn is not null,
-     * it will be used to produce a bucket value for the histogram keys.
-     * If the value of strip_leading_zero is not False, prints a histogram
-     * that is omitted leading zeros from the beginning.
-     * If bucket_sort_fn is not null, it will be used to sort the buckets
-     * before iterating them, and it is useful when there are multiple fields
-     * in the secondary key.
-     * The maximum index allowed is linear_index_max (1025), which is hoped
-     * to be sufficient for integer ranges spanned.
+     * Prints a table as a linear histogram. This is intended to span integer ranges, eg, from 0 to
+     * 100. The val_type argument is optional, and is a column header. If the histogram has a
+     * secondary key, multiple tables will print and section_header can be used as a header
+     * description for each. If section_print_fn is not null, it will be passed the bucket value to
+     * format into a string as it sees fit. If bucket_fn is not null, it will be used to produce a
+     * bucket value for the histogram keys. If the value of strip_leading_zero is not False, prints
+     * a histogram that is omitted leading zeros from the beginning. If bucket_sort_fn is not null,
+     * it will be used to sort the buckets before iterating them, and it is useful when there are
+     * multiple fields in the secondary key. The maximum index allowed is linear_index_max (1025),
+     * which is hoped to be sufficient for integer ranges spanned.
      */
-    public void print_linear_hist(String val_type, String section_header, String section_print_fn, String bucket_fn, String strip_leading_zero, String bucket_sort_fn) {
+    public void print_linear_hist(
+            String val_type,
+            String section_header,
+            String section_print_fn,
+            String bucket_fn,
+            String strip_leading_zero,
+            String bucket_sort_fn) {
         // TODO: implement structs
         Integer[] vals = new Integer[HistogramUtils.LINEAR_INDEX_MAX];
         for (var entry : entrySet()) {
@@ -446,10 +550,17 @@ public class BPFTable<K, V> {
             try {
                 vals[key.hashCode()] = value.hashCode();
             } catch (IndexOutOfBoundsException e) {
-                throw new IndexOutOfBoundsException("Index in print_linear_hist() of " + key.hashCode() + " exceeds max of " + HistogramUtils.LINEAR_INDEX_MAX);
+                throw new IndexOutOfBoundsException(
+                        "Index in print_linear_hist() of "
+                                + key.hashCode()
+                                + " exceeds max of "
+                                + HistogramUtils.LINEAR_INDEX_MAX);
             }
         }
-        HistogramUtils.printLinearHist(Arrays.asList(vals), val_type, strip_leading_zero != null && !strip_leading_zero.equals("False"));
+        HistogramUtils.printLinearHist(
+                Arrays.asList(vals),
+                val_type,
+                strip_leading_zero != null && !strip_leading_zero.equals("False"));
     }
 
     public int getMaxEntries() {
@@ -458,7 +569,8 @@ public class BPFTable<K, V> {
 
     public static class BaseMapTable<K, V> extends BPFTable<K, V> implements Map<K, V> {
 
-        public BaseMapTable(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
+        public BaseMapTable(
+                BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
             super(bpf, mapId, mapFd, keyType, leafType, name);
         }
 
@@ -485,28 +597,40 @@ public class BPFTable<K, V> {
     }
 
     public static class HashTable<K, V> extends BaseMapTable<K, V> {
-        public HashTable(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
+        public HashTable(
+                BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
             super(bpf, mapId, mapFd, keyType, leafType, name);
         }
 
-        public static final TableProvider<HashTable<@Unsigned Long, @Unsigned Long>> UINT64T_MAP_PROVIDER = (bpf, mapId, mapFd, name) -> new HashTable<>(bpf, mapId, mapFd, BPFType.BPFIntType.UINT64, BPFType.BPFIntType.UINT64, name);
+        public static final TableProvider<HashTable<@Unsigned Long, @Unsigned Long>>
+                UINT64T_MAP_PROVIDER =
+                        (bpf, mapId, mapFd, name) ->
+                                new HashTable<>(
+                                        bpf,
+                                        mapId,
+                                        mapFd,
+                                        BPFType.BPFIntType.UINT64,
+                                        BPFType.BPFIntType.UINT64,
+                                        name);
 
-        public static <K, V> TableProvider<HashTable<K, V>> createProvider(BPFType keyType, BPFType leafType) {
-            return (bpf, mapId, mapFd, name) -> new HashTable<>(bpf, mapId, mapFd, keyType, leafType, name);
+        public static <K, V> TableProvider<HashTable<K, V>> createProvider(
+                BPFType keyType, BPFType leafType) {
+            return (bpf, mapId, mapFd, name) ->
+                    new HashTable<>(bpf, mapId, mapFd, keyType, leafType, name);
         }
     }
 
     public static class LruHash<K, V> extends BaseMapTable<K, V> {
-        public LruHash(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
+        public LruHash(
+                BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
             super(bpf, mapId, mapFd, keyType, leafType, name);
         }
     }
 
-    /**
-     * Base class for all array like types, fixed size array
-     */
+    /** Base class for all array like types, fixed size array */
     public static class Array<K, V> extends BPFTable<K, V> implements List<V> {
-        public Array(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
+        public Array(
+                BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
             super(bpf, mapId, mapFd, keyType, leafType, name);
             if (!(keyType instanceof BPFType.BPFIntType)) {
                 throw new AssertionError("Array key must be an integer type");
@@ -534,9 +658,7 @@ public class BPFTable<K, V> {
             return values().toArray(a);
         }
 
-        /**
-         * Not supported, as array is fixed size
-         */
+        /** Not supported, as array is fixed size */
         @Override
         public boolean add(V v) {
             throw new UnsupportedOperationException("Array is fixed size");
@@ -547,25 +669,19 @@ public class BPFTable<K, V> {
             return values().containsAll(c);
         }
 
-        /**
-         * Not supported, as array is fixed size
-         */
+        /** Not supported, as array is fixed size */
         @Override
         public boolean addAll(@NotNull Collection<? extends V> c) {
             throw new UnsupportedOperationException("Array is fixed size");
         }
 
-        /**
-         * Not supported, as array is fixed size
-         */
+        /** Not supported, as array is fixed size */
         @Override
         public boolean addAll(int index, @NotNull Collection<? extends V> c) {
             throw new UnsupportedOperationException("Array is fixed size");
         }
 
-        /**
-         * Nulls all elements
-         */
+        /** Nulls all elements */
         @Override
         public boolean removeAll(@NotNull Collection<?> c) {
             var toRemove = new ArrayList<K>();
@@ -613,17 +729,13 @@ public class BPFTable<K, V> {
             return put((K) (Object) index, element);
         }
 
-        /**
-         * Not supported, as array is fixed size
-         */
+        /** Not supported, as array is fixed size */
         @Override
         public void add(int index, V element) {
             throw new UnsupportedOperationException("Array is fixed size");
         }
 
-        /**
-         * nulls the element
-         */
+        /** nulls the element */
         @Override
         public V remove(int index) {
             var val = get(index);
@@ -644,12 +756,21 @@ public class BPFTable<K, V> {
         @SuppressWarnings("unchecked")
         @Override
         public int indexOf(Object o) {
-            return ((Optional<Integer>) entrySet().stream().filter(e -> e.getValue().equals(o)).map(Map.Entry::getKey).findFirst()).orElse(-1);
+            return ((Optional<Integer>)
+                            entrySet().stream()
+                                    .filter(e -> e.getValue().equals(o))
+                                    .map(Map.Entry::getKey)
+                                    .findFirst())
+                    .orElse(-1);
         }
 
         @Override
         public int lastIndexOf(Object o) {
-            var findings = entrySet().stream().filter(e -> e.getValue().equals(o)).map(Map.Entry::getKey).toArray();
+            var findings =
+                    entrySet().stream()
+                            .filter(e -> e.getValue().equals(o))
+                            .map(Map.Entry::getKey)
+                            .toArray();
             return findings.length == 0 ? -1 : (int) findings[findings.length - 1];
         }
 
@@ -718,9 +839,7 @@ public class BPFTable<K, V> {
             return listIterator();
         }
 
-        /**
-         * Not supported, as array is fixed size
-         */
+        /** Not supported, as array is fixed size */
         @NotNull
         @Override
         public List<V> subList(int fromIndex, int toIndex) {

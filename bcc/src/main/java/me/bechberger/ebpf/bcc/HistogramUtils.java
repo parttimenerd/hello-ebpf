@@ -11,22 +11,22 @@ class HistogramUtils {
     public static final int LOG2_INDEX_MAX = 65;
     public static final int LINEAR_INDEX_MAX = 1025;
 
-    public record HistorgramEntry(int intervalStart, int intervalEnd, int count) {
-    }
+    public record HistorgramEntry(int intervalStart, int intervalEnd, int count) {}
 
     /**
      * Translation of BCC's JSON histogram
+     *
      * @param ts time stamp
      * @param valType value type
      * @param data histogram data
      */
-    public record Histogram(String ts, String valType, List<HistorgramEntry> data) {
-    }
+    public record Histogram(String ts, String valType, List<HistorgramEntry> data) {}
+
     /*
     def _get_json_hist(vals, val_type, section_bucket=None):
 
      */
-    /** Translation of BCC's <code>_get_json_hist</code>*/
+    /** Translation of BCC's <code>_get_json_hist</code> */
     public static Histogram _getJsonHist(List<Integer> values, String valType) {
         var histList = new java.util.ArrayList<HistorgramEntry>();
         int maxNonZeroIdx = 0;
@@ -50,8 +50,7 @@ class HistogramUtils {
         return new Histogram(formattedDateTime, valType, histList);
     }
 
-
-    /** Translation of BCC's <code>_stars</code>*/
+    /** Translation of BCC's <code>_stars</code> */
     public static String _stars(int val, int valMax, int width) {
         int i = 0;
         StringBuilder text = new StringBuilder();
@@ -97,8 +96,9 @@ class HistogramUtils {
                 print(body % (i, val, stars,
                               _stars(val, val_max, stars)))
      */
-    /** Translation of BCC's <code>_print_linear_hist</code>*/
-    public static void printLinearHist(List<Integer> values, String valType, boolean stripLeadingZero) {
+    /** Translation of BCC's <code>_print_linear_hist</code> */
+    public static void printLinearHist(
+            List<Integer> values, String valType, boolean stripLeadingZero) {
         int valMax = 0;
         int idxMax = -1;
         for (int i = 0; i < values.size(); i++) {

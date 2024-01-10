@@ -9,9 +9,9 @@ import java.nio.file.Path;
 
 /**
  * Read lines from a file and can be interrupted at any time.
- * <p>
- * Normally BufferedReader.readLine() blocks until a line is available, but we can
- * just close the wrapped InputStream to interrupt it.
+ *
+ * <p>Normally BufferedReader.readLine() blocks until a line is available, but we can just close the
+ * wrapped InputStream to interrupt it.
  */
 public class LineReader {
 
@@ -28,9 +28,7 @@ public class LineReader {
         this.reader = new BufferedReader(new InputStreamReader(input));
     }
 
-    /**
-     * Close the file
-     */
+    /** Close the file */
     public void close() {
         try {
             input.close();
@@ -39,9 +37,7 @@ public class LineReader {
         }
     }
 
-    /**
-     * Read a line from the file, or return null if the file is closed
-     */
+    /** Read a line from the file, or return null if the file is closed */
     public String readLine() {
         try {
             return reader.readLine();
