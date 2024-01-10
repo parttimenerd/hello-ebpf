@@ -1,12 +1,16 @@
 package me.bechberger.ebpf.bcc;
 
 import me.bechberger.ebpf.annotations.AnnotationInstances;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -254,6 +258,126 @@ public sealed interface BPFType {
         @Override
         public AnnotatedClass javaClass() {
             return wrapped.javaClass();
+        }
+    }
+
+
+    record BPFUnionTypeMember(String name, BPFType type) {}
+
+    /**
+     * Union
+     * @param bpfName
+     * @param shared type that is shared between all members
+     * @param members members of the union, including the shared type members
+     */
+    record BPFUnionType(String bpfName, BPFType shared, List<BPFUnionTypeMember> members) implements BPFType {
+
+        @Override
+        public MemoryLayout layout() {
+            return MemoryLayout.sequenceLayout(size(), ValueLayout.JAVA_BYTE);
+        }
+
+        @Override
+        public long size() {
+            return members.stream()
+                    .mapToLong(member -> member.type.size())
+                    .max()
+                    .orElseThrow();
+        }
+
+        @Override
+        public MemoryParser parser() {
+            return segment -> {
+                Map<String, Object> possibleMembers = new HashMap<>();
+                for (var member : members) {
+                    // try to parse all members, but only keep the ones that work
+                    try {
+                        possibleMembers.put(member.name(), member.type.parseMemory(segment));
+                    } catch (IllegalArgumentException e) {
+                    }
+                }
+                return new BPFUnionFromMemory<>(shared.parseMemory(segment), possibleMembers);
+            };
+        }
+
+        /** Return the memory setter, only works if the passed union has a set current member */
+        @Override
+        public MemorySetter setter() {
+            return (segment, obj) -> {
+                BPFUnionFromMemory<?> union = (BPFUnionFromMemory<?>) obj;
+                if (union.current() == null) {
+                    throw new IllegalArgumentException("Union must have a current member");
+                }
+                BPFUnionTypeMember current = members().stream().filter(m -> m.name.equals(union.current())).findFirst().orElseThrow();
+                current.type.setMemory(segment, union.get(union.current()));
+            };
+        }
+
+        @Override
+        public AnnotatedClass javaClass() {
+            return new AnnotatedClass(BPFUnion.class, List.of());
+        }
+    }
+
+    interface BPFUnion<S> {
+        <S> S shared();
+        <T> T get(String name);
+
+        <T> void set(String name, T value);
+
+        @Nullable String current();
+
+        void setCurrent(String name);
+    }
+
+    static final class BPFUnionFromMemory<S> implements BPFUnion<S> {
+        private final S shared;
+        private final Map<String, Object> possibleMembers;
+
+        @Nullable String current = null;
+
+        public BPFUnionFromMemory(S shared, Map<String, Object> possibleMembers) {
+            this.shared = shared;
+            this.possibleMembers = possibleMembers;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public <T> T get(String name) {
+            return Objects.requireNonNull((T) possibleMembers.get(name));
+        }
+
+        @Override
+        public <T> void set(String name, T value) {
+            possibleMembers.put(name, value);
+            setCurrent(name);
+        }
+
+        @Override
+        public S shared() {
+            return shared;
+        }
+
+        @Override
+        public @Nullable String current() {
+            return current;
+        }
+
+        @Override
+        public void setCurrent(String current) {
+            if (!possibleMembers.containsKey(current)) {
+                throw new IllegalArgumentException("Union does not have member " + current);
+            }
+            this.current = current;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (BPFUnionFromMemory<?>) obj;
+            return Objects.equals(this.shared, that.shared) &&
+                    Objects.equals(this.possibleMembers, that.possibleMembers);
         }
     }
 }
