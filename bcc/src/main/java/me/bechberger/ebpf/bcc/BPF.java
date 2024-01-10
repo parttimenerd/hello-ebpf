@@ -1,7 +1,8 @@
 package me.bechberger.ebpf.bcc;
 
-import me.bechberger.ebpf.raw.Lib;
-import org.jetbrains.annotations.Nullable;
+import static java.lang.foreign.ValueLayout.JAVA_INT;
+import static me.bechberger.ebpf.bcc.PanamaUtil.HandlerWithErrno;
+import static me.bechberger.ebpf.bcc.PanamaUtil.ResultAndErr;
 
 import java.io.IOException;
 import java.lang.foreign.Arena;
@@ -14,14 +15,10 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import me.bechberger.ebpf.raw.Lib;
+import org.jetbrains.annotations.Nullable;
 
-import static java.lang.foreign.ValueLayout.JAVA_INT;
-import static me.bechberger.ebpf.bcc.PanamaUtil.HandlerWithErrno;
-import static me.bechberger.ebpf.bcc.PanamaUtil.ResultAndErr;
-
-/**
- * Main class for BPF functionality, modelled after the BPF class from the bcc Python bindings
- */
+/** Main class for BPF functionality, modelled after the BPF class from the bcc Python bindings */
 public class BPF implements AutoCloseable {
 
     static {
@@ -31,16 +28,15 @@ public class BPF implements AutoCloseable {
             try {
                 System.load("/lib/x86_64-linux-gnu/libbcc.so");
             } catch (UnsatisfiedLinkError e2) {
-                System.err.println("Failed to load libbcc.so.0, pass the location of the lib folder " +
-                        "via -Djava.library.path after you installed it");
+                System.err.println(
+                        "Failed to load libbcc.so.0, pass the location of the lib folder "
+                                + "via -Djava.library.path after you installed it");
                 System.exit(1);
             }
         }
     }
 
-    /**
-     * Construct a BPF object fluently
-     */
+    /** Construct a BPF object fluently */
     public static class BCCBuilder {
 
         private String text;
@@ -49,9 +45,7 @@ public class BPF implements AutoCloseable {
         private boolean allowRLimit = true;
         private int debug;
 
-
-        private BCCBuilder() {
-        }
+        private BCCBuilder() {}
 
         public BCCBuilder withText(String text) {
             this.text = text;
@@ -90,65 +84,68 @@ public class BPF implements AutoCloseable {
     }
 
     /**
-     * Prefixes for system calls on different supported platforms (but the Java bindings are only tested on x86_64)
+     * Prefixes for system calls on different supported platforms (but the Java bindings are only
+     * tested on x86_64)
      */
-    private static final List<String> syscallPrefixes = List.of("sys_", "__x64_sys_", "__x32_compat_sys_",
-            "__ia32_compat_sys_", "__arm64_sys_", "__s390x_sys_", "__s390_sys_");
+    private static final List<String> syscallPrefixes =
+            List.of(
+                    "sys_",
+                    "__x64_sys_",
+                    "__x32_compat_sys_",
+                    "__ia32_compat_sys_",
+                    "__arm64_sys_",
+                    "__s390x_sys_",
+                    "__s390_sys_");
 
-    /**
-     * eBPF program text
-     */
+    /** eBPF program text */
     private final String text;
 
-    /**
-     * debug flags
-     */
+    /** debug flags */
     private final int debug;
 
     private MemorySegment module;
 
-    /**
-     * Disable the clean-up on close?
-     */
+    /** Disable the clean-up on close? */
     private boolean disableCleanup = false;
+
     private static final Map<Integer, SymbolCache> _sym_caches = new HashMap<>();
 
-    /**
-     * eBPF program function name -> function
-     */
+    /** eBPF program function name -> function */
     private final Map<String, BPFFunction> funcs = new HashMap<>();
+
     private final Map<String, BPFTable<?, ?>> tables = new HashMap<>();
 
     private static final int DEFAULT_PROBE_LIMIT = 1000;
     private static int _num_open_probes = 0;
 
-    /**
-     * event name -> function name -> file descriptor
-     */
+    /** event name -> function name -> file descriptor */
     private final Map<String, Map<String, Integer>> kprobe_fds = new HashMap<>();
 
     private LineReader traceFile = null;
 
-
     /**
      * Construct a BPF object from a string
-     * <p>
-     * Call registerCleanup afterwards
+     *
+     * <p>Call registerCleanup afterwards
      */
-    private BPF(String text, String fileName, @Nullable Path hdrFile, boolean allowRLimit, int debug) {
+    private BPF(
+            String text, String fileName, @Nullable Path hdrFile, boolean allowRLimit, int debug) {
         this.text = text;
         MemorySegment textNative = Arena.global().allocateUtf8String(text);
         this.debug = debug;
 
         /*
-                self.module = lib.bpf_module_create_c_from_string(text,
-                                                          self.debug,
-                                                          cflags_array, len(cflags_array),
-                                                          allow_rlimit, device)
-         */
-        module = Lib.bpf_module_create_c_from_string(textNative, debug, MemorySegment.NULL, 0, allowRLimit, MemorySegment.NULL);
+               self.module = lib.bpf_module_create_c_from_string(text,
+                                                         self.debug,
+                                                         cflags_array, len(cflags_array),
+                                                         allow_rlimit, device)
+        */
+        module =
+                Lib.bpf_module_create_c_from_string(
+                        textNative, debug, MemorySegment.NULL, 0, allowRLimit, MemorySegment.NULL);
 
-        if (module == null) throw new RuntimeException(STR."Failed to compile BPF module \{fileName}");
+        if (module == null)
+            throw new RuntimeException(STR."Failed to compile BPF module \{fileName}");
 
         trace_autoload();
     }
@@ -165,17 +162,13 @@ public class BPF implements AutoCloseable {
         Runtime.getRuntime().addShutdownHook(new Thread(this::cleanup));
     }
 
-    /**
-     * Loaded ebpf function
-     */
-    public record BPFFunction(BPF BPF, String name, int fd) {
-    }
-
+    /** Loaded ebpf function */
+    public record BPFFunction(BPF BPF, String name, int fd) {}
 
     /**
      * Does the BPF program contain a the given function?
-     * <p/>
-     * Uses a regex to find the function, so it my be failing.
+     *
+     * <p>Uses a regex to find the function, so it my be failing.
      *
      * @param name name of the function
      */
@@ -183,27 +176,52 @@ public class BPF implements AutoCloseable {
         return Pattern.compile(STR." \{name}\\(.*\\).*\\{").matcher(text).find();
     }
 
-    private static HandlerWithErrno<Integer> BCC_FUNC_LOAD = new HandlerWithErrno<>("bcc_func_load",
-            FunctionDescriptor.of(JAVA_INT,
-                    ValueLayout.ADDRESS,
-                    JAVA_INT,
-                    ValueLayout.ADDRESS,
-                    ValueLayout.ADDRESS,
-                    JAVA_INT,
-                    ValueLayout.ADDRESS,
-                    JAVA_INT,
-                    JAVA_INT,
-                    ValueLayout.ADDRESS,
-                    JAVA_INT,
-                    ValueLayout.ADDRESS,
-                    JAVA_INT
-            ));
+    private static HandlerWithErrno<Integer> BCC_FUNC_LOAD =
+            new HandlerWithErrno<>(
+                    "bcc_func_load",
+                    FunctionDescriptor.of(
+                            JAVA_INT,
+                            ValueLayout.ADDRESS,
+                            JAVA_INT,
+                            ValueLayout.ADDRESS,
+                            ValueLayout.ADDRESS,
+                            JAVA_INT,
+                            ValueLayout.ADDRESS,
+                            JAVA_INT,
+                            JAVA_INT,
+                            ValueLayout.ADDRESS,
+                            JAVA_INT,
+                            ValueLayout.ADDRESS,
+                            JAVA_INT));
 
-    private static ResultAndErr<Integer> bcc_func_load(Arena arena, MemorySegment module, int prog_type, MemorySegment funcNameNative,
-                                                       MemorySegment funcStart, int funcSize, MemorySegment license, int kernVersion,
-                                                       int logLevel, MemorySegment logBuf, int logSize, MemorySegment device, int attachType) {
-        return BCC_FUNC_LOAD.call(arena, module, prog_type, funcNameNative, funcStart, funcSize, license, kernVersion,
-                logLevel, logBuf, logSize, device, attachType);
+    private static ResultAndErr<Integer> bcc_func_load(
+            Arena arena,
+            MemorySegment module,
+            int prog_type,
+            MemorySegment funcNameNative,
+            MemorySegment funcStart,
+            int funcSize,
+            MemorySegment license,
+            int kernVersion,
+            int logLevel,
+            MemorySegment logBuf,
+            int logSize,
+            MemorySegment device,
+            int attachType) {
+        return BCC_FUNC_LOAD.call(
+                arena,
+                module,
+                prog_type,
+                funcNameNative,
+                funcStart,
+                funcSize,
+                license,
+                kernVersion,
+                logLevel,
+                logBuf,
+                logSize,
+                device,
+                attachType);
     }
 
     /**
@@ -212,7 +230,8 @@ public class BPF implements AutoCloseable {
      * @param func_name name of the function to load
      * @param prog_type type of the program (Lib.BPF_PROG_TYPE_*)
      */
-    public BPFFunction load_func(String func_name, int prog_type, MemorySegment device, int attach_type) {
+    public BPFFunction load_func(
+            String func_name, int prog_type, MemorySegment device, int attach_type) {
         if (funcs.containsKey(func_name)) return funcs.get(func_name);
         if (!doesFunctionExistInText(func_name))
             throw new RuntimeException(STR."Trying to use undefined function \{func_name}");
@@ -227,16 +246,30 @@ public class BPF implements AutoCloseable {
                 log_level = 1;
             }
             try {
-                var res = bcc_func_load(arena, module, prog_type, funcNameNative,
-                        Lib.bpf_function_start(module, funcNameNative),
-                        (int) Lib.bpf_function_size(module, funcNameNative),
-                        Lib.bpf_module_license(module), Lib.bpf_module_kern_version(module),
-                        log_level, MemorySegment.NULL, 0, device, attach_type);
+                var res =
+                        bcc_func_load(
+                                arena,
+                                module,
+                                prog_type,
+                                funcNameNative,
+                                Lib.bpf_function_start(module, funcNameNative),
+                                (int) Lib.bpf_function_size(module, funcNameNative),
+                                Lib.bpf_module_license(module),
+                                Lib.bpf_module_kern_version(module),
+                                log_level,
+                                MemorySegment.NULL,
+                                0,
+                                device,
+                                attach_type);
                 if (res.result() < 0) {
                     disableCleanup = true;
                     if (res.err() == PanamaUtil.ERRNO_PERM_ERROR)
-                        throw new BPFCallException("Need to run with root priviledges to load BPF functions, bcc_load_func failed", res.err());
-                    throw new BPFCallException(STR."Failed to load BPF function \{func_name}", res.err());
+                        throw new BPFCallException(
+                                "Need to run with root priviledges to load BPF functions,"
+                                        + " bcc_load_func failed",
+                                res.err());
+                    throw new BPFCallException(
+                            STR."Failed to load BPF function \{func_name}", res.err());
                 }
                 var fn = new BPFFunction(this, func_name, res.result());
                 funcs.put(func_name, fn);
@@ -269,7 +302,8 @@ public class BPF implements AutoCloseable {
         }
     }
 
-    public record TraceFields(String task, int pid, String cpu, String flags, double ts, String msg) {
+    public record TraceFields(
+            String task, int pid, String cpu, String flags, double ts, String msg) {
         public String format(String fmt) {
             String fields = fmt;
             fields = fields.replace("{0}", task);
@@ -284,8 +318,8 @@ public class BPF implements AutoCloseable {
 
     /**
      * Open the trace_pipe if not already open
-     * <p/>
-     * Currently, doesn't support non-blocking mode
+     *
+     * <p>Currently, doesn't support non-blocking mode
      */
     public LineReader trace_open() {
         /*    def trace_open(self, nonblocking=False):
@@ -312,10 +346,10 @@ public class BPF implements AutoCloseable {
     }
 
     /**
-     * Read from the kernel debug trace pipe and return the fields.
-     * Returns null if no line was read.
-     * <p/>
-     * Currently, doesn't support non-blocking mode
+     * Read from the kernel debug trace pipe and return the fields. Returns null if no line was
+     * read.
+     *
+     * <p>Currently, doesn't support non-blocking mode
      */
     public TraceFields trace_fields() {
         while (true) {
@@ -349,16 +383,14 @@ public class BPF implements AutoCloseable {
         }
     }
 
-    /**
-     * Read from the kernel debug trace pipe and return one line
-     */
+    /** Read from the kernel debug trace pipe and return one line */
     public String trace_readline() {
         return trace_open().readLine();
     }
 
     /**
-     * Read from the kernel debug trace pipe and print on stdout.
-     * If fmt is specified, apply as a format string to the output.
+     * Read from the kernel debug trace pipe and print on stdout. If fmt is specified, apply as a
+     * format string to the output.
      *
      * @param format format function
      */
@@ -379,13 +411,12 @@ public class BPF implements AutoCloseable {
     }
 
     /**
-     * Read from the kernel debug trace pipe and print on stdout.
-     * If fmt is specified, apply as a format string to the output. See
-     * trace_fields for the members of the tuple
-     * example: trace_print(fmt="pid {1}, msg = {5}")
-     * <p/>
-     * The format string is not as expressive as in Python, therefore, please use
-     * the {@link #trace_print(Function)} method if you need more flexibility.
+     * Read from the kernel debug trace pipe and print on stdout. If fmt is specified, apply as a
+     * format string to the output. See trace_fields for the members of the tuple example:
+     * trace_print(fmt="pid {1}, msg = {5}")
+     *
+     * <p>The format string is not as expressive as in Python, therefore, please use the {@link
+     * #trace_print(Function)} method if you need more flexibility.
      *
      * @param fmt format string
      */
@@ -397,17 +428,15 @@ public class BPF implements AutoCloseable {
         trace_print((Function<TraceFields, String>) null);
     }
 
-    /**
-     * Read from the kernel debug trace pipe and print on stdout.
-     */
+    /** Read from the kernel debug trace pipe and print on stdout. */
     public void trace_print() {
         trace_print((String) null);
     }
 
     /**
-     * Given a Kernel function name that represents a syscall but already has a
-     * prefix included, transform it to current system's prefix. For example,
-     * if "sys_clone" provided, the helper may translate it to "__x64_sys_clone".
+     * Given a Kernel function name that represents a syscall but already has a prefix included,
+     * transform it to current system's prefix. For example, if "sys_clone" provided, the helper may
+     * translate it to "__x64_sys_clone".
      */
     private String fix_syscall_fnname(String fnName) {
         for (var prefix : syscallPrefixes) {
@@ -427,12 +456,16 @@ public class BPF implements AutoCloseable {
     /**
      * Attach a function to a kprobe
      *
-     * @param event     name of the event to attach to
+     * @param event name of the event to attach to
      * @param event_off event offset, can be 0
-     * @param fn_name   name of the function to attach
-     * @param event_re  event regex, can be null
+     * @param fn_name name of the function to attach
+     * @param event_re event regex, can be null
      */
-    public BPF attach_kprobe(@Nullable String event, int event_off, @Nullable String fn_name, @Nullable String event_re) {
+    public BPF attach_kprobe(
+            @Nullable String event,
+            int event_off,
+            @Nullable String fn_name,
+            @Nullable String event_re) {
         if (event_re != null) {
             var matches = get_kprobe_functions(event_re);
             _check_probe_quota(matches.size());
@@ -448,8 +481,10 @@ public class BPF implements AutoCloseable {
             }
             if (failed == matches.size()) {
                 var probesStr = String.join("/", probes);
-                throw new FailedToAttachException(STR."Failed to attach BPF program \{fn_name} to kprobe \{probesStr}" +
-                        "it's not traceable (either non-existing, inlined, or marked as \"notrace\")");
+                throw new FailedToAttachException(
+                        STR."Failed to attach BPF program \{fn_name} to kprobe \{probesStr}"
+                                + "it's not traceable (either non-existing, inlined, or marked as"
+                                + " \"notrace\")");
             }
             return this;
         }
@@ -464,16 +499,16 @@ public class BPF implements AutoCloseable {
             fd = Lib.bpf_attach_kprobe(fn.fd, 0, evNameNative, eventNative, event_off, 0);
         }
         if (fd < 0) {
-            throw new FailedToAttachException(STR."Failed to attach BPF program \{fn_name} to kprobe \{event}," +
-                    "it's not traceable (either non-existing, inlined, or marked as \"notrace\")");
+            throw new FailedToAttachException(
+                    STR."Failed to attach BPF program \{fn_name} to kprobe \{event},"
+                            + "it's not traceable (either non-existing, inlined, or marked as"
+                            + " \"notrace\")");
         }
         _add_kprobe_fd(ev_name, fn_name, fd);
         return this;
     }
 
-    /**
-     * Attach a function to a kprobe
-     */
+    /** Attach a function to a kprobe */
     public void attach_kprobe(String event, String fn_name) {
         attach_kprobe(event, 0, fn_name, null);
     }
@@ -486,7 +521,8 @@ public class BPF implements AutoCloseable {
     }
 
     private void detach_kprobe_event_by_fn(String ev_name, String fn_name) {
-        if (!kprobe_fds.containsKey(ev_name)) throw new RuntimeException(STR."Kprobe \{ev_name} is not attached");
+        if (!kprobe_fds.containsKey(ev_name))
+            throw new RuntimeException(STR."Kprobe \{ev_name} is not attached");
         var res = Lib.bpf_close_perf_event_fd(kprobe_fds.get(ev_name).get(fn_name));
         if (res < 0) throw new RuntimeException("Failed to close kprobe FD");
         _del_kprobe_fd(ev_name, fn_name);
@@ -499,10 +535,9 @@ public class BPF implements AutoCloseable {
         }
     }
 
-    /**
-     * get table without caching
-     */
-    public <T extends BPFTable<?, ?>> T get_table(String name, BPFTable.TableProvider<? extends T> provider) {
+    /** get table without caching */
+    public <T extends BPFTable<?, ?>> T get_table(
+            String name, BPFTable.TableProvider<? extends T> provider) {
         try (var arena = Arena.ofConfined()) {
             var nameNative = arena.allocateUtf8String(name);
             var mapId = Lib.bpf_table_id(module, nameNative);
@@ -513,34 +548,26 @@ public class BPF implements AutoCloseable {
         }
     }
 
-
-    /**
-     * get a map
-     */
+    /** get a map */
     @SuppressWarnings("unchecked")
-    public <T extends BPFTable<?, ?>> T get(String name, BPFTable.TableProvider<? extends T> provider) {
+    public <T extends BPFTable<?, ?>> T get(
+            String name, BPFTable.TableProvider<? extends T> provider) {
         return (T) tables.computeIfAbsent(name, k -> get_table(name, provider));
     }
 
-    /**
-     * Number of maps allocated
-     */
+    /** Number of maps allocated */
     public int size() {
         return tables.size();
     }
 
-    /**
-     * Remove map from cache
-     */
+    /** Remove map from cache */
     public boolean remove(String name) {
         var table = tables.remove(name);
         if (table == null) return false;
         return true;
     }
 
-    /**
-     * names of the maps
-     */
+    /** names of the maps */
     public Iterable<String> keys() {
         return tables.keySet();
     }
@@ -564,8 +591,10 @@ public class BPF implements AutoCloseable {
         var blacklist_file = Constants.DEBUGFS.resolve("kprobes").resolve("blacklist");
         Set<String> blacklist;
         try {
-            blacklist = Files.readAllLines(blacklist_file).stream()
-                    .map(line -> line.trim().split(" ")[1]).collect(Collectors.toSet());
+            blacklist =
+                    Files.readAllLines(blacklist_file).stream()
+                            .map(line -> line.trim().split(" ")[1])
+                            .collect(Collectors.toSet());
         } catch (IOException e) {
             if (e.getMessage().toLowerCase().contains("permission denied"))
                 throw new RuntimeException("Permission denied", e);
@@ -583,8 +612,10 @@ public class BPF implements AutoCloseable {
         var availFilterFile = Constants.TRACEFS.resolve("available_filter_functions");
         Set<String> availFilter;
         try {
-            availFilter = Files.readAllLines(availFilterFile).stream()
-                    .map(line -> line.trim().split(" ")[0]).collect(Collectors.toSet());
+            availFilter =
+                    Files.readAllLines(availFilterFile).stream()
+                            .map(line -> line.trim().split(" ")[0])
+                            .collect(Collectors.toSet());
         } catch (IOException e) {
             if (e.getMessage().toLowerCase().contains("permission denied"))
                 throw new RuntimeException("Permission denied", e);
@@ -609,16 +640,16 @@ public class BPF implements AutoCloseable {
         }
         for (String line : lines) {
             /* (t, fn) = line.rstrip().split()[1:3]
-                # Skip all functions defined between __init_begin and
-                # __init_end
-                if in_init_section == 0:
-                    if fn == b'__init_begin':
-                        in_init_section = 1
-                        continue
-                elif in_init_section == 1:
-                    if fn == b'__init_end':
-                        in_init_section = 2
-                    continue*/
+            # Skip all functions defined between __init_begin and
+            # __init_end
+            if in_init_section == 0:
+                if fn == b'__init_begin':
+                    in_init_section = 1
+                    continue
+            elif in_init_section == 1:
+                if fn == b'__init_end':
+                    in_init_section = 2
+                continue*/
             var parts = line.trim().split(" ");
             var t = parts[1];
             var fn = parts[2];
@@ -635,21 +666,21 @@ public class BPF implements AutoCloseable {
                 continue;
             }
             /* # Skip all functions defined between __irqentry_text_start and
-                # __irqentry_text_end
-                if in_irq_section == 0:
-                    if fn == b'__irqentry_text_start':
-                        in_irq_section = 1
-                        continue
-                    # __irqentry_text_end is not always after
-                    # __irqentry_text_start. But only happens when
-                    # no functions between two irqentry_text
-                    elif fn == b'__irqentry_text_end':
-                        in_irq_section = 2
-                        continue
-                elif in_irq_section == 1:
-                    if fn == b'__irqentry_text_end':
-                        in_irq_section = 2
-                    continue*/
+            # __irqentry_text_end
+            if in_irq_section == 0:
+                if fn == b'__irqentry_text_start':
+                    in_irq_section = 1
+                    continue
+                # __irqentry_text_end is not always after
+                # __irqentry_text_start. But only happens when
+                # no functions between two irqentry_text
+                elif fn == b'__irqentry_text_end':
+                    in_irq_section = 2
+                    continue
+            elif in_irq_section == 1:
+                if fn == b'__irqentry_text_end':
+                    in_irq_section = 2
+                continue*/
             // Skip all functions defined between __irqentry_text_start and __irqentry_text_end
             if (inIrqSection == 0) {
                 if (fn.equals("__irqentry_text_start")) {
@@ -692,7 +723,8 @@ public class BPF implements AutoCloseable {
                     fns.append(fn)
              */
             // All functions defined as NOKPROBE_SYMBOL() start with the prefix _kbl_addr_*,
-            // blacklisting them by looking at the name allows to catch also those symbols that are defined in kernel modules.
+            // blacklisting them by looking at the name allows to catch also those symbols that are
+            // defined in kernel modules.
             if (fn.startsWith("_kbl_addr_")) {
                 continue;
             }
@@ -708,8 +740,10 @@ public class BPF implements AutoCloseable {
             else if (fn.matches("^.*\\.cold(\\.\\d+)?$")) {
                 continue;
             }
-            if ((t.equalsIgnoreCase("t") || t.equalsIgnoreCase("w")) &&
-                    fn.matches(event_re) && !blacklist.contains(fn) && availFilter.contains(fn)) {
+            if ((t.equalsIgnoreCase("t") || t.equalsIgnoreCase("w"))
+                    && fn.matches(event_re)
+                    && !blacklist.contains(fn)
+                    && availFilter.contains(fn)) {
                 fns.add(fn);
             }
         }
@@ -742,18 +776,16 @@ public class BPF implements AutoCloseable {
     }
 
     /**
-     * Given a syscall's name, return the full Kernel function name with current
-     * system's syscall prefix. For example, given "clone" the helper would
-     * return "sys_clone" or "__x64_sys_clone".
+     * Given a syscall's name, return the full Kernel function name with current system's syscall
+     * prefix. For example, given "clone" the helper would return "sys_clone" or "__x64_sys_clone".
      */
     public String get_syscall_fnname(String fnName) {
         return get_syscall_prefix() + fnName;
     }
 
     /**
-     * Find current system's syscall prefix by testing on the BPF syscall.
-     * If no valid value found, will return the first possible value which
-     * would probably lead to error in later API calls.
+     * Find current system's syscall prefix by testing on the BPF syscall. If no valid value found,
+     * will return the first possible value which would probably lead to error in later API calls.
      */
     private String get_syscall_prefix() {
         for (var prefix : syscallPrefixes) {
@@ -763,7 +795,6 @@ public class BPF implements AutoCloseable {
         }
         return syscallPrefixes.getFirst();
     }
-
 
     // incomplete
     private void cleanup() {
@@ -778,10 +809,7 @@ public class BPF implements AutoCloseable {
         close_fds();
     }
 
-    /**
-     * Closes all associated files descriptors. Attached BPF programs are not
-     * detached.
-     */
+    /** Closes all associated files descriptors. Attached BPF programs are not detached. */
     // complete
     void close_fds() {
         for (var fn : funcs.values()) {
@@ -794,16 +822,16 @@ public class BPF implements AutoCloseable {
     }
 
     /**
-     * Translate a kernel name into an address. This is the reverse of
-     * {@link #ksymname(String)}. Returns -1 when the function name is unknown.
+     * Translate a kernel name into an address. This is the reverse of {@link #ksymname(String)}.
+     * Returns -1 when the function name is unknown.
      */
     private static long ksymname(String name) {
         return _sym_cache(-1).resolve_name(null, name);
     }
 
     /**
-     * Returns a symbol cache for the specified PID. The kernel symbol cache is
-     * accessed by providing any PID less than zero.
+     * Returns a symbol cache for the specified PID. The kernel symbol cache is accessed by
+     * providing any PID less than zero.
      */
     private static SymbolCache _sym_cache(int pid) {
         if (pid < 0 && pid != -1) {
