@@ -160,7 +160,7 @@
         </dependency>
         <dependency>
             <groupId>me.bechberger</groupId>
-            <artifactId>annotations</artifactId>
+            <artifactId>ebpf-annotations</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
