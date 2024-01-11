@@ -304,7 +304,7 @@ public sealed interface BPFType {
         @Override
         public MemorySetter setter() {
             return (segment, obj) -> {
-                BPFUnionFromMemory<?> union = (BPFUnionFromMemory<?>) obj;
+                BPFUnion<?> union = (BPFUnion<?>) obj;
                 if (union.current() == null) {
                     throw new IllegalArgumentException("Union must have a current member");
                 }

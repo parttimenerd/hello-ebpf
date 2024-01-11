@@ -16,7 +16,7 @@ import java.util.List;
 public class HelloStructMap {
 
     /** Data stored in the map, with user id, group id and counter */
-    record Data(long uid, long gid, @Unsigned int counter) {
+    record Data(@Unsigned long uid, @Unsigned long gid, @Unsigned int counter) {
     }
 
     static final BPFType.BPFStructType DATA_TYPE = new BPFType.BPFStructType("data_t",
