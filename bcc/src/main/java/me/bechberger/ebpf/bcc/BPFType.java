@@ -111,7 +111,7 @@ public sealed interface BPFType {
         }
 
         /**
-         * <code>uint64_t</code> mapped to {@code @Unsigned long}
+         * <code>u64</code> mapped to {@code @Unsigned long}
          */
         public static BPFIntType UINT64 = new BPFIntType("u64", ValueLayout.JAVA_LONG, segment -> {
             return segment.get(ValueLayout.JAVA_LONG, 0);
@@ -120,7 +120,7 @@ public sealed interface BPFType {
         }, new AnnotatedClass(long.class, List.of(AnnotationInstances.UNSIGNED)), 0);
 
         /**
-         * <code>uint32_t</code> mapped to {@code @Unsigned int}
+         * <code>u32</code> mapped to {@code @Unsigned int}
          */
         public static BPFIntType UINT32 = new BPFIntType("u32", ValueLayout.JAVA_INT, segment -> {
             return segment.get(ValueLayout.JAVA_INT, 0);
@@ -129,7 +129,7 @@ public sealed interface BPFType {
         }, new AnnotatedClass(int.class, List.of(AnnotationInstances.UNSIGNED)), 0);
 
         /**
-         * <code>int32_t</code> mapped to {@code int}
+         * <code>s32</code> mapped to {@code int}
          */
         public static BPFIntType INT32 = new BPFIntType("s32", ValueLayout.JAVA_INT, segment -> {
             return segment.get(ValueLayout.JAVA_INT, 0);
