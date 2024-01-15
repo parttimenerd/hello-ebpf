@@ -25,7 +25,7 @@ with a [blog series](https://mostlynerdless.de/blog/tag/hello-ebpf/) to document
 
 This project is still in its early stages, and a read-along of the book is recommended:
 
-__We're currently at page 18 of the book in the [blog series](https://mostlynerdless.de/blog/tag/hello-ebpf/)
+__We're currently at page 23 of the book in the [blog series](https://mostlynerdless.de/blog/tag/hello-ebpf/)
 and page 23 with this repo.__
 
 Goals
