@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
  * A BPF type, see <a href="https://www.kernel.org/doc/html/latest/bpf/btf.html">Linux BTF documentation</a> for
  * more information
  */
-public sealed interface BPFType {
+public sealed interface BPFType<T> {
 
     /**
      * Java class with annotations
@@ -31,16 +31,16 @@ public sealed interface BPFType {
      * Parse a memory segment to return a Java object
      */
     @FunctionalInterface
-    interface MemoryParser {
-        Object parse(MemorySegment segment);
+    interface MemoryParser<T> {
+        T parse(MemorySegment segment);
     }
 
     /**
      * Copy the native representation of a Java object into a passed memory segment
      */
     @FunctionalInterface
-    interface MemorySetter {
-        void store(MemorySegment segment, Object obj);
+    interface MemorySetter<T> {
+        void store(MemorySegment segment, T obj);
     }
 
     /**
@@ -50,9 +50,9 @@ public sealed interface BPFType {
 
     MemoryLayout layout();
 
-    MemoryParser parser();
+    MemoryParser<T> parser();
 
-    MemorySetter setter();
+    MemorySetter<T> setter();
 
     /**
      * Size of the type in bytes
@@ -77,19 +77,19 @@ public sealed interface BPFType {
      * Make sure to guarantee type-safety
      */
     @SuppressWarnings("unchecked")
-    default <V> V parseMemory(MemorySegment segment) {
-        return (V) parser().parse(segment);
+    default T parseMemory(MemorySegment segment) {
+        return parser().parse(segment);
     }
 
-    default <V> void setMemory(MemorySegment segment, V obj) {
+    default void setMemory(MemorySegment segment, T obj) {
         setter().store(segment, obj);
     }
 
     /**
      * Integer
      */
-    record BPFIntType(String bpfName, MemoryLayout layout, MemoryParser parser, MemorySetter setter,
-                      AnnotatedClass javaClass, int encoding) implements BPFType {
+    record BPFIntType<I>(String bpfName, MemoryLayout layout, MemoryParser<I> parser, MemorySetter<I> setter,
+                      AnnotatedClass javaClass, int encoding) implements BPFType<I> {
         static final int ENCODING_SIGNED = 1;
         /**
          * used for pretty printing
@@ -115,40 +115,37 @@ public sealed interface BPFType {
         /**
          * <code>u64</code> mapped to {@code @Unsigned long}
          */
-        public static BPFIntType UINT64 = new BPFIntType("u64", ValueLayout.JAVA_LONG, segment -> {
+        public static BPFIntType<Long> UINT64 = new BPFIntType<>("u64", ValueLayout.JAVA_LONG, segment -> {
             return segment.get(ValueLayout.JAVA_LONG, 0);
         }, (segment, obj) -> {
-            segment.set(ValueLayout.JAVA_LONG, 0, (long) obj);
+            segment.set(ValueLayout.JAVA_LONG, 0, obj);
         }, new AnnotatedClass(long.class, List.of(AnnotationInstances.UNSIGNED)), 0);
 
         /**
          * <code>u32</code> mapped to {@code @Unsigned int}
          */
-        public static BPFIntType UINT32 = new BPFIntType("u32", ValueLayout.JAVA_INT, segment -> {
+        public static BPFIntType<Integer> UINT32 = new BPFIntType<>("u32", ValueLayout.JAVA_INT, segment -> {
             return segment.get(ValueLayout.JAVA_INT, 0);
         }, (segment, obj) -> {
-            segment.set(ValueLayout.JAVA_INT, 0, (int) obj);
+            segment.set(ValueLayout.JAVA_INT, 0, obj);
         }, new AnnotatedClass(int.class, List.of(AnnotationInstances.UNSIGNED)), 0);
 
         /**
          * <code>s32</code> mapped to {@code int}
          */
-        public static BPFIntType INT32 = new BPFIntType("s32", ValueLayout.JAVA_INT, segment -> {
+        public static BPFIntType<Integer> INT32 = new BPFIntType<>("s32", ValueLayout.JAVA_INT, segment -> {
             return segment.get(ValueLayout.JAVA_INT, 0);
         }, (segment, obj) -> {
-            segment.set(ValueLayout.JAVA_INT, 0, (int) obj);
+            segment.set(ValueLayout.JAVA_INT, 0, obj);
         }, new AnnotatedClass(int.class, List.of()), ENCODING_SIGNED);
 
         /**
          * <code>char</code> mapped to {@code char}
          */
-        public static BPFIntType CHAR = new BPFIntType("char", ValueLayout.JAVA_BYTE, segment -> {
+        public static BPFIntType<Byte> CHAR = new BPFIntType<>("char", ValueLayout.JAVA_BYTE, segment -> {
             return segment.get(ValueLayout.JAVA_BYTE, 0);
         }, (segment, obj) -> {
-            if ((char) obj > 255) {
-                throw new IllegalArgumentException("char must be in range 0-255");
-            }
-            segment.set(ValueLayout.JAVA_BYTE, 0, (byte) obj);
+            segment.set(ValueLayout.JAVA_BYTE, 0, obj);
         }, new AnnotatedClass(byte.class, List.of()), ENCODING_CHAR);
     }
 
@@ -160,7 +157,7 @@ public sealed interface BPFType {
      * @param offset offset from the start of the struct in bytes
      * @param getter function that takes the struct and returns the member
      */
-    record BPFStructMember(String name, BPFType type, int offset, Function<?, Object> getter) {
+    record BPFStructMember<P, T>(String name, BPFType<T> type, int offset, Function<P, T> getter) {
     }
 
     /**
@@ -171,8 +168,8 @@ public sealed interface BPFType {
      * @param javaClass   class that represents the struct
      * @param constructor constructor that takes the members in the same order as in the constructor
      */
-    record BPFStructType(String bpfName, List<BPFStructMember> members, AnnotatedClass javaClass,
-                         Function<List<Object>, ?> constructor) implements BPFType {
+    record BPFStructType<T>(String bpfName, List<BPFStructMember<T, ?>> members, AnnotatedClass javaClass,
+                         Function<List<Object>, T> constructor) implements BPFType<T> {
 
         @Override
         public MemoryLayout layout() {
@@ -185,19 +182,20 @@ public sealed interface BPFType {
         }
 
         @Override
-        public MemoryParser parser() {
+        public MemoryParser<T> parser() {
             return segment -> {
-                List<Object> args = members.stream().map(member -> member.type.parseMemory(segment.asSlice(member.offset))).toList();
+                List<Object> args = members.stream().map(member -> (Object)member.type.parseMemory(segment.asSlice(member.offset))).toList();
                 return constructor.apply(args);
             };
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public MemorySetter setter() {
+        public MemorySetter<T> setter() {
             return (segment, obj) -> {
-                for (BPFStructMember member : members) {
-                    member.type.setMemory(segment.asSlice(member.offset), ((Function<Object, Object>) member.getter).apply(obj));
+                for (BPFStructMember<T, ?> member : members) {
+                    ((BPFType<Object>)member.type).setMemory(segment.asSlice(member.offset),
+                            member.getter.apply(obj));
                 }
             };
         }
@@ -206,7 +204,7 @@ public sealed interface BPFType {
     /**
      * Array mapped to {@code List}
      */
-    record BPFArrayType(String bpfName, BPFType memberType, int length) implements BPFType {
+    record BPFArrayType<E>(String bpfName, BPFType<E> memberType, int length) implements BPFType<List<E>> {
 
         @Override
         public MemoryLayout layout() {
@@ -214,14 +212,13 @@ public sealed interface BPFType {
         }
 
         @Override
-        public MemoryParser parser() {
+        public MemoryParser<List<E>> parser() {
             return segment -> IntStream.range(0, length).mapToObj(i -> memberType.parseMemory(segment.asSlice(i * memberType.size()))).toList();
         }
 
         @Override
-        public MemorySetter setter() {
-            return (segment, obj) -> {
-                List<?> list = (List<?>) obj;
+        public MemorySetter<List<E>> setter() {
+            return (segment, list) -> {
                 if (list.size() != length) {
                     throw new IllegalArgumentException("Array must have length " + length);
                 }
@@ -236,8 +233,8 @@ public sealed interface BPFType {
             return new AnnotatedClass(List.class, List.of(AnnotationInstances.size(length)));
         }
 
-        public static BPFArrayType of(BPFType memberType, int length) {
-            return new BPFArrayType(memberType.bpfName() + "[" + length + "]",
+        public static <E> BPFArrayType<E> of(BPFType<E> memberType, int length) {
+            return new BPFArrayType<>(memberType.bpfName() + "[" + length + "]",
                     memberType, length);
         }
     }
@@ -248,7 +245,7 @@ public sealed interface BPFType {
      * Important: the string is null-terminated, therefore the max length of the string is length-1 ASCII character.
      * The string is truncated if it is longer than length-1.
      */
-    record StringType(int length) implements BPFType {
+    record StringType(int length) implements BPFType<String> {
 
         @Override
         public String bpfName() {
@@ -261,17 +258,16 @@ public sealed interface BPFType {
         }
 
         @Override
-        public MemoryParser parser() {
+        public MemoryParser<String> parser() {
             return segment -> segment.getUtf8String(0);
         }
 
         @Override
-        public MemorySetter setter() {
+        public MemorySetter<String> setter() {
             return (segment, obj) -> {
-                assert obj instanceof String;
-                byte[] bytes = ((String) obj).getBytes();
+                byte[] bytes = obj.getBytes();
                 if (bytes.length + 1 < length) {
-                    segment.setUtf8String(0, (String) obj);
+                    segment.setUtf8String(0, obj);
                 } else {
                     byte[] dest = new byte[length];
                     System.arraycopy(bytes, 0, dest, 0, length - 1);
@@ -292,7 +288,7 @@ public sealed interface BPFType {
     /**
      * Type alias
      */
-    record BPFTypedef(String bpfName, BPFType wrapped) implements BPFType {
+    record BPFTypedef<T>(String bpfName, BPFType<T> wrapped) implements BPFType<T> {
 
         @Override
         public MemoryLayout layout() {
@@ -300,12 +296,12 @@ public sealed interface BPFType {
         }
 
         @Override
-        public MemoryParser parser() {
+        public MemoryParser<T> parser() {
             return wrapped.parser();
         }
 
         @Override
-        public MemorySetter setter() {
+        public MemorySetter<T> setter() {
             return wrapped.setter();
         }
 
@@ -316,7 +312,7 @@ public sealed interface BPFType {
     }
 
 
-    record BPFUnionTypeMember(String name, BPFType type) {
+    record BPFUnionTypeMember(String name, BPFType<?> type) {
     }
 
     /**
@@ -326,7 +322,7 @@ public sealed interface BPFType {
      * @param shared  type that is shared between all members
      * @param members members of the union, including the shared type members
      */
-    record BPFUnionType(String bpfName, BPFType shared, List<BPFUnionTypeMember> members) implements BPFType {
+    record BPFUnionType<S>(String bpfName, BPFType<S> shared, List<BPFUnionTypeMember> members) implements BPFType<BPFUnion<S>> {
 
         @Override
         public MemoryLayout layout() {
@@ -342,7 +338,7 @@ public sealed interface BPFType {
         }
 
         @Override
-        public MemoryParser parser() {
+        public MemoryParser<BPFUnion<S>> parser() {
             return segment -> {
                 Map<String, Object> possibleMembers = new HashMap<>();
                 for (var member : members) {
@@ -360,9 +356,8 @@ public sealed interface BPFType {
          * Return the memory setter, only works if the passed union has a set current member
          */
         @Override
-        public MemorySetter setter() {
-            return (segment, obj) -> {
-                BPFUnion<?> union = (BPFUnion<?>) obj;
+        public MemorySetter<BPFUnion<S>> setter() {
+            return (segment, union) -> {
                 if (union.current() == null) {
                     throw new IllegalArgumentException("Union must have a current member");
                 }
@@ -378,7 +373,7 @@ public sealed interface BPFType {
     }
 
     interface BPFUnion<S> {
-        <S> S shared();
+        S shared();
 
         <T> T get(String name);
 
@@ -389,7 +384,7 @@ public sealed interface BPFType {
         void setCurrent(String name);
     }
 
-    static final class BPFUnionFromMemory<S> implements BPFUnion<S> {
+    final class BPFUnionFromMemory<S> implements BPFUnion<S> {
         private final S shared;
         private final Map<String, Object> possibleMembers;
 

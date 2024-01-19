@@ -33,15 +33,15 @@ public class BPFTable<K, V> {
     final BPF bpf;
     private final long mapId;
     private final int mapFd;
-    private final BPFType keyType;
-    private final BPFType leafType;
+    private final BPFType<K> keyType;
+    private final BPFType<V> leafType;
 
     private final String name;
     private final int maxEntries;
     private final int ttype;
     private final int flags;
 
-    public BPFTable(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
+    public BPFTable(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
         this.bpf = bpf;
         this.mapId = mapId;
         this.mapFd = mapFd;
@@ -57,10 +57,11 @@ public class BPFTable<K, V> {
         return mapFd;
     }
 
+    @SuppressWarnings("unchecked")
     public V get(Object key) {
         try (var arena = Arena.ofConfined()) {
             var keyInC = arena.allocate(keyType.layout());
-            keyType.setMemory(keyInC, key);
+            keyType.setMemory(keyInC, (K)key);
             var leaf = arena.allocate(leafType.layout());
             var res = Lib.bpf_lookup_elem(mapFd, keyInC, leaf);
             if (res < 0) {
@@ -91,10 +92,11 @@ public class BPFTable<K, V> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public V removeEntry(Object key) {
         try (var arena = Arena.ofConfined()) {
             var keyInC = arena.allocate(keyType.layout());
-            keyType.setMemory(keyInC, key);
+            keyType.setMemory(keyInC, (K)key);
             var leaf = arena.allocate(leafType.layout());
             var res = Lib.bpf_lookup_elem(mapFd, keyInC, leaf);
             if (res < 0) {
@@ -111,10 +113,11 @@ public class BPFTable<K, V> {
         return BPF_DELETE_ELEM.call(arena, map_fd, key);
     }
 
+    @SuppressWarnings("unchecked")
     public void rawRemove(Object key) {
         try (var arena = Arena.ofConfined()) {
             var keyInC = arena.allocate(keyType.layout());
-            keyType.setMemory(keyInC, key);
+            keyType.setMemory(keyInC, (K)key);
             var res = bpf_delete_elem(arena, mapFd, keyInC);
             if (res.result() < 0) {
                 throw new BPFCallException("Failed to delete element", res.err());
@@ -364,8 +367,8 @@ public class BPFTable<K, V> {
             assert allocated.leafSegment() != null;
             var entries = new ArrayList<Map.Entry<K, V>>();
             for (int i = 0; i < total; i++) {
-                var key = keyType.<K>parseMemory(allocated.keySegment().asSlice(i * keyType.sizePadded(), keyType.layout().byteSize()));
-                var value = leafType.<V>parseMemory(allocated.leafSegment().asSlice(i * leafType.sizePadded(), leafType.layout().byteSize()));
+                var key = keyType.parseMemory(allocated.keySegment().asSlice(i * keyType.sizePadded(), keyType.layout().byteSize()));
+                var value = leafType.parseMemory(allocated.leafSegment().asSlice(i * leafType.sizePadded(), leafType.layout().byteSize()));
                 entries.add(new AbstractMap.SimpleEntry<>(key, value));
             }
             return entries;
@@ -466,7 +469,7 @@ public class BPFTable<K, V> {
 
     public static class BaseMapTable<K, V> extends BPFTable<K, V> implements Map<K, V> {
 
-        public BaseMapTable(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
+        public BaseMapTable(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
             super(bpf, mapId, mapFd, keyType, leafType, name);
         }
 
@@ -493,19 +496,19 @@ public class BPFTable<K, V> {
     }
 
     public static class HashTable<K, V> extends BaseMapTable<K, V> {
-        public HashTable(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
+        public HashTable(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
             super(bpf, mapId, mapFd, keyType, leafType, name);
         }
 
         public static final TableProvider<HashTable<@Unsigned Long, @Unsigned Long>> UINT64T_MAP_PROVIDER = (bpf, mapId, mapFd, name) -> new HashTable<>(bpf, mapId, mapFd, BPFType.BPFIntType.UINT64, BPFType.BPFIntType.UINT64, name);
 
-        public static <K, V> TableProvider<HashTable<K, V>> createProvider(BPFType keyType, BPFType leafType) {
+        public static <K, V> TableProvider<HashTable<K, V>> createProvider(BPFType<K> keyType, BPFType<V> leafType) {
             return (bpf, mapId, mapFd, name) -> new HashTable<>(bpf, mapId, mapFd, keyType, leafType, name);
         }
     }
 
     public static class LruHash<K, V> extends BaseMapTable<K, V> {
-        public LruHash(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
+        public LruHash(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
             super(bpf, mapId, mapFd, keyType, leafType, name);
         }
     }
@@ -514,7 +517,7 @@ public class BPFTable<K, V> {
      * Base class for all array like types, fixed size array
      */
     public abstract static class ArrayBase<K, V> extends BPFTable<K, V> implements List<V> {
-        public ArrayBase(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
+        public ArrayBase(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
             super(bpf, mapId, mapFd, keyType, leafType, name);
             if (!(keyType instanceof BPFType.BPFIntType)) {
                 throw new AssertionError("Array key must be an integer type");
@@ -734,7 +737,7 @@ public class BPFTable<K, V> {
     }
 
     public static class Array<K, V> extends ArrayBase<K, V> {
-        public Array(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
+        public Array(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
             super(bpf, mapId, mapFd, keyType, leafType, name);
         }
 
@@ -750,7 +753,7 @@ public class BPFTable<K, V> {
      * array of bpf function fds
      */
     public static class ProgArray<K> extends ArrayBase<K, Integer> {
-        public ProgArray(BPF bpf, long mapId, int mapFd, BPFType keyType, String name) {
+        public ProgArray(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, String name) {
             super(bpf, mapId, mapFd, keyType, BPFType.BPFIntType.INT32, name);
         }
 
@@ -760,32 +763,25 @@ public class BPFTable<K, V> {
     }
 
     /**
-     * automatically closes the file descriptor when closed
-     */
-    private static class FileDesc implements Closeable {
-        private final int fd;
-
-        public FileDesc(int fd) {
+         * automatically closes the file descriptor when closed
+         */
+        private record FileDesc(int fd) implements Closeable {
+        private FileDesc {
             if (fd < 0) {
                 throw new IllegalArgumentException("Invalid file descriptor");
             }
-            this.fd = fd;
         }
 
-        public int getFd() {
-            return fd;
-        }
-
-        @Override
-        public void close() {
-            if (fd >= 0) {
-                Lib.close(fd);
+            @Override
+            public void close() {
+                if (fd >= 0) {
+                    Lib.close(fd);
+                }
             }
         }
-    }
 
     public static class CgroupArray<K> extends ArrayBase<K, Integer> {
-        public CgroupArray(BPF bpf, long mapId, int mapFd, BPFType keyType, String name) {
+        public CgroupArray(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, String name) {
             super(bpf, mapId, mapFd, keyType, BPFType.BPFIntType.INT32, name);
         }
 
@@ -794,7 +790,7 @@ public class BPFTable<K, V> {
             try (Arena arena = Arena.ofConfined()) {
                 var pathInC = allocateNullOrString(arena, path);
                 try (FileDesc desc = new FileDesc(Lib.open(pathInC, O_RDONLY))) {
-                    return set(index, desc.getFd());
+                    return set(index, desc.fd());
                 }
             }
         }
@@ -832,18 +828,21 @@ public class BPFTable<K, V> {
             void call(PerfEventArray<E> array, long lost) throws IOException;
         }
 
-        private static AtomicInteger nextId = new AtomicInteger(0);
+        private static final AtomicInteger nextId = new AtomicInteger(0);
 
         private final int id = nextId.getAndIncrement();
 
-        private final BPFType eventType;
+        private final BPFType<E> eventType;
         /**
          * cpu to event fd
          */
         private final Map<Integer, Integer> openKeyFds = new HashMap<>();
+        /**
+         * Just there to prevent the callbacks to be garbage collected
+         */
         private final Map<Integer, FuncAndLostCallbacks> callbacks = new HashMap<>();
 
-        public PerfEventArray(BPF bpf, long mapId, int mapFd, String name, BPFType eventType) {
+        public PerfEventArray(BPF bpf, long mapId, int mapFd, String name, BPFType<E> eventType) {
             super(bpf, mapId, mapFd, BPFType.BPFIntType.INT32, BPFType.BPFIntType.UINT32, name);
             this.eventType = eventType;
         }
@@ -880,20 +879,19 @@ public class BPFTable<K, V> {
             return new PerfEventArrayId(id, cpu);
         }
 
-        public static record PerfEventArrayId(int id, int cpu) {
+        public record PerfEventArrayId(int id, int cpu) {
         }
 
         /**
          * When perf buffers are opened to receive custom perf event,
          * the underlying event data struct which is defined in C in
          * the BPF program can be deduced via this function.
-         * TODO: maybe remove
          */
         public E event(MemorySegment data) {
             return eventType.parseMemory(data);
         }
 
-        public PerfEventArray<E> open_perf_buffer(EventCallback callback) {
+        public PerfEventArray<E> open_perf_buffer(EventCallback<E> callback) {
             open_perf_buffer(callback, 8, null, 1);
             return this;
         }
@@ -982,7 +980,7 @@ public class BPFTable<K, V> {
             return this;
         }
 
-        public static <E> TableProvider<PerfEventArray<E>> createProvider(BPFType eventType) {
+        public static <E> TableProvider<PerfEventArray<E>> createProvider(BPFType<E> eventType) {
             return (bpf, mapId, mapFd, name) -> new PerfEventArray<>(bpf, mapId, mapFd, name, eventType);
         }
     }

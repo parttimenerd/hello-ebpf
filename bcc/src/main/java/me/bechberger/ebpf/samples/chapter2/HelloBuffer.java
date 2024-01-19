@@ -58,14 +58,14 @@ public class HelloBuffer {
     record Data(int pid, int uid, @Size(16) String command, @Size(12) String message) {
     }
 
-    static final BPFType.BPFStructType DATA_TYPE = new BPFType.BPFStructType("data_t",
+    static final BPFType.BPFStructType<Data> DATA_TYPE = new BPFType.BPFStructType<>("data_t",
             List.of(
-                    new BPFType.BPFStructMember("pid", BPFType.BPFIntType.INT32, 0, (Data d) -> d.pid()),
-                    new BPFType.BPFStructMember("uid", BPFType.BPFIntType.INT32, 4, (Data d) -> d.uid()),
-                    new BPFType.BPFStructMember("command", new BPFType.StringType(16), 8, (Data d) -> d.command()),
-                    new BPFType.BPFStructMember("message", new BPFType.StringType(12), 24, (Data d) -> d.message())),
+                    new BPFType.BPFStructMember<>("pid", BPFType.BPFIntType.INT32, 0, Data::pid),
+                    new BPFType.BPFStructMember<>("uid", BPFType.BPFIntType.INT32, 4, Data::uid),
+                    new BPFType.BPFStructMember<>("command", new BPFType.StringType(16), 8, Data::command),
+                    new BPFType.BPFStructMember<>("message", new BPFType.StringType(12), 24, Data::message)),
             new BPFType.AnnotatedClass(Data.class, List.of()),
-            objects -> new Data((int) objects.get(0), (int) objects.get(1), (String) objects.get(2), (String) objects.get(3)));
+                objects -> new Data((int) objects.get(0), (int) objects.get(1), (String) objects.get(2), (String) objects.get(3)));
 
     public static void main(String[] args) throws InterruptedException {
         try (var b = BPF.builder("""

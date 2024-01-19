@@ -19,11 +19,11 @@ public class HelloStructMap {
     record Data(@Unsigned long uid, @Unsigned long gid, @Unsigned int counter) {
     }
 
-    static final BPFType.BPFStructType DATA_TYPE = new BPFType.BPFStructType("data_t",
+    static final BPFType.BPFStructType<Data> DATA_TYPE = new BPFType.BPFStructType<>("data_t",
             List.of(
-                    new BPFType.BPFStructMember("uid", BPFType.BPFIntType.UINT64, 0, (Data d) -> d.uid()),
-                    new BPFType.BPFStructMember("gid", BPFType.BPFIntType.UINT64, 8, (Data d) -> d.gid()),
-                    new BPFType.BPFStructMember("counter", BPFType.BPFIntType.UINT32, 16, (Data d) -> d.counter())),
+                    new BPFType.BPFStructMember<>("uid", BPFType.BPFIntType.UINT64, 0, Data::uid),
+                    new BPFType.BPFStructMember<>("gid", BPFType.BPFIntType.UINT64, 8, Data::gid),
+                    new BPFType.BPFStructMember<>("counter", BPFType.BPFIntType.UINT32, 16, Data::counter)),
             new BPFType.AnnotatedClass(Data.class, List.of()),
             objects -> new Data((long) objects.get(0), (long) objects.get(1), (int) objects.get(2)));
     static final BPFTable.TableProvider<BPFTable.HashTable<@Unsigned Long, Data>> UINT64T_DATA_MAP_PROVIDER =
