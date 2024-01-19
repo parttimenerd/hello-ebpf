@@ -147,6 +147,24 @@ public sealed interface BPFType<T> {
         }, (segment, obj) -> {
             segment.set(ValueLayout.JAVA_BYTE, 0, obj);
         }, new AnnotatedClass(byte.class, List.of()), ENCODING_CHAR);
+
+        public static BPFIntType<Byte> UINT8 = new BPFIntType<>("u8", ValueLayout.JAVA_BYTE, segment -> {
+            return segment.get(ValueLayout.JAVA_BYTE, 0);
+        }, (segment, obj) -> {
+            segment.set(ValueLayout.JAVA_BYTE, 0, obj);
+        }, new AnnotatedClass(byte.class, List.of()), 0);
+
+        public static BPFIntType<Short> INT16 = new BPFIntType<>("s16", ValueLayout.JAVA_SHORT, segment -> {
+            return segment.get(ValueLayout.JAVA_SHORT, 0);
+        }, (segment, obj) -> {
+            segment.set(ValueLayout.JAVA_SHORT, 0, obj);
+        }, new AnnotatedClass(short.class, List.of()), ENCODING_SIGNED);
+
+        public static BPFIntType<Short> UINT16 = new BPFIntType<>("u16", ValueLayout.JAVA_SHORT, segment -> {
+            return segment.get(ValueLayout.JAVA_SHORT, 0);
+        }, (segment, obj) -> {
+            segment.set(ValueLayout.JAVA_SHORT, 0, obj);
+        }, new AnnotatedClass(short.class, List.of()), 0);
     }
 
     /**
@@ -322,7 +340,7 @@ public sealed interface BPFType<T> {
      * @param shared  type that is shared between all members
      * @param members members of the union, including the shared type members
      */
-    record BPFUnionType<S>(String bpfName, BPFType<S> shared, List<BPFUnionTypeMember> members) implements BPFType<BPFUnion<S>> {
+    record BPFUnionType<S>(String bpfName, @Nullable BPFType<S> shared, List<BPFUnionTypeMember> members) implements BPFType<BPFUnion<S>> {
 
         @Override
         public MemoryLayout layout() {
@@ -348,7 +366,7 @@ public sealed interface BPFType<T> {
                     } catch (IllegalArgumentException e) {
                     }
                 }
-                return new BPFUnionFromMemory<>(shared.parseMemory(segment), possibleMembers);
+                return new BPFUnionFromMemory<>(shared != null ? shared.parseMemory(segment) : null, possibleMembers);
             };
         }
 
@@ -373,7 +391,7 @@ public sealed interface BPFType<T> {
     }
 
     interface BPFUnion<S> {
-        S shared();
+        @Nullable S shared();
 
         <T> T get(String name);
 
@@ -385,12 +403,12 @@ public sealed interface BPFType<T> {
     }
 
     final class BPFUnionFromMemory<S> implements BPFUnion<S> {
-        private final S shared;
+        private final @Nullable S shared;
         private final Map<String, Object> possibleMembers;
 
         @Nullable String current = null;
 
-        public BPFUnionFromMemory(S shared, Map<String, Object> possibleMembers) {
+        public BPFUnionFromMemory(@Nullable S shared, Map<String, Object> possibleMembers) {
             this.shared = shared;
             this.possibleMembers = possibleMembers;
         }
@@ -408,7 +426,7 @@ public sealed interface BPFType<T> {
         }
 
         @Override
-        public S shared() {
+        public @Nullable S shared() {
             return shared;
         }
 

@@ -272,6 +272,22 @@ public class BPF implements AutoCloseable {
         return load_func(func_name, Lib.BPF_PROG_TYPE_RAW_TRACEPOINT());
     }
 
+    MemorySegment dump_func(Arena arena, String func_name) {
+        var funcNameNative = arena.allocateUtf8String(func_name);
+        if (Lib.bpf_function_start(module, funcNameNative) == null)
+            throw new RuntimeException(STR."Unknown program \{func_name}");
+        var start = Lib.bpf_function_start(module, funcNameNative);
+        var size = Lib.bpf_function_size(module, funcNameNative);
+        return start.asSlice(0, size);
+    }
+
+    public String disassemble_func(String func_name) {
+        try (var arena = Arena.ofConfined()) {
+            var bpfstr = dump_func(arena, func_name);
+            return Disassembler.disassemble_prog(func_name, bpfstr);
+        }
+    }
+
     /**
      * Return the eBPF bytecodes for the specified function
      */
