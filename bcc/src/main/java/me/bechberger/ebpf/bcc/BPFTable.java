@@ -815,6 +815,10 @@ public class BPFTable<K, V> {
         public Integer set(int index, BPF.BPFFunction function) {
             return set(index, function.fd());
         }
+
+        public static TableProvider<ProgArray<Integer>> createProvider() {
+            return (bpf, mapId, mapFd, name) -> new ProgArray<>(bpf, mapId, mapFd, BPFType.BPFIntType.INT32, name);
+        }
     }
 
     /**

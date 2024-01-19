@@ -133,6 +133,8 @@ public class BPF implements AutoCloseable {
 
     private final Map<BPFTable.PerfEventArray.PerfEventArrayId, MemorySegment> perfBuffers = new HashMap<>();
 
+    private final Map<String, Integer> raw_tracepoint_fds = new HashMap<>();
+
     /**
      * Construct a BPF object from a string
      * <p>
@@ -266,6 +268,13 @@ public class BPF implements AutoCloseable {
         return load_func(func_name, prog_type, MemorySegment.NULL, -1);
     }
 
+    public BPFFunction load_raw_tracepoint_func(String func_name) {
+        return load_func(func_name, Lib.BPF_PROG_TYPE_RAW_TRACEPOINT());
+    }
+
+    /**
+     * Return the eBPF bytecodes for the specified function
+     */
     // incomplete
     private void trace_autoload() {
         for (int i = 0; i < Lib.bpf_num_functions(module); i++) {
@@ -274,6 +283,10 @@ public class BPF implements AutoCloseable {
             if (funcName.startsWith("kprobe__")) {
                 var fn = load_func(funcName, Lib.BPF_PROG_TYPE_KPROBE());
                 attach_kprobe(fix_syscall_fnname(funcName.substring(8)), 0, fn.name, null);
+            } else if (funcName.startsWith("tracepoint__")) {
+                var fn = load_func(funcName, Lib.BPF_PROG_TYPE_TRACEPOINT());
+                var tp = funcName.substring("tracepoint__".length()).replace("__", ":");
+                attach_raw_tracepoint(tp, fn.name);
             }
         }
     }
@@ -425,6 +438,73 @@ public class BPF implements AutoCloseable {
             }
         }
         return fnName;
+    }
+
+    public static boolean support_raw_tracepoint() {
+        return BPF.ksymname("bpf_find_raw_tracepoint") != -1 ||
+                BPF.ksymname("bpf_get_raw_tracepoint") != -1;
+    }
+
+    public static boolean support_raw_tracepoint_in_module() {
+        var kallsyms = Path.of("/proc/kallsyms");
+        try {
+            return Files.lines(kallsyms).anyMatch(line -> {
+                var parts = line.trim().split(" ");
+                var name = parts[2].split("\t")[0];
+                return name.equals("bpf_trace_modules");
+            });
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read /proc/kallsyms", e);
+        }
+    }
+
+    public static boolean kernel_struct_has_field(String structName, String fieldName) {
+        try (var arena = Arena.ofConfined()) {
+            var structNameNative = arena.allocateUtf8String(structName);
+            var fieldNameNative = arena.allocateUtf8String(fieldName);
+            return Lib.kernel_struct_has_field(structNameNative, fieldNameNative) == 1;
+        }
+    }
+
+    /**
+     * Attach a function to a raw tracepoint
+     * <p>
+     * Run the bpf function denoted by fn_name every time the kernel tracepoint
+     * specified by 'tp' is hit. The bpf function should be loaded as a
+     * RAW_TRACEPOINT type. The fn_name is the kernel tracepoint name,
+     * e.g., sched_switch, sys_enter_bind, etc.
+     * <p>
+     * Examples:
+     * {@snippet :
+     *  bpf.attach_raw_tracepoint("sched_switch", "on_switch")
+     * }
+     */
+    public BPF attach_raw_tracepoint(@Nullable String tracepoint, @Nullable String fn_name) {
+        if (tracepoint == null || fn_name == null) return this;
+        if (raw_tracepoint_fds.containsKey(tracepoint))
+            throw new RuntimeException(STR."Raw tracepoint \{tracepoint} has been attached");
+        var fn = load_func(fn_name, Lib.BPF_PROG_TYPE_RAW_TRACEPOINT());
+        int fd = Lib.bpf_attach_raw_tracepoint(fn.fd, arena.allocateUtf8String(tracepoint));
+        if (fd < 0) throw new RuntimeException("Failed to attach BPF to raw tracepoint");
+        raw_tracepoint_fds.put(tracepoint, fd);
+        return this;
+    }
+
+    /**
+     * Attach a function to a raw tracepoint
+     * <p>
+     * Stop running the bpf function that is attached to the kernel tracepoint
+     * specified by 'tp'.
+     * <p>
+     * Example: {@snippet : bpf.detach_raw_tracepoint("sched_switch")}
+     */
+    public void detach_raw_tracepoint(@Nullable String tracepoint) {
+        if (tracepoint == null) return;
+        if (!raw_tracepoint_fds.containsKey(tracepoint))
+            throw new RuntimeException(STR."Raw tracepoint \{tracepoint} is not attached");
+        var res = Lib.bpf_close_perf_event_fd(raw_tracepoint_fds.get(tracepoint));
+        if (res < 0) throw new RuntimeException("Failed to close raw tracepoint FD");
+        raw_tracepoint_fds.remove(tracepoint);
     }
 
     public static class FailedToAttachException extends RuntimeException {
@@ -780,6 +860,9 @@ public class BPF implements AutoCloseable {
         disableCleanup = true;
         for (var k : kprobe_fds.keySet()) {
             detach_kprobe_event(k);
+        }
+        for (var k : raw_tracepoint_fds.keySet()) {
+            detach_raw_tracepoint(k);
         }
         if (traceFile != null) {
             traceFile.close();
