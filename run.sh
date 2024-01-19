@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 # Navigate to current folder
 cd "$(dirname "$0")"/bcc || exit
@@ -8,9 +8,10 @@ if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     echo "Usage: $0 <sample>"
     echo "Available samples:"
     (cd src/main/java/me/bechberger/ebpf/samples && (
-      for file in **/*.java; do
+      find . -name "*.java" | while read file; do
         f=$(echo "$file" | sed 's/\//\./g')
-        printf "%-30s - %s\n" "${f%.java}" "$(head -n 2 "$file" | tail -n 1 | sed 's/^ \* //g')"
+        f=${f:2}
+        printf "%-35s - %s\n" "${f%.java}" "$(head -n 2 "$file" | tail -n 1 | sed 's/^ \* //g')"
       done
     ))
     exit 0

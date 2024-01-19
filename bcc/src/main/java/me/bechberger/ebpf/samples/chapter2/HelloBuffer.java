@@ -55,10 +55,10 @@ import java.util.List;
  *}
  */
 public class HelloBuffer {
-    record Data(int pid, int uid, @Size(16) String command, @Size(12) String message) {
+    public record Data(int pid, int uid, @Size(16) String command, @Size(12) String message) {
     }
 
-    static final BPFType.BPFStructType<Data> DATA_TYPE = new BPFType.BPFStructType<>("data_t",
+    public static final BPFType.BPFStructType<Data> DATA_TYPE = new BPFType.BPFStructType<>("data_t",
             List.of(
                     new BPFType.BPFStructMember<>("pid", BPFType.BPFIntType.INT32, 0, Data::pid),
                     new BPFType.BPFStructMember<>("uid", BPFType.BPFIntType.INT32, 4, Data::uid),

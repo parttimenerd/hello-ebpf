@@ -26,7 +26,9 @@ with a [blog series](https://mostlynerdless.de/blog/tag/hello-ebpf/) to document
 This project is still in its early stages, and a read-along of the book is recommended:
 
 __We're currently at page 23 of the book in the [blog series](https://mostlynerdless.de/blog/tag/hello-ebpf/)
-and page 34 with this repo.__
+and page 36 with this repo.__
+
+It is evolving fast, you can already implement all examples and exercises from chapter 2.
 
 Goals
 -----
@@ -86,6 +88,9 @@ Be sure to run the following in a shell with root privileges that uses JDK 21:
 java --enable-preview -cp target/bcc.jar --enable-native-access=ALL-UNNAMED me.bechberger.ebpf.samples.EXAMPLE_NAME
 # or in the project directory
 ./run.sh EXAMPLE_NAME
+
+# list all examples
+./run.sh
 ```
 
 The following runs the hello world sample from the vcc repository. It currently prints something like:
@@ -174,7 +179,7 @@ like the bcc repository and state this in the first column.
 | own                 | -                                                              | [own.HelloStructMap](bcc/src/main/java/me/bechberger/ebpf/samples/own/HelloStructMap.java)     | works  | Count and print `execve` calls per user and store the result as a struct in a map      |
 | 2                   | [chapter2/hello-buffer.py](pysamples/chapter2/hello-buffer.py) | [chapter2.HelloBuffer](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloBuffer.java) | works  | Record information in perf buffer                                                      |
 | 2                   | [chapter2/hello-tail.py](pysamples/chapter2/hello-tail.py)     | [chapter2.HelloTail](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloTail.java)     | works  | Print a message when a syscall is called, and also when a timer is created or deleted. |
-
+| 2                   | -                                                              | [chapter2.ex](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/ex)                        | works  | Implementation of some of the exercises for chapter 2                                  |
 ... more to come from the [books' repository](https://github.com/lizrice/learning-ebpf/tree/main).
 
 
