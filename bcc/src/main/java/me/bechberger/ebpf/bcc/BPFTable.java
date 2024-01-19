@@ -30,6 +30,52 @@ import static me.bechberger.ebpf.bcc.PanamaUtil.*;
  * Translation of BCC's <code>class BPFTable</code>.
  */
 public class BPFTable<K, V> {
+
+    static enum MapTypeId {
+        HASH(1),
+        ARRAY(2),
+        PROG_ARRAY(3),
+        PERF_EVENT_ARRAY(4),
+        PERCPU_HASH(5),
+        PERCPU_ARRAY(6),
+        STACK_TRACE(7),
+        CGROUP_ARRAY(8),
+        LRU_HASH(9),
+        LRU_PERCPU_HASH(10),
+        LPM_TRIE(11),
+        ARRAY_OF_MAPS(12),
+        HASH_OF_MAPS(13),
+        DEVMAP(14),
+        SOCKMAP(15),
+        CPUMAP(16),
+        XSKMAP(17),
+        SOCKHASH(18),
+        CGROUP_STORAGE(19),
+        REUSEPORT_SOCKARRAY(20),
+        PERCPU_CGROUP_STORAGE(21),
+        QUEUE(22),
+        STACK(23),
+        SK_STORAGE(24),
+        DEVMAP_HASH(25),
+        STRUCT_OPS(26),
+        RINGBUF(27),
+        INODE_STORAGE(28),
+        TASK_STORAGE(29);
+        private final int id;
+
+        MapTypeId(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public static MapTypeId fromId(int id) {
+            return Arrays.stream(values()).filter(m -> m.id == id).findFirst().get();
+        }
+    }
+
     final BPF bpf;
     private final long mapId;
     private final int mapFd;
@@ -41,7 +87,7 @@ public class BPFTable<K, V> {
     private final int ttype;
     private final int flags;
 
-    public BPFTable(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
+    public BPFTable(BPF bpf, MapTypeId typeId, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
         this.bpf = bpf;
         this.mapId = mapId;
         this.mapFd = mapFd;
@@ -51,6 +97,10 @@ public class BPFTable<K, V> {
         this.ttype = Lib.bpf_table_type_id(bpf.getModule(), mapId);
         this.flags = Lib.bpf_table_flags_id(bpf.getModule(), mapId);
         this.maxEntries = (int) Lib.bpf_table_max_entries_id(bpf.getModule(), mapId);
+        int expectedTypeId = Lib.bpf_table_type_id(bpf.getModule(), mapId);
+        if (expectedTypeId != typeId.id) {
+            throw new AssertionError("Expected type " + typeId + " but got " + MapTypeId.fromId(expectedTypeId));
+        }
     }
 
     public int get_fd() {
@@ -469,8 +519,8 @@ public class BPFTable<K, V> {
 
     public static class BaseMapTable<K, V> extends BPFTable<K, V> implements Map<K, V> {
 
-        public BaseMapTable(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
-            super(bpf, mapId, mapFd, keyType, leafType, name);
+        public BaseMapTable(BPF bpf, MapTypeId typeId, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
+            super(bpf, typeId, mapId, mapFd, keyType, leafType, name);
         }
 
         @Override
@@ -497,7 +547,7 @@ public class BPFTable<K, V> {
 
     public static class HashTable<K, V> extends BaseMapTable<K, V> {
         public HashTable(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
-            super(bpf, mapId, mapFd, keyType, leafType, name);
+            super(bpf, MapTypeId.HASH, mapId, mapFd, keyType, leafType, name);
         }
 
         public static final TableProvider<HashTable<@Unsigned Long, @Unsigned Long>> UINT64T_MAP_PROVIDER = (bpf, mapId, mapFd, name) -> new HashTable<>(bpf, mapId, mapFd, BPFType.BPFIntType.UINT64, BPFType.BPFIntType.UINT64, name);
@@ -509,7 +559,7 @@ public class BPFTable<K, V> {
 
     public static class LruHash<K, V> extends BaseMapTable<K, V> {
         public LruHash(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
-            super(bpf, mapId, mapFd, keyType, leafType, name);
+            super(bpf, MapTypeId.LRU_HASH, mapId, mapFd, keyType, leafType, name);
         }
     }
 
@@ -517,8 +567,8 @@ public class BPFTable<K, V> {
      * Base class for all array like types, fixed size array
      */
     public abstract static class ArrayBase<K, V> extends BPFTable<K, V> implements List<V> {
-        public ArrayBase(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
-            super(bpf, mapId, mapFd, keyType, leafType, name);
+        public ArrayBase(BPF bpf, MapTypeId typeId, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
+            super(bpf, typeId, mapId, mapFd, keyType, leafType, name);
             if (!(keyType instanceof BPFType.BPFIntType)) {
                 throw new AssertionError("Array key must be an integer type");
             }
@@ -738,7 +788,7 @@ public class BPFTable<K, V> {
 
     public static class Array<K, V> extends ArrayBase<K, V> {
         public Array(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
-            super(bpf, mapId, mapFd, keyType, leafType, name);
+            super(bpf, MapTypeId.ARRAY, mapId, mapFd, keyType, leafType, name);
         }
 
         @Override
@@ -754,7 +804,7 @@ public class BPFTable<K, V> {
      */
     public static class ProgArray<K> extends ArrayBase<K, Integer> {
         public ProgArray(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, String name) {
-            super(bpf, mapId, mapFd, keyType, BPFType.BPFIntType.INT32, name);
+            super(bpf, MapTypeId.PROG_ARRAY, mapId, mapFd, keyType, BPFType.BPFIntType.INT32, name);
         }
 
         public Integer set(int index, BPF.BPFFunction function) {
@@ -782,7 +832,7 @@ public class BPFTable<K, V> {
 
     public static class CgroupArray<K> extends ArrayBase<K, Integer> {
         public CgroupArray(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, String name) {
-            super(bpf, mapId, mapFd, keyType, BPFType.BPFIntType.INT32, name);
+            super(bpf, MapTypeId.CGROUP_ARRAY, mapId, mapFd, keyType, BPFType.BPFIntType.INT32, name);
         }
 
         public Integer set(int index, String path) {
@@ -843,7 +893,7 @@ public class BPFTable<K, V> {
         private final Map<Integer, FuncAndLostCallbacks> callbacks = new HashMap<>();
 
         public PerfEventArray(BPF bpf, long mapId, int mapFd, String name, BPFType<E> eventType) {
-            super(bpf, mapId, mapFd, BPFType.BPFIntType.INT32, BPFType.BPFIntType.UINT32, name);
+            super(bpf, MapTypeId.PERF_EVENT_ARRAY, mapId, mapFd, BPFType.BPFIntType.INT32, BPFType.BPFIntType.UINT32, name);
             this.eventType = eventType;
         }
 
