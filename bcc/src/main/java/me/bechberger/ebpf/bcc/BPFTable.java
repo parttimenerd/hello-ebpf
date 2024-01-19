@@ -17,6 +17,7 @@ import java.lang.foreign.ValueLayout;
 import java.nio.channels.ClosedByInterruptException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import static me.bechberger.ebpf.bcc.PanamaUtil.*;
@@ -546,8 +547,12 @@ public class BPFTable<K, V> {
     }
 
     public static class HashTable<K, V> extends BaseMapTable<K, V> {
-        public HashTable(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
+        HashTable(BPF bpf, MapTypeId id, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
             super(bpf, MapTypeId.HASH, mapId, mapFd, keyType, leafType, name);
+        }
+
+        public HashTable(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
+            this(bpf, MapTypeId.HASH, mapId, mapFd, keyType, leafType, name);
         }
 
         public static final TableProvider<HashTable<@Unsigned Long, @Unsigned Long>> UINT64T_MAP_PROVIDER = (bpf, mapId, mapFd, name) -> new HashTable<>(bpf, mapId, mapFd, BPFType.BPFIntType.UINT64, BPFType.BPFIntType.UINT64, name);
@@ -1032,6 +1037,76 @@ public class BPFTable<K, V> {
 
         public static <E> TableProvider<PerfEventArray<E>> createProvider(BPFType<E> eventType) {
             return (bpf, mapId, mapFd, name) -> new PerfEventArray<>(bpf, mapId, mapFd, name, eventType);
+        }
+
+        public static class PerCPUHash<K, V> extends HashTable<K, List<V>> {
+
+            private final @Nullable Function<List<V>, V> reducer;
+            private final List<Integer> totalCPUs;
+            private final BPFType<V> innerType;
+
+            static <T> BPFType.BPFArrayType<T> createLeafType(BPFType<T> type, int size) {
+                // Currently Float, Char, un-aligned structs are not supported
+                if (type.size() == 8) {
+                    return BPFType.BPFArrayType.of(type, size);
+                }
+                throw new AssertionError("Unaligned structs, ints, floats and chars currently not supported");
+            }
+
+            public PerCPUHash(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> innerType, String name) {
+                this(bpf, mapId, mapFd, keyType, innerType, name, null);
+            }
+
+            public PerCPUHash(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> innerType, String name, @Nullable Function<List<V>, V> reducer) {
+                this(bpf, MapTypeId.PERCPU_HASH, mapId, mapFd, keyType, innerType, name, reducer);
+            }
+
+            PerCPUHash(BPF bpf, MapTypeId typeId, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> innerType, String name, @Nullable Function<List<V>, V> reducer) {
+                super(bpf, typeId, mapId, mapFd, keyType, createLeafType(innerType, Util.getPossibleCPUs().size()), name);
+                this.reducer = reducer;
+                this.totalCPUs = Util.getPossibleCPUs();
+                this.innerType = innerType;
+            }
+
+            @Override
+            public List<V> get(Object key) {
+                return super.get(key);
+            }
+
+            public V getReduced(K key) {
+                assert reducer != null;
+                return reducer.apply(get(key));
+            }
+        }
+    }
+
+    public static class LRUPerCPUHash<K, V> extends PerfEventArray.PerCPUHash<K, V> {
+        public LRUPerCPUHash(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> innerType, String name) {
+            super(bpf, MapTypeId.LRU_PERCPU_HASH, mapId, mapFd, keyType, innerType, name, null);
+        }
+
+        public LRUPerCPUHash(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> innerType, String name, Function<List<V>, V> reducer) {
+            super(bpf, MapTypeId.LRU_PERCPU_HASH, mapId, mapFd, keyType, innerType, name, reducer);
+        }
+    }
+
+    public static class PerCPUArray<K, V> extends ArrayBase<K, List<V>> {
+
+        private final @Nullable Function<List<V>, V> reducer;
+        public PerCPUArray(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> innerType, String name, @Nullable Function<List<V>, V> reducer) {
+            super(bpf, MapTypeId.PERCPU_ARRAY, mapId, mapFd, keyType, PerfEventArray.PerCPUHash.createLeafType(innerType, Util.getPossibleCPUs().size()), name);
+            this.reducer = reducer;
+        }
+
+        public V getReduced(K key) {
+            assert reducer != null;
+            return reducer.apply(get(key));
+        }
+    }
+
+    public static class LpmTrie<K, V> extends BPFTable<K, V> {
+        public LpmTrie(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> leafType, String name) {
+            super(bpf, MapTypeId.LPM_TRIE, mapId, mapFd, keyType, leafType, name);
         }
     }
 }
