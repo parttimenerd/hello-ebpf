@@ -61,7 +61,9 @@ public sealed interface BPFType {
         return layout().byteSize();
     }
 
-    /** Padded size of the type in bytes, use for all array index computations */
+    /**
+     * Padded size of the type in bytes, use for all array index computations
+     */
     default long sizePadded() {
         return PanamaUtil.padSize(layout().byteSize());
     }
@@ -233,6 +235,58 @@ public sealed interface BPFType {
         public AnnotatedClass javaClass() {
             return new AnnotatedClass(List.class, List.of(AnnotationInstances.size(length)));
         }
+
+        public static BPFArrayType of(BPFType memberType, int length) {
+            return new BPFArrayType(memberType.bpfName() + "[" + length + "]",
+                    memberType, length);
+        }
+    }
+
+    /**
+     * String with max size mapped to {@code char[]}
+     * <p>
+     * Important: the string is null-terminated, therefore the max length of the string is length-1 ASCII character.
+     * The string is truncated if it is longer than length-1.
+     */
+    record StringType(int length) implements BPFType {
+
+        @Override
+        public String bpfName() {
+            return "char[" + length + "]";
+        }
+
+        @Override
+        public MemoryLayout layout() {
+            return MemoryLayout.sequenceLayout(length, ValueLayout.JAVA_BYTE);
+        }
+
+        @Override
+        public MemoryParser parser() {
+            return segment -> segment.getUtf8String(0);
+        }
+
+        @Override
+        public MemorySetter setter() {
+            return (segment, obj) -> {
+                assert obj instanceof String;
+                byte[] bytes = ((String) obj).getBytes();
+                if (bytes.length + 1 < length) {
+                    segment.setUtf8String(0, (String) obj);
+                } else {
+                    byte[] dest = new byte[length];
+                    System.arraycopy(bytes, 0, dest, 0, length - 1);
+                    dest[length - 1] = 0;
+                    for (int i = 0; i < length; i++) {
+                        segment.set(ValueLayout.JAVA_BYTE, i, dest[i]);
+                    }
+                }
+            };
+        }
+
+        @Override
+        public AnnotatedClass javaClass() {
+            return new AnnotatedClass(String.class, List.of(AnnotationInstances.size(length)));
+        }
     }
 
     /**
@@ -262,12 +316,14 @@ public sealed interface BPFType {
     }
 
 
-    record BPFUnionTypeMember(String name, BPFType type) {}
+    record BPFUnionTypeMember(String name, BPFType type) {
+    }
 
     /**
      * Union
+     *
      * @param bpfName
-     * @param shared type that is shared between all members
+     * @param shared  type that is shared between all members
      * @param members members of the union, including the shared type members
      */
     record BPFUnionType(String bpfName, BPFType shared, List<BPFUnionTypeMember> members) implements BPFType {
@@ -300,7 +356,9 @@ public sealed interface BPFType {
             };
         }
 
-        /** Return the memory setter, only works if the passed union has a set current member */
+        /**
+         * Return the memory setter, only works if the passed union has a set current member
+         */
         @Override
         public MemorySetter setter() {
             return (segment, obj) -> {
@@ -321,6 +379,7 @@ public sealed interface BPFType {
 
     interface BPFUnion<S> {
         <S> S shared();
+
         <T> T get(String name);
 
         <T> void set(String name, T value);

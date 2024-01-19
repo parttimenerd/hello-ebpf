@@ -14,6 +14,10 @@ import static java.lang.foreign.ValueLayout.JAVA_BYTE;
  */
 public class PanamaUtil {
 
+    public static final char O_RDONLY = 0;
+    public static final char O_WRONLY = 1;
+    public static final char O_RDWR = 2;
+
     /**
      * Convert a memory segment to a string, returns null if segment is NULL
      */

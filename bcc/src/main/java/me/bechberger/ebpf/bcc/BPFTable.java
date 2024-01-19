@@ -2,14 +2,21 @@ package me.bechberger.ebpf.bcc;
 
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.raw.Lib;
+import me.bechberger.ebpf.raw.bcc_perf_buffer_opts;
+import me.bechberger.ebpf.raw.perf_reader_lost_cb;
+import me.bechberger.ebpf.raw.perf_reader_raw_cb;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.lang.foreign.Arena;
 import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
+import java.nio.channels.ClosedByInterruptException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.UnaryOperator;
 
 import static me.bechberger.ebpf.bcc.PanamaUtil.*;
@@ -23,7 +30,7 @@ import static me.bechberger.ebpf.bcc.PanamaUtil.*;
  * Translation of BCC's <code>class BPFTable</code>.
  */
 public class BPFTable<K, V> {
-    private final BPF bpf;
+    final BPF bpf;
     private final long mapId;
     private final int mapFd;
     private final BPFType keyType;
@@ -63,9 +70,10 @@ public class BPFTable<K, V> {
         }
     }
 
-    private static final HandlerWithErrno<Integer> BPF_UPDATE_ELEM = new HandlerWithErrno<>("bpf_update_elem", FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
+    private static final HandlerWithErrno<Integer> BPF_UPDATE_ELEM = new HandlerWithErrno<>("bpf_update_elem",
+            FunctionDescriptor.of(ValueLayout.JAVA_INT, ValueLayout.JAVA_INT, PanamaUtil.POINTER, PanamaUtil.POINTER, ValueLayout.JAVA_LONG));
 
-    private ResultAndErr<Integer> bpf_update_elem(Arena arena, int map_fd, MemorySegment key, MemorySegment value, int flags) {
+    private ResultAndErr<Integer> bpf_update_elem(Arena arena, int map_fd, MemorySegment key, MemorySegment value, long flags) {
         return BPF_UPDATE_ELEM.call(arena, map_fd, key, value, flags);
     }
 
@@ -505,8 +513,8 @@ public class BPFTable<K, V> {
     /**
      * Base class for all array like types, fixed size array
      */
-    public static class Array<K, V> extends BPFTable<K, V> implements List<V> {
-        public Array(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
+    public abstract static class ArrayBase<K, V> extends BPFTable<K, V> implements List<V> {
+        public ArrayBase(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
             super(bpf, mapId, mapFd, keyType, leafType, name);
             if (!(keyType instanceof BPFType.BPFIntType)) {
                 throw new AssertionError("Array key must be an integer type");
@@ -621,13 +629,10 @@ public class BPFTable<K, V> {
             throw new UnsupportedOperationException("Array is fixed size");
         }
 
-        /**
-         * nulls the element
-         */
         @Override
         public V remove(int index) {
             var val = get(index);
-            set(index, null);
+            remove((K) (Object) index);
             return val;
         }
 
@@ -697,12 +702,12 @@ public class BPFTable<K, V> {
 
                 @Override
                 public void remove() {
-                    Array.this.remove(currentIndex);
+                    ArrayBase.this.remove(currentIndex);
                 }
 
                 @Override
                 public void set(V v) {
-                    Array.this.set(currentIndex, v);
+                    ArrayBase.this.set(currentIndex, v);
                 }
 
                 @Override
@@ -725,6 +730,260 @@ public class BPFTable<K, V> {
         @Override
         public List<V> subList(int fromIndex, int toIndex) {
             throw new UnsupportedOperationException("Array is fixed size");
+        }
+    }
+
+    public static class Array<K, V> extends ArrayBase<K, V> {
+        public Array(BPF bpf, long mapId, int mapFd, BPFType keyType, BPFType leafType, String name) {
+            super(bpf, mapId, mapFd, keyType, leafType, name);
+        }
+
+        @Override
+        public V remove(int index) {
+            var val = get(index);
+            set(index, null);
+            return val;
+        }
+    }
+
+    /**
+     * array of bpf function fds
+     */
+    public static class ProgArray<K> extends ArrayBase<K, Integer> {
+        public ProgArray(BPF bpf, long mapId, int mapFd, BPFType keyType, String name) {
+            super(bpf, mapId, mapFd, keyType, BPFType.BPFIntType.INT32, name);
+        }
+
+        public Integer set(int index, BPF.BPFFunction function) {
+            return set(index, function.fd());
+        }
+    }
+
+    /**
+     * automatically closes the file descriptor when closed
+     */
+    private static class FileDesc implements Closeable {
+        private final int fd;
+
+        public FileDesc(int fd) {
+            if (fd < 0) {
+                throw new IllegalArgumentException("Invalid file descriptor");
+            }
+            this.fd = fd;
+        }
+
+        public int getFd() {
+            return fd;
+        }
+
+        @Override
+        public void close() {
+            if (fd >= 0) {
+                Lib.close(fd);
+            }
+        }
+    }
+
+    public static class CgroupArray<K> extends ArrayBase<K, Integer> {
+        public CgroupArray(BPF bpf, long mapId, int mapFd, BPFType keyType, String name) {
+            super(bpf, mapId, mapFd, keyType, BPFType.BPFIntType.INT32, name);
+        }
+
+        public Integer set(int index, String path) {
+            // use Lib.fopen
+            try (Arena arena = Arena.ofConfined()) {
+                var pathInC = allocateNullOrString(arena, path);
+                try (FileDesc desc = new FileDesc(Lib.open(pathInC, O_RDONLY))) {
+                    return set(index, desc.getFd());
+                }
+            }
+        }
+    }
+
+    /**
+     * Pollable event array, maps CPU to event fd
+     * <p>
+     * Assumes that cpu id == cpu index
+     *
+     * @param <E> event type
+     */
+    public static class PerfEventArray<E> extends ArrayBase<Integer, @Unsigned Integer> implements Closeable {
+
+        public record FuncAndLostCallbacks(MemorySegment func, MemorySegment lost, perf_reader_raw_cb rawFunc,
+                                           @Nullable perf_reader_lost_cb rawLost) {
+        }
+
+        @FunctionalInterface
+        public interface EventCallback<E> {
+            /**
+             * Called when a new event is received
+             *
+             * @param array perf array that received the event
+             * @param cpu   cpu id of the event
+             * @param data  event data, use {@link PerfEventArray#event(MemorySegment)} to parse
+             * @param size  size of the event data
+             * @throws IOException can be thrown by the callback
+             */
+            void call(PerfEventArray<E> array, int cpu, MemorySegment data, int size) throws IOException;
+        }
+
+        @FunctionalInterface
+        public interface LostCallback<E> {
+            void call(PerfEventArray<E> array, long lost) throws IOException;
+        }
+
+        private static AtomicInteger nextId = new AtomicInteger(0);
+
+        private final int id = nextId.getAndIncrement();
+
+        private final BPFType eventType;
+        /**
+         * cpu to event fd
+         */
+        private final Map<Integer, Integer> openKeyFds = new HashMap<>();
+        private final Map<Integer, FuncAndLostCallbacks> callbacks = new HashMap<>();
+
+        public PerfEventArray(BPF bpf, long mapId, int mapFd, String name, BPFType eventType) {
+            super(bpf, mapId, mapFd, BPFType.BPFIntType.INT32, BPFType.BPFIntType.UINT32, name);
+            this.eventType = eventType;
+        }
+
+        @Override
+        public void close() {
+            for (var fd : openKeyFds.values()) {
+                remove(fd);
+            }
+            openKeyFds.clear();
+        }
+
+        @Override
+        public @Unsigned Integer remove(int cpu) {
+            if (!openKeyFds.containsKey(cpu)) {
+                return null;
+            }
+            // Delete entry from the array
+            var ret = super.remove(cpu);
+            var id = id(cpu);
+            if (this.bpf.hasPerfBuffer(id)) {
+                // The key is opened for perf ring buffer
+                Lib.perf_reader_free(this.bpf.getPerfBuffer(id));
+                this.bpf.removePerfBuffer(id);
+                callbacks.remove(cpu);
+            } else {
+                // The key is opened for perf event read
+                Lib.bpf_close_perf_event_fd(openKeyFds.get(cpu));
+            }
+            return ret;
+        }
+
+        public PerfEventArrayId id(int cpu) {
+            return new PerfEventArrayId(id, cpu);
+        }
+
+        public static record PerfEventArrayId(int id, int cpu) {
+        }
+
+        /**
+         * When perf buffers are opened to receive custom perf event,
+         * the underlying event data struct which is defined in C in
+         * the BPF program can be deduced via this function.
+         * TODO: maybe remove
+         */
+        public E event(MemorySegment data) {
+            return eventType.parseMemory(data);
+        }
+
+        public PerfEventArray<E> open_perf_buffer(EventCallback callback) {
+            open_perf_buffer(callback, 8, null, 1);
+            return this;
+        }
+
+        /**
+         * Opens a set of per-cpu ring buffer to receive custom perf event
+         * data from the bpf program. The callback will be invoked for each
+         * event submitted from the kernel, up to millions per second. Use
+         * page_cnt to change the size of the per-cpu ring buffer. The value
+         * must be a power of two and defaults to 8.
+         */
+        public void open_perf_buffer(EventCallback<E> callback, int pageCnt, @Nullable LostCallback<E> lostCallback, int wakeupEvents) {
+            if ((pageCnt & (pageCnt - 1)) != 0) {
+                throw new IllegalArgumentException("Perf buffer page_cnt must be a power of two");
+            }
+            for (var cpu : Util.getOnlineCPUs()) {
+                open_perf_buffer(cpu, callback, pageCnt, lostCallback, wakeupEvents);
+            }
+        }
+
+        private void open_perf_buffer(int cpu, EventCallback<E> callback, int pageCnt, @Nullable LostCallback<E> lostCallback, int wakeupEvents) {
+
+            perf_reader_raw_cb rawFn = (ctx, data, size) -> {
+                try {
+                    callback.call(this, cpu, data, size);
+                } catch (IOException e) {
+                    if (e instanceof ClosedByInterruptException) {
+                        System.exit(0);
+                    } else {
+                        throw new RuntimeException(e);
+                    }
+                }
+            };
+
+            perf_reader_lost_cb rawLostFn = (ctx, lost) -> {
+                try {
+                    assert lostCallback != null;
+                    lostCallback.call(this, lost);
+                } catch (IOException e) {
+                    if (e instanceof ClosedByInterruptException) {
+                        System.exit(0);
+                    } else {
+                        throw new RuntimeException(e);
+                    }
+                }
+            };
+            try (var arena = Arena.ofConfined()) {
+                var fn = perf_reader_raw_cb.allocate(rawFn, bpf.arena());
+                var lostFn = lostCallback != null ? perf_reader_lost_cb.allocate(rawLostFn, bpf.arena()) : MemorySegment.NULL;
+                var opts = bcc_perf_buffer_opts.allocate(arena);
+                bcc_perf_buffer_opts.pid$set(opts, -1);
+                bcc_perf_buffer_opts.cpu$set(opts, cpu);
+                bcc_perf_buffer_opts.wakeup_events$set(opts, wakeupEvents);
+                var reader = Lib.bpf_open_perf_buffer_opts(fn, lostFn, MemorySegment.NULL, pageCnt, opts);
+                if (reader == null) {
+                    throw new IllegalStateException("Could not open perf buffer");
+                }
+                var fd = Lib.perf_reader_fd(reader);
+                set(cpu, fd);
+                bpf.setPerfBuffer(id(cpu), reader);
+                // keep a refcnt
+                callbacks.put(cpu, new FuncAndLostCallbacks(fn, lostFn, rawFn, rawLostFn));
+                // The actual fd is held by the perf reader, add to track opened keys
+                openKeyFds.put(cpu, -1);
+            }
+        }
+
+        private void open_perf_event(int cpu, int typ, int config, int pid) {
+            var fd = Lib.bpf_open_perf_event(typ, config, pid, cpu);
+            if (fd < 0) {
+                throw new IllegalStateException("bpf_open_perf_event failed");
+            }
+            set(cpu, fd);
+            openKeyFds.put(cpu, fd);
+        }
+
+        /**
+         * Configures the table such that calls from the bpf program to
+         * table.perf_read(CUR_CPU_IDENTIFIER) will return the hardware
+         * counter denoted by event ev on the local cpu.
+         */
+        public PerfEventArray<E> open_perf_event(int typ, int config, int pid) {
+            for (var cpu : Util.getOnlineCPUs()) {
+                open_perf_event(cpu, typ, config, pid);
+            }
+            return this;
+        }
+
+        public static <E> TableProvider<PerfEventArray<E>> createProvider(BPFType eventType) {
+            return (bpf, mapId, mapFd, name) -> new PerfEventArray<>(bpf, mapId, mapFd, name, eventType);
         }
     }
 }

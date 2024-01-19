@@ -16,8 +16,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.lang.foreign.ValueLayout.JAVA_INT;
-import static me.bechberger.ebpf.bcc.PanamaUtil.HandlerWithErrno;
-import static me.bechberger.ebpf.bcc.PanamaUtil.ResultAndErr;
+import static me.bechberger.ebpf.bcc.PanamaUtil.*;
 
 /**
  * Main class for BPF functionality, modelled after the BPF class from the bcc Python bindings
@@ -95,6 +94,9 @@ public class BPF implements AutoCloseable {
     private static final List<String> syscallPrefixes = List.of("sys_", "__x64_sys_", "__x32_compat_sys_",
             "__ia32_compat_sys_", "__arm64_sys_", "__s390x_sys_", "__s390_sys_");
 
+    /** Arena that lives as long as this object */
+    private final Arena arena = Arena.ofConfined();
+
     /**
      * eBPF program text
      */
@@ -129,6 +131,7 @@ public class BPF implements AutoCloseable {
 
     private LineReader traceFile = null;
 
+    private final Map<BPFTable.PerfEventArray.PerfEventArrayId, MemorySegment> perfBuffers = new HashMap<>();
 
     /**
      * Construct a BPF object from a string
@@ -137,7 +140,7 @@ public class BPF implements AutoCloseable {
      */
     private BPF(String text, String fileName, @Nullable Path hdrFile, boolean allowRLimit, int debug) {
         this.text = text;
-        MemorySegment textNative = Arena.global().allocateUtf8String(text);
+        MemorySegment textNative = arena.allocateUtf8String(text);
         this.debug = debug;
 
         /*
@@ -171,6 +174,12 @@ public class BPF implements AutoCloseable {
     public record BPFFunction(BPF BPF, String name, int fd) {
     }
 
+    /**
+     * Returns the arena that lives as long as this object
+     */
+    public Arena arena() {
+        return arena;
+    }
 
     /**
      * Does the BPF program contain a the given function?
@@ -816,12 +825,70 @@ public class BPF implements AutoCloseable {
         return _num_open_probes;
     }
 
+    /**
+     * Poll from all open perf ring buffers, calling the callback that was
+     * provided when calling {@link BPFTable.PerfEventArray#open_perf_buffer(BPFTable.PerfEventArray.EventCallback)} for each entry.
+     *
+     * Without a timeout.
+     */
+    public void perf_buffer_poll() {
+        perf_buffer_poll(-1);
+    }
+
+    /**
+     * Poll from all open perf ring buffers, calling the callback that was
+     * provided when calling {@link BPFTable.PerfEventArray#open_perf_buffer(BPFTable.PerfEventArray.EventCallback)} for each entry.
+     */
+    public void perf_buffer_poll(int timeout) {
+        try (var arena = Arena.ofConfined()) {
+            var readers = arena.allocateArray(PanamaUtil.POINTER, perfBuffers.size());
+            int i = 0;
+            for (var v : perfBuffers.values()) {
+                readers.setAtIndex(POINTER, i++, v);
+            }
+            Lib.perf_reader_poll(perfBuffers.size(), readers, timeout);
+        }
+    }
+
+    /**
+     * Consume all open perf buffers, regardless of whether or not
+     * they currently contain events data. Necessary to catch 'remainder'
+     * events when wakeup_events > 1 is set in open_perf_buffer
+     */
+    public void perf_buffer_consume() {
+        try (var arena = Arena.ofConfined()) {
+            var readers = arena.allocateArray(PanamaUtil.POINTER, perfBuffers.size());
+            int i = 0;
+            for (var v : perfBuffers.values()) {
+                readers.setAtIndex(POINTER, i++, v);
+            }
+            Lib.perf_reader_consume(perfBuffers.size(), readers);
+        }
+    }
+
     @Override
     public void close() {
+        arena.close();
         cleanup();
     }
 
     public MemorySegment getModule() {
         return module;
+    }
+
+    public void setPerfBuffer(BPFTable.PerfEventArray.PerfEventArrayId id, MemorySegment reader) {
+        perfBuffers.put(id, reader);
+    }
+
+    public void removePerfBuffer(BPFTable.PerfEventArray.PerfEventArrayId id) {
+        perfBuffers.remove(id);
+    }
+
+    public boolean hasPerfBuffer(BPFTable.PerfEventArray.PerfEventArrayId id) {
+        return perfBuffers.containsKey(id);
+    }
+
+    public MemorySegment getPerfBuffer(BPFTable.PerfEventArray.PerfEventArrayId id) {
+        return perfBuffers.get(id);
     }
 }
