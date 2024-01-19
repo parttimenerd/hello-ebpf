@@ -291,7 +291,7 @@ public class BPF implements AutoCloseable {
         }
     }
 
-    public record TraceFields(String task, int pid, String cpu, String flags, double ts, String msg) {
+    public record TraceFields(String line, String task, int pid, String cpu, String flags, double ts, String msg) {
         public String format(String fmt) {
             String fields = fmt;
             fields = fields.replace("{0}", task);
@@ -341,15 +341,15 @@ public class BPF implements AutoCloseable {
      */
     public TraceFields trace_fields() {
         while (true) {
-            String line = trace_readline();
-            if (line == null) return null;
+            String tracedLine = trace_readline();
+            if (tracedLine == null) return null;
             // don't print messages related to lost events
-            if (line.startsWith("CPU:")) continue;
+            if (tracedLine.startsWith("CPU:")) continue;
             try {
-                var task = line.substring(0, 16).strip();
-                line = line.substring(17);
+                var task = tracedLine.substring(0, 16).strip();
+                var line = tracedLine.substring(17);
                 var tsEnd = line.indexOf(":");
-                var pidCpuFlagsTs = line.substring(0, tsEnd).split(" ");
+                var pidCpuFlagsTs = line.substring(0, tsEnd).split(" +");
                 var pid = Integer.parseInt(pidCpuFlagsTs[0]);
                 var cpu = pidCpuFlagsTs[1].substring(1, pidCpuFlagsTs[1].length() - 1);
                 var flags = pidCpuFlagsTs[2];
@@ -364,9 +364,9 @@ public class BPF implements AutoCloseable {
                 line = line.substring(tsEnd + 1);
                 int symEnd = line.indexOf(":");
                 var msg = line.substring(symEnd + 2);
-                return new TraceFields(task, pid, cpu, flags, ts, msg);
+                return new TraceFields(tracedLine, task, pid, cpu, flags, ts, msg);
             } catch (NumberFormatException e) {
-                return new TraceFields("Unknown", 0, "Unknown", "Unknown", 0.0, "Unknown");
+                return new TraceFields(tracedLine, "Unknown", 0, "Unknown", "Unknown", 0.0, "Unknown");
             }
         }
     }
@@ -381,16 +381,23 @@ public class BPF implements AutoCloseable {
     /**
      * Read from the kernel debug trace pipe and print on stdout.
      * If fmt is specified, apply as a format string to the output.
+     * Skip messages if format returns null.
      *
      * @param format format function
+     *
+     * Example:
+     * {@snippet :
+     *    b.trace_print(t -> t.msg()) // print only the message
+     * }
      */
-    public void trace_print(@Nullable Function<TraceFields, String> format) {
+    public void trace_print(@Nullable Function<TraceFields, @Nullable String> format) {
         while (true) {
             String line;
             if (format != null) {
                 var fields = trace_fields();
                 if (fields == null) continue;
                 line = format.apply(fields);
+                if (line == null) continue;
             } else {
                 line = trace_readline();
                 if (line == null) continue;
@@ -480,14 +487,16 @@ public class BPF implements AutoCloseable {
      * }
      */
     public BPF attach_raw_tracepoint(@Nullable String tracepoint, @Nullable String fn_name) {
-        if (tracepoint == null || fn_name == null) return this;
-        if (raw_tracepoint_fds.containsKey(tracepoint))
-            throw new RuntimeException(STR."Raw tracepoint \{tracepoint} has been attached");
-        var fn = load_func(fn_name, Lib.BPF_PROG_TYPE_RAW_TRACEPOINT());
-        int fd = Lib.bpf_attach_raw_tracepoint(fn.fd, arena.allocateUtf8String(tracepoint));
-        if (fd < 0) throw new RuntimeException("Failed to attach BPF to raw tracepoint");
-        raw_tracepoint_fds.put(tracepoint, fd);
-        return this;
+        try (var arena = Arena.ofConfined()) {
+            if (tracepoint == null || fn_name == null) return this;
+            if (raw_tracepoint_fds.containsKey(tracepoint))
+                throw new RuntimeException(STR."Raw tracepoint \{tracepoint} has been attached");
+            var fn = load_func(fn_name, Lib.BPF_PROG_TYPE_RAW_TRACEPOINT());
+            int fd = Lib.bpf_attach_raw_tracepoint(fn.fd, arena.allocateUtf8String(tracepoint));
+            if (fd < 0) throw new RuntimeException("Failed to attach BPF to raw tracepoint");
+            raw_tracepoint_fds.put(tracepoint, fd);
+            return this;
+        }
     }
 
     /**
@@ -502,8 +511,7 @@ public class BPF implements AutoCloseable {
         if (tracepoint == null) return;
         if (!raw_tracepoint_fds.containsKey(tracepoint))
             throw new RuntimeException(STR."Raw tracepoint \{tracepoint} is not attached");
-        var res = Lib.bpf_close_perf_event_fd(raw_tracepoint_fds.get(tracepoint));
-        if (res < 0) throw new RuntimeException("Failed to close raw tracepoint FD");
+        Lib.close(raw_tracepoint_fds.get(tracepoint));
         raw_tracepoint_fds.remove(tracepoint);
     }
 

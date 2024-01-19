@@ -58,6 +58,10 @@ public class Syscalls {
         return getSyscallMap().get(name);
     }
 
+    public static Syscall getSyscall(int number) {
+        return getOrderedSyscalls().get(number);
+    }
+
     private static List<Syscall> parse() throws IOException, InterruptedException {
         var process = Runtime.getRuntime().exec(new String[]{"cpp", "-dM"});
         process.getOutputStream().write("#include <sys/syscall.h>\n".getBytes());

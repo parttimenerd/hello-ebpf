@@ -26,7 +26,7 @@ with a [blog series](https://mostlynerdless.de/blog/tag/hello-ebpf/) to document
 This project is still in its early stages, and a read-along of the book is recommended:
 
 __We're currently at page 23 of the book in the [blog series](https://mostlynerdless.de/blog/tag/hello-ebpf/)
-and page 28 with this repo.__
+and page 34 with this repo.__
 
 Goals
 -----
@@ -156,7 +156,7 @@ Posts covering the development of this project:
 - Jan 12, 2024: [Hello eBPF: Recording data in basic eBPF maps (2)](https://mostlynerdless.de/blog/2024/01/12/hello-ebpf-recording-data-in-basic-ebpf-maps-2/)
 
 Planned posts:
-- Hello eBPF: Recording data in perf buffers (3)
+- Hello eBPF: Recording data in perf buffers and program arrays (3)
 
 Examples
 --------
@@ -166,13 +166,14 @@ of the implementation by the examples we have implemented. We also use examples 
 like the bcc repository and state this in the first column.
 
 
-| Chapter<br/>/Source | Example                                                        | Java class                                                                                     | Status | Description                                                                       |
-|---------------------|----------------------------------------------------------------|------------------------------------------------------------------------------------------------|--------|-----------------------------------------------------------------------------------|
-| bcc                 | [bcc/hello_world.py](pysamples/bcc/hello_world.py)             | [HelloWorld](bcc/src/main/java/me/bechberger/ebpf/samples/bcc/HelloWorld.java)                 | works  | Basic hello world                                                                 |
-| 2                   | [chapter2/hello.py](pysamples/chapter2/hello.py)               | [chapter2.HelloWorld](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloWorld.java)   | works  | print "Hello World!" for each `execve` syscall                                    |
-| 2                   | [chapter2/hello-map.py](pysamples/chapter2/hello-map.py)       | [chapter2.HelloMap](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloMap.java)       | works  | Count and print `execve` calls per user                                           |
-| own                 | -                                                              | [own.HelloStructMap](bcc/src/main/java/me/bechberger/ebpf/samples/own/HelloStructMap.java)     | works  | Count and print `execve` calls per user and store the result as a struct in a map |
-| 2                   | [chapter2/hello-buffer.py](pysamples/chapter2/hello-buffer.py) | [chapter2.HelloBuffer](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloBuffer.java) | works  | Record information in perf buffer                                                 |                                                |
+| Chapter<br/>/Source | Example                                                        | Java class                                                                                     | Status | Description                                                                            |
+|---------------------|----------------------------------------------------------------|------------------------------------------------------------------------------------------------|--------|----------------------------------------------------------------------------------------|
+| bcc                 | [bcc/hello_world.py](pysamples/bcc/hello_world.py)             | [HelloWorld](bcc/src/main/java/me/bechberger/ebpf/samples/bcc/HelloWorld.java)                 | works  | Basic hello world                                                                      |
+| 2                   | [chapter2/hello.py](pysamples/chapter2/hello.py)               | [chapter2.HelloWorld](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloWorld.java)   | works  | print "Hello World!" for each `execve` syscall                                         |
+| 2                   | [chapter2/hello-map.py](pysamples/chapter2/hello-map.py)       | [chapter2.HelloMap](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloMap.java)       | works  | Count and print `execve` calls per user                                                |
+| own                 | -                                                              | [own.HelloStructMap](bcc/src/main/java/me/bechberger/ebpf/samples/own/HelloStructMap.java)     | works  | Count and print `execve` calls per user and store the result as a struct in a map      |
+| 2                   | [chapter2/hello-buffer.py](pysamples/chapter2/hello-buffer.py) | [chapter2.HelloBuffer](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloBuffer.java) | works  | Record information in perf buffer                                                      |
+| 2                   | [chapter2/hello-tail.py](pysamples/chapter2/hello-tail.py)     | [chapter2.HelloTail](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloTail.java)     | works  | Print a message when a syscall is called, and also when a timer is created or deleted. |
 
 ... more to come from the [books' repository](https://github.com/lizrice/learning-ebpf/tree/main).
 
@@ -183,6 +184,12 @@ All classes and methods have the name as in the Python API, introducing things l
 for more complex cases (like the constructor of `BPF`).
 
 The comments for all of these entities are copied from the Python API and extended where necessary.
+
+Todo
+----
+The near future to-dos:
+- Move the raw bindings into their own maven package
+- Implement all API methods
 
 Plans
 -----

@@ -15,5 +15,9 @@ if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     ))
     exit 0
 fi
+
+CLASS=$1
+
 # Run the program
-java --enable-preview -cp target/bcc.jar --enable-native-access=ALL-UNNAMED $JAVA_OPTS me.bechberger.ebpf.samples.$1
+shift
+java --enable-preview -cp target/bcc.jar --enable-native-access=ALL-UNNAMED $JAVA_OPTS me.bechberger.ebpf.samples.$CLASS $@
