@@ -180,6 +180,7 @@ like the bcc repository and state this in the first column.
 | 2                   | [chapter2/hello-buffer.py](pysamples/chapter2/hello-buffer.py) | [chapter2.HelloBuffer](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloBuffer.java) | works  | Record information in perf buffer                                                      |
 | 2                   | [chapter2/hello-tail.py](pysamples/chapter2/hello-tail.py)     | [chapter2.HelloTail](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/HelloTail.java)     | works  | Print a message when a syscall is called, and also when a timer is created or deleted. |
 | 2                   | -                                                              | [chapter2.ex](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/ex)                        | works  | Implementation of some of the exercises for chapter 2                                  |
+| own                 | [own/disassembler-test.py](pysamples/own/disassembler-test.py) | [own.DisassemblerTest](bcc/src/main/java/me/bechberger/ebpf/samples/own/DisassemblerTest.java) | works  | Disassemble byte-code for the HelloMap example                                         |
 ... more to come from the [books' repository](https://github.com/lizrice/learning-ebpf/tree/main).
 
 
