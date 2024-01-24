@@ -1,7 +1,7 @@
 package me.bechberger.ebpf.bcc;
 
-import me.bechberger.ebpf.raw.Lib;
-import me.bechberger.ebpf.raw.bcc_symbol;
+import me.bechberger.ebpf.bcc.raw.Lib;
+import me.bechberger.ebpf.bcc.raw.bcc_symbol;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;

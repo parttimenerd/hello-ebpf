@@ -1,6 +1,6 @@
 package me.bechberger.ebpf.bcc;
 
-import me.bechberger.ebpf.raw.Lib;
+import me.bechberger.ebpf.bcc.raw.Lib;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.*;

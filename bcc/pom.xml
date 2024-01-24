@@ -46,52 +46,6 @@
         <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>2.5</version>
-                <executions>
-                    <execution>
-                        <id>auto-clean</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                        <configuration>
-                            <filesets>
-                                <fileset>
-                                    <directory>${basedir}/src/main/java/me/bechberger/ebpf/raw</directory>
-                                </fileset>
-                            </filesets>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <executable>python3</executable>
-                    <workingDirectory>..</workingDirectory>
-                    <arguments>
-                        <argument>${basedir}/../bin/jextract_bpf.py</argument>
-                        <argument>${basedir}/src/main/java</argument>
-                        <argument>me.bechberger.ebpf.raw</argument>
-                        <argument>Lib</argument>
-                    </arguments>
-                    <environmentVariables>
-                        <LANG>en_US</LANG>
-                    </environmentVariables>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
@@ -162,6 +116,11 @@
             <groupId>me.bechberger</groupId>
             <artifactId>ebpf-annotations</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>me.bechberger</groupId>
+            <artifactId>rawbcc</artifactId>
+            <version>0.1.1</version>
         </dependency>
     </dependencies>
 

@@ -16,10 +16,10 @@
 package me.bechberger.ebpf.bcc;
 
 import me.bechberger.ebpf.annotations.Unsigned;
-import me.bechberger.ebpf.raw.Lib;
-import me.bechberger.ebpf.raw.bcc_perf_buffer_opts;
-import me.bechberger.ebpf.raw.perf_reader_lost_cb;
-import me.bechberger.ebpf.raw.perf_reader_raw_cb;
+import me.bechberger.ebpf.bcc.raw.Lib;
+import me.bechberger.ebpf.bcc.raw.bcc_perf_buffer_opts;
+import me.bechberger.ebpf.bcc.raw.perf_reader_lost_cb;
+import me.bechberger.ebpf.bcc.raw.perf_reader_raw_cb;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

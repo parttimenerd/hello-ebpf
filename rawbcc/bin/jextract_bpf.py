@@ -133,7 +133,7 @@ def assert_java21():
 
 
 def run_jextract(dest_path: Path, package: str = "", name: str = "BPF",
-                 delete_dest_path: bool = True):
+                 delete_dest_path: bool = False):
     assert_java21()
     print("Running jextract")
     create_modified_bcc_header()

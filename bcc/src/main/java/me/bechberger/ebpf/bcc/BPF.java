@@ -1,6 +1,7 @@
 package me.bechberger.ebpf.bcc;
 
-import me.bechberger.ebpf.raw.Lib;
+import me.bechberger.ebpf.bcc.raw.LibraryLoader;
+import me.bechberger.ebpf.bcc.raw.Lib;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -24,17 +25,7 @@ import static me.bechberger.ebpf.bcc.PanamaUtil.*;
 public class BPF implements AutoCloseable {
 
     static {
-        try {
-            System.loadLibrary("bcc");
-        } catch (UnsatisfiedLinkError e) {
-            try {
-                System.load("/lib/x86_64-linux-gnu/libbcc.so");
-            } catch (UnsatisfiedLinkError e2) {
-                System.err.println("Failed to load libbcc.so.0, pass the location of the lib folder " +
-                        "via -Djava.library.path after you installed it");
-                System.exit(1);
-            }
-        }
+        LibraryLoader.load();
     }
 
     /**
