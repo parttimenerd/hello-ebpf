@@ -135,8 +135,6 @@ if __name__ == '__main__':
     argparse.add_argument("version", help="Kernel version")
     argparse.add_argument("destination", help="Destination folder")
     args = argparse.parse_args()
-    print(
-        f"Downloading headers for {args.version} (arch {get_arch()}) into {args.destination}")
     copy_headers_into_dest(get_arch(),
                            args.version,
                            Path(args.destination))

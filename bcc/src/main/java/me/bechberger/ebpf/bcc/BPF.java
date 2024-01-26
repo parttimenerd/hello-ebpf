@@ -142,9 +142,12 @@ public class BPF implements AutoCloseable {
                                                           cflags_array, len(cflags_array),
                                                           allow_rlimit, device)
          */
-        var maybeModule = bpf_module_create_c_from_string(arena, textNative, debug, MemorySegment.NULL, 0, allowRLimit ? 1 : 0, MemorySegment.NULL);
+        var maybeModule = bpf_module_create_c_from_string(arena, textNative, -1, MemorySegment.NULL, 0, allowRLimit ? 1 : 0, MemorySegment.NULL);
         if (maybeModule.err() != 0 && maybeModule.err() != 2) {
            throw new BPFCallException(STR."Failed to compile BPF module: \{PanamaUtil.errnoString(maybeModule.err())}");
+        }
+        if (maybeModule.err() != 0) {
+            System.err.println(STR."Warning BPF constructor: \{fileName} \{maybeModule.err()} \{PanamaUtil.errnoString(maybeModule.err())}");
         }
         module = maybeModule.result();
 

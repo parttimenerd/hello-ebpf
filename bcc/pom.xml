@@ -120,7 +120,7 @@
         <dependency>
             <groupId>me.bechberger</groupId>
             <artifactId>rawbcc</artifactId>
-            <version>0.1.1</version>
+            <version>0.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

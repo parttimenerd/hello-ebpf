@@ -6,7 +6,7 @@
 #
 # Configuration per environment variables:
 #  - `HBT_JAVA_BINARY` - the java binary to use (default: `java`)
-#  - `HBT_KERNEL_VERSION` - the kernel version to use (default: `6.7`)
+#  - `HBT_KERNEL_VERSION` - the kernel version to use (default: `6.6`)
 #                           see https://ghcr.io/cilium/ci-kernels for available versions
 #
 # Has to reside in bin/java so it can be passed to the `-Djvm` maven option.
@@ -20,8 +20,7 @@ set -e
 HBT_JAVA_BINARY=${HBT_JAVA_BINARY:-java}
 
 # The kernel version to use
-HBT_KERNEL_VERSION=${HBT_KERNEL_VERSION:-6.7}
+HBT_KERNEL_VERSION=${HBT_KERNEL_VERSION:-6.6}
 
 testutil_dir=$(dirname "$0")/..
 $testutil_dir/run-in-container.sh $HBT_KERNEL_VERSION $HBT_JAVA_BINARY $@
-exit 0

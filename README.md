@@ -1,6 +1,8 @@
 Hello eBPF
 ==========
 
+[![ci](https://github.com/parttimenerd/hello-ebpf/actions/workflows/ci.yml/badge.svg)](https://github.com/parttimenerd/hello-ebpf/actions/workflows/ci.yml)
+
 There are [user land libraries](https://ebpf.io/what-is-ebpf/#development-toolchains) for [eBPF](https://ebpf.io) that allow you to
 write eBPF applications in C++, Rust, Go, Python and even
 Lua. But there are none for Java, which is a pity.
@@ -221,6 +223,7 @@ This requires [virtme](https://github.com/ezequielgarcia/virtme) (`apt install v
 You can run custom commands in the container using `testutil/run-in-container.sh`.
 Read more in the [testutil/README.md](testutil/README.md).
 
+I'm unable to get it running in the CI, so I'm currently running the tests locally.
 
 Contributing
 ------------

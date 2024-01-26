@@ -72,6 +72,12 @@ fi
 # get exact kernel version which is "$input/lib/modules/<version>/updates"
 kernel_version=$(basename "$(find "${input}/lib/modules" -maxdepth 1 -type d)")
 
+# /lib is a symlink which causes problems
+mkdir "$input"/lib2
+cp -r "$input"/lib/modules "$input"/lib2
+rm -r "$input"/lib
+mv $input/lib2 $input/lib
+
 "$script_folder"/find_and_get_kernel.py "${kernel_version}" "$input"
 
 mkdir -p "$input"/root

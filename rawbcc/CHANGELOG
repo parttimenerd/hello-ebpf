@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.2
+
+### Fixed
+- Fix loading libraries if the library ends with a version number, like `libbcc.so.0`
+
+### Changed
+- Delegate loading of libraries to `System.load` if possible
+
 ## 0.1.1
 
 ### Fixed

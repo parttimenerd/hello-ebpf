@@ -63,7 +63,7 @@ public class HelloBufferTest {
                                 
                     return 0;
                 }
-                """).build()) {
+                """).withDebug(-1).build()) {
             var syscall = b.get_syscall_fnname("execve");
             b.attach_kprobe(syscall, "hello");
 
