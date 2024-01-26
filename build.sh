@@ -2,6 +2,4 @@
 
 cd "$(dirname "$0")" || exit
 
-(cd annotations && mvn install)
-
-(cd bcc && mvn package)
+mvn package -DskipTests=true

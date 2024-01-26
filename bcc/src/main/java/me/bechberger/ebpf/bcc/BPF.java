@@ -142,11 +142,31 @@ public class BPF implements AutoCloseable {
                                                           cflags_array, len(cflags_array),
                                                           allow_rlimit, device)
          */
-        module = Lib.bpf_module_create_c_from_string(textNative, debug, MemorySegment.NULL, 0, allowRLimit, MemorySegment.NULL);
+        var maybeModule = bpf_module_create_c_from_string(arena, textNative, debug, MemorySegment.NULL, 0, allowRLimit ? 1 : 0, MemorySegment.NULL);
+        if (maybeModule.err() != 0 && maybeModule.err() != 2) {
+           throw new BPFCallException(STR."Failed to compile BPF module: \{PanamaUtil.errnoString(maybeModule.err())}");
+        }
+        module = maybeModule.result();
 
         if (module == null) throw new RuntimeException(STR."Failed to compile BPF module \{fileName}");
 
         trace_autoload();
+    }
+
+    // error checked version of Lib.bpf_module_create_c_from_string
+    private static HandlerWithErrno<MemorySegment> BPF_MODULE_CREATE_C_FROM_STRING = new HandlerWithErrno<>("bpf_module_create_c_from_string",
+            FunctionDescriptor.of(ValueLayout.ADDRESS,
+                    ValueLayout.ADDRESS,
+                    JAVA_INT,
+                    ValueLayout.ADDRESS,
+                    JAVA_INT,
+                    JAVA_INT,
+                    ValueLayout.ADDRESS
+            ));
+
+    private static ResultAndErr<MemorySegment> bpf_module_create_c_from_string(Arena arena, MemorySegment text, int debug, MemorySegment cflags, int cflagsLen,
+                                                                               int allowRLimit, MemorySegment device) {
+        return BPF_MODULE_CREATE_C_FROM_STRING.call(arena, text, debug, cflags, cflagsLen, allowRLimit, device);
     }
 
     public static BCCBuilder builder(String text) {

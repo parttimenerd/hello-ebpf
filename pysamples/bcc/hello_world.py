@@ -7,11 +7,6 @@
 
 # run in project examples directory with:
 # sudo ./hello_world.py"
-# see trace_fields.py for a longer example
-
-from helpers import trace
-
-trace.setup(r".*bcc.*")
 
 from bcc import BPF
 

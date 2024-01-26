@@ -924,7 +924,10 @@ public class BPFTable<K, V> {
         @Override
         public void close() {
             for (var fd : openKeyFds.values()) {
-                remove(fd);
+                if (this.bpf.hasPerfBuffer(id(id))) {
+                    Lib.perf_reader_free(this.bpf.getPerfBuffer(id(id)));
+                    this.bpf.removePerfBuffer(id(id));
+                }
             }
             openKeyFds.clear();
         }
