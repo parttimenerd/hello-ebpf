@@ -69,19 +69,19 @@ jobs:
       - name: Build
         run: ./mvnw -ntp -B --file pom.xml verify
 
-      - name: Publish package
+      - name: Deploy
         run: |
-          mkdir -p bcc/target/staging-deploy
-          ./mvnw -ntp -B -Ppublication -am -pl :bcc jreleaser:config
-          ./mvnw -ntp -B -Ppublication -am -pl :bcc
-          ./mvnw -ntp -B -Ppublication -X -am -pl :bcc jreleaser:full-release
+          mkdir -p ~/.m2
+          echo "<settings><servers><server><id>ossrh</id><username>${NEXUS2_USERNAME}</username><password>${NEXUS2_PASSWORD}</password></server></servers></settings>" > ~/.m2/settings.xml
+          mvn -ntp -B clean deploy
         env:
-          JRELEASER_NEXUS2_USERNAME: ${{ secrets.JRELEASER_NEXUS2_USERNAME }}
-          JRELEASER_NEXUS2_PASSWORD: ${{ secrets.JRELEASER_NEXUS2_PASSWORD }}
-          JRELEASER_GPG_PASSPHRASE: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
-          JRELEASER_GPG_SECRET_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
-          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEXUS2_USERNAME: ${{ secrets.JRELEASER_NEXUS2_USERNAME }}
+          NEXUS2_PASSWORD: ${{ secrets.JRELEASER_NEXUS2_PASSWORD }}
+          SIGN_KEY_PASS: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
+          SIGN_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
+          GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
+          SIGN_KEY_ID: ${{ secrets.GPG_KEY_NAME }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: JReleaser output
         if: always()
