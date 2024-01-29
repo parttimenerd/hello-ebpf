@@ -58,6 +58,9 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRO }}
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
 
       - name: Cache Maven
         uses: actions/cache@v4
@@ -67,18 +70,19 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build
-        run: ./mvnw -ntp -B --file pom.xml verify
+        run: ./mvnw -Ppublication -ntp -B --file pom.xml verify
 
       - name: Deploy
         run: |
           mkdir -p ~/.m2
-          echo "<settings><servers><server><id>ossrh</id><username>${NEXUS2_USERNAME}</username><password>${NEXUS2_PASSWORD}</password></server></servers></settings>" > ~/.m2/settings.xml
+          echo $SETTINGS_FILE > ~/.m2/settings.xml
           mvn -ntp -B clean deploy
         env:
-          NEXUS2_USERNAME: ${{ secrets.JRELEASER_NEXUS2_USERNAME }}
-          NEXUS2_PASSWORD: ${{ secrets.JRELEASER_NEXUS2_PASSWORD }}
+          MAVEN_USERNAME: ${{ secrets.JRELEASER_NEXUS2_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.JRELEASER_NEXUS2_PASSWORD }}
           SIGN_KEY_PASS: ${{ secrets.JRELEASER_GPG_PASSPHRASE }}
           SIGN_KEY: ${{ secrets.JRELEASER_GPG_SECRET_KEY }}
           GPG_PUBLIC_KEY: ${{ secrets.JRELEASER_GPG_PUBLIC_KEY }}
           SIGN_KEY_ID: ${{ secrets.GPG_KEY_NAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SETTINGS_FILE: ${{ secrets.SETTINGS_FILE }}

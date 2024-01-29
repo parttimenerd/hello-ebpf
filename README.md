@@ -146,6 +146,34 @@ b.trace_print()
 
 You can use the `debug.sh` to run an example with a debugger port open at port 5005.
 
+Usage as a library
+------------------
+The library is available as a Maven package:
+
+```xml
+<dependency>
+    <groupId>me.bechberger</groupId>
+    <artifactId>hello-ebpf</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+</dependency>
+```
+
+You might have to add the https://s01.oss.sonatype.org/content/repositories/releases/ repo:
+```xml
+<repositories>
+    <repository>
+        <id>snapshots</id>
+        <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        <releases>
+            <enabled>false</enabled>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
+```
+
 Blog Posts
 ----------
 Posts covering the development of this project:
