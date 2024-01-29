@@ -2,4 +2,4 @@
 
 cd "$(dirname "$0")" || exit
 
-mvn package -DskipTests=true
+./mvnw package -DskipTests=true
