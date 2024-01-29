@@ -23,8 +23,15 @@ jobs:
           java-version: '21'
           distribution: 'adopt'
 
+      - name: Cache Maven
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
       - name: mvn package
-        run: mvn package -DskipTests
+        run: ./mvnw -ntp -B package -DskipTests
 
       - name: upload bcc/target/bcc.jar
         uses: actions/upload-artifact@v4
@@ -57,7 +64,7 @@ jobs:
 
       - name: Test
         run: |
-          mvn test -Djvm=testutil/bin/java
+          ./mvnw -ntp -B test -Djvm=testutil/bin/java
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v4

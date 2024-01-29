@@ -206,17 +206,17 @@ Other modules
 
 Testing
 -------
-Tests are run using [JUnit 5](https://junit.org/junit5/) and `mvn test`.
+Tests are run using [JUnit 5](https://junit.org/junit5/) and `./mvnw test`.
 You can either run
 
 ```shell
-mvn test
+./mvnw test
 ```
 
 or you can run the tests in a container using `testutil/bin/java`: 
 
 ```shell
-mvn test -Djvm=testutil/bin/java
+./mvnw test -Djvm=testutil/bin/java
 ```
 
 This requires [virtme](https://github.com/ezequielgarcia/virtme) (`apt install virtme`), python 3, and docker to be installed.
