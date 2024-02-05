@@ -7,7 +7,7 @@ There are [user land libraries](https://ebpf.io/what-is-ebpf/#development-toolch
 write eBPF applications in C++, Rust, Go, Python and even
 Lua. But there are none for Java, which is a pity.
 So... I decided to write bindings using [Project Panama](https://openjdk.org/projects/panama/)
-and [bcc](https://github.com/isovalent/bcc), the first and widely used userland library for eBPF,
+and [bcc](https://github.com/iovisor/bcc), the first and widely used userland library for eBPF,
 which is typically used with its Python API.
 
 ![Overview images](img/overview.svg)
