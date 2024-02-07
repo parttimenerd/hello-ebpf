@@ -1,7 +1,7 @@
 Hello eBPF
 ==========
 
-[![ci](https://github.com/parttimenerd/hello-ebpf/actions/workflows/ci.yml/badge.svg)](https://github.com/parttimenerd/hello-ebpf/actions/workflows/ci.yml)
+[![Early Access](https://github.com/parttimenerd/hello-ebpf/actions/workflows/early-access.yml/badge.svg)](https://github.com/parttimenerd/hello-ebpf/actions/workflows/early-access.yml)
 
 There are [user land libraries](https://ebpf.io/what-is-ebpf/#development-toolchains) for [eBPF](https://ebpf.io) that allow you to
 write eBPF applications in C++, Rust, Go, Python and even
