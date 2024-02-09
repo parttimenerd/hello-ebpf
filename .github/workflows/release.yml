@@ -64,7 +64,7 @@ jobs:
         run: |
           mkdir -p ~/.m2
           echo $SETTINGS_FILE > ~/.m2/settings.xml
-          mvn -ntp -B clean deploy
+          mvn -ntp -B clean source:jar deploy
         env:
           MAVEN_USERNAME: ${{ secrets.JRELEASER_NEXUS2_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.JRELEASER_NEXUS2_PASSWORD }}
