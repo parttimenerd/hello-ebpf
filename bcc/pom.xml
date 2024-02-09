@@ -6,11 +6,11 @@
 
     <groupId>me.bechberger</groupId>
     <artifactId>bcc</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>bcc</name>
     <url>https://github.com/parttimenerd/hello-ebpf</url>
+    <version>0.1.0-SNAPSHOT</version>
 
     <licenses>
         <license>
@@ -56,6 +56,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -85,7 +86,7 @@
         <dependency>
             <groupId>me.bechberger</groupId>
             <artifactId>ebpf-annotations</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>me.bechberger</groupId>
@@ -103,6 +104,6 @@
     <parent>
         <groupId>me.bechberger</groupId>
         <artifactId>hello-ebpf</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.1.0-SNAPSHOT</version>
     </parent>
 </project>

@@ -25,17 +25,3 @@ import me.bechberger.ebpf.bcc.BPF;
     b.trace_print()
  *}
  */
-public class HelloWorld {
-    public static void main(String[] args) {
-        try (BPF b = BPF.builder("""
-                int hello(void *ctx) {
-                   bpf_trace_printk("Hello, World!");
-                   return 0;
-                }
-                """).build()) {
-            var syscall = b.get_syscall_fnname("execve");
-            b.attach_kprobe(syscall, "hello");
-            b.trace_print();
-        }
-    }
-}

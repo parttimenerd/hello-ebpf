@@ -6,7 +6,7 @@
 
     <groupId>me.bechberger</groupId>
     <artifactId>hello-ebpf</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>hello-ebpf</name>
@@ -54,9 +54,6 @@
     <profiles>
         <profile>
             <id>publication</id>
-            <properties>
-                <altDeploymentRepository>local::default::file:${project.build.directory}/staging-deploy</altDeploymentRepository>
-            </properties>
             <build>
                 <defaultGoal>deploy</defaultGoal>
                 <plugins>
@@ -64,25 +61,6 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
                         <version>3.1.1</version>
-                        <executions>
-                            <execution>
-                                <id>default-deploy</id>
-                                <phase>deploy</phase>
-                                <goals>
-                                    <goal>deploy</goal>
-                                </goals>
-                                <configuration>
-                                    <skip>true</skip>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>release</id>
-                                <phase>deploy</phase>
-                                <goals>
-                                    <goal>deploy</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>

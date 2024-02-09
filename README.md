@@ -153,7 +153,7 @@ The library is available as a Maven package:
 ```xml
 <dependency>
     <groupId>me.bechberger</groupId>
-    <artifactId>hello-ebpf</artifactId>
+    <artifactId>bcc</artifactId>
     <version>0.1.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -173,6 +173,9 @@ You might have to add the https://s01.oss.sonatype.org/content/repositories/rele
     </repository>
 </repositories>
 ```
+
+A sample project can be found in the [sample-bcc-project](https://github.com/parttimenerd/sample-bcc-project)
+repository.
 
 Blog Posts
 ----------
