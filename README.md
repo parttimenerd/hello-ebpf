@@ -32,6 +32,9 @@ and page 36 with this repo.__
 
 It is evolving fast, you can already implement all examples and exercises from chapter 2.
 
+A sample project using the library can be found in the [sample-bcc-project](https://github.com/parttimenerd/sample-bcc-project)
+repository.
+
 Goals
 -----
 Provide a library (and documentation) for Java developers to explore eBPF and
@@ -57,7 +60,7 @@ Either a Linux machine with the following:
 - root privileges (for eBPF programs)
 - Maven 3.6.3 (or newer to build the project)
 
-On Mac OS, you can use the Lima VM (or use the `hello-ebpf.yaml` file as a guide to install the prerequisites):
+On Mac OS, you can use the [Lima VM](https://lima-vm.io/) (or use the `hello-ebpf.yaml` file as a guide to install the prerequisites):
 
 ```sh
 limactl start hello-ebpf.yaml
@@ -173,9 +176,6 @@ You might have to add the https://s01.oss.sonatype.org/content/repositories/rele
     </repository>
 </repositories>
 ```
-
-A sample project can be found in the [sample-bcc-project](https://github.com/parttimenerd/sample-bcc-project)
-repository.
 
 Blog Posts
 ----------
