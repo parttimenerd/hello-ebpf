@@ -146,9 +146,6 @@ public class BPF implements AutoCloseable {
         if (maybeModule.err() != 0 && maybeModule.err() != 2) {
            throw new BPFCallException(STR."Failed to compile BPF module: \{PanamaUtil.errnoString(maybeModule.err())}");
         }
-        if (maybeModule.err() != 0) {
-            System.err.println(STR."Warning BPF constructor: \{fileName} \{maybeModule.err()} \{PanamaUtil.errnoString(maybeModule.err())}");
-        }
         module = maybeModule.result();
 
         if (module == null) throw new RuntimeException(STR."Failed to compile BPF module \{fileName}");
@@ -959,6 +956,8 @@ public class BPF implements AutoCloseable {
     /**
      * Poll from all open perf ring buffers, calling the callback that was
      * provided when calling {@link BPFTable.PerfEventArray#open_perf_buffer(BPFTable.PerfEventArray.EventCallback)} for each entry.
+     *
+     * @param timeout timeout in milliseconds
      */
     public void perf_buffer_poll(int timeout) {
         try (var arena = Arena.ofConfined()) {
