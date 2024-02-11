@@ -34,7 +34,10 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
+import static java.util.Spliterators.spliterator;
 import static me.bechberger.ebpf.bcc.PanamaUtil.*;
 
 /**
@@ -191,18 +194,39 @@ public class BPFTable<K, V> {
         }
     }
 
+    /**
+     * Only use this method if batch functions are not available.
+     */
+    private Stream<K> slowKeyStream() {
+        assert !PanamaUtil.hasBCCBatchFunctions();
+        return StreamSupport.stream(spliterator(keyIterator(), maxEntries, 0), false);
+    }
+
     @NotNull
     public Set<K> keySet() {
+        if (!PanamaUtil.hasBCCBatchFunctions()) {
+            // very inefficient, but some bcc versions do not support batch functions
+            return slowKeyStream().collect(java.util.stream.Collectors.toSet());
+        }
         return items_lookup_batch().stream().map(Map.Entry::getKey).collect(java.util.stream.Collectors.toSet());
     }
 
     @NotNull
     public Collection<V> values() {
+        if (!PanamaUtil.hasBCCBatchFunctions()) {
+            // very inefficient, but some bcc versions do not support batch functions
+            return slowKeyStream().map(this::get).collect(java.util.stream.Collectors.toList());
+        }
         return items_lookup_batch().stream().map(Map.Entry::getValue).collect(java.util.stream.Collectors.toList());
     }
 
     @NotNull
     public Set<Map.Entry<K, V>> entrySet() {
+        if (!PanamaUtil.hasBCCBatchFunctions()) {
+            // very inefficient, but some bcc versions do not support batch functions
+            return slowKeyStream().map(k -> new AbstractMap.SimpleEntry<>(k, get(k)))
+                    .collect(java.util.stream.Collectors.toSet());
+        }
         return new HashSet<>(items_lookup_batch());
     }
 
@@ -297,6 +321,11 @@ public class BPFTable<K, V> {
      * @return key-value pairs
      */
     public List<Map.Entry<K, V>> items_lookup_batch() {
+        if (!PanamaUtil.hasBCCBatchFunctions()) {
+            // very inefficient, but some bcc versions do not support batch functions
+            return slowKeyStream().map(k -> new AbstractMap.SimpleEntry<>(k, get(k)))
+                    .collect(java.util.stream.Collectors.toList());
+        }
         return items_lookup_and_optionally_delete_batch(false);
     }
 
@@ -317,7 +346,8 @@ public class BPFTable<K, V> {
      *             deletes all the related keys-values.
      *             If keys is None (default) then it deletes all entries.
      */
-    public void items_delete_batch(Arena arena, @Nullable MemorySegment keys) {
+    private void items_delete_batch(Arena arena, @Nullable MemorySegment keys) {
+        assert PanamaUtil.hasBCCBatchFunctions();
         if (keys != null) {
             var count = sanity_check_keys_values(keys, null);
             var countRef = arena.allocate(ValueLayout.JAVA_LONG);
@@ -338,6 +368,15 @@ public class BPFTable<K, V> {
      * @param keys keys array to delete. If an array of keys is given then it deletes all
      */
     public void delete_keys(@Nullable List<K> keys) {
+        if (!PanamaUtil.hasBCCBatchFunctions()) {
+            // very inefficient, but some bcc versions do not support batch functions
+            if (keys == null) {
+                zero();
+                return;
+            }
+            keys.forEach(this::rawRemove);
+            return;
+        }
         try (var arena = Arena.ofConfined()) {
             if (keys != null) {
                 var allocated = alloc_key_values(arena, true, false, keys.size());
@@ -367,7 +406,7 @@ public class BPFTable<K, V> {
      * @param keys   keys array to update
      * @param values values array to update
      */
-    public void items_update_batch(Arena arena, @Nullable MemorySegment keys, @Nullable MemorySegment values) {
+    private void items_update_batch(Arena arena, @Nullable MemorySegment keys, @Nullable MemorySegment values) {
         var count = sanity_check_keys_values(keys, values);
         var countRef = arena.allocate(ValueLayout.JAVA_LONG);
         countRef.set(ValueLayout.JAVA_LONG, 0, count);
@@ -380,7 +419,7 @@ public class BPFTable<K, V> {
     /**
      * Look up and delete all the key-value pairs in the map.
      */
-    public List<Map.Entry<K, V>> items_lookup_and_delete_batch() {
+    private List<Map.Entry<K, V>> items_lookup_and_delete_batch() {
         return items_lookup_and_optionally_delete_batch(true);
     }
 
