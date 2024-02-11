@@ -57,9 +57,8 @@ Either a Linux machine with the following:
 - Java 21 (exactly this version, as we need [Project Panama](https://openjdk.org/projects/panama/) with is a preview
   feature), we'll switch to Java 22 as soon as it is released
 - libbcc (see [bcc installation instructions](https://github.com/iovisor/bcc/blob/master/INSTALL.md), be sure to install the libbpfcc-dev package)
+  - e.g. `apt install bpfcc-tools libbpfcc-dev linux-tools-common linux-tools-$(uname -r)` on Ubuntu
 - root privileges (for eBPF programs)
-- Maven 3.6.3 (or newer to build the project)
-
 On Mac OS, you can use the [Lima VM](https://lima-vm.io/) (or use the `hello-ebpf.yaml` file as a guide to install the prerequisites):
 
 ```sh

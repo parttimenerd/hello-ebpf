@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.foreign.*;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
+import java.util.NoSuchElementException;
 
 import static java.lang.foreign.ValueLayout.JAVA_BYTE;
 
@@ -33,7 +34,8 @@ public class PanamaUtil {
      */
     public static MemorySegment lookup(String symbol) {
         return Linker.nativeLinker().defaultLookup().find(symbol)
-                .or(() -> SymbolLookup.loaderLookup().find(symbol)).orElseThrow();
+                .or(() -> SymbolLookup.loaderLookup().find(symbol))
+                .orElseThrow(() -> new NoSuchElementException("Symbol not found: " + symbol));
     }
 
     /**

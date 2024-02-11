@@ -12,7 +12,7 @@ These bindings are regurlarly updated and published on Maven Central:
 <dependency>
     <groupId>me.bechberger</groupId>
     <artifactId>rawbcc</artifactId>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
 </dependency>
 ```
 
@@ -32,17 +32,19 @@ Requirements
 ------------
 - Java 21 with `--enable-preview`
 - Linux 64-bit
+- libbcc (see [bcc installation instructions](https://github.com/iovisor/bcc/blob/master/INSTALL.md), be sure to install the libbpfcc-dev package)
+  - I know that the packages there are outdated for some distributions, but installing the packages from
+    other repositories crashed my system...
+  - e.g. `apt install bpfcc-tools libbpfcc-dev linux-tools-common linux-tools-$(uname -r)` on Ubuntu
+
 
 Build
 -----
 
-Requirements:
+Additional Requirements:
 
-- Linux 64-bit
-- Java 21
-- Python 3.8
+- Python 3.8+
 - clang (for [jextract](https://github.com/openjdk/jextract))
-- libbcc (see [bcc installation instructions](https://github.com/iovisor/bcc/blob/master/INSTALL.md), be sure to install the libbpfcc-dev package)
 - Maven 3.6.3 (or newer to build the project)
 
 Build the project with `mvn package`.

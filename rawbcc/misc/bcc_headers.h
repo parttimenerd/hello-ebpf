@@ -1,4 +1,4 @@
-#include "/usr/include/bcc/bcc_common.h"
+#include "bcc/bcc_common.h"
 #include "/usr/include/bcc/bcc_elf.h"
 #include "/usr/include/bcc/bcc_proc.h"
 #include "/usr/include/bcc/bcc_syms.h"

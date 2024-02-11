@@ -7,7 +7,7 @@
     <artifactId>rawbcc</artifactId>
     <groupId>me.bechberger</groupId>
     <name>Raw bindings for libbcc</name>
-
+    <version>0.1.3</version>
     <url>https://github.com/parttimenerd/hello-ebpf</url>
     <licenses>
         <license>

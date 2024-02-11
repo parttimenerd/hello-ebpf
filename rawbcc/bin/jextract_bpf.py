@@ -99,7 +99,7 @@ def create_combined_bcc_header():
 
 
 def create_modified_bcc_header():
-    """
+    r"""
     Find lines that match regexp
     "union.* __attribute__\(\(aligned\(8\)\)\);" and
     replace "__attribute__((aligned(8)))" with
