@@ -99,9 +99,12 @@ public class HelloTail {
                 BPF_PROG_ARRAY(syscall, 300);
 
                 int hello(struct bpf_raw_tracepoint_args *ctx) {
-                    int opcode = ctx->args[1];
-                    syscall.call(ctx, opcode);
-                    bpf_trace_printk("Another syscall: %d", opcode);
+                    int nr = ctx->args[1];
+                    // syscall.call(ctx, nr) doesn't compile
+                    // for whatever reason, so we use the raw helper
+                    // function instead
+                    bpf_tail_call_(bpf_pseudo_fd(1, -1), ctx, nr);
+                    bpf_trace_printk("Another syscall: %d", nr);
                     return 0;
                 }
 
@@ -111,8 +114,8 @@ public class HelloTail {
                 }
 
                 int hello_timer(struct bpf_raw_tracepoint_args *ctx) {
-                    int opcode = ctx->args[1];
-                    switch (opcode) {
+                    int nr = ctx->args[1];
+                    switch (nr) {
                         case 222:
                             bpf_trace_printk("Creating a timer");
                             break;
@@ -138,11 +141,10 @@ public class HelloTail {
 
             var progArray = b.get_table("syscall", BPFTable.ProgArray.createProvider());
             progArray.set(Syscalls.getSyscall("execve").number(), execFn);
-            progArray.set(Syscalls.getSyscall("timer_create").number(), timerFn);
-            progArray.set(Syscalls.getSyscall("timer_gettime").number(), timerFn);
-            progArray.set(Syscalls.getSyscall("timer_getoverrun").number(), timerFn);
-            progArray.set(Syscalls.getSyscall("timer_settime").number(), timerFn);
-            progArray.set(Syscalls.getSyscall("timer_delete").number(), timerFn);
+            for (String syscall : new String[]{"timer_create", "timer_gettime", "timer_getoverrun",
+                    "timer_settime", "timer_delete"}) {
+                progArray.set(Syscalls.getSyscall(syscall).number(), timerFn);
+            }
             // ignore some syscalls that come up a lot
             for (int i : new int[]{
                     21, 22, 25, 29, 56, 57, 63, 64, 66, 72,
