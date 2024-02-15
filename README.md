@@ -185,9 +185,10 @@ Posts covering the development of this project:
 - Jan 01, 2024: [Hello eBPF: Developing eBPF Apps in Java (1)](https://mostlynerdless.de/blog/2023/12/31/hello-ebpf-developing-ebpf-apps-in-java-1/)
 - Jan 12, 2024: [Hello eBPF: Recording data in basic eBPF maps (2)](https://mostlynerdless.de/blog/2024/01/12/hello-ebpf-recording-data-in-basic-ebpf-maps-2/)
 - Jan 29, 2024: [Hello eBPF: Recording data in perf event buffers (3)](https://mostlynerdless.de/blog/2024/01/29/hello-ebpf-recording-data-in-event-buffers-3/)
+- Feb 12, 2024: [Hello eBPF: Tail calls and your first eBPF application (4)](https://mostlynerdless.de/blog/2024/02/12/hello-ebpf-tail-calls-and-your-first-ebpf-application-4/)
 
 Planned posts:
-- Hello eBPF: Tail calls and your first eBPF application (4)
+- Hello eBPF: First steps with libbpf (5)
 
 Examples
 --------
