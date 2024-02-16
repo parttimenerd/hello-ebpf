@@ -107,10 +107,12 @@
         <maven.test.skip>true</maven.test.skip>
     </properties>
 
-   <modules>
+    <modules>
         <module>annotations</module>
         <module>bcc</module>
-   </modules>
+        <module>bpf-processor</module>
+        <module>bpf</module>
+    </modules>
 
     <distributionManagement>
         <snapshotRepository>
