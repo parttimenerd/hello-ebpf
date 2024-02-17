@@ -272,8 +272,9 @@ public class Processor extends AbstractProcessor {
             }
             // else run bpftool btf dump file /sys/kernel/btf/vmlinux format c
             // save output to a temp file and return the path to the temp file
-            var tempFile = Files.createTempFile("vmlinux", ".h");
-            tempFile.toFile().deleteOnExit();
+            var tempDirectory = Files.createTempDirectory("vmlinux");
+            tempDirectory.toFile().deleteOnExit();
+            var tempFile = tempDirectory.resolve("vmlinux.h");
             var process = new ProcessBuilder("bpftool", "btf", "dump", "file", "/sys/kernel/btf/vmlinux", "format", "c")
                     .redirectOutput(tempFile.toFile())
                     .start();
