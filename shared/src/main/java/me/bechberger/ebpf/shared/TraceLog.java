@@ -7,22 +7,14 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.function.Function;
 
+import static me.bechberger.ebpf.shared.Constants.TRACEFS;
+
 /**
  * TraceLog provides a simple interface to the kernel debug trace pipe.
  * <p>
  * Inspired transitively (and probably derived) from the bcc project
  */
 public class TraceLog {
-    private static final Path DEBUGFS = Path.of("/sys/kernel/debug");
-    private static final Path TRACEFS;
-    static {
-        if (DEBUGFS.resolve("tracing").toFile().exists()) {
-            TRACEFS = DEBUGFS.resolve("tracing");
-        } else {
-            TRACEFS = Path.of("/sys/kernel/tracing");
-        }
-    }
-
     public record TraceFields(String line, String task, int pid, String cpu, String flags, double ts, String msg) {
         public String format(String fmt) {
             String fields = fmt;

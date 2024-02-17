@@ -2,6 +2,9 @@ package me.bechberger.ebpf.bcc;
 
 import me.bechberger.ebpf.bcc.raw.LibraryLoader;
 import me.bechberger.ebpf.bcc.raw.Lib;
+import me.bechberger.ebpf.shared.Constants;
+import me.bechberger.ebpf.shared.Disassembler;
+import me.bechberger.ebpf.shared.PanamaUtil;
 import me.bechberger.ebpf.shared.TraceLog;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +21,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.lang.foreign.ValueLayout.JAVA_INT;
-import static me.bechberger.ebpf.bcc.PanamaUtil.*;
+import static me.bechberger.ebpf.shared.PanamaUtil.*;
 import static me.bechberger.ebpf.shared.TraceLog.TraceFields;
 
 /**
@@ -144,7 +147,7 @@ public class BPF implements AutoCloseable {
          */
         var maybeModule = bpf_module_create_c_from_string(arena, textNative, debug, MemorySegment.NULL, 0, allowRLimit ? 1 : 0, MemorySegment.NULL);
         if (maybeModule.err() != 0 && maybeModule.err() != 2) {
-           throw new BPFCallException(STR."Failed to compile BPF module: \{PanamaUtil.errnoString(maybeModule.err())}");
+           throw new BPFCallException(STR."Failed to compile BPF module: \{Util.errnoString(maybeModule.err())}");
         }
         module = maybeModule.result();
 

@@ -8,6 +8,7 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 import me.bechberger.ebpf.shared.TraceLog;
 
 public abstract class BPFProgram implements AutoCloseable {
@@ -92,4 +93,5 @@ public abstract class BPFProgram implements AutoCloseable {
     public void tracePrintLoop() {
         TraceLog.getInstance().printLoop();
     }
+
 }

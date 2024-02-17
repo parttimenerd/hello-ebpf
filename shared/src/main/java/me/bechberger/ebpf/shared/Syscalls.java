@@ -1,4 +1,4 @@
-package me.bechberger.ebpf.bcc;
+package me.bechberger.ebpf.shared;
 
 import org.jetbrains.annotations.Nullable;
 

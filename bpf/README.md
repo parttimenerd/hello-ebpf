@@ -30,7 +30,7 @@ public class Test {
                 #include <bpf/bpf_tracing.h>
                             
                 SEC ("kprobe/do_sys_openat2") int kprobe__do_sys_openat2 (struct pt_regs *ctx){                                                                   
-                    bpf_printk("Hello, World from BPF and more!\\n");
+                    bpf_printk("Hello, World from BPF and more!");
                     return 0;
                 }
                 char _license[] SEC ("license") = "GPL";
@@ -68,6 +68,22 @@ public final class TestProgramImpl extends Test.TestProgram {
         return Base64.getDecoder().decode(BYTE_CODE);
     }
 }
+```
+
+When you run the program via `./run_bpf.sh Test`, it will print something like the following:
+
+```shell
+      irqbalance-2003    [005] ...21 55240.855445: bpf_trace_printk: Hello, World from BPF and more!
+      irqbalance-2003    [005] ...21 55240.855463: bpf_trace_printk: Hello, World from BPF and more!
+      irqbalance-2003    [005] ...21 55240.855483: bpf_trace_printk: Hello, World from BPF and more!
+      irqbalance-2003    [005] ...21 55240.855502: bpf_trace_printk: Hello, World from BPF and more!
+      irqbalance-2003    [005] ...21 55240.855520: bpf_trace_printk: Hello, World from BPF and more!
+      irqbalance-2003    [005] ...21 55240.855538: bpf_trace_printk: Hello, World from BPF and more!
+      irqbalance-2003    [005] ...21 55240.855556: bpf_trace_printk: Hello, World from BPF and more!
+           <...>-1773    [064] ...21 55240.869828: bpf_trace_printk: Hello, World from BPF and more!
+ DefaultDispatch-178720  [094] ...21 55240.929322: bpf_trace_printk: Hello, World from BPF and more!
+            code-4978    [086] ...21 55240.974095: bpf_trace_printk: Hello, World from BPF and more!
+    systemd-oomd-1773    [064] ...21 55241.119825: bpf_trace_printk: Hello, World from BPF and more!
 ```
 
 

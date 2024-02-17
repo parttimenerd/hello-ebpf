@@ -20,6 +20,9 @@ import me.bechberger.ebpf.bcc.raw.Lib;
 import me.bechberger.ebpf.bcc.raw.bcc_perf_buffer_opts;
 import me.bechberger.ebpf.bcc.raw.perf_reader_lost_cb;
 import me.bechberger.ebpf.bcc.raw.perf_reader_raw_cb;
+import me.bechberger.ebpf.shared.BPFType;
+import me.bechberger.ebpf.shared.PanamaUtil;
+import me.bechberger.ebpf.shared.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +41,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static java.util.Spliterators.spliterator;
-import static me.bechberger.ebpf.bcc.PanamaUtil.*;
+import static me.bechberger.ebpf.shared.PanamaUtil.*;
 
 /**
  * Implementation of BPF maps.

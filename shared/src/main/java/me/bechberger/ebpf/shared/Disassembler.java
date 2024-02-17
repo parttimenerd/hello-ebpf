@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.bechberger.ebpf.bcc;
+package me.bechberger.ebpf.shared;
 
 import java.lang.foreign.MemorySegment;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static me.bechberger.ebpf.bcc.BPFType.BPFIntType.UINT64;
+import static me.bechberger.ebpf.shared.BPFType.BPFIntType.UINT64;
 
 /**
  * Dissassembles eBPF bytecode

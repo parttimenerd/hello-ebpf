@@ -17,7 +17,7 @@ public class Test {
                 #include <bpf/bpf_tracing.h>
                 
                 SEC ("kprobe/do_sys_openat2") int kprobe__do_sys_openat2 (struct pt_regs *ctx){                                                                   
-                    bpf_printk("Hello, World from BPF and more!\\n");
+                    bpf_printk("Hello, World from BPF and more!");
                     return 0;
                 }
                 

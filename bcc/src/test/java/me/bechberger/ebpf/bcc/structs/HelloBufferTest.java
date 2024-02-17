@@ -6,14 +6,10 @@ package me.bechberger.ebpf.bcc.structs;
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.bcc.BPF;
 import me.bechberger.ebpf.bcc.BPFTable;
-import me.bechberger.ebpf.bcc.BPFType;
+import me.bechberger.ebpf.shared.BPFType;
 import me.bechberger.ebpf.bcc.Utils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 
-import java.awt.desktop.SystemEventListener;
-import java.lang.foreign.Arena;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 

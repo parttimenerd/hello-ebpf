@@ -1,13 +1,11 @@
-package me.bechberger.ebpf.bcc;
+package me.bechberger.ebpf.shared;
 
-import me.bechberger.ebpf.bcc.raw.Lib;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.*;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.lang.foreign.ValueLayout.JAVA_BYTE;
@@ -79,13 +77,6 @@ public class PanamaUtil {
      * errno value for permission errors
      */
     public static final int ERRNO_PERM_ERROR = 1;
-
-    /**
-     * Format errno to string using {@link Lib#strerror}
-     */
-    public static String errnoString(int error) {
-        return Lib.strerror(error).getUtf8String(0);
-    }
 
     /**
      * Allocate a string or NULL in the given arena

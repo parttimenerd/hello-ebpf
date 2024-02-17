@@ -6,7 +6,7 @@ package me.bechberger.ebpf.samples.own;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.bcc.BPF;
 import me.bechberger.ebpf.bcc.BPFTable;
-import me.bechberger.ebpf.bcc.BPFType;
+import me.bechberger.ebpf.shared.BPFType;
 
 import java.util.List;
 
