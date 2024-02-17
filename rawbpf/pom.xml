@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>rawbcc</artifactId>
+    <artifactId>rawbpf</artifactId>
     <groupId>me.bechberger</groupId>
-    <name>Raw bindings for libbcc</name>
-    <version>0.1.3</version>
+    <name>Raw bindings for libbpf</name>
+    <version>0.1.0</version>
     <url>https://github.com/parttimenerd/hello-ebpf</url>
     <licenses>
         <license>
@@ -28,7 +28,7 @@
         <url>https://github.com/parttimenerd/hello-ebpf.git</url>
     </scm>
     <inceptionYear>2024</inceptionYear>
-    <description>Raw Panama bindings for libbcc generated for jextract on 64-bit Linux</description>
+    <description>Raw Panama bindings for libbpf generated for jextract on 64-bit Linux</description>
 
 
     <properties>
@@ -60,7 +60,7 @@
                         <configuration>
                             <filesets>
                                 <fileset>
-                                    <directory>${basedir}/src/main/java/me/bechberger/ebpf/bcc/raw</directory>
+                                    <directory>${basedir}/src/main/java/me/bechberger/ebpf/bpf/raw</directory>
                                     <excludes>
                                         <exclude>**/LibraryLoader.java</exclude>
                                     </excludes>
@@ -86,12 +86,12 @@
                     <executable>python3</executable>
                     <workingDirectory>..</workingDirectory>
                     <arguments>
-                        <argument>${basedir}/bin/jextract_bindings.py</argument>
+                        <argument>${basedir}/../rawbcc/bin/jextract_bindings.py</argument>
                         <argument>${basedir}/src/main/java</argument>
-                        <argument>me.bechberger.ebpf.bcc.raw</argument>
+                        <argument>me.bechberger.ebpf.bpf.raw</argument>
                         <argument>Lib</argument>
-                        <argument>${basedir}/misc/bcc_headers.h</argument>
-                        <argument>${basedir}/misc</argument>
+                        <argument>${project.basedir}/misc/bpf_headers.h</argument>
+                        <argument>${project.basedir}/misc</argument>
                     </arguments>
                     <environmentVariables>
                         <LANG>en_US</LANG>

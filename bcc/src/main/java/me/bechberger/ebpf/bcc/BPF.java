@@ -2,6 +2,7 @@ package me.bechberger.ebpf.bcc;
 
 import me.bechberger.ebpf.bcc.raw.LibraryLoader;
 import me.bechberger.ebpf.bcc.raw.Lib;
+import me.bechberger.ebpf.shared.TraceLog;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.foreign.ValueLayout.JAVA_INT;
 import static me.bechberger.ebpf.bcc.PanamaUtil.*;
+import static me.bechberger.ebpf.shared.TraceLog.TraceFields;
 
 /**
  * Main class for BPF functionality, modelled after the BPF class from the bcc Python bindings
@@ -119,8 +121,6 @@ public class BPF implements AutoCloseable {
      * event name -> function name -> file descriptor
      */
     private final Map<String, Map<String, Integer>> kprobe_fds = new HashMap<>();
-
-    private LineReader traceFile = null;
 
     private final Map<BPFTable.PerfEventArray.PerfEventArrayId, MemorySegment> perfBuffers = new HashMap<>();
 
@@ -318,91 +318,11 @@ public class BPF implements AutoCloseable {
         }
     }
 
-    public record TraceFields(String line, String task, int pid, String cpu, String flags, double ts, String msg) {
-        public String format(String fmt) {
-            String fields = fmt;
-            fields = fields.replace("{0}", task);
-            fields = fields.replace("{1}", String.valueOf(pid));
-            fields = fields.replace("{2}", cpu);
-            fields = fields.replace("{3}", flags);
-            fields = fields.replace("{4}", String.valueOf(ts));
-            fields = fields.replace("{5}", msg);
-            return fields;
-        }
-    }
-
-    /**
-     * Open the trace_pipe if not already open
-     * <p/>
-     * Currently, doesn't support non-blocking mode
-     */
-    public LineReader trace_open() {
-        /*    def trace_open(self, nonblocking=False):
-        """trace_open(nonblocking=False)
-
-        Open the trace_pipe if not already open
-        """
-        if not self.tracefile:
-            self.tracefile = open("%s/trace_pipe" % TRACEFS, "rb")
-            if nonblocking:
-                fd = self.tracefile.fileno()
-                fl = fcntl.fcntl(fd, fcntl.F_GETFL)
-                fcntl.fcntl(fd, fcntl.F_SETFL, fl | os.O_NONBLOCK)
-        return self.tracefile*/
-        if (traceFile == null) {
-            try {
-                var p = Constants.TRACEFS.resolve("trace_pipe");
-                traceFile = new LineReader(p);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to open trace_pipe");
-            }
-        }
-        return traceFile;
-    }
-
-    /**
-     * Read from the kernel debug trace pipe and return the fields.
-     * Returns null if no line was read.
-     * <p/>
-     * Currently, doesn't support non-blocking mode
-     */
-    public TraceFields trace_fields() {
-        while (true) {
-            String tracedLine = trace_readline();
-            if (tracedLine == null) return null;
-            // don't print messages related to lost events
-            if (tracedLine.startsWith("CPU:")) continue;
-            try {
-                var task = tracedLine.substring(0, 16).strip();
-                var line = tracedLine.substring(17);
-                var tsEnd = line.indexOf(":");
-                var pidCpuFlagsTs = line.substring(0, tsEnd).split(" +");
-                var pid = Integer.parseInt(pidCpuFlagsTs[0]);
-                var cpu = pidCpuFlagsTs[1].substring(1, pidCpuFlagsTs[1].length() - 1);
-                var flags = pidCpuFlagsTs[2];
-                var ts = Double.parseDouble(pidCpuFlagsTs[3]);
-                // line[ts_end:] will have ": [sym_or_addr]: msgs"
-                // For trace_pipe debug output, the addr typically
-                // is invalid (e.g., 0x1). For kernel 4.12 or earlier,
-                // if address is not able to match a kernel symbol,
-                // nothing will be printed out. For kernel 4.13 and later,
-                // however, the illegal address will be printed out.
-                // Hence, both cases are handled here.
-                line = line.substring(tsEnd + 1);
-                int symEnd = line.indexOf(":");
-                var msg = line.substring(symEnd + 2);
-                return new TraceFields(tracedLine, task, pid, cpu, flags, ts, msg);
-            } catch (NumberFormatException e) {
-                return new TraceFields(tracedLine, "Unknown", 0, "Unknown", "Unknown", 0.0, "Unknown");
-            }
-        }
-    }
-
     /**
      * Read from the kernel debug trace pipe and return one line
      */
     public String trace_readline() {
-        return trace_open().readLine();
+        return TraceLog.getInstance().readLine();
     }
 
     /**
@@ -418,20 +338,7 @@ public class BPF implements AutoCloseable {
      * }
      */
     public void trace_print(@Nullable Function<TraceFields, @Nullable String> format) {
-        while (true) {
-            String line;
-            if (format != null) {
-                var fields = trace_fields();
-                if (fields == null) continue;
-                line = format.apply(fields);
-                if (line == null) continue;
-            } else {
-                line = trace_readline();
-                if (line == null) continue;
-            }
-            System.out.println(line);
-            System.out.flush();
-        }
+        TraceLog.getInstance().printLoop(format);
     }
 
     /**
@@ -446,11 +353,7 @@ public class BPF implements AutoCloseable {
      * @param fmt format string
      */
     public void trace_print(String fmt) {
-        if (fmt != null) {
-            trace_print(fields -> fields.format(fmt));
-            return;
-        }
-        trace_print((Function<TraceFields, String>) null);
+        TraceLog.getInstance().printLoop(fmt);
     }
 
     /**
@@ -899,9 +802,7 @@ public class BPF implements AutoCloseable {
         for (var k : raw_tracepoint_fds.keySet()) {
             detach_raw_tracepoint(k);
         }
-        if (traceFile != null) {
-            traceFile.close();
-        }
+        TraceLog.close();
         close_fds();
     }
 

@@ -1,28 +1,19 @@
 #!/usr/bin/python3
 
 """
-This script downloads jextract and uses it to generate the bcc bindings.
+This script downloads jextract and uses it to generate the bcc and bpf bindings.
 
-Usage:
-python3 jextract_bcc.py <destination_path> [package]
-
-The main libbcc class is BPF.java and is located in the package.
-
-Requirements:
-- Running JDK 21
-- bcc (https://github.com/iovisor/bcc/blob/master/INSTALL.md)
-- Linux system
-- clang
+The main libbcc/libbpf class is BPF.java and is located in the package.
 
 Why do we need this script?
 ---------------------------
-We want to use Project Panama to call libbcc from Java, we
+We want to use Project Panama to call libbcc/libbpf from Java, we
 use jextract for this.
 But we have to download jextract as it's probably not installed
-and also jextract has some issues with the libbcc header files.
-So we have to slightly modify the libbcc header files before
+and also jextract has some issues with the libbcc/libbpf header files.
+So we have to slightly modify the libbcc/libbpf header files before
 passing them to jextract (but we combine all header files into
-one that is stored at misc/bcc.h).
+one).
 
 Running the whole script takes less than a second when jextract is
 already downloaded, so it can be run every time in your build
@@ -42,16 +33,10 @@ import os
 import shutil
 import tarfile
 
-BASE_FOLDER = Path(__file__).parent.parent
-BIN_FOLDER = BASE_FOLDER / "bin"
+BIN_FOLDER = Path(__file__).parent.parent / "bin"
 JEXTRACT_PATH = BIN_FOLDER / "jextract-21"
 JEXTRACT_TOOL_PATH = JEXTRACT_PATH / "bin" / "jextract"
 JEXTRACT_VERSION = 2
-
-
-assert Path(
-    "/usr/include/bcc").exists(), \
-    "Please install bcc: https://github.com/iovisor/bcc with the dev package"
 
 
 def download_jextract():
@@ -87,18 +72,13 @@ def ensure_jextract_in_path():
 
 ensure_jextract_in_path()
 
-BCC_HEADERS = BASE_FOLDER / "misc" / "bcc_headers.h"
-COMBINED_BPF_HEADER = BASE_FOLDER / "misc" / "combined_bcc.h"
-MODIFIED_BPF_HEADER = BASE_FOLDER / "misc" / "bcc.h"
-
-
-def create_combined_bcc_header():
-    os.makedirs(COMBINED_BPF_HEADER.parent, exist_ok=True)
+def create_combined_lib_header(header: Path, combined_header: Path):
+    os.makedirs(header.parent, exist_ok=True)
     subprocess.check_output(
-        f"clang -C -E {BCC_HEADERS} -o {COMBINED_BPF_HEADER}", shell=True)
+        f"clang -C -E {header} -o {combined_header}", shell=True)
 
 
-def create_modified_bcc_header():
+def create_modified_lib_header(header: Path, combined_header: Path, modified_header: Path):
     r"""
     Find lines that match regexp
     "union.* __attribute__\(\(aligned\(8\)\)\);" and
@@ -106,11 +86,11 @@ def create_modified_bcc_header():
     "var{counter} __attribute__((aligned(8)))"
     Store the file in MODIFIED_BPF_HEADER
     """
-    create_combined_bcc_header()
-    with open(COMBINED_BPF_HEADER) as f:
+    create_combined_lib_header(header, combined_header)
+    with open(combined_header) as f:
         lines = f.readlines()
-    COMBINED_BPF_HEADER.unlink()
-    with open(MODIFIED_BPF_HEADER, "w") as f:
+    combined_header.unlink()
+    with open(modified_header, "w") as f:
         counter = 0
         for line in lines:
             if "union" in line and "__attribute__((aligned(8)));" in line:
@@ -132,11 +112,15 @@ def assert_java21():
         sys.exit(1)
 
 
-def run_jextract(dest_path: Path, package: str = "", name: str = "BPF",
+def run_jextract(header: Path, mod_header_folder: Path,
+        dest_path: Path, package: str = "", name: str = "BPF",
                  delete_dest_path: bool = False):
     assert_java21()
     print("Running jextract")
-    create_modified_bcc_header()
+    os.makedirs(mod_header_folder, exist_ok=True)
+    combined_header = mod_header_folder / "combined_lib.h"
+    modified_header = mod_header_folder / "mod_lib.h"
+    create_modified_lib_header(header, combined_header, modified_header)
     del_path = dest_path
     if package:
         del_path = dest_path / package.replace(".", "/")
@@ -144,17 +128,19 @@ def run_jextract(dest_path: Path, package: str = "", name: str = "BPF",
         shutil.rmtree(del_path, ignore_errors=True)
     os.makedirs(dest_path, exist_ok=True)
     subprocess.check_call(
-        f"{JEXTRACT_TOOL_PATH} {MODIFIED_BPF_HEADER} "
+        f"{JEXTRACT_TOOL_PATH} {modified_header} "
         f"--source --output {dest_path} {'-t ' + package if package else ''} "
         f"--header-class-name {name}",
         shell=True)
 
 
 if __name__ == "__main__":
-
-    if 1 < len(sys.argv) <= 4:
-        run_jextract(Path(sys.argv[1]),
-                     sys.argv[2] if len(sys.argv) >= 3 else "",
-                     sys.argv[3] if len(sys.argv) == 4 else "BPF")
+    if len(sys.argv) == 6:
+        run_jextract(Path(sys.argv[4]),
+                     Path(sys.argv[5]),
+                     Path(sys.argv[1]),
+                     sys.argv[2],
+                     sys.argv[3])
     else:
-        print("Usage: jextract_bcc.py <destination_path> [package] [name]")
+        print("Usage: python3 jextract_bindings.py <destination_path> <package> <Lib class> <header> <mod_header_folder>")
+        sys.exit(1)

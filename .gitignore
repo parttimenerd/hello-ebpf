@@ -395,3 +395,5 @@ rawbcc/misc/*
 rawbcc/bin/jextract-*
 rawbcc/src/main/java/me/bechberger/ebpf/bcc/raw
 !rawbcc/src/main/java/me/bechberger/ebpf/bcc/raw/LibraryLoader.java
+rawbpf/src/main/java/me/bechberger/ebpf/bpf/raw
+!rawbpf/src/main/java/me/bechberger/ebpf/bpf/raw/LibraryLoader.java

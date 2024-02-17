@@ -109,6 +109,7 @@
 
     <modules>
         <module>annotations</module>
+        <module>shared</module>
         <module>bcc</module>
         <module>bpf-processor</module>
         <module>bpf</module>

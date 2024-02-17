@@ -9,6 +9,8 @@ Lua. But there are none for Java, which is a pity.
 So... I decided to write bindings using [Project Panama](https://openjdk.org/projects/panama/)
 and [bcc](https://github.com/iovisor/bcc), the first and widely used userland library for eBPF,
 which is typically used with its Python API.
+_Work is on the way to work on the [libbpf](https://www.kernel.org/doc/html/latest/bpf/libbpf/libbpf_overview.html)
+support in the [bpf](bpf) and [bpf-processor](bpf-processor) modules._
 
 ![Overview images](img/overview.svg)
 
@@ -248,7 +250,7 @@ You can either run
 or you can run the tests in a container using `testutil/bin/java`: 
 
 ```shell
-./mvnw test -Djvm=testutil/bin/java
+./mvnw test -Djvm=testutil/bin/java -Dmaven.test.skip=false
 ```
 
 This requires [virtme](https://github.com/ezequielgarcia/virtme) (`apt install virtme`), python 3, and docker to be installed.

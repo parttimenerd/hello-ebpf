@@ -1,4 +1,4 @@
-package me.bechberger.ebpf.bcc;
+package me.bechberger.ebpf.shared.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
