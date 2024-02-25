@@ -16,6 +16,22 @@ import static me.bechberger.ebpf.shared.Constants.TRACEFS;
  */
 public class TraceLog {
     public record TraceFields(String line, String task, int pid, String cpu, String flags, double ts, String msg) {
+
+        /**
+         * Format the fields using the given format string
+         * <p>
+         * <ul>
+         *     <li>{0} - task</li>
+         *     <li>{1} - pid</li>
+         *     <li>{2} - cpu</li>
+         *     <li>{3} - flags</li>
+         *     <li>{4} - ts (time stamp)</li>
+         *     <li>{5} - msg</li>
+         *     <li>Example: "{0} ({1}) on cpu {2} at {4}: {5}"</li>
+         * </ul>
+         * @param fmt
+         * @return
+         */
         public String format(String fmt) {
             String fields = fmt;
             fields = fields.replace("{0}", task);

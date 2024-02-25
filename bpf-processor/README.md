@@ -3,7 +3,7 @@ BPF Processor
 
 Annotation processor for processing BPF annotations and generating source code.
 
-This is in it's earliest stages of experimentation.
+This is in its earliest stages of experimentation.
 
 ## Requirements
 

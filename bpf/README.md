@@ -11,79 +11,68 @@ So, I'm experimenting with using [libbpf](https://www.kernel.org/doc/html/next/b
 compiling the eBPF program at in an annotation processor and using writing my own Java wrapper for libbpf.
 This will remedy all the problems mentioned above.
 The only caveat is that I have to start again. But this time,
-I'm creating a Java-esque API, not a mirror of a Python wrapper.
+I'm creating a well-tested Java-esque API, not a mirror of a Python wrapper.
 
 You can find the annotation processor in the [bpf-processor](../bpf-processor) module
 and the library with examples in this module.
 
 The mean idea with the annotation processor is that it transforms an example like 
-[this](src/main/java/me/bechberger/ebpf/samples/Test.java) into something like this:
+[this](src/main/java/me/bechberger/ebpf/samples/HelloWorld.java) into something like this:
 
 ```java
-public class Test {
-    @BPF
-    public static abstract class TestProgram extends BPFProgram {
+@BPF
+public abstract class HelloWorld extends BPFProgram {
 
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                #include <bpf/bpf_tracing.h>
+    static final String EBPF_PROGRAM = """
+            #include "vmlinux.h"
+            #include <bpf/bpf_helpers.h>
+            #include <bpf/bpf_tracing.h>
                             
-                SEC ("kprobe/do_sys_openat2") int kprobe__do_sys_openat2 (struct pt_regs *ctx){                                                                   
-                    bpf_printk("Hello, World from BPF and more!");
-                    return 0;
-                }
-                char _license[] SEC ("license") = "GPL";
-                """;
-    }
+            SEC ("kprobe/do_sys_openat2")
+            int kprobe__do_sys_openat2(struct pt_regs *ctx){                                                             
+                bpf_printk("Hello, World from BPF and more!");
+                return 0;
+            }
+                            
+            char _license[] SEC ("license") = "GPL";
+            """;
 
     public static void main(String[] args) {
-        try (TestProgram program = new TestProgramImpl()) {
+        try (HelloWorld program = BPFProgram.load(HelloWorld.class)) {
             program.autoAttachProgram(program.getProgramByName("kprobe__do_sys_openat2"));
-            program.tracePrintLoop();
+            program.tracePrintLoop(f -> String.format("%d: %s: %s", (int)f.ts(), f.task(), f.msg()));
         }
     }
 }
 ```
 
-Into the following, compiling in the eBPF byte-code in a sub-class `TestProgramImpl`
-which already used above:
-    
+Into the following, compiling in the eBPF byte-code in a sub-class `HelloWorldImpl`:
+
 ```java
-package me.bechberger.ebpf.samples.tes
-
-import me.bechberger.ebpf.samples.Test;
-
-import java.util.Base64;
-
-public final class TestProgramImpl extends Test.TestProgram {
+public final class HelloWorldImpl extends HelloWorld {
     /**
-     * Base64 encoded eBPF byte-code
+     * Base64 encoded gzipped eBPF byte-code
      */
-    private static final String BYTE_CODE =
-            "f0VMRgIBAQAAAAAAAAAAAAEA9wABAA...QAAAAQAAAAIAAAAAAAAABgAAAAAAAAA";
+    private static final String BYTE_CODE = "H4sIAA...n5q6hfQNFV+sgDAAA=";
 
     @Override
     public byte[] getByteCode() {
-        return Base64.getDecoder().decode(BYTE_CODE);
+        return me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(BYTE_CODE);
     }
 }
 ```
 
-When you run the program via `./run_bpf.sh Test`, it will print something like the following:
+When you run the program via `./run_bpf.sh HelloWorld`, it will print something like the following:
 
 ```shell
-      irqbalance-2003    [005] ...21 55240.855445: bpf_trace_printk: Hello, World from BPF and more!
-      irqbalance-2003    [005] ...21 55240.855463: bpf_trace_printk: Hello, World from BPF and more!
-      irqbalance-2003    [005] ...21 55240.855483: bpf_trace_printk: Hello, World from BPF and more!
-      irqbalance-2003    [005] ...21 55240.855502: bpf_trace_printk: Hello, World from BPF and more!
-      irqbalance-2003    [005] ...21 55240.855520: bpf_trace_printk: Hello, World from BPF and more!
-      irqbalance-2003    [005] ...21 55240.855538: bpf_trace_printk: Hello, World from BPF and more!
-      irqbalance-2003    [005] ...21 55240.855556: bpf_trace_printk: Hello, World from BPF and more!
-           <...>-1773    [064] ...21 55240.869828: bpf_trace_printk: Hello, World from BPF and more!
- DefaultDispatch-178720  [094] ...21 55240.929322: bpf_trace_printk: Hello, World from BPF and more!
-            code-4978    [086] ...21 55240.974095: bpf_trace_printk: Hello, World from BPF and more!
-    systemd-oomd-1773    [064] ...21 55241.119825: bpf_trace_printk: Hello, World from BPF and more!
+3385: irqbalance: Hello, World from BPF and more!
+3385: irqbalance: Hello, World from BPF and more!
+3385: irqbalance: Hello, World from BPF and more!
+3385: irqbalance: Hello, World from BPF and more!
+3385: irqbalance: Hello, World from BPF and more!
+3385: irqbalance: Hello, World from BPF and more!
+3385: irqbalance: Hello, World from BPF and more!
+3385: C2 CompilerThre: Hello, World from BPF and more!
 ```
 
 
@@ -100,6 +89,8 @@ Or on Ubuntu or Debian:
     sudo apt install clang libbpf-dev linux-tools-common linux-tools-$(uname -r)
 ```
 
+Or just use the lima VM in the parent directory.
+
 Build and run
 -------------
 
@@ -108,5 +99,18 @@ In the main project directory:
 ```shell
 ./mvnw package
 # run the example
-./run_bpf.sh Test
+./run_bpf.sh HelloWorld
+```
+
+Test
+----
+Move to the parent directory.
+On Linux (with virt-me and docker installed), run the tests with:
+```shell
+./mvnw test -Dmaven.test.skip=false -pl bpf -amd -Djvm=testutil/bin/java
+```
+
+In the lima VM, run the tests with:
+```shell
+sudo mvn test -Dmaven.test.skip=false -pl bpf -amd
 ```

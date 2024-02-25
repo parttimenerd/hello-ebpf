@@ -4,6 +4,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import jdk.jshell.execution.Util;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -25,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.zip.GZIPOutputStream;
 
 @SupportedAnnotationTypes("me.bechberger.ebpf.annotations.bpf.BPF")
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
@@ -81,6 +83,7 @@ public class Processor extends AbstractProcessor {
         String pkg = typeElement.getQualifiedName().toString();
         pkg = pkg.substring(0, pkg.lastIndexOf('.')).toLowerCase();
         String name = typeElement.getSimpleName().toString() + "Impl";
+
         TypeSpec typeSpec = createType(typeElement.getSimpleName() + "Impl", typeElement.asType(), bytes);
         try {
             var file = processingEnv.getFiler().createSourceFile(pkg + "." + name,
@@ -98,6 +101,19 @@ public class Processor extends AbstractProcessor {
         }
     }
 
+    /** GZIP the bytecode and then turns it into a Base64 String */
+    private static String gzipBase64Encode(byte[] byteCode) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try (GZIPOutputStream gos = new GZIPOutputStream(baos)) {
+                gos.write(byteCode);
+            }
+            return Base64.getEncoder().encodeToString(baos.toByteArray());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Create a class that implements the class of typeElement and overrides the getByteCode method to return the
      * compiled eBPF program, but store the compiled eBPF program as a base64 encoded string in a static final field
@@ -107,13 +123,13 @@ public class Processor extends AbstractProcessor {
                 .superclass(baseType)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .addField(FieldSpec.builder(String.class, "BYTE_CODE", Modifier.PRIVATE, Modifier.STATIC,
-                        Modifier.FINAL).addJavadoc("Base64 encoded eBPF byte-code").initializer("$S",
-                        Base64.getEncoder().encodeToString(byteCode)).build())
+                        Modifier.FINAL).addJavadoc("Base64 encoded and gzipped eBPF byte-code").initializer("$S",
+                        gzipBase64Encode(byteCode)).build())
                 .addMethod(MethodSpec.methodBuilder("getByteCode")
                         .addAnnotation(Override.class)
                         .addModifiers(Modifier.PUBLIC)
                         .returns(byte[].class)
-                        .addStatement("return $T.getDecoder().decode(BYTE_CODE)", Base64.class)
+                        .addStatement("return me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(BYTE_CODE)")
                         .build())
                 .build();
     }
@@ -166,6 +182,22 @@ public class Processor extends AbstractProcessor {
         return compile(ebpfProgram, element);
     }
 
+    private static String findNewestClangVersion() {
+        for (int i = 24; i > 12; i--) {
+            try {
+                var process = new ProcessBuilder("clang-" + i, "--version").start();
+                if (process.waitFor() == 0) {
+                    return "clang-" + i;
+                }
+            } catch (IOException | InterruptedException e) {
+                // ignore
+            }
+        }
+        throw new RuntimeException("Could not find clang");
+    }
+
+    private static String newestClang = findNewestClangVersion();
+
     private byte[] compile(String ebpfProgram, VariableElement element) {
         // obtain the path to the vmlinux.h header file
         var vmlinuxHeader = obtainPathToVMLinuxHeader();
@@ -178,7 +210,7 @@ public class Processor extends AbstractProcessor {
         try {
             var tempFile = Files.createTempFile("ebpf", ".o");
             tempFile.toFile().deleteOnExit();
-            var process = new ProcessBuilder("clang", "-O2", "-target", "bpf", "-c", "-o", tempFile.toString(),
+            var process = new ProcessBuilder(newestClang, "-O2", "-target", "bpf", "-c", "-o", tempFile.toString(),
                     "-I", vmlinuxHeader.getParent().toString(), "-x", "c", "-",
                     "--sysroot=/").redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE)
                     .start();
