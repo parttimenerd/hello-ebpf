@@ -30,7 +30,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang libbpf-dev linux-tools-common linux-tools-$(uname -r)
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang libbpf-dev linux-tools-common linux-tools-$(uname -r) gcc-multilib
 
       - name: mvn package
         run: ./mvnw -ntp -B package -DskipTests
@@ -62,7 +62,7 @@ jobs:
           distribution: 'adopt'
 
       - run: sudo pip3 install https://github.com/amluto/virtme/archive/beb85146cd91de37ae455eccb6ab67c393e6e290.zip
-      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends qemu-system-x86 bpfcc-tools libbpfcc libbpfcc-dev linux-headers-$(uname -r) linux-cloud-tools-generic
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends qemu-system-x86 bpfcc-tools libbpfcc libbpfcc-dev linux-headers-$(uname -r) linux-cloud-tools-generic gcc-multilib
 
       - name: Test
         run: |
