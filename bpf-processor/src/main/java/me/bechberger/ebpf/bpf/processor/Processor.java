@@ -71,12 +71,12 @@ public class Processor extends AbstractProcessor {
             return;
         }
         byte[] bytes = compileProgram(typeElement);
-        System.out.println("Compiled eBPF program " + bytes.length + " bytes");
         // create class that implement the class of typeElement and override the getByteCode method to return the
         // compiled eBPF program, but store this ebpf program as a base64 string
         if (bytes == null) {
             return;
         }
+        System.out.println("Compiled eBPF program " + bytes.length + " bytes");
         this.processingEnv.getMessager().printMessage(Diagnostic.Kind.OTHER, "Compiled eBPF program",
                 typeElement);
 
@@ -200,7 +200,7 @@ public class Processor extends AbstractProcessor {
 
     private byte[] compile(String ebpfProgram, VariableElement element) {
         // obtain the path to the vmlinux.h header file
-        var vmlinuxHeader = obtainPathToVMLinuxHeader();
+        var vmlinuxHeader = getPathToVMLinuxHeader();
         if (vmlinuxHeader == null) {
             return null;
         }
@@ -210,7 +210,8 @@ public class Processor extends AbstractProcessor {
         try {
             var tempFile = Files.createTempFile("ebpf", ".o");
             tempFile.toFile().deleteOnExit();
-            var process = new ProcessBuilder(newestClang, "-O2", "-target", "bpf", "-c", "-o", tempFile.toString(),
+            var process = new ProcessBuilder(newestClang, "-O2", "-g", "-target", "bpf", "-c", "-o",
+                    tempFile.toString(),
                     "-I", vmlinuxHeader.getParent().toString(), "-x", "c", "-",
                     "--sysroot=/").redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE)
                     .start();
@@ -253,8 +254,22 @@ public class Processor extends AbstractProcessor {
             } else {
                 System.err.println(line);
             }
+            var suggestions = suggestionsForMessage(line);
+            if (!suggestions.isEmpty()) {
+                System.out.println("Suggestions:");
+                for (String suggestion : suggestions) {
+                    System.out.println("  " + suggestion);
+                }
+            }
         }
-        // [ERROR] /home/i560383/code/experiments/ebpf/hello/bpf-processor/src/main/java/me/bechberger/ebpf/bpf/processor/Processor.java:[256,24] cannot find symbol
+    }
+
+    private List<String> suggestionsForMessage(String message) {
+        List<String> suggestions = new ArrayList<>();
+        if (message.contains(" fatal error: 'bits/libc-header-start.h' file not found")) {
+            suggestions.add("Try to install gcc-multilib");
+        }
+        return suggestions;
     }
 
     private record Line(int line, int start) {}
@@ -292,6 +307,15 @@ public class Processor extends AbstractProcessor {
         return Map.of();
     }
 
+    private @Nullable Optional<Path> obtainedPathToVMLinuxHeader = null;
+
+    private @Nullable Path getPathToVMLinuxHeader() {
+        if (obtainedPathToVMLinuxHeader == null) {
+            obtainedPathToVMLinuxHeader = Optional.ofNullable(obtainPathToVMLinuxHeader());
+        }
+        return obtainedPathToVMLinuxHeader.orElse(null);
+    }
+
     private Path obtainPathToVMLinuxHeader() {
         // obtain the path to the vmlinux.h header file
         // if it is not found, print an error
@@ -307,12 +331,14 @@ public class Processor extends AbstractProcessor {
             var tempDirectory = Files.createTempDirectory("vmlinux");
             tempDirectory.toFile().deleteOnExit();
             var tempFile = tempDirectory.resolve("vmlinux.h");
+            var errorFile = tempDirectory.resolve("error.txt");
             var process = new ProcessBuilder("bpftool", "btf", "dump", "file", "/sys/kernel/btf/vmlinux", "format", "c")
                     .redirectOutput(tempFile.toFile())
+                    .redirectError(errorFile.toFile())
                     .start();
             if (process.waitFor() != 0) {
                 this.processingEnv.getMessager().printError("Could not obtain vmlinux.h header file via 'bpftool btf " +
-                        "dump file /sys/kernel/btf/vmlinux format c'", null);
+                        "dump file /sys/kernel/btf/vmlinux format c'\n" + Files.readString(errorFile), null);
                 return null;
             }
             return tempFile;

@@ -209,10 +209,21 @@ like the bcc repository and state this in the first column.
 | 2                   | -                                                              | [chapter2.ex](bcc/src/main/java/me/bechberger/ebpf/samples/chapter2/ex)                        | works  | Implementation of some of the exercises for chapter 2                                  |
 | own                 | [own/disassembler-test.py](pysamples/own/disassembler-test.py) | [own.DisassemblerTest](bcc/src/main/java/me/bechberger/ebpf/samples/own/DisassemblerTest.java) | works  | Disassemble byte-code for the HelloMap example                                         |
 
-... more to come from the [books' repository](https://github.com/lizrice/learning-ebpf/tree/main).
+
+BPF Examples
+------------
+The examples from the book and other sources like [Ansil H's blog posts](https://ansilh.com/tags/ebpf/)
+are implemented in the [bpf/src/main/me/bechberger/ebpf/samples](bpf/src/main/java/me/bechberger/ebpf/samples) directory.
+You can run them using the `./run_bpf.sh` script. All examples have accompanying tests in the 
+[bpf/src/test](bpf/src/test) directory.
+
+| Source  | Java Class                                                            | Description                          |
+|---------|-----------------------------------------------------------------------|--------------------------------------|
+| Ansil H | [HelloWorld](bpf/src/main/java/me/bechberger/ebpf/samples/Helloworld.java) | A simple hello world example         |
+| Ansil H | [RingSample](bpf/src/main/java/me/bechberger/ebpf/samples/RingSample.java) | Record openat calls in a ring buffer |
 
 
-Classes
+Classes and Methods
 -------
 All classes and methods have the name as in the Python API, introducing things like builders only
 for more complex cases (like the constructor of `BPF`).

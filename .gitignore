@@ -397,3 +397,8 @@ rawbcc/src/main/java/me/bechberger/ebpf/bcc/raw
 !rawbcc/src/main/java/me/bechberger/ebpf/bcc/raw/LibraryLoader.java
 rawbpf/src/main/java/me/bechberger/ebpf/bpf/raw
 !rawbpf/src/main/java/me/bechberger/ebpf/bpf/raw/LibraryLoader.java
+rawbpf/misc/mod_lib.h
+hello-ebpf.iml
+*.deb
+*.zst
+*.c

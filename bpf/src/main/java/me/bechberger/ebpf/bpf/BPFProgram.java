@@ -1,7 +1,16 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.bpf.map.BPFMap;
+import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
+import me.bechberger.ebpf.bpf.map.FileDescriptor;
 import me.bechberger.ebpf.bpf.raw.Lib;
 import me.bechberger.ebpf.bpf.raw.LibraryLoader;
+import me.bechberger.ebpf.shared.BPFType;
+import me.bechberger.ebpf.shared.PanamaUtil;
+import me.bechberger.ebpf.shared.PanamaUtil.HandlerWithErrno;
+import me.bechberger.ebpf.shared.TraceLog;
+import me.bechberger.ebpf.shared.TraceLog.TraceFields;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.lang.foreign.Arena;
@@ -10,12 +19,6 @@ import java.lang.foreign.MemorySegment;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Function;
-
-import me.bechberger.ebpf.shared.PanamaUtil;
-import me.bechberger.ebpf.shared.PanamaUtil.HandlerWithErrno;
-import me.bechberger.ebpf.shared.TraceLog;
-import me.bechberger.ebpf.shared.TraceLog.TraceFields;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Base class for bpf programs.
@@ -44,7 +47,7 @@ import org.jetbrains.annotations.Nullable;
  *             program.tracePrintLoop();
  *         }
  *     }
- * }
+ *}
  */
 public abstract class BPFProgram implements AutoCloseable {
 
@@ -67,11 +70,12 @@ public abstract class BPFProgram implements AutoCloseable {
      * <p>
      * Example: {@snippet :
      *    HelloWorld program = BPFProgram.load(HelloWorld.class);
-     * }
+     *}
+     *
      * @param clazz abstract BPFProgram subclass
+     * @param <T>   the abstract BPFProgram subclass
+     * @param <S>   the implementation class
      * @return instance of the implementation class, created using the default constructor
-     * @param <T> the abstract BPFProgram subclass
-     * @param <S> the implementation class
      */
     @SuppressWarnings("unchecked")
     public static <T extends BPFProgram, S extends T> S load(Class<T> clazz) {
@@ -88,15 +92,18 @@ public abstract class BPFProgram implements AutoCloseable {
     /**
      * The eBPF object, struct bpf_object *ebpf_object
      */
-    private MemorySegment ebpf_object;
+    private final MemorySegment ebpf_object;
 
-    /** Load the eBPF program from the byte code */
+    /**
+     * Load the eBPF program from the byte code
+     */
     public BPFProgram() {
         this.ebpf_object = loadProgram();
     }
 
     /**
      * Load the eBPF program from the byte code
+     *
      * @return the eBPF object
      * @throws BPFLoadError if the whole program could not be loaded
      */
@@ -117,6 +124,7 @@ public abstract class BPFProgram implements AutoCloseable {
 
     /**
      * Get the byte code of the bpf program.
+     *
      * @return the byte code
      */
     public abstract byte[] getByteCode();
@@ -148,6 +156,7 @@ public abstract class BPFProgram implements AutoCloseable {
 
     /**
      * Get a program handle by name
+     *
      * @param name the name of the program, or null, if the program cannot be found
      * @return the program handle
      * @throws BPFProgramNotFound if the program cannot be found
@@ -162,7 +171,9 @@ public abstract class BPFProgram implements AutoCloseable {
         }
     }
 
-    /** Thrown when attaching a specific program / entry function fails */
+    /**
+     * Thrown when attaching a specific program / entry function fails
+     */
     public static class BPFAttachError extends BPFError {
 
         public BPFAttachError(String name, int errorCode) {
@@ -170,13 +181,15 @@ public abstract class BPFProgram implements AutoCloseable {
         }
     }
 
-    private static HandlerWithErrno<MemorySegment> BCC_PROGRAM__ATTACH = new HandlerWithErrno<>("bpf_program__attach",
-            FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER)
-            );
+    private static final HandlerWithErrno<MemorySegment> BCC_PROGRAM__ATTACH =
+            new HandlerWithErrno<>("bpf_program__attach",
+                    FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER));
 
 
     /**
-     * Attach the program by the automatically detected program type, attach type, and extra paremeters, where applicable.
+     * Attach the program by the automatically detected program type, attach type, and extra paremeters, where
+     * applicable.
+     *
      * @param prog program to attach
      * @throws BPFAttachError when attaching fails
      */
@@ -198,6 +211,7 @@ public abstract class BPFProgram implements AutoCloseable {
     /**
      * Print the kernel debug trace pipe
      * <p>
+     *
      * @see TraceLog#printLoop()
      */
     public void tracePrintLoop() {
@@ -206,12 +220,12 @@ public abstract class BPFProgram implements AutoCloseable {
 
     /**
      * Read from the kernel debug trace pipe and print on stdout.
-     * @param format optional function to format the output
      *
-     * Example
-     * {@snippet
-     *   tracePrintLoop(f -> f.format("pid {1}, msg = {5}"));
-     * }
+     * @param format optional function to format the output
+     *               <p>
+     *               Example
+     *               {@snippet *tracePrintLoop(f->f.format("pid {1}, msg = {5}"));
+     *}
      */
     public void tracePrintLoop(Function<TraceFields, @Nullable String> format) {
         TraceLog.getInstance().printLoop(format);
@@ -223,5 +237,63 @@ public abstract class BPFProgram implements AutoCloseable {
 
     public TraceFields readTraceFields() {
         return TraceLog.getInstance().readFields();
+    }
+
+
+    /**
+     * Thrown when a map could not be found
+     */
+    public static class BPFMapNotFoundError extends BPFError {
+        public BPFMapNotFoundError(String name) {
+            super("Map not found: " + name);
+        }
+    }
+
+    /**
+     * Get a map descriptor by name
+     *
+     * @param name the name of the map
+     * @return the map descriptor
+     * @throws BPFMapNotFoundError if the map cannot be found
+     */
+    private FileDescriptor getMapDescriptorByName(String name) {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment map = Lib.bpf_object__find_map_by_name(this.ebpf_object, arena.allocateUtf8String(name));
+            if (map == MemorySegment.NULL || map.address() == 0) {
+                throw new BPFMapNotFoundError(name);
+            }
+            return new FileDescriptor(name, Lib.bpf_map__fd(map));
+        }
+    }
+
+    /**
+     * Get a map by name
+     *
+     * @param name       the name of the map
+     * @param mapCreator function to create the map
+     * @param <M>        the type of the map
+     * @return the map
+     * @throws BPFMapNotFoundError       if the map cannot be found
+     * @throws BPFMap.BPFMapTypeMismatch if the type of the map does not match the expected type
+     */
+    public <M extends BPFMap> M getMapByName(String name, Function<FileDescriptor, M> mapCreator) {
+        return mapCreator.apply(getMapDescriptorByName(name));
+    }
+
+    /**
+     * Get a ring buffer by name
+     *
+     * @param name      the name of the ring buffer
+     * @param eventType type of the event
+     * @param callback  callback that is called when a new event is received
+     * @param <E>       the type of the event
+     * @return the ring buffer
+     * @throws BPFMapNotFoundError              if the ring buffer cannot be found
+     * @throws BPFMap.BPFMapTypeMismatch        if the type of the ring buffer does not match the expected type
+     * @throws BPFRingBuffer.BPFRingBufferError if the ring buffer could not be created
+     */
+    public <E> BPFRingBuffer<E> getRingBufferByName(String name, BPFType<E> eventType,
+                                                    BPFRingBuffer.EventCallback<E> callback) {
+        return getMapByName(name, fd -> new BPFRingBuffer<>(fd, eventType, callback));
     }
 }

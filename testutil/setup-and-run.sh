@@ -17,4 +17,4 @@ fi
 #script_dir="$(dirname "$(realpath "$0")")"
 #timeout 5 python3 $script_dir/../pysamples/bcc/hello_world.py
 
-$* && touch /run/output/statusqgitq
+$* && touch /run/output/status

@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
 import static java.lang.foreign.ValueLayout.JAVA_BYTE;
+import static java.lang.foreign.ValueLayout.JAVA_INT;
 
 /**
  * Utility methods for Panama
@@ -79,6 +80,16 @@ public class PanamaUtil {
     public static final int ERRNO_PERM_ERROR = 1;
 
     /**
+     * errno value for "Resource temporarily unavailable"
+     */
+    public static final int ERRNO_EAGAIN = 11;
+
+    /**
+     * errno value for "Invalid argument"
+     */
+    public static final int ERRNO_EINVAL = 22;
+
+    /**
      * Allocate a string or NULL in the given arena
      */
     public static MemorySegment allocateNullOrString(Arena arena, @Nullable String string) {
@@ -141,5 +152,14 @@ public class PanamaUtil {
 
     public static long padSize(long size) {
         return (size + 7) & ~7;
+    }
+
+    /**
+     * Allocate a reference to an int in the given arena
+     */
+    public static MemorySegment allocateIntRef(Arena arena, int value) {
+        var ref = arena.allocate(JAVA_INT);
+        ref.set(JAVA_INT, 0, value);
+        return ref;
     }
 }

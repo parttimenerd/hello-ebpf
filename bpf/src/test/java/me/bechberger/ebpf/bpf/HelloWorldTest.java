@@ -4,6 +4,7 @@ import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.bpf.BPFProgram.BPFProgramNotFound;
 import me.bechberger.ebpf.samples.HelloWorld;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import java.io.IOException;
 
@@ -32,15 +33,20 @@ public class HelloWorldTest {
     }
 
     @Test
-    public void testProgramLoad() throws IOException {
+    @Timeout(5)
+    public void testProgramLoad() {
         try (var program = BPFProgram.load(Prog.class)) {
             program.autoAttachProgram(program.getProgramByName("kprobe__do_sys_openat2"));
-            assertEquals("Hello, World from BPF and more!", program.readTraceFields().msg());
+            while (true) {
+                if (program.readTraceFields().msg().equals("Hello, World from BPF and more!")) {
+                    break;
+                }
+            }
         }
     }
 
     @Test
-    public void testFailingProgramByName() throws IOException {
+    public void testFailingProgramByName() {
         try (HelloWorld program = BPFProgram.load(HelloWorld.class)) {
             assertThrows(BPFProgramNotFound.class, () -> program.getProgramByName("invalid-name"));
         }
