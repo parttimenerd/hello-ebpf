@@ -189,6 +189,7 @@ Posts covering the development of this project:
 - Jan 29, 2024: [Hello eBPF: Recording data in perf event buffers (3)](https://mostlynerdless.de/blog/2024/01/29/hello-ebpf-recording-data-in-event-buffers-3/)
 - Feb 12, 2024: [Hello eBPF: Tail calls and your first eBPF application (4)](https://mostlynerdless.de/blog/2024/02/12/hello-ebpf-tail-calls-and-your-first-ebpf-application-4/)
 - Feb 26, 2024: [Hello eBPF: First steps with libbpf (5)](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/)
+- Mar 12, 2024: [Hello eBPF: Ring buffers in libbpf (6)](https://mostlynerdless.de/blog/2024/03/12/hello-ebpf-ring-buffers-in-libbpf-6/)
 
 Examples
 --------
