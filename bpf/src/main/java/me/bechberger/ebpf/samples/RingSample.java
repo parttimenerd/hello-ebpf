@@ -28,6 +28,7 @@ public abstract class RingSample extends BPFProgram {
             #define TARGET_NAME "sample_write"
             #define MAX_ENTRIES 10
             #define FILE_NAME_LEN 256
+            #define TASK_COMM_LEN 16
                             
             // Structure to store the data that we want to pass to user
             struct event
