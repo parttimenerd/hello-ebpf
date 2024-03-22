@@ -148,14 +148,16 @@ public sealed interface BPFType<T> {
         }, false);
 
         /**
-         * <code>char</code> mapped to {@code char}
+         * <code>char</code> mapped to {@code byte} (essentially an unsigned byte)
          */
-        public static final BPFIntType<Character> CHAR = createType("char", Character.class, ValueLayout.JAVA_CHAR,
+        public static final BPFIntType<Byte> CHAR = createType("char", Byte.class, ValueLayout.JAVA_BYTE,
                 segment -> {
-            return segment.get(ValueLayout.JAVA_CHAR, 0);
+            return segment.get(ValueLayout.JAVA_BYTE, 0);
         }, (segment, obj) -> {
-            segment.set(ValueLayout.JAVA_CHAR, 0, obj);
+            segment.set(ValueLayout.JAVA_BYTE, 0, obj);
         }, false);
+
+        public static final BPFTypedef<Byte> UINT8 = new BPFTypedef<>("u8", CHAR);
 
         /**
          * <code>i8</code> mapped to {@code byte}
@@ -165,15 +167,6 @@ public sealed interface BPFType<T> {
         }, (segment, obj) -> {
             segment.set(ValueLayout.JAVA_BYTE, 0, obj);
         }, true);
-
-        /**
-         * <code>u8</code> mapped to {@code @Unsigned byte}
-         */
-        public static final BPFIntType<Byte> UINT8 = createType("u8", Byte.class, ValueLayout.JAVA_BYTE, segment -> {
-            return segment.get(ValueLayout.JAVA_BYTE, 0);
-        }, (segment, obj) -> {
-            segment.set(ValueLayout.JAVA_BYTE, 0, obj);
-        }, false);
 
         /**
          * <code>s16</code> mapped to {@code short}

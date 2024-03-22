@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static me.bechberger.ebpf.shared.BPFType.BPFIntType.CHAR;
 import static me.bechberger.ebpf.shared.BPFType.BPFIntType.UINT32;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -43,6 +44,11 @@ public class TypeProcessingTest {
 
         @Type
         public record RecordWithOtherType(@Unsigned int value, SimpleRecord other) {
+        }
+
+        @Type
+        public record RecordWithDirectMemberType(@Unsigned int value, @Type.Member(bpfType = "me.bechberger.ebpf" +
+                ".shared.BPFType.BPFIntType.CHAR") byte other) {
         }
     }
 
@@ -106,5 +112,15 @@ public class TypeProcessingTest {
         // check that constructor works
         assertEquals(new SimpleRecordTestProgram.RecordWithOtherType(42, new SimpleRecordTestProgram.SimpleRecord(43)),
                 type.constructor().apply(List.of(42, new SimpleRecordTestProgram.SimpleRecord(43))));
+    }
+
+    @Test
+    public void testRecordWithDirectMemberType() {
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.RecordWithDirectMemberType.class);
+        assertEquals(CHAR, type.getMember("other").type());
+        // check that constructor works
+        assertEquals(new SimpleRecordTestProgram.RecordWithDirectMemberType(42, (byte)43),
+                type.constructor().apply(List.of(42, (byte)43)));
     }
 }

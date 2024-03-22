@@ -4,6 +4,8 @@ import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.Unsigned;
 
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
@@ -30,6 +32,8 @@ public @interface Type {
     /** Name of the generated BPFStructType, uses the type as default */
     String name() default "";
 
+    @Target({ElementType.TYPE, ElementType.TYPE_USE})
+    @Retention(RetentionPolicy.CLASS)
     public @interface Member {
 
         /** Java statement directly copied into the result at the place of the BPFType */
