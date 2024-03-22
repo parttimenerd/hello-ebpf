@@ -190,6 +190,7 @@ Posts covering the development of this project:
 - Feb 12, 2024: [Hello eBPF: Tail calls and your first eBPF application (4)](https://mostlynerdless.de/blog/2024/02/12/hello-ebpf-tail-calls-and-your-first-ebpf-application-4/)
 - Feb 26, 2024: [Hello eBPF: First steps with libbpf (5)](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/)
 - Mar 12, 2024: [Hello eBPF: Ring buffers in libbpf (6)](https://mostlynerdless.de/blog/2024/03/12/hello-ebpf-ring-buffers-in-libbpf-6/)
+- Mar 22, 2024: [Hello eBPF: Auto Layouting Structs (7)](https://mostlynerdless.de/blog/2024/03/22/hello-ebpf-auto-layouting-structs-7/)
 
 Examples
 --------
@@ -236,10 +237,10 @@ Plans
 
 A look ahead into the future so you know what to expect:
 
-- Implement the API so that we can recreate all bcc examples from the book
 - Support the newer [libbpf](https://github.com/libbpf/libbpf) library
    - Started in the [bpf](bpf) and [bpf-processor](bpf-processor) modules
 - Allow writing eBPF programs in Java
+- Drop libbcc and the BCC tools
 
 These plans might change, but I'll try to keep this up to date.
 I'm open to suggestions, contributions, and ideas.
