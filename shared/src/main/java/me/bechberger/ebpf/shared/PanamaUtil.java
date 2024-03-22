@@ -154,6 +154,10 @@ public class PanamaUtil {
         return (size + 7) & ~7;
     }
 
+    public static long padSize(long size, long alignment) {
+        return (size + alignment - 1) & -alignment;
+    }
+
     /**
      * Allocate a reference to an int in the given arena
      */

@@ -84,7 +84,7 @@ public class BPFRingBuffer<E> extends BPFMap {
 
     /**
      * Create a new ring buffer
-     *
+     *^
      * @param fd        file descriptor of the ring buffer
      * @param eventType type of the event
      * @param callback  callback that is called when a new event is received
