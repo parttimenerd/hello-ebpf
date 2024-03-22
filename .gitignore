@@ -402,3 +402,5 @@ hello-ebpf.iml
 *.deb
 *.zst
 *.c
+kprobe*
+vmlinux*
