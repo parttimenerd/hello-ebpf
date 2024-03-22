@@ -64,7 +64,7 @@ public abstract class RingSample extends BPFProgram {
               evt->e_pid = bpf_get_current_pid_tgid ();	// Get current process PID
                             
               // Read the filename from the second argument
-              // The x86 arch/ABI have first argument in di and second in si registers (man syscall)\s
+              // The x86 arch/ABI have first argument in di and second in si registers (man syscall)
               bpf_probe_read (evt->e_filename, sizeof (filename), (char *) ctx->si);
                             
               // Read the current process name
@@ -92,7 +92,7 @@ public abstract class RingSample extends BPFProgram {
     private static final int FILE_NAME_LEN = 256;
     private static final int TASK_COMM_LEN = 16;
 
-    record Event(@Unsigned int pid, String filename, @Size(TASK_COMM_LEN) String comm) {}
+    record Event(@Unsigned int pid, @Size(FILE_NAME_LEN) String filename, @Size(TASK_COMM_LEN) String comm) {}
 
     private static final BPFType.BPFStructType<Event> eventType = new BPFType.BPFStructType<>("rb", List.of(
             new BPFType.BPFStructMember<>("e_pid", BPFType.BPFIntType.UINT32, 0, Event::pid),
