@@ -18,6 +18,7 @@ import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.MemorySegment;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.function.Function;
 
 /**
@@ -65,6 +66,18 @@ public abstract class BPFProgram implements AutoCloseable {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private static <T, S extends T> Class<S> getImplClass(Class<T> clazz) {
+        try {
+            String pkg = clazz.getCanonicalName();
+            pkg = pkg.substring(0, pkg.lastIndexOf('.')).toLowerCase();
+            String name = clazz.getSimpleName() + "Impl";
+            return (Class<S>)Class.forName(pkg + "." + name);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Loads the implementation class of the given abstract BPFProgram subclass
      * <p>
@@ -77,13 +90,9 @@ public abstract class BPFProgram implements AutoCloseable {
      * @param <S>   the implementation class
      * @return instance of the implementation class, created using the default constructor
      */
-    @SuppressWarnings("unchecked")
     public static <T extends BPFProgram, S extends T> S load(Class<T> clazz) {
         try {
-            String pkg = clazz.getCanonicalName();
-            pkg = pkg.substring(0, pkg.lastIndexOf('.')).toLowerCase();
-            String name = clazz.getSimpleName() + "Impl";
-            return (S) Class.forName(pkg + "." + name).getConstructor().newInstance();
+            return BPFProgram.<T, S>getImplClass(clazz).getConstructor().newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -99,6 +108,25 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public BPFProgram() {
         this.ebpf_object = loadProgram();
+    }
+
+    public <T> BPFType.BPFStructType<T> getTypeForClass(Class<T> innerType) {
+        return getTypeForImplClass(getClass(), innerType);
+    }
+
+    public static <T> BPFType.BPFStructType<T> getTypeForClass(Class<?> outer, Class<T> inner) {
+        return getTypeForImplClass(getImplClass(outer), inner);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> BPFType.BPFStructType<T> getTypeForImplClass(Class<?> outerImpl, Class<T> inner) {
+        String fieldName = inner.getSimpleName().replaceAll("([a-z0-9])([A-Z])", "$1_$2").toUpperCase();
+
+        try {
+            return (BPFType.BPFStructType<T>) outerImpl.getDeclaredField(fieldName).get(null);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

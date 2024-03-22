@@ -4,7 +4,6 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import jdk.jshell.execution.Util;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -18,8 +17,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
-import javax.tools.FileObject;
-import javax.tools.StandardLocation;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,22 +25,23 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.zip.GZIPOutputStream;
 
-@SupportedAnnotationTypes("me.bechberger.ebpf.annotations.bpf.BPF")
+/**
+ * Annotation processor that processes classes annotated with {@code @BPF}.
+ * <p>
+ * The processor compiles the eBPF program and takes care of {@code @Type} inner types.
+ */
+@SupportedAnnotationTypes({"me.bechberger.ebpf.annotations.bpf.BPF"})
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class Processor extends AbstractProcessor {
 
-    public boolean process(Set<? extends TypeElement> annotations,
-                           RoundEnvironment env) {
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
         this.processingEnv.getMessager().printNote("Processing BPF annotations");
         annotations.forEach(annotation -> {
-                    Set<? extends Element> elements = env.getElementsAnnotatedWith(annotation);
-                    if (annotation.getQualifiedName().toString().equals("me.bechberger.ebpf.annotations.bpf.BPF")) {
-                        elements.stream()
-                                .filter(TypeElement.class::isInstance)
-                                .map(TypeElement.class::cast).forEach(this::processBPFProgram);
-                    }
-                }
-        );
+            Set<? extends Element> elements = env.getElementsAnnotatedWith(annotation);
+            if (annotation.getQualifiedName().toString().equals("me.bechberger.ebpf.annotations.bpf.BPF")) {
+                elements.stream().filter(TypeElement.class::isInstance).map(TypeElement.class::cast).forEach(this::processBPFProgram);
+            }
+        });
         return true;
     }
 
@@ -55,19 +53,20 @@ public class Processor extends AbstractProcessor {
      *     <li>Class must contain a static field EBPF_PROGRAM of type String</li>
      *     <li>Field EBPF_PROGRAM must contain the eBPF program as a string literal or a path to valid EBPF program
      *     from the module path</li>
+     *     <li>Can contain {@code @Type} annotated inner records</li>
      * </ul>
      */
     public void processBPFProgram(TypeElement typeElement) {
         System.out.println("Processing BPFProgram: " + typeElement.getQualifiedName());
-        if (typeElement.getSuperclass() == null || !typeElement.getSuperclass().toString().equals("me.bechberger.ebpf" +
-                ".bpf.BPFProgram")) {
-            this.processingEnv.getMessager().printError("Class " + typeElement.getSimpleName() + " is annotated with " +
-                    "BPF but does not extend BPFProgram", typeElement);
+        if (typeElement.getSuperclass() == null || !typeElement.getSuperclass().toString().equals("me.bechberger" +
+                ".ebpf" + ".bpf.BPFProgram")) {
+            this.processingEnv.getMessager().printError("Class " + typeElement.getSimpleName() + " is annotated with "
+                    + "BPF but does not extend BPFProgram", typeElement);
             return;
         }
         if (!typeElement.getModifiers().contains(javax.lang.model.element.Modifier.ABSTRACT)) {
-            this.processingEnv.getMessager().printError("Class " + typeElement.getSimpleName() + " is annotated with " +
-                    "BPF but is not abstract", typeElement);
+            this.processingEnv.getMessager().printError("Class " + typeElement.getSimpleName() + " is annotated with "
+                    + "BPF but is not abstract", typeElement);
             return;
         }
         byte[] bytes = compileProgram(typeElement);
@@ -77,17 +76,16 @@ public class Processor extends AbstractProcessor {
             return;
         }
         System.out.println("Compiled eBPF program " + bytes.length + " bytes");
-        this.processingEnv.getMessager().printMessage(Diagnostic.Kind.OTHER, "Compiled eBPF program",
-                typeElement);
+        this.processingEnv.getMessager().printMessage(Diagnostic.Kind.OTHER, "Compiled eBPF program", typeElement);
 
         String pkg = typeElement.getQualifiedName().toString();
         pkg = pkg.substring(0, pkg.lastIndexOf('.')).toLowerCase();
         String name = typeElement.getSimpleName().toString() + "Impl";
 
-        TypeSpec typeSpec = createType(typeElement.getSimpleName() + "Impl", typeElement.asType(), bytes);
+        TypeSpec typeSpec = createType(typeElement.getSimpleName() + "Impl", typeElement.asType(), bytes,
+                new TypeProcessor(processingEnv).processBPFTypeRecords(typeElement));
         try {
-            var file = processingEnv.getFiler().createSourceFile(pkg + "." + name,
-                    typeElement);
+            var file = processingEnv.getFiler().createSourceFile(pkg + "." + name, typeElement);
             // delete file if it exists
             if (Files.exists(Path.of(file.toUri()))) {
                 Files.delete(Path.of(file.toUri()));
@@ -96,12 +94,16 @@ public class Processor extends AbstractProcessor {
             try (var writer = file.openWriter()) {
                 writer.write(javaFile.toString());
             }
+            System.err.println("Wrote file " + file.toUri());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    /** GZIP the bytecode and then turns it into a Base64 String */
+
+    /**
+     * GZIP the bytecode and then turns it into a Base64 String
+     */
     private static String gzipBase64Encode(byte[] byteCode) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -117,46 +119,42 @@ public class Processor extends AbstractProcessor {
     /**
      * Create a class that implements the class of typeElement and overrides the getByteCode method to return the
      * compiled eBPF program, but store the compiled eBPF program as a base64 encoded string in a static final field
+     *
+     * @param name          the name of the class
+     * @param baseType      the type of the class
+     * @param byteCode      the compiled eBPF program
+     * @param bpfTypeFields the {@code BPFStructType} fields of the class, related to the {@code @Type} annotated
+     *                      inner records
+     * @return the generated class
      */
-    private TypeSpec createType(String name, TypeMirror baseType, byte[] byteCode) {
-        return TypeSpec.classBuilder(name)
-                .superclass(baseType)
-                .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .addField(FieldSpec.builder(String.class, "BYTE_CODE", Modifier.PRIVATE, Modifier.STATIC,
-                        Modifier.FINAL).addJavadoc("Base64 encoded and gzipped eBPF byte-code").initializer("$S",
-                        gzipBase64Encode(byteCode)).build())
-                .addMethod(MethodSpec.methodBuilder("getByteCode")
-                        .addAnnotation(Override.class)
-                        .addModifiers(Modifier.PUBLIC)
-                        .returns(byte[].class)
-                        .addStatement("return me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(BYTE_CODE)")
-                        .build())
-                .build();
+    private TypeSpec createType(String name, TypeMirror baseType, byte[] byteCode, List<FieldSpec> bpfTypeFields) {
+        var spec =
+                TypeSpec.classBuilder(name).superclass(baseType).addModifiers(Modifier.PUBLIC, Modifier.FINAL).addField(FieldSpec.builder(String.class, "BYTE_CODE", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL).addJavadoc("Base64 encoded and gzipped eBPF byte-code").initializer("$S", gzipBase64Encode(byteCode)).build()).addMethod(MethodSpec.methodBuilder("getByteCode").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(byte[].class).addStatement("return me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(BYTE_CODE)").build());
+        bpfTypeFields.forEach(spec::addField);
+        return spec.build();
     }
 
     private byte[] compileProgram(TypeElement typeElement) {
         Optional<? extends Element> elem =
-                typeElement.getEnclosedElements().stream().filter(e -> e.getKind().isField() && e.getSimpleName().toString().equals
-                        ("EBPF_PROGRAM")).findFirst();
+                typeElement.getEnclosedElements().stream().filter(e -> e.getKind().isField() && e.getSimpleName().toString().equals("EBPF_PROGRAM")).findFirst();
         // check that the class has a static field EBPF_PROGRAM of type String or Path
         if (elem.isEmpty()) {
-            this.processingEnv.getMessager().printError("Class " + typeElement.getSimpleName() + " is annotated with " +
-                    "BPF but does not contain a String field EBPF_PROGRAM which contains the field", typeElement);
+            this.processingEnv.getMessager().printError("Class " + typeElement.getSimpleName() + " is annotated with "
+                    + "BPF but does not contain a String field EBPF_PROGRAM which contains the field", typeElement);
             return null;
         }
-        var element = (VariableElement)elem.get();
+        var element = (VariableElement) elem.get();
         // check that element is of correct type
-        if (!element.asType().toString().equals("java.lang.String") && !element.asType().toString().equals("java.nio.file.Path")) {
-            this.processingEnv.getMessager().printError("Field EBPF_PROGRAM in class " + typeElement.getSimpleName() +
-                    " is not of type String or Path", typeElement);
+        if (!element.asType().toString().equals("java.lang.String") && !element.asType().toString().equals("java.nio" +
+                ".file.Path")) {
+            this.processingEnv.getMessager().printError("Field EBPF_PROGRAM in class " + typeElement.getSimpleName() + " is not of type String or Path", typeElement);
             return null;
         }
         String ebpfProgram;
         if (element.getConstantValue() != null) {
             ebpfProgram = (String) element.getConstantValue();
         } else {
-            this.processingEnv.getMessager().printError("Field EBPF_PROGRAM in class " + typeElement.getSimpleName() +
-                    " is not a constant string", typeElement);
+            this.processingEnv.getMessager().printError("Field EBPF_PROGRAM in class " + typeElement.getSimpleName() + " is not a constant string", typeElement);
             return null;
         }
         if (ebpfProgram.endsWith(".c") && ebpfProgram.split("\n").length == 1) {
@@ -166,9 +164,7 @@ public class Processor extends AbstractProcessor {
             try {
                 Path p = getPath(ebpfProgram);
                 if (p == null || !Files.exists(p)) {
-                    this.processingEnv.getMessager().printError("Field EBPF_PROGRAM in class " + typeElement.getSimpleName() +
-                            " is a path to a file that does not exist, maybe pass base folder via -Aebpf.folder",
-                            typeElement);
+                    this.processingEnv.getMessager().printError("Field EBPF_PROGRAM in class " + typeElement.getSimpleName() + " is a path to a file that does not exist, maybe pass base folder via -Aebpf.folder", typeElement);
                     return null;
                 }
                 try (var is = Files.newInputStream(p)) {
@@ -211,10 +207,7 @@ public class Processor extends AbstractProcessor {
             var tempFile = Files.createTempFile("ebpf", ".o");
             tempFile.toFile().deleteOnExit();
             var process = new ProcessBuilder(newestClang, "-O2", "-g", "-target", "bpf", "-c", "-o",
-                    tempFile.toString(),
-                    "-I", vmlinuxHeader.getParent().toString(), "-x", "c", "-",
-                    "--sysroot=/").redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE)
-                    .start();
+                    tempFile.toString(), "-I", vmlinuxHeader.getParent().toString(), "-x", "c", "-", "--sysroot=/").redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE).start();
             process.getOutputStream().write(ebpfProgram.getBytes());
             process.getOutputStream().close();
             ByteArrayOutputStream error = new ByteArrayOutputStream();
@@ -272,7 +265,8 @@ public class Processor extends AbstractProcessor {
         return suggestions;
     }
 
-    private record Line(int line, int start) {}
+    private record Line(int line, int start) {
+    }
 
     private Map<Integer, Line> getLineMap(String ebpfProgram, VariableElement element) {
         Path file = Paths.get(this.processingEnv.getElementUtils().getFileObjectOf(element).getName());
@@ -332,13 +326,11 @@ public class Processor extends AbstractProcessor {
             tempDirectory.toFile().deleteOnExit();
             var tempFile = tempDirectory.resolve("vmlinux.h");
             var errorFile = tempDirectory.resolve("error.txt");
-            var process = new ProcessBuilder("bpftool", "btf", "dump", "file", "/sys/kernel/btf/vmlinux", "format", "c")
-                    .redirectOutput(tempFile.toFile())
-                    .redirectError(errorFile.toFile())
-                    .start();
+            var process = new ProcessBuilder("bpftool", "btf", "dump", "file", "/sys/kernel/btf/vmlinux", "format",
+                    "c").redirectOutput(tempFile.toFile()).redirectError(errorFile.toFile()).start();
             if (process.waitFor() != 0) {
-                this.processingEnv.getMessager().printError("Could not obtain vmlinux.h header file via 'bpftool btf " +
-                        "dump file /sys/kernel/btf/vmlinux format c'\n" + Files.readString(errorFile), null);
+                this.processingEnv.getMessager().printError("Could not obtain vmlinux.h header file via 'bpftool btf "
+                        + "dump file /sys/kernel/btf/vmlinux format c'\n" + Files.readString(errorFile), null);
                 return null;
             }
             return tempFile;

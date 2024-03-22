@@ -1,5 +1,5 @@
 /*
- * Ring buffer sample from https://ansilh.com/posts/09-ebpf-for-linux-admins-part9/
+ * Adaption of {@link RingSample} that shows how to use the {@link Type} annotation and related annotation processing
  */
 package me.bechberger.ebpf.samples;
 
@@ -13,12 +13,10 @@ import me.bechberger.ebpf.shared.BPFType;
 import java.util.List;
 
 /**
- * Ring buffer sample from
- * <a href="https://ansilh.com/posts/09-ebpf-for-linux-admins-part9/">ebpf for linux admins part 9</a>
- * that traces the openat2 syscall and prints the filename, process name, and PID
+ * Adaption of {@link RingSample} that shows how to use the {@link Type} annotation and related annotation processing
  */
 @BPF
-public abstract class RingSample extends BPFProgram {
+public abstract class TypeProcessingSample extends BPFProgram {
 
     static final String EBPF_PROGRAM = """
             #include "vmlinux.h"
@@ -93,18 +91,14 @@ public abstract class RingSample extends BPFProgram {
     private static final int FILE_NAME_LEN = 256;
     private static final int TASK_COMM_LEN = 16;
 
+    @Type
     record Event(@Unsigned int pid, @Size(FILE_NAME_LEN) String filename, @Size(TASK_COMM_LEN) String comm) {}
 
-    private static final BPFType.BPFStructType<Event> eventType = new BPFType.BPFStructType<>("rb", List.of(
-            new BPFType.BPFStructMember<>("e_pid", BPFType.BPFIntType.UINT32, 0, Event::pid),
-            new BPFType.BPFStructMember<>("e_filename", new BPFType.StringType(FILE_NAME_LEN), 4, Event::filename),
-            new BPFType.BPFStructMember<>("e_comm", new BPFType.StringType(TASK_COMM_LEN), 4 + FILE_NAME_LEN, Event::comm)
-    ), new BPFType.AnnotatedClass(Event.class, List.of()), fields -> new Event((int)fields.get(0),
-            (String)fields.get(1), (String)fields.get(2)));
 
     public static void main(String[] args) {
-        try (RingSample program = BPFProgram.load(RingSample.class)) {
+        try (TypeProcessingSample program = BPFProgram.load(TypeProcessingSample.class)) {
             program.autoAttachProgram(program.getProgramByName("kprobe__do_sys_openat2"));
+            var eventType = program.getTypeForClass(Event.class);
             var ringBuffer = program.getRingBufferByName("rb", eventType, (buffer, event) -> {
                 System.out.printf("do_sys_openat2 called by:%s file:%s pid:%d\n", event.comm(), event.filename(), event.pid());
             });

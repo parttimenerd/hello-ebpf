@@ -137,11 +137,6 @@ public sealed interface BPFType<T> {
             return type;
         }
 
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        public static Optional<BPFIntType<?>> getRegisteredType(AnnotatedClass klass) {
-            return (Optional<BPFIntType<?>>) (Optional) Optional.ofNullable(registeredTypes.get(klass));
-        }
-
         /**
          * <code>bool/u8</code> mapped to {@code boolean}
          */
@@ -354,7 +349,11 @@ public sealed interface BPFType<T> {
          * Returns the offset of the passed member
          */
         public int getOffsetOfMember(String memberName) {
-            return members.stream().filter(m -> m.name().equals(memberName)).findFirst().map(BPFStructMember::offset).orElseThrow();
+            return getMember(memberName).offset();
+        }
+
+        public BPFStructMember<T, ?> getMember(String memberName) {
+            return members.stream().filter(m -> m.name().equals(memberName)).findFirst().orElseThrow();
         }
 
         @Override
