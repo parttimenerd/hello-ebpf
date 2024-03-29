@@ -1,8 +1,6 @@
 package me.bechberger.ebpf.bpf;
 
-import me.bechberger.ebpf.bpf.map.BPFMap;
-import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
-import me.bechberger.ebpf.bpf.map.FileDescriptor;
+import me.bechberger.ebpf.bpf.map.*;
 import me.bechberger.ebpf.bpf.raw.Lib;
 import me.bechberger.ebpf.bpf.raw.LibraryLoader;
 import me.bechberger.ebpf.shared.BPFType;
@@ -323,5 +321,12 @@ public abstract class BPFProgram implements AutoCloseable {
     public <E> BPFRingBuffer<E> getRingBufferByName(String name, BPFType<E> eventType,
                                                     BPFRingBuffer.EventCallback<E> callback) {
         return getMapByName(name, fd -> new BPFRingBuffer<>(fd, eventType, callback));
+    }
+
+    public <K, V> BPFHashMap<K, V> getHashMapByName(String name, BPFType<K> keyType,
+                                                    BPFType<V> valueType) {
+        var fd = getMapDescriptorByName(name);
+        MapTypeId type = BPFMap.getInfo(fd).type();
+        return new BPFHashMap<>(fd, type == MapTypeId.LRU_HASH, keyType, valueType);
     }
 }

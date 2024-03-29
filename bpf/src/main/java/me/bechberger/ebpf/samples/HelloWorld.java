@@ -1,11 +1,11 @@
-/*
- * Hello, World from BPF
- */
 package me.bechberger.ebpf.samples;
 
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.bpf.BPFProgram;
 
+/**
+ * Hello, World from BPF
+ */
 @BPF
 public abstract class HelloWorld extends BPFProgram {
 

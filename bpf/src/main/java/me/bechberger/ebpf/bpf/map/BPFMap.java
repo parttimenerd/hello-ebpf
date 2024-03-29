@@ -22,9 +22,10 @@ public class BPFMap {
         }
     }
 
-    private final FileDescriptor fd;
+    protected final MapTypeId typeId;
+    protected final FileDescriptor fd;
 
-    private final MapInfo info;
+    protected final MapInfo info;
 
     /**
      * Create a new map
@@ -34,6 +35,7 @@ public class BPFMap {
      * @throws BPFMapTypeMismatch if the type of the map does not match the expected type
      */
     BPFMap(MapTypeId typeId, FileDescriptor fd) {
+        this.typeId = typeId;
         this.fd = fd;
         this.info = getInfo(fd);
         if (info.type != typeId) {
@@ -84,4 +86,7 @@ public class BPFMap {
         return info;
     }
 
+    public int getMaxEntries() {
+        return info.maxEntries;
+    }
 }

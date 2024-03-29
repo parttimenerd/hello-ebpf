@@ -1,6 +1,3 @@
-/*
- * Ring buffer sample from https://ansilh.com/posts/09-ebpf-for-linux-admins-part9/
- */
 package me.bechberger.ebpf.samples;
 
 import me.bechberger.ebpf.annotations.Size;
@@ -13,9 +10,9 @@ import me.bechberger.ebpf.shared.BPFType;
 import java.util.List;
 
 /**
- * Ring buffer sample from
- * <a href="https://ansilh.com/posts/09-ebpf-for-linux-admins-part9/">ebpf for linux admins part 9</a>
- * that traces the openat2 syscall and prints the filename, process name, and PID
+ * Ring buffer sample that traces the openat2 syscall and prints the filename, process name, and PID
+ * <p>
+ * Based on <a href="https://ansilh.com/posts/09-ebpf-for-linux-admins-part9/">ebpf for linux admins part 9</a>
  */
 @BPF
 public abstract class RingSample extends BPFProgram {
@@ -26,8 +23,6 @@ public abstract class RingSample extends BPFProgram {
             #include <bpf/bpf_tracing.h>
             #include <string.h>
                             
-            #define TARGET_NAME "sample_write"
-            #define MAX_ENTRIES 10
             #define FILE_NAME_LEN 256
             #define TASK_COMM_LEN 16
                             

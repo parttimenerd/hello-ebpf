@@ -1,6 +1,3 @@
-/*
- * Adaption of {@link RingSample} that shows how to use the {@link Type} annotation and related annotation processing
- */
 package me.bechberger.ebpf.samples;
 
 import me.bechberger.ebpf.annotations.Size;
@@ -23,9 +20,7 @@ public abstract class TypeProcessingSample extends BPFProgram {
             #include <bpf/bpf_helpers.h>
             #include <bpf/bpf_tracing.h>
             #include <string.h>
-                            
-            #define TARGET_NAME "sample_write"
-            #define MAX_ENTRIES 10
+            
             #define FILE_NAME_LEN 256
             #define TASK_COMM_LEN 16
                             

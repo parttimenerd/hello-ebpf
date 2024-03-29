@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static me.bechberger.ebpf.bpf.TestUtil.triggerOpenAt;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -91,20 +92,6 @@ public class RingBufferTest {
                             
             char _license[] SEC ("license") = "GPL";
             """;
-    }
-
-    /**
-     * Triggers a openat syscall and returns the path of the file that was opened
-     */
-    private static Path triggerOpenAt() {
-        try {
-            var path = Files.createTempFile("test", "txt");
-            Files.write(path, "Hello, World!".getBytes());
-            Files.delete(path);
-            return path;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private static final int FILE_NAME_LEN = 256;

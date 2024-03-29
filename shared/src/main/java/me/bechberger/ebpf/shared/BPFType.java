@@ -4,6 +4,7 @@ import me.bechberger.ebpf.annotations.AnnotationInstances;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
+import java.lang.foreign.Arena;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
@@ -86,6 +87,18 @@ public sealed interface BPFType<T> {
 
     default void setMemory(MemorySegment segment, T obj) {
         setter().store(segment, obj);
+    }
+
+    /** Allocate a memory segment and store the object in it */
+    default MemorySegment allocate(Arena arena, T obj) {
+        MemorySegment segment = arena.allocate(layout());
+        setMemory(segment, obj);
+        return segment;
+    }
+
+    /** Allocate a memory segment */
+    default MemorySegment allocate(Arena arena) {
+        return arena.allocate(layout());
     }
 
     /**
