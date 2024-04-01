@@ -3,9 +3,8 @@ package me.bechberger.ebpf.samples;
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
-import me.bechberger.ebpf.annotations.bpf.Type;
 import me.bechberger.ebpf.bpf.BPFProgram;
-import me.bechberger.ebpf.shared.BPFType;
+import me.bechberger.ebpf.type.BPFType;
 
 import java.util.List;
 

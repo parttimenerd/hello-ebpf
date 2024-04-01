@@ -3,9 +3,8 @@ package me.bechberger.ebpf.bpf.map;
 import me.bechberger.ebpf.bpf.BPFError;
 import me.bechberger.ebpf.bpf.raw.Lib;
 import me.bechberger.ebpf.bpf.raw.ring_buffer_sample_fn;
-import me.bechberger.ebpf.shared.BPFType;
+import me.bechberger.ebpf.type.BPFType;
 
-import java.io.IOException;
 import java.lang.foreign.Arena;
 import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.MemorySegment;

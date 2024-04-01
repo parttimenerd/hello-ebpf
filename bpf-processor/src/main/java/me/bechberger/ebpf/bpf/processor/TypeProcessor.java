@@ -1,9 +1,8 @@
 package me.bechberger.ebpf.bpf.processor;
 
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
+import me.bechberger.cast.CAST;
+import me.bechberger.ebpf.type.BPFType;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.AnnotatedConstruct;
@@ -11,33 +10,59 @@ import javax.lang.model.element.*;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
  * Handles {@code @Type} annotated records
  */
-class TypeProcessor {
+public class TypeProcessor {
 
-    private final String SIZE_ANNOTATION = "me.bechberger.ebpf.annotations.Size";
-    private final String UNSIGNED_ANNOTATION = "me.bechberger.ebpf.annotations.Unsigned";
-    private final String TYPE_ANNOTATION = "me.bechberger.ebpf.annotations.bpf.Type";
-    private final String TYPE_MEMBER_ANNOTATION = "me.bechberger.ebpf.annotations.bpf.Type.Member";
-
-    private final String BPF_PACKAGE = "me.bechberger.ebpf.shared";
-    private final String BPF_TYPE = "me.bechberger.ebpf.shared.BPFType";
-    private final String BPF_INT_TYPE = BPF_TYPE + ".BPFIntType";
-
+    public final static String SIZE_ANNOTATION = "me.bechberger.ebpf.annotations.Size";
+    public final static String UNSIGNED_ANNOTATION = "me.bechberger.ebpf.annotations.Unsigned";
+    public final static String TYPE_ANNOTATION = "me.bechberger.ebpf.annotations.bpf.Type";
+    public final static String BPF_PACKAGE = "me.bechberger.ebpf.shared";
+    public final static String BPF_TYPE = "me.bechberger.ebpf.shared.BPFType";
     /**
      * Helper class to keep track of defined types
      */
-    private record DefinedTypes(Map<TypeElement, String> typeToFieldName) {
+    private class DefinedTypes {
+
+        private final Map<TypeElement, String> typeToFieldName;
+        private final Map<String, String> nameToSpecFieldName;
+
+        private final Map<String, TypeElement> nameToTypeElement;
+
+        DefinedTypes(Map<TypeElement, String> typeToFieldName) {
+            this.typeToFieldName = typeToFieldName;
+            this.nameToSpecFieldName = new HashMap<>();
+            this.nameToTypeElement = new HashMap<>();
+            this.typeToFieldName.forEach((k, v) -> {
+                var name = getTypeRecordBpfName(k);
+                this.nameToSpecFieldName.put(name, v);
+                this.nameToTypeElement.put(name, k);
+            });
+        }
 
         public boolean isTypeDefined(TypeElement typeElement) {
             return this.typeToFieldName.containsKey(typeElement);
         }
 
+        public boolean isNameDefined(String name) {
+            return this.nameToSpecFieldName.containsKey(name);
+        }
+
         public Optional<String> getFieldName(TypeElement typeElement) {
             return Optional.ofNullable(this.typeToFieldName.get(typeElement));
+        }
+
+        public Optional<String> getSpecFieldName(String name) {
+            return Optional.ofNullable(this.nameToSpecFieldName.get(name));
+        }
+
+        public Optional<TypeElement> getTypeElement(String name) {
+            return Optional.ofNullable(this.nameToTypeElement.get(name));
         }
 
         @Override
@@ -82,20 +107,80 @@ class TypeProcessor {
         }).filter(Objects::nonNull).toList();
     }
 
+    record TypeProcessorResult(List<FieldSpec> fields, List<CAST.Statement> definingStatements) {
+
+        String toCCode() {
+            return definingStatements.stream().map(CAST.Statement::toPrettyString).collect(Collectors.joining("\n"));
+        }
+    }
+
     /**
      * Process the records annotated with {@code @Type} in the given class
      *
      * @param outerTypeElement the class to process that contains the records
      * @return a list of field specs that define the related {@code BPFStructType} instances
      */
-    List<FieldSpec> processBPFTypeRecords(TypeElement outerTypeElement) {
+    TypeProcessorResult processBPFTypeRecords(TypeElement outerTypeElement) {
         List<TypeElement> innerTypeElements = getInnerBPFTypeElements(outerTypeElement);
         definedTypes = getDefinedTypes(innerTypeElements);
-        var list = innerTypeElements.stream().map(this::processBPFTypeRecord).toList();
-        if (list.stream().anyMatch(Optional::isEmpty)) {
-            return List.of();
+
+        Map<String, BPFType<?>> alreadyDefinedTypes = new HashMap<>();
+        // detect recursion
+        Set<String> currentlyDefining = new HashSet<>();
+
+        List<TypeElement> processedTypes = new ArrayList<>();
+
+        AtomicReference<Function<String, BPFType<?>>> obtainType = new AtomicReference<>();
+        obtainType.set(name -> {
+            if (alreadyDefinedTypes.containsKey(name)) {
+                return alreadyDefinedTypes.get(name);
+            }
+            if (currentlyDefining.contains(name)) {
+                this.processingEnv.getMessager().printError("Recursion detected for type " + name, outerTypeElement);
+                throw new IllegalStateException("Recursion detected for type " + name);
+            }
+            currentlyDefining.add(name);
+            var typeElement = definedTypes.getTypeElement(name).get();
+            var type = processBPFTypeRecord(typeElement, obtainType.get());
+            if (type.isEmpty()) {
+                return null;
+            }
+            alreadyDefinedTypes.put(name, type.get());
+            currentlyDefining.remove(name);
+            processedTypes.add(typeElement);
+            return type.get();
+        });
+
+        Function<BPFType<?>, String> typeToSpecField = t -> {
+            if (t instanceof BPFType.BPFStructType<?> structType) {
+                return definedTypes.getSpecFieldName(structType.bpfName()).get();
+            }
+            return null;
+        };
+
+        while (processedTypes.size() < innerTypeElements.size()) {
+            var unprocessed = innerTypeElements.stream().filter(e -> !processedTypes.contains(e)).toList();
+            var type = processBPFTypeRecord(unprocessed.get(0), obtainType.get());
+            if (type.isEmpty()) {
+                return new TypeProcessorResult(List.of(), List.of());
+            }
+            alreadyDefinedTypes.put(type.get().bpfName(), type.get());
+            processedTypes.add(unprocessed.get(0));
         }
-        return list.stream().map(Optional::get).toList();
+
+        List<FieldSpec> fields = new ArrayList<>();
+        List<CAST.Statement> definingStatements = new ArrayList<>();
+
+        for (var processedType : processedTypes) {
+            var name = getTypeRecordBpfName(processedType);
+            var type = alreadyDefinedTypes.get(getTypeRecordBpfName(processedType));
+            var spec = type.toFieldSpecGenerator().get().apply(definedTypes.getSpecFieldName(name).get(),
+                    typeToSpecField);
+            fields.add(spec);
+            var def = type.toCDeclarationStatement();
+            def.ifPresent(definingStatements::add);
+        }
+        return new TypeProcessorResult(fields, definingStatements);
     }
 
     /**
@@ -112,28 +197,10 @@ class TypeProcessor {
         return name.get().getValue().getValue().toString();
     }
 
-    /**
-     * Mirrors a generic BPFType instance
-     */
-    record BPFTypeMirror(String expression) {
-    }
-
-    /**
-     * Mirrors the BPFStructMember constructor
-     */
-    record UBPFStructMemberMirror(String name, BPFTypeMirror type, String javaType) {
-    }
-
-    /**
-     * Mirrors the BPFStructType constructor
-     */
-    record StructTypeMirror(String bpfName, List<UBPFStructMemberMirror> members, TypeMirror javaClass) {
-    }
-
-    private Optional<FieldSpec> processBPFTypeRecord(TypeElement typeElement) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Optional<BPFType.BPFStructType<?>> processBPFTypeRecord(TypeElement typeElement, Function<String, BPFType<?>> nameToCustomType) {
         String className = typeElement.getSimpleName().toString();
         String name = getTypeRecordBpfName(typeElement);
-        String fieldName = typeToFieldName(typeElement);
         var constructors =
                 typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.CONSTRUCTOR).toList();
         if (constructors.size() != 1) {
@@ -142,40 +209,29 @@ class TypeProcessor {
             return Optional.empty();
         }
         var constructor = (ExecutableElement) constructors.getFirst();
-        var members = processBPFTypeRecordMembers(constructor.getParameters());
+        Optional<List<BPFType.UBPFStructMember<?, ?>>> members =
+                processBPFTypeRecordMembers(constructor.getParameters(), nameToCustomType);
         if (members.isEmpty()) {
             return Optional.empty();
         }
-        // now create the BPFStructType instance FieldSpec
-        // that we get something like
-        /*
-        BPFType.BPFStructType<Event> fieldName = BPFStructType.autoLayout("name", List.of(
-            new BPFType.UBPFStructMember<>("e_pid", BPFType.BPFIntType.UINT32, Event::pid),
-    ), new BPFType.AnnotatedClass(className.class, List.of()), fields -> new Event((int)fields.get(0),
-            (String)fields.get(1), (String)fields.get(2)));
-         */
-        ClassName bpfStructType = ClassName.get(BPF_PACKAGE, "BPFType.BPFStructType");
-        TypeName fieldType = ParameterizedTypeName.get(bpfStructType, ClassName.get("", className));
-        String memberExpression =
-                members.get().stream().map(m -> "new " + BPF_TYPE + ".UBPFStructMember<>(" + "\"" + m.name() + "\", " + m.type().expression() + ", " + className + "::" + m.name() + ")").collect(Collectors.joining(", "));
-        ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
-        String creatorExpr =
-                members.get().stream().map(m -> "(" + m.javaType + ")fields.get(" + members.get().indexOf(m) + ")").collect(Collectors.joining(", "));
-        return Optional.of(FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC,
-                Modifier.PUBLIC).initializer("$T.autoLayout($S, java.util.List.of($L), new $T.AnnotatedClass($T" +
-                ".class, java.util.List" + ".of()" + "), " + "fields -> new $T($L))", bpfStructType, name,
-                memberExpression, bpfType, ClassName.get("", className), ClassName.get("", className), creatorExpr).build());
+
+        BPFType.AnnotatedClass annotatedClass = new BPFType.AnnotatedClass(className, List.of());
+
+        return Optional.of(BPFType.BPFStructType.autoLayout(name,
+                (List<BPFType.UBPFStructMember<Object, ?>>)(List)members.get(),
+                annotatedClass, null));
     }
 
-    private Optional<List<UBPFStructMemberMirror>> processBPFTypeRecordMembers(List<? extends VariableElement> recordMembers) {
-        var list = recordMembers.stream().map(this::processBPFTypeRecordMember).toList();
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Optional<List<BPFType.UBPFStructMember<?, ?>>> processBPFTypeRecordMembers(List<? extends VariableElement> recordMembers, Function<String, BPFType<?>> nameToCustomType) {
+        var list = recordMembers.stream().map(m -> processBPFTypeRecordMember(m, nameToCustomType)).toList();
         if (list.stream().anyMatch(Optional::isEmpty)) {
             return Optional.empty();
         }
-        return Optional.of(list.stream().map(Optional::get).toList());
+        return Optional.of((List<BPFType.UBPFStructMember<?, ?>>)(List)list.stream().map(Optional::get).toList());
     }
 
-    record AnnotationValues(boolean unsigned, Optional<Integer> size, Optional<String> bpfType) {
+    record AnnotationValues(boolean unsigned, Optional<Integer> size) {
     }
 
     private AnnotationValues getAnnotationValuesForRecordMember(VariableElement element) {
@@ -189,22 +245,18 @@ class TypeProcessor {
                 size = Optional.of((Integer) value.get().getValue().getValue());
             }
         }
-        var typeAnnotation = getAnnotationMirror(element.asType(), TYPE_MEMBER_ANNOTATION);
-        if (typeAnnotation.isPresent()) {
-            var value = typeAnnotation.get().getElementValues().entrySet().stream().findFirst();
-            if (value.isPresent()) {
-                bpfType = Optional.of((String) value.get().getValue().getValue());
-            }
-        }
-        return new AnnotationValues(unsigned, size, bpfType);
+        return new AnnotationValues(unsigned, size);
     }
 
-    private Optional<UBPFStructMemberMirror> processBPFTypeRecordMember(VariableElement element) {
+    private Optional<BPFType.UBPFStructMember<?, ?>> processBPFTypeRecordMember(VariableElement element,
+                                                                                Function<String, BPFType<?>> nameToCustomType) {
         AnnotationValues annotations = getAnnotationValuesForRecordMember(element);
         TypeMirror type = element.asType();
         var bpfType = processBPFTypeRecordMemberType(element, annotations, type);
-        return bpfType.map(bpfTypeMirror -> new UBPFStructMemberMirror(element.getSimpleName().toString(),
-                bpfTypeMirror, lastPart(type.toString())));
+        return bpfType.map(t -> {
+            return new BPFType.UBPFStructMember<>(element.getSimpleName().toString(),
+                    t.toBPFType(nameToCustomType), null, null);
+        });
     }
 
     private static final Set<String> integerTypes = Set.of("int", "long", "short", "byte", "char");
@@ -226,11 +278,8 @@ class TypeProcessor {
 
     private Optional<BPFTypeMirror> processBPFTypeRecordMemberType(Element element, AnnotationValues annotations,
                                                                    TypeMirror type) {
-        if (annotations.bpfType().isPresent()) {
-            return processCustomType(annotations.bpfType().get(), type);
-        }
         if (isIntegerType(type)) {
-            return processIntegerType(element, annotations, type);
+            return processIntegerType(element, annotations, type).map(tp -> (t -> tp));
         }
         if (isStringType(type)) {
             return processStringType(element, annotations, type);
@@ -242,17 +291,25 @@ class TypeProcessor {
         return Optional.empty();
     }
 
-    private Optional<BPFTypeMirror> processCustomType(String bpfType, TypeMirror type) {
-        return Optional.of(new BPFTypeMirror(bpfType));
+    @FunctionalInterface
+    interface BPFTypeMirror {
+
+        BPFType<?> toBPFType(Function<String, BPFType<?>> nameToCustomType);
     }
 
-    private Optional<String> getBaseIntegerType(Element element, TypeMirror type) {
+    private Optional<BPFType<?>> getIntegerType(Element element, TypeMirror type, boolean unsigned) {
         return switch (lastPart(type.toString())) {
-            case "int" -> Optional.of("INT32");
-            case "long" -> Optional.of("INT64");
-            case "short" -> Optional.of("INT16");
-            case "byte" -> Optional.of("INT8");
-            case "char" -> Optional.of("UINT16");
+            case "int" -> Optional.of(unsigned ? BPFType.BPFIntType.UINT32 : BPFType.BPFIntType.INT32);
+            case "long" -> Optional.of(unsigned ? BPFType.BPFIntType.UINT64 : BPFType.BPFIntType.INT64);
+            case "short" -> Optional.of(unsigned ? BPFType.BPFIntType.UINT16 : BPFType.BPFIntType.INT16);
+            case "byte" -> Optional.of(unsigned ? BPFType.BPFIntType.UINT8 : BPFType.BPFIntType.INT8);
+            case "char" -> {
+                if (unsigned) {
+                    this.processingEnv.getMessager().printError("Unsigned char not supported", element);
+                    yield  Optional.empty();
+                }
+                yield Optional.of(BPFType.BPFIntType.CHAR);
+            }
             default -> {
                 this.processingEnv.getMessager().printError("Unsupported integer type " + type, element);
                 yield Optional.empty();
@@ -260,13 +317,30 @@ class TypeProcessor {
         };
     }
 
-    private Optional<BPFTypeMirror> processIntegerType(Element element, AnnotationValues annotations, TypeMirror type) {
+    private Optional<BPFType<?>> processIntegerType(Element element, AnnotationValues annotations, TypeMirror type) {
         if (annotations.size().isPresent()) {
             // annotation not supported for integer types and log
             this.processingEnv.getMessager().printError("Size annotation not supported for integer types", element);
             return Optional.empty();
         }
-        return getBaseIntegerType(element, type).map(s -> new BPFTypeMirror(BPF_INT_TYPE + "." + (annotations.unsigned ? "U" : "") + s));
+        boolean unsigned = annotations.unsigned;
+        return switch (lastPart(type.toString())) {
+            case "int" -> Optional.of(unsigned ? BPFType.BPFIntType.UINT32 : BPFType.BPFIntType.INT32);
+            case "long" -> Optional.of(unsigned ? BPFType.BPFIntType.UINT64 : BPFType.BPFIntType.INT64);
+            case "short" -> Optional.of(unsigned ? BPFType.BPFIntType.UINT16 : BPFType.BPFIntType.INT16);
+            case "byte" -> Optional.of(unsigned ? BPFType.BPFIntType.UINT8 : BPFType.BPFIntType.INT8);
+            case "char" -> {
+                if (unsigned) {
+                    this.processingEnv.getMessager().printError("Unsigned char not supported", element);
+                    yield  Optional.empty();
+                }
+                yield Optional.of(BPFType.BPFIntType.CHAR);
+            }
+            default -> {
+                this.processingEnv.getMessager().printError("Unsupported integer type " + type, element);
+                yield Optional.empty();
+            }
+        };
     }
 
     private Optional<BPFTypeMirror> processStringType(Element element, AnnotationValues annotations, TypeMirror type) {
@@ -278,7 +352,7 @@ class TypeProcessor {
             this.processingEnv.getMessager().printError("Unsigned annotation not supported for string types", element);
             return Optional.empty();
         }
-        return Optional.of(new BPFTypeMirror("new " + BPF_TYPE + ".StringType(" + annotations.size().get() + ")"));
+        return Optional.of(t -> new BPFType.StringType(annotations.size().get()));
     }
 
     private Optional<BPFTypeMirror> processDefinedType(Element element, AnnotationValues annotations, TypeMirror type) {
@@ -297,7 +371,7 @@ class TypeProcessor {
                     element);
             return Optional.empty();
         }
-        return Optional.of(new BPFTypeMirror(fieldName.get()));
+        return Optional.of(t -> t.apply(fieldName.get()));
     }
 
     private DefinedTypes getDefinedTypes(List<TypeElement> innerTypeElements) {

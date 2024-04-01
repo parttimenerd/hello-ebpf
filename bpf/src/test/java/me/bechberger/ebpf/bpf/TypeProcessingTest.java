@@ -4,13 +4,13 @@ import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.Type;
-import me.bechberger.ebpf.shared.BPFType;
+import me.bechberger.ebpf.type.BPFType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static me.bechberger.ebpf.shared.BPFType.BPFIntType.CHAR;
-import static me.bechberger.ebpf.shared.BPFType.BPFIntType.UINT32;
+import static me.bechberger.ebpf.type.BPFType.BPFIntType.CHAR;
+import static me.bechberger.ebpf.type.BPFType.BPFIntType.UINT32;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 

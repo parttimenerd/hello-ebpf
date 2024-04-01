@@ -1,18 +1,30 @@
-package me.bechberger.ebpf.shared;
+package me.bechberger.ebpf.type;
 
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
+import me.bechberger.cast.CAST;
 import me.bechberger.ebpf.annotations.AnnotationInstances;
 import org.jetbrains.annotations.Nullable;
 
+import javax.lang.model.element.Modifier;
 import java.lang.annotation.Annotation;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static me.bechberger.ebpf.shared.BPFType.BPFIntType.CHAR;
+import static me.bechberger.cast.CAST.Declarator.identifier;
+import static me.bechberger.cast.CAST.Expression.variable;
+import static me.bechberger.ebpf.bpf.processor.TypeProcessor.BPF_PACKAGE;
+import static me.bechberger.ebpf.bpf.processor.TypeProcessor.BPF_TYPE;
+import static me.bechberger.ebpf.type.BPFType.BPFIntType.CHAR;
 
 
 /**
@@ -24,7 +36,11 @@ public sealed interface BPFType<T> {
     /**
      * Java class with annotations
      */
-    record AnnotatedClass(Class<?> klass, List<Annotation> annotations) {
+    record AnnotatedClass(String klass, List<Annotation> annotations) {
+
+        public AnnotatedClass(Class<?> klass, List<Annotation> annotations) {
+            this(klass.getName(), annotations);
+        }
     }
 
     /**
@@ -66,17 +82,47 @@ public sealed interface BPFType<T> {
      */
     long alignment();
 
+    private static long padSize(long size, long alignment) {
+        return (size + alignment - 1) & -alignment;
+    }
+
     /**
      * Padded size of the type in bytes, use for all array index computations
      */
     default long sizePadded() {
-        return PanamaUtil.padSize(layout().byteSize(), alignment());
+        return padSize(layout().byteSize(), alignment());
     }
 
     /**
      * Class that represents the type
      */
     AnnotatedClass javaClass();
+
+    default Optional<? extends CAST> toCDeclaration() {
+        return Optional.empty(); // for structs already defined in C
+    }
+
+    default Optional<? extends CAST.Statement> toCDeclarationStatement() {
+        return Optional.empty();
+    }
+
+    default CAST.Declarator toCUse() {
+        return identifier(bpfName());
+    }
+
+    default Optional<BiFunction<String, Function<BPFType<?>, String>, FieldSpec>> toFieldSpecGenerator() {
+        return Optional.empty();
+    }
+
+    default String toJavaUse() {
+        return javaClass().klass;
+    }
+
+    default String toJavaUseInGenerics() {
+        return toJavaUse();
+    }
+
+    String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName);
 
     /**
      * Make sure to guarantee type-safety
@@ -133,12 +179,37 @@ public sealed interface BPFType<T> {
             return size();
         }
 
+        @Override
+        public String toJavaUse() {
+            return switch (javaClass.klass) {
+                case "java.lang.Integer" -> "int";
+                case "java.lang.Long" -> "long";
+                case "java.lang.Short" -> "short";
+                case "java.lang.Byte" -> "byte";
+                case "java.lang.Boolean" -> "boolean";
+                default -> javaClass().klass;
+            };
+        }
+
+        @Override
+        public String toJavaUseInGenerics() {
+            return javaClass.klass;
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+            return getClass().getSimpleName() + "." + Objects.requireNonNull(typeToSpecName.get(this));
+        }
+
         private static final Map<AnnotatedClass, BPFType<?>> registeredTypes = new HashMap<>();
+        private static final Map<BPFType<?>, String> typeToSpecName = new IdentityHashMap<>();
 
         /**
          * Create a new BPFIntType and register it
          */
-        private static <T, V extends ValueLayout> BPFIntType<T> createType(String bpfName, Class<T> klass, V layout,
+        private static <T, V extends ValueLayout> BPFIntType<T> createType(String bpfName, String specFieldName,
+                                                                           Class<T> klass,
+                                                                           V layout,
                                                                            MemoryParser<T> parser,
                                                                            MemorySetter<T> setter, boolean signed) {
             var type = new BPFIntType<>(bpfName, layout, parser, setter, new AnnotatedClass(klass, signed ?
@@ -147,13 +218,14 @@ public sealed interface BPFType<T> {
                 throw new IllegalArgumentException("Type " + type.javaClass() + " already registered as " + registeredTypes.get(type.javaClass()).bpfName());
             }
             registeredTypes.put(type.javaClass(), type);
+            typeToSpecName.put(type, specFieldName);
             return type;
         }
 
         /**
          * <code>bool/u8</code> mapped to {@code boolean}
          */
-        public static final BPFIntType<Boolean> BOOL = createType("bool", Boolean.class, ValueLayout.JAVA_BYTE,
+        public static final BPFIntType<Boolean> BOOL = createType("bool", "BOOL", Boolean.class, ValueLayout.JAVA_BYTE,
                 segment -> {
             return segment.get(ValueLayout.JAVA_BYTE, 0) == 1;
         }, (segment, obj) -> {
@@ -163,7 +235,7 @@ public sealed interface BPFType<T> {
         /**
          * <code>char</code> mapped to {@code byte} (essentially an unsigned byte)
          */
-        public static final BPFIntType<Byte> CHAR = createType("char", Byte.class, ValueLayout.JAVA_BYTE,
+        public static final BPFIntType<Byte> CHAR = createType("char", "CHAR", Byte.class, ValueLayout.JAVA_BYTE,
                 segment -> {
             return segment.get(ValueLayout.JAVA_BYTE, 0);
         }, (segment, obj) -> {
@@ -175,7 +247,8 @@ public sealed interface BPFType<T> {
         /**
          * <code>i8</code> mapped to {@code byte}
          */
-        public static final BPFIntType<Byte> INT8 = createType("s8", Byte.class, ValueLayout.JAVA_BYTE, segment -> {
+        public static final BPFIntType<Byte> INT8 = createType("s8", "INT8", Byte.class, ValueLayout.JAVA_BYTE,
+                segment -> {
             return segment.get(ValueLayout.JAVA_BYTE, 0);
         }, (segment, obj) -> {
             segment.set(ValueLayout.JAVA_BYTE, 0, obj);
@@ -184,7 +257,7 @@ public sealed interface BPFType<T> {
         /**
          * <code>s16</code> mapped to {@code short}
          */
-        public static final BPFIntType<Short> INT16 = createType("s16", Short.class, ValueLayout.JAVA_SHORT,
+        public static final BPFIntType<Short> INT16 = createType("s16", "INT16", Short.class, ValueLayout.JAVA_SHORT,
                 segment -> {
             return segment.get(ValueLayout.JAVA_SHORT, 0);
         }, (segment, obj) -> {
@@ -194,7 +267,7 @@ public sealed interface BPFType<T> {
         /**
          * <code>u16</code> mapped to {@code @Unsigned short}
          */
-        public static final BPFIntType<Short> UINT16 = createType("u16", Short.class, ValueLayout.JAVA_SHORT,
+        public static final BPFIntType<Short> UINT16 = createType("u16", "UINT16", Short.class, ValueLayout.JAVA_SHORT,
                 segment -> {
             return segment.get(ValueLayout.JAVA_SHORT, 0);
         }, (segment, obj) -> {
@@ -204,7 +277,7 @@ public sealed interface BPFType<T> {
         /**
          * <code>s32</code> mapped to {@code int}
          */
-        public static final BPFIntType<Integer> INT32 = createType("s32", Integer.class, ValueLayout.JAVA_INT,
+        public static final BPFIntType<Integer> INT32 = createType("s32",  "INT32", Integer.class, ValueLayout.JAVA_INT,
                 segment -> {
             return segment.get(ValueLayout.JAVA_INT, 0);
         }, (segment, obj) -> {
@@ -214,7 +287,8 @@ public sealed interface BPFType<T> {
         /**
          * <code>u32</code> mapped to {@code @Unsigned int}
          */
-        public static final BPFIntType<Integer> UINT32 = createType("u32", Integer.class, ValueLayout.JAVA_INT,
+        public static final BPFIntType<Integer> UINT32 = createType("u32", "UINT32", Integer.class,
+                ValueLayout.JAVA_INT,
                 segment -> {
             return segment.get(ValueLayout.JAVA_INT, 0);
         }, (segment, obj) -> {
@@ -225,7 +299,8 @@ public sealed interface BPFType<T> {
         /**
          * <code>s64</code> mapped to {@code long}
          */
-        public static final BPFIntType<Long> INT64 = createType("s64", Long.class, ValueLayout.JAVA_LONG, segment -> {
+        public static final BPFIntType<Long> INT64 = createType("s64", "INT64", Long.class, ValueLayout.JAVA_LONG,
+                segment -> {
             return segment.get(ValueLayout.JAVA_LONG, 0);
         }, (segment, obj) -> {
             segment.set(ValueLayout.JAVA_LONG, 0, obj);
@@ -234,7 +309,8 @@ public sealed interface BPFType<T> {
         /**
          * <code>u64</code> mapped to {@code @Unsigned long}
          */
-        public static final BPFIntType<Long> UINT64 = createType("u64", Long.class, ValueLayout.JAVA_LONG, segment -> {
+        public static final BPFIntType<Long> UINT64 = createType("u64", "UINT64", Long.class, ValueLayout.JAVA_LONG,
+                segment -> {
             return segment.get(ValueLayout.JAVA_LONG, 0);
         }, (segment, obj) -> {
             segment.set(ValueLayout.JAVA_LONG, 0, obj);
@@ -245,7 +321,6 @@ public sealed interface BPFType<T> {
          * <code>void*</code>
          */
         public static final BPFType<Long> POINTER = new BPFTypedef<>("void*", BPFIntType.UINT64);
-
     }
 
     /**
@@ -256,7 +331,17 @@ public sealed interface BPFType<T> {
      * @param offset offset from the start of the struct in bytes
      * @param getter function that takes the struct and returns the member
      */
-    record BPFStructMember<P, T>(String name, BPFType<T> type, int offset, Function<P, T> getter) {
+    record BPFStructMember<P, T>(String name, BPFType<T> type, int offset, Function<P, T> getter,
+                                 @Nullable String ebpfSize) {
+
+        public BPFStructMember(String name, BPFType<T> type, int offset, Function<P, T> getter) {
+            this(name, type, offset, getter, null);
+        }
+
+        CAST.Declarator.StructMember toCStructMember() {
+            return CAST.Declarator.structMember(type.toCUse(), CAST.Expression.variable(name),
+                    ebpfSize == null ? null : CAST.Expression.verbatim(ebpfSize));
+        }
     }
 
     /**
@@ -266,9 +351,13 @@ public sealed interface BPFType<T> {
      * @param type   type of the member
      * @param getter function that takes the struct and returns the member
      */
-    record UBPFStructMember<P, T>(String name, BPFType<T> type, Function<P, T> getter) {
+    record UBPFStructMember<P, T>(String name, BPFType<T> type, Function<P, T> getter, @Nullable String ebpfSize) {
+
+        public UBPFStructMember(String name, BPFType<T> type, Function<P, T> getter) {
+            this(name, type, getter, null);
+        }
         public BPFStructMember<P, T> position(int offset) {
-            return new BPFStructMember<>(name, type, offset, getter);
+            return new BPFStructMember<>(name, type, offset, getter, ebpfSize);
         }
     }
 
@@ -332,7 +421,7 @@ public sealed interface BPFType<T> {
             List<BPFStructMember<T, ?>> result = new ArrayList<>();
             long offset = 0;
             for (var member : members) {
-                offset = PanamaUtil.padSize(offset, member.type.alignment());
+                offset = padSize(offset, member.type.alignment());
                 result.add(member.position((int) offset));
                 offset += member.type.size();
             }
@@ -422,6 +511,50 @@ public sealed interface BPFType<T> {
             return "BPFStructType[" + "bpfName=" + bpfName + ", " + "members=" + members + ", " + "javaClass=" + javaClass + ", " + "constructor=" + constructor + ']';
         }
 
+        @Override
+        public Optional<CAST.Declarator> toCDeclaration() {
+            return Optional.of(CAST.Declarator.struct(CAST.Expression.variable(bpfName),
+                    members.stream().map(BPFStructMember::toCStructMember).toList()));
+        }
+
+        @Override
+        public Optional<CAST.Statement> toCDeclarationStatement() {
+            return toCDeclaration().map(d -> CAST.Statement.declarationStatement(d, null));
+        }
+
+        @Override
+        public CAST.Declarator toCUse() {
+            return CAST.Declarator.structIdentifier(CAST.Expression.variable(bpfName));
+        }
+
+        @Override
+        public Optional<BiFunction<String, Function<BPFType<?>, String>, FieldSpec>> toFieldSpecGenerator() {
+            return Optional.of((fieldName, typeToSpecName)-> {
+                String className = this.javaClass.klass;
+                ClassName bpfStructType = ClassName.get(BPF_PACKAGE, "BPFType.BPFStructType");
+                TypeName fieldType = ParameterizedTypeName.get(bpfStructType, ClassName.get("", className));
+                String memberExpression =
+                        members.stream().map(m -> "new " + BPF_TYPE + ".UBPFStructMember<>(" + "\"" + m.name() + "\"," +
+                                " " + typeToSpecName.apply(m.type()) + ", " + className + "::" + m.name() +
+                                ")").collect(Collectors.joining(", "));
+                ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
+                String creatorExpr = IntStream.range(0, members.size()).mapToObj(i -> "(" + members.get(i).type.toJavaUse() + ")" + "fields.get(" + i + ")").collect(Collectors.joining(", "));
+                return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC, Modifier.PUBLIC)
+                        .initializer("$T.autoLayout($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " +
+                                "java.util.List" + ".of()" + "), " + "fields -> new $T($L))", bpfStructType, bpfName,
+                                memberExpression, bpfType, ClassName.get("", className), ClassName.get("", className), creatorExpr).build();
+            });
+        }
+
+        @Override
+        public String toJavaUse() {
+            return javaClass.klass;
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+            return typeToSpecFieldName.apply(this);
+        }
     }
 
     /**
@@ -477,6 +610,26 @@ public sealed interface BPFType<T> {
         public static <E> BPFArrayType<E> of(BPFType<E> memberType, int length) {
             return new BPFArrayType<>(memberType.bpfName() + "[" + length + "]", memberType, length);
         }
+
+        @Override
+        public Optional<CAST.Declarator> toCDeclaration() {
+            return Optional.empty();
+        }
+
+        @Override
+        public CAST.Declarator toCUse() {
+            return CAST.Declarator.array(memberType.toCUse(), CAST.Expression.constant(length));
+        }
+
+        @Override
+        public String toJavaUse() {
+            return "java.util.List<" + memberType.toJavaUseInGenerics() + ">";
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+            return "new " + BPF_TYPE + ".BPFArrayType<>(\""+ bpfName + "\", " + typeToSpecFieldName.apply(memberType) + ", " + length + ")";
+        }
     }
 
     /**
@@ -528,6 +681,21 @@ public sealed interface BPFType<T> {
         public AnnotatedClass javaClass() {
             return new AnnotatedClass(String.class, List.of(AnnotationInstances.size(length)));
         }
+
+        @Override
+        public Optional<CAST.Declarator> toCDeclaration() {
+            return Optional.empty();
+        }
+
+        @Override
+        public CAST.Declarator toCUse() {
+            return CAST.Declarator.array(CHAR.toCUse(), CAST.Expression.constant(length));
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+            return "new " + BPF_TYPE + ".StringType(" + length + ")";
+        }
     }
 
     /**
@@ -558,6 +726,21 @@ public sealed interface BPFType<T> {
         @Override
         public AnnotatedClass javaClass() {
             return wrapped.javaClass();
+        }
+
+        @Override
+        public Optional<CAST> toCDeclaration() {
+            return Optional.of(CAST.Statement.typedef(wrapped.toCUse(), variable(bpfName)));
+        }
+
+        @Override
+        public Optional<CAST.Statement> toCDeclarationStatement() {
+            return Optional.of(CAST.Statement.typedef(wrapped.toCUse(), variable(bpfName)));
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+            return "new " + BPF_TYPE + ".BPFTypedef<>(" + "\"" + bpfName + "\", " + typeToSpecFieldName.apply(wrapped) + ")";
         }
     }
 
@@ -623,6 +806,11 @@ public sealed interface BPFType<T> {
         @Override
         public AnnotatedClass javaClass() {
             return new AnnotatedClass(BPFUnion.class, List.of());
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+            throw new UnsupportedOperationException();
         }
     }
 

@@ -34,17 +34,17 @@ import shutil
 import tarfile
 
 BIN_FOLDER = Path(__file__).parent.parent / "bin"
-JEXTRACT_PATH = BIN_FOLDER / "jextract-21"
+JEXTRACT_PATH = BIN_FOLDER / "jextract-22"
 JEXTRACT_TOOL_PATH = JEXTRACT_PATH / "bin" / "jextract"
-JEXTRACT_VERSION = 2
+JEXTRACT_VERSION = "3-13"
 
 
 def download_jextract():
     # download jextract
     shutil.rmtree(JEXTRACT_PATH, ignore_errors=True)
     print("Downloading jextract")
-    url = (f"https://download.java.net/java/early_access/jextract/"
-           f"1/openjdk-21-jextract+1-{JEXTRACT_VERSION}_linux-x64_bin.tar.gz")
+    url = (f"https://download.java.net/java/early_access/jextract/22/3/"
+           f"/openjdk-22-jextract+{JEXTRACT_VERSION}_linux-x64_bin.tar.gz")
     os.makedirs(BIN_FOLDER, exist_ok=True)
     urllib.request.urlretrieve(url, BIN_FOLDER / "jextract.tar.gz")
     # extract jextract
@@ -105,10 +105,10 @@ def assert_java21():
     try:
         output = subprocess.check_output("java -version", shell=True,
                                          stderr=subprocess.STDOUT).decode()
-        assert "version \"21" in output, \
-            "Please run this script with JDK 21"
+        assert "version \"22" in output, \
+            "Please run this script with JDK 22"
     except FileNotFoundError:
-        print("Please install JDK 21 and run this script with JDK 21")
+        print("Please install JDK 22 and run this script with JDK 22")
         sys.exit(1)
 
 
@@ -128,9 +128,9 @@ def run_jextract(header: Path, mod_header_folder: Path,
         shutil.rmtree(del_path, ignore_errors=True)
     os.makedirs(dest_path, exist_ok=True)
     subprocess.check_call(
-        f"{JEXTRACT_TOOL_PATH} {modified_header} "
-        f"--source --output {dest_path} {'-t ' + package if package else ''} "
-        f"--header-class-name {name}",
+        f"{JEXTRACT_TOOL_PATH} "
+        f"--output {dest_path} {'-t ' + package if package else ''} "
+        f"--header-class-name {name} {modified_header}",
         shell=True)
 
 

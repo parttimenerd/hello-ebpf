@@ -1,6 +1,6 @@
 package me.bechberger.ebpf.bpf.map;
 
-import me.bechberger.ebpf.shared.BPFType;
+import me.bechberger.ebpf.type.BPFType;
 
 /**
  * A base map based on <a href="https://docs.kernel.org/bpf/map_hash.html">BPF hash map</a>

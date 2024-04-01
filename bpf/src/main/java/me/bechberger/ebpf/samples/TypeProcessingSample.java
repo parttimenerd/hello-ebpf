@@ -5,9 +5,6 @@ import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.Type;
 import me.bechberger.ebpf.bpf.BPFProgram;
-import me.bechberger.ebpf.shared.BPFType;
-
-import java.util.List;
 
 /**
  * Adaption of {@link RingSample} that shows how to use the {@link Type} annotation and related annotation processing

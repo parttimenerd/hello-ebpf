@@ -2,7 +2,7 @@ package me.bechberger.ebpf.bpf.map;
 
 import me.bechberger.ebpf.bpf.BPFError;
 import me.bechberger.ebpf.bpf.raw.Lib;
-import me.bechberger.ebpf.shared.BPFType;
+import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.shared.PanamaUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -121,7 +121,7 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
 
             record MemAndKey<K>(MemorySegment mem, K key) {}
 
-            Arena arena = Arena.ofConfined();
+            final Arena arena = Arena.ofConfined();
             @Nullable MemAndKey<K> next = obtainNext(null);
             MemorySegment nextKeyMem;
 
