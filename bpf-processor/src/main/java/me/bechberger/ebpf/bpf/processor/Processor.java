@@ -69,7 +69,9 @@ public class Processor extends AbstractProcessor {
                     + "BPF but is not abstract", typeElement);
             return;
         }
-        byte[] bytes = compileProgram(typeElement);
+        var typeProcessorResult = new TypeProcessor(processingEnv).processBPFTypeRecords(typeElement);
+        var codeToInsert = typeProcessorResult.toCCode();
+        byte[] bytes = compileProgram(typeElement, codeToInsert);
         // create class that implement the class of typeElement and override the getByteCode method to return the
         // compiled eBPF program, but store this ebpf program as a base64 string
         if (bytes == null) {
@@ -83,7 +85,7 @@ public class Processor extends AbstractProcessor {
         String name = typeElement.getSimpleName().toString() + "Impl";
 
         TypeSpec typeSpec = createType(typeElement.getSimpleName() + "Impl", typeElement.asType(), bytes,
-                new TypeProcessor(processingEnv).processBPFTypeRecords(typeElement));
+                typeProcessorResult.fields());
         try {
             var file = processingEnv.getFiler().createSourceFile(pkg + "." + name, typeElement);
             // delete file if it exists
@@ -134,7 +136,7 @@ public class Processor extends AbstractProcessor {
         return spec.build();
     }
 
-    private byte[] compileProgram(TypeElement typeElement) {
+    private byte[] compileProgram(TypeElement typeElement, String codeToInsert) {
         Optional<? extends Element> elem =
                 typeElement.getEnclosedElements().stream().filter(e -> e.getKind().isField() && e.getSimpleName().toString().equals("EBPF_PROGRAM")).findFirst();
         // check that the class has a static field EBPF_PROGRAM of type String or Path
@@ -175,7 +177,20 @@ public class Processor extends AbstractProcessor {
             }
         }
         this.processingEnv.getMessager().printNote("EBPF Program: " + ebpfProgram, typeElement);
+        ebpfProgram = placeDefinitionsIntoEBPFProgram(ebpfProgram, codeToInsert);
         return compile(ebpfProgram, element);
+    }
+
+    private String placeDefinitionsIntoEBPFProgram(String ebpfProgram, String codeToInsert) {
+        // insert the code to insert into the ebpf program
+        // if the insertion fails, print an error
+        // if the insertion succeeds, return the new ebpf program
+        int index = ebpfProgram.lastIndexOf("#include");
+        if (index == -1) {
+            this.processingEnv.getMessager().printError("Could not find #include in eBPF program", null);
+            return null;
+        }
+        return ebpfProgram.substring(0, index) + codeToInsert + ebpfProgram.substring(index);
     }
 
     private static String findNewestClangVersion() {

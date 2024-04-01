@@ -6,7 +6,7 @@ package me.bechberger.ebpf.samples.chapter2;
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.bcc.BPF;
 import me.bechberger.ebpf.bcc.BPFTable;
-import me.bechberger.ebpf.shared.BPFType;
+import me.bechberger.ebpf.type.BPFType;
 
 import java.util.List;
 

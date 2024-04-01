@@ -1,1 +1,7 @@
 # Changelog
+
+## 0.1.1
+
+### Changed
+
+- Moved to JDK 22 from JDK 21

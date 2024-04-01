@@ -23,11 +23,17 @@ public interface CAST {
 
     List<? extends CAST> children();
 
-    sealed interface Expression extends CAST permits Declarator, InitDeclarator, Initializer, OperatorExpression,
-            PrimaryExpression {
+    Statement toStatement();
+
+    sealed interface Expression extends CAST permits Declarator, InitDeclarator, Initializer, OperatorExpression, PrimaryExpression {
 
         @Override
         List<? extends Expression> children();
+
+        @Override
+        default Statement toStatement() {
+            return Statement.expression(this);
+        }
 
         static PrimaryExpression.Constant constant(Object value) {
             return new PrimaryExpression.Constant(value);
@@ -47,6 +53,10 @@ public interface CAST {
 
         static PrimaryExpression.EnumerationConstant enumerationConstant(String name) {
             return new PrimaryExpression.EnumerationConstant(name);
+        }
+
+        static PrimaryExpression.VerbatimExpression verbatim(String code) {
+            return new PrimaryExpression.VerbatimExpression(code);
         }
     }
 
@@ -93,6 +103,11 @@ public interface CAST {
 
             static CAnnotation sec(String value) {
                 return new CAnnotation("SEC", value);
+            }
+
+            @Override
+            public Statement toStatement() {
+                throw new UnsupportedOperationException("CAnnotation cannot be converted to a statement");
             }
         }
 
@@ -141,6 +156,18 @@ public interface CAST {
             @Override
             public List<? extends Expression> children() {
                 return List.of(expression);
+            }
+        }
+
+        record VerbatimExpression(String code) implements PrimaryExpression {
+            @Override
+            public List<? extends PrimaryExpression> children() {
+                return List.of();
+            }
+
+            @Override
+            public String toString() {
+                return code;
             }
         }
     }
@@ -567,12 +594,24 @@ public interface CAST {
         record IdentifierDeclarator(PrimaryExpression.Variable name) implements Declarator {
             @Override
             public List<? extends Expression> children() {
-                return List.of();
+                return List.of(name);
             }
 
             @Override
             public String toString() {
                 return name.toString();
+            }
+        }
+
+        record StructIdentifierDeclarator(PrimaryExpression.Variable name) implements Declarator {
+            @Override
+            public List<? extends Expression> children() {
+                return List.of(name);
+            }
+
+            @Override
+            public String toString() {
+                return "struct " + name.toString();
             }
         }
 
@@ -608,6 +647,10 @@ public interface CAST {
                                          PrimaryExpression ebpfSize) {
             return new StructMember(declarator, name, ebpfSize);
         }
+
+        static Declarator structIdentifier(PrimaryExpression.Variable name) {
+            return new StructIdentifierDeclarator(name);
+        }
     }
 
 
@@ -626,6 +669,11 @@ public interface CAST {
 
         default String toPrettyString() {
             return toPrettyString("", "  ");
+        }
+
+        @Override
+        default Statement toStatement() {
+            return this;
         }
 
         record ExpressionStatement(Expression expression) implements Statement {
@@ -908,16 +956,16 @@ public interface CAST {
             }
         }
 
-        record Typedef(Declarator declarator) implements Statement {
+        record Typedef(Declarator declarator, PrimaryExpression.Variable name) implements Statement {
 
             @Override
             public List<? extends CAST> children() {
-                return List.of(declarator);
+                return List.of(declarator, name);
             }
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "typedef " + declarator;
+                return indent + "typedef " + declarator + " " + name + ";";
             }
 
             @Override
@@ -1042,8 +1090,8 @@ public interface CAST {
             return new Include(file);
         }
 
-        static Statement typedef(Declarator declarator) {
-            return new Typedef(declarator);
+        static Statement typedef(Declarator declarator, PrimaryExpression.Variable name) {
+            return new Typedef(declarator, name);
         }
 
         static Statement caseStatement(Expression expression, Statement body) {

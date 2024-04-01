@@ -23,7 +23,6 @@ import java.lang.annotation.Target;
  *     <li>integer types (int, long, ...), optionally annotated with {@link Unsigned} if unsigned</li>
  *     <li>String types, annotated with {@link Size} to specify the size</li>
  *     <li>Other {@link Type} annotated types</li>
- *     <li>{@link Type.Member} annotated member, to specify the BPFType directly</li>
  * </ul>
  */
 @Target(ElementType.TYPE)
@@ -31,12 +30,4 @@ public @interface Type {
 
     /** Name of the generated BPFStructType, uses the type as default */
     String name() default "";
-
-    @Target({ElementType.TYPE, ElementType.TYPE_USE})
-    @Retention(RetentionPolicy.CLASS)
-    public @interface Member {
-
-        /** Java statement directly copied into the result at the place of the BPFType */
-        String bpfType();
-    }
 }

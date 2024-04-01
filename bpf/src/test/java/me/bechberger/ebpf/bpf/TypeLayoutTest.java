@@ -1,7 +1,7 @@
 package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.Unsigned;
-import me.bechberger.ebpf.shared.BPFType;
+import me.bechberger.ebpf.type.BPFType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -11,8 +11,8 @@ import java.lang.foreign.MemoryLayout;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static me.bechberger.ebpf.shared.BPFType.BPFStructType;
-import static me.bechberger.ebpf.shared.BPFType.UBPFStructMember;
+import static me.bechberger.ebpf.type.BPFType.BPFStructType;
+import static me.bechberger.ebpf.type.BPFType.UBPFStructMember;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**

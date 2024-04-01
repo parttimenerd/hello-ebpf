@@ -1,13 +1,8 @@
 package me.bechberger.ebpf.samples;
 
-import me.bechberger.ebpf.annotations.Size;
-import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
-import me.bechberger.ebpf.annotations.bpf.Type;
 import me.bechberger.ebpf.bpf.BPFProgram;
-import me.bechberger.ebpf.shared.BPFType;
-
-import java.util.Map;
+import me.bechberger.ebpf.type.BPFType;
 
 /**
  * Print the number of openat syscalls per process, using a hash map to count them

@@ -16,11 +16,8 @@
 package me.bechberger.ebpf.bcc;
 
 import me.bechberger.ebpf.annotations.Unsigned;
-import me.bechberger.ebpf.bcc.raw.Lib;
-import me.bechberger.ebpf.bcc.raw.bcc_perf_buffer_opts;
-import me.bechberger.ebpf.bcc.raw.perf_reader_lost_cb;
-import me.bechberger.ebpf.bcc.raw.perf_reader_raw_cb;
-import me.bechberger.ebpf.shared.BPFType;
+import me.bechberger.ebpf.bcc.raw.*;
+import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.shared.PanamaUtil;
 import me.bechberger.ebpf.shared.Util;
 import org.jetbrains.annotations.NotNull;
@@ -921,8 +918,8 @@ public class BPFTable<K, V> {
      */
     public static class PerfEventArray<E> extends ArrayBase<Integer, @Unsigned Integer> implements Closeable {
 
-        public record FuncAndLostCallbacks(MemorySegment func, MemorySegment lost, perf_reader_raw_cb rawFunc,
-                                           @Nullable perf_reader_lost_cb rawLost) {
+        public record FuncAndLostCallbacks(MemorySegment func, MemorySegment lost, perf_reader_raw_cb.Function rawFunc,
+                                           @Nullable perf_reader_lost_cb.Function rawLost) {
         }
 
         @FunctionalInterface
@@ -1033,7 +1030,7 @@ public class BPFTable<K, V> {
 
         private void open_perf_buffer(int cpu, EventCallback<E> callback, int pageCnt, @Nullable LostCallback<E> lostCallback, int wakeupEvents) {
 
-            perf_reader_raw_cb rawFn = (ctx, data, size) -> {
+            perf_reader_raw_cb.Function rawFn = (ctx, data, size) -> {
                 try {
                     callback.call(this, cpu, data, size);
                 } catch (IOException e) {
@@ -1045,7 +1042,7 @@ public class BPFTable<K, V> {
                 }
             };
 
-            perf_reader_lost_cb rawLostFn = (ctx, lost) -> {
+            perf_reader_lost_cb.Function rawLostFn = (ctx, lost) -> {
                 try {
                     assert lostCallback != null;
                     lostCallback.call(this, lost);
@@ -1061,9 +1058,9 @@ public class BPFTable<K, V> {
                 var fn = perf_reader_raw_cb.allocate(rawFn, bpf.arena());
                 var lostFn = lostCallback != null ? perf_reader_lost_cb.allocate(rawLostFn, bpf.arena()) : MemorySegment.NULL;
                 var opts = bcc_perf_buffer_opts.allocate(arena);
-                bcc_perf_buffer_opts.pid$set(opts, -1);
-                bcc_perf_buffer_opts.cpu$set(opts, cpu);
-                bcc_perf_buffer_opts.wakeup_events$set(opts, wakeupEvents);
+                bcc_perf_buffer_opts.pid(opts, -1);
+                bcc_perf_buffer_opts.cpu(opts, cpu);
+                bcc_perf_buffer_opts.wakeup_events(opts, wakeupEvents);
                 var reader = Lib.bpf_open_perf_buffer_opts(fn, lostFn, MemorySegment.NULL, pageCnt, opts);
                 if (reader == null) {
                     throw new IllegalStateException("Could not open perf buffer");

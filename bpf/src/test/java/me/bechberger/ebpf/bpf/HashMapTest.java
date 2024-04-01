@@ -3,7 +3,7 @@ package me.bechberger.ebpf.bpf;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.bpf.map.BPFBaseMap;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
-import me.bechberger.ebpf.shared.BPFType;
+import me.bechberger.ebpf.type.BPFType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
