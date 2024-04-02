@@ -4,6 +4,8 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import me.bechberger.cast.CAST.Statement.Define;
+import me.bechberger.ebpf.annotations.Size;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -23,8 +25,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.zip.GZIPOutputStream;
+
+import static me.bechberger.cast.CAST.Expression.constant;
+import static me.bechberger.cast.CAST.Statement.define;
 
 /**
  * Annotation processor that processes classes annotated with {@code @BPF}.
@@ -71,8 +77,8 @@ public class Processor extends AbstractProcessor {
             return;
         }
         var typeProcessorResult = new TypeProcessor(processingEnv).processBPFTypeRecords(typeElement);
-        var codeToInsert = typeProcessorResult.toCCode();
-        var combinedCode = combineEBPFProgram(typeElement, codeToInsert);
+        var codeToInsert = typeProcessorResult.toCCodeWithoutDefines();
+        var combinedCode = combineEBPFProgram(typeElement, typeProcessorResult.defines(), codeToInsert);
         if (combinedCode == null) {
             return;
         }
@@ -145,11 +151,11 @@ public class Processor extends AbstractProcessor {
         bpfTypeFields.forEach(spec::addField);
         return spec.build();
     }
-    
+
     record CombinedCode(String ebpfProgram, VariableElement codeField) {
     }
-    
-    private @Nullable CombinedCode combineEBPFProgram(TypeElement typeElement, String codeToInsert) {
+
+    private @Nullable CombinedCode combineEBPFProgram(TypeElement typeElement, List<Define> defines, String codeToInsert) {
         Optional<? extends Element> elem =
                 typeElement.getEnclosedElements().stream().filter(e -> e.getKind().isField() && e.getSimpleName().toString().equals("EBPF_PROGRAM")).findFirst();
         // check that the class has a static field EBPF_PROGRAM of type String or Path
@@ -190,10 +196,10 @@ public class Processor extends AbstractProcessor {
             }
         }
         this.processingEnv.getMessager().printNote("EBPF Program: " + ebpfProgram, typeElement);
-        return new CombinedCode(placeDefinitionsIntoEBPFProgram(ebpfProgram, codeToInsert), element);
+        return new CombinedCode(placeDefinitionsIntoEBPFProgram(ebpfProgram, defines, codeToInsert), element);
     }
 
-    private String placeDefinitionsIntoEBPFProgram(String ebpfProgram, String codeToInsert) {
+    private String placeDefinitionsIntoEBPFProgram(String ebpfProgram, List<Define> defines, String codeToInsert) {
         // insert the code to insert into the ebpf program
         // if the insertion fails, print an error
         // if the insertion succeeds, return the new ebpf program
@@ -202,7 +208,11 @@ public class Processor extends AbstractProcessor {
         if (lastInclude == -1) {
             return codeToInsert + "\n" + ebpfProgram;
         }
-        return String.join("\n",lines.subList(0, lastInclude + 1)) + "\n\n" + 
+        var filteredDefines = defines.stream().filter(d -> {
+            var tester = "#define " + d.name() + " ";
+            return lines.stream().noneMatch(l -> l.startsWith(tester));
+        }).toList();
+        return String.join("\n", lines.subList(0, lastInclude + 1)) + "\n\n" + filteredDefines.stream().map(Define::toPrettyString).collect(Collectors.joining("\n")) + "\n\n" +
                 codeToInsert + "\n" + String.join("\n", lines.subList(lastInclude + 1, lines.size()));
     }
 
@@ -392,7 +402,7 @@ public class Processor extends AbstractProcessor {
         }
         return getEBPFFolder() == null ? null : getEBPFFolder().resolve(name);
     }
-    
+
     private boolean dontCompile() {
         return "true".equals(System.getenv("EBPF_DONT_COMPILE"));
     }

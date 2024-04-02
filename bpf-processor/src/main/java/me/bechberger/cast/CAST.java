@@ -989,7 +989,7 @@ public interface CAST {
             return new FunctionDeclarationStatement(declarator, body);
         }
 
-        static Statement define(String name, PrimaryExpression.Constant value) {
+        static Define define(String name, PrimaryExpression.Constant value) {
             return new Define(name, value);
         }
 
