@@ -7,8 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static me.bechberger.cast.CAST.Declarator.struct;
-import static me.bechberger.cast.CAST.Declarator.structMember;
+import static me.bechberger.cast.CAST.Declarator.*;
 import static me.bechberger.cast.CAST.Expression.constant;
 import static me.bechberger.cast.CAST.Expression.variable;
 import static me.bechberger.cast.CAST.OperatorExpression.binary;
@@ -39,7 +38,16 @@ public class ASTTest {
                                 List.of(structMember(CAST.Declarator.identifier("int"), variable("b"), constant(1)))),
                                 variable(
                                         "myVar", sec("a")))
-                        , "struct myStruct {\n  int (b, 1);\n} myVar SEC(\"a\");"));
+                        , "struct myStruct {\n  int (b, 1);\n} myVar SEC(\"a\");"),
+                Arguments.of(
+                        struct(variable("x"),
+                            List.of(structMember(array(identifier("a"),
+                                    constant(10)),
+                                    variable("x")))).toStatement(),
+                """
+                struct x {
+                  a x[10];
+                };"""));
     }
 
     @ParameterizedTest

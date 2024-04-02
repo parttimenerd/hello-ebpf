@@ -1,5 +1,6 @@
 package me.bechberger.cast;
 
+import me.bechberger.cast.CAST.Declarator.ArrayDeclarator;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -24,6 +25,18 @@ public interface CAST {
     List<? extends CAST> children();
 
     Statement toStatement();
+
+    /** Generate pretty printed code */
+    default String toPrettyString() {
+        return toPrettyString("", "  ");
+    }
+
+    /** Generate pretty printed code */
+    String toPrettyString(String indent, String increment);
+
+    static String toStringLiteral(String value) {
+        return "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
+    }
 
     sealed interface Expression extends CAST permits Declarator, InitDeclarator, Initializer, OperatorExpression, PrimaryExpression {
 
@@ -77,9 +90,6 @@ public interface CAST {
             return List.of();
         }
 
-        @Override
-        String toString();
-
         /**
          * Annotation like <code>@SEC("...")</code>
          *
@@ -93,8 +103,8 @@ public interface CAST {
             }
 
             @Override
-            public String toString() {
-                return annotation + "(" + Expression.constant(value) + ")";
+            public String toPrettyString(String indent, String increment) {
+                return indent + annotation + "(" + Expression.constant(value).toPrettyString() + ")";
             }
 
             static CAnnotation annotation(String annotation, String value) {
@@ -116,16 +126,16 @@ public interface CAST {
          */
         record Variable(String name, CAnnotation... annotations) implements PrimaryExpression {
             @Override
-            public String toString() {
-                String annString = Arrays.stream(annotations).map(Object::toString).collect(Collectors.joining(" "));
-                return name + (annString.isEmpty() ? "" : " " + annString);
+            public String toPrettyString(String indent, String increment) {
+                String annString = Arrays.stream(annotations).map(CAnnotation::toPrettyString).collect(Collectors.joining(" "));
+                return indent + name + (annString.isEmpty() ? "" : " " + annString);
             }
         }
 
         record EnumerationConstant(String name) implements PrimaryExpression {
             @Override
-            public String toString() {
-                return name;
+            public String toPrettyString(String indent, String increment) {
+                return indent + name;
             }
         }
 
@@ -134,12 +144,11 @@ public interface CAST {
          */
         record Constant(Object value) implements PrimaryExpression {
             @Override
-            public String toString() {
-                if (value instanceof String) {
-// Escape the string
-                    return "\"" + value.toString().replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
+            public String toPrettyString(String indent, String increment) {
+                if (value instanceof String str) {
+                    return indent + toStringLiteral(str);
                 } else {
-                    return value.toString();
+                    return indent + value.toString();
                 }
             }
         }
@@ -149,8 +158,8 @@ public interface CAST {
          */
         record ParenthesizedExpression(Expression expression) implements PrimaryExpression {
             @Override
-            public String toString() {
-                return "(" + expression + ")";
+            public String toPrettyString(String indent, String increment) {
+                return indent + "(" + expression.toPrettyString() + ")";
             }
 
             @Override
@@ -166,8 +175,8 @@ public interface CAST {
             }
 
             @Override
-            public String toString() {
-                return code;
+            public String toPrettyString(String indent, String increment) {
+                return indent + code;
             }
         }
     }
@@ -273,7 +282,7 @@ public interface CAST {
          * Takes care of operator precedence and associativity
          */
         @Override
-        public String toString() {
+        public String toPrettyString(String indent, String increment) {
 // idea:
 // if the operator is a binary operator, we need to check the precedence of the children
 // if the precedence of the child is lower, we need to wrap it in parentheses
@@ -306,126 +315,126 @@ public interface CAST {
 // if the operator is a unary operator, we need to check if the child is a binary operator
             if (operator().precedence == 3) {
                 Expression operator1 = children().getFirst();
-                String op1String = operator1.toString();
+                String op1String = operator1.toPrettyString();
                 if (operator1 instanceof OperatorExpression operatorExpression) {
                     if (operatorExpression.operator().precedence < operator().precedence) {
-                        op1String = "(" + operatorExpression + ")";
+                        op1String = "(" + op1String + ")";
                     }
                 }
-                return operator() + op1String;
+                return indent + operator() + op1String;
             } else {
 // if the operator is a postfix operator, we need to wrap the child in parentheses
                 if (operator().precedence == 2) {
                     Expression operator1 = children().getFirst();
-                    String op1String = operator1.toString();
-                    if (operator1 instanceof OperatorExpression operatorExpression) {
-                        op1String = "(" + operatorExpression + ")";
+                    String op1String = operator1.toPrettyString();
+                    if (operator1 instanceof OperatorExpression) {
+                        op1String = "(" + op1String + ")";
                     }
-                    return op1String + operator();
+                    return indent + op1String + operator();
                 } else {
 // if the operator is an assignment operator, we need to wrap the left child in parentheses
                     if (operator().precedence == 16) {
                         Expression operator1 = children().get(0);
                         Expression operator2 = children().get(1);
-                        String op1String = operator1.toString();
-                        String op2String = operator2.toString();
-                        if (operator1 instanceof OperatorExpression operatorExpression) {
-                            op1String = "(" + operatorExpression + ")";
+                        String op1String = operator1.toPrettyString();
+                        String op2String = operator2.toPrettyString();
+                        if (operator1 instanceof OperatorExpression) {
+                            op1String = "(" + op1String + ")";
                         }
                         if (operator2 instanceof OperatorExpression operatorExpression) {
                             if (operatorExpression.operator().precedence < operator().precedence) {
-                                op2String = "(" + operatorExpression + ")";
+                                op2String = "(" + op2String + ")";
                             }
                         }
-                        return op1String + " " + operator() + " " + op2String;
+                        return indent + op1String + " " + operator() + " " + op2String;
                     } else {
 // if the operator is a ternary operator, we need to wrap the children in parentheses
                         if (operator() == Operator.CONDITIONAL) {
                             Expression operator1 = children().get(0);
                             Expression operator2 = children().get(1);
                             Expression operator3 = children().get(2);
-                            String op1String = operator1.toString();
-                            String op2String = operator2.toString();
-                            String op3String = operator3.toString();
-                            if (operator1 instanceof OperatorExpression operatorExpression) {
-                                op1String = "(" + operatorExpression + ")";
+                            String op1String = operator1.toPrettyString();
+                            String op2String = operator2.toPrettyString();
+                            String op3String = operator3.toPrettyString();
+                            if (operator1 instanceof OperatorExpression) {
+                                op1String = "(" + op1String + ")";
                             }
-                            if (operator2 instanceof OperatorExpression operatorExpression) {
-                                op2String = "(" + operatorExpression + ")";
+                            if (operator2 instanceof OperatorExpression) {
+                                op2String = "(" + op2String + ")";
                             }
-                            if (operator3 instanceof OperatorExpression operatorExpression) {
-                                op3String = "(" + operatorExpression + ")";
+                            if (operator3 instanceof OperatorExpression) {
+                                op3String = "(" + op3String + ")";
                             }
-                            return op1String + " ? " + op2String + " : " + op3String;
+                            return indent + op1String + " ? " + op2String + " : " + op3String;
                         } else if (operator() == Operator.MEMBER_ACCESS) {
                             Expression operator1 = children().get(0);
                             Expression operator2 = children().get(1);
-                            String op1String = operator1.toString();
-                            String op2String = operator2.toString();
-                            if (operator2 instanceof OperatorExpression operatorExpression) {
-                                op2String = "(" + operatorExpression + ")";
+                            String op1String = operator1.toPrettyString();
+                            String op2String = operator2.toPrettyString();
+                            if (operator2 instanceof OperatorExpression) {
+                                op2String = "(" + op2String + ")";
                             }
-                            return op1String + "." + op2String;
+                            return indent + op1String + "." + op2String;
                         } else if (operator() == Operator.SUBSCRIPT) {
                             Expression operator1 = children().get(0);
                             Expression operator2 = children().get(1);
-                            String op1String = operator1.toString();
-                            String op2String = operator2.toString();
-                            if (operator2 instanceof OperatorExpression operatorExpression) {
-                                op2String = "(" + operatorExpression + ")";
+                            String op1String = operator1.toPrettyString();
+                            String op2String = operator2.toPrettyString();
+                            if (operator2 instanceof OperatorExpression) {
+                                op2String = "(" + op2String + ")";
                             }
-                            return op1String + "[" + op2String + "]";
+                            return indent + op1String + "[" + op2String + "]";
                         } else if (operator() == Operator.FUNCTION_CALL) {
                             Expression func = children().getFirst();
-                            String funcString = func.toString();
-                            if (func instanceof OperatorExpression operatorExpression) {
+                            String funcString = func.toPrettyString();
+                            if (func instanceof OperatorExpression) {
                                 funcString = "(" + funcString + ")";
                             }
-                            return funcString + "(" + children().stream().skip(1).map(Object::toString).collect(Collectors.joining(", ")) + ")";
+                            return indent +  funcString + "(" + children().stream().skip(1).map(CAST::toPrettyString).collect(Collectors.joining(", ")) + ")";
                         } else if (operator() == Operator.SIZEOF) {
                             Expression operator1 = children().getFirst();
-                            String op1String = operator1.toString();
-                            if (operator1 instanceof OperatorExpression operatorExpression) {
-                                op1String = "(" + operatorExpression + ")";
+                            String op1String = operator1.toPrettyString();
+                            if (operator1 instanceof OperatorExpression) {
+                                op1String = "(" + op1String + ")";
                             }
-                            return "sizeof(" + op1String + ")";
+                            return indent + "sizeof(" + op1String + ")";
                         } else if (operator() == Operator.CAST) {
-                            return "(" + children().get(0) + ")" + children().get(1);
+                            return indent + "(" + children().get(0).toPrettyString() + ")" + children().get(1);
                         } else if (operator().isUnitary()) {
                             Expression operator1 = children().getFirst();
-                            String op1String = operator1.toString();
-                            if (operator1 instanceof OperatorExpression operatorExpression) {
-                                op1String = "(" + operatorExpression + ")";
+                            String op1String = operator1.toPrettyString();
+                            if (operator1 instanceof OperatorExpression) {
+                                op1String = "(" + op1String + ")";
                             }
                             if (operator().associativity == Operator.Associativity.RIGHT) {
-                                return operator() + op1String;
+                                return indent + operator() + op1String;
                             } else {
-                                return op1String + operator();
+                                return indent + op1String + operator();
                             }
                         } else {
                             Expression operator1 = children().get(0);
                             Expression operator2 = children().get(1);
-                            String op1String = operator1.toString();
-                            String op2String = operator2.toString();
+                            String op1String = operator1.toPrettyString();
+                            String op2String = operator2.toPrettyString();
                             if (operator1 instanceof OperatorExpression operatorExpression) {
                                 if (operatorExpression.operator().precedence < operator().precedence) {
-                                    op1String = "(" + operatorExpression + ")";
+                                    op1String = "(" + op1String + ")";
                                 } else if (operatorExpression.operator().precedence == operator().precedence) {
                                     if (operatorExpression.operator().associativity == Operator.Associativity.LEFT) {
-                                        op1String = "(" + operatorExpression + ")";
+                                        op1String = "(" + op1String + ")";
                                     }
                                 }
                             }
                             if (operator2 instanceof OperatorExpression operatorExpression) {
                                 if (operatorExpression.operator().precedence < operator().precedence) {
-                                    op2String = "(" + operatorExpression + ")";
+                                    op2String = "(" + op2String + ")";
                                 } else if (operatorExpression.operator().precedence == operator().precedence) {
                                     if (operatorExpression.operator().associativity == Operator.Associativity.RIGHT) {
-                                        op2String = "(" + operatorExpression + ")";
+                                        op2String = "(" + op2String + ")";
                                     }
                                 }
                             }
-                            return op1String + " " + operator() + " " + op2String;
+                            return indent + op1String + " " + operator() + " " + op2String;
                         }
                     }
 
@@ -484,8 +493,8 @@ public interface CAST {
         }
 
         @Override
-        public String toString() {
-            return (name == null ? "" : name + " = ") + expression;
+        public String toPrettyString(String indent, String increment) {
+            return indent + (name == null ? "" : name.toPrettyString() + " = ") + expression.toPrettyString();
         }
     }
 
@@ -498,21 +507,13 @@ public interface CAST {
             }
 
             @Override
-            public String toString() {
-                return "{" + declarators.stream().map(InitDeclarator::toString).collect(Collectors.joining(", ")) + "}";
+            public String toPrettyString(String indent, String increment) {
+                return indent + "{" + declarators.stream().map(InitDeclarator::toPrettyString).collect(Collectors.joining(", ")) + "}";
             }
         }
     }
 
     sealed interface Declarator extends Expression {
-
-        default String toPrettyString(String indent, String increment) {
-            return indent + this;
-        }
-
-        default String toPrettyString() {
-            return toPrettyString("", "  ");
-        }
 
         record PointerDeclarator(Declarator declarator) implements Declarator {
             @Override
@@ -521,8 +522,8 @@ public interface CAST {
             }
 
             @Override
-            public String toString() {
-                return "*" + declarator;
+            public String toPrettyString(String indent, String increment) {
+                return indent + "*" + declarator.toPrettyString();
             }
         }
 
@@ -533,8 +534,13 @@ public interface CAST {
             }
 
             @Override
-            public String toString() {
-                return declarator + (size == null ? "[]" : "[" + size + "]");
+            public String toPrettyString(String indent, String increment) {
+                return indent + declarator.toPrettyString() + (size == null ? "[]" : "[" + size.toPrettyString() + "]");
+            }
+
+            public String toPrettyVariableDefinition(Expression name, String indent) {
+                return indent + declarator.toPrettyString() + " " + name.toPrettyString() +
+                        (size == null ? "[]" : "[" + size.toPrettyString() + "]");
             }
         }
 
@@ -550,16 +556,14 @@ public interface CAST {
             }
 
             @Override
-            public String toString() {
-                return declarator + " " + name;
-            }
-
-            @Override
             public String toPrettyString(String indent, String increment) {
                 if (ebpfSize == null) {
-                    return declarator.toPrettyString(indent, increment) + " " + name + ";";
+                    if (declarator instanceof ArrayDeclarator arr) {
+                        return arr.toPrettyVariableDefinition(name, indent) + ";";
+                    }
+                    return declarator.toPrettyString(indent, increment) + " " + name.toPrettyString() + ";";
                 }
-                return indent + declarator + " (" + name + ", " + ebpfSize + ");";
+                return indent + declarator.toPrettyString() + " (" + name.toPrettyString() + ", " + ebpfSize.toPrettyString() + ");";
             }
         }
 
@@ -575,7 +579,7 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "struct " + (name == null ? "" : name + " ") + "{\n" + members.stream().map(m -> m.toPrettyString(indent + increment, increment)).collect(Collectors.joining("\n")) + "\n" + indent + "}";
+                return indent + "struct " + (name == null ? "" : name.toPrettyString() + " ") + "{\n" + members.stream().map(m -> m.toPrettyString(indent + increment, increment)).collect(Collectors.joining("\n")) + "\n" + indent + "}";
             }
         }
 
@@ -586,8 +590,8 @@ public interface CAST {
             }
 
             @Override
-            public String toString() {
-                return declarator + "(" + parameters.stream().map(Object::toString).collect(Collectors.joining(", ")) + ")";
+            public String toPrettyString(String indent, String increment) {
+                return declarator.toPrettyString(indent, increment) + "(" + parameters.stream().map(CAST::toPrettyString).collect(Collectors.joining(", ")) + ")";
             }
         }
 
@@ -598,8 +602,8 @@ public interface CAST {
             }
 
             @Override
-            public String toString() {
-                return name.toString();
+            public String toPrettyString(String indent, String increment) {
+                return name.toPrettyString(indent, increment);
             }
         }
 
@@ -610,8 +614,8 @@ public interface CAST {
             }
 
             @Override
-            public String toString() {
-                return "struct " + name.toString();
+            public String toPrettyString(String indent, String increment) {
+                return indent + "struct " + name.toPrettyString();
             }
         }
 
@@ -656,21 +660,6 @@ public interface CAST {
 
     interface Statement extends CAST {
 
-        /**
-         * Pretty string representation of the AST
-         *
-         * @param indent    indent of the current line, ignored by expressions
-         * @param increment increment of the indent
-         * @return pretty string representation of the AST
-         */
-        default String toPrettyString(String indent, String increment) {
-            return indent + this.children().getFirst() + ";";
-        }
-
-        default String toPrettyString() {
-            return toPrettyString("", "  ");
-        }
-
         @Override
         default Statement toStatement() {
             return this;
@@ -684,8 +673,8 @@ public interface CAST {
             }
 
             @Override
-            public String toString() {
-                return toPrettyString("", "");
+            public String toPrettyString(String indent, String increment) {
+                return expression.toPrettyString(indent, increment) + ";";
             }
         }
 
@@ -698,7 +687,10 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return type.toPrettyString(indent, increment) + " " + name + ";";
+                if (type instanceof ArrayDeclarator arr) {
+                    return arr.toPrettyVariableDefinition(name, indent) + ";";
+                }
+                return type.toPrettyString(indent, increment) + " " + name.toPrettyString() + ";";
             }
 
         }
@@ -714,11 +706,6 @@ public interface CAST {
             public String toPrettyString(String indent, String increment) {
                 return indent + "{\n" + statements.stream().map(s -> s.toPrettyString(indent + increment, increment)).collect(Collectors.joining("\n")) + "\n" + indent + "}";
             }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
-            }
         }
 
         record IfStatement(Expression condition, Statement thenStatement,
@@ -732,14 +719,9 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "if (" + condition + ")\n" + thenStatement.toPrettyString(indent + increment,
+                return indent + "if (" + condition.toPrettyString() + ")\n" + thenStatement.toPrettyString(indent + increment,
                         increment) + (elseStatement == null ? "" :
                         " else\n" + elseStatement.toPrettyString(indent + increment, increment));
-            }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
             }
         }
 
@@ -752,12 +734,7 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "while (" + condition + ")\n" + body.toPrettyString(indent + increment, increment);
-            }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
+                return indent + "while (" + condition.toPrettyString() + ")\n" + body.toPrettyString(indent + increment, increment);
             }
         }
 
@@ -782,14 +759,9 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "for (" + (init == null ? "" : init) + "; " + (condition == null ? "" : condition) +
+                return indent + "for (" + (init == null ? "" : init.toPrettyString()) + "; " + (condition == null ? "" : condition.toPrettyString()) +
                         "; " + (increment == null ? "" : increment) + ")\n" + body.toPrettyString(indent + increment,
                         increment);
-            }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
             }
         }
 
@@ -802,12 +774,7 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "return" + (expression == null ? "" : " " + expression) + ";";
-            }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
+                return indent + "return" + (expression == null ? "" : " " + expression.toPrettyString()) + ";";
             }
         }
 
@@ -822,11 +789,6 @@ public interface CAST {
             public String toPrettyString(String indent, String increment) {
                 return indent + "break;";
             }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
-            }
         }
 
         record ContinueStatement() implements Statement {
@@ -839,11 +801,6 @@ public interface CAST {
             @Override
             public String toPrettyString(String indent, String increment) {
                 return indent + "continue;";
-            }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
             }
         }
 
@@ -858,11 +815,6 @@ public interface CAST {
             public String toPrettyString(String indent, String increment) {
                 return indent + ";";
             }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
-            }
         }
 
         record DeclarationStatement(Declarator declarator, @Nullable Initializer initializer) implements Statement {
@@ -874,12 +826,7 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + declarator + (initializer == null ? "" : " = " + initializer) + ";";
-            }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
+                return indent + declarator.toPrettyString() + (initializer == null ? "" : " = " + initializer.toPrettyString()) + ";";
             }
         }
 
@@ -892,12 +839,7 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + declarator + ";";
-            }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
+                return declarator.toPrettyString(indent, increment) + ";";
             }
         }
 
@@ -911,12 +853,7 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + declarator + "\n" + body.toPrettyString(indent + increment, increment);
-            }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
+                return declarator.toPrettyString(indent, increment) + "\n" + body.toPrettyString(indent + increment, increment);
             }
         }
 
@@ -929,12 +866,7 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "#define " + name + " " + value;
-            }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
+                return indent + "#define " + name + " " + value.toPrettyString();
             }
         }
 
@@ -949,11 +881,6 @@ public interface CAST {
             public String toPrettyString(String indent, String increment) {
                 return indent + "#include " + file;
             }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
-            }
         }
 
         record Typedef(Declarator declarator, PrimaryExpression.Variable name) implements Statement {
@@ -965,12 +892,7 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "typedef " + declarator + " " + name + ";";
-            }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
+                return indent + "typedef " + declarator.toPrettyString() + " " + name.toPrettyString() + ";";
             }
         }
 
@@ -983,12 +905,7 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "case " + expression + ":\n" + body.toPrettyString(indent + increment, increment);
-            }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
+                return indent + "case " + expression.toPrettyString() + ":\n" + body.toPrettyString(indent + increment, increment);
             }
         }
 
@@ -1003,11 +920,6 @@ public interface CAST {
             public String toPrettyString(String indent, String increment) {
                 return indent + "default:\n" + body.toPrettyString(indent + increment, increment);
             }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
-            }
         }
 
         record SwitchStatement(Expression expression, Statement body) implements Statement {
@@ -1019,12 +931,7 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "switch (" + expression + ")\n" + body.toPrettyString(indent + increment, increment);
-            }
-
-            @Override
-            public String toString() {
-                return toPrettyString("", "  ");
+                return indent + "switch (" + expression.toPrettyString() + ")\n" + body.toPrettyString(indent + increment, increment);
             }
         }
 

@@ -3,6 +3,7 @@ package me.bechberger.ebpf.bpf.processor;
 import com.squareup.javapoet.FieldSpec;
 import me.bechberger.cast.CAST;
 import me.bechberger.ebpf.type.BPFType;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.AnnotatedConstruct;
@@ -22,8 +23,8 @@ public class TypeProcessor {
     public final static String SIZE_ANNOTATION = "me.bechberger.ebpf.annotations.Size";
     public final static String UNSIGNED_ANNOTATION = "me.bechberger.ebpf.annotations.Unsigned";
     public final static String TYPE_ANNOTATION = "me.bechberger.ebpf.annotations.bpf.Type";
-    public final static String BPF_PACKAGE = "me.bechberger.ebpf.shared";
-    public final static String BPF_TYPE = "me.bechberger.ebpf.shared.BPFType";
+    public final static String BPF_PACKAGE = "me.bechberger.ebpf.type";
+    public final static String BPF_TYPE = "me.bechberger.ebpf.type.BPFType";
     /**
      * Helper class to keep track of defined types
      */
@@ -87,6 +88,15 @@ public class TypeProcessor {
         return element.getAnnotationMirrors().stream().filter(a -> a.getAnnotationType().asElement().toString().equals(annotationName)).findFirst();
     }
 
+    private Map<String, Object> getAnnotationValues(AnnotationMirror annotation) {
+        return annotation.getElementValues().entrySet().stream().collect(Collectors.toMap(e -> e.getKey().toString(), Map.Entry::getValue));
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T getAnnotationValue(AnnotationMirror annotation, String name, T defaultValue) {
+        return annotation.getElementValues().entrySet().stream().filter(e -> e.getKey().getSimpleName().toString().equals(name)).map(e -> (T)e.getValue().getValue()).findFirst().orElse(defaultValue);
+    }
+
     private boolean hasAnnotation(AnnotatedConstruct element, String annotationName) {
         return getAnnotationMirror(element, annotationName).isPresent();
     }
@@ -112,6 +122,10 @@ public class TypeProcessor {
         String toCCode() {
             return definingStatements.stream().map(CAST.Statement::toPrettyString).collect(Collectors.joining("\n"));
         }
+    }
+
+    boolean shouldGenerateCCode(TypeElement innerElement) {
+        return !getAnnotationMirror(innerElement, TYPE_ANNOTATION).map(a -> getAnnotationValue(a, "noCCodeGeneration", false)).orElse(false);
     }
 
     /**
@@ -177,8 +191,9 @@ public class TypeProcessor {
             var spec = type.toFieldSpecGenerator().get().apply(definedTypes.getSpecFieldName(name).get(),
                     typeToSpecField);
             fields.add(spec);
-            var def = type.toCDeclarationStatement();
-            def.ifPresent(definingStatements::add);
+            if (shouldGenerateCCode(processedType)) {
+                type.toCDeclarationStatement().ifPresent(definingStatements::add);
+            }
         }
         return new TypeProcessorResult(fields, definingStatements);
     }
@@ -295,26 +310,6 @@ public class TypeProcessor {
     interface BPFTypeMirror {
 
         BPFType<?> toBPFType(Function<String, BPFType<?>> nameToCustomType);
-    }
-
-    private Optional<BPFType<?>> getIntegerType(Element element, TypeMirror type, boolean unsigned) {
-        return switch (lastPart(type.toString())) {
-            case "int" -> Optional.of(unsigned ? BPFType.BPFIntType.UINT32 : BPFType.BPFIntType.INT32);
-            case "long" -> Optional.of(unsigned ? BPFType.BPFIntType.UINT64 : BPFType.BPFIntType.INT64);
-            case "short" -> Optional.of(unsigned ? BPFType.BPFIntType.UINT16 : BPFType.BPFIntType.INT16);
-            case "byte" -> Optional.of(unsigned ? BPFType.BPFIntType.UINT8 : BPFType.BPFIntType.INT8);
-            case "char" -> {
-                if (unsigned) {
-                    this.processingEnv.getMessager().printError("Unsigned char not supported", element);
-                    yield  Optional.empty();
-                }
-                yield Optional.of(BPFType.BPFIntType.CHAR);
-            }
-            default -> {
-                this.processingEnv.getMessager().printError("Unsupported integer type " + type, element);
-                yield Optional.empty();
-            }
-        };
     }
 
     private Optional<BPFType<?>> processIntegerType(Element element, AnnotationValues annotations, TypeMirror type) {

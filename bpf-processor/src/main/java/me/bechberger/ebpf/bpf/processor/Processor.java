@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.IntStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -71,9 +72,11 @@ public class Processor extends AbstractProcessor {
         }
         var typeProcessorResult = new TypeProcessor(processingEnv).processBPFTypeRecords(typeElement);
         var codeToInsert = typeProcessorResult.toCCode();
-        byte[] bytes = compileProgram(typeElement, codeToInsert);
-        // create class that implement the class of typeElement and override the getByteCode method to return the
-        // compiled eBPF program, but store this ebpf program as a base64 string
+        var combinedCode = combineEBPFProgram(typeElement, codeToInsert);
+        if (combinedCode == null) {
+            return;
+        }
+        byte[] bytes = compile(combinedCode.ebpfProgram(), combinedCode.codeField());
         if (bytes == null) {
             return;
         }
@@ -85,7 +88,7 @@ public class Processor extends AbstractProcessor {
         String name = typeElement.getSimpleName().toString() + "Impl";
 
         TypeSpec typeSpec = createType(typeElement.getSimpleName() + "Impl", typeElement.asType(), bytes,
-                typeProcessorResult.fields());
+                typeProcessorResult.fields(), combinedCode.ebpfProgram());
         try {
             var file = processingEnv.getFiler().createSourceFile(pkg + "." + name, typeElement);
             // delete file if it exists
@@ -129,14 +132,24 @@ public class Processor extends AbstractProcessor {
      *                      inner records
      * @return the generated class
      */
-    private TypeSpec createType(String name, TypeMirror baseType, byte[] byteCode, List<FieldSpec> bpfTypeFields) {
+    private TypeSpec createType(String name, TypeMirror baseType, byte[] byteCode, List<FieldSpec> bpfTypeFields,
+                                String fullCCode) {
         var spec =
-                TypeSpec.classBuilder(name).superclass(baseType).addModifiers(Modifier.PUBLIC, Modifier.FINAL).addField(FieldSpec.builder(String.class, "BYTE_CODE", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL).addJavadoc("Base64 encoded and gzipped eBPF byte-code").initializer("$S", gzipBase64Encode(byteCode)).build()).addMethod(MethodSpec.methodBuilder("getByteCode").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(byte[].class).addStatement("return me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(BYTE_CODE)").build());
+                TypeSpec.classBuilder(name).superclass(baseType).addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                        .addField(FieldSpec.builder(String.class, "BYTE_CODE", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+                                .addJavadoc("Base64 encoded and gzipped eBPF byte-code of the program\n{@snippet : \n" + fullCCode + "\n}")
+                                .initializer("$S", gzipBase64Encode(byteCode)).build())
+                        .addMethod(MethodSpec.methodBuilder("getByteCode")
+                                .addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(byte[].class)
+                                .addStatement("return me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(BYTE_CODE)").build());
         bpfTypeFields.forEach(spec::addField);
         return spec.build();
     }
-
-    private byte[] compileProgram(TypeElement typeElement, String codeToInsert) {
+    
+    record CombinedCode(String ebpfProgram, VariableElement codeField) {
+    }
+    
+    private @Nullable CombinedCode combineEBPFProgram(TypeElement typeElement, String codeToInsert) {
         Optional<? extends Element> elem =
                 typeElement.getEnclosedElements().stream().filter(e -> e.getKind().isField() && e.getSimpleName().toString().equals("EBPF_PROGRAM")).findFirst();
         // check that the class has a static field EBPF_PROGRAM of type String or Path
@@ -177,28 +190,29 @@ public class Processor extends AbstractProcessor {
             }
         }
         this.processingEnv.getMessager().printNote("EBPF Program: " + ebpfProgram, typeElement);
-        ebpfProgram = placeDefinitionsIntoEBPFProgram(ebpfProgram, codeToInsert);
-        return compile(ebpfProgram, element);
+        return new CombinedCode(placeDefinitionsIntoEBPFProgram(ebpfProgram, codeToInsert), element);
     }
 
     private String placeDefinitionsIntoEBPFProgram(String ebpfProgram, String codeToInsert) {
         // insert the code to insert into the ebpf program
         // if the insertion fails, print an error
         // if the insertion succeeds, return the new ebpf program
-        int index = ebpfProgram.lastIndexOf("#include");
-        if (index == -1) {
-            this.processingEnv.getMessager().printError("Could not find #include in eBPF program", null);
-            return null;
+        var lines = ebpfProgram.lines().toList();
+        var lastInclude = IntStream.range(0, lines.size()).filter(i -> lines.get(i).startsWith("#include")).max().orElse(-1);
+        if (lastInclude == -1) {
+            return codeToInsert + "\n" + ebpfProgram;
         }
-        return ebpfProgram.substring(0, index) + codeToInsert + ebpfProgram.substring(index);
+        return String.join("\n",lines.subList(0, lastInclude + 1)) + "\n\n" + 
+                codeToInsert + "\n" + String.join("\n", lines.subList(lastInclude + 1, lines.size()));
     }
 
     private static String findNewestClangVersion() {
-        for (int i = 24; i > 12; i--) {
+        for (int i = 12; i > 11; i--) {
             try {
-                var process = new ProcessBuilder("clang-" + i, "--version").start();
+                var name = i == 12 ? "clang" : "clang-" + i;
+                var process = new ProcessBuilder(name, "--version").start();
                 if (process.waitFor() == 0) {
-                    return "clang-" + i;
+                    return name;
                 }
             } catch (IOException | InterruptedException e) {
                 // ignore
@@ -210,6 +224,12 @@ public class Processor extends AbstractProcessor {
     private static String newestClang = findNewestClangVersion();
 
     private byte[] compile(String ebpfProgram, VariableElement element) {
+        if (dontCompile()) {
+            System.out.println("EBPF program to compile:");
+            System.out.println("-".repeat(10));
+            System.out.println(ebpfProgram);
+            return new byte[]{0};
+        }
         // obtain the path to the vmlinux.h header file
         var vmlinuxHeader = getPathToVMLinuxHeader();
         if (vmlinuxHeader == null) {
@@ -356,7 +376,11 @@ public class Processor extends AbstractProcessor {
 
     public @Nullable Path getEBPFFolder() {
         String p = processingEnv.getOptions().getOrDefault("ebpf.folder", null);
-        return p == null ? null : Path.of(p);
+        if (p == null) {
+            String val = System.getenv("EBPF_FOLDER");
+            return val == null ? null : Path.of(val);
+        }
+        return Path.of(p);
     }
 
     private @Nullable Path getPath(String name) {
@@ -367,5 +391,9 @@ public class Processor extends AbstractProcessor {
             return Path.of(System.getProperty("user.home"), name.substring(2));
         }
         return getEBPFFolder() == null ? null : getEBPFFolder().resolve(name);
+    }
+    
+    private boolean dontCompile() {
+        return "true".equals(System.getenv("EBPF_DONT_COMPILE"));
     }
 }
