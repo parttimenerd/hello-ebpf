@@ -28,9 +28,9 @@ public class Utils {
 
     public static void triggerExecve(String path, String... args) {
         try (var arena = Arena.ofConfined()) {
-            var pathNative = arena.allocateUtf8String(path);
-            var argsNative = arena.allocateUtf8String(Stream.concat(Stream.of(path), Stream.of(args)).collect(Collectors.joining("\0")));
-            var envNative = arena.allocateUtf8String("\0");
+            var pathNative = arena.allocateFrom(path);
+            var argsNative = arena.allocateFrom(Stream.concat(Stream.of(path), Stream.of(args)).collect(Collectors.joining("\0")));
+            var envNative = arena.allocateFrom("\0");
             var ret = Lib.execve(pathNative, argsNative, envNative);
         }
     }

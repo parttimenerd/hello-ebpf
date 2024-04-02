@@ -31,7 +31,7 @@ import java.util.zip.GZIPOutputStream;
  * The processor compiles the eBPF program and takes care of {@code @Type} inner types.
  */
 @SupportedAnnotationTypes({"me.bechberger.ebpf.annotations.bpf.BPF"})
-@SupportedSourceVersion(SourceVersion.RELEASE_21)
+@SupportedSourceVersion(SourceVersion.RELEASE_22)
 public class Processor extends AbstractProcessor {
 
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {

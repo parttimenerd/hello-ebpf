@@ -136,7 +136,7 @@ public class BPF implements AutoCloseable {
      */
     private BPF(String text, String fileName, @Nullable Path hdrFile, boolean allowRLimit, int debug) {
         this.text = text;
-        MemorySegment textNative = arena.allocateUtf8String(text);
+        MemorySegment textNative = arena.allocateFrom(text);
         this.debug = debug;
 
         /*
@@ -242,7 +242,7 @@ public class BPF implements AutoCloseable {
         if (!doesFunctionExistInText(func_name))
             throw new RuntimeException("Trying to use undefined function " + func_name);
         try (var arena = Arena.ofConfined()) {
-            MemorySegment funcNameNative = arena.allocateUtf8String(func_name);
+            MemorySegment funcNameNative = arena.allocateFrom(func_name);
             if (Lib.bpf_function_start(module, funcNameNative) == null)
                 throw new RuntimeException("Unknown program " + func_name);
             int log_level = 0;
@@ -287,7 +287,7 @@ public class BPF implements AutoCloseable {
     }
 
     MemorySegment dump_func(Arena arena, String func_name) {
-        var funcNameNative = arena.allocateUtf8String(func_name);
+        var funcNameNative = arena.allocateFrom(func_name);
         if (Lib.bpf_function_start(module, funcNameNative) == null)
             throw new RuntimeException("Unknown program " + func_name);
         var start = Lib.bpf_function_start(module, funcNameNative);
@@ -400,8 +400,8 @@ public class BPF implements AutoCloseable {
 
     public static boolean kernel_struct_has_field(String structName, String fieldName) {
         try (var arena = Arena.ofConfined()) {
-            var structNameNative = arena.allocateUtf8String(structName);
-            var fieldNameNative = arena.allocateUtf8String(fieldName);
+            var structNameNative = arena.allocateFrom(structName);
+            var fieldNameNative = arena.allocateFrom(fieldName);
             return Lib.kernel_struct_has_field(structNameNative, fieldNameNative) == 1;
         }
     }
@@ -425,7 +425,7 @@ public class BPF implements AutoCloseable {
             if (raw_tracepoint_fds.containsKey(tracepoint))
                 throw new RuntimeException("Raw tracepoint " +tracepoint + " has been attached");
             var fn = load_func(fn_name, Lib.BPF_PROG_TYPE_RAW_TRACEPOINT());
-            int fd = Lib.bpf_attach_raw_tracepoint(fn.fd, arena.allocateUtf8String(tracepoint));
+            int fd = Lib.bpf_attach_raw_tracepoint(fn.fd, arena.allocateFrom(tracepoint));
             if (fd < 0) throw new RuntimeException("Failed to attach BPF to raw tracepoint");
             raw_tracepoint_fds.put(tracepoint, fd);
             return this;
@@ -489,8 +489,8 @@ public class BPF implements AutoCloseable {
         var ev_name = "p_" + event.replace("+", "_").replace(".", "_");
         int fd;
         try (var arena = Arena.ofConfined()) {
-            var evNameNative = arena.allocateUtf8String(ev_name);
-            var eventNative = arena.allocateUtf8String(event);
+            var evNameNative = arena.allocateFrom(ev_name);
+            var eventNative = arena.allocateFrom(event);
             fd = Lib.bpf_attach_kprobe(fn.fd, 0, evNameNative, eventNative, event_off, 0);
         }
         if (fd < 0) {
@@ -522,7 +522,7 @@ public class BPF implements AutoCloseable {
         _del_kprobe_fd(ev_name, fn_name);
         if (kprobe_fds.get(ev_name).isEmpty()) {
             try (var arena = Arena.ofConfined()) {
-                var evNameNative = arena.allocateUtf8String(ev_name);
+                var evNameNative = arena.allocateFrom(ev_name);
                 res = Lib.bpf_detach_kprobe(evNameNative);
             }
             if (res < 0) throw new RuntimeException("Failed to detach BPF from kprobe");
@@ -534,7 +534,7 @@ public class BPF implements AutoCloseable {
      */
     public <T extends BPFTable<?, ?>> T get_table(String name, BPFTable.TableProvider<? extends T> provider) {
         try (var arena = Arena.ofConfined()) {
-            var nameNative = arena.allocateUtf8String(name);
+            var nameNative = arena.allocateFrom(name);
             var mapId = Lib.bpf_table_id(module, nameNative);
             var mapFd = Lib.bpf_table_fd(module, nameNative);
             if (mapFd < 0) throw new RuntimeException("Failed to load BPF Table " + name);
@@ -865,7 +865,7 @@ public class BPF implements AutoCloseable {
      */
     public void perf_buffer_poll(int timeout) {
         try (var arena = Arena.ofConfined()) {
-            var readers = arena.allocateArray(PanamaUtil.POINTER, perfBuffers.size());
+            var readers = arena.allocate(PanamaUtil.POINTER, perfBuffers.size());
             int i = 0;
             for (var v : perfBuffers.values()) {
                 readers.setAtIndex(POINTER, i++, v);
@@ -881,7 +881,7 @@ public class BPF implements AutoCloseable {
      */
     public void perf_buffer_consume() {
         try (var arena = Arena.ofConfined()) {
-            var readers = arena.allocateArray(PanamaUtil.POINTER, perfBuffers.size());
+            var readers = arena.allocate(PanamaUtil.POINTER, perfBuffers.size());
             int i = 0;
             for (var v : perfBuffers.values()) {
                 readers.setAtIndex(POINTER, i++, v);

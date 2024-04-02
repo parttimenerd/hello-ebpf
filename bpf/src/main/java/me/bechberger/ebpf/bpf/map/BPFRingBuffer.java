@@ -105,7 +105,7 @@ public class BPFRingBuffer<E> extends BPFMap {
     }
 
     private MemorySegment initRingBuffer(FileDescriptor fd, BPFType<E> eventType, EventCallback<E> callback) {
-        ring_buffer_sample_fn sample = (ctx, data, len) -> {
+        ring_buffer_sample_fn.Function sample = (ctx, data, len) -> {
             E event;
             try {
                 event = eventType.parseMemory(data);

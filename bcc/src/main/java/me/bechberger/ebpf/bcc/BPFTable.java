@@ -281,7 +281,7 @@ public class BPFTable<K, V> {
         if (count < 1 || count > maxEntries) {
             throw new AssertionError("Invalid count");
         }
-        return new AllocatedKeyAndLeafs(count, allocateKeys ? arena.allocateArray(keyType.layout(), count) : null, allocateValues ? arena.allocateArray(leafType.layout(), count) : null);
+        return new AllocatedKeyAndLeafs(count, allocateKeys ? arena.allocate(keyType.layout(), count) : null, allocateValues ? arena.allocate(leafType.layout(), count) : null);
     }
 
     /**
@@ -902,7 +902,7 @@ public class BPFTable<K, V> {
             // use Lib.fopen
             try (Arena arena = Arena.ofConfined()) {
                 var pathInC = allocateNullOrString(arena, path);
-                try (FileDesc desc = new FileDesc(Lib.open(pathInC, O_RDONLY))) {
+                try (FileDesc desc = new FileDesc(Lib.open.makeInvoker().apply(pathInC, (int)O_RDONLY))) {
                     return set(index, desc.fd());
                 }
             }

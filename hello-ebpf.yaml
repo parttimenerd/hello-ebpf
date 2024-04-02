@@ -1,9 +1,9 @@
 # This example requires Lima v0.8.0 or later
 # based on https://github.com/lizrice/learning-ebpf/blob/main/learning-ebpf.yaml
 images:
-  - location: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img"
+  - location: "https://cloud-images.ubuntu.com/releases/23.10/release/ubuntu-23.10-server-cloudimg-amd64.img"
     arch: "x86_64"
-  - location: "https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-arm64.img"
+  - location: "https://cloud-images.ubuntu.com/releases/23.10/release/ubuntu-23.10-server-cloudimg-arm64.img"
     arch: "aarch64"
 
 cpus: 4
@@ -16,10 +16,4 @@ mounts:
   writable: true
 provision:
 - mode: system
-  script: |
-    apt-get update
-    apt-get install -y apt-transport-https ca-certificates curl clang llvm jq
-    apt-get install -y libelf-dev libpcap-dev libbfd-dev binutils-dev build-essential make 
-    apt-get install -y linux-tools-common linux-tools-$(uname -r) 
-    apt-get install -y bpfcc-tools libbpfcc-dev libbpf-dev
-    apt-get install -y python3-pip zsh tmux openjdk-21-jre-headless maven
+  script: ./bin/install.sh

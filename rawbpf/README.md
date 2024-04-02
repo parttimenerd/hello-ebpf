@@ -30,7 +30,7 @@ To load the libbpf, there is a helper class `LibraryLoader`:
 
 Requirements
 ------------
-- Java 21 with `--enable-preview`
+- Java 22
 - Linux 64-bit
 - libbpf (install `libbpf-dev` on Ubuntu or Debian)
   - e.g. `apt install libbpf-dev linux-tools-common linux-tools-$(uname -r)` on Ubuntu or Debian

@@ -404,3 +404,4 @@ hello-ebpf.iml
 *.c
 kprobe*
 vmlinux*
+**/jextract-*

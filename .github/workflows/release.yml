@@ -8,7 +8,7 @@ on:
         required: true
 
 env:
-  JAVA_VERSION: '21'
+  JAVA_VERSION: '22'
   JAVA_DISTRO: 'adopt'
 
 jobs:

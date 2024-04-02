@@ -21,4 +21,4 @@ CLASS=$1
 
 # Run the program
 shift
-java --enable-preview -cp target/bcc.jar --enable-native-access=ALL-UNNAMED $JAVA_OPTS me.bechberger.ebpf.samples.$CLASS $@
+java -cp target/bcc.jar --enable-native-access=ALL-UNNAMED $JAVA_OPTS me.bechberger.ebpf.samples.$CLASS $@

@@ -135,7 +135,7 @@ public abstract class BPFProgram implements AutoCloseable {
     private MemorySegment loadProgram() {
         Path objFile = getTmpObjectFile();
         try (Arena arena = Arena.ofConfined()) {
-            MemorySegment fileName = arena.allocateUtf8String(objFile.toString());
+            MemorySegment fileName = arena.allocateFrom(objFile.toString());
             MemorySegment ebpf_object = Lib.bpf_object__open_file(fileName, MemorySegment.NULL);
             if (ebpf_object == MemorySegment.NULL) {
                 throw new BPFLoadError("Failed to load eBPF object");
@@ -188,7 +188,7 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public ProgramHandle getProgramByName(String name) {
         try (Arena arena = Arena.ofConfined()) {
-            MemorySegment prog = Lib.bpf_object__find_program_by_name(this.ebpf_object, arena.allocateUtf8String(name));
+            MemorySegment prog = Lib.bpf_object__find_program_by_name(this.ebpf_object, arena.allocateFrom(name));
             if (prog == MemorySegment.NULL || prog.address() == 0) {
                 throw new BPFProgramNotFound(name);
             }
@@ -283,7 +283,7 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     private FileDescriptor getMapDescriptorByName(String name) {
         try (Arena arena = Arena.ofConfined()) {
-            MemorySegment map = Lib.bpf_object__find_map_by_name(this.ebpf_object, arena.allocateUtf8String(name));
+            MemorySegment map = Lib.bpf_object__find_map_by_name(this.ebpf_object, arena.allocateFrom(name));
             if (map == MemorySegment.NULL || map.address() == 0) {
                 throw new BPFMapNotFoundError(name);
             }

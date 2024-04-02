@@ -30,7 +30,7 @@ To load the libbcc, there is a helper class `LibraryLoader`:
 
 Requirements
 ------------
-- Java 21 with `--enable-preview`
+- Java 22
 - Linux 64-bit
 - libbcc (see [bcc installation instructions](https://github.com/iovisor/bcc/blob/master/INSTALL.md), be sure to install the libbpfcc-dev package)
   - I know that the packages there are outdated for some distributions, but installing the packages from
