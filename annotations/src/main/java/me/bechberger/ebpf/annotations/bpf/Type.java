@@ -30,4 +30,7 @@ public @interface Type {
 
     /** Name of the generated BPFStructType, uses the type as default */
     String name() default "";
+
+    /** Don't generate C code and insert it into the ebpf program string */
+    boolean noCCodeGeneration() default false;
 }
