@@ -4,8 +4,10 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Statement.Define;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.bpf.processor.TypeProcessor.TypeProcessorResult;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -18,6 +20,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import javax.sound.sampled.Line;
 import javax.tools.Diagnostic;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,6 +30,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
 
 import static me.bechberger.cast.CAST.Expression.constant;
@@ -41,11 +45,13 @@ import static me.bechberger.cast.CAST.Statement.define;
 @SupportedSourceVersion(SourceVersion.RELEASE_22)
 public class Processor extends AbstractProcessor {
 
+    private static final String BPF = "me.bechberger.ebpf.annotations.bpf.BPF";
+
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
         this.processingEnv.getMessager().printNote("Processing BPF annotations");
         annotations.forEach(annotation -> {
             Set<? extends Element> elements = env.getElementsAnnotatedWith(annotation);
-            if (annotation.getQualifiedName().toString().equals("me.bechberger.ebpf.annotations.bpf.BPF")) {
+            if (annotation.getQualifiedName().toString().equals(BPF)) {
                 elements.stream().filter(TypeElement.class::isInstance).map(TypeElement.class::cast).forEach(this::processBPFProgram);
             }
         });
@@ -77,8 +83,7 @@ public class Processor extends AbstractProcessor {
             return;
         }
         var typeProcessorResult = new TypeProcessor(processingEnv).processBPFTypeRecords(typeElement);
-        var codeToInsert = typeProcessorResult.toCCodeWithoutDefines();
-        var combinedCode = combineEBPFProgram(typeElement, typeProcessorResult.defines(), codeToInsert);
+        var combinedCode = combineEBPFProgram(typeElement, typeProcessorResult);
         if (combinedCode == null) {
             return;
         }
@@ -155,7 +160,8 @@ public class Processor extends AbstractProcessor {
     record CombinedCode(String ebpfProgram, VariableElement codeField) {
     }
 
-    private @Nullable CombinedCode combineEBPFProgram(TypeElement typeElement, List<Define> defines, String codeToInsert) {
+    private @Nullable CombinedCode combineEBPFProgram(TypeElement typeElement, TypeProcessorResult tpResult) {
+        var codeToInsert = tpResult.toCCodeWithoutDefines();
         Optional<? extends Element> elem =
                 typeElement.getEnclosedElements().stream().filter(e -> e.getKind().isField() && e.getSimpleName().toString().equals("EBPF_PROGRAM")).findFirst();
         // check that the class has a static field EBPF_PROGRAM of type String or Path
@@ -196,10 +202,10 @@ public class Processor extends AbstractProcessor {
             }
         }
         this.processingEnv.getMessager().printNote("EBPF Program: " + ebpfProgram, typeElement);
-        return new CombinedCode(placeDefinitionsIntoEBPFProgram(ebpfProgram, defines, codeToInsert), element);
+        return new CombinedCode(placeDefinitionsIntoEBPFProgram(typeElement, ebpfProgram, tpResult.defines(), codeToInsert, tpResult.licenseDefinition()), element);
     }
 
-    private String placeDefinitionsIntoEBPFProgram(String ebpfProgram, List<Define> defines, String codeToInsert) {
+    private String placeDefinitionsIntoEBPFProgram(TypeElement outer, String ebpfProgram, List<Define> defines, String codeToInsert, @Nullable CAST.Statement licenseDefinition) {
         // insert the code to insert into the ebpf program
         // if the insertion fails, print an error
         // if the insertion succeeds, return the new ebpf program
@@ -212,8 +218,23 @@ public class Processor extends AbstractProcessor {
             var tester = "#define " + d.name() + " ";
             return lines.stream().noneMatch(l -> l.startsWith(tester));
         }).toList();
-        return String.join("\n", lines.subList(0, lastInclude + 1)) + "\n\n" + filteredDefines.stream().map(Define::toPrettyString).collect(Collectors.joining("\n")) + "\n\n" +
-                codeToInsert + "\n" + String.join("\n", lines.subList(lastInclude + 1, lines.size()));
+
+        var license = lines.stream().filter(l -> l.matches(".*SEC *\\(\"license\"\\).*")).findFirst().orElse(null);
+        if (licenseDefinition == null) {
+            if (license == null) {
+                throw new RuntimeException("No license defined");
+            }
+        } else {
+            if (license != null) {
+                throw new RuntimeException("License defined twice");
+            }
+        }
+        String includes = lines.subList(0, lastInclude + 1).stream().map(l -> l.startsWith("#") ? l.trim() : l).collect(Collectors.joining("\n"));
+        String definitions = filteredDefines.stream().map(Define::toPrettyString).collect(Collectors.joining("\n"));
+        String afterIncludes = String.join("\n", lines.subList(lastInclude + 1, lines.size()));
+        String end = licenseDefinition == null ? "" : "\n\n" + licenseDefinition.toStatement().toPrettyString();
+        // TODO: record line number remapping
+        return Stream.of(includes, definitions, codeToInsert, afterIncludes, end).filter(s -> !s.isBlank()).map(String::trim).collect(Collectors.joining("\n\n"));
     }
 
     private static String findNewestClangVersion() {

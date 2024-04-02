@@ -2,6 +2,9 @@ package me.bechberger.ebpf.bpf.processor;
 
 import com.squareup.javapoet.FieldSpec;
 import me.bechberger.cast.CAST;
+import me.bechberger.cast.CAST.Declarator;
+import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
+import me.bechberger.cast.CAST.Statement;
 import me.bechberger.cast.CAST.Statement.Define;
 import me.bechberger.ebpf.type.BPFType;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +20,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static me.bechberger.cast.CAST.Expression.constant;
-import static me.bechberger.cast.CAST.Statement.define;
+import static me.bechberger.cast.CAST.Expression.variable;
+import static me.bechberger.cast.CAST.Statement.*;
 
 /**
  * Handles {@code @Type} annotated records
@@ -87,21 +91,21 @@ public class TypeProcessor {
     /**
      * Get a specific annotation which is present on the element (if not present returns {@code Optional.empty()})
      */
-    private Optional<? extends AnnotationMirror> getAnnotationMirror(AnnotatedConstruct element,
+    static Optional<? extends AnnotationMirror> getAnnotationMirror(AnnotatedConstruct element,
                                                                      String annotationName) {
         return element.getAnnotationMirrors().stream().filter(a -> a.getAnnotationType().asElement().toString().equals(annotationName)).findFirst();
     }
 
-    private Map<String, Object> getAnnotationValues(AnnotationMirror annotation) {
+    static Map<String, Object> getAnnotationValues(AnnotationMirror annotation) {
         return annotation.getElementValues().entrySet().stream().collect(Collectors.toMap(e -> e.getKey().toString(), Map.Entry::getValue));
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T getAnnotationValue(AnnotationMirror annotation, String name, T defaultValue) {
+    static  <T> T getAnnotationValue(AnnotationMirror annotation, String name, T defaultValue) {
         return annotation.getElementValues().entrySet().stream().filter(e -> e.getKey().getSimpleName().toString().equals(name)).map(e -> (T)e.getValue().getValue()).findFirst().orElse(defaultValue);
     }
 
-    private boolean hasAnnotation(AnnotatedConstruct element, String annotationName) {
+    static boolean hasAnnotation(AnnotatedConstruct element, String annotationName) {
         return getAnnotationMirror(element, annotationName).isPresent();
     }
 
@@ -121,7 +125,8 @@ public class TypeProcessor {
         }).filter(Objects::nonNull).toList();
     }
 
-    record TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements) {
+    record TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements,
+                               @Nullable Statement licenseDefinition) {
 
         String toCCodeWithoutDefines() {
             return definingStatements.stream().map(CAST.Statement::toPrettyString).collect(Collectors.joining("\n"));
@@ -180,7 +185,7 @@ public class TypeProcessor {
             var unprocessed = innerTypeElements.stream().filter(e -> !processedTypes.contains(e)).toList();
             var type = processBPFTypeRecord(unprocessed.get(0), obtainType.get());
             if (type.isEmpty()) {
-                return new TypeProcessorResult(List.of(), List.of(), List.of());
+                return new TypeProcessorResult(List.of(), List.of(), List.of(), null);
             }
             alreadyDefinedTypes.put(type.get().bpfName(), type.get());
             processedTypes.add(unprocessed.get(0));
@@ -199,9 +204,22 @@ public class TypeProcessor {
                 type.toCDeclarationStatement().ifPresent(definingStatements::add);
             }
         }
-        return new TypeProcessorResult(fields, createDefineStatements(outerTypeElement), definingStatements);
+        return new TypeProcessorResult(fields, createDefineStatements(outerTypeElement), definingStatements,
+                getLicenseDefinitionStatement(outerTypeElement));
     }
 
+    private @Nullable Statement getLicenseDefinitionStatement(TypeElement outerTypeElement) {
+        var annotation = getAnnotationMirror(outerTypeElement, "me.bechberger.ebpf.annotations.bpf.BPF");
+        if (annotation.isEmpty()) {
+            return null;
+        }
+        var license = getAnnotationValue(annotation.get(), "license", "");
+        if (license.isEmpty()) {
+            return null;
+        }
+        // char _license[] SEC ("license") = "GPL";
+        return variableDefinition(Declarator.array(Declarator.identifier("char"), null), variable("_license", CAnnotation.sec("license")));
+    }
 
     private @Nullable CAST.Statement.Define processField(VariableElement field) {
         // check that the field is static, final and of type boolean, ..., int, long, float, double or String
