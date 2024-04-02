@@ -12,14 +12,17 @@ import me.bechberger.ebpf.bpf.BPFProgram;
 @BPF
 public abstract class TypeProcessingSample2 extends BPFProgram {
 
+    private static final int FILE_NAME_LEN = 256;
+    private static final int TASK_COMM_LEN = 16;
+
+    @Type(name = "event")
+    record Event(@Unsigned int pid, @Size(FILE_NAME_LEN) String filename, @Size(TASK_COMM_LEN) String comm) {}
+
     static final String EBPF_PROGRAM = """
             #include "vmlinux.h"
             #include <bpf/bpf_helpers.h>
             #include <bpf/bpf_tracing.h>
             #include <string.h>
-            
-            #define FILE_NAME_LEN 256
-            #define TASK_COMM_LEN 16
                             
             // eBPF map reference
             struct
@@ -71,13 +74,6 @@ public abstract class TypeProcessingSample2 extends BPFProgram {
                             
             char _license[] SEC ("license") = "GPL";
             """;
-
-    private static final int FILE_NAME_LEN = 256;
-    private static final int TASK_COMM_LEN = 16;
-
-    @Type(name = "event")
-    record Event(@Unsigned int pid, @Size(FILE_NAME_LEN) String filename, @Size(TASK_COMM_LEN) String comm) {}
-
 
     public static void main(String[] args) {
         try (TypeProcessingSample2 program = BPFProgram.load(TypeProcessingSample2.class)) {

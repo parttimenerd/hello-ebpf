@@ -2,6 +2,7 @@ package me.bechberger.ebpf.bpf.processor;
 
 import com.squareup.javapoet.FieldSpec;
 import me.bechberger.cast.CAST;
+import me.bechberger.cast.CAST.Statement.Define;
 import me.bechberger.ebpf.type.BPFType;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,6 +15,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static me.bechberger.cast.CAST.Expression.constant;
+import static me.bechberger.cast.CAST.Statement.define;
 
 /**
  * Handles {@code @Type} annotated records
@@ -117,9 +121,9 @@ public class TypeProcessor {
         }).filter(Objects::nonNull).toList();
     }
 
-    record TypeProcessorResult(List<FieldSpec> fields, List<CAST.Statement> definingStatements) {
+    record TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements) {
 
-        String toCCode() {
+        String toCCodeWithoutDefines() {
             return definingStatements.stream().map(CAST.Statement::toPrettyString).collect(Collectors.joining("\n"));
         }
     }
@@ -176,7 +180,7 @@ public class TypeProcessor {
             var unprocessed = innerTypeElements.stream().filter(e -> !processedTypes.contains(e)).toList();
             var type = processBPFTypeRecord(unprocessed.get(0), obtainType.get());
             if (type.isEmpty()) {
-                return new TypeProcessorResult(List.of(), List.of());
+                return new TypeProcessorResult(List.of(), List.of(), List.of());
             }
             alreadyDefinedTypes.put(type.get().bpfName(), type.get());
             processedTypes.add(unprocessed.get(0));
@@ -195,7 +199,34 @@ public class TypeProcessor {
                 type.toCDeclarationStatement().ifPresent(definingStatements::add);
             }
         }
-        return new TypeProcessorResult(fields, definingStatements);
+        return new TypeProcessorResult(fields, createDefineStatements(outerTypeElement), definingStatements);
+    }
+
+
+    private @Nullable CAST.Statement.Define processField(VariableElement field) {
+        // check that the field is static, final and of type boolean, ..., int, long, float, double or String
+        // create a #define statement for the field
+        // return the #define statement
+        if (!field.getModifiers().contains(Modifier.STATIC) || !field.getModifiers().contains(Modifier.FINAL) || field.getSimpleName().toString().equals("EBPF_PROGRAM")) {
+            return null;
+        }
+        TypeMirror type = field.asType();
+        return switch (type.toString()) {
+            case "boolean" ->
+                    define(field.getSimpleName().toString(), constant(field.getConstantValue().equals(true) ? "1" : "0"));
+            case "byte", "short", "int", "long", "float", "double" ->
+                    new Define(field.getSimpleName().toString(), constant(field.getConstantValue()));
+            case "java.lang.String" ->
+                    new Define(field.getSimpleName().toString(), constant(field.getConstantValue().toString()));
+            default -> null;
+        };
+    }
+
+    private List<Define> createDefineStatements(TypeElement typeElement) {
+        // idea: find all static final fields with type boolean, ..., int, long, float, double or String of the typeElement
+        // create a #define statement for each of them (name is the field name)
+        // return the list of #define statements
+        return typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e).map(this::processField).filter(Objects::nonNull).toList();
     }
 
     /**
