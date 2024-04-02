@@ -111,7 +111,7 @@ public interface CAST {
                 return new CAnnotation(annotation, value);
             }
 
-            static CAnnotation sec(String value) {
+            public static CAnnotation sec(String value) {
                 return new CAnnotation("SEC", value);
             }
 
@@ -127,8 +127,12 @@ public interface CAST {
         record Variable(String name, CAnnotation... annotations) implements PrimaryExpression {
             @Override
             public String toPrettyString(String indent, String increment) {
-                String annString = Arrays.stream(annotations).map(CAnnotation::toPrettyString).collect(Collectors.joining(" "));
+                var annString = annotationsString();
                 return indent + name + (annString.isEmpty() ? "" : " " + annString);
+            }
+
+            public String annotationsString() {
+                return Arrays.stream(annotations).map(CAnnotation::toPrettyString).collect(Collectors.joining(" "));
             }
         }
 
@@ -678,19 +682,20 @@ public interface CAST {
             }
         }
 
-        record VariableDefinition(Declarator type, PrimaryExpression.Variable name) implements Statement {
+        record VariableDefinition(Declarator type, PrimaryExpression.Variable name, @Nullable Expression value) implements Statement {
 
             @Override
             public List<? extends CAST> children() {
-                return List.of(type, name);
+                return List.of(type, name, value);
             }
 
             @Override
             public String toPrettyString(String indent, String increment) {
+                String app = value == null ? "" : " = " + value.toPrettyString();
                 if (type instanceof ArrayDeclarator arr) {
-                    return arr.toPrettyVariableDefinition(name, indent) + ";";
+                    return arr.toPrettyVariableDefinition(Expression.variable(name.name), indent) + (name.annotations.length == 0 ? "" : " " + name.annotationsString()) + app + ";";
                 }
-                return type.toPrettyString(indent, increment) + " " + name.toPrettyString() + ";";
+                return type.toPrettyString(indent, increment) + " " + name.toPrettyString() + app + ";";
             }
 
         }
@@ -1014,7 +1019,11 @@ public interface CAST {
         }
 
         static Statement variableDefinition(Declarator type, PrimaryExpression.Variable name) {
-            return new VariableDefinition(type, name);
+            return new VariableDefinition(type, name, null);
+        }
+
+        static Statement variableDefinition(Declarator type, PrimaryExpression.Variable name, Expression value) {
+            return new VariableDefinition(type, name, value);
         }
     }
 }

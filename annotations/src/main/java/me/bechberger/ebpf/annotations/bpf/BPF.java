@@ -21,4 +21,9 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 public @interface BPF {
+    /**
+     * License of the eBPF program, the EBPF_PROGRAM contains a <code>SEC("license")</code> variable
+     * only iff this license is not present. Typically, the license is GPL.
+     */
+    String license() default "";
 }
