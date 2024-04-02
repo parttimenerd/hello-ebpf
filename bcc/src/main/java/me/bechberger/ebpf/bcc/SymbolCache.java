@@ -44,19 +44,19 @@ public class SymbolCache {
                 res = Lib.bcc_symcache_resolve_no_demangle(cache, addr, sym);
             }
             if (res < 0) {
-                if (bcc_symbol.module$get(sym) != null && bcc_symbol.offset$get(sym) != 0) {
-                    return new ResolveResult(null, bcc_symbol.offset$get(sym), PanamaUtil.toString(bcc_symbol.module$get(sym)));
+                if (bcc_symbol.module(sym) != null && bcc_symbol.offset(sym) != 0) {
+                    return new ResolveResult(null, bcc_symbol.offset(sym), PanamaUtil.toString(bcc_symbol.module(sym)));
                 }
                 return new ResolveResult(null, addr, null);
             }
             String name_res;
             if (demangle) {
-                name_res = PanamaUtil.toString(bcc_symbol.demangle_name$get(sym));
+                name_res = PanamaUtil.toString(bcc_symbol.demangle_name(sym));
                 Lib.bcc_symbol_free_demangle_name(sym);
             } else {
-                name_res = PanamaUtil.toString(bcc_symbol.name$get(sym));
+                name_res = PanamaUtil.toString(bcc_symbol.name(sym));
             }
-            return new ResolveResult(name_res, bcc_symbol.offset$get(sym), PanamaUtil.toString(bcc_symbol.module$get(sym)));
+            return new ResolveResult(name_res, bcc_symbol.offset(sym), PanamaUtil.toString(bcc_symbol.module(sym)));
         }
     }
 
@@ -68,7 +68,7 @@ public class SymbolCache {
         try (Arena arena = Arena.ofConfined()) {
             var addr = arena.allocate(8);
             var moduleStr = PanamaUtil.allocateNullOrString(arena, module);
-            var nameStr = arena.allocateUtf8String(name);
+            var nameStr = arena.allocateFrom(name);
             int res = Lib.bcc_symcache_resolve_name(cache, moduleStr, nameStr, addr);
             if (res < 0) {
                 return -1;

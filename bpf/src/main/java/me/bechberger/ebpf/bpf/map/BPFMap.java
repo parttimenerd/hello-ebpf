@@ -69,9 +69,9 @@ public class BPFMap {
     public static MapInfo getInfo(FileDescriptor fd) {
         try (var arena = Arena.ofConfined()) {
             var info = obtainRawInfo(arena, fd);
-            return new MapInfo(fd, MapTypeId.fromId(bpf_map_info.type$get(info)), bpf_map_info.key_size$get(info),
-                    bpf_map_info.value_size$get(info), bpf_map_info.max_entries$get(info),
-                    bpf_map_info.map_flags$get(info));
+            return new MapInfo(fd, MapTypeId.fromId(bpf_map_info.type(info)), bpf_map_info.key_size(info),
+                    bpf_map_info.value_size(info), bpf_map_info.max_entries(info),
+                    bpf_map_info.map_flags(info));
         }
     }
 

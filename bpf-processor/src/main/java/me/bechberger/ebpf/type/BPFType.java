@@ -652,7 +652,7 @@ public sealed interface BPFType<T> {
 
         @Override
         public MemoryParser<String> parser() {
-            return segment -> segment.getUtf8String(0);
+            return segment -> segment.getString(0);
         }
 
         @Override
@@ -660,7 +660,7 @@ public sealed interface BPFType<T> {
             return (segment, obj) -> {
                 byte[] bytes = obj.getBytes();
                 if (bytes.length + 1 < length) {
-                    segment.setUtf8String(0, obj);
+                    segment.setString(0, obj);
                 } else {
                     byte[] dest = new byte[length];
                     System.arraycopy(bytes, 0, dest, 0, length - 1);

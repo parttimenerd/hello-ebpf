@@ -56,8 +56,7 @@ These might change in the future, but for now, you need the following:
 Either a Linux machine with the following:
 
 - Linux 64-bit (or a VM)
-- Java 21 (exactly this version, as we need [Project Panama](https://openjdk.org/projects/panama/) with is a preview
-  feature), we'll switch to Java 22 as soon as it is released
+- Java 22 or later
 - libbcc (see [bcc installation instructions](https://github.com/iovisor/bcc/blob/master/INSTALL.md), be sure to install the libbpfcc-dev package)
   - e.g. `apt install bpfcc-tools libbpfcc-dev linux-tools-common linux-tools-$(uname -r)` on Ubuntu
 - root privileges (for eBPF programs)
@@ -81,10 +80,10 @@ To build the project, make sure you have all prerequisites installed, then just 
 
 Running the examples
 --------------------
-Be sure to run the following in a shell with root privileges that uses JDK 21:
+Be sure to run the following in a shell with root privileges that uses JDK 22:
 
 ```shell
-java --enable-preview -cp bcc/target/bcc.jar --enable-native-access=ALL-UNNAMED me.bechberger.ebpf.samples.EXAMPLE_NAME
+java -cp bcc/target/bcc.jar --enable-native-access=ALL-UNNAMED me.bechberger.ebpf.samples.EXAMPLE_NAME
 # or in the project directory
 ./run.sh EXAMPLE_NAME
 

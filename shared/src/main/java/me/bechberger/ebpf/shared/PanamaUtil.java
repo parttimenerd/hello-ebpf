@@ -39,7 +39,7 @@ public class PanamaUtil {
         if (segment == MemorySegment.NULL) {
             return null;
         }
-        return segment.getUtf8String(0);
+        return segment.getString(0);
     }
 
     /**
@@ -66,7 +66,7 @@ public class PanamaUtil {
     /**
      * Pointer type
      */
-    public static final AddressLayout POINTER = ValueLayout.ADDRESS.withTargetLayout(MemoryLayout.sequenceLayout(JAVA_BYTE));
+    public static final AddressLayout POINTER = ValueLayout.ADDRESS.withTargetLayout(MemoryLayout.sequenceLayout(0, JAVA_BYTE));
 
     /**
      * No such file or directory errno value
@@ -96,7 +96,7 @@ public class PanamaUtil {
         if (string == null) {
             return MemorySegment.NULL;
         }
-        return arena.allocateUtf8String(string);
+        return arena.allocateFrom(string);
     }
 
     /** Result and errno */
