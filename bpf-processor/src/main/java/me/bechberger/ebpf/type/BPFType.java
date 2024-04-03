@@ -22,8 +22,6 @@ import java.util.stream.IntStream;
 
 import static me.bechberger.cast.CAST.Declarator.identifier;
 import static me.bechberger.cast.CAST.Expression.variable;
-import static me.bechberger.ebpf.bpf.processor.TypeProcessor.BPF_PACKAGE;
-import static me.bechberger.ebpf.bpf.processor.TypeProcessor.BPF_TYPE;
 import static me.bechberger.ebpf.type.BPFType.BPFIntType.CHAR;
 
 
@@ -33,6 +31,9 @@ import static me.bechberger.ebpf.type.BPFType.BPFIntType.CHAR;
  */
 public sealed interface BPFType<T> {
 
+    static String BPF_PACKAGE = "me.bechberger.ebpf.type";
+    static String BPF_TYPE = BPF_PACKAGE + ".BPFType";
+
     /**
      * Java class with annotations
      */
@@ -40,6 +41,14 @@ public sealed interface BPFType<T> {
 
         public AnnotatedClass(Class<?> klass, List<Annotation> annotations) {
             this(klass.getName(), annotations);
+        }
+
+        @Override
+        public String toString() {
+            if (annotations.isEmpty()) {
+                return klass;
+            }
+            return annotations.stream().map(Annotation::toString).collect(Collectors.joining(" ")) + " " + klass;
         }
     }
 
@@ -198,7 +207,7 @@ public sealed interface BPFType<T> {
 
         @Override
         public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
-            return getClass().getSimpleName() + "." + Objects.requireNonNull(typeToSpecName.get(this));
+            return getClass().getCanonicalName() + "." + Objects.requireNonNull(typeToSpecName.get(this));
         }
 
         private static final Map<AnnotatedClass, BPFType<?>> registeredTypes = new HashMap<>();
@@ -529,7 +538,7 @@ public sealed interface BPFType<T> {
 
         @Override
         public Optional<BiFunction<String, Function<BPFType<?>, String>, FieldSpec>> toFieldSpecGenerator() {
-            return Optional.of((fieldName, typeToSpecName)-> {
+            return Optional.of((fieldName, typeToSpecName) -> {
                 String className = this.javaClass.klass;
                 ClassName bpfStructType = ClassName.get(BPF_PACKAGE, "BPFType.BPFStructType");
                 TypeName fieldType = ParameterizedTypeName.get(bpfStructType, ClassName.get("", className));

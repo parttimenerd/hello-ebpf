@@ -940,6 +940,18 @@ public interface CAST {
             }
         }
 
+        record VerbatimStatement(String code) implements Statement {
+            @Override
+            public List<? extends CAST> children() {
+                return List.of();
+            }
+
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                return code.lines().map(l -> indent + l).collect(Collectors.joining("\n"));
+            }
+        }
+
         static Statement expression(Expression expression) {
             return new ExpressionStatement(expression);
         }
@@ -1024,6 +1036,10 @@ public interface CAST {
 
         static Statement variableDefinition(Declarator type, PrimaryExpression.Variable name, Expression value) {
             return new VariableDefinition(type, name, value);
+        }
+
+        static Statement verbatim(String code) {
+            return new VerbatimStatement(code);
         }
     }
 }

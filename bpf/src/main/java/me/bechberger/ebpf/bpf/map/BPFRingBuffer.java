@@ -1,5 +1,6 @@
 package me.bechberger.ebpf.bpf.map;
 
+import me.bechberger.ebpf.annotations.bpf.BPFMapClass;
 import me.bechberger.ebpf.bpf.BPFError;
 import me.bechberger.ebpf.bpf.raw.Lib;
 import me.bechberger.ebpf.bpf.raw.ring_buffer_sample_fn;
@@ -21,6 +22,16 @@ import static me.bechberger.ebpf.shared.PanamaUtil.*;
  *
  * @param <E> type of the event
  */
+@BPFMapClass(
+        cTemplate = """
+        struct {
+            __uint (type, BPF_MAP_TYPE_RINGBUF);
+            __uint (max_entries, $maxEntries);
+        } $field SEC(".maps");
+        """,
+        javaTemplate = """
+        new $class<>($fd, $b1)
+        """)
 public class BPFRingBuffer<E> extends BPFMap {
 
     /**
@@ -58,6 +69,8 @@ public class BPFRingBuffer<E> extends BPFMap {
      */
     private final MemorySegment rb;
 
+    private EventCallback<E> callback;
+
     /**
      * Error caught while calling the callback
      */
@@ -93,7 +106,30 @@ public class BPFRingBuffer<E> extends BPFMap {
         super(MapTypeId.RINGBUF, fd);
         this.ringArena = Arena.ofConfined();
         this.eventType = eventType;
+        this.callback = callback;
         this.rb = initRingBuffer(fd, eventType, callback);
+    }
+
+    public BPFRingBuffer(FileDescriptor fd, BPFType<E> eventType) {
+        super(MapTypeId.RINGBUF, fd);
+        this.ringArena = Arena.ofConfined();
+        this.eventType = eventType;
+        this.rb = initRingBuffer(fd, eventType, (buffer, event) -> {
+            if (callback != null) {
+                callback.call(buffer, event);
+            }
+        });
+    }
+
+    /**
+     * Sets the callback if it is not already set,
+     * use in combination with {@link BPFRingBuffer#BPFRingBuffer(FileDescriptor, BPFType)}
+     */
+    public void setCallback(EventCallback<E> callback) {
+        if (this.callback != null) {
+            throw new IllegalStateException("Callback already set");
+        }
+        this.callback = callback;
     }
 
     private static final HandlerWithErrno<MemorySegment> RING_BUFFER_NEW = new HandlerWithErrno<>("ring_buffer__new",

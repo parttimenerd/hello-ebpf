@@ -281,7 +281,7 @@ public abstract class BPFProgram implements AutoCloseable {
      * @return the map descriptor
      * @throws BPFMapNotFoundError if the map cannot be found
      */
-    private FileDescriptor getMapDescriptorByName(String name) {
+    public FileDescriptor getMapDescriptorByName(String name) {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment map = Lib.bpf_object__find_map_by_name(this.ebpf_object, arena.allocateFrom(name));
             if (map == MemorySegment.NULL || map.address() == 0) {
