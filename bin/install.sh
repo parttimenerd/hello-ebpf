@@ -1,5 +1,5 @@
 #!/bin/bash
-sed "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" /etc/needrestart/needrestart.conf
+sed "/#\$nrconf{restart} = 'i';/s/.*/\$nrconf{restart} = 'a';/" /etc/needrestart/needrestart.conf > /etc/needrestart/needrestart.conf
 apt-get update
 apt-get install -y apt-transport-https ca-certificates curl clang llvm jq maven
 apt-get install -y libelf-dev libpcap-dev libbfd-dev binutils-dev build-essential make
