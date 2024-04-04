@@ -19,6 +19,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import javax.sound.sampled.Line;
 import javax.tools.Diagnostic;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -289,6 +290,17 @@ public class Processor extends AbstractProcessor {
     }
 
     private static final String newestClang = findNewestClangVersion();
+    private static final Path includePath = findIncludePath();
+
+    /** Find the library include path */
+    private static Path findIncludePath() {
+        // like /usr/include/aarch64-linux-gnu
+        var p = Path.of("/usr/include").resolve(System.getProperty("os.arch") + "-linux-gnu");
+        if (!Files.exists(p)) {
+            throw new RuntimeException("Could not find include path " + p);
+        }
+        return p;
+    }
 
     private byte[] compile(CombinedCode code) {
         if (dontCompile()) {
@@ -309,7 +321,7 @@ public class Processor extends AbstractProcessor {
             var tempFile = Files.createTempFile("ebpf", ".o");
             tempFile.toFile().deleteOnExit();
             var process = new ProcessBuilder(newestClang, "-O2", "-g", "-target", "bpf", "-c", "-o",
-                    tempFile.toString(), "-I", vmlinuxHeader.getParent().toString(), "-x", "c", "-", "--sysroot=/").redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE).start();
+                    tempFile.toString(), "-I", vmlinuxHeader.getParent().toString(), "-x", "c", "-", "--sysroot=/", "-I" + includePath).redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE).start();
             process.getOutputStream().write(code.ebpfProgram.getBytes());
             process.getOutputStream().close();
             ByteArrayOutputStream error = new ByteArrayOutputStream();

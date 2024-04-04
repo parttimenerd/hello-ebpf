@@ -50,7 +50,7 @@ public abstract class TypeProcessingSample2 extends BPFProgram {
                             
               // Read the filename from the second argument
               // The x86 arch/ABI have first argument in di and second in si registers (man syscall)
-              bpf_probe_read (evt->filename, sizeof (filename), (char *) ctx->si);
+              bpf_probe_read (evt->filename, sizeof (filename), (char *) ctx->regs[1]);
                             
               // Read the current process name
               bpf_get_current_comm (evt->comm, sizeof (comm));

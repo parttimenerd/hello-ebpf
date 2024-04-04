@@ -63,7 +63,8 @@ Either a Linux machine with the following:
 On Mac OS, you can use the [Lima VM](https://lima-vm.io/) (or use the `hello-ebpf.yaml` file as a guide to install the prerequisites):
 
 ```sh
-limactl start hello-ebpf.yaml
+limactl start hello-ebpf.yaml --mount-writable
+limactl shell hello-ebpf sudo bin/install.sh
 limactl shell hello-ebpf
 
 # You'll need to be root for most of the examples

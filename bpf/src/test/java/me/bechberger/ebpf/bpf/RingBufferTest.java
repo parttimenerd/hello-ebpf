@@ -79,7 +79,7 @@ public class RingBufferTest {
                             
               // Read the filename from the second argument
               // The x86 arch/ABI have first argument in di and second in si registers (man syscall)\s
-              bpf_probe_read (evt->e_filename, sizeof (filename), (char *) ctx->si);
+              bpf_probe_read (evt->e_filename, sizeof (filename), (char *) ctx->regs[1]);
                             
               // Read the current process name
               bpf_get_current_comm (evt->e_comm, sizeof (comm));
