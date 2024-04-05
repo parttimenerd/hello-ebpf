@@ -232,6 +232,7 @@ public class BPFRingBuffer<E> extends BPFMap {
 
     @Override
     public void close() {
+        System.out.println("Closing ring buffer");
         Lib.ring_buffer__free(rb);
         ringArena.close();
         super.close();

@@ -77,7 +77,7 @@ public class TraceLog {
      * <p/>
      * Currently, doesn't support non-blocking mode
      */
-    public TraceFields readFields() {
+    public @Nullable TraceFields readFields() {
         while (true) {
             String tracedLine = traceFile.readLine();
             if (tracedLine == null) return null;
@@ -103,10 +103,14 @@ public class TraceLog {
     }
 
     /**
-     * Read from the kernel debug trace pipe and return one line
+     * Read from the kernel debug trace pipe and return one line, might block
      */
-    public String readLine() {
+    public @Nullable String readLine() {
         return traceFile.readLine();
+    }
+
+    public @Nullable String readLineIfPossible() {
+        return traceFile.readLineIfPossible();
     }
 
     /**

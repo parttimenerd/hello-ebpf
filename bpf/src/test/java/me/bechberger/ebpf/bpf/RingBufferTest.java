@@ -5,12 +5,12 @@ import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.bpf.map.BPFMap;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
-import me.bechberger.ebpf.samples.RingSample;
 import me.bechberger.ebpf.type.BPFType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -78,7 +78,7 @@ public class RingBufferTest {
               evt->e_pid = bpf_get_current_pid_tgid ();	// Get current process PID
                             
               // Read the filename from the second argument
-              // The x86 arch/ABI have first argument in di and second in si registers (man syscall)\s
+              // The x86 arch/ABI have first argument in di and second in si registers (man syscall)
               bpf_probe_read (evt->e_filename, sizeof (filename), (char *) ctx->regs[1]);
                             
               // Read the current process name
@@ -128,33 +128,31 @@ public class RingBufferTest {
     }
 
     @Test
-    @Timeout(5)
-    public void testSuccessfulCase() throws InterruptedException {
-        try (RingSample program = BPFProgram.load(RingSample.class)) {
+    public void testSuccessfulCase() throws Exception {
+        try (Prog program = BPFProgram.load(Prog.class)) {
             program.autoAttachProgram(program.getProgramByName("kprobe__do_sys_openat2"));
             AtomicReference<Event> eventRef = new AtomicReference<>();
+            List<Path> paths = new ArrayList<>();
             var ringBuffer = program.getRingBufferByName("rb", eventType, (buffer, event) -> {
-                eventRef.set(event);
+                paths.add(Path.of(event.filename));
             });
             Path openendPath = triggerOpenAt();
             long start = System.currentTimeMillis();
             while (System.currentTimeMillis() - start < 1000) {
                 Thread.sleep(10);
                 int ret = ringBuffer.consumeAndThrow();
-                if (ret != 0) {
-                    assertNotNull(eventRef.get());
-                    assertEquals(openendPath.toString(), eventRef.get().filename);
-                    break;
+                if (paths.contains(openendPath)) {
+                    return;
                 }
             }
-            assertTrue(System.currentTimeMillis() - start < 1000);
+            fail("No " + openendPath + " received, just " + paths);
         }
     }
 
     @Test
     @Timeout(5)
     public void testFailingCallback() throws InterruptedException {
-        try (RingSample program = BPFProgram.load(RingSample.class)) {
+        try (Prog program = BPFProgram.load(Prog.class)) {
             program.autoAttachProgram(program.getProgramByName("kprobe__do_sys_openat2"));
             AtomicReference<Throwable> throwableRef = new AtomicReference<>();
             var ringBuffer = program.getRingBufferByName("rb", eventType, (buffer, event) -> {
@@ -186,7 +184,7 @@ public class RingBufferTest {
     @Test
     @Timeout(5)
     public void testFailingParse() throws InterruptedException {
-        try (RingSample program = BPFProgram.load(RingSample.class)) {
+        try (Prog program = BPFProgram.load(Prog.class)) {
             program.autoAttachProgram(program.getProgramByName("kprobe__do_sys_openat2"));
             var ringBuffer = program.getRingBufferByName("rb", brokenEventType, (buffer, event) -> {});
             long start = System.currentTimeMillis();

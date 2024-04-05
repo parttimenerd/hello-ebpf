@@ -1,6 +1,8 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.bpf.map.*;
+import me.bechberger.ebpf.bpf.map.BPFRingBuffer.BPFRingBufferError;
 import me.bechberger.ebpf.bpf.raw.Lib;
 import me.bechberger.ebpf.bpf.raw.LibraryLoader;
 import me.bechberger.ebpf.type.BPFType;
@@ -16,6 +18,9 @@ import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.MemorySegment;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Function;
 
 /**
@@ -101,10 +106,22 @@ public abstract class BPFProgram implements AutoCloseable {
     private final MemorySegment ebpf_object;
 
     /**
+     * Link to an attached program
+     */
+    public record BPFLink(MemorySegment segment) {}
+
+    private final Set<BPFLink> attachedPrograms = new HashSet<>();
+
+    private final Set<BPFMap> attachedMaps = new HashSet<>();
+
+    private volatile boolean closed = false;
+
+    /**
      * Load the eBPF program from the byte code
      */
     public BPFProgram() {
         this.ebpf_object = loadProgram();
+        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
     }
 
     public <T> BPFType.BPFStructType<T> getTypeForClass(Class<T> innerType) {
@@ -206,7 +223,7 @@ public abstract class BPFProgram implements AutoCloseable {
         }
     }
 
-    private static final HandlerWithErrno<MemorySegment> BCC_PROGRAM__ATTACH =
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH =
             new HandlerWithErrno<>("bpf_program__attach",
                     FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER));
 
@@ -218,11 +235,26 @@ public abstract class BPFProgram implements AutoCloseable {
      * @param prog program to attach
      * @throws BPFAttachError when attaching fails
      */
-    public void autoAttachProgram(ProgramHandle prog) {
-        var ret = BCC_PROGRAM__ATTACH.call(prog.prog());
+    public BPFLink autoAttachProgram(ProgramHandle prog) {
+        var ret = BPF_PROGRAM__ATTACH.call(prog.prog());
         if (ret.result() == MemorySegment.NULL) {
             throw new BPFAttachError(prog.name, ret.err());
         }
+        var link = new BPFLink(ret.result());
+        attachedPrograms.add(link);
+        return link;
+    }
+
+    public void detachProgram(BPFLink link) {
+        if (!attachedPrograms.contains(link)) {
+            throw new IllegalArgumentException("Program not attached");
+        }
+        if (link.segment.address() == 0) {
+            throw new IllegalArgumentException("Improper link");
+        }
+        Lib.bpf_link__destroy(link.segment);
+        System.out.println("Detached program " + getClass().getCanonicalName());
+        attachedPrograms.remove(link);
     }
 
     /**
@@ -230,6 +262,16 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     @Override
     public void close() {
+        if (closed) {
+            return;
+        }
+        closed = true;
+        for (var prog : new HashSet<>(attachedPrograms)) {
+            detachProgram(prog);
+        }
+        for (var map : new HashSet<>(attachedMaps)) {
+            map.close();
+        }
         Lib.bpf_object__close(this.ebpf_object);
     }
 
@@ -291,6 +333,11 @@ public abstract class BPFProgram implements AutoCloseable {
         }
     }
 
+    public <T extends BPFMap> T recordMap(T map) {
+        attachedMaps.add(map);
+        return map;
+    }
+
     /**
      * Get a map by name
      *
@@ -302,11 +349,13 @@ public abstract class BPFProgram implements AutoCloseable {
      * @throws BPFMap.BPFMapTypeMismatch if the type of the map does not match the expected type
      */
     public <M extends BPFMap> M getMapByName(String name, Function<FileDescriptor, M> mapCreator) {
-        return mapCreator.apply(getMapDescriptorByName(name));
+        return recordMap(mapCreator.apply(getMapDescriptorByName(name)));
     }
 
     /**
      * Get a ring buffer by name
+     * <p>
+     * Keep in mind to regularly call {@link BPFRingBuffer#consumeAndThrow()} to consume the events
      *
      * @param name      the name of the ring buffer
      * @param eventType type of the event
@@ -319,13 +368,28 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public <E> BPFRingBuffer<E> getRingBufferByName(String name, BPFType<E> eventType,
                                                     BPFRingBuffer.EventCallback<E> callback) {
-        return getMapByName(name, fd -> new BPFRingBuffer<>(fd, eventType, callback));
+        return recordMap(getMapByName(name, fd -> new BPFRingBuffer<>(fd, eventType, callback)));
     }
 
     public <K, V> BPFHashMap<K, V> getHashMapByName(String name, BPFType<K> keyType,
                                                     BPFType<V> valueType) {
         var fd = getMapDescriptorByName(name);
         MapTypeId type = BPFMap.getInfo(fd).type();
-        return new BPFHashMap<>(fd, type == MapTypeId.LRU_HASH, keyType, valueType);
+        return recordMap(new BPFHashMap<>(fd, type == MapTypeId.LRU_HASH, keyType, valueType));
+    }
+
+    /**
+     * Polls data from all ring buffers and consumes if available.
+     *
+     * @return the number of events consumed (max MAX_INT)
+     * @throws BPFRingBufferError if calling the consume method failed,
+     *         or if any errors were caught in the call-back of any ring buffer
+     */
+    public void consumeAndThrow() {
+        for (var map : attachedMaps) {
+            if (map instanceof BPFRingBuffer) {
+                ((BPFRingBuffer<?>)map).consumeAndThrow();
+            }
+        }
     }
 }

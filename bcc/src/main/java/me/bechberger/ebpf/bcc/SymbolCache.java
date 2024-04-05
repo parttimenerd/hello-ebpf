@@ -16,7 +16,7 @@ import java.util.Objects;
  */
 public class SymbolCache {
 
-    public static record ResolveResult(String symbol, long offset, String module) {
+    public record ResolveResult(String symbol, long offset, String module) {
     }
 
     private final MemorySegment cache;

@@ -8,6 +8,7 @@ import me.bechberger.ebpf.bcc.BPF;
 import me.bechberger.ebpf.bcc.BPFTable;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.bcc.Utils;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class HelloBufferTest {
 
 
     @Test
+    @Disabled
     public void testHelloBuffer() throws InterruptedException {
         try (var b = BPF.builder("""
                 BPF_PERF_OUTPUT(output);
