@@ -77,7 +77,13 @@ public class Processor extends AbstractProcessor {
                     + "BPF but is not abstract", typeElement);
             return;
         }
-        var typeProcessorResult = new TypeProcessor(processingEnv).processBPFTypeRecords(typeElement);
+        TypeProcessorResult typeProcessorResult;
+        try {
+            typeProcessorResult = new TypeProcessor(processingEnv).processBPFTypeRecords(typeElement);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
         var combinedCode = combineEBPFProgram(typeElement, typeProcessorResult);
         if (combinedCode == null) {
             return;
@@ -216,14 +222,11 @@ public class Processor extends AbstractProcessor {
 
         var lines = ebpfProgram.lines().toList();
         var lastInclude = IntStream.range(0, lines.size()).filter(i -> lines.get(i).startsWith("#include")).max().orElse(-1);
-        if (lastInclude == -1) {
-            this.processingEnv.getMessager().printError("No includes found in EBPF program", field);
-            return null;
-        }
         var resultLines = new ArrayList<>(lines.subList(0, lastInclude + 1));
-        IntStream.range(0, lastInclude + 1).forEach(i -> codeLineMapping.put(i, i));
-
-        resultLines.add("");
+        if (lastInclude != -1) {
+            IntStream.range(0, lastInclude + 1).forEach(i -> codeLineMapping.put(i, i));
+            resultLines.add("");
+        }
 
         Consumer<String> addLine = l -> resultLines.addAll(l.lines().toList());
 
@@ -239,8 +242,7 @@ public class Processor extends AbstractProcessor {
         var license = lines.stream().filter(l -> l.matches(".*SEC *\\(\"license\"\\).*")).findFirst().orElse(null);
         if (tpResult.licenseDefinition() == null) {
             if (license == null) {
-                this.processingEnv.getMessager().printError("No license defined", field);
-                return null;
+                this.processingEnv.getMessager().printWarning("No license defined in EBPF program", field);
             }
         } else {
             if (license != null) {
@@ -268,7 +270,7 @@ public class Processor extends AbstractProcessor {
             codeLineMapping.put(resultLines.size() + i, lastInclude + 1 + i);
         }
         resultLines.addAll(afterIncludes);
-        if (license == null) {
+        if (license == null && tpResult.licenseDefinition() != null) {
             addLine.accept(tpResult.licenseDefinition().toStatement().toPrettyString());
         }
         return new CombinedCode(String.join("\n", resultLines), field, codeLineMapping, tpResult);
@@ -290,16 +292,18 @@ public class Processor extends AbstractProcessor {
     }
 
     private static final String newestClang = findNewestClangVersion();
-    private static final Path includePath = findIncludePath();
+    private static Path includePath;
 
     /** Find the library include path */
     private static Path findIncludePath() {
-        // like /usr/include/aarch64-linux-gnu
-        var p = Path.of("/usr/include").resolve(System.getProperty("os.arch") + "-linux-gnu");
-        if (!Files.exists(p)) {
-            throw new RuntimeException("Could not find include path " + p);
+        if (includePath == null) {
+            // like /usr/include/aarch64-linux-gnu
+            includePath = Path.of("/usr/include").resolve(System.getProperty("os.arch") + "-linux-gnu");
+            if (!Files.exists(includePath)) {
+                throw new RuntimeException("Could not find include path " + includePath);
+            }
         }
-        return p;
+        return includePath;
     }
 
     private byte[] compile(CombinedCode code) {
@@ -317,18 +321,22 @@ public class Processor extends AbstractProcessor {
         // compile the eBPF program
         // if the compilation fails, print an error
         // if the compilation succeeds, return the byte code
+        System.out.println("Compiling eBPF program include path : " + findIncludePath());
         try {
             var tempFile = Files.createTempFile("ebpf", ".o");
             tempFile.toFile().deleteOnExit();
             var process = new ProcessBuilder(newestClang, "-O2", "-g", "-target", "bpf", "-c", "-o",
-                    tempFile.toString(), "-I", vmlinuxHeader.getParent().toString(), "-x", "c", "-", "--sysroot=/", "-I" + includePath).redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE).start();
+                    tempFile.toString(), "-I", vmlinuxHeader.getParent().toString(), "-x", "c", "-", "--sysroot=/", "-I" + findIncludePath()).redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE).start();
             process.getOutputStream().write(code.ebpfProgram.getBytes());
             process.getOutputStream().close();
             ByteArrayOutputStream error = new ByteArrayOutputStream();
             process.getErrorStream().transferTo(error);
             if (process.waitFor() != 0) {
                 System.err.println("Could not compile eBPF program");
-
+                var lines = code.ebpfProgram.split("\n");
+                for (int i = 0; i < lines.length; i++) {
+                    System.err.printf("%3d: %s\n", i + 1, lines[i]);
+                }
                 String errorString = error.toString();
                 this.processingEnv.getMessager().printError("Could not compile eBPF program", code.codeField);
                 this.processingEnv.getMessager().printError(errorString, code.codeField);

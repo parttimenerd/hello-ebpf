@@ -68,7 +68,7 @@ limactl shell hello-ebpf sudo bin/install.sh
 limactl shell hello-ebpf
 
 # You'll need to be root for most of the examples
-sudo -s
+sudo -s PATH=$PATH
 ```
 
 Build

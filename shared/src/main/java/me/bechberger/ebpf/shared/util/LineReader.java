@@ -1,5 +1,7 @@
 package me.bechberger.ebpf.shared.util;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,11 +42,26 @@ public class LineReader {
     }
 
     /**
-     * Read a line from the file, or return null if the file is closed
+     * Read a line from the file, or return null if the file is closed, might block
      */
-    public String readLine() {
+    public @Nullable String readLine() {
         try {
             return reader.readLine();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Read a line from the file if there is content available, or return null
+     * @return the line or null if no line is available
+     */
+    public @Nullable String readLineIfPossible() {
+        try {
+            if (reader.ready() && input.available() > 0) {
+                return readLine();
+            }
+            return null;
         } catch (IOException e) {
             return null;
         }

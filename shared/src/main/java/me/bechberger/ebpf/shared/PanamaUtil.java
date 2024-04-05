@@ -136,8 +136,14 @@ public class PanamaUtil {
                 Object[] argsWithState = new Object[args.length + 1];
                 argsWithState[0] = capturedState;
                 System.arraycopy(args, 0, argsWithState, 1, args.length);
-                return new ResultAndErr<>((R) getHandle().invokeWithArguments(argsWithState),
-                        (int) errnoHandle.get(capturedState));
+                var result = (R) getHandle().invokeWithArguments(argsWithState);
+                int errno;
+                try {
+                    errno = (int) errnoHandle.get(capturedState);
+                } catch (Throwable throwable) {
+                    errno = capturedState.get(JAVA_INT, 0);
+                }
+                return new ResultAndErr<>(result, errno);
             } catch (Throwable throwable) {
                 throw new RuntimeException(throwable);
             }
