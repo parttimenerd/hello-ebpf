@@ -20,29 +20,29 @@ public class TypeProcessingTest {
         static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
 
         @Type
-        public record SimpleRecord(@Unsigned int value) {
+        record SimpleRecord(@Unsigned int value) {
         }
 
         @Type(name = "Name")
-        public record SimpleNamedRecord(@Unsigned int value) {
+        record SimpleNamedRecord(@Unsigned int value) {
         }
 
         @Type
-        public record RecordWithString(@Size(10) String name) {
+        record RecordWithString(@Size(10) String name) {
         }
 
         static final int SIZE = 11;
 
         @Type
-        public record RecordWithSizeFromVariable(@Size(SIZE) String name) {
+        record RecordWithSizeFromVariable(@Size(SIZE) String name) {
         }
 
         @Type
-        public record RecordWithMultipleMembers(byte value, @Size(10) String name, long longValue) {
+        record RecordWithMultipleMembers(byte value, @Size(10) String name, long longValue) {
         }
 
         @Type
-        public record RecordWithOtherType(@Unsigned int value, SimpleRecord other) {
+        record RecordWithOtherType(@Unsigned int value, SimpleRecord other) {
         }
     }
 

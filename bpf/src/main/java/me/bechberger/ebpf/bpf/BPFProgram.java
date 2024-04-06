@@ -3,6 +3,7 @@ package me.bechberger.ebpf.bpf;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.bpf.map.*;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer.BPFRingBufferError;
+import me.bechberger.ebpf.bpf.processor.Processor;
 import me.bechberger.ebpf.bpf.raw.Lib;
 import me.bechberger.ebpf.bpf.raw.LibraryLoader;
 import me.bechberger.ebpf.type.BPFType;
@@ -71,10 +72,8 @@ public abstract class BPFProgram implements AutoCloseable {
     @SuppressWarnings("unchecked")
     private static <T, S extends T> Class<S> getImplClass(Class<T> clazz) {
         try {
-            String pkg = clazz.getCanonicalName();
-            pkg = pkg.substring(0, pkg.lastIndexOf('.')).toLowerCase();
-            String name = clazz.getSimpleName() + "Impl";
-            return (Class<S>)Class.forName(pkg + "." + name);
+            var implName = Processor.classToImplName(clazz);
+            return (Class<S>)Class.forName(implName.fullyQualifiedClassName());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
