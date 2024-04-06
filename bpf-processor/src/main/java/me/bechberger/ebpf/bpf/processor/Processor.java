@@ -14,10 +14,7 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
+import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
 import javax.sound.sampled.Line;
 import javax.tools.Diagnostic;
@@ -96,19 +93,17 @@ public class Processor extends AbstractProcessor {
         System.out.println("Compiled eBPF program " + bytes.length + " bytes");
         this.processingEnv.getMessager().printMessage(Diagnostic.Kind.OTHER, "Compiled eBPF program", typeElement);
 
-        String pkg = typeElement.getQualifiedName().toString();
-        pkg = pkg.substring(0, pkg.lastIndexOf('.')).toLowerCase();
-        String name = typeElement.getSimpleName().toString() + "Impl";
+        ImplName implName = typeToImplName(typeElement);
 
-        TypeSpec typeSpec = createType(typeElement.getSimpleName() + "Impl", typeElement.asType(), bytes,
+        TypeSpec typeSpec = createType(implName.className, typeElement.asType(), bytes,
                 typeProcessorResult.fields(), combinedCode);
         try {
-            var file = processingEnv.getFiler().createSourceFile(pkg + "." + name, typeElement);
+            var file = processingEnv.getFiler().createSourceFile(implName.fullyQualifiedClassName, typeElement);
             // delete file if it exists
             if (Files.exists(Path.of(file.toUri()))) {
                 Files.delete(Path.of(file.toUri()));
             }
-            JavaFile javaFile = JavaFile.builder(pkg, typeSpec).build();
+            JavaFile javaFile = JavaFile.builder(implName.packageName, typeSpec).build();
             try (var writer = file.openWriter()) {
                 writer.write(javaFile.toString());
             }
@@ -118,6 +113,39 @@ public class Processor extends AbstractProcessor {
         }
     }
 
+    public record ImplName(String className, String fullyQualifiedClassName, String packageName) {}
+
+    /** Creates the name of the implementing class */
+    private static ImplName classNameToImplName(String packageName, String className) {
+        if (packageName.isEmpty()) {
+            return new ImplName(className + "Impl", className + "Impl", packageName);
+        }
+        var simpleName = className.replace(".", "$") + "Impl";
+        return new ImplName(simpleName, packageName + "." + simpleName, packageName);
+    }
+
+    private static ImplName typeToImplName(TypeElement type) {
+        // problem type might be nested
+        List<String> classNameParts = new ArrayList<>();
+        var t = type;
+        classNameParts.add(t.getSimpleName().toString());
+        while (t.getNestingKind() == NestingKind.MEMBER) {
+            if (t.getEnclosingElement() instanceof TypeElement typeElement) {
+                t = typeElement;
+                classNameParts.add(0, t.getSimpleName().toString());
+            }
+        }
+        String qualifiedName = t.getQualifiedName().toString();
+        return classNameToImplName(qualifiedName.substring(0, qualifiedName.length() - t.getSimpleName().length() - 1),
+                String.join(".", classNameParts));
+    }
+
+    public static ImplName classToImplName(Class<?> klass) {
+        if (klass.getPackageName().isEmpty()) {
+            return classNameToImplName("", klass.getName());
+        }
+        return classNameToImplName(klass.getPackageName(), klass.getName().substring(klass.getPackageName().length() + 1));
+    }
 
     /**
      * GZIP the bytecode and then turns it into a Base64 String

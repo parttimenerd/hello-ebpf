@@ -28,10 +28,10 @@ public class MapGenerationTest {
         private static final int TASK_COMM_LEN = 16;
 
         @Type(name = "event")
-        public record Event(@Unsigned int pid, @Size(FILE_NAME_LEN) String filename, @Size(TASK_COMM_LEN) String comm) {}
+        record Event(@Unsigned int pid, @Size(FILE_NAME_LEN) String filename, @Size(TASK_COMM_LEN) String comm) {}
 
         @BPFMapDefinition(maxEntries = 256 * 4096)
-        protected BPFRingBuffer<Event> rb;
+        BPFRingBuffer<Event> rb;
 
         static final String EBPF_PROGRAM = """
             #include "vmlinux.h"
