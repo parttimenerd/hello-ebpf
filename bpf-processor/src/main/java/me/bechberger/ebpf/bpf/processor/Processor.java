@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -169,7 +170,8 @@ public class Processor extends AbstractProcessor {
      * @param codeField field that contains the EBPF_PROGRAM
      * @param codeLineMapping line number in generated -> original line number
      */
-    record CombinedCode(String ebpfProgram, VariableElement codeField, Map<Integer, Integer> codeLineMapping, TypeProcessorResult tp) {
+    record CombinedCode(String ebpfProgram, VariableElement codeField, Map<Integer, Integer> codeLineMapping,
+                        TypeProcessorResult tp, Set<Integer> generatedLines) {
     }
 
     private @Nullable CombinedCode combineEBPFProgram(TypeElement typeElement, TypeProcessorResult tpResult) {
@@ -273,7 +275,8 @@ public class Processor extends AbstractProcessor {
         if (license == null && tpResult.licenseDefinition() != null) {
             addLine.accept(tpResult.licenseDefinition().toStatement().toPrettyString());
         }
-        return new CombinedCode(String.join("\n", resultLines), field, codeLineMapping, tpResult);
+        var generatedLines = IntStream.range(0, resultLines.size()).filter(i -> !codeLineMapping.containsKey(i)).boxed().collect(Collectors.toSet());
+        return new CombinedCode(String.join("\n", resultLines), field, codeLineMapping, tpResult, generatedLines);
     }
 
     private static String findNewestClangVersion() {
@@ -362,7 +365,7 @@ public class Processor extends AbstractProcessor {
                 Line l = lineMap.get(lineNumber);
                 if (l != null) {
                     // format [ERROR] filename:[line,column] message
-                    System.err.println(Paths.get(".").relativize(file) + ":[" + l.line + "," + (l.start + column) + "] " + message);
+                    System.err.println(file + ":[" + l.line + "," + (l.start + column) + "] " + message);
                 } else {
                     System.err.println(line);
                 }
@@ -392,38 +395,65 @@ public class Processor extends AbstractProcessor {
 
     private Map<Integer, Line> getLineMap(CombinedCode code) {
         Path file = Paths.get(this.processingEnv.getElementUtils().getFileObjectOf(code.codeField).getName());
-        List<String> linesInEBPFProgram = code.ebpfProgram.lines().toList();
-        List<String> linesInFile;
+        List<String> linesInGeneratedEBPFProgram = code.ebpfProgram.lines().toList();
+        List<String> strippedLinesInGeneratedEBPFProgram = linesInGeneratedEBPFProgram.stream().map(String::strip).toList();
+        List<String> linesInSourceFile;
         try {
-            linesInFile = Files.readAllLines(file);
+            linesInSourceFile = Files.readAllLines(file);
         } catch (IOException e) {
             this.processingEnv.getMessager().printError("Could not read file " + file, code.codeField);
             return Map.of();
         }
-        // find line that (excluding whitespace) matches the start of the line in the ebpf program
-        Map<Integer, Line> lineMap = new HashMap<>();
-        int line = 0;
-        for (int i = 0; i < linesInEBPFProgram.size(); i++) {
-            if (!code.codeLineMapping.containsKey(i)) {
-                continue;
+        List<String> strippedLinesInSourceFile = linesInSourceFile.stream().map(String::strip).toList();
+        Map<Integer, Line> generatedToSourceLine = new HashMap<>();
+
+        int genIndex = 0;
+        int sourceIndex = 0;
+        boolean start = true;
+        while (sourceIndex < strippedLinesInSourceFile.size() && genIndex < strippedLinesInGeneratedEBPFProgram.size()) {
+            // omit clearly generated lines
+            while (code.generatedLines.contains(genIndex)) {
+                genIndex++;
             }
-            String lineInEBPFProgram = linesInEBPFProgram.get(i);
-            String lineInEBPFProgramTrimmed = lineInEBPFProgram.strip().replace("\\", "");
-            while (line < linesInFile.size()) {
-                String lineInFile = linesInFile.get(line);
-                String lineInFileTrimmed = lineInFile.strip().replace("\\", "");
-                if (lineInFileTrimmed.startsWith(lineInEBPFProgramTrimmed)) {
-                    lineMap.put(i, new Line(line, lineInFile.indexOf(lineInEBPFProgram)));
-                    line++;
+            String strippedGenLine = strippedLinesInGeneratedEBPFProgram.get(genIndex);
+            int newSourceIndex = strippedLinesInSourceFile.subList(sourceIndex, strippedLinesInSourceFile.size())
+                    .indexOf(strippedGenLine) + sourceIndex;
+
+            if (newSourceIndex == -1 + sourceIndex) {
+                return Map.of();
+            }
+
+            boolean newStart = false;
+            // check that there is no """ in between new and old source index
+            for (int i = sourceIndex; i <= newSourceIndex && !start; i++) {
+                if (strippedLinesInSourceFile.get(i).equals("\"\"\"")) {
+                    genIndex = 0;
+                    sourceIndex = i;
+                    generatedToSourceLine.clear();
+                    start = true;
+                    newStart = true;
                     break;
                 }
-                line++;
             }
-            if (lineMap.size() == linesInEBPFProgram.size()) {
-                return lineMap;
+
+            if (newStart) {
+                continue;
             }
+            sourceIndex = newSourceIndex;
+
+            String sourceLine = linesInSourceFile.get(sourceIndex);
+            String genLine = linesInGeneratedEBPFProgram.get(genIndex);
+            int lineStart = sourceLine.indexOf(genLine);
+            if (lineStart == -1) {
+                return Map.of();
+            }
+            generatedToSourceLine.put(genIndex, new Line(sourceIndex, lineStart));
+            start = false;
+            sourceIndex++;
+            genIndex++;
         }
-        return Map.of();
+
+        return generatedToSourceLine;
     }
 
     private @Nullable Optional<Path> obtainedPathToVMLinuxHeader = null;
