@@ -100,22 +100,22 @@ def create_modified_lib_header(header: Path, combined_header: Path, modified_hea
             f.write(line)
 
 
-def assert_java21():
-    """ assert that we are running JDK 21 by calling java -version """
+def assert_java22():
+    """ assert that we are running JDK 22+ by calling java -version """
     try:
         output = subprocess.check_output("java -version", shell=True,
                                          stderr=subprocess.STDOUT).decode()
-        assert "version \"22" in output, \
-            "Please run this script with JDK 22"
+        assert any(f"version \"{v}" in output for v in range(22, 30)), \
+            "Please run this script with JDK 22+"
     except FileNotFoundError:
-        print("Please install JDK 22 and run this script with JDK 22")
+        print("Please install JDK 22+ and run this script with JDK 22+")
         sys.exit(1)
 
 
 def run_jextract(header: Path, mod_header_folder: Path,
         dest_path: Path, package: str = "", name: str = "BPF",
                  delete_dest_path: bool = False):
-    assert_java21()
+    assert_java22()
     print("Running jextract")
     os.makedirs(mod_header_folder, exist_ok=True)
     combined_header = mod_header_folder / "combined_lib.h"
