@@ -225,6 +225,7 @@ You can run them using the `./run_bpf.sh` script. All examples have accompanying
 | Ansil H | [RingSample](bpf/src/main/java/me/bechberger/ebpf/samples/RingSample.java)                     | Record openat calls in a ring buffer  |
 |         | [TypeProcessingSample](bpf/src/main/java/me/bechberger/ebpf/samples/TypeProcessingSample.java) | RingSample using the @Type annotation |
 |         | [HashMapSample](bpf/src/main/java/me/bechberger/ebpf/samples/HashMapSample.java)               | Record openat calls in a hash map     |
+|         | [TypeProcessingSample](bpf/src/main/java/me/bechberger/ebpf/samples/TypeProcessingSample.java) | RingSample using more code generation |
 
 Classes and Methods
 -------
