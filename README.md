@@ -219,13 +219,14 @@ are implemented in the [bpf/src/main/me/bechberger/ebpf/samples](bpf/src/main/ja
 You can run them using the `./run_bpf.sh` script. All examples have accompanying tests in the 
 [bpf/src/test](bpf/src/test) directory.
 
-| Source  | Java Class                                                                                     | Description                           |
-|---------|------------------------------------------------------------------------------------------------|---------------------------------------|
-| Ansil H | [HelloWorld](bpf/src/main/java/me/bechberger/ebpf/samples/Helloworld.java)                     | A simple hello world example          |
-| Ansil H | [RingSample](bpf/src/main/java/me/bechberger/ebpf/samples/RingSample.java)                     | Record openat calls in a ring buffer  |
-|         | [TypeProcessingSample](bpf/src/main/java/me/bechberger/ebpf/samples/TypeProcessingSample.java) | RingSample using the @Type annotation |
-|         | [HashMapSample](bpf/src/main/java/me/bechberger/ebpf/samples/HashMapSample.java)               | Record openat calls in a hash map     |
-|         | [TypeProcessingSample](bpf/src/main/java/me/bechberger/ebpf/samples/TypeProcessingSample.java) | RingSample using more code generation |
+| Source   | Java Class                                                                                     | Description                                           |
+|----------|------------------------------------------------------------------------------------------------|-------------------------------------------------------|
+| Ansil H  | [HelloWorld](bpf/src/main/java/me/bechberger/ebpf/samples/Helloworld.java)                     | A simple hello world example                          |
+| Ansil H  | [RingSample](bpf/src/main/java/me/bechberger/ebpf/samples/RingSample.java)                     | Record openat calls in a ring buffer                  |
+|          | [TypeProcessingSample](bpf/src/main/java/me/bechberger/ebpf/samples/TypeProcessingSample.java) | RingSample using the @Type annotation                 |
+|          | [HashMapSample](bpf/src/main/java/me/bechberger/ebpf/samples/HashMapSample.java)               | Record openat calls in a hash map                     |
+|          | [TypeProcessingSample](bpf/src/main/java/me/bechberger/ebpf/samples/TypeProcessingSample.java) | RingSample using more code generation                 |
+| sematext | [XDPSample](bpf/src/main/java/me/bechberger/ebpf/samples/XDPSample.java)                       | Use XDP to block incoming packages from a certain URL |
 
 Classes and Methods
 -------

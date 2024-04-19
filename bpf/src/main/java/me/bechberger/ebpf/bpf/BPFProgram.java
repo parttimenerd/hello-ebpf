@@ -1,6 +1,5 @@
 package me.bechberger.ebpf.bpf;
 
-import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.bpf.map.*;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer.BPFRingBufferError;
 import me.bechberger.ebpf.bpf.processor.Processor;
@@ -19,7 +18,6 @@ import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.MemorySegment;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
@@ -112,6 +110,10 @@ public abstract class BPFProgram implements AutoCloseable {
     private final Set<BPFLink> attachedPrograms = new HashSet<>();
 
     private final Set<BPFMap> attachedMaps = new HashSet<>();
+
+    record AttachedXDPIfIndex(int ifindex, int flags) {}
+
+    private final Set<AttachedXDPIfIndex> attachedXDPIfIndexes = new HashSet<>();
 
     private volatile boolean closed = false;
 
@@ -252,6 +254,16 @@ public abstract class BPFProgram implements AutoCloseable {
         return link;
     }
 
+    public void xdpAttach(ProgramHandle prog, int ifindex) {
+        int flags = XDPUtil.XDP_FLAGS_UPDATE_IF_NOEXIST | XDPUtil.XDP_FLAGS_DRV_MODE;
+        int fd = Lib.bpf_program__fd(prog.prog());
+        int err = Lib.bpf_xdp_attach(ifindex, fd, flags, MemorySegment.NULL);
+        if (err > 0) {
+            throw new BPFAttachError(prog.name, err);
+        }
+        attachedXDPIfIndexes.add(new AttachedXDPIfIndex(ifindex, flags));
+    }
+
     public void detachProgram(BPFLink link) {
         if (!attachedPrograms.contains(link)) {
             throw new IllegalArgumentException("Program not attached");
@@ -275,6 +287,9 @@ public abstract class BPFProgram implements AutoCloseable {
         closed = true;
         for (var prog : new HashSet<>(attachedPrograms)) {
             detachProgram(prog);
+        }
+        for (var ifindex : new HashSet<>(attachedXDPIfIndexes)) {
+            Lib.bpf_xdp_detach(ifindex.ifindex, ifindex.flags, MemorySegment.NULL);
         }
         for (var map : new HashSet<>(attachedMaps)) {
             map.close();
@@ -388,7 +403,6 @@ public abstract class BPFProgram implements AutoCloseable {
     /**
      * Polls data from all ring buffers and consumes if available.
      *
-     * @return the number of events consumed (max MAX_INT)
      * @throws BPFRingBufferError if calling the consume method failed,
      *         or if any errors were caught in the call-back of any ring buffer
      */

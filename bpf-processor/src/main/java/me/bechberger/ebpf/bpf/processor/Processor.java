@@ -16,7 +16,6 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
-import javax.sound.sampled.Line;
 import javax.tools.Diagnostic;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -132,7 +131,7 @@ public class Processor extends AbstractProcessor {
         while (t.getNestingKind() == NestingKind.MEMBER) {
             if (t.getEnclosingElement() instanceof TypeElement typeElement) {
                 t = typeElement;
-                classNameParts.add(0, t.getSimpleName().toString());
+                classNameParts.addFirst(t.getSimpleName().toString());
             }
         }
         String qualifiedName = t.getQualifiedName().toString();
@@ -178,7 +177,7 @@ public class Processor extends AbstractProcessor {
         var spec =
                 TypeSpec.classBuilder(name).superclass(baseType).addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                         .addField(FieldSpec.builder(String.class, "BYTE_CODE", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-                                .addJavadoc("Base64 encoded and gzipped eBPF byte-code of the program\n{@snippet : \n" + code.ebpfProgram + "\n}")
+                                .addJavadoc("Base64 encoded and gzipped eBPF byte-code of the program\n{@snippet : \n" + sanitizeCodeForJavadoc(code.ebpfProgram) + "\n}")
                                 .initializer("$S", gzipBase64Encode(byteCode)).build());
         // insert the spec fields
         bpfTypeFields.forEach(spec::addField);
@@ -190,6 +189,10 @@ public class Processor extends AbstractProcessor {
         code.tp.mapDefinitions().forEach(m -> constructor.addStatement("$L", m.javaFieldInitializer()));
         spec.addMethod(constructor.build());
         return spec.build();
+    }
+
+    private String sanitizeCodeForJavadoc(String code) {
+        return code.replace("*/", "* /").replace("/*", "/ *");
     }
 
     /**
@@ -414,6 +417,9 @@ public class Processor extends AbstractProcessor {
         List<String> suggestions = new ArrayList<>();
         if (message.contains(" fatal error: 'bits/libc-header-start.h' file not found")) {
             suggestions.add("Try to install gcc-multilib");
+        }
+        if (message.contains(" fatal error: 'bpf_helpers.h' file not found")) {
+            suggestions.add("Replace `#include 'bpf_helpers.h` with `#include <bpf/bpf_helpers.h>`");
         }
         return suggestions;
     }

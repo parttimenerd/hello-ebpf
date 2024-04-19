@@ -4,11 +4,13 @@ import me.bechberger.ebpf.bpf.BPFError;
 import me.bechberger.ebpf.bpf.raw.Lib;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.shared.PanamaUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 /**
  * A base map based on <a href="https://docs.kernel.org/bpf/map_hash.html">BPF hash map</a>
@@ -179,8 +181,8 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
      * Iterate over all entries in the map
      */
     @Override
-    public Iterator<Map.Entry<K, V>> iterator() {
-        return new Iterator<Map.Entry<K, V>>() {
+    public @NotNull Iterator<Map.Entry<K, V>> iterator() {
+        return new Iterator<>() {
 
             final Iterator<K> keyIterator = keyIterator();
 
@@ -235,6 +237,12 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
                 size++;
             }
             return size;
+        }
+    }
+
+    public void forEach(BiConsumer<? super K, ? super V> action) {
+        for (Map.Entry<K, V> entry : this) {
+            action.accept(entry.getKey(), entry.getValue());
         }
     }
 }
