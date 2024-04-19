@@ -3,19 +3,21 @@ package me.bechberger.ebpf.bpf;
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
+import me.bechberger.ebpf.annotations.bpf.CustomType;
 import me.bechberger.ebpf.annotations.bpf.Type;
 import me.bechberger.ebpf.type.BPFType;
+import me.bechberger.ebpf.type.BPFType.BPFStructType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static me.bechberger.ebpf.type.BPFType.BPFIntType.UINT32;
+import static me.bechberger.ebpf.type.BPFType.BPFIntType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 public class TypeProcessingTest {
 
-    @BPF
+    @BPF(includeTypes = {IncludedType.class})
     public static abstract class SimpleRecordTestProgram extends BPFProgram {
         static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
 
@@ -44,6 +46,37 @@ public class TypeProcessingTest {
         @Type
         record RecordWithOtherType(@Unsigned int value, SimpleRecord other) {
         }
+
+        @Type
+        record RecordWithStringWithRecordOutOfProgram(RecordWithStringOutOfProgram name) {
+        }
+
+        public static BPFStructType<IntPair> INT_PAIR = BPFStructType.autoLayout("IntPair",
+                List.of(new BPFType.UBPFStructMember<>("x", INT32, IntPair::x),
+                        new BPFType.UBPFStructMember<>("y", INT32, IntPair::y)),
+                new BPFType.AnnotatedClass(IntPair.class, List.of()),
+                fields -> new IntPair((int) fields.get(0), (int) fields.get(1)));
+
+        @CustomType(
+                isStruct = true,
+                specFieldName = "$outerClass.INT_PAIR", cCode = """
+                struct $name {
+                  int x;
+                  int y;
+                };
+                """)
+        record IntPair(int x, int y) {}
+
+        @Type
+        record RecordWithCustomType(IntPair pair) {}
+    }
+
+    @Type
+    record RecordWithStringOutOfProgram(@Size(10) String name) {
+    }
+
+    @Type
+    record IncludedType(int value) {
     }
 
     @Test
@@ -119,5 +152,36 @@ public class TypeProcessingTest {
                 };
                 """.trim(),
                 type.toCDeclarationStatement().get().toPrettyString());
+    }
+
+    @Test
+    public void testRecordWithOutOfProgramRecord() {
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.RecordWithStringWithRecordOutOfProgram.class);
+        assertEquals(10, type.size());
+        assertInstanceOf(BPFType.BPFStructType.class, type.getMember("name").type());
+    }
+
+    @Test
+    public void testCustomType() {
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.RecordWithCustomType.class);
+        assertEquals(8, type.size());
+        assertEquals("pair", type.members().getFirst().name());
+        assertEquals("""
+                struct IntPair {
+                  s32 x;
+                  s32 y;
+                };
+                """.trim(), type.members().getFirst().type().toCDeclarationStatement().get().toPrettyString());
+    }
+
+    @Test
+    public void testIncludedType() {
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class,
+                IncludedType.class);
+        assertEquals(4, type.size());
+        assertEquals("value", type.members().getFirst().name());
+        assertEquals(INT32, type.members().getFirst().type());
     }
 }

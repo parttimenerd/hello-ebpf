@@ -26,4 +26,6 @@ public @interface BPF {
      * only iff this license is not present. Typically, the license is GPL.
      */
     String license() default "";
+    /** Types that should be included in the generated eBPF program */
+    Class<?>[] includeTypes() default {};
 }

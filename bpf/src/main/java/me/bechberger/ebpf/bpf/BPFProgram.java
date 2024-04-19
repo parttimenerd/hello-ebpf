@@ -131,10 +131,18 @@ public abstract class BPFProgram implements AutoCloseable {
         return getTypeForImplClass(getImplClass(outer), inner);
     }
 
-    @SuppressWarnings("unchecked")
     private static <T> BPFType.BPFStructType<T> getTypeForImplClass(Class<?> outerImpl, Class<T> inner) {
-        String fieldName = inner.getSimpleName().replaceAll("([a-z0-9])([A-Z])", "$1_$2").toUpperCase();
+        try {
+            return getTypeForImplClass(outerImpl, inner, true);
+        } catch (Exception e) {
+            return getTypeForImplClass(outerImpl, inner, false);
+        }
+    }
 
+    @SuppressWarnings("unchecked")
+    private static <T> BPFType.BPFStructType<T> getTypeForImplClass(Class<?> outerImpl, Class<T> inner, boolean canonical) {
+        String fieldName = (canonical ? inner.getCanonicalName() : inner.getSimpleName()).replaceAll("([a-z0-9])([A-Z])", "$1_$2")
+                .replace(".", "__").toUpperCase();
         try {
             return (BPFType.BPFStructType<T>) outerImpl.getDeclaredField(fieldName).get(null);
         } catch (IllegalAccessException | NoSuchFieldException e) {

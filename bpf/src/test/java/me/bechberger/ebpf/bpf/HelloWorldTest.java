@@ -46,7 +46,7 @@ public class HelloWorldTest {
 
     @Test
     public void testFailingProgramByName() {
-        try (HelloWorld program = BPFProgram.load(HelloWorld.class)) {
+        try (var program = BPFProgram.load(Prog.class)) {
             assertThrows(BPFProgramNotFound.class, () -> program.getProgramByName("invalid-name"));
         }
     }

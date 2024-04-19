@@ -5,18 +5,24 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import me.bechberger.cast.CAST;
+import me.bechberger.cast.CAST.Declarator;
+import me.bechberger.cast.CAST.Statement;
 import me.bechberger.ebpf.annotations.AnnotationInstances;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.lang.model.element.Modifier;
+import java.awt.desktop.OpenFilesEvent;
 import java.lang.annotation.Annotation;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,8 +37,57 @@ import static me.bechberger.ebpf.type.BPFType.BPFIntType.CHAR;
  */
 public sealed interface BPFType<T> {
 
-    static String BPF_PACKAGE = "me.bechberger.ebpf.type";
-    static String BPF_TYPE = BPF_PACKAGE + ".BPFType";
+    String BPF_PACKAGE = "me.bechberger.ebpf.type";
+    String BPF_TYPE = BPF_PACKAGE + ".BPFType";
+
+    /** Used in the type processor */
+    record CustomBPFType<T>(String javaName, String bpfName, Supplier<Declarator> cUse, Function<Function<BPFType<?>, String>, String> specFieldNameCreator, Supplier<Optional<? extends Statement>> cDeclaration) implements BPFType<T> {
+
+        @Override
+        public MemoryLayout layout() {
+            return MemoryLayout.structLayout();
+        }
+
+        @Override
+        public MemoryParser<T> parser() {
+            return null;
+        }
+
+        @Override
+        public MemorySetter<T> setter() {
+            return null;
+        }
+
+        @Override
+        public long alignment() {
+            return 0;
+        }
+
+        @Override
+        public AnnotatedClass javaClass() {
+            return null;
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+           return specFieldNameCreator.apply(typeToSpecFieldName);
+        }
+
+        @Override
+        public Optional<? extends Statement> toCDeclaration() {
+            return cDeclaration.get();
+        }
+
+        @Override
+        public String toJavaUse() {
+            return javaName;
+        }
+
+        @Override
+        public Declarator toCUse() {
+            return cUse.get();
+        }
+    }
 
     /**
      * Java class with annotations
@@ -330,6 +385,83 @@ public sealed interface BPFType<T> {
          * <code>void*</code>
          */
         public static final BPFType<Long> POINTER = new BPFTypedef<>("void*", BPFIntType.UINT64);
+    }
+
+    /** A potentially signed integer with a fixed width */
+    class FixedWidthInteger extends Number implements Comparable<FixedWidthInteger> {
+
+        private final int width;
+        private final boolean signed;
+        private final byte[] content;
+
+        public FixedWidthInteger(int width, boolean signed, byte[] content) {
+            this.width = width;
+            this.content = content;
+            this.signed = signed;
+        }
+
+        public FixedWidthInteger(int width, boolean signed, String val, int radix) {
+            this(width, signed, new BigInteger(val, radix).toByteArray());
+        }
+
+        public static FixedWidthInteger fromBigInteger(int width, boolean signed, BigInteger val) {
+            return new FixedWidthInteger(width, signed, val.toByteArray());
+        }
+
+        public static FixedWidthInteger valueOf(int width, boolean signed, long val) {
+            return fromBigInteger(width, signed, BigInteger.valueOf(val));
+        }
+
+        public boolean isSigned() {
+            return signed;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public byte[] getContent() {
+            return content;
+        }
+
+        /** Convert to a {@code BigInteger}, keeping signedness */
+        public BigInteger toBigInteger() {
+            if (signed) {
+                return new BigInteger(content);
+            } else {
+                return new BigInteger(1, content);
+            }
+        }
+
+        @Override
+        public int compareTo(@NotNull FixedWidthInteger other) {
+            return toBigInteger().compareTo(other.toBigInteger());
+        }
+
+        @Override
+        public int intValue() {
+            return toBigInteger().intValue();
+        }
+
+        @Override
+        public long longValue() {
+            return toBigInteger().longValue();
+        }
+
+        @Override
+        public float floatValue() {
+            return toBigInteger().floatValue();
+        }
+
+        @Override
+        public double doubleValue() {
+            return toBigInteger().doubleValue();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof FixedWidthInteger integer && integer.compareTo(this) == 0;
+        }
     }
 
     /**
