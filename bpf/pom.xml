@@ -125,6 +125,11 @@
       <version>5.10.2</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+      <version>4.7.5</version>
+    </dependency>
   </dependencies>
 
   <parent>

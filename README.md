@@ -226,7 +226,7 @@ You can run them using the `./run_bpf.sh` script. All examples have accompanying
 |          | [TypeProcessingSample](bpf/src/main/java/me/bechberger/ebpf/samples/TypeProcessingSample.java) | RingSample using the @Type annotation                 |
 |          | [HashMapSample](bpf/src/main/java/me/bechberger/ebpf/samples/HashMapSample.java)               | Record openat calls in a hash map                     |
 |          | [TypeProcessingSample](bpf/src/main/java/me/bechberger/ebpf/samples/TypeProcessingSample.java) | RingSample using more code generation                 |
-| sematext | [XDPSample](bpf/src/main/java/me/bechberger/ebpf/samples/XDPSample.java)                       | Use XDP to block incoming packages from a certain URL |
+| sematext | [XDPSample](bpf/src/main/java/me/bechberger/ebpf/samples/XDPPackageFilter.java)                | Use XDP to block incoming packages from specific URLs |
 
 Classes and Methods
 -------
