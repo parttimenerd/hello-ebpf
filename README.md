@@ -226,7 +226,7 @@ You can run them using the `./run_bpf.sh` script. All examples have accompanying
 |          | [TypeProcessingSample](bpf/src/main/java/me/bechberger/ebpf/samples/TypeProcessingSample.java) | RingSample using the @Type annotation                 |
 |          | [HashMapSample](bpf/src/main/java/me/bechberger/ebpf/samples/HashMapSample.java)               | Record openat calls in a hash map                     |
 |          | [TypeProcessingSample](bpf/src/main/java/me/bechberger/ebpf/samples/TypeProcessingSample.java) | RingSample using more code generation                 |
-| sematext | [XDPSample](bpf/src/main/java/me/bechberger/ebpf/samples/XDPPackageFilter.java)                | Use XDP to block incoming packages from specific URLs |
+| sematext | [XDPPacketFilter](bpf/src/main/java/me/bechberger/ebpf/samples/XDPPacketFilter.java)           | Use XDP to block incoming packages from specific URLs |
 
 Classes and Methods
 -------
@@ -240,8 +240,9 @@ Plans
 
 A look ahead into the future so you know what to expect:
 
-- Support the newer [libbpf](https://github.com/libbpf/libbpf) library
-   - Started in the [bpf](bpf) and [bpf-processor](bpf-processor) modules
+- Implement more features related to libbpf
+  - cgroups support
+  - arrays in types and array maps
 - Allow writing eBPF programs in Java
 - Drop libbcc and the BCC tools
 

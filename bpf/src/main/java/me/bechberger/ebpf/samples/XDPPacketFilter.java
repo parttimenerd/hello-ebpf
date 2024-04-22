@@ -25,9 +25,9 @@ import static java.lang.System.*;
  * it is the most straightforward example of using XDP to block incoming packages.
  */
 @BPF(license = "GPL")
-@Command(name = "XDPPackageFilter", mixinStandardHelpOptions = true, version = "XDPPackageFilter 1.0",
+@Command(name = "XDPPacketFilter", mixinStandardHelpOptions = true,
         description = "Use XDP to block incoming IPv4 packages from a URLs")
-public abstract class XDPPackageFilter extends BPFProgram implements Runnable {
+public abstract class XDPPacketFilter extends BPFProgram implements Runnable {
 
     @BPFMapDefinition(maxEntries = 256 * 4096)
     BPFHashMap<Integer, Boolean> blockedIPs;
@@ -38,19 +38,14 @@ public abstract class XDPPackageFilter extends BPFProgram implements Runnable {
     private static final String EBPF_PROGRAM = """
             #include <vmlinux.h>
             #include <bpf/bpf_helpers.h>
+            #include <bpf/bpf_endian.h>
             
             // copied from the linux kernel
-            #define AF_INET 2
-            #define AF_INET6 10
-            
-            #define ETH_ALEN 6
-            #define ETH_P_802_3_MIN 0x0600
             #define ETH_P_8021Q 0x8100
             #define ETH_P_8021AD 0x88A8
             #define ETH_P_IP 0x0800
             #define ETH_P_IPV6 0x86DD
             #define ETH_P_ARP 0x0806
-            #define IPPROTO_ICMPV6 58
             
             SEC("xdp")
             int xdp_pass(struct xdp_md *ctx) {
@@ -70,7 +65,7 @@ public abstract class XDPPackageFilter extends BPFProgram implements Runnable {
                 eth_type = eth->h_proto;
             
                 /* handle VLAN tagged packet */
-                if (eth_type == ETH_P_8021Q || eth_type == ETH_P_8021AD) {
+                if (eth_type == bpf_htons(ETH_P_8021Q) || eth_type == bpf_htons(ETH_P_8021AD)) {
                     struct vlan_hdr *vlan_hdr;
             
                     vlan_hdr = (void *)eth + offset;
@@ -82,8 +77,8 @@ public abstract class XDPPackageFilter extends BPFProgram implements Runnable {
                     eth_type = vlan_hdr->h_vlan_encapsulated_proto;
                 }
             
-                /* let's only handle IPv4 addresses and ignore ARP packages */
-                if (eth_type == ETH_P_IPV6 || eth_type == ETH_P_ARP) {
+                /* let's only handle IPv4 addresses */
+                if (eth_type != bpf_htons(ETH_P_IP)) {
                     return XDP_PASS;
                 }
             
@@ -100,10 +95,7 @@ public abstract class XDPPackageFilter extends BPFProgram implements Runnable {
                 if (!ret) {
                     return XDP_PASS;
                 }
-                if (*(s8*)ret) { // log if requested
-                    bpf_printk("IP source address: %d.%d.%d.%d", (ip_src >> 0) & 0xff, (ip_src >> 8) & 0xff, (ip_src >> 16) & 0xff, (ip_src >> 24) & 0xff);
-                }
-            
+                
                 // count the number of blocked packages
                 s32* counter = bpf_map_lookup_elem(&blockingStats, &ip_src);
                 if (counter) {
@@ -165,7 +157,7 @@ public abstract class XDPPackageFilter extends BPFProgram implements Runnable {
     }
 
     public static void main(String[] args) {
-        try (XDPPackageFilter program = BPFProgram.load(XDPPackageFilter.class)) {
+        try (XDPPacketFilter program = BPFProgram.load(XDPPacketFilter.class)) {
             var cmd = new CommandLine(program);
             cmd.parseArgs(args);
             if (cmd.isUsageHelpRequested()) {

@@ -449,6 +449,9 @@ public class Processor extends AbstractProcessor {
             while (code.generatedLines.contains(genIndex)) {
                 genIndex++;
             }
+            if (genIndex >= strippedLinesInGeneratedEBPFProgram.size()) {
+                break;
+            }
             String strippedGenLine = strippedLinesInGeneratedEBPFProgram.get(genIndex);
             int newSourceIndex = strippedLinesInSourceFile.subList(sourceIndex, strippedLinesInSourceFile.size())
                     .indexOf(strippedGenLine) + sourceIndex;
