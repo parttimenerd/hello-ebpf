@@ -99,7 +99,11 @@ public abstract class XDPPacketFilter extends BPFProgram implements Runnable {
                 // count the number of blocked packages
                 s32* counter = bpf_map_lookup_elem(&blockingStats, &ip_src);
                 if (counter) {
-                    *counter += 1;
+                    // use atomics to prevent a race condition when a packet
+                    // from the same IP address is received on two
+                    // different cores at the same time
+                    // (thanks Dylan Reimerink for catching this bug)
+                    __sync_fetch_and_add(counter, 1);
                 } else {
                     u64 value = 1;
                     bpf_map_update_elem(&blockingStats, &ip_src, &value, BPF_ANY);
