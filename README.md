@@ -191,6 +191,8 @@ Posts covering the development of this project:
 - Feb 26, 2024: [Hello eBPF: First steps with libbpf (5)](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/)
 - Mar 12, 2024: [Hello eBPF: Ring buffers in libbpf (6)](https://mostlynerdless.de/blog/2024/03/12/hello-ebpf-ring-buffers-in-libbpf-6/)
 - Mar 22, 2024: [Hello eBPF: Auto Layouting Structs (7)](https://mostlynerdless.de/blog/2024/03/22/hello-ebpf-auto-layouting-structs-7/)
+- Apr 09, 2024: [Hello eBPF: Generating C Code (8)](https://mostlynerdless.de/blog/2024/04/09/hello-ebpf-generating-c-code-8/)
+- Apr 22, 2024: [Hello eBPF: XDP-based Packet Filter (9)](https://mostlynerdless.de/blog/2024/04/22/hello-ebpf-xdp-based-packet-filter-9/)
 
 Examples
 --------
