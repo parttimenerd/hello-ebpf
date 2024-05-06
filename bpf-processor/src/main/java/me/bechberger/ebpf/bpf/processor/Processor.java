@@ -253,8 +253,15 @@ public class Processor extends AbstractProcessor {
     private @Nullable CombinedCode combineEBPFProgram(TypeElement outer, VariableElement field, String ebpfProgram, TypeProcessorResult tpResult) {
         Map<Integer, Integer> codeLineMapping = new HashMap<>(); // line number in generated -> original line number
 
-        var lines = ebpfProgram.lines().toList();
-        var lastInclude = IntStream.range(0, lines.size()).filter(i -> lines.get(i).startsWith("#include")).max().orElse(-1);
+        var unstrippedLines = ebpfProgram.lines().toList();
+        var lastInclude = IntStream.range(0, unstrippedLines.size()).filter(i -> unstrippedLines.get(i).contains("#include")).max().orElse(-1);
+        List<String> lines;
+        if (lastInclude != -1) {
+            var ws = unstrippedLines.get(lastInclude).split("#include")[0];
+            lines = unstrippedLines.stream().map(l -> l.startsWith(ws) ? l.substring(ws.length()) : l).toList();
+        } else {
+            lines = unstrippedLines;
+        }
         var resultLines = new ArrayList<>(lines.subList(0, lastInclude + 1));
         if (lastInclude != -1) {
             IntStream.range(0, lastInclude + 1).forEach(i -> codeLineMapping.put(i, i));

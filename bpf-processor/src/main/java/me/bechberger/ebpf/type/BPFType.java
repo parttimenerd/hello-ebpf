@@ -210,6 +210,73 @@ public sealed interface BPFType<T> {
         return arena.allocate(layout());
     }
 
+    record WrappedBPFType<T>(BPFType<T> type, long alignment) implements BPFType<T> {
+
+            public WrappedBPFType(BPFType<T> type) {
+                this(type, (int) type.alignment());
+            }
+
+            public WrappedBPFType<T> alignTo(int bytes) {
+                return new WrappedBPFType<>(type, bytes);
+            }
+
+            public MemoryLayout layout() {
+                return type.layout().withByteAlignment(alignment);
+            }
+
+            public MemoryParser<T> parser() {
+                return type.parser();
+            }
+
+            public MemorySetter<T> setter() {
+                return type.setter();
+            }
+
+            public long size() {
+                return padSize(type.size(), alignment);
+            }
+
+            public String bpfName() {
+                return type.bpfName();
+            }
+
+            public AnnotatedClass javaClass() {
+                return type.javaClass();
+            }
+
+            public String toJavaUse() {
+                return type.toJavaUse();
+            }
+
+            public String toJavaUseInGenerics() {
+                return type.toJavaUseInGenerics();
+            }
+
+            public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+                return type.toJavaFieldSpecUse(typeToSpecFieldName);
+            }
+
+            public Optional<? extends CAST> toCDeclaration() {
+                return type.toCDeclaration();
+            }
+
+            public Optional<? extends CAST.Statement> toCDeclarationStatement() {
+                return type.toCDeclarationStatement();
+            }
+
+            public CAST.Declarator toCUse() {
+                return type.toCUse();
+            }
+
+            public Optional<BiFunction<String, Function<BPFType<?>, String>, FieldSpec>> toFieldSpecGenerator() {
+                return type.toFieldSpecGenerator();
+            }
+    }
+
+    default WrappedBPFType<T> alignTo(int bytes) {
+        return new WrappedBPFType<>(this).alignTo(bytes);
+    }
+
     /**
      * Integer
      */

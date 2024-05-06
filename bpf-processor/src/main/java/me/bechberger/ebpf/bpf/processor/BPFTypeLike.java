@@ -23,6 +23,8 @@ sealed interface BPFTypeLike<T> {
 
     BPFName getBPFName();
 
+    String getBPFNameWithStructPrefixIfNeeded();
+
     String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName);
 
     static <T> BPFTypeLike<T> of(BPFType<T> type) {
@@ -64,6 +66,11 @@ sealed interface BPFTypeLike<T> {
         @Override
         public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
             return type.toJavaFieldSpecUse(typeToSpecFieldName);
+        }
+
+        @Override
+        public String getBPFNameWithStructPrefixIfNeeded() {
+            return type instanceof BPFStructType<?> structType ? "struct " + structType.bpfName() : type.bpfName();
         }
     }
 

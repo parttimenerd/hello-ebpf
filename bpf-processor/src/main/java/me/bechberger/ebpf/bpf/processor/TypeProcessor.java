@@ -562,11 +562,11 @@ class TypeProcessor {
     String processBPFClassTemplate(String template, List<BPFTypeLike<?>> typeParams, int maxEntries, String fieldName,
                                    String className, Function<BPFTypeLike<?>, SpecFieldName> typeToSpecFieldName) {
         var classNames = typeParams.stream().map(BPFTypeLike::getJavaName).map(JavaName::toString).toList();
-        var cTypeNames = typeParams.stream().map(BPFTypeLike::getBPFName).toList();
+        var cTypeNames = typeParams.stream().map(BPFTypeLike::getBPFNameWithStructPrefixIfNeeded).toList();
         var bFields = typeParams.stream().map(t -> t.toJavaFieldSpecUse(tm -> typeToSpecFieldName.apply(BPFTypeLike.of(tm)).name())).toList();
         String res = template;
         for (int i = typeParams.size(); i > 0; i--) {
-            res = res.replace("$c" + i, cTypeNames.get(i - 1).name())
+            res = res.replace("$c" + i, cTypeNames.get(i - 1))
                     .replace("$j" + i, classNames.get(i - 1))
                     .replace("$b" + i, bFields.get(i - 1));
         }
