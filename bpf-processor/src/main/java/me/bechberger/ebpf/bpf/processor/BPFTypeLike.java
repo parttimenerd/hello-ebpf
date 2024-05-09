@@ -5,6 +5,7 @@ import me.bechberger.ebpf.bpf.processor.DefinedTypes.BPFName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.JavaName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.SpecFieldName;
 import me.bechberger.ebpf.type.BPFType;
+import me.bechberger.ebpf.type.BPFType.BPFArrayType;
 import me.bechberger.ebpf.type.BPFType.BPFStructType;
 import me.bechberger.ebpf.type.BPFType.CustomBPFType;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +28,8 @@ sealed interface BPFTypeLike<T> {
 
     String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName);
 
+    String toJavaUse();
+
     static <T> BPFTypeLike<T> of(BPFType<T> type) {
         return switch (type) {
             case BPFType.BPFStructType<T> structType -> new TypeBackedBPFStructType<>(structType);
@@ -34,7 +37,7 @@ sealed interface BPFTypeLike<T> {
         };
     }
 
-    sealed class TypeBackedBPFTypeLike<T> implements BPFTypeLike<T> {
+    public sealed class TypeBackedBPFTypeLike<T> implements BPFTypeLike<T> {
 
         final BPFType<T> type;
 
@@ -44,18 +47,23 @@ sealed interface BPFTypeLike<T> {
 
         @Override
         public @Nullable DefinedTypes.SpecFieldName getSpecFieldName(DefinedTypes types) {
-            return types.getSpecFieldName(new BPFName(type.bpfName())).get();
+            return types.getSpecFieldName(new BPFName(type.bpfName())).orElseThrow(() -> new IllegalStateException("No spec field name for " + type.bpfName()));
         }
 
         @Override
         public CustomBPFType<T> toCustomType() {
-            return new CustomBPFType<>(getJavaName().name(), type.bpfName(), type::toCUse, type::toJavaFieldSpecUse,
+            return new CustomBPFType<>(getJavaName().name(), toJavaUse(), type.bpfName(), type::toCUse, type::toJavaFieldSpecUse,
                     type::toCDeclarationStatement);
         }
 
         @Override
         public JavaName getJavaName() {
             return new JavaName(type);
+        }
+
+        @Override
+        public String toJavaUse() {
+            return type.toJavaUse();
         }
 
         @Override
@@ -70,7 +78,7 @@ sealed interface BPFTypeLike<T> {
 
         @Override
         public String getBPFNameWithStructPrefixIfNeeded() {
-            return type instanceof BPFStructType<?> structType ? "struct " + structType.bpfName() : type.bpfName();
+            return type.toCUse().toPrettyString();
         }
     }
 

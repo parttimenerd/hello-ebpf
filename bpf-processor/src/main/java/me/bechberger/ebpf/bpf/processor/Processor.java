@@ -1,9 +1,6 @@
 package me.bechberger.ebpf.bpf.processor;
 
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.*;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Statement.Define;
 import me.bechberger.ebpf.bpf.processor.TypeProcessor.TypeProcessorResult;
@@ -174,8 +171,9 @@ public class Processor extends AbstractProcessor {
      */
     private TypeSpec createType(String name, TypeMirror baseType, byte[] byteCode, List<FieldSpec> bpfTypeFields,
                                 CombinedCode code) {
+        var suppressWarnings = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "{\"unchecked\", \"rawtypes\"}").build();
         var spec =
-                TypeSpec.classBuilder(name).superclass(baseType).addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                TypeSpec.classBuilder(name).addAnnotation(suppressWarnings).superclass(baseType).addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                         .addField(FieldSpec.builder(String.class, "BYTE_CODE", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                                 .addJavadoc("Base64 encoded and gzipped eBPF byte-code of the program\n{@snippet : \n" + sanitizeCodeForJavadoc(code.ebpfProgram) + "\n}")
                                 .initializer("$S", gzipBase64Encode(byteCode)).build());

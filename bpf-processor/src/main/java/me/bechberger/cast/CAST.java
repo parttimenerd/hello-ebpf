@@ -1,6 +1,7 @@
 package me.bechberger.cast;
 
 import me.bechberger.cast.CAST.Declarator.ArrayDeclarator;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -531,7 +532,7 @@ public interface CAST {
             }
         }
 
-        record ArrayDeclarator(Declarator declarator, @Nullable Expression size) implements Declarator {
+        record ArrayDeclarator(Declarator declarator, Expression size) implements Declarator {
             @Override
             public List<? extends Expression> children() {
                 return size == null ? List.of(declarator) : List.of(declarator, size);
@@ -539,12 +540,22 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + declarator.toPrettyString() + (size == null ? "[]" : "[" + size.toPrettyString() + "]");
+                return toPrettyVariableDefinition(null, indent);
             }
 
-            public String toPrettyVariableDefinition(Expression name, String indent) {
-                return indent + declarator.toPrettyString() + " " + name.toPrettyString() +
-                        (size == null ? "[]" : "[" + size.toPrettyString() + "]");
+            public String toPrettyVariableDefinition(@Nullable Expression name, String indent) {
+                List<String> sizes = new ArrayList<>();
+                CAST cur = this;
+                while (cur instanceof ArrayDeclarator arr) {
+                    sizes.add(((ArrayDeclarator) cur).sizeBracket());
+                    cur = arr.declarator;
+                }
+                return indent + cur.toPrettyString() + (name != null ? " " + name.toPrettyString() : "") +
+                        String.join("", sizes);
+            }
+
+            private @NotNull String sizeBracket() {
+                return size == null ? "[]" : "[" + size.toPrettyString() + "]";
             }
         }
 

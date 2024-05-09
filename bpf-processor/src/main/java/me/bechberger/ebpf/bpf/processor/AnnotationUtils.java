@@ -3,6 +3,8 @@ package me.bechberger.ebpf.bpf.processor;
 import javax.lang.model.AnnotatedConstruct;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.VariableElement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -10,6 +12,7 @@ import java.util.stream.Collectors;
 class AnnotationUtils {
 
     public final static String SIZE_ANNOTATION = "me.bechberger.ebpf.annotations.Size";
+    public final static String SIZES_ANNOTATION = "me.bechberger.ebpf.annotations.Sizes";
     public final static String UNSIGNED_ANNOTATION = "me.bechberger.ebpf.annotations.Unsigned";
 
     /**
@@ -34,24 +37,32 @@ class AnnotationUtils {
         return getAnnotationMirror(element, annotationName).isPresent();
     }
 
-    record AnnotationValues(boolean unsigned, Optional<Integer> size) {
+    record AnnotationValues(boolean unsigned, List<Integer> size) {
+        AnnotationValues dropSize() {
+            return new AnnotationValues(unsigned, size.subList(1, size.size()));
+        }
     }
 
     static AnnotationValues getAnnotationValuesForRecordMember(VariableElement element) {
         return getAnnotationValuesForRecordMember(element.asType());
     }
 
+    @SuppressWarnings("unchecked")
     static AnnotationValues getAnnotationValuesForRecordMember(AnnotatedConstruct element) {
         boolean unsigned = hasAnnotation(element, UNSIGNED_ANNOTATION);
-        Optional<Integer> size = Optional.empty();
-        Optional<String> bpfType = Optional.empty();
+        List<Integer> sizes = new ArrayList<>();
         var sizeAnnotation = getAnnotationMirror(element, SIZE_ANNOTATION);
         if (sizeAnnotation.isPresent()) {
             var value = sizeAnnotation.get().getElementValues().entrySet().stream().findFirst();
             if (value.isPresent()) {
-                size = Optional.of((Integer) value.get().getValue().getValue());
+                sizes = new ArrayList<>(List.of((Integer) value.get().getValue().getValue()));
             }
         }
-        return new AnnotationValues(unsigned, size);
+        var sizesAnnotation = getAnnotationMirror(element, SIZES_ANNOTATION);
+        if (sizesAnnotation.isPresent()) {
+            sizes.addAll(((List<AnnotationMirror>)sizesAnnotation.get().getElementValues().values().stream()
+                    .findFirst().get().getValue()).stream().map(a -> getAnnotationValue(a, "value", -1)).toList());
+        }
+        return new AnnotationValues(unsigned, sizes);
     }
 }

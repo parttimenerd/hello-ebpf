@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static me.bechberger.ebpf.bpf.TypeProcessingTest.SimpleRecordTestProgram.ARRAY_SIZE;
+import static me.bechberger.ebpf.bpf.TypeProcessingTest.SimpleRecordTestProgram.STRING_SIZE;
 import static me.bechberger.ebpf.type.BPFType.BPFIntType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -69,6 +71,27 @@ public class TypeProcessingTest {
 
         @Type
         record RecordWithCustomType(IntPair pair) {}
+
+        static final int ARRAY_SIZE = 11;
+        static final int STRING_SIZE = 12;
+
+        @Type
+        record RecordWithIntArray(@Size(ARRAY_SIZE) int[] values) {
+        }
+
+        // alignment of 4
+        @Type
+        record SimpleRecord2(@Unsigned int a, byte b) {
+        }
+
+        // alignment of 4, padding between elements
+        @Type
+        record RecordWithOtherTypeArray(@Size(ARRAY_SIZE) SimpleRecord2[] values) {
+        }
+
+        @Type
+        record RecordWithStringArray(@Size(ARRAY_SIZE) @Size(STRING_SIZE) String[] values) {
+        }
     }
 
     @Type
@@ -183,5 +206,52 @@ public class TypeProcessingTest {
         assertEquals(4, type.size());
         assertEquals("value", type.members().getFirst().name());
         assertEquals(INT32, type.members().getFirst().type());
+    }
+
+    @Test
+    public void testRecordWithIntArray() {
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.RecordWithIntArray.class);
+        assertEquals(ARRAY_SIZE * 4, type.size());
+        assertEquals(ARRAY_SIZE * 4, type.getMember("values").type().size());
+        assertEquals(4, type.getMember("values").type().alignment());
+        assertEquals(4, type.alignment());
+        assertEquals(INT32, ((BPFArrayType<?>)type.getMember("values").type()).memberType());
+        assertEquals("""
+                struct RecordWithIntArray {
+                  s32 values[$s];
+                };
+                """.replace("$s", "" + ARRAY_SIZE).trim(),
+                type.toCDeclarationStatement().get().toPrettyString());
+    }
+
+    @Test
+    public void testRecordWithOtherTypeArray() {
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.RecordWithOtherTypeArray.class);
+        assertEquals(ARRAY_SIZE * 8, type.size());
+        assertEquals(ARRAY_SIZE * 8, type.getMember("values").type().size());
+        assertEquals(4, type.getMember("values").type().alignment());
+        assertEquals(4, type.alignment());
+        assertEquals("""
+                struct RecordWithOtherTypeArray {
+                  struct SimpleRecord2 values[$s];
+                };
+                """.replace("$s", "" + ARRAY_SIZE).trim(),
+                type.toCDeclarationStatement().get().toPrettyString());
+    }
+
+    @Test
+    public void testRecordWithStringArray() {
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.RecordWithStringArray.class);
+        assertEquals(ARRAY_SIZE * STRING_SIZE, type.size());
+        assertEquals(ARRAY_SIZE * STRING_SIZE, type.getMember("values").type().size());
+        assertEquals("""
+                struct RecordWithStringArray {
+                  char values[$a][$s];
+                };
+                """.replace("$s", "" + STRING_SIZE).replace("$a", "" + ARRAY_SIZE).trim(),
+                type.toCDeclarationStatement().get().toPrettyString());
     }
 }

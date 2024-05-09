@@ -33,6 +33,17 @@ public class XDPUtil {
         return bytes[3] << 24 | (bytes[2] & 0xFF) << 16 | (bytes[1] & 0xFF) << 8 | (bytes[0] & 0xFF);
     }
 
+    public static int ipAddressToInt(String addr) {
+        if (addr.matches("\\d+\\.\\d+\\.\\d+\\.\\d+")) {
+            return ipAddressToInt(InetAddress.ofLiteral(addr));
+        }
+        try {
+            return ipAddressToInt(InetAddress.getByName(addr));
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static InetAddress intToIpAddress(int addr) {
         byte[] bytes = new byte[4];
         bytes[0] = (byte) (addr & 0xFF);
@@ -62,5 +73,14 @@ public class XDPUtil {
                 System.out.println("Error: " + e.getMessage());
             }
         }).start();
+    }
+
+    public static String openURL(String url) {
+        try {
+            URLConnection connection = URL.of(URI.create("https://" + url), null).openConnection();
+            return new String(connection.getInputStream().readAllBytes());
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
     }
 }

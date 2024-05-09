@@ -1123,7 +1123,7 @@ public class BPFTable<K, V> {
             }
 
             PerCPUHash(BPF bpf, MapTypeId typeId, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> innerType, String name, @Nullable Function<List<V>, V> reducer) {
-                super(bpf, typeId, mapId, mapFd, keyType, createLeafType(innerType, Util.getPossibleCPUs().size()), name);
+                super(bpf, typeId, mapId, mapFd, keyType, null/*createLeafType(innerType, Util.getPossibleCPUs().size())*/, name);
                 this.reducer = reducer;
                 this.totalCPUs = Util.getPossibleCPUs();
                 this.innerType = innerType;
@@ -1148,20 +1148,6 @@ public class BPFTable<K, V> {
 
         public LRUPerCPUHash(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> innerType, String name, Function<List<V>, V> reducer) {
             super(bpf, MapTypeId.LRU_PERCPU_HASH, mapId, mapFd, keyType, innerType, name, reducer);
-        }
-    }
-
-    public static class PerCPUArray<K, V> extends ArrayBase<K, List<V>> {
-
-        private final @Nullable Function<List<V>, V> reducer;
-        public PerCPUArray(BPF bpf, long mapId, int mapFd, BPFType<K> keyType, BPFType<V> innerType, String name, @Nullable Function<List<V>, V> reducer) {
-            super(bpf, MapTypeId.PERCPU_ARRAY, mapId, mapFd, keyType, PerfEventArray.PerCPUHash.createLeafType(innerType, Util.getPossibleCPUs().size()), name);
-            this.reducer = reducer;
-        }
-
-        public V getReduced(K key) {
-            assert reducer != null;
-            return reducer.apply(get(key));
         }
     }
 

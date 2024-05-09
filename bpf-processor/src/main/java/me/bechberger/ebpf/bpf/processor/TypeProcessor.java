@@ -3,21 +3,27 @@ package me.bechberger.ebpf.bpf.processor;
 import com.squareup.javapoet.FieldSpec;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
+import me.bechberger.cast.CAST.PrimaryExpression.Variable;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils.AnnotationValues;
+import me.bechberger.ebpf.bpf.processor.BPFTypeLike.TypeBackedBPFTypeLike;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.BPFName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.JavaName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.SpecFieldName;
 import me.bechberger.ebpf.bpf.processor.BPFTypeLike.TypeBackedBPFStructType;
 import me.bechberger.ebpf.type.BPFType;
+import me.bechberger.ebpf.type.BPFType.BPFArrayType;
 import me.bechberger.ebpf.type.BPFType.CustomBPFType;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static me.bechberger.cast.CAST.Expression.constant;
@@ -236,8 +242,8 @@ class TypeProcessor {
         if (annotation.isEmpty()) {
             annotation = getAnnotationMirror(typeElement, "me.bechberger.ebpf.annotations.bpf.CustomType");
         }
-        assert annotation.isPresent();
-        return new BPFName(getAnnotationValue(annotation.get(), "name", typeElement.getSimpleName().toString()));
+        return new BPFName(annotation.flatMap(a -> Optional.ofNullable(getAnnotationValue(a, "name", (String)null)))
+                .orElse(typeElement.getSimpleName().toString()));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -314,6 +320,12 @@ class TypeProcessor {
 
     private Optional<BPFTypeMirror> processBPFTypeRecordMemberType(Element element, AnnotationValues annotations,
                                                                    TypeMirror type) {
+        if (type.getKind() == TypeKind.ARRAY) {
+            return processArrayType(element,
+                    AnnotationUtils.getAnnotationValuesForRecordMember(((ArrayType)type).getComponentType()),
+                    (ArrayType)type);
+        }
+
         if (isIntegerType(type)) {
             return processIntegerType(element, annotations, type).map(tp -> (t -> BPFTypeLike.of(tp)));
         }
@@ -323,14 +335,29 @@ class TypeProcessor {
         var typeElement = (TypeElement) processingEnv.getTypeUtils().asElement(type);
 
         System.out.println("Type " + typeElement.getSimpleName());
-         if (isTypeAnnotatedRecord(typeElement)) {
-            return processDefinedType(element, annotations, type);
-        }
         if (isCustomTypeAnnotatedRecord(typeElement)) {
             return processCustomType(element, annotations, type);
         }
+         if (isTypeAnnotatedRecord(typeElement) || true) {
+            return processDefinedType(element, annotations, type);
+        }
         this.processingEnv.getMessager().printError("Unsupported type " + type, element);
         return Optional.empty();
+    }
+
+    private Optional<BPFTypeMirror> processArrayType(Element element, AnnotationValues annotations, ArrayType type) {
+        System.out.println("Array type " + type);
+        if (annotations.size().isEmpty()) {
+            this.processingEnv.getMessager().printError("Size annotation required for array types", element);
+            return Optional.empty();
+        }
+        var innerType = processBPFTypeRecordMemberType(element, annotations.dropSize(), type.getComponentType());
+        if (innerType.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(nameToCustomType -> new TypeBackedBPFTypeLike<>(BPFType.BPFArrayType.of(
+                innerType.get().toBPFType(nameToCustomType).toCustomType(), annotations.size().getFirst())));
     }
 
     @FunctionalInterface
@@ -340,7 +367,7 @@ class TypeProcessor {
     }
 
     private Optional<BPFType<?>> processIntegerType(Element element, AnnotationValues annotations, TypeMirror type) {
-        if (annotations.size().isPresent()) {
+        if (!annotations.size().isEmpty()) {
             // annotation not supported for integer types and log
             this.processingEnv.getMessager().printError("Size annotation not supported for integer types", element);
             return Optional.empty();
@@ -377,7 +404,7 @@ class TypeProcessor {
             this.processingEnv.getMessager().printError("Unsigned annotation not supported for string types", element);
             return Optional.empty();
         }
-        return Optional.of(t -> BPFTypeLike.of(new BPFType.StringType(annotations.size().get())));
+        return Optional.of(t -> BPFTypeLike.of(new BPFType.StringType(annotations.size().getFirst())));
     }
 
     private Optional<BPFTypeMirror> processDefinedType(Element element, AnnotationValues annotations, TypeMirror type) {
@@ -391,7 +418,7 @@ class TypeProcessor {
     }
 
     private boolean checkAnnotatedType(Element element, AnnotationValues annotations) {
-        if (annotations.size().isPresent()) {
+        if (!annotations.size().isEmpty()) {
             this.processingEnv.getMessager().printError("Size annotation not supported for defined types", element);
             return false;
         }
@@ -420,7 +447,6 @@ class TypeProcessor {
 
     private void addCustomType(TypeElement typeElement) {
         var optAnn = getAnnotationMirror(typeElement, "me.bechberger.ebpf.annotations.bpf.CustomType");
-        assert optAnn.isPresent();
         var javaName = new JavaName(typeElement);
         var bpfName = new BPFName(getAnnotationValue(optAnn.get(), "name", typeElement.getSimpleName().toString()));
         var fieldNameString = getAnnotationValue(optAnn.get(), "specFieldName", "").replace("$class", javaName.name());
@@ -436,7 +462,7 @@ class TypeProcessor {
         var isStruct = getAnnotationValue(optAnn.get(), "isStruct", false);
         var cCode = getAnnotationValue(optAnn.get(), "cCode", "").replace("$name", bpfName.name());
         definedTypes.insertType(typeElement, bpfName, fieldName);
-        usedCustomBPFTypes.add(new CustomBPFType<>(javaName.name(), bpfName.name(), () -> {
+        usedCustomBPFTypes.add(new CustomBPFType<>(javaName.name(), javaName.name(), bpfName.name(), () -> {
             return isStruct ? Declarator.structIdentifier(variable(bpfName.name())) : Declarator.identifier(bpfName.name());
         },  f -> fieldName.name(), () -> cCode.isEmpty() ? Optional.<Statement>empty() : Optional.of(verbatim(cCode))));
     }
@@ -505,9 +531,11 @@ class TypeProcessor {
         // get generic type members
         var typeParams = declaredType.getTypeArguments().stream()
                 .map(t -> processBPFTypeRecordMemberType(field, getAnnotationValuesForRecordMember(t), t)
-                        .map(m -> m.toBPFType(mt -> fieldToType.apply(definedTypes.nameToSpecFieldName(definedTypes.nameToBPFName(mt)))))).toList();
+                        .map(m -> m.toBPFType(mt -> fieldToType.apply(definedTypes.nameToSpecFieldName(definedTypes.nameToBPFName(mt)))))
+                ).toList();
         if (typeParams.stream().anyMatch(Optional::isEmpty)) {
-            this.processingEnv.getMessager().printError("Type parameters must be valid", field);
+            List<? extends TypeMirror> problematicFields = IntStream.range(0, typeParams.size()).filter(i -> typeParams.get(i).isEmpty()).mapToObj(i -> declaredType.getTypeArguments().get(i)).toList();
+            this.processingEnv.getMessager().printError("Type parameters must be valid: " + problematicFields.stream().map(TypeMirror::toString).collect(Collectors.joining(", ")) + " is not, maybe you missed an @Type annotation", field);
             return null;
         }
         List<BPFTypeLike<?>> typeParameters = (List<BPFTypeLike<?>>) (List) typeParams.stream().map(Optional::get).toList();

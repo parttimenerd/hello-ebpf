@@ -40,7 +40,7 @@ public sealed interface BPFType<T> {
     String BPF_TYPE = BPF_PACKAGE + ".BPFType";
 
     /** Used in the type processor */
-    record CustomBPFType<T>(String javaName, String bpfName, Supplier<Declarator> cUse, Function<Function<BPFType<?>, String>, String> specFieldNameCreator, Supplier<Optional<? extends Statement>> cDeclaration) implements BPFType<T> {
+    record CustomBPFType<T>(String javaName, String javaUse, String bpfName, Supplier<Declarator> cUse, Function<Function<BPFType<?>, String>, String> specFieldNameCreator, Supplier<Optional<? extends Statement>> cDeclaration) implements BPFType<T> {
 
         @Override
         public MemoryLayout layout() {
@@ -79,7 +79,7 @@ public sealed interface BPFType<T> {
 
         @Override
         public String toJavaUse() {
-            return javaName;
+            return javaUse;
         }
 
         @Override
@@ -746,7 +746,7 @@ public sealed interface BPFType<T> {
                                 ")").collect(Collectors.joining(", "));
                 ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
                 String creatorExpr = IntStream.range(0, members.size()).mapToObj(i -> "(" + members.get(i).type.toJavaUse() + ")" + "fields.get(" + i + ")").collect(Collectors.joining(", "));
-                return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC, Modifier.PUBLIC)
+                return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC)
                         .initializer("$T.autoLayout($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " +
                                 "java.util.List" + ".of()" + "), " + "fields -> new $T($L))", bpfStructType, bpfName,
                                 memberExpression, bpfType, ClassName.get("", className), ClassName.get("", className), creatorExpr).build();
@@ -767,7 +767,7 @@ public sealed interface BPFType<T> {
     /**
      * Array mapped to {@code List}
      */
-    record BPFArrayType<E>(String bpfName, BPFType<E> memberType, int length) implements BPFType<List<E>> {
+    record BPFArrayType<E>(String bpfName, BPFType<E> memberType, int length) implements BPFType<E[]> {
 
         @Override
         public MemoryLayout layout() {
@@ -783,19 +783,21 @@ public sealed interface BPFType<T> {
             }
         }
 
+        @SuppressWarnings("unchecked")
         @Override
-        public MemoryParser<List<E>> parser() {
-            return segment -> IntStream.range(0, length).mapToObj(i -> memberType.parseMemory(segment.asSlice(i * memberType.size()))).toList();
+        public MemoryParser<E[]> parser() {
+            return segment -> (E[])IntStream.range(0, length).mapToObj(i ->
+                    memberType.parseMemory(segment.asSlice(i * memberType.size()))).toArray();
         }
 
         @Override
-        public MemorySetter<List<E>> setter() {
+        public MemorySetter<E[]> setter() {
             return (segment, list) -> {
-                if (list.size() != length) {
+                if (list.length != length) {
                     throw new IllegalArgumentException("Array must have length " + length);
                 }
                 for (int i = 0; i < length; i++) {
-                    memberType.setMemory(segment.asSlice(i * memberType.size()), list.get(i));
+                    memberType.setMemory(segment.asSlice(i * memberType.sizePadded()), list[i]);
                 }
             };
         }
@@ -807,7 +809,7 @@ public sealed interface BPFType<T> {
 
         @Override
         public AnnotatedClass javaClass() {
-            return new AnnotatedClass(List.class, List.of(AnnotationInstances.size(length)));
+            return new AnnotatedClass(memberType.toJavaUse() + "[]", List.of(AnnotationInstances.size(length)));
         }
 
         public long getOffsetAtIndex(int index) {
@@ -830,12 +832,12 @@ public sealed interface BPFType<T> {
 
         @Override
         public String toJavaUse() {
-            return "java.util.List<" + memberType.toJavaUseInGenerics() + ">";
+            return memberType.toJavaUseInGenerics() + "[]";
         }
 
         @Override
         public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
-            return "new " + BPF_TYPE + ".BPFArrayType<>(\""+ bpfName + "\", " + typeToSpecFieldName.apply(memberType) + ", " + length + ")";
+            return "(BPFType)new " + BPF_TYPE + ".BPFArrayType<>(\""+ bpfName + "\", " + memberType.toJavaFieldSpecUse(typeToSpecFieldName) + ", " + length + ")";
         }
     }
 

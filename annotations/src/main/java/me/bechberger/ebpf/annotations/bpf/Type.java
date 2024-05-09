@@ -23,6 +23,7 @@ import java.lang.annotation.Target;
  *     <li>integer types (int, long, ...), optionally annotated with {@link Unsigned} if unsigned</li>
  *     <li>String types, annotated with {@link Size} to specify the size</li>
  *     <li>Other {@link Type} annotated types</li>
+ *     <li>Arrays of all of the above, annotated with {@link Size} to specify the size</li>
  * </ul>
  */
 @Target(ElementType.TYPE)
