@@ -7,6 +7,7 @@ import me.bechberger.ebpf.annotations.bpf.CustomType;
 import me.bechberger.ebpf.annotations.bpf.Type;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.type.BPFType.BPFStructType;
+import me.bechberger.ebpf.type.Ptr;
 import me.bechberger.ebpf.type.Struct;
 import me.bechberger.ebpf.type.Union;
 import org.junit.jupiter.api.Test;
@@ -117,6 +118,28 @@ public class TypeProcessingTest {
         @Type
         static class ClassRecordWithoutStruct {
             int a;
+        }
+
+        @Type
+        static class ClassWithPointer {
+            Ptr<SimpleRecord> recordPointer;
+            Ptr<@Unsigned Integer> intPointer;
+            Ptr<@Size(10) int[]> intArrayPointer;
+            Ptr<@Size(10) String> stringPointer;
+            Ptr<@Size(2) @Size(2) int[][]> intArrayArrayPointer;
+            Ptr<Ptr<SimpleRecord>> recordPointerPointer;
+            Ptr<@Size(2) Ptr<Integer>[]> intPointerArrayPointer;
+        }
+
+        @Type
+        static class UnionWithPointer extends Union {
+            Ptr<SimpleRecord> recordPointer;
+            Ptr<@Unsigned Integer> intPointer;
+            Ptr<@Size(10) int[]> intArrayPointer;
+            Ptr<@Size(10) String> stringPointer;
+            Ptr<@Size(2) @Size(2) int[][]> intArrayArrayPointer;
+            Ptr<Ptr<SimpleRecord>> recordPointerPointer;
+            Ptr<@Size(2) Ptr<Integer>[]> intPointerArrayPointer;
         }
     }
 
@@ -382,5 +405,39 @@ public class TypeProcessingTest {
             assertEquals(42, memory.get(ValueLayout.JAVA_INT, 0));
             assertEquals(record.a, type.parseMemory(memory).a);
         }
+    }
+
+    @Test
+    public void testClassWithPointer() {
+        var type = BPFProgram.getStructTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.ClassWithPointer.class);
+        assertEquals("""
+                struct ClassWithPointer {
+                  struct SimpleRecord *recordPointer;
+                  u32 *intPointer;
+                  s32 (*intArrayPointer)[10];
+                  char (*stringPointer)[10];
+                  s32 (*intArrayArrayPointer)[2][2];
+                  struct SimpleRecord **recordPointerPointer;
+                  s32* (*intPointerArrayPointer)[2];
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+    }
+
+    @Test
+    public void testUnionWithPointer() {
+        var type = BPFProgram.getUnionTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.UnionWithPointer.class);
+        assertEquals("""
+                union UnionWithPointer {
+                  struct SimpleRecord *recordPointer;
+                  u32 *intPointer;
+                  s32 (*intArrayPointer)[10];
+                  char (*stringPointer)[10];
+                  s32 (*intArrayArrayPointer)[2][2];
+                  struct SimpleRecord **recordPointerPointer;
+                  s32* (*intPointerArrayPointer)[2];
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
     }
 }

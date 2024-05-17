@@ -24,6 +24,8 @@ sealed interface BPFTypeLike<T> {
 
     String toJavaUse();
 
+    String toJavaUseInGenerics();
+
     static <T> BPFTypeLike<T> of(BPFType<T> type) {
         return switch (type) {
             case BPFType.BPFStructType<T> structType -> new TypeBackedBPFStructType<>(structType);
@@ -46,7 +48,7 @@ sealed interface BPFTypeLike<T> {
 
         @Override
         public CustomBPFType<T> toCustomType() {
-            return new CustomBPFType<>(getJavaName().name(), toJavaUse(), type.bpfName(), type::toCUse, type::toJavaFieldSpecUse,
+            return new CustomBPFType<>(getJavaName().name(), toJavaUse(), toJavaUseInGenerics(), type.bpfName(), type::toCUse, type::toJavaFieldSpecUse,
                     type::toCDeclarationStatement);
         }
 
@@ -58,6 +60,11 @@ sealed interface BPFTypeLike<T> {
         @Override
         public String toJavaUse() {
             return type.toJavaUse();
+        }
+
+        @Override
+        public String toJavaUseInGenerics() {
+            return type.toJavaUseInGenerics();
         }
 
         @Override

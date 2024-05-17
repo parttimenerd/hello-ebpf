@@ -1,6 +1,7 @@
 package me.bechberger.cast;
 
 import me.bechberger.cast.CAST.Declarator.ArrayDeclarator;
+import me.bechberger.cast.CAST.Declarator.Pointery;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -520,7 +521,11 @@ public interface CAST {
 
     sealed interface Declarator extends Expression {
 
-        record PointerDeclarator(Declarator declarator) implements Declarator {
+        interface Pointery {
+            String toPrettyVariableDefinition(@Nullable Expression name, String indent);
+        }
+
+        record PointerDeclarator(Declarator declarator) implements Declarator, Pointery {
             @Override
             public List<? extends Expression> children() {
                 return List.of(declarator);
@@ -528,11 +533,25 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "*" + declarator.toPrettyString();
+                return indent + declarator.toPrettyString() + "*";
+            }
+
+            @Override
+            public String toPrettyVariableDefinition(@Nullable Expression name, String indent) {
+                if (name == null) {
+                    return toPrettyString(indent, "");
+                }
+                if (declarator instanceof ArrayDeclarator arr) {
+                    return arr.toPrettyVariableDefinition(Expression.parenthesizedExpression(OperatorExpression.pointer(name)), indent);
+                }
+                if (declarator instanceof PointerDeclarator ptr) {
+                    return ptr.toPrettyVariableDefinition(OperatorExpression.pointer(name), indent);
+                }
+                return indent + declarator.toPrettyString() + " *" + name.toPrettyString();
             }
         }
 
-        record ArrayDeclarator(Declarator declarator, Expression size) implements Declarator {
+        record ArrayDeclarator(Declarator declarator, Expression size) implements Declarator, Pointery {
             @Override
             public List<? extends Expression> children() {
                 return size == null ? List.of(declarator) : List.of(declarator, size);
@@ -543,6 +562,7 @@ public interface CAST {
                 return toPrettyVariableDefinition(null, indent);
             }
 
+            @Override
             public String toPrettyVariableDefinition(@Nullable Expression name, String indent) {
                 List<String> sizes = new ArrayList<>();
                 CAST cur = this;
@@ -573,7 +593,7 @@ public interface CAST {
             @Override
             public String toPrettyString(String indent, String increment) {
                 if (ebpfSize == null) {
-                    if (declarator instanceof ArrayDeclarator arr) {
+                    if (declarator instanceof Pointery arr) {
                         return arr.toPrettyVariableDefinition(name, indent) + ";";
                     }
                     return declarator.toPrettyString(indent, increment) + " " + name.toPrettyString() + ";";
@@ -606,7 +626,7 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                if (declarator instanceof ArrayDeclarator arr) {
+                if (declarator instanceof Pointery arr) {
                     return arr.toPrettyVariableDefinition(name, indent) + ";";
                 }
                 return declarator.toPrettyString(indent, increment) + " " + name.toPrettyString() + ";";
@@ -679,6 +699,10 @@ public interface CAST {
 
         static Declarator pointer(Declarator declarator) {
             return new PointerDeclarator(declarator);
+        }
+
+        static Declarator voidPointer() {
+            return new PointerDeclarator(new IdentifierDeclarator(new PrimaryExpression.Variable("void")));
         }
 
         static Declarator array(Declarator declarator, @Nullable Expression size) {
@@ -762,7 +786,7 @@ public interface CAST {
             @Override
             public String toPrettyString(String indent, String increment) {
                 String app = value == null ? "" : " = " + value.toPrettyString();
-                if (type instanceof ArrayDeclarator arr) {
+                if (type instanceof Pointery arr) {
                     return arr.toPrettyVariableDefinition(Expression.variable(name.name), indent) + (name.annotations.length == 0 ? "" : " " + name.annotationsString()) + app + ";";
                 }
                 return type.toPrettyString(indent, increment) + " " + name.toPrettyString() + app + ";";

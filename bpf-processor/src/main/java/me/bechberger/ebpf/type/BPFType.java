@@ -6,13 +6,15 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Declarator;
-import me.bechberger.cast.CAST.Declarator.StructMember;
+import me.bechberger.cast.CAST.Declarator.Pointery;
 import me.bechberger.cast.CAST.Statement;
 import me.bechberger.ebpf.annotations.AnnotationInstances;
+import me.bechberger.ebpf.type.BPFType.BPFArrayType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.lang.model.element.Modifier;
+import javax.management.openmbean.ArrayType;
 import java.lang.annotation.Annotation;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemoryLayout;
@@ -26,6 +28,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.lang.foreign.ValueLayout.JAVA_BYTE;
 import static me.bechberger.cast.CAST.Declarator.identifier;
 import static me.bechberger.cast.CAST.Expression.variable;
 import static me.bechberger.ebpf.type.BPFType.BPFIntType.CHAR;
@@ -42,7 +45,7 @@ public sealed interface BPFType<T> {
     String BPF_TYPE = BPF_PACKAGE + ".BPFType";
 
     /** Used in the type processor */
-    record CustomBPFType<T>(String javaName, String javaUse, String bpfName, Supplier<Declarator> cUse, Function<Function<BPFType<?>, String>, String> specFieldNameCreator, Supplier<Optional<? extends Statement>> cDeclaration) implements BPFType<T> {
+    record CustomBPFType<T>(String javaName, String javaUse, String javaUseInGenerics, String bpfName, Supplier<Declarator> cUse, Function<Function<BPFType<?>, String>, String> specFieldNameCreator, Supplier<Optional<? extends Statement>> cDeclaration) implements BPFType<T> {
 
         @Override
         public MemoryLayout layout() {
@@ -82,6 +85,11 @@ public sealed interface BPFType<T> {
         @Override
         public String toJavaUse() {
             return javaUse;
+        }
+
+        @Override
+        public String toJavaUseInGenerics() {
+            return javaUseInGenerics;
         }
 
         @Override
@@ -319,13 +327,26 @@ public sealed interface BPFType<T> {
                 case "java.lang.Short" -> "short";
                 case "java.lang.Byte" -> "byte";
                 case "java.lang.Boolean" -> "boolean";
+                case "java.lang.Character" -> "char";
+                case "java.lang.Float" -> "float";
+                case "java.lang.Double" -> "double";
                 default -> javaClass().klass;
             };
         }
 
         @Override
         public String toJavaUseInGenerics() {
-            return javaClass.klass;
+            return switch (javaClass.klass) {
+                case "int" -> "Integer";
+                case "long" -> "Long";
+                case "short" -> "Short";
+                case "byte" -> "Byte";
+                case "boolean" -> "Boolean";
+                case "char" -> "Character";
+                case "float" -> "Float";
+                case "double" -> "Double";
+                default -> javaClass().klass;
+            };
         }
 
         @Override
@@ -787,10 +808,10 @@ public sealed interface BPFType<T> {
                 TypeName fieldType = ParameterizedTypeName.get(bpfStructType, ClassName.get("", className));
                 Function<BPFStructMember<?, ?>, String> accessor = m -> switch (sourceClassKind) {
                     case RECORD -> className + "::" + m.name();
-                    case CLASS, CLASS_WITH_CONSTRUCTOR -> "o -> o." + m.name;
+                    case CLASS, CLASS_WITH_CONSTRUCTOR -> "o -> (" + m.type().toJavaUseInGenerics() + ")(Object)o." + m.name;
                 };
                 String memberExpression =
-                        members.stream().map(m -> "new " + BPF_TYPE + ".UBPFStructMember<>(" + "\"" + m.name() + "\"," +
+                        members.stream().map(m -> "new " + BPF_TYPE + ".UBPFStructMember<" + className + ", " + m.type().toJavaUseInGenerics() + ">(" + "\"" + m.name() + "\"," +
                                 " " + typeToSpecName.apply(m.type()) + ", " + accessor.apply(m) +
                                 ")").collect(Collectors.joining(", "));
 
@@ -828,7 +849,7 @@ public sealed interface BPFType<T> {
     }
 
     /**
-     * Array mapped to {@code List}
+     * Array type
      */
     record BPFArrayType<E>(String bpfName, BPFType<E> memberType, int length) implements BPFType<E[]> {
 
@@ -895,12 +916,75 @@ public sealed interface BPFType<T> {
 
         @Override
         public String toJavaUse() {
-            return memberType.toJavaUseInGenerics() + "[]";
+            return memberType.toJavaUse() + "[]";
         }
 
         @Override
         public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
             return "(BPFType)new " + BPF_TYPE + ".BPFArrayType<>(\""+ bpfName + "\", " + memberType.toJavaFieldSpecUse(typeToSpecFieldName) + ", " + length + ")";
+        }
+    }
+
+    /**
+     * Pointer type mapped to {@link Ptr} in Java, and only usable in generated C code for now
+     */
+    record BPFPointerType<T>(@Nullable BPFType<T> valueType) implements BPFType<Ptr<T>> {
+
+        @Override
+        public String bpfName() {
+            return (valueType == null ? "void" : valueType.bpfName()) + "*";
+        }
+
+        @Override
+        public MemoryLayout layout() {
+            return ValueLayout.ADDRESS.withTargetLayout(MemoryLayout.sequenceLayout(0, valueType == null ? JAVA_BYTE : valueType.layout()));
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public MemoryParser<Ptr<T>> parser() {
+            throw new UnsupportedOperationException("Not implemented");
+        }
+
+        @Override
+        public MemorySetter<Ptr<T>> setter() {
+            throw new UnsupportedOperationException("Not implemented");
+        }
+
+        @Override
+        public long alignment() {
+            return layout().byteAlignment();
+        }
+
+        @Override
+        public AnnotatedClass javaClass() {
+            return new AnnotatedClass(Ptr.class, List.of());
+        }
+
+        @Override
+        public Optional<CAST.Declarator> toCDeclaration() {
+            return Optional.empty();
+        }
+
+        @Override
+        public CAST.Declarator toCUse() {
+            return valueType == null ? CAST.Declarator.voidPointer() : CAST.Declarator.pointer(valueType.toCUse());
+        }
+
+        @Override
+        public String toJavaUse() {
+            return Ptr.class.getCanonicalName();
+        }
+
+        @Override
+        public String toJavaUseInGenerics() {
+            return Ptr.class.getCanonicalName() + "<" + (valueType == null ? "?" : valueType.toJavaUseInGenerics()) + ">";
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+            return "new " + BPF_TYPE + ".BPFPointerType<" + (valueType == null ? "" : valueType.toJavaUseInGenerics()) +">(" +
+                    (valueType == null ? "null" : valueType.toJavaFieldSpecUse(typeToSpecFieldName)) + ")";
         }
     }
 
@@ -1143,7 +1227,7 @@ public sealed interface BPFType<T> {
                 ClassName bpfStructType = ClassName.get(BPF_PACKAGE, "BPFType.BPFUnionType");
                 TypeName fieldType = ParameterizedTypeName.get(bpfStructType, ClassName.get("", className));
                 String memberExpression =
-                        members.stream().map(m -> "new " + BPF_TYPE + ".BPFUnionMember<>(" + "\"" + m.name() + "\"," + " " + typeToSpecName.apply(m.type()) + ", (" + className + " u) -> u." + m.name() + ")").collect(Collectors.joining(", "));
+                        members.stream().map(m -> "new " + BPF_TYPE + ".BPFUnionMember<" + className + ", " + m.type().toJavaUseInGenerics() + ">(" + "\"" + m.name() + "\"," + " " + typeToSpecName.apply(m.type()) + ", (" + className + " u) -> (" + m.type().toJavaUseInGenerics() + ") (Object)u." + m.name() + ")").collect(Collectors.joining(", "));
                 ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
                 return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC).initializer("new $T<>($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " + "java.util.List" + ".of()" + "), members -> new $T().init(members))", bpfStructType, bpfName, memberExpression, bpfType, ClassName.get("", className), ClassName.get("", className)).build();
             });
