@@ -6,6 +6,7 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Declarator;
+import me.bechberger.cast.CAST.Declarator.StructMember;
 import me.bechberger.cast.CAST.Statement;
 import me.bechberger.ebpf.annotations.AnnotationInstances;
 import org.jetbrains.annotations.NotNull;
@@ -573,6 +574,25 @@ public sealed interface BPFType<T> {
      * Struct
      */
     final class BPFStructType<T> implements BPFType<T> {
+
+        /**
+         * Kind of the source class, only important for the generation of Java code
+         */
+        public enum SourceClassKind {
+            /**
+             * Class defined via {@code record}
+             */
+            RECORD,
+            /**
+             * Class with a default constructor and no field matching constructor
+             */
+            CLASS,
+            /**
+             * Class with a field matching constructor
+             */
+            CLASS_WITH_CONSTRUCTOR
+        }
+
         private final String bpfName;
         private final MemoryLayout layout;
 
@@ -580,6 +600,7 @@ public sealed interface BPFType<T> {
         private final List<BPFStructMember<T, ?>> members;
         private final AnnotatedClass javaClass;
         private final Function<List<Object>, T> constructor;
+        private final SourceClassKind sourceClassKind;
 
         /**
          * Create a new struct type with manually set layout,
@@ -593,17 +614,39 @@ public sealed interface BPFType<T> {
          */
         public BPFStructType(String bpfName, List<BPFStructMember<T, ?>> members, AnnotatedClass javaClass,
                              Function<List<Object>, T> constructor) {
+            this(bpfName, members, javaClass, constructor, SourceClassKind.RECORD);
+        }
+
+        /**
+         * Create a new struct type with manually set layout,
+         * consider using {@link #autoLayout(String, List, AnnotatedClass, Function)}
+         * for creating the layout automatically
+         *
+         * @param bpfName     name of the struct in BPF
+         * @param members     members of the struct, order should be the same as in the constructor
+         * @param javaClass   class that represents the struct
+         * @param constructor constructor that takes the members in the same order as in the constructor
+         */
+        public BPFStructType(String bpfName, List<BPFStructMember<T, ?>> members, AnnotatedClass javaClass,
+                             Function<List<Object>, T> constructor, SourceClassKind sourceClassKind) {
             this.bpfName = bpfName;
             this.layout = createLayout(members);
             this.alignment = members.stream().mapToLong(m -> m.type.alignment()).max().orElse(1);
             this.members = members;
             this.javaClass = javaClass;
             this.constructor = constructor;
+            this.sourceClassKind = sourceClassKind;
         }
 
         public static <T> BPFStructType<T> autoLayout(String bpfName, List<UBPFStructMember<T, ?>> members,
                                                       AnnotatedClass javaClass, Function<List<Object>, T> constructor) {
-            return new BPFStructType<>(bpfName, layoutMembers(members), javaClass, constructor);
+            return autoLayout(bpfName, members, javaClass, constructor, SourceClassKind.RECORD);
+        }
+
+        public static <T> BPFStructType<T> autoLayout(String bpfName, List<UBPFStructMember<T, ?>> members,
+                                                      AnnotatedClass javaClass, Function<List<Object>, T> constructor,
+                                                      SourceClassKind sourceClassKind) {
+            return new BPFStructType<>(bpfName, layoutMembers(members), javaClass, constructor, sourceClassKind);
         }
 
         /**
@@ -742,17 +785,34 @@ public sealed interface BPFType<T> {
                 String className = this.javaClass.klass;
                 ClassName bpfStructType = ClassName.get(BPF_PACKAGE, "BPFType.BPFStructType");
                 TypeName fieldType = ParameterizedTypeName.get(bpfStructType, ClassName.get("", className));
+                Function<BPFStructMember<?, ?>, String> accessor = m -> switch (sourceClassKind) {
+                    case RECORD -> className + "::" + m.name();
+                    case CLASS, CLASS_WITH_CONSTRUCTOR -> "o -> o." + m.name;
+                };
                 String memberExpression =
                         members.stream().map(m -> "new " + BPF_TYPE + ".UBPFStructMember<>(" + "\"" + m.name() + "\"," +
-                                " " + typeToSpecName.apply(m.type()) + ", " + className + "::" + m.name() +
+                                " " + typeToSpecName.apply(m.type()) + ", " + accessor.apply(m) +
                                 ")").collect(Collectors.joining(", "));
+
                 ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
-                String creatorExpr =
-                        IntStream.range(0, members.size()).mapToObj(i -> "(" + members.get(i).type.toJavaUse() + ")" + "me.bechberger.ebpf.type.BoxHelper.unbox(fields.get(" + i + "), " + members.get(i).type.toJavaUse() + ".class)").collect(Collectors.joining(", "));
+                String constructorExpr = switch (sourceClassKind) {
+                    case RECORD, CLASS_WITH_CONSTRUCTOR -> {
+                        String creatorExpr =
+                                IntStream.range(0, members.size()).mapToObj(i -> "(" + members.get(i).type.toJavaUse() + ")" +
+                                        "me.bechberger.ebpf.type.BoxHelper.unbox(fields.get(" + i + "), " +
+                                        members.get(i).type.toJavaUse() + ".class)").collect(Collectors.joining(", "));
+                        yield "new " + className + "(" + creatorExpr + ")";
+                    }
+                    case CLASS ->
+                            "{ var o = new " + className + "(); " + members.stream().map(m -> "o." + m.name() + " = " +
+                                    "me.bechberger.ebpf.type.BoxHelper.unbox(fields.get(" + members.indexOf(m) + "), " +
+                                    m.type().toJavaUse() + ".class)").collect(Collectors.joining("; ")) + "; return o; }";
+                };
+
                 return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC)
                         .initializer("$T.autoLayout($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " +
-                                "java.util.List" + ".of()" + "), " + "fields -> new $T($L))", bpfStructType, bpfName,
-                                memberExpression, bpfType, ClassName.get("", className), ClassName.get("", className), creatorExpr).build();
+                                        "java.util.List" + ".of()" + "), " + "fields -> $L)", bpfStructType, bpfName,
+                                memberExpression, bpfType, ClassName.get("", className), constructorExpr).build();
             });
         }
 

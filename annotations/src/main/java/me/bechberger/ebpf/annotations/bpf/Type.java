@@ -16,6 +16,14 @@ import java.lang.annotation.Target;
  *     // struct
  *     @Type
  *     record Event(@Unsigned int pid, @Size(256) String filename, @Size(16) String comm) {}
+ *     // which can also be written as, with 'extends Struct' being optional
+ *     @Type
+ *     static class Event extends Struct {
+ *       @Unsigned int pid;
+ *       @Size(256) String filename;
+ *       @Size(16) String comm;
+ *     }
+ *
  *     // union
  *     @Type
  *     static class Address extends Union {
@@ -28,7 +36,7 @@ import java.lang.annotation.Target;
  * <ul>
  *     <li>integer types (int, long, ...), optionally annotated with {@link Unsigned} if unsigned</li>
  *     <li>String types, annotated with {@link Size} to specify the size</li>
- *     <li>Other {@link Type} annotated types</li>
+ *     <li>Other {@link Type} annotated types or types that satisfy all criteria of type annotated ones</li>
  *     <li>Arrays of all of the above, annotated with {@link Size} to specify the size</li>
  * </ul>
  */

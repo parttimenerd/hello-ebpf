@@ -244,7 +244,6 @@ A look ahead into the future so you know what to expect:
 
 - Implement more features related to libbpf
   - cgroups support
-  - arrays in types and array maps
 - Allow writing eBPF programs in Java
 - Drop libbcc and the BCC tools
 

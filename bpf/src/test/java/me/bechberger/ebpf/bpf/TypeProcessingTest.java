@@ -7,6 +7,7 @@ import me.bechberger.ebpf.annotations.bpf.CustomType;
 import me.bechberger.ebpf.annotations.bpf.Type;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.type.BPFType.BPFStructType;
+import me.bechberger.ebpf.type.Struct;
 import me.bechberger.ebpf.type.Union;
 import org.junit.jupiter.api.Test;
 
@@ -105,6 +106,17 @@ public class TypeProcessingTest {
             @Unsigned int a;
             @Size(16) byte[] b;
             @Size(2) @Size(2) int[][] c;
+        }
+
+        @Type
+        static class ClassRecord extends Struct {
+            int a;
+            @Size(6) String b;
+        }
+
+        @Type
+        static class ClassRecordWithoutStruct {
+            int a;
         }
     }
 
@@ -331,6 +343,44 @@ public class TypeProcessingTest {
             var memory = type.allocate(arena, union);
             assertEquals(1, memory.get(ValueLayout.JAVA_INT, 0));
             assertArrayEquals(union.c, type.parseMemory(memory).c);
+        }
+    }
+
+    @Test
+    public void testClassRecord() {
+        var type = BPFProgram.getStructTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.ClassRecord.class);
+        assertEquals("""
+                struct ClassRecord {
+                  s32 a;
+                  char b[6];
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+        var record = new SimpleRecordTestProgram.ClassRecord();
+        record.a = 42;
+        record.b = "Hello";
+        try (var arena = Arena.ofConfined()) {
+            var memory = type.allocate(arena, record);
+            assertEquals(42, memory.get(ValueLayout.JAVA_INT, 0));
+            assertEquals(record, type.parseMemory(memory));
+        }
+    }
+
+    @Test
+    public void testClassRecordWithoutStruct() {
+        var type = BPFProgram.getStructTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.ClassRecordWithoutStruct.class);
+        assertEquals("""
+                struct ClassRecordWithoutStruct {
+                  s32 a;
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+        var record = new SimpleRecordTestProgram.ClassRecordWithoutStruct();
+        record.a = 42;
+        try (var arena = Arena.ofConfined()) {
+            var memory = type.allocate(arena, record);
+            assertEquals(42, memory.get(ValueLayout.JAVA_INT, 0));
+            assertEquals(record.a, type.parseMemory(memory).a);
         }
     }
 }

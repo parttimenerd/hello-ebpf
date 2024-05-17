@@ -12,8 +12,10 @@ import me.bechberger.ebpf.bpf.processor.DefinedTypes.JavaName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.SpecFieldName;
 import me.bechberger.ebpf.bpf.processor.BPFTypeLike.TypeBackedBPFStructType;
 import me.bechberger.ebpf.type.BPFType;
+import me.bechberger.ebpf.type.BPFType.BPFStructType.SourceClassKind;
 import me.bechberger.ebpf.type.BPFType.BPFUnionMember;
 import me.bechberger.ebpf.type.BPFType.CustomBPFType;
+import me.bechberger.ebpf.type.Struct;
 import me.bechberger.ebpf.type.Union;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,6 +81,14 @@ class TypeProcessor {
         NONE
     }
 
+    private TypeMirror getTypeMirror(Class<?> klass) {
+        return processingEnv.getElementUtils().getTypeElement(klass.getCanonicalName()).asType();
+    }
+
+    private boolean hasSuperClass(Element element, Class<?> klass) {
+        return processingEnv.getTypeUtils().isSameType(((TypeElement) element).getSuperclass(), getTypeMirror(klass));
+    }
+
     private StructOrUnion isValidStructRecordOrUnionClass(Element element) {
         if (element.getKind() == ElementKind.RECORD) {
             // check that it has no super class
@@ -94,12 +104,15 @@ class TypeProcessor {
                 this.processingEnv.getMessager().printError("Inner class " + element.getSimpleName() + " is a class but not static", element);
                 return StructOrUnion.NONE;
             }
-            // check that it extends the Union class
-            if (!processingEnv.getTypeUtils().isSameType(((TypeElement) element).getSuperclass(), processingEnv.getElementUtils().getTypeElement("me.bechberger.ebpf.type.Union").asType())) {
-                this.processingEnv.getMessager().printError("Inner class " + element + " is a class but does not extend Union, use records for structs", element);
-                return StructOrUnion.NONE;
+            // check if it is a union
+            if (hasSuperClass(element, Union.class)) {
+                return StructOrUnion.UNION;
             }
-            return StructOrUnion.UNION;
+            // check if it either extends Object or Struct, so it can be a struct
+            if (!hasSuperClass(element, Object.class) && !hasSuperClass(element, Struct.class) && ((TypeElement)element).getSuperclass().getKind() != TypeKind.NONE) {
+                this.processingEnv.getMessager().printError("Inner class " + element + " is a class but does not extend Object, Union or Struct", element);
+            }
+            return StructOrUnion.STRUCT;
         }
         return StructOrUnion.NONE;
     }
@@ -285,27 +298,70 @@ class TypeProcessor {
         };
     }
 
+    record StructProcResult(Optional<List<BPFType.UBPFStructMember<?, ?>>> members, SourceClassKind kind) {}
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Optional<TypeBackedBPFStructType<?>> processBPFTypeStruct(TypeElement typeElement, String className, BPFName name) {
-        var constructors =
-                typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.CONSTRUCTOR).toList();
-        if (constructors.size() != 1) {
-            this.processingEnv.getMessager().printError("Record " + typeElement.getSimpleName() + " must have " +
-                    "exactly" + " one " + "constructor", typeElement);
-            return Optional.empty();
+        // TODO: handle with struct too
+
+        StructProcResult result;
+        if (typeElement.getKind() == ElementKind.RECORD) {
+            result = processBPFTypeRecordStruct(typeElement, className, name);
+        } else {
+            result = processBPFTypeClassStruct(typeElement, className, name);
         }
-        var constructor = (ExecutableElement) constructors.getFirst();
-        Optional<List<BPFType.UBPFStructMember<?, ?>>> members =
-                processBPFTypeRecordMembers(constructor.getParameters());
-        if (members.isEmpty()) {
+
+        if (result.members.isEmpty()) {
             return Optional.empty();
         }
 
         BPFType.AnnotatedClass annotatedClass = new BPFType.AnnotatedClass(className, List.of());
 
         return Optional.of(new TypeBackedBPFStructType<>(BPFType.BPFStructType.autoLayout(name.name(),
-                (List<BPFType.UBPFStructMember<Object, ?>>) (List) members.get(),
-                annotatedClass, null)));
+                (List<BPFType.UBPFStructMember<Object, ?>>) (List) result.members.get(),
+                annotatedClass, null, result.kind)));
+    }
+
+    private StructProcResult processBPFTypeRecordStruct(TypeElement typeElement, String className, BPFName name) {
+        var constructors =
+                typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.CONSTRUCTOR).toList();
+        if (constructors.size() != 1) {
+            this.processingEnv.getMessager().printError("Record " + typeElement.getSimpleName() + " must have " +
+                    "exactly" + " one " + "constructor", typeElement);
+            return new StructProcResult(Optional.empty(), null);
+        }
+        var constructor = (ExecutableElement) constructors.getFirst();
+        return new StructProcResult(
+                processBPFTypeRecordMembers(constructor.getParameters()), SourceClassKind.RECORD);
+    }
+
+    private StructProcResult processBPFTypeClassStruct(TypeElement typeElement, String className, BPFName name) {
+        var constructors =
+                typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.CONSTRUCTOR).toList();
+
+        // has default constructor
+        boolean hasDefaultConstructor = constructors.stream().anyMatch(e -> ((ExecutableElement) e).getParameters().isEmpty());
+
+        // get fields
+        var fields = typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e).toList();
+
+        boolean hasConstructorWithFieldsInOrder = constructors.stream().anyMatch(e -> {
+            var constructor = (ExecutableElement) e;
+            var constructorFields = constructor.getParameters();
+
+            return fields.size() == constructorFields.size() &&
+                    IntStream.range(0, fields.size())
+                            .allMatch(i -> constructorFields.get(i).asType().equals(fields.get(i).asType()));
+        });
+
+        if (!hasDefaultConstructor && !hasConstructorWithFieldsInOrder) {
+            this.processingEnv.getMessager().printError("Class " + typeElement.getSimpleName() + " must have " +
+                    "either a default constructor or a constructor with fields in order", typeElement);
+            return new StructProcResult(Optional.empty(), null);
+        }
+
+        return new StructProcResult(
+                processBPFTypeRecordMembers(fields), hasConstructorWithFieldsInOrder ? SourceClassKind.CLASS_WITH_CONSTRUCTOR : SourceClassKind.CLASS);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
