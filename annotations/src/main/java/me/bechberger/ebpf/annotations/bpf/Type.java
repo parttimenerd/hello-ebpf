@@ -9,13 +9,19 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotates a record for with a BPFStructType is generated
- * <p>
- * Currently only supported directly inside {@link BPF} annotated classes
+ * Annotates a record for with a struct or union type is generated
  * <p>
  * Example:
  * {@snippet :
+ *     // struct
+ *     @Type
  *     record Event(@Unsigned int pid, @Size(256) String filename, @Size(16) String comm) {}
+ *     // union
+ *     @Type
+ *     static class Address extends Union {
+ *        @Unsigned int ipv4;
+ *        @Size(16) byte[] ipv6;
+ *     }
  * }
  * <p>
  * Members can be one of the following:

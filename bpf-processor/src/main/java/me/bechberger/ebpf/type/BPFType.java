@@ -28,6 +28,7 @@ import java.util.stream.IntStream;
 import static me.bechberger.cast.CAST.Declarator.identifier;
 import static me.bechberger.cast.CAST.Expression.variable;
 import static me.bechberger.ebpf.type.BPFType.BPFIntType.CHAR;
+import static me.bechberger.ebpf.type.BoxHelper.box;
 
 
 /**
@@ -677,7 +678,8 @@ public sealed interface BPFType<T> {
         public MemorySetter<T> setter() {
             return (segment, obj) -> {
                 for (BPFStructMember<T, ?> member : members) {
-                    ((BPFType<Object>) member.type).setMemory(segment.asSlice(member.offset), member.getter.apply(obj));
+                    var arr = box(member.getter.apply(obj));
+                    ((BPFType<Object>) member.type).setMemory(segment.asSlice(member.offset), arr);
                 }
             };
         }
@@ -745,7 +747,8 @@ public sealed interface BPFType<T> {
                                 " " + typeToSpecName.apply(m.type()) + ", " + className + "::" + m.name() +
                                 ")").collect(Collectors.joining(", "));
                 ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
-                String creatorExpr = IntStream.range(0, members.size()).mapToObj(i -> "(" + members.get(i).type.toJavaUse() + ")" + "fields.get(" + i + ")").collect(Collectors.joining(", "));
+                String creatorExpr =
+                        IntStream.range(0, members.size()).mapToObj(i -> "(" + members.get(i).type.toJavaUse() + ")" + "me.bechberger.ebpf.type.BoxHelper.unbox(fields.get(" + i + "), " + members.get(i).type.toJavaUse() + ".class)").collect(Collectors.joining(", "));
                 return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC)
                         .initializer("$T.autoLayout($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " +
                                 "java.util.List" + ".of()" + "), " + "fields -> new $T($L))", bpfStructType, bpfName,
@@ -953,10 +956,151 @@ public sealed interface BPFType<T> {
         }
     }
 
-
-    record BPFUnionTypeMember(String name, BPFType<?> type) {
+    record BPFUnionMember<P, T>(String name, BPFType<T> type, Function<P, T> getter) {
+        CAST.Declarator.UnionMember toCUnionMember() {
+            return CAST.Declarator.unionMember(type.toCUse(), CAST.Expression.variable(name));
+        }
     }
 
+    /**
+     * Union
+     *
+     * @param bpfName
+     * @param members members of the union
+     */
+    record BPFUnionType<T extends Union>(String bpfName, List<BPFUnionMember<T, ?>> members, AnnotatedClass javaClass,
+                                         Function<Map<String, Object>, T> constructor) implements BPFType<T> {
+
+        @Override
+        public MemoryLayout layout() {
+            return MemoryLayout.sequenceLayout(size(), ValueLayout.JAVA_BYTE);
+        }
+
+        @Override
+        public long size() {
+            return members.stream().mapToLong(member -> member.type.size()).max().orElseThrow();
+        }
+
+        @Override
+        public long alignment() {
+            return members.stream().mapToLong(member -> member.type.alignment()).max().orElse(1);
+        }
+
+        public BPFUnionMember getMember(String memberName) {
+            return members.stream().filter(m -> m.name().equals(memberName)).findFirst().orElseThrow();
+        }
+
+        @Override
+        public MemoryParser<T> parser() {
+            return segment -> {
+                Map<String, Object> possibleMembers = new HashMap<>();
+                for (var member : members) {
+                    // try to parse all members, but only keep the ones that work
+                    try {
+                        possibleMembers.put(member.name(), member.type.parseMemory(segment));
+                    } catch (IllegalArgumentException e) {
+                    }
+                }
+                if (possibleMembers.isEmpty()) {
+                    throw new IllegalArgumentException("Union must have atleast one member set");
+                }
+                return constructor.apply(possibleMembers);
+            };
+        }
+
+        record FieldValueChanged(BPFUnionMember<?, ?> member, Object value, boolean changed) {
+        }
+
+        /**
+         * Return the memory setter, only works if the passed union has a set current member
+         */
+        @Override
+        @SuppressWarnings("unchecked")
+        public MemorySetter<T> setter() {
+            return (segment, union) -> {
+                // find all members that don't have their original value
+                // their original value comes either from the originalValues map (compare via ==)
+                // or is the default value of the type (like null for references, 0 for numbers, etc.)
+                var membersToSet = members.stream().map(member -> {
+                    Object currentValue = box(member.getter.apply(union));
+                    if (union.originalValues != null && union.originalValues.containsKey(member.name())) {
+                        return new FieldValueChanged(member, currentValue,
+                                union.originalValues.get(member.name()) != currentValue);
+                    }
+                    if (currentValue instanceof Number number) {
+                        return new FieldValueChanged(member, currentValue, number.longValue() != 0);
+                    }
+                    if (currentValue instanceof Boolean bool) {
+                        return new FieldValueChanged(member, currentValue, bool);
+                    }
+                    return new FieldValueChanged(member, currentValue, currentValue != null);
+                }).filter(f -> f.changed).toList();
+                if (membersToSet.size() > 1) {
+                    System.err.println("Union must have exactly one member set of " + union);
+                }
+                if (membersToSet.isEmpty()) {
+                    return;
+                }
+                var member = membersToSet.getFirst();
+                ((BPFType<Object>) member.member.type).setMemory(segment, box(member.value));
+            };
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(bpfName, members, javaClass);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (BPFUnionType<?>) obj;
+            return Objects.equals(this.bpfName, that.bpfName) && Objects.equals(this.members, that.members) &&
+                    Objects.equals(this.javaClass, that.javaClass);
+        }
+
+        @Override
+        public Optional<CAST.Declarator> toCDeclaration() {
+            return Optional.of(CAST.Declarator.union(CAST.Expression.variable(bpfName),
+                    members.stream().map(BPFUnionMember::toCUnionMember).toList()));
+        }
+
+        @Override
+        public Optional<CAST.Statement> toCDeclarationStatement() {
+            return toCDeclaration().map(d -> CAST.Statement.declarationStatement(d, null));
+        }
+
+        @Override
+        public CAST.Declarator toCUse() {
+            return CAST.Declarator.unionIdentifier(CAST.Expression.variable(bpfName));
+        }
+
+        @Override
+        public Optional<BiFunction<String, Function<BPFType<?>, String>, FieldSpec>> toFieldSpecGenerator() {
+            return Optional.of((fieldName, typeToSpecName) -> {
+                String className = this.javaClass.klass;
+                ClassName bpfStructType = ClassName.get(BPF_PACKAGE, "BPFType.BPFUnionType");
+                TypeName fieldType = ParameterizedTypeName.get(bpfStructType, ClassName.get("", className));
+                String memberExpression =
+                        members.stream().map(m -> "new " + BPF_TYPE + ".BPFUnionMember<>(" + "\"" + m.name() + "\"," + " " + typeToSpecName.apply(m.type()) + ", (" + className + " u) -> u." + m.name() + ")").collect(Collectors.joining(", "));
+                ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
+                return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC).initializer("new $T<>($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " + "java.util.List" + ".of()" + "), members -> new $T().init(members))", bpfStructType, bpfName, memberExpression, bpfType, ClassName.get("", className), ClassName.get("", className)).build();
+            });
+        }
+
+        @Override
+        public String toJavaUse() {
+            return javaClass.klass;
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+            return typeToSpecFieldName.apply(this);
+        }
+    }
+
+    // just for existing code
     /**
      * Union
      *
@@ -964,8 +1108,8 @@ public sealed interface BPFType<T> {
      * @param shared  type that is shared between all members
      * @param members members of the union, including the shared type members
      */
-    record BPFUnionType<S>(String bpfName, @Nullable BPFType<S> shared,
-                           List<BPFUnionTypeMember> members) implements BPFType<BPFUnion<S>> {
+    record BPFUnionTypeOld<S>(String bpfName, @Nullable BPFType<S> shared,
+                              List<BPFUnionMember> members) implements BPFType<BPFUnion<S>> {
 
         @Override
         public MemoryLayout layout() {
@@ -1006,7 +1150,7 @@ public sealed interface BPFType<T> {
                 if (union.current() == null) {
                     throw new IllegalArgumentException("Union must have a current member");
                 }
-                BPFUnionTypeMember current =
+                BPFUnionMember current =
                         members().stream().filter(m -> m.name.equals(union.current())).findFirst().orElseThrow();
                 current.type.setMemory(segment, union.get(union.current()));
             };
@@ -1022,6 +1166,7 @@ public sealed interface BPFType<T> {
             throw new UnsupportedOperationException();
         }
     }
+
 
     interface BPFUnion<S> {
         @Nullable S shared();

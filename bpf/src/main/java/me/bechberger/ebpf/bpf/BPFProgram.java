@@ -10,6 +10,9 @@ import me.bechberger.ebpf.shared.PanamaUtil;
 import me.bechberger.ebpf.shared.PanamaUtil.HandlerWithErrno;
 import me.bechberger.ebpf.shared.TraceLog;
 import me.bechberger.ebpf.shared.TraceLog.TraceFields;
+import me.bechberger.ebpf.type.BPFType.BPFStructType;
+import me.bechberger.ebpf.type.BPFType.BPFUnionType;
+import me.bechberger.ebpf.type.Union;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -125,15 +128,31 @@ public abstract class BPFProgram implements AutoCloseable {
         Runtime.getRuntime().addShutdownHook(new Thread(this::close));
     }
 
-    public <T> BPFType.BPFStructType<T> getTypeForClass(Class<T> innerType) {
+    public <T> BPFType<T> getTypeForClass(Class<T> innerType) {
         return getTypeForImplClass(getClass(), innerType);
     }
 
-    public static <T> BPFType.BPFStructType<T> getTypeForClass(Class<?> outer, Class<T> inner) {
+    public static <T> BPFType<T> getTypeForClass(Class<?> outer, Class<T> inner) {
         return getTypeForImplClass(getImplClass(outer), inner);
     }
 
-    private static <T> BPFType.BPFStructType<T> getTypeForImplClass(Class<?> outerImpl, Class<T> inner) {
+    public <T> BPFStructType<T> getStructTypeForClass(Class<T> innerType) {
+        return (BPFStructType<T>) getTypeForImplClass(getClass(), innerType);
+    }
+
+    public static <T> BPFStructType<T> getStructTypeForClass(Class<?> outer, Class<T> inner) {
+        return (BPFStructType<T>) getTypeForImplClass(getImplClass(outer), inner);
+    }
+
+    public <T extends Union> BPFUnionType<T> getUnionTypeForClass(Class<T> innerType) {
+        return (BPFUnionType<T>) getTypeForImplClass(getClass(), innerType);
+    }
+
+    public static <T extends Union> BPFUnionType<T> getUnionTypeForClass(Class<?> outer, Class<T> inner) {
+        return (BPFUnionType<T>) getTypeForImplClass(getImplClass(outer), inner);
+    }
+
+    private static <T> BPFType<T> getTypeForImplClass(Class<?> outerImpl, Class<T> inner) {
         try {
             return getTypeForImplClass(outerImpl, inner, true);
         } catch (Exception e) {
@@ -142,11 +161,11 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> BPFType.BPFStructType<T> getTypeForImplClass(Class<?> outerImpl, Class<T> inner, boolean canonical) {
+    private static <T> BPFType<T> getTypeForImplClass(Class<?> outerImpl, Class<T> inner, boolean canonical) {
         String fieldName = (canonical ? inner.getCanonicalName() : inner.getSimpleName()).replaceAll("([a-z0-9])([A-Z])", "$1_$2")
                 .replace(".", "__").toUpperCase();
         try {
-            return (BPFType.BPFStructType<T>) outerImpl.getDeclaredField(fieldName).get(null);
+            return (BPFType<T>) outerImpl.getDeclaredField(fieldName).get(null);
         } catch (IllegalAccessException | NoSuchFieldException e) {
             throw new RuntimeException(e);
         }

@@ -598,6 +598,37 @@ public interface CAST {
             }
         }
 
+        record UnionMember(Declarator declarator, PrimaryExpression.Variable name) implements Declarator {
+            @Override
+            public List<? extends Expression> children() {
+                return List.of(declarator, name);
+            }
+
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                if (declarator instanceof ArrayDeclarator arr) {
+                    return arr.toPrettyVariableDefinition(name, indent) + ";";
+                }
+                return declarator.toPrettyString(indent, increment) + " " + name.toPrettyString() + ";";
+            }
+        }
+
+        record UnionDeclarator(@Nullable PrimaryExpression.Variable name,
+                               List<UnionMember> members) implements Declarator {
+            @Override
+            public List<? extends Expression> children() {
+                if (name == null) {
+                    return members;
+                }
+                return Stream.concat(Stream.of(name), members.stream()).collect(Collectors.toList());
+            }
+
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                return indent + "union " + (name == null ? "" : name.toPrettyString() + " ") + "{\n" + members.stream().map(m -> m.toPrettyString(indent + increment, increment)).collect(Collectors.joining("\n")) + "\n" + indent + "}";
+            }
+        }
+
         record FunctionDeclarator(Declarator declarator, List<Declarator> parameters) implements Declarator {
             @Override
             public List<? extends Expression> children() {
@@ -631,6 +662,18 @@ public interface CAST {
             @Override
             public String toPrettyString(String indent, String increment) {
                 return indent + "struct " + name.toPrettyString();
+            }
+        }
+
+        record UnionIdentifierDeclarator(PrimaryExpression.Variable name) implements Declarator {
+            @Override
+            public List<? extends Expression> children() {
+                return List.of(name);
+            }
+
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                return indent + "union " + name.toPrettyString();
             }
         }
 
@@ -669,6 +712,22 @@ public interface CAST {
 
         static Declarator structIdentifier(PrimaryExpression.Variable name) {
             return new StructIdentifierDeclarator(name);
+        }
+
+        static Declarator union(PrimaryExpression.Variable name, List<UnionMember> members) {
+            return new UnionDeclarator(name, members);
+        }
+
+        static UnionMember unionMember(Declarator declarator, PrimaryExpression.Variable name) {
+            return new UnionMember(declarator, name);
+        }
+
+        static Declarator unionIdentifier(PrimaryExpression.Variable name) {
+            return new UnionIdentifierDeclarator(name);
+        }
+
+        static Declarator unionIdentifier(String name) {
+            return new UnionIdentifierDeclarator(new PrimaryExpression.Variable(name));
         }
     }
 

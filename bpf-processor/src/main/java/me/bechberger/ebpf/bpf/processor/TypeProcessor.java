@@ -3,23 +3,23 @@ package me.bechberger.ebpf.bpf.processor;
 import com.squareup.javapoet.FieldSpec;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
-import me.bechberger.cast.CAST.PrimaryExpression.Variable;
-import me.bechberger.ebpf.annotations.bpf.BPF;
+import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils.AnnotationValues;
 import me.bechberger.ebpf.bpf.processor.BPFTypeLike.TypeBackedBPFTypeLike;
+import me.bechberger.ebpf.bpf.processor.BPFTypeLike.TypeBackedBPFUnionType;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.BPFName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.JavaName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.SpecFieldName;
 import me.bechberger.ebpf.bpf.processor.BPFTypeLike.TypeBackedBPFStructType;
 import me.bechberger.ebpf.type.BPFType;
-import me.bechberger.ebpf.type.BPFType.BPFArrayType;
+import me.bechberger.ebpf.type.BPFType.BPFUnionMember;
 import me.bechberger.ebpf.type.BPFType.CustomBPFType;
+import me.bechberger.ebpf.type.Union;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -68,13 +68,40 @@ class TypeProcessor {
 
     private boolean isTypeAnnotatedRecord(Element element) {
         if (getAnnotationMirror(element, TYPE_ANNOTATION).isPresent()) {
-            if (element.getKind() != ElementKind.RECORD) {
-                this.processingEnv.getMessager().printError("Inner class " + element.getSimpleName() + " is annotated " + "with Type but is not a record", element);
-                return false;
-            }
-            return true;
+           return isValidStructRecordOrUnionClass((TypeElement) element) != StructOrUnion.NONE;
         }
         return false;
+    }
+
+    enum StructOrUnion {
+        STRUCT,
+        UNION,
+        NONE
+    }
+
+    private StructOrUnion isValidStructRecordOrUnionClass(Element element) {
+        if (element.getKind() == ElementKind.RECORD) {
+            // check that it has no super class
+            if (((TypeElement) element).getSuperclass().getKind() != TypeKind.NONE && !((TypeElement) element).getSuperclass().toString().equals("java.lang.Record")){
+                this.processingEnv.getMessager().printError("Inner class " + element.getSimpleName() + " is a record but has a super class", element);
+                return StructOrUnion.NONE;
+            }
+            return StructOrUnion.STRUCT;
+        }
+        if (element.getKind() == ElementKind.CLASS) {
+            // check that it is a static class
+            if (!element.getModifiers().contains(Modifier.STATIC)) {
+                this.processingEnv.getMessager().printError("Inner class " + element.getSimpleName() + " is a class but not static", element);
+                return StructOrUnion.NONE;
+            }
+            // check that it extends the Union class
+            if (!processingEnv.getTypeUtils().isSameType(((TypeElement) element).getSuperclass(), processingEnv.getElementUtils().getTypeElement("me.bechberger.ebpf.type.Union").asType())) {
+                this.processingEnv.getMessager().printError("Inner class " + element + " is a class but does not extend Union, use records for structs", element);
+                return StructOrUnion.NONE;
+            }
+            return StructOrUnion.UNION;
+        }
+        return StructOrUnion.NONE;
     }
 
     private boolean isCustomTypeAnnotatedRecord(Element element) {
@@ -153,8 +180,8 @@ class TypeProcessor {
             var name = getTypeRecordBpfName(processedType);
             var type = alreadyDefinedTypes.get(new JavaName(processedType));
             var fieldSpecName = definedTypes.getSpecFieldName(name).get().name();
-            assert type instanceof BPFTypeLike.TypeBackedBPFStructType<?>;
-            var actualType = ((TypeBackedBPFStructType<?>) type).type;
+            assert type instanceof BPFTypeLike.TypeBackedBPFTypeLike<?>;
+            var actualType = ((TypeBackedBPFTypeLike<?>) type).type;
             var spec = actualType.toFieldSpecGenerator().get().apply(fieldSpecName,
                     t -> t.toJavaFieldSpecUse(t2 -> typeToSpecField.apply(BPFTypeLike.of(t2)).name()));
             fields.add(spec);
@@ -246,10 +273,20 @@ class TypeProcessor {
                 .orElse(typeElement.getSimpleName().toString()));
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private Optional<TypeBackedBPFStructType<?>> processBPFTypeRecord(TypeElement typeElement) {
+    private Optional<? extends TypeBackedBPFTypeLike<?>> processBPFTypeRecord(TypeElement typeElement) {
         String className = typeElement.getQualifiedName().toString();
         var name = getTypeRecordBpfName(typeElement);
+
+        var t = isValidStructRecordOrUnionClass(typeElement);
+        return switch (t) {
+            case STRUCT -> processBPFTypeStruct(typeElement, className, name);
+            case UNION -> processBPFTypeUnion(typeElement, className, name);
+            case NONE -> Optional.empty();
+        };
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Optional<TypeBackedBPFStructType<?>> processBPFTypeStruct(TypeElement typeElement, String className, BPFName name) {
         var constructors =
                 typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.CONSTRUCTOR).toList();
         if (constructors.size() != 1) {
@@ -267,8 +304,32 @@ class TypeProcessor {
         BPFType.AnnotatedClass annotatedClass = new BPFType.AnnotatedClass(className, List.of());
 
         return Optional.of(new TypeBackedBPFStructType<>(BPFType.BPFStructType.autoLayout(name.name(),
-                (List<BPFType.UBPFStructMember<Object, ?>>)(List)members.get(),
+                (List<BPFType.UBPFStructMember<Object, ?>>) (List) members.get(),
                 annotatedClass, null)));
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Optional<TypeBackedBPFUnionType<?>> processBPFTypeUnion(TypeElement typeElement, String className, BPFName name) {
+        var constructors =
+                typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.CONSTRUCTOR).toList();
+        if (constructors.size() != 1 || !((ExecutableElement)constructors.getFirst()).getParameters().isEmpty()) {
+            this.processingEnv.getMessager().printError("Union class " + typeElement.getSimpleName() + " must only have the default constructor",
+                    typeElement);
+            return Optional.empty();
+        }
+        var constructor = (ExecutableElement) constructors.getFirst();
+        Optional<List<BPFType.UBPFStructMember<?, ?>>> membersOpt =
+                processBPFTypeRecordMembers(typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e).toList());
+        if (membersOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        var members = membersOpt.get();
+
+        BPFType.AnnotatedClass annotatedClass = new BPFType.AnnotatedClass(className, List.of());
+
+        return Optional.of(new TypeBackedBPFUnionType<>(new BPFType.BPFUnionType<>(name.name(),
+                (List<BPFUnionMember<Union,?>>) (List) members.stream().map(m -> new BPFUnionMember<>(m.name(), m.type(), null)).toList(), annotatedClass, null)));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -277,7 +338,7 @@ class TypeProcessor {
         if (list.stream().anyMatch(Optional::isEmpty)) {
             return Optional.empty();
         }
-        return Optional.of((List<BPFType.UBPFStructMember<?, ?>>)(List)list.stream().map(Optional::get).toList());
+        return Optional.of((List<BPFType.UBPFStructMember<?, ?>>)(List)list.stream().map(Optional::orElseThrow).toList());
     }
 
     private Optional<BPFType.UBPFStructMember<?, ?>> processBPFTypeRecordMember(VariableElement element) {
@@ -322,7 +383,7 @@ class TypeProcessor {
                                                                    TypeMirror type) {
         if (type.getKind() == TypeKind.ARRAY) {
             return processArrayType(element,
-                    AnnotationUtils.getAnnotationValuesForRecordMember(((ArrayType)type).getComponentType()),
+                    annotations,
                     (ArrayType)type);
         }
 
@@ -338,8 +399,12 @@ class TypeProcessor {
         if (isCustomTypeAnnotatedRecord(typeElement)) {
             return processCustomType(element, annotations, type);
         }
-         if (isTypeAnnotatedRecord(typeElement) || true) {
-            return processDefinedType(element, annotations, type);
+        var t = isValidStructRecordOrUnionClass(typeElement);
+        if (t == StructOrUnion.STRUCT) {
+            return processDefinedStructType(element, annotations, type);
+        }
+        if (t == StructOrUnion.UNION) {
+            return processDefinedUnionType(element, annotations, type);
         }
         this.processingEnv.getMessager().printError("Unsupported type " + type, element);
         return Optional.empty();
@@ -349,6 +414,16 @@ class TypeProcessor {
         System.out.println("Array type " + type);
         if (annotations.size().isEmpty()) {
             this.processingEnv.getMessager().printError("Size annotation required for array types", element);
+            if (type.getComponentType().getKind() == TypeKind.ARRAY) {
+                int depth = 1;
+                var innerType = type.getComponentType();
+                while (innerType.getKind() == TypeKind.ARRAY) {
+                    depth++;
+                    innerType = ((ArrayType)innerType).getComponentType();
+                }
+                String example = "@Size(...) " + innerType + "[] " + IntStream.range(0, depth - 1).mapToObj(i -> " @Size(...) []").collect(Collectors.joining());
+                this.processingEnv.getMessager().printError("This might be due to misplaced annotations, use: " + example, element);
+            }
             return Optional.empty();
         }
         var innerType = processBPFTypeRecordMemberType(element, annotations.dropSize(), type.getComponentType());
@@ -407,7 +482,17 @@ class TypeProcessor {
         return Optional.of(t -> BPFTypeLike.of(new BPFType.StringType(annotations.size().getFirst())));
     }
 
-    private Optional<BPFTypeMirror> processDefinedType(Element element, AnnotationValues annotations, TypeMirror type) {
+    private Optional<BPFTypeMirror> processDefinedStructType(Element element, AnnotationValues annotations, TypeMirror type) {
+        if (!checkAnnotatedType(element, annotations)) {
+            return Optional.empty();
+        }
+        TypeElement typeElement = (TypeElement) processingEnv.getTypeUtils().asElement(type);
+        SpecFieldName fieldName = definedTypes.getOrCreateFieldName(typeElement);
+        var typeName = definedTypes.bpfNameToName(definedTypes.specFieldNameToName(fieldName));
+        return Optional.of(t -> t.apply(typeName));
+    }
+
+    private Optional<BPFTypeMirror> processDefinedUnionType(Element element, AnnotationValues annotations, TypeMirror type) {
         if (!checkAnnotatedType(element, annotations)) {
             return Optional.empty();
         }

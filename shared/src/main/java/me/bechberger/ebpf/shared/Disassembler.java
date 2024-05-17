@@ -17,6 +17,7 @@
 package me.bechberger.ebpf.shared;
 
 import me.bechberger.ebpf.type.BPFType;
+import me.bechberger.ebpf.type.BPFType.BPFUnionMember;
 
 import java.lang.foreign.MemorySegment;
 import java.util.ArrayList;
@@ -56,9 +57,9 @@ public class Disassembler {
             objects -> new BPFInstrFields((byte) objects.get(0), (byte) objects.get(1), (short) objects.get(2),
                     (int) objects.get(3)));
 
-    static final BPFType.BPFUnionType<Void> BPF_INSTR_TYPE = new BPFType.BPFUnionType<>("bpf_instr", null,
-            List.of(new BPFType.BPFUnionTypeMember("s", BPF_INSTR_FIELDS_TYPE), new BPFType.BPFUnionTypeMember("instr"
-                    , UINT64)));
+    static final BPFType.BPFUnionTypeOld<Void> BPF_INSTR_TYPE = new BPFType.BPFUnionTypeOld<>("bpf_instr", null,
+            List.of(new BPFUnionMember("s", BPF_INSTR_FIELDS_TYPE, null), new BPFUnionMember("instr"
+                    , UINT64, null)));
 
     static class BPFDecoder {
         static final int BPF_PSEUDO_CALL = 1;

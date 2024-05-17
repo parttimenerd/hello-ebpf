@@ -32,7 +32,7 @@ public class DataTypeTest {
 
             SEC ("kprobe/do_sys_openat2")
                  int kprobe__do_sys_openat2 (struct pt_regs *ctx)
-            {B
+            {
               int key = 11;
               struct OuterRecord* val = bpf_map_lookup_elem(&array, &key);
               if (val == NULL) {

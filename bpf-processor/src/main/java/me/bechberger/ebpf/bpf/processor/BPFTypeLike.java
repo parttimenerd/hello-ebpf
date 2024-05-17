@@ -1,19 +1,13 @@
 package me.bechberger.ebpf.bpf.processor;
 
-import me.bechberger.cast.CAST;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.BPFName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.JavaName;
-import me.bechberger.ebpf.bpf.processor.DefinedTypes.SpecFieldName;
 import me.bechberger.ebpf.type.BPFType;
-import me.bechberger.ebpf.type.BPFType.BPFArrayType;
-import me.bechberger.ebpf.type.BPFType.BPFStructType;
-import me.bechberger.ebpf.type.BPFType.CustomBPFType;
+import me.bechberger.ebpf.type.BPFType.*;
+import me.bechberger.ebpf.type.Union;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.Function;
-
-import static me.bechberger.cast.CAST.Statement.verbatim;
 
 sealed interface BPFTypeLike<T> {
 
@@ -85,6 +79,13 @@ sealed interface BPFTypeLike<T> {
     final class TypeBackedBPFStructType<T> extends TypeBackedBPFTypeLike<T> {
 
         public TypeBackedBPFStructType(BPFStructType<T> type) {
+            super(type);
+        }
+    }
+
+    final class TypeBackedBPFUnionType<T extends Union> extends TypeBackedBPFTypeLike<T> {
+
+        public TypeBackedBPFUnionType(BPFUnionType<T> type) {
             super(type);
         }
     }

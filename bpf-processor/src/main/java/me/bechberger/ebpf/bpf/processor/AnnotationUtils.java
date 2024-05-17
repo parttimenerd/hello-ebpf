@@ -3,10 +3,12 @@ package me.bechberger.ebpf.bpf.processor;
 import javax.lang.model.AnnotatedConstruct;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.ArrayType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 class AnnotationUtils {
@@ -51,17 +53,24 @@ class AnnotationUtils {
     static AnnotationValues getAnnotationValuesForRecordMember(AnnotatedConstruct element) {
         boolean unsigned = hasAnnotation(element, UNSIGNED_ANNOTATION);
         List<Integer> sizes = new ArrayList<>();
-        var sizeAnnotation = getAnnotationMirror(element, SIZE_ANNOTATION);
-        if (sizeAnnotation.isPresent()) {
-            var value = sizeAnnotation.get().getElementValues().entrySet().stream().findFirst();
-            if (value.isPresent()) {
-                sizes = new ArrayList<>(List.of((Integer) value.get().getValue().getValue()));
+        Consumer<AnnotatedConstruct> process = con -> {
+            var sizeAnnotation = getAnnotationMirror(con, SIZE_ANNOTATION);
+            if (sizeAnnotation.isPresent()) {
+                var value = sizeAnnotation.get().getElementValues().entrySet().stream().findFirst();
+                if (value.isPresent()) {
+                    sizes.add(0, (Integer) value.get().getValue().getValue());
+                }
             }
-        }
-        var sizesAnnotation = getAnnotationMirror(element, SIZES_ANNOTATION);
-        if (sizesAnnotation.isPresent()) {
-            sizes.addAll(((List<AnnotationMirror>)sizesAnnotation.get().getElementValues().values().stream()
-                    .findFirst().get().getValue()).stream().map(a -> getAnnotationValue(a, "value", -1)).toList());
+            var sizesAnnotation = getAnnotationMirror(con, SIZES_ANNOTATION);
+            if (sizesAnnotation.isPresent()) {
+                sizes.addAll(0, ((List<AnnotationMirror>) sizesAnnotation.get().getElementValues().values().stream()
+                        .findFirst().get().getValue()).stream().map(a -> getAnnotationValue(a, "value", -1)).toList());
+            }
+        };
+        process.accept(element);
+        while (element instanceof ArrayType) {
+            process.accept(((ArrayType) element).getComponentType());
+            element = ((ArrayType) element).getComponentType();
         }
         return new AnnotationValues(unsigned, sizes);
     }
