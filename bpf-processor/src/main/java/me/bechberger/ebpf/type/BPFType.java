@@ -33,6 +33,7 @@ import static me.bechberger.cast.CAST.Declarator.identifier;
 import static me.bechberger.cast.CAST.Expression.variable;
 import static me.bechberger.ebpf.type.BPFType.BPFIntType.CHAR;
 import static me.bechberger.ebpf.type.BoxHelper.box;
+import static me.bechberger.ebpf.type.BoxHelper.unbox;
 
 
 /**
@@ -395,7 +396,7 @@ public sealed interface BPFType<T> {
             segment.set(ValueLayout.JAVA_BYTE, 0, obj);
         }, false);
 
-        public static final BPFTypedef<Byte> UINT8 = new BPFTypedef<>("u8", CHAR);
+        public static final BPFInternalTypedef<Byte> UINT8 = new BPFInternalTypedef<>("u8", CHAR);
 
         /**
          * <code>i8</code> mapped to {@code byte}
@@ -473,7 +474,7 @@ public sealed interface BPFType<T> {
         /**
          * <code>void*</code>
          */
-        public static final BPFType<Long> POINTER = new BPFTypedef<>("void*", BPFIntType.UINT64);
+        public static final BPFInternalTypedef<Long> POINTER = new BPFInternalTypedef<>("void*", BPFIntType.UINT64);
     }
 
     /** A potentially signed integer with a fixed width */
@@ -1055,9 +1056,9 @@ public sealed interface BPFType<T> {
     }
 
     /**
-     * Type alias
+     * Type alias for built-in typedefs
      */
-    record BPFTypedef<T>(String bpfName, BPFType<T> wrapped) implements BPFType<T> {
+    record BPFInternalTypedef<T>(String bpfName, BPFType<T> wrapped) implements BPFType<T> {
 
         @Override
         public MemoryLayout layout() {
@@ -1096,7 +1097,89 @@ public sealed interface BPFType<T> {
 
         @Override
         public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
-            return "new " + BPF_TYPE + ".BPFTypedef<>(" + "\"" + bpfName + "\", " + typeToSpecFieldName.apply(wrapped) + ")";
+            return "new " + BPF_TYPE + ".BPFInternalTypedef<>(" + "\"" + bpfName + "\", " + typeToSpecFieldName.apply(wrapped) + ")";
+        }
+    }
+
+    /**
+     * Type alias
+     */
+    record BPFTypedef<W, T extends Typedef<W>>(String bpfName, BPFType<W> wrapped, AnnotatedClass javaClass, Function<W, T> constructor, @Nullable Class<?> wrappedClass) implements BPFType<T> {
+
+        public BPFTypedef(String bpfName, BPFType<W> wrapped, AnnotatedClass javaClass, Function<W, T> constructor) {
+            this(bpfName, wrapped, javaClass, constructor, null);
+        }
+
+        @Override
+        public MemoryLayout layout() {
+            return wrapped.layout();
+        }
+
+        @Override
+        public MemoryParser<T> parser() {
+            return segment -> constructor.apply(unbox(wrapped.parser().parse(segment), wrappedClass));
+        }
+
+        @Override
+        public MemorySetter<T> setter() {
+            return (segment, obj) -> wrapped.setter().store(segment, box(obj.val()));
+        }
+
+        @Override
+        public long alignment() {
+            return wrapped.alignment();
+        }
+
+        @Override
+        public Optional<CAST> toCDeclaration() {
+            return Optional.of(CAST.Statement.typedef(wrapped.toCUse(), variable(bpfName)));
+        }
+
+        @Override
+        public Optional<CAST.Statement> toCDeclarationStatement() {
+            return Optional.of(CAST.Statement.typedef(wrapped.toCUse(), variable(bpfName)));
+        }
+
+        @Override
+        public long size() {
+            return wrapped.size();
+        }
+
+        @Override
+        public long sizePadded() {
+            return wrapped.sizePadded();
+        }
+
+        @Override
+        public Declarator toCUse() {
+            return CAST.Declarator.identifier(bpfName);
+        }
+
+        @Override
+        public Optional<BiFunction<String, Function<BPFType<?>, String>, FieldSpec>> toFieldSpecGenerator() {
+            return Optional.of((fieldName, typeToSpecName) -> {
+                String className = this.javaClass.klass;
+                ClassName baseType = ClassName.get(BPF_PACKAGE, "BPFType.BPFTypedef");
+                TypeName fieldType = ParameterizedTypeName.get(baseType, ClassName.get("", wrapped.toJavaUseInGenerics()), ClassName.get("", className));
+                ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
+                String wrappedFieldName = typeToSpecName.apply(wrapped);
+                return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC).initializer("new $T<>($S, $L, new $T.AnnotatedClass($T" + ".class, " + "java.util.List" + ".of()" + "), ($L o) -> new $L(o), $L.class)", baseType, bpfName, wrappedFieldName, bpfType, ClassName.get("", className), wrapped.toJavaUseInGenerics(), className, wrapped.toJavaUse()).build();
+            });
+        }
+
+        @Override
+        public String toJavaUse() {
+            return javaClass.klass;
+        }
+
+        @Override
+        public String toJavaUseInGenerics() {
+            return javaClass.klass;
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+            return typeToSpecFieldName.apply(this);
         }
     }
 
@@ -1224,12 +1307,12 @@ public sealed interface BPFType<T> {
         public Optional<BiFunction<String, Function<BPFType<?>, String>, FieldSpec>> toFieldSpecGenerator() {
             return Optional.of((fieldName, typeToSpecName) -> {
                 String className = this.javaClass.klass;
-                ClassName bpfStructType = ClassName.get(BPF_PACKAGE, "BPFType.BPFUnionType");
-                TypeName fieldType = ParameterizedTypeName.get(bpfStructType, ClassName.get("", className));
+                ClassName baseType = ClassName.get(BPF_PACKAGE, "BPFType.BPFUnionType");
+                TypeName fieldType = ParameterizedTypeName.get(baseType, ClassName.get("", className));
                 String memberExpression =
                         members.stream().map(m -> "new " + BPF_TYPE + ".BPFUnionMember<" + className + ", " + m.type().toJavaUseInGenerics() + ">(" + "\"" + m.name() + "\"," + " " + typeToSpecName.apply(m.type()) + ", (" + className + " u) -> (" + m.type().toJavaUseInGenerics() + ") (Object)u." + m.name() + ")").collect(Collectors.joining(", "));
                 ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
-                return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC).initializer("new $T<>($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " + "java.util.List" + ".of()" + "), members -> new $T().init(members))", bpfStructType, bpfName, memberExpression, bpfType, ClassName.get("", className), ClassName.get("", className)).build();
+                return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC).initializer("new $T<>($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " + "java.util.List" + ".of()" + "), members -> new $T().init(members))", baseType, bpfName, memberExpression, bpfType, ClassName.get("", className), ClassName.get("", className)).build();
             });
         }
 

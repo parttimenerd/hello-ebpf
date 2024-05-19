@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotates a record for with a struct or union type is generated
+ * Annotates a record or a class for with a struct, union or typedef type is generated
  * <p>
  * Example:
  * {@snippet :
@@ -30,6 +30,10 @@ import java.lang.annotation.Target;
  *        @Unsigned int ipv4;
  *        @Size(16) byte[] ipv6;
  *     }
+ *
+ *     // typedef
+ *     @Type
+ *     record IntArray(@Size(10) int[] val) implements Typedef<@Size(10) int[]> {}
  * }
  * <p>
  * Members can be one of the following:

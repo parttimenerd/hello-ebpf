@@ -13,7 +13,7 @@ package me.bechberger.ebpf.type;
  */
 public class Ptr<T> {
     /** Dereference this pointer */
-    public T deref() {
+    public T val() {
         throw new UnsupportedOperationException("Not implemented");
     }
 

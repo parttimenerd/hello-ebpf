@@ -2,6 +2,7 @@ package me.bechberger.cast;
 
 import me.bechberger.cast.CAST.Declarator.ArrayDeclarator;
 import me.bechberger.cast.CAST.Declarator.Pointery;
+import me.bechberger.cast.CAST.PrimaryExpression.Variable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -991,6 +992,9 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
+                if (declarator instanceof Pointery arr) {
+                    return indent + "typedef " + arr.toPrettyVariableDefinition(name, indent) + ";";
+                }
                 return indent + "typedef " + declarator.toPrettyString() + " " + name.toPrettyString() + ";";
             }
         }

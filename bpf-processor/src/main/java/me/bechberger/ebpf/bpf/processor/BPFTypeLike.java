@@ -4,6 +4,7 @@ import me.bechberger.ebpf.bpf.processor.DefinedTypes.BPFName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.JavaName;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.type.BPFType.*;
+import me.bechberger.ebpf.type.Typedef;
 import me.bechberger.ebpf.type.Union;
 import org.jetbrains.annotations.Nullable;
 
@@ -93,6 +94,13 @@ sealed interface BPFTypeLike<T> {
     final class TypeBackedBPFUnionType<T extends Union> extends TypeBackedBPFTypeLike<T> {
 
         public TypeBackedBPFUnionType(BPFUnionType<T> type) {
+            super(type);
+        }
+    }
+
+    final class TypeBackedBPFTypedef<W, T extends Typedef<W>> extends TypeBackedBPFTypeLike<T> {
+
+        public TypeBackedBPFTypedef(BPFTypedef<W, T> type) {
             super(type);
         }
     }

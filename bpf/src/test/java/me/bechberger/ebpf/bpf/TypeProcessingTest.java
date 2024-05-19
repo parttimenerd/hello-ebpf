@@ -5,11 +5,8 @@ import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.CustomType;
 import me.bechberger.ebpf.annotations.bpf.Type;
-import me.bechberger.ebpf.type.BPFType;
+import me.bechberger.ebpf.type.*;
 import me.bechberger.ebpf.type.BPFType.BPFStructType;
-import me.bechberger.ebpf.type.Ptr;
-import me.bechberger.ebpf.type.Struct;
-import me.bechberger.ebpf.type.Union;
 import org.junit.jupiter.api.Test;
 
 import java.lang.foreign.Arena;
@@ -141,6 +138,25 @@ public class TypeProcessingTest {
             Ptr<Ptr<SimpleRecord>> recordPointerPointer;
             Ptr<@Size(2) Ptr<Integer>[]> intPointerArrayPointer;
         }
+
+        @Type
+        record InterfaceBasedTypedef(int[] val) implements Typedef<@Size(10) int[]> {}
+
+        @Type
+        static class ClassBasedTypedef extends TypedefBase<@Size(10) int[]> {
+            public ClassBasedTypedef(int[] val) {
+                super(val);
+            }
+        }
+
+        @Type
+        record InterfaceBasedTypedefWithPtrOfArrays(Ptr<int[]> val) implements Typedef<Ptr<@Size(10) int[]>> {}
+
+        @Type
+        record InterfaceBasedTypedefOfTypedef(InterfaceBasedTypedef val) implements Typedef<InterfaceBasedTypedef> {}
+
+        @Type
+        record IntType(@Unsigned Integer val) implements Typedef<@Unsigned Integer> {}
     }
 
     @Type
@@ -439,5 +455,61 @@ public class TypeProcessingTest {
                   s32* (*intPointerArrayPointer)[2];
                 };
                 """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+    }
+
+    @Test
+    public void testInterfaceBasedTypedef() {
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.InterfaceBasedTypedef.class);
+        assertEquals("""
+                typedef s32 InterfaceBasedTypedef[10];
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+    }
+
+    @Test
+    public void testClassBasedTypedef() {
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.ClassBasedTypedef.class);
+        assertEquals("""
+                typedef s32 ClassBasedTypedef[10];
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+        var record = new SimpleRecordTestProgram.ClassBasedTypedef(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+        try (var arena = Arena.ofConfined()) {
+            var memory = type.allocate(arena, record);
+            assertArrayEquals(record.val(), type.parseMemory(memory).val());
+        }
+    }
+
+    @Test
+    public void testInterfaceBasedTypedefWithPtrOfArrays() {
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.InterfaceBasedTypedefWithPtrOfArrays.class);
+        assertEquals("""
+                typedef s32 (*InterfaceBasedTypedefWithPtrOfArrays)[10];
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+    }
+
+    @Test
+    public void testInterfaceBasedTypedefOfTypedef() {
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.InterfaceBasedTypedefOfTypedef.class);
+        assertEquals("""
+                typedef InterfaceBasedTypedef InterfaceBasedTypedefOfTypedef;
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+    }
+
+    @Test
+    public void testIntType() {
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.IntType.class);
+        assertEquals("""
+                typedef u32 IntType;
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+        var record = new SimpleRecordTestProgram.IntType(42);
+        try (var arena = Arena.ofConfined()) {
+            var memory = type.allocate(arena, record);
+            assertEquals(42, memory.get(ValueLayout.JAVA_INT, 0));
+            assertEquals(record.val(), type.parseMemory(memory).val());
+        }
     }
 }
