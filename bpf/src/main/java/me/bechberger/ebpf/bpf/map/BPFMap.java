@@ -2,6 +2,7 @@ package me.bechberger.ebpf.bpf.map;
 
 import me.bechberger.ebpf.bpf.BPFError;
 import me.bechberger.ebpf.bpf.raw.Lib;
+import me.bechberger.ebpf.bpf.raw.bpf_attr.task_fd_query;
 import me.bechberger.ebpf.bpf.raw.bpf_map_info;
 import me.bechberger.ebpf.shared.PanamaUtil;
 
@@ -34,11 +35,11 @@ public class BPFMap {
      * @param fd     file descriptor of the map
      * @throws BPFMapTypeMismatch if the type of the map does not match the expected type
      */
-    BPFMap(MapTypeId typeId, FileDescriptor fd) {
-        this.typeId = typeId;
+    public BPFMap(MapTypeId typeId, FileDescriptor fd) {
+        this.typeId = typeId == null ? getInfo(fd).type : typeId;
         this.fd = fd;
         this.info = getInfo(fd);
-        if (info.type != typeId) {
+        if (typeId != null && info.type != typeId) {
             throw new BPFMapTypeMismatch(typeId, info.type);
         }
     }
@@ -88,5 +89,9 @@ public class BPFMap {
 
     public int getMaxEntries() {
         return info.maxEntries;
+    }
+
+    public FileDescriptor getFd() {
+        return fd;
     }
 }

@@ -57,13 +57,21 @@ public class LineReader {
      * @return the line or null if no line is available
      */
     public @Nullable String readLineIfPossible() {
+        if (ready()) {
+            return readLine();
+        }
+        return null;
+    }
+
+    /**
+     * Check if the reader is ready to read a line and has content available
+     * @return true if a line can be read without blocking
+     */
+    public boolean ready() {
         try {
-            if (reader.ready() && input.available() > 0) {
-                return readLine();
-            }
-            return null;
+            return reader.ready() && input.available() > 0;
         } catch (IOException e) {
-            return null;
+            return false;
         }
     }
 }

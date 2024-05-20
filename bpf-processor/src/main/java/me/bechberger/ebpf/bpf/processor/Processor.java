@@ -3,6 +3,7 @@ package me.bechberger.ebpf.bpf.processor;
 import com.squareup.javapoet.*;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Statement.Define;
+import me.bechberger.ebpf.bpf.processor.TypeProcessor.GlobalVariableDefinition;
 import me.bechberger.ebpf.bpf.processor.TypeProcessor.TypeProcessorResult;
 import org.jetbrains.annotations.Nullable;
 
@@ -92,7 +93,7 @@ public class Processor extends AbstractProcessor {
         ImplName implName = typeToImplName(typeElement);
 
         TypeSpec typeSpec = createType(implName.className, typeElement.asType(), bytes,
-                typeProcessorResult.fields(), combinedCode);
+                typeProcessorResult.fields(), combinedCode, typeProcessorResult.globalVariableDefinitions());
         try {
             var file = processingEnv.getFiler().createSourceFile(implName.fullyQualifiedClassName, typeElement);
             // delete file if it exists
@@ -162,31 +163,61 @@ public class Processor extends AbstractProcessor {
      * Create a class that implements the class of typeElement and overrides the getByteCode method to return the
      * compiled eBPF program, but store the compiled eBPF program as a base64 encoded string in a static final field
      *
-     * @param name          the name of the class
-     * @param baseType      the type of the class
-     * @param byteCode      the compiled eBPF program
-     * @param bpfTypeFields the {@code BPFStructType} fields of the class, related to the {@code @Type} annotated
-     *                      inner records
+     * @param name                      the name of the class
+     * @param baseType                  the type of the class
+     * @param byteCode                  the compiled eBPF program
+     * @param bpfTypeFields             the {@code BPFStructType} fields of the class, related to the {@code @Type} annotated
+     *                                  inner records
+     * @param globalVariableDefinitions
      * @return the generated class
      */
     private TypeSpec createType(String name, TypeMirror baseType, byte[] byteCode, List<FieldSpec> bpfTypeFields,
-                                CombinedCode code) {
+                                CombinedCode code, List<GlobalVariableDefinition> globalVariableDefinitions) {
         var suppressWarnings = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "{\"unchecked\", \"rawtypes\"}").build();
         var spec =
                 TypeSpec.classBuilder(name).addAnnotation(suppressWarnings).superclass(baseType).addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                         .addField(FieldSpec.builder(String.class, "BYTE_CODE", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                                 .addJavadoc("Base64 encoded and gzipped eBPF byte-code of the program\n{@snippet : \n" + sanitizeCodeForJavadoc(code.ebpfProgram) + "\n}")
-                                .initializer("$S", gzipBase64Encode(byteCode)).build());
-        // insert the spec fields
+                                .initializer("$S", gzipBase64Encode(byteCode)).build());// insert the spec fields
         bpfTypeFields.forEach(spec::addField);
         spec.addMethod(MethodSpec.methodBuilder("getByteCode")
                 .addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(byte[].class)
                 .addStatement("return me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(BYTE_CODE)").build());
         // implement the constructor and set the map fields
         var constructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC);
-        code.tp.mapDefinitions().forEach(m -> constructor.addStatement("$L", m.javaFieldInitializer()));
+        code.tp.mapDefinitions().forEach(m -> {
+            constructor.addStatement("$L", m.javaFieldInitializer());
+        });
         spec.addMethod(constructor.build());
+        if (!globalVariableDefinitions.isEmpty()) {
+            spec.addMethod(addGlobalVariableDefinitions(MethodSpec.methodBuilder("initGlobals")
+                    .addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(TypeName.VOID), globalVariableDefinitions).build());
+        }
         return spec.build();
+    }
+
+    /*
+
+        public record GlobabVariableInitInfo<T>(GlobalVariable<T> variable, String name, BPFType<T> type) {
+        }
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        public void initGlobals(List<GlobabVariableInitInfo<?>> globalVariables) {
+     */
+    private MethodSpec.Builder addGlobalVariableDefinitions(MethodSpec.Builder spec, List<GlobalVariableDefinition> globalVariableDefinitions) {
+        if (globalVariableDefinitions.isEmpty()) {
+            return spec;
+        }
+
+        var globalVariablesType = ClassName.get("me.bechberger.ebpf.bpf", "GlobalVariable.Globals");
+
+        spec.addStatement("$T globalVariables = $T.forProgram(this)", globalVariablesType, globalVariablesType)
+                .addStatement("globalVariables.initGlobals(java.util.List.of($L))", globalVariableDefinitions.stream().map(this::createGlobalVariableInitInfoExpression).collect(Collectors.joining(", ")));
+        return spec;
+    }
+
+    private String createGlobalVariableInitInfoExpression(GlobalVariableDefinition g) {
+        return "new me.bechberger.ebpf.bpf.GlobalVariable.GlobalVariableInitInfo<>(this." + g.name() + ", \"" + g.name() + "\", " + g.typeField() + ")";
     }
 
     private String sanitizeCodeForJavadoc(String code) {
@@ -299,6 +330,12 @@ public class Processor extends AbstractProcessor {
         // and the defined maps
         tpResult.mapDefinitions().stream().map(m -> m.structDefinition().toPrettyString()).forEach(l -> {
             addLine.accept(l);
+            resultLines.add("");
+        });
+
+        tpResult.globalVariableDefinitions().forEach(v -> {
+            String line = v.globalVariable().toPrettyString();
+            addLine.accept(line);
             resultLines.add("");
         });
 

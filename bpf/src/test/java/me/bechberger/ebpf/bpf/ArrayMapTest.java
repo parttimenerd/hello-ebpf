@@ -3,7 +3,11 @@ package me.bechberger.ebpf.bpf;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.bpf.map.BPFArray;
+import me.bechberger.ebpf.shared.TraceLog;
 import org.junit.jupiter.api.Test;
+
+import java.time.Duration;
+import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -37,7 +41,7 @@ public class ArrayMapTest {
     }
 
     @Test
-    public void testBasicArrayMap() {
+    public void testBasicArrayMap() throws InterruptedException {
         try (var program = BPFProgram.load(ArrayMapTest.Program.class)) {
             var array = program.array;
             assertEquals(256, array.size());
@@ -53,5 +57,6 @@ public class ArrayMapTest {
                 }
             }
         }
+        TraceLog.getInstance().readAllAvailableLines(Duration.ofMillis(100));
     }
 }

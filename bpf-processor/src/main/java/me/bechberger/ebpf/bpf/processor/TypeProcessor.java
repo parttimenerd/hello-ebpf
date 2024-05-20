@@ -1,6 +1,8 @@
 package me.bechberger.ebpf.bpf.processor;
 
 import com.squareup.javapoet.FieldSpec;
+import com.sun.tools.javac.tree.JCTree.JCNewClass;
+import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
@@ -97,6 +99,10 @@ class TypeProcessor {
         return processingEnv.getTypeUtils().isSameType(((TypeElement) element).getSuperclass(), getTypeMirror(klass));
     }
 
+    private boolean hasClassIgnoringTypeParameters(Element element, String klass) {
+        return processingEnv.getTypeUtils().erasure(element.asType()).toString().equals(klass);
+    }
+
     private boolean hasSameSuperclassIgnoringTypeParameters(Element element, Class<?> klass) {
         return processingEnv.getTypeUtils().isSameType(
                 processingEnv.getTypeUtils().erasure(((TypeElement) element).getSuperclass()),
@@ -170,7 +176,8 @@ class TypeProcessor {
     }
 
     record TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements,
-                               @Nullable Statement licenseDefinition, List<MapDefinition> mapDefinitions) {
+                               @Nullable Statement licenseDefinition, List<MapDefinition> mapDefinitions,
+                               List<GlobalVariableDefinition> globalVariableDefinitions) {
     }
 
     boolean shouldGenerateCCode(TypeElement innerElement) {
@@ -183,7 +190,7 @@ class TypeProcessor {
      * @param outerTypeElement the class to process that contains the records
      * @return a list of field specs that define the related {@code BPFStructType} instances
      */
-    TypeProcessorResult processBPFTypeRecords(TypeElement outerTypeElement) {
+    public TypeProcessorResult processBPFTypeRecords(TypeElement outerTypeElement) {
         this.outerTypeElement = outerTypeElement;
         List<TypeElement> predefinedTypeElements = getRequiredBPFTypeElements(outerTypeElement);
         // we initialize the defined types with the predefined types
@@ -206,7 +213,7 @@ class TypeProcessor {
             }
             var type = processBPFTypeRecord(unprocessed.getFirst());
             if (type.isEmpty()) {
-                return new TypeProcessorResult(List.of(), List.of(), List.of(), null, List.of());
+                return new TypeProcessorResult(List.of(), List.of(), List.of(), null, List.of(), createGlobalVariableDefinitions(outerTypeElement, typeToSpecField));
             }
             alreadyDefinedTypes.put(type.get().getJavaName(), type.get());
             processedTypes.add(unprocessed.getFirst());
@@ -241,7 +248,55 @@ class TypeProcessor {
         }
 
         return new TypeProcessorResult(fields, createDefineStatements(outerTypeElement), definingStatements,
-                getLicenseDefinitionStatement(outerTypeElement), mapDefinitions);
+                getLicenseDefinitionStatement(outerTypeElement), mapDefinitions, createGlobalVariableDefinitions(outerTypeElement, typeToSpecField));
+    }
+
+    static record GlobalVariableDefinition(Statement globalVariable, String name, String typeField, String initializer) {}
+
+    private List<GlobalVariableDefinition> createGlobalVariableDefinitions(TypeElement outerTypeElement, Function<BPFTypeLike<?>, SpecFieldName> typeToSpecField) {
+        return outerTypeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e)
+                .filter(e -> hasClassIgnoringTypeParameters(e, "me.bechberger.ebpf.bpf.GlobalVariable"))
+                .map(e -> processGlobalVariable(e, typeToSpecField)).filter(Objects::nonNull).toList();
+    }
+
+    private @Nullable GlobalVariableDefinition processGlobalVariable(VariableElement field, Function<BPFTypeLike<?>, SpecFieldName> typeToSpecField) {
+        // check that the field is final
+        if (!field.getModifiers().contains(Modifier.FINAL)) {
+            this.processingEnv.getMessager().printError("Global variable field " + field.getSimpleName() + " must be final", field);
+            return null;
+        }
+        // check that field is not static
+        if (field.getModifiers().contains(Modifier.STATIC)) {
+            this.processingEnv.getMessager().printError("Global variable field " + field.getSimpleName() + " must not be static", field);
+            return null;
+        }
+        // get the type from the type parameter
+        var type = ((DeclaredType) field.asType()).getTypeArguments().getFirst();
+        var bpfTypeMirror = processBPFTypeRecordMemberType(field, getAnnotationValuesForRecordMember(type), type);
+        if (bpfTypeMirror.isEmpty()) {
+            return null;
+        }
+        var bpfType = bpfTypeMirror.get().toBPFType(this::getBPFTypeForJavaName);
+        var typeField = bpfType.toCustomType().toJavaFieldSpecUse(t -> typeToSpecField.apply(BPFTypeLike.of(t)).name());
+
+        var tree = javacProcessingEnv.getElementUtils().getTree(field);
+        assert tree instanceof JCVariableDecl;
+        var init = ((JCVariableDecl) tree).init;
+        if (init == null) {
+            this.processingEnv.getMessager().printError("Global variable field " + field.getSimpleName() + " must have an initializer", field);
+            return null;
+        }
+        if (!(init instanceof JCNewClass newClass) || !((JCTypeApply) ((JCNewClass) init).clazz).getType().toString().equals("GlobalVariable")) {
+            this.processingEnv.getMessager().printError("Global variable field " + field.getSimpleName() + " must be initialized with a new GlobalVariable", field);
+            return null;
+        }
+        var args = ((JCNewClass) init).getArguments();
+        assert args.size() == 1;
+        String initializer = args.getFirst().toString();
+        var definition = variableDefinition(bpfType.toCustomType().cUse().get(),
+                variable(field.getSimpleName().toString(),
+                        CAnnotation.sec(".data")));
+        return new GlobalVariableDefinition(definition, field.getSimpleName().toString(), typeField, initializer);
     }
 
     private BPFTypeLike<?> getBPFTypeForJavaName(JavaName name) {

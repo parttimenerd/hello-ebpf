@@ -4,7 +4,9 @@ import me.bechberger.ebpf.shared.util.LineReader;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.nio.file.Path;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import static me.bechberger.ebpf.shared.Constants.TRACEFS;
@@ -15,6 +17,7 @@ import static me.bechberger.ebpf.shared.Constants.TRACEFS;
  * Inspired transitively (and probably derived) from the bcc project
  */
 public class TraceLog {
+
     public record TraceFields(String line, String task, int pid, String cpu, String flags, double ts, String msg) {
 
         /**
@@ -157,5 +160,21 @@ public class TraceLog {
      */
     public void printLoop() {
         printLoop((String) null);
+    }
+
+    public List<String> readAllAvailableLines() {
+        return readAllAvailableLines(Duration.ZERO);
+    }
+
+    public List<String> readAllAvailableLines(Duration waitAtMost) {
+        List<String> lines = new ArrayList<>();
+        long start = System.nanoTime();
+        while (Duration.ofNanos(System.nanoTime() - start).compareTo(waitAtMost) < 0) {
+            while (traceFile.ready()) {
+                lines.add(traceFile.readLine());
+                start = System.nanoTime();
+            }
+        }
+        return lines;
     }
 }

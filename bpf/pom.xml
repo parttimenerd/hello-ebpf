@@ -115,7 +115,7 @@
     <dependency>
       <groupId>me.bechberger</groupId>
       <artifactId>rawbpf</artifactId>
-      <version>0.1.1</version>
+      <version>0.1.3</version>
     </dependency>
     <dependency>
       <groupId>me.bechberger</groupId>

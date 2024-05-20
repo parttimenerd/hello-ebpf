@@ -1,10 +1,13 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.bpf.GlobalVariable.Globals;
 import me.bechberger.ebpf.bpf.map.*;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer.BPFRingBufferError;
 import me.bechberger.ebpf.bpf.processor.Processor;
 import me.bechberger.ebpf.bpf.raw.Lib;
 import me.bechberger.ebpf.bpf.raw.LibraryLoader;
+import me.bechberger.ebpf.bpf.raw.btf_type;
+import me.bechberger.ebpf.bpf.raw.btf_var_secinfo;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.shared.PanamaUtil;
 import me.bechberger.ebpf.shared.PanamaUtil.HandlerWithErrno;
@@ -16,14 +19,16 @@ import me.bechberger.ebpf.type.Union;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.lang.foreign.AddressLayout;
 import java.lang.foreign.Arena;
 import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.MemorySegment;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
+import java.util.function.IntSupplier;
+import java.util.stream.IntStream;
 
 /**
  * Base class for bpf programs.
@@ -94,7 +99,9 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public static <T extends BPFProgram, S extends T> S load(Class<T> clazz) {
         try {
-            return BPFProgram.<T, S>getImplClass(clazz).getConstructor().newInstance();
+            var program = BPFProgram.<T, S>getImplClass(clazz).getConstructor().newInstance();
+            program.initGlobals();
+            return program;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -122,10 +129,15 @@ public abstract class BPFProgram implements AutoCloseable {
 
     /**
      * Load the eBPF program from the byte code
+     * <p>
+     * You have to call {@link #initGlobals()} to initialize the global variables
      */
     public BPFProgram() {
         this.ebpf_object = loadProgram();
         Runtime.getRuntime().addShutdownHook(new Thread(this::close));
+    }
+
+    protected void initGlobals() {
     }
 
     public <T> BPFType<T> getTypeForClass(Class<T> innerType) {
@@ -370,7 +382,7 @@ public abstract class BPFProgram implements AutoCloseable {
             if (map == MemorySegment.NULL || map.address() == 0) {
                 throw new BPFMapNotFoundError(name);
             }
-            return new FileDescriptor(name, Lib.bpf_map__fd(map));
+            return new FileDescriptor(name, map, Lib.bpf_map__fd(map));
         }
     }
 
@@ -431,5 +443,143 @@ public abstract class BPFProgram implements AutoCloseable {
                 ((BPFRingBuffer<?>)map).consumeAndThrow();
             }
         }
+    }
+
+    public static class BTF {
+
+        private final MemorySegment bpfObject;
+        private Map<Integer, BTFType> types = new HashMap<>();
+
+        BTF(MemorySegment bpfObject) {
+            this.bpfObject = bpfObject;
+        }
+
+        public enum Kind {
+            UNKN(0),
+            INT(1),
+            PTR(2),
+            ARRAY(3),
+            STRUCT(4),
+            UNION(5),
+            ENUM(6),
+            FWD(7),
+            TYPEDEF(8),
+            VOLATILE(9),
+            CONST(10),
+            RESTRICT(11),
+            FUNC(12),
+            FUNC_PROTO(13),
+            VAR(14),
+            DATASEC(15),
+            FLOAT(16),
+            DECL_TAG(17),
+            TYPE_TAG(18),
+            ENUM64(19);
+
+            private final int value;
+
+            Kind(int value) {
+                this.value = value;
+            }
+
+            public int value() {
+                return value;
+            }
+
+            public static Kind fromValue(int value) {
+                return values()[value];
+            }
+        }
+
+        public static class BTFType {
+
+            private static int kind(int info) {
+                return (info >> 24) & 0xff;
+            }
+
+            private static int vlen(int info) {
+                return info & 0xffff;
+            }
+
+            private final BTF btf;
+            private final MemorySegment typeObj;
+            private final Kind kind;
+            private final String name;
+
+            public BTFType(BTF btf, MemorySegment typeObj) {
+                this.btf = btf;
+                this.typeObj = typeObj;
+                this.kind = Kind.fromValue(kind(btf_type.info(typeObj)));
+                this.name = PanamaUtil.toString(Lib.btf__name_by_offset(btf.bpfObject, btf_type.name_off(typeObj)));
+            }
+
+            Kind kind() {
+                return kind;
+            }
+
+            String name() {
+                return name;
+            }
+
+            int memberCount() {
+                return vlen(btf_type.info(typeObj));
+            }
+
+            record VariableSectionInfo(BTFType type, int offset, int size) {
+                String name() {
+                    return type.name;
+                }
+            }
+
+            List<VariableSectionInfo> getVariableSectionInfos() {
+                // in c code:
+                // btf_var_secinfo *ptr = (struct btf_var_secinfo *)(type + 1);
+                // assume that btf_var_secinfo and btf_type are 4 byte aligned
+                var infos = typeObj.address() + btf_type.sizeof();
+                return IntStream.range(0, memberCount()).mapToObj(i -> {
+                    var elem = MemorySegment.ofAddress(infos + i * btf_var_secinfo.sizeof()).reinterpret(btf_var_secinfo.sizeof());
+                    return new VariableSectionInfo(btf.getTypeById(btf_var_secinfo.type(elem)), btf_var_secinfo.offset(elem), btf_var_secinfo.size(elem));
+                }).toList();
+            }
+        }
+
+        int findIdByName(String name) {
+            try (Arena arena = Arena.ofConfined()) {
+                int id = Lib.btf__find_by_name(bpfObject, arena.allocateFrom(name));
+                if (id < 0) {
+                    throw new BPFError("Failed to find BTF by name: " + name);
+                }
+                return id;
+            }
+        }
+
+        BTFType getTypeById(int id) {
+            return types.computeIfAbsent(id, i -> {
+                try (Arena arena = Arena.ofConfined()) {
+                    MemorySegment segment = Lib.btf__type_by_id(bpfObject, id);
+                    if (segment == MemorySegment.NULL) {
+                        throw new BPFError("Failed to get BTF type by id: " + id);
+                    }
+                    return new BTFType(this, segment);
+                }
+            });
+        }
+
+        BTFType findTypeByName(String name) {
+            return getTypeById(findIdByName(name));
+        }
+    }
+
+    private BTF btf = null;
+
+    public BTF getBTF() {
+        if (btf == null) {
+            var ret = Lib.bpf_object__btf(this.ebpf_object);
+            if (Lib.libbpf_get_error(ret) != 0) {
+                throw new BPFError("Failed to get BTF");
+            }
+            btf = new BTF(ret);
+        }
+        return btf;
     }
 }
