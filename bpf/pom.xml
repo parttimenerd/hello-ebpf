@@ -52,10 +52,13 @@
           <annotationProcessors>
             <annotationProcessor>me.bechberger.ebpf.bpf.processor.Processor</annotationProcessor>
           </annotationProcessors>
+          <!-- fork=true is necessary to pass compilerArgs,
+          see https://github.com/projectlombok/lombok/issues/2681#issuecomment-748616687
+          <fork>false</fork>
           <compilerArgs>
-            <arg>--add-exports</arg>
-            <arg>jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+            <arg>-J- -add-opens=...</arg>
           </compilerArgs>
+          but we can omit it by just using the .mvn/jvm.config file-->
         </configuration>
       </plugin>
       <plugin>

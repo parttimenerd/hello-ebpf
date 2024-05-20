@@ -1,6 +1,7 @@
 package me.bechberger.ebpf.bpf.processor;
 
 import com.squareup.javapoet.FieldSpec;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils.AnnotationValues;
@@ -29,6 +30,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import com.sun.tools.javac.processing.JavacProcessingEnvironment;
+
 import static me.bechberger.cast.CAST.Expression.constant;
 import static me.bechberger.cast.CAST.Expression.variable;
 import static me.bechberger.cast.CAST.Statement.*;
@@ -46,6 +49,8 @@ class TypeProcessor {
     public final static String BPF_MAP_CLASS = "me.bechberger.ebpf.annotations.bpf.BPFMapClass";
 
     private final ProcessingEnvironment processingEnv;
+    /** only use this where necessary because it is not part of the public API */
+    private final JavacProcessingEnvironment javacProcessingEnv;
     private TypeElement outerTypeElement;
     private DefinedTypes definedTypes;
     private Map<JavaName, BPFTypeLike<?>> alreadyDefinedTypes;
@@ -56,6 +61,7 @@ class TypeProcessor {
 
     TypeProcessor(ProcessingEnvironment processingEnv) {
         this.processingEnv = processingEnv;
+        this.javacProcessingEnv = (JavacProcessingEnvironment) processingEnv;
     }
 
     /** Returns all records annotated with {@code @Type} and types specified in the {@link me.bechberger.ebpf.annotations.bpf.BPF} annotation */
@@ -441,10 +447,26 @@ class TypeProcessor {
                 (List<BPFUnionMember<Union,?>>) (List) members.stream().map(m -> new BPFUnionMember<>(m.name(), m.type(), null)).toList(), annotatedClass, null)));
     }
 
+    private boolean hasInitializer(VariableElement element) {
+        var tree = javacProcessingEnv.getElementUtils().getTree(element);
+        if (tree instanceof JCVariableDecl) {
+            return ((JCVariableDecl) tree).init != null;
+        }
+        return element.getConstantValue() != null;
+    }
+
+    private boolean checkThatNoMemberHasAnInitializer(List<? extends VariableElement> recordMembers) {
+        var membersWithInitializer = recordMembers.stream().filter(this::hasInitializer).toList();
+        for (var member : membersWithInitializer) {
+            this.processingEnv.getMessager().printError(member.getEnclosingElement().getSimpleName() + "." + member.getSimpleName() + " must not have an initializer", member);
+        }
+        return membersWithInitializer.isEmpty();
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Optional<List<BPFType.UBPFStructMember<?, ?>>> processBPFTypeRecordMembers(List<? extends VariableElement> recordMembers) {
         var list = recordMembers.stream().map(this::processBPFTypeRecordMember).toList();
-        if (list.stream().anyMatch(Optional::isEmpty)) {
+        if (list.stream().anyMatch(Optional::isEmpty) || !checkThatNoMemberHasAnInitializer(recordMembers)) {
             return Optional.empty();
         }
         return Optional.of((List<BPFType.UBPFStructMember<?, ?>>)(List)list.stream().map(Optional::orElseThrow).toList());
@@ -717,8 +739,8 @@ class TypeProcessor {
         var maxEntries = getAnnotationValue(annotation.get(), "maxEntries", 0);
         if (maxEntries == 0) {
             this.processingEnv.getMessager().printError("maxEntries must be set and larger than 0", field);
+            return null;
         }
-
         var type = field.asType();
         if (!(type instanceof DeclaredType declaredType)) {
             this.processingEnv.getMessager().printError("Field must be a declared type", field);

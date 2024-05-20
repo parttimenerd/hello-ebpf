@@ -3,10 +3,10 @@ package me.bechberger.ebpf.type;
 /**
  * Represents a pointer to a value in Java code that is translated to a pointer in C code.
  * <p>
- * Example: {
- *     Ref<Integer> ref;
+ * Example: {@snippet :
+ *     Ptr<Integer> ptr;
  *     // is translated to
- *     int *ref;
+ *     int *ptr;
  * }
  * <b>None of the methods work in Java</b>
  * @param <T> Type of the value

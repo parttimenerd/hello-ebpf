@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import java.lang.foreign.Arena;
 import java.lang.foreign.ValueLayout;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static me.bechberger.ebpf.bpf.TypeProcessingTest.SimpleRecordTestProgram.*;
 import static me.bechberger.ebpf.type.BPFType.BPFIntType.*;
