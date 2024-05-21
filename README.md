@@ -193,6 +193,7 @@ Posts covering the development of this project:
 - Mar 22, 2024: [Hello eBPF: Auto Layouting Structs (7)](https://mostlynerdless.de/blog/2024/03/22/hello-ebpf-auto-layouting-structs-7/)
 - Apr 09, 2024: [Hello eBPF: Generating C Code (8)](https://mostlynerdless.de/blog/2024/04/09/hello-ebpf-generating-c-code-8/)
 - Apr 22, 2024: [Hello eBPF: XDP-based Packet Filter (9)](https://mostlynerdless.de/blog/2024/04/22/hello-ebpf-xdp-based-packet-filter-9/)
+- May 21, 2024: [Hello eBPF: Global Variables (10)](https://mostlynerdless.de/blog/2024/05/21/hello-ebpf-global-variables-10/)
 
 Examples
 --------
