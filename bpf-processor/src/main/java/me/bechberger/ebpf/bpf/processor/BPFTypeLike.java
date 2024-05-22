@@ -4,6 +4,7 @@ import me.bechberger.ebpf.bpf.processor.DefinedTypes.BPFName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.JavaName;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.type.BPFType.*;
+import me.bechberger.ebpf.type.Enum;
 import me.bechberger.ebpf.type.Typedef;
 import me.bechberger.ebpf.type.Union;
 import org.jetbrains.annotations.Nullable;
@@ -101,6 +102,13 @@ sealed interface BPFTypeLike<T> {
     final class TypeBackedBPFTypedef<W, T extends Typedef<W>> extends TypeBackedBPFTypeLike<T> {
 
         public TypeBackedBPFTypedef(BPFTypedef<W, T> type) {
+            super(type);
+        }
+    }
+
+    final class TypeBackedBPFEnumType<T extends Enum<?>> extends TypeBackedBPFTypeLike<T> {
+
+        public TypeBackedBPFEnumType(BPFEnumType<T> type) {
             super(type);
         }
     }

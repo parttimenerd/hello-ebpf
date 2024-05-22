@@ -30,6 +30,9 @@ import java.util.function.Function;
 import java.util.function.IntSupplier;
 import java.util.stream.IntStream;
 
+import static me.bechberger.ebpf.NameUtil.toConstantCase;
+import static me.bechberger.ebpf.NameUtil.toSnakeCase;
+
 /**
  * Base class for bpf programs.
  * <p></p>
@@ -174,8 +177,8 @@ public abstract class BPFProgram implements AutoCloseable {
 
     @SuppressWarnings("unchecked")
     private static <T> BPFType<T> getTypeForImplClass(Class<?> outerImpl, Class<T> inner, boolean canonical) {
-        String fieldName = (canonical ? inner.getCanonicalName() : inner.getSimpleName()).replaceAll("([a-z0-9])([A-Z])", "$1_$2")
-                .replace(".", "__").toUpperCase();
+        String fieldName = toConstantCase(canonical ? inner.getCanonicalName() : inner.getSimpleName())
+                .replace(".", "__");
         try {
             return (BPFType<T>) outerImpl.getDeclaredField(fieldName).get(null);
         } catch (IllegalAccessException | NoSuchFieldException e) {

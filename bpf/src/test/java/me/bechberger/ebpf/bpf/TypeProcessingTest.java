@@ -4,9 +4,13 @@ import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.CustomType;
+import me.bechberger.ebpf.annotations.bpf.EnumMember;
 import me.bechberger.ebpf.annotations.bpf.Type;
+import me.bechberger.ebpf.type.Enum;
+import me.bechberger.ebpf.type.Enum.EnumSupport;
 import me.bechberger.ebpf.type.*;
 import me.bechberger.ebpf.type.BPFType.BPFStructType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.lang.foreign.Arena;
@@ -156,6 +160,15 @@ public class TypeProcessingTest {
 
         @Type
         record IntType(@Unsigned Integer val) implements Typedef<@Unsigned Integer> {}
+
+        @Type
+        enum Kind implements Enum<Kind> {
+            A, @EnumMember(value = 23, name = "KIND_42") B, C, D
+        }
+
+        @Type
+        record RecordWithEnumArray(@Size(2) Kind[] values) {
+        }
     }
 
     @Type
@@ -509,6 +522,58 @@ public class TypeProcessingTest {
             var memory = type.allocate(arena, record);
             assertEquals(42, memory.get(ValueLayout.JAVA_INT, 0));
             assertEquals(record.val(), type.parseMemory(memory).val());
+        }
+    }
+
+    @Test
+    public void testKindEnum() {
+        Assertions.assertAll(
+                () -> assertEquals(0, Kind.A.value(), "A has value 0"),
+                () -> assertEquals(23, Kind.B.value(), "B has value 23"),
+                () -> assertEquals(24, Kind.C.value(), "C has value 24"),
+                () -> assertEquals(25, Kind.D.value(), "D has value 25"),
+                () -> assertEquals("A(0)", Kind.A.toStr()),
+                () -> assertEquals(Kind.C, EnumSupport.fromValue(Kind.class, 24))
+        );
+        for (var kind : Kind.values()) {
+            assertEquals(kind, EnumSupport.fromValue(Kind.class, kind.value()));
+        }
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class, Kind.class);
+        assertEquals("""
+                enum Kind {
+                  KIND_A = 0,
+                  KIND_42 = 23,
+                  KIND_C = 24,
+                  KIND_D = 25
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+        var record = Kind.B;
+        try (var arena = Arena.ofConfined()) {
+            var memory = type.allocate(arena, record);
+            assertEquals(23, memory.get(ValueLayout.JAVA_INT, 0));
+            assertEquals(record, type.parseMemory(memory));
+        }
+    }
+
+    @Test
+    public void testRecordWithEnumArray() {
+        var type = BPFProgram.getStructTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.RecordWithEnumArray.class);
+        assertEquals(8, type.size());
+        assertEquals(8, type.getMember("values").type().size());
+        assertEquals(4, type.getMember("values").type().alignment());
+        assertEquals(4, type.alignment());
+        assertEquals("""
+                struct RecordWithEnumArray {
+                  enum Kind values[2];
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+        var record = new SimpleRecordTestProgram.RecordWithEnumArray(new Kind[]{Kind.A, Kind.B});
+        try (var arena = Arena.ofConfined()) {
+            var memory = type.allocate(arena, record);
+            assertEquals(0, memory.get(ValueLayout.JAVA_INT, 0));
+            assertEquals(23, memory.get(ValueLayout.JAVA_INT, 4));
+            assertArrayEquals(record.values, type.parseMemory(memory).values);
         }
     }
 }

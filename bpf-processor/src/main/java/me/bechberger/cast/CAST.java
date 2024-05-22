@@ -2,6 +2,8 @@ package me.bechberger.cast;
 
 import me.bechberger.cast.CAST.Declarator.ArrayDeclarator;
 import me.bechberger.cast.CAST.Declarator.Pointery;
+import me.bechberger.cast.CAST.PrimaryExpression.Constant;
+import me.bechberger.cast.CAST.PrimaryExpression.Constant.IntegerConstant;
 import me.bechberger.cast.CAST.PrimaryExpression.Variable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,8 +53,27 @@ public interface CAST {
             return Statement.expression(this);
         }
 
-        static PrimaryExpression.Constant constant(Object value) {
-            return new PrimaryExpression.Constant(value);
+        static PrimaryExpression.Constant<?> constant(Object value) {
+            switch (value) {
+                case Integer i  -> {
+                    return new PrimaryExpression.Constant.IntegerConstant(i);
+                }
+                case Long l -> {
+                    return new PrimaryExpression.Constant.LongConstant(l);
+                }
+                case Character c -> {
+                    return new PrimaryExpression.Constant.CharConstant(c);
+                }
+                case String s -> {
+                    return new PrimaryExpression.Constant.StringConstant(s);
+                }
+                case Double d -> {
+                    return new PrimaryExpression.Constant.FloatConstant(d);
+                }
+                default -> {
+                    throw new IllegalArgumentException("Unsupported constant type: " + value.getClass());
+                }
+            }
         }
 
         static PrimaryExpression.Variable variable(String name) {
@@ -146,16 +167,41 @@ public interface CAST {
             }
         }
 
-        /**
-         * Constant value for expressions, escapes string
-         */
-        record Constant(Object value) implements PrimaryExpression {
-            @Override
-            public String toPrettyString(String indent, String increment) {
-                if (value instanceof String str) {
-                    return indent + toStringLiteral(str);
-                } else {
-                    return indent + value.toString();
+        sealed interface Constant<T> extends PrimaryExpression {
+            T value();
+
+            record IntegerConstant(Integer value) implements Constant<Integer> {
+                @Override
+                public String toPrettyString(String indent, String increment) {
+                    return indent + value;
+                }
+            }
+
+            record LongConstant(Long value) implements Constant<Long> {
+                @Override
+                public String toPrettyString(String indent, String increment) {
+                    return indent + value + "L";
+                }
+            }
+
+            record CharConstant(Character value) implements Constant<Character> {
+                @Override
+                public String toPrettyString(String indent, String increment) {
+                    return indent + "'" + (value == '\'' ? "\\'" : value) + "'";
+                }
+            }
+
+            record StringConstant(String value) implements Constant<String> {
+                @Override
+                public String toPrettyString(String indent, String increment) {
+                    return indent + toStringLiteral(value);
+                }
+            }
+
+            record FloatConstant(Double value) implements Constant<Double> {
+                @Override
+                public String toPrettyString(String indent, String increment) {
+                    return indent + value;
                 }
             }
         }
@@ -650,6 +696,34 @@ public interface CAST {
             }
         }
 
+        record EnumMember(PrimaryExpression.Variable name, IntegerConstant value) implements Declarator {
+            @Override
+            public List<? extends Expression> children() {
+                return List.of(name, value);
+            }
+
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                return indent + name.toPrettyString() + " = " + value.toPrettyString();
+            }
+        }
+
+        record EnumDeclarator(@Nullable PrimaryExpression.Variable name,
+                              List<EnumMember> members) implements Declarator {
+            @Override
+            public List<? extends Expression> children() {
+                if (name == null) {
+                    return members;
+                }
+                return Stream.concat(Stream.of(name), members.stream()).collect(Collectors.toList());
+            }
+
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                return indent + "enum " + (name == null ? "" : name.toPrettyString() + " ") + "{\n" + members.stream().map(m -> m.toPrettyString(indent + increment, increment)).collect(Collectors.joining(",\n")) + "\n" + indent + "}";
+            }
+        }
+
         record FunctionDeclarator(Declarator declarator, List<Declarator> parameters) implements Declarator {
             @Override
             public List<? extends Expression> children() {
@@ -695,6 +769,18 @@ public interface CAST {
             @Override
             public String toPrettyString(String indent, String increment) {
                 return indent + "union " + name.toPrettyString();
+            }
+        }
+
+        record EnumIdentifierDeclarator(PrimaryExpression.Variable name) implements Declarator {
+            @Override
+            public List<? extends Expression> children() {
+                return List.of(name);
+            }
+
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                return indent + "enum " + name.toPrettyString();
             }
         }
 
@@ -753,6 +839,22 @@ public interface CAST {
 
         static Declarator unionIdentifier(String name) {
             return new UnionIdentifierDeclarator(new PrimaryExpression.Variable(name));
+        }
+
+        static Declarator _enum(PrimaryExpression.Variable name, List<EnumMember> members) {
+            return new EnumDeclarator(name, members);
+        }
+
+        static EnumMember enumMember(PrimaryExpression.Variable name, int value) {
+            return new EnumMember(name, new IntegerConstant(value));
+        }
+
+        static Declarator enumIdentifier(PrimaryExpression.Variable name) {
+            return new EnumIdentifierDeclarator(name);
+        }
+
+        static Declarator enumIdentifier(String name) {
+            return new EnumIdentifierDeclarator(new PrimaryExpression.Variable(name));
         }
     }
 
@@ -957,7 +1059,7 @@ public interface CAST {
             }
         }
 
-        record Define(String name, PrimaryExpression.Constant value) implements Statement {
+        record Define(String name, PrimaryExpression.Constant<?> value) implements Statement {
 
             @Override
             public List<? extends CAST> children() {
@@ -1104,7 +1206,7 @@ public interface CAST {
             return new FunctionDeclarationStatement(declarator, body);
         }
 
-        static Define define(String name, PrimaryExpression.Constant value) {
+        static Define define(String name, PrimaryExpression.Constant<?> value) {
             return new Define(name, value);
         }
 

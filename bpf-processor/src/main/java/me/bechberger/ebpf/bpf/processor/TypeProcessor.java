@@ -8,18 +8,17 @@ import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils.AnnotationValues;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils.AnnotationValues.AnnotationKind;
-import me.bechberger.ebpf.bpf.processor.BPFTypeLike.TypeBackedBPFTypeLike;
-import me.bechberger.ebpf.bpf.processor.BPFTypeLike.TypeBackedBPFTypedef;
-import me.bechberger.ebpf.bpf.processor.BPFTypeLike.TypeBackedBPFUnionType;
+import me.bechberger.ebpf.bpf.processor.BPFTypeLike.*;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.BPFName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.JavaName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.SpecFieldName;
-import me.bechberger.ebpf.bpf.processor.BPFTypeLike.TypeBackedBPFStructType;
 import me.bechberger.ebpf.type.*;
+import me.bechberger.ebpf.type.BPFType.BPFEnumMember;
 import me.bechberger.ebpf.type.BPFType.BPFStructType.SourceClassKind;
 import me.bechberger.ebpf.type.BPFType.BPFTypedef;
 import me.bechberger.ebpf.type.BPFType.BPFUnionMember;
 import me.bechberger.ebpf.type.BPFType.CustomBPFType;
+import me.bechberger.ebpf.type.Enum;
 import me.bechberger.ebpf.type.Typedef;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +36,7 @@ import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import static me.bechberger.cast.CAST.Expression.constant;
 import static me.bechberger.cast.CAST.Expression.variable;
 import static me.bechberger.cast.CAST.Statement.*;
+import static me.bechberger.ebpf.NameUtil.toConstantCase;
 import static me.bechberger.ebpf.bpf.processor.AnnotationUtils.*;
 
 /**
@@ -88,6 +88,7 @@ class TypeProcessor {
         STRUCT,
         UNION,
         TYPEDEF,
+        ENUM,
         NONE
     }
 
@@ -121,10 +122,21 @@ class TypeProcessor {
 
     private TypeProcessor.DataTypeKind isValidDataType(Element element) {
         boolean implementsTypedef = implementsInterfaceIgnoringTypeParameters(element, Typedef.class);
+        if (element.getKind() == ElementKind.ENUM) {
+            if (implementsTypedef) {
+                this.processingEnv.getMessager().printError("Class " + element.getSimpleName() + " is an enum but implements the Typedef interface", element);
+                return DataTypeKind.NONE;
+            }
+            if (!implementsInterfaceIgnoringTypeParameters(element, Enum.class)) {
+                this.processingEnv.getMessager().printError("Enum " + element + " must implement the Enum interface", element);
+                return DataTypeKind.NONE;
+            }
+            return DataTypeKind.ENUM;
+        }
         if (element.getKind() == ElementKind.RECORD) {
             // check that it has no super class
             if (((TypeElement) element).getSuperclass().getKind() != TypeKind.NONE && !((TypeElement) element).getSuperclass().toString().equals("java.lang.Record")){
-                this.processingEnv.getMessager().printError("Inner class " + element.getSimpleName() + " is a record but has a super class", element);
+                this.processingEnv.getMessager().printError("Class " + element.getSimpleName() + " is a record but has a super class", element);
                 return DataTypeKind.NONE;
             }
             if (implementsTypedef) {
@@ -135,25 +147,25 @@ class TypeProcessor {
         if (element.getKind() == ElementKind.CLASS) {
             // check that it is a static class
             if (!element.getModifiers().contains(Modifier.STATIC)) {
-                this.processingEnv.getMessager().printError("Inner class " + element.getSimpleName() + " is a class but not static", element);
+                this.processingEnv.getMessager().printError("Class " + element.getSimpleName() + " is a class but not static", element);
                 return DataTypeKind.NONE;
             }
             // check if it is a union
             if (hasSuperClass(element, Union.class)) {
                 if (implementsTypedef) {
-                    this.processingEnv.getMessager().printError("Inner class " + element + " is a union and must not implement the Typedef interface", element);
+                    this.processingEnv.getMessager().printError("Class " + element + " is a union and must not implement the Typedef interface", element);
                 }
                 return DataTypeKind.UNION;
             }
             if (hasSameSuperclassIgnoringTypeParameters(element, TypedefBase.class)) {
                 if (implementsTypedef) {
-                    this.processingEnv.getMessager().printError("Inner class " + element + " is a typedef and must not extend also TypedefBase", element);
+                    this.processingEnv.getMessager().printError("Class " + element + " is a typedef and must not extend also TypedefBase", element);
                 }
                 return DataTypeKind.TYPEDEF;
             }
             // check if it either extends Object or Struct, so it can be a struct
             if (!hasSuperClass(element, Object.class) && !hasSuperClass(element, Struct.class) && ((TypeElement)element).getSuperclass().getKind() != TypeKind.NONE) {
-                this.processingEnv.getMessager().printError("Inner class " + element + " is a class but does not extend Object, Union or Struct", element);
+                this.processingEnv.getMessager().printError("Class " + element + " is a class but does not extend Object, Union or Struct", element);
             }
             return DataTypeKind.STRUCT;
         }
@@ -387,8 +399,36 @@ class TypeProcessor {
             case STRUCT -> processBPFTypeStruct(typeElement, className, name);
             case UNION -> processBPFTypeUnion(typeElement, className, name);
             case TYPEDEF -> processBPFTypeTypedef(typeElement, className, name);
+            case ENUM -> processBPFTypeEnum(typeElement, className, name);
             case NONE -> Optional.empty();
         };
+    }
+
+    private Optional<TypeBackedBPFEnumType<?>> processBPFTypeEnum(TypeElement typeElement, String className, BPFName name) {
+        var enumMembers = typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.ENUM_CONSTANT).map(e -> (VariableElement) e).toList();
+        var members = new ArrayList<BPFEnumMember>();
+        int currentValue = 0;
+        Map<String, Element> cNames = new HashMap<>();
+        for (var member : enumMembers) {
+            int value = getAnnotationMirror(member, "me.bechberger.ebpf.annotations.bpf.EnumMember")
+                    .map(a -> getAnnotationValue(a, "value", -1)).orElse(currentValue);
+            if (value == -1) {
+                this.processingEnv.getMessager().printError("Enum member " + member.getSimpleName() + " must have a value", member);
+                return Optional.empty();
+            }
+            var memberName = member.getSimpleName().toString();
+            var memberCNameValue = getAnnotationMirror(member, "me.bechberger.ebpf.annotations.bpf.EnumMember")
+                    .map(a -> getAnnotationValue(a, "name", "")).orElse(toConstantCase(name.name() + "_" + memberName));
+            if (cNames.containsKey(memberCNameValue)) {
+                this.processingEnv.getMessager().printError("Enum member " + member.getSimpleName() + " has a duplicate name, " + typeElement.getSimpleName() + "::" + cNames.get(memberCNameValue) + " has the same C name", member);
+                return Optional.empty();
+            }
+            cNames.put(memberCNameValue, member);
+            members.add(new BPFEnumMember(memberName, memberCNameValue, value));
+            currentValue = value + 1;
+        }
+        BPFType.AnnotatedClass annotatedClass = new BPFType.AnnotatedClass(className, List.of());
+        return Optional.of(new TypeBackedBPFEnumType<>(new BPFType.BPFEnumType<>(name.name(), members, annotatedClass, null)));
     }
 
     @SuppressWarnings({"unchecked"})
@@ -754,16 +794,7 @@ class TypeProcessor {
         } else {
             name = typeElement.getQualifiedName().toString().replace(".", "__");
         }
-        return new SpecFieldName(toSnakeCase(name).toUpperCase());
-    }
-
-    /**
-     * Convert a name to snake case
-     * <p>
-     * Example: "HelloWorld" -> "hello_world"
-     */
-    private static String toSnakeCase(String name) {
-        return name.replaceAll("([a-z0-9])([A-Z])", "$1_$2");
+        return new SpecFieldName(toConstantCase(name));
     }
 
     /**

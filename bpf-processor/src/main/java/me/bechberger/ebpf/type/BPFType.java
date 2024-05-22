@@ -6,15 +6,12 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Declarator;
-import me.bechberger.cast.CAST.Declarator.Pointery;
 import me.bechberger.cast.CAST.Statement;
 import me.bechberger.ebpf.annotations.AnnotationInstances;
-import me.bechberger.ebpf.type.BPFType.BPFArrayType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.lang.model.element.Modifier;
-import javax.management.openmbean.ArrayType;
 import java.lang.annotation.Annotation;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemoryLayout;
@@ -32,6 +29,7 @@ import static java.lang.foreign.ValueLayout.JAVA_BYTE;
 import static me.bechberger.cast.CAST.Declarator.identifier;
 import static me.bechberger.cast.CAST.Expression.variable;
 import static me.bechberger.ebpf.type.BPFType.BPFIntType.CHAR;
+import static me.bechberger.ebpf.type.BPFType.BPFIntType.UINT32;
 import static me.bechberger.ebpf.type.BoxHelper.box;
 import static me.bechberger.ebpf.type.BoxHelper.unbox;
 
@@ -1327,6 +1325,163 @@ public sealed interface BPFType<T> {
         }
     }
 
+    record BPFEnumMember(String name, String cName, int value) {
+        CAST.Declarator.EnumMember toCEnumMember() {
+            return CAST.Declarator.enumMember(CAST.Expression.variable(cName), value);
+        }
+    }
+
+    /**
+     * Enum
+     */
+    final class BPFEnumType<T extends Enum<?>> implements BPFType<T> {
+        private final String bpfName;
+        private final List<BPFEnumMember> members;
+        private final AnnotatedClass javaClass;
+        private final Function<Integer, T> indexToEnum;
+        private final Map<Integer, Integer> memberValueToIndex;
+
+        /**
+         * @param members constant members of the enum
+         */
+        public BPFEnumType(String bpfName, List<BPFEnumMember> members, AnnotatedClass javaClass, Function<Integer,
+                T> indexToEnum) {
+            this.bpfName = bpfName;
+            this.members = members;
+            this.javaClass = javaClass;
+            this.indexToEnum = indexToEnum;
+            this.memberValueToIndex =
+                    IntStream.range(0, members.size()).boxed().collect(Collectors.toMap(i -> members.get(i).value(),
+                            i -> i));
+        }
+
+
+        @Override
+        public MemoryLayout layout() {
+            return UINT32.layout();
+        }
+
+        @Override
+        public long size() {
+            return UINT32.size();
+        }
+
+        @Override
+        public long alignment() {
+            return UINT32.alignment();
+        }
+
+        public BPFEnumMember getMember(String memberName) {
+            return members.stream().filter(m -> m.name().equals(memberName)).findFirst().orElseThrow();
+        }
+
+        @Override
+        public MemoryParser<T> parser() {
+            return segment -> {
+                int value = UINT32.parseMemory(segment);
+                var index = memberValueToIndex.get(value);
+                if (index == null) {
+                    throw new RuntimeException("Unknown enum value " + value);
+                }
+                return indexToEnum.apply(index);
+            };
+        }
+
+        @Override
+        public MemorySetter<T> setter() {
+            return (segment, member) -> {
+                UINT32.setMemory(segment, members.get(((java.lang.Enum<?>) member).ordinal()).value());
+            };
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(bpfName, members, javaClass);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (BPFEnumType<?>) obj;
+            return Objects.equals(this.bpfName, that.bpfName) && Objects.equals(this.members, that.members) &&
+                    Objects.equals(this.javaClass, that.javaClass);
+        }
+
+        @Override
+        public Optional<Declarator> toCDeclaration() {
+            return Optional.of(Declarator._enum(variable(bpfName),
+                    members.stream().map(BPFEnumMember::toCEnumMember).toList()));
+        }
+
+        @Override
+        public Optional<Statement> toCDeclarationStatement() {
+            return toCDeclaration().map(d -> Statement.declarationStatement(d, null));
+        }
+
+        @Override
+        public Declarator toCUse() {
+            return Declarator.enumIdentifier(variable(bpfName));
+        }
+
+        @Override
+        public Optional<BiFunction<String, Function<BPFType<?>, String>, FieldSpec>> toFieldSpecGenerator() {
+            return Optional.of((fieldName, typeToSpecName) -> {
+                String className = this.javaClass.klass;
+                ClassName baseType = ClassName.get(BPF_PACKAGE, "BPFType.BPFEnumType");
+                TypeName fieldType = ParameterizedTypeName.get(baseType, ClassName.get("", className));
+                String memberExpression =
+                        members.stream().map(m -> "new " + BPF_TYPE + ".BPFEnumMember(" + "\"" + m.name() + "\", \"" + m.cName() + "\", " + m.value() + ")").collect(Collectors.joining(", "));
+                ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
+                return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC)
+                        .initializer("new $T<>($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " + "java.util.List" + ".of()" + "), index -> $T.values()[index])",
+                                baseType, bpfName, memberExpression, bpfType, ClassName.get("", className), ClassName.get("", className)).build();
+            });
+        }
+
+        @Override
+        public String toJavaUse() {
+            return javaClass.klass;
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+            return typeToSpecFieldName.apply(this);
+        }
+
+        @Override
+        public String bpfName() {
+            return bpfName;
+        }
+
+        @Override
+        public AnnotatedClass javaClass() {
+            return javaClass;
+        }
+
+        @Override
+        public String toString() {
+            return "BPFEnumType[" +
+                    "bpfName=" + bpfName + ", " +
+                    "members=" + members + ", " +
+                    "javaClass=" + javaClass + ']';
+        }
+
+        /**
+         * Get the enum value from the passed value
+         */
+        public T fromValue(int value) {
+            return indexToEnum.apply(memberValueToIndex.get(value));
+        }
+
+        /**
+         * Get the value of the passed enum
+         */
+        public int toValue(T value) {
+            return members.get(((java.lang.Enum<?>) value).ordinal()).value();
+        }
+    }
+
     // just for existing code
     /**
      * Union
@@ -1336,7 +1491,7 @@ public sealed interface BPFType<T> {
      * @param members members of the union, including the shared type members
      */
     record BPFUnionTypeOld<S>(String bpfName, @Nullable BPFType<S> shared,
-                              List<BPFUnionMember> members) implements BPFType<BPFUnion<S>> {
+                              List<BPFUnionMember<?, ?>> members) implements BPFType<BPFUnion<S>> {
 
         @Override
         public MemoryLayout layout() {
@@ -1361,7 +1516,7 @@ public sealed interface BPFType<T> {
                     // try to parse all members, but only keep the ones that work
                     try {
                         possibleMembers.put(member.name(), member.type.parseMemory(segment));
-                    } catch (IllegalArgumentException e) {
+                    } catch (IllegalArgumentException _) {
                     }
                 }
                 return new BPFUnionFromMemory<>(shared != null ? shared.parseMemory(segment) : null, possibleMembers);
@@ -1377,7 +1532,7 @@ public sealed interface BPFType<T> {
                 if (union.current() == null) {
                     throw new IllegalArgumentException("Union must have a current member");
                 }
-                BPFUnionMember current =
+                var current =
                         members().stream().filter(m -> m.name.equals(union.current())).findFirst().orElseThrow();
                 current.type.setMemory(segment, union.get(union.current()));
             };

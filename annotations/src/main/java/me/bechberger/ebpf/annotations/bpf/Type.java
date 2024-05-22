@@ -34,6 +34,12 @@ import java.lang.annotation.Target;
  *     // typedef
  *     @Type
  *     record IntArray(@Size(10) int[] val) implements Typedef<@Size(10) int[]> {}
+ *
+ *     // enum
+ *     @Type
+ *     enum Kind implements Enum<Kind> {
+ *        A, B, C, D
+ *     }
  * }
  * <p>
  * Members can be one of the following:
@@ -45,6 +51,7 @@ import java.lang.annotation.Target;
  * </ul>
  */
 @Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Type {
 
     /** Name of the generated BPFStructType, uses the type as default */
