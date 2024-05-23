@@ -82,7 +82,9 @@ public abstract class BPFProgram implements AutoCloseable {
     private static <T, S extends T> Class<S> getImplClass(Class<T> clazz) {
         try {
             var implName = Processor.classToImplName(clazz);
-            return (Class<S>)Class.forName(implName.fullyQualifiedClassName());
+            return (Class<S>) Class.forName(implName.fullyQualifiedClassName());
+        } catch (ClassNotFoundException e) {
+            throw new BPFError("Implementation class not found, you probably forgot to annotate the " + clazz.getSimpleName() + " class with @BPF", e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -105,6 +107,8 @@ public abstract class BPFProgram implements AutoCloseable {
             var program = BPFProgram.<T, S>getImplClass(clazz).getConstructor().newInstance();
             program.initGlobals();
             return program;
+        } catch (BPFError e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -208,6 +212,13 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     /**
+     * Get the names of all functions that represent auto-attachable programs,
+     * see {@link #autoAttachPrograms()}.
+     * @return the names of the auto-attachable programs
+     */
+    public abstract List<String> getAutoAttachablePrograms();
+
+    /**
      * Get the byte code of the bpf program.
      *
      * @return the byte code
@@ -286,6 +297,38 @@ public abstract class BPFProgram implements AutoCloseable {
         var link = new BPFLink(ret.result());
         attachedPrograms.add(link);
         return link;
+    }
+
+    /**
+     * Attach the program by the automatically detected program type, attach type, and extra paremeters, where
+     * applicable.
+     *
+     * @param name name of the program to attach
+     * @throws BPFAttachError when attaching fails
+     */
+    public BPFLink autoAttachProgram(String name) {
+        return autoAttachProgram(getProgramByName(name));
+    }
+
+    /**
+     * Attach all programs by the automatically detected program type, attach type, and extra paremeters, where
+     * applicable.
+     * <p>
+     * Auto-attaches all programs that are prefixed by "SEC(...)" in the eBPF program.
+     * It works with
+     * <li>
+     *     <ul>fentry, fexit of syscalls: e.g. <code>SEC("fentry/do_unlinkat")
+     * int BPF_PROG(do_unlinkat, int dfd, struct filename *name)</code>, <code>SEC("fexit/do_unlinkat")
+     * int BPF_PROG(do_unlinkat_exit, int dfd, struct filename *name, long ret)</code></ul>
+     * </li>
+     * See <a href="https://man7.org/linux/man-pages/man2/syscalls.2.html">syscalls(2)</a> for a list of syscalls.
+     * @return
+     */
+    public BPFProgram autoAttachPrograms() {
+        for (var name : getAutoAttachablePrograms()) {
+            autoAttachProgram(name);
+        }
+        return this;
     }
 
     public void xdpAttach(ProgramHandle prog, int ifindex) {

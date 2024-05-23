@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.zip.GZIPOutputStream;
@@ -183,6 +184,9 @@ public class Processor extends AbstractProcessor {
         spec.addMethod(MethodSpec.methodBuilder("getByteCode")
                 .addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(byte[].class)
                 .addStatement("return me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(BYTE_CODE)").build());
+        spec.addMethod(MethodSpec.methodBuilder("getAutoAttachablePrograms").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC)
+                .returns(ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(String.class)))
+                .addStatement("return java.util.List.of($L)", code.autoAttachablePrograms.stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(", "))).build());
         // implement the constructor and set the map fields
         var constructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC);
         code.tp.mapDefinitions().forEach(m -> {
@@ -231,7 +235,7 @@ public class Processor extends AbstractProcessor {
      * @param codeLineMapping line number in generated -> original line number
      */
     record CombinedCode(String ebpfProgram, VariableElement codeField, Map<Integer, Integer> codeLineMapping,
-                        TypeProcessorResult tp, Set<Integer> generatedLines) {
+                        TypeProcessorResult tp, Set<Integer> generatedLines, List<String> autoAttachablePrograms) {
     }
 
     private @Nullable CombinedCode combineEBPFProgram(TypeElement typeElement, TypeProcessorResult tpResult) {
@@ -278,8 +282,42 @@ public class Processor extends AbstractProcessor {
         return combineEBPFProgram(typeElement, element, ebpfProgram, tpResult);
     }
 
+    private List<String> findAutoAttachablePrograms(String ebpfProgram) {
+        /*
+        Find names with patterns like: SEC("...")
+        ... (but without {) BPF_PROG(NAME...) {
+
+        or like: SEC("...") ... (but without {) NAME(...) {
+        via regexp
+         */
+        String ebpfProgramWithoutMultipleSpacesOrNewlines = ebpfProgram.replaceAll("[\\s]+", " ");
+        List<String> autoAttachablePrograms = new ArrayList<>();
+        for (var part : ebpfProgramWithoutMultipleSpacesOrNewlines.split("SEC\\s*\\(\"[^\"]*\"")) {
+            if (!part.startsWith(")")) {
+                continue;
+            }
+            part = part.substring(1);
+            var matcher = Pattern.compile("([a-zA-Z0-9_]+)\\s?\\(").matcher(part);
+            if (matcher.find()) {
+                String match = matcher.group(1);
+                if (SUPPORTED_BPF_PROG_MACROS.contains(match)) {
+                    // take the first word after the macro
+                    var nameMatcher = Pattern.compile("([a-zA-Z0-9_]+)").matcher(part.substring(matcher.end()));
+                    if (nameMatcher.find()) {
+                        autoAttachablePrograms.add(nameMatcher.group(1));
+                    }
+                } else {
+                    autoAttachablePrograms.add(match);
+                }
+            }
+        }
+        return autoAttachablePrograms;
+    }
+
+    private static final Set<String> SUPPORTED_BPF_PROG_MACROS = Set.of("BPF_PROG");
+
     /** Combines the code */
-    private @Nullable CombinedCode combineEBPFProgram(TypeElement outer, VariableElement field, String ebpfProgram, TypeProcessorResult tpResult) {
+    private @Nullable Processor.CombinedCode combineEBPFProgram(TypeElement outer, VariableElement field, String ebpfProgram, TypeProcessorResult tpResult) {
         Map<Integer, Integer> codeLineMapping = new HashMap<>(); // line number in generated -> original line number
 
         var unstrippedLines = ebpfProgram.lines().toList();
@@ -349,7 +387,8 @@ public class Processor extends AbstractProcessor {
             addLine.accept(tpResult.licenseDefinition().toStatement().toPrettyString());
         }
         var generatedLines = IntStream.range(0, resultLines.size()).filter(i -> !codeLineMapping.containsKey(i)).boxed().collect(Collectors.toSet());
-        return new CombinedCode(String.join("\n", resultLines), field, codeLineMapping, tpResult, generatedLines);
+        List<String> autoAttachablePrograms = findAutoAttachablePrograms(ebpfProgram);
+        return new CombinedCode(String.join("\n", resultLines), field, codeLineMapping, tpResult, generatedLines, autoAttachablePrograms);
     }
 
     private static String findNewestClangVersion() {

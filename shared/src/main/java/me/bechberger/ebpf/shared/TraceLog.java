@@ -86,6 +86,7 @@ public class TraceLog {
             if (tracedLine == null) return null;
             // don't print messages related to lost events
             if (tracedLine.startsWith("CPU:")) continue;
+            if (tracedLine.length() < 17) continue;
             try {
                 var task = tracedLine.substring(0, 16).strip();
                 var line = tracedLine.substring(17);
