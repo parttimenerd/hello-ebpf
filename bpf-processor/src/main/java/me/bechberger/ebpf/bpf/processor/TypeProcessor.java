@@ -225,7 +225,8 @@ class TypeProcessor {
             }
             var type = processBPFTypeRecord(unprocessed.getFirst());
             if (type.isEmpty()) {
-                return new TypeProcessorResult(List.of(), List.of(), List.of(), null, List.of(), createGlobalVariableDefinitions(outerTypeElement, typeToSpecField));
+                return new TypeProcessorResult(List.of(), List.of(), List.of(), null, List.of(),
+                        createGlobalVariableDefinitions(outerTypeElement, typeToSpecField));
             }
             alreadyDefinedTypes.put(type.get().getJavaName(), type.get());
             processedTypes.add(unprocessed.getFirst());
@@ -241,6 +242,8 @@ class TypeProcessor {
         // add custom type definitions
         usedCustomBPFTypes.stream().map(CustomBPFType::toCDeclaration)
                 .forEach(c -> c.ifPresent(definingStatements::add));
+
+        var globs = createGlobalVariableDefinitions(outerTypeElement, typeToSpecField);
 
         for (var processedType : processedTypes) {
             if (isCustomTypeAnnotatedRecord(processedType)) {
@@ -260,7 +263,7 @@ class TypeProcessor {
         }
 
         return new TypeProcessorResult(fields, createDefineStatements(outerTypeElement), definingStatements,
-                getLicenseDefinitionStatement(outerTypeElement), mapDefinitions, createGlobalVariableDefinitions(outerTypeElement, typeToSpecField));
+                getLicenseDefinitionStatement(outerTypeElement), mapDefinitions, globs);
     }
 
     static record GlobalVariableDefinition(Statement globalVariable, String name, String typeField, String initializer) {}
@@ -289,6 +292,9 @@ class TypeProcessor {
             return null;
         }
         var bpfType = bpfTypeMirror.get().toBPFType(this::getBPFTypeForJavaName);
+        if (bpfType == null) {
+            return null;
+        }
         var typeField = bpfType.toCustomType().toJavaFieldSpecUse(t -> typeToSpecField.apply(BPFTypeLike.of(t)).name());
 
         var tree = javacProcessingEnv.getElementUtils().getTree(field);

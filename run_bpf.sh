@@ -1,13 +1,12 @@
 #!/bin/zsh
 
-# Navigate to current folder
-cd "$(dirname "$0")"/bpf || exit
+DIR=$(dirname "$0")
 
 # if empty arguments or help flag, print help
 if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     echo "Usage: $0 <sample>"
     echo "Available samples:"
-    (cd src/main/java/me/bechberger/ebpf/samples && (
+    (cd $DIR/bpf/src/main/java/me/bechberger/ebpf/samples && (
       find . -name "*.java" | while read file; do
         f=$(echo "$file" | sed 's/\//\./g')
         f=${f:2}
@@ -22,4 +21,4 @@ CLASS=$1
 
 # Run the program
 shift
-java -cp target/bpf.jar --enable-native-access=ALL-UNNAMED $JAVA_OPTS me.bechberger.ebpf.samples.$CLASS $@
+java -cp $DIR/bpf/target/bpf.jar --enable-native-access=ALL-UNNAMED $JAVA_OPTS me.bechberger.ebpf.samples.$CLASS $@

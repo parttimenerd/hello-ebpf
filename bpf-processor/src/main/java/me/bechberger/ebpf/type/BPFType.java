@@ -876,10 +876,10 @@ public sealed interface BPFType<T> {
         @Override
         public MemorySetter<E[]> setter() {
             return (segment, list) -> {
-                if (list.length != length) {
-                    throw new IllegalArgumentException("Array must have length " + length);
+                if (list.length > length) {
+                    throw new IllegalArgumentException("Array must have length <= " + length);
                 }
-                for (int i = 0; i < length; i++) {
+                for (int i = 0; i < list.length; i++) {
                     memberType.setMemory(segment.asSlice(i * memberType.sizePadded()), list[i]);
                 }
             };

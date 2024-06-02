@@ -49,6 +49,16 @@ public class Processor extends AbstractProcessor {
         return true;
     }
 
+    void createSyscallHelperClass() {
+        try {
+            long start = System.currentTimeMillis();
+            Syscalls.parse();
+            long end = System.currentTimeMillis();
+            System.out.println("Parsed syscalls in " + (end - start) + "ms");
+        } catch (IOException | InterruptedException _) {
+        }
+    }
+
     /**
      * Expects a class annotated with BPF:
      * <ul>
@@ -213,7 +223,7 @@ public class Processor extends AbstractProcessor {
             return spec;
         }
 
-        var globalVariablesType = ClassName.get("me.bechberger.ebpf.bpf", "GlobalVariable.Globals");
+        var globalVariablesType = ClassName.get("", "me.bechberger.ebpf.bpf.GlobalVariable.Globals");
 
         spec.addStatement("$T globalVariables = $T.forProgram(this)", globalVariablesType, globalVariablesType)
                 .addStatement("globalVariables.initGlobals(java.util.List.of($L))", globalVariableDefinitions.stream().map(this::createGlobalVariableInitInfoExpression).collect(Collectors.joining(", ")));
@@ -413,7 +423,12 @@ public class Processor extends AbstractProcessor {
     private static Path findIncludePath() {
         if (includePath == null) {
             // like /usr/include/aarch64-linux-gnu
-            includePath = Path.of("/usr/include").resolve(System.getProperty("os.arch") + "-linux-gnu");
+            String arch = switch (System.getProperty("os.arch")) {
+                case "amd64" -> "x86_64";
+                case "aarch64" -> "aarch64";
+                default -> throw new RuntimeException("Unsupported architecture " + System.getProperty("os.arch"));
+            };
+            includePath = Path.of("/usr/include").resolve(arch + "-linux-gnu");
             if (!Files.exists(includePath)) {
                 throw new RuntimeException("Could not find include path " + includePath);
             }

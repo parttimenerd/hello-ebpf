@@ -2,7 +2,10 @@ package me.bechberger.ebpf.bpf;
 
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class XDPUtil {
     public static final int XDP_FLAGS_UPDATE_IF_NOEXIST = 1;
@@ -26,6 +29,16 @@ public class XDPUtil {
             throw new RuntimeException(e);
         }
         return -1;
+    }
+
+    public static List<Integer> getNetworkInterfaceIndices() {
+        try {
+            return Collections.list(NetworkInterface.getNetworkInterfaces()).stream()
+                    .map(NetworkInterface::getIndex)
+                    .collect(Collectors.toList());
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static int ipAddressToInt(InetAddress addr) {
@@ -57,6 +70,17 @@ public class XDPUtil {
         }
     }
 
+    private static URL urlToUrl(String url) {
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            url = "https://" + url;
+        }
+        try {
+            return URL.of(URI.create(url), null);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Open a connection to the given URL and read its content in a loop every second asynchronously.
      */
@@ -65,7 +89,7 @@ public class XDPUtil {
             try {
                 while (true) {
                     System.out.println("Opening " + url);
-                    URLConnection connection = URL.of(URI.create("https://" + url), null).openConnection();
+                    URLConnection connection = urlToUrl(url).openConnection();
                     System.out.println("Read " + connection.getInputStream().readAllBytes().length + " bytes");
                     Thread.sleep(1000);
                 }
@@ -77,7 +101,7 @@ public class XDPUtil {
 
     public static String openURL(String url) {
         try {
-            URLConnection connection = URL.of(URI.create("https://" + url), null).openConnection();
+            URLConnection connection = urlToUrl(url).openConnection();
             return new String(connection.getInputStream().readAllBytes());
         } catch (Exception e) {
             return "Error: " + e.getMessage();

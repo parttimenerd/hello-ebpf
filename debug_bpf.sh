@@ -1,6 +1,6 @@
 #!/bin/sh
-# Move to the directory where the script is located
-cd "$(dirname "$0")"/bcc || exit
+
+DIR=$(dirname "$0")
 
 # if empty arguments or help flag, print help of ./run_bpf.sh and prefix with "debug port is "5005"
 if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
@@ -14,4 +14,4 @@ CLASS=$1
 
 # Run the program with debug port 5005
 shift
-JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005" ../run_bpf.sh $CLASS $@
+JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005" $DIR/run_bpf.sh $CLASS $@
