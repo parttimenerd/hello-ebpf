@@ -14,6 +14,7 @@ class AnnotationUtils {
     public final static String SIZE_ANNOTATION = "me.bechberger.ebpf.annotations.Size";
     public final static String SIZES_ANNOTATION = "me.bechberger.ebpf.annotations.Sizes";
     public final static String UNSIGNED_ANNOTATION = "me.bechberger.ebpf.annotations.Unsigned";
+    public final static String OFFSET_ANNOTATION = "me.bechberger.ebpf.annotations.Offset";
 
     /**
      * Get a specific annotation which is present on the element (if not present returns {@code Optional.empty()})
@@ -49,14 +50,18 @@ class AnnotationUtils {
         return getAnnotationMirror(element, annotationName).isPresent();
     }
 
-    record AnnotationValues(boolean unsigned, List<Integer> size) {
+    record AnnotationValues(boolean unsigned, List<Integer> size, Optional<Integer> offset) {
         AnnotationValues dropSize() {
-            return new AnnotationValues(unsigned, size.subList(1, size.size()));
+            return new AnnotationValues(unsigned, size.subList(1, size.size()), offset);
+        }
+        AnnotationValues dropOffset() {
+            return new AnnotationValues(unsigned, size, Optional.empty());
         }
 
         enum AnnotationKind {
             SIZE,
-            UNSIGNED;
+            UNSIGNED,
+            OFFSET;
 
             @Override
             public String toString() {
@@ -68,6 +73,7 @@ class AnnotationUtils {
             return switch (kind) {
                 case SIZE -> !size.isEmpty();
                 case UNSIGNED -> unsigned;
+                case OFFSET -> offset.isPresent();
             };
         }
 
@@ -110,6 +116,7 @@ class AnnotationUtils {
             process.accept(((ArrayType) element).getComponentType());
             element = ((ArrayType) element).getComponentType();
         }
-        return new AnnotationValues(unsigned, sizes);
+        Optional<Integer> offset = getAnnotationMirror(element, OFFSET_ANNOTATION).map(a -> getAnnotationValue(a, "value", 0));
+        return new AnnotationValues(unsigned, sizes, offset);
     }
 }

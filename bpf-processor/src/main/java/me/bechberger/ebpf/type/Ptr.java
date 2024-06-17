@@ -1,5 +1,7 @@
 package me.bechberger.ebpf.type;
 
+import me.bechberger.ebpf.annotations.MethodIsBPFRelatedFunction;
+
 /**
  * Represents a pointer to a value in Java code that is translated to a pointer in C code.
  * <p>
@@ -14,14 +16,14 @@ package me.bechberger.ebpf.type;
 public class Ptr<T> {
     /** Dereference this pointer */
     public T val() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new MethodIsBPFRelatedFunction();
     }
 
     public static <T> Ptr<T> of(T value) {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new MethodIsBPFRelatedFunction();
     }
 
     public static <T> Ptr<T> ofNull() {
-        throw new UnsupportedOperationException("Not implemented");
+        throw new MethodIsBPFRelatedFunction();
     }
 }

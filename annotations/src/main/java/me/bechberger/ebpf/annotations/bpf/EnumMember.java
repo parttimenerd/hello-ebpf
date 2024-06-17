@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EnumMember {
-    int value() default -1;
+    long value() default -1;
 
     String name() default "";
 }

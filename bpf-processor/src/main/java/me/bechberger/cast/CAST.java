@@ -1,9 +1,7 @@
 package me.bechberger.cast;
 
-import me.bechberger.cast.CAST.Declarator.ArrayDeclarator;
 import me.bechberger.cast.CAST.Declarator.Pointery;
 import me.bechberger.cast.CAST.PrimaryExpression.Constant;
-import me.bechberger.cast.CAST.PrimaryExpression.Constant.IntegerConstant;
 import me.bechberger.cast.CAST.PrimaryExpression.Variable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -70,9 +68,7 @@ public interface CAST {
                 case Double d -> {
                     return new PrimaryExpression.Constant.FloatConstant(d);
                 }
-                default -> {
-                    throw new IllegalArgumentException("Unsupported constant type: " + value.getClass());
-                }
+                default -> throw new IllegalArgumentException("Unsupported constant type: " + value.getClass());
             }
         }
 
@@ -94,6 +90,10 @@ public interface CAST {
 
         static PrimaryExpression.VerbatimExpression verbatim(String code) {
             return new PrimaryExpression.VerbatimExpression(code);
+        }
+
+        static PrimaryExpression.Variable _void() {
+            return new PrimaryExpression.Variable("void");
         }
     }
 
@@ -643,6 +643,9 @@ public interface CAST {
                     if (declarator instanceof Pointery arr) {
                         return arr.toPrettyVariableDefinition(name, indent) + ";";
                     }
+                    if (declarator instanceof UnionDeclarator union && union.name == null) {
+                        return declarator.toPrettyString(indent, increment) + ";";
+                    }
                     return declarator.toPrettyString(indent, increment) + " " + name.toPrettyString() + ";";
                 }
                 return indent + declarator.toPrettyString() + " (" + name.toPrettyString() + ", " + ebpfSize.toPrettyString() + ");";
@@ -662,6 +665,20 @@ public interface CAST {
             @Override
             public String toPrettyString(String indent, String increment) {
                 return indent + "struct " + (name == null ? "" : name.toPrettyString() + " ") + "{\n" + members.stream().map(m -> m.toPrettyString(indent + increment, increment)).collect(Collectors.joining("\n")) + "\n" + indent + "}";
+            }
+        }
+
+        record TypedefedStructDeclarator(PrimaryExpression.Variable name,
+                                         List<StructMember> members) implements Declarator {
+            @Override
+            public List<? extends Expression> children() {
+                return Stream.concat(Stream.of(name), members.stream()).collect(Collectors.toList());
+            }
+
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                return indent + "typedef struct {\n" + members.stream().map(m -> m.toPrettyString(indent + increment,
+                        increment)).collect(Collectors.joining("\n")) + "\n" + indent + "} " + name.toPrettyString();
             }
         }
 
@@ -696,7 +713,21 @@ public interface CAST {
             }
         }
 
-        record EnumMember(PrimaryExpression.Variable name, IntegerConstant value) implements Declarator {
+        record TypedefedUnionDeclarator(PrimaryExpression.Variable name,
+                                        List<UnionMember> members) implements Declarator {
+            @Override
+            public List<? extends Expression> children() {
+                return Stream.concat(Stream.of(name), members.stream()).collect(Collectors.toList());
+            }
+
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                return indent + "typedef union {\n" + members.stream().map(m -> m.toPrettyString(indent + increment,
+                        increment)).collect(Collectors.joining("\n")) + "\n" + indent + "} " + name.toPrettyString();
+            }
+        }
+
+        record EnumMember(PrimaryExpression.Variable name, Constant<?> value) implements Declarator {
             @Override
             public List<? extends Expression> children() {
                 return List.of(name, value);
@@ -724,15 +755,28 @@ public interface CAST {
             }
         }
 
-        record FunctionDeclarator(Declarator declarator, List<Declarator> parameters) implements Declarator {
+        record FunctionParameter(Variable name, Declarator declarator) implements Declarator {
             @Override
             public List<? extends Expression> children() {
-                return parameters;
+                return List.of(name, declarator);
             }
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return declarator.toPrettyString(indent, increment) + "(" + parameters.stream().map(CAST::toPrettyString).collect(Collectors.joining(", ")) + ")";
+                return declarator.toPrettyString(indent, increment) + " " + name.toPrettyString();
+            }
+        }
+
+        record FunctionDeclarator(Variable name, Declarator returnValue,
+                                  List<FunctionParameter> parameters) implements Declarator {
+            @Override
+            public List<? extends Expression> children() {
+                return Stream.concat(Stream.of(name, returnValue), parameters.stream()).collect(Collectors.toList());
+            }
+
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                return returnValue.toPrettyString(indent, increment) + " " + name + "(" + parameters.stream().map(CAST::toPrettyString).collect(Collectors.joining(", ")) + ")";
             }
         }
 
@@ -784,6 +828,18 @@ public interface CAST {
             }
         }
 
+        record TaggedDeclarator(String tag, Declarator declarator) implements Declarator {
+            @Override
+            public List<? extends Expression> children() {
+                return List.of(declarator);
+            }
+
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                return indent + tag + " " + declarator.toPrettyString();
+            }
+        }
+
         static Declarator pointer(Declarator declarator) {
             return new PointerDeclarator(declarator);
         }
@@ -796,12 +852,16 @@ public interface CAST {
             return new ArrayDeclarator(declarator, size);
         }
 
-        static Declarator function(Declarator declarator, List<Declarator> parameters) {
-            return new FunctionDeclarator(declarator, parameters);
+        static Declarator function(Variable name, Declarator returnValue, List<FunctionParameter> parameters) {
+            return new FunctionDeclarator(name, returnValue, parameters);
         }
 
         static Declarator identifier(PrimaryExpression.Variable name) {
             return new IdentifierDeclarator(name);
+        }
+
+        static Declarator _void() {
+            return new IdentifierDeclarator(Expression._void());
         }
 
         static Declarator identifier(String name) {
@@ -810,6 +870,14 @@ public interface CAST {
 
         static Declarator struct(PrimaryExpression.Variable name, List<StructMember> members) {
             return new StructDeclarator(name, members);
+        }
+
+        static Declarator typedefedStruct(PrimaryExpression.Variable name, List<StructMember> members) {
+            return new TypedefedStructDeclarator(name, members);
+        }
+
+        static Declarator typedefedUnion(PrimaryExpression.Variable name, List<UnionMember> members) {
+            return new TypedefedUnionDeclarator(name, members);
         }
 
         static StructMember structMember(Declarator declarator, PrimaryExpression.Variable name) {
@@ -825,8 +893,12 @@ public interface CAST {
             return new StructIdentifierDeclarator(name);
         }
 
-        static Declarator union(PrimaryExpression.Variable name, List<UnionMember> members) {
+        static Declarator union(@Nullable PrimaryExpression.Variable name, List<UnionMember> members) {
             return new UnionDeclarator(name, members);
+        }
+
+        static Declarator inlineUnion(List<UnionMember> members) {
+            return new UnionDeclarator(null, members);
         }
 
         static UnionMember unionMember(Declarator declarator, PrimaryExpression.Variable name) {
@@ -845,8 +917,8 @@ public interface CAST {
             return new EnumDeclarator(name, members);
         }
 
-        static EnumMember enumMember(PrimaryExpression.Variable name, int value) {
-            return new EnumMember(name, new IntegerConstant(value));
+        static EnumMember enumMember(PrimaryExpression.Variable name, Constant<?> value) {
+            return new EnumMember(name, value);
         }
 
         static Declarator enumIdentifier(PrimaryExpression.Variable name) {
@@ -855,6 +927,10 @@ public interface CAST {
 
         static Declarator enumIdentifier(String name) {
             return new EnumIdentifierDeclarator(new PrimaryExpression.Variable(name));
+        }
+
+        static Declarator tagged(String tag, Declarator declarator) {
+            return new TaggedDeclarator(tag, declarator);
         }
     }
 
@@ -883,6 +959,9 @@ public interface CAST {
 
             @Override
             public List<? extends CAST> children() {
+                if (value == null) {
+                    return List.of(type, name);
+                }
                 return List.of(type, name, value);
             }
 

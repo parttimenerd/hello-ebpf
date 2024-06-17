@@ -59,4 +59,10 @@ public @interface Type {
 
     /** Don't generate C code and insert it into the ebpf program string */
     boolean noCCodeGeneration() default false;
+
+    /**
+     * Don't add {@code struct} or {@code union} when using the type in C, and use
+     * {@code typedef ... name;} when defining it
+     */
+    boolean typedefed() default false;
 }

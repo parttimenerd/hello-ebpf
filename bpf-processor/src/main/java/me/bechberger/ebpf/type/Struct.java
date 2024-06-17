@@ -1,9 +1,9 @@
 package me.bechberger.ebpf.type;
 
+import me.bechberger.ebpf.type.BPFType.InlineUnion;
+
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static me.bechberger.ebpf.type.BoxHelper.unbox;
@@ -12,6 +12,9 @@ import static me.bechberger.ebpf.type.BoxHelper.unbox;
  * Adds {@link #toString()}, {@link #equals(Object)} and {@link #hashCode()} to a class.
  */
 public class Struct {
+
+    private List<InlineUnion> inlineUnions = new ArrayList<>();
+
     /**
      * Type {field1 = x, field2 = y, ...}
      */

@@ -28,10 +28,10 @@ public interface Enum<T extends java.lang.Enum<T> & Enum<T>> {
      * Utility class to support enums that implement {@link Enum}
      */
     class EnumSupport {
-        public static <T extends java.lang.Enum<T> & Enum<T>> T fromValue(Class<T> enumClass, int value) {
+        public static <T extends java.lang.Enum<T> & Enum<T>> T fromValue(Class<T> enumClass, long value) {
             // Optimize this with some code generation if it ever is a performance problem
             var members = enumClass.getEnumConstants();
-            var currentValue = 0;
+            long currentValue = 0;
             for (T t : members) {
                 var val = getMemberAnnotationValue((T) t);
                 if (val != -1) {
@@ -49,7 +49,7 @@ public interface Enum<T extends java.lang.Enum<T> & Enum<T>> {
             return null;
         }
 
-        private static <T extends java.lang.Enum<T> & Enum<T>> int getMemberAnnotationValue(T enumMember) {
+        private static <T extends java.lang.Enum<T> & Enum<T>> long getMemberAnnotationValue(T enumMember) {
             Field field = enumMember.getClass().getDeclaredFields()[enumMember.ordinal()];
             var ann = field.getAnnotation(EnumMember.class);
             return ann == null ? -1 : ann.value();
@@ -59,7 +59,7 @@ public interface Enum<T extends java.lang.Enum<T> & Enum<T>> {
          * Get the value of an enum member
          */
         @SuppressWarnings("unchecked")
-        public static <T extends java.lang.Enum<T> & Enum<T>> int value(T enumMember) {
+        public static <T extends java.lang.Enum<T> & Enum<T>> long value(T enumMember) {
             var val = getMemberAnnotationValue(enumMember);
             if (val != -1) {
                 return val;
@@ -82,12 +82,12 @@ public interface Enum<T extends java.lang.Enum<T> & Enum<T>> {
     }
 
     @SuppressWarnings("unchecked")
-    default int value() {
+    default long value() {
         return EnumSupport.value((T) this);
     }
 
     @SuppressWarnings("unchecked")
-    default @Nullable T fromValue(int value) {
+    default @Nullable T fromValue(long value) {
         // get EnumMember annotation value
         return EnumSupport.fromValue((Class<T>) this.getClass(), value);
     }

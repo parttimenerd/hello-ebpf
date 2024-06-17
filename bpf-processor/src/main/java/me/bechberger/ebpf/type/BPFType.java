@@ -6,8 +6,10 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Declarator;
+import me.bechberger.cast.CAST.Declarator.StructMember;
 import me.bechberger.cast.CAST.Statement;
 import me.bechberger.ebpf.annotations.AnnotationInstances;
+import me.bechberger.ebpf.type.BPFType.BPFStructType.SourceClassKind;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,6 +21,7 @@ import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -28,6 +31,7 @@ import java.util.stream.IntStream;
 import static java.lang.foreign.ValueLayout.JAVA_BYTE;
 import static me.bechberger.cast.CAST.Declarator.identifier;
 import static me.bechberger.cast.CAST.Expression.variable;
+import static me.bechberger.ebpf.type.BPFType.BPFInlineUnionType.cts;
 import static me.bechberger.ebpf.type.BPFType.BPFIntType.CHAR;
 import static me.bechberger.ebpf.type.BPFType.BPFIntType.UINT32;
 import static me.bechberger.ebpf.type.BoxHelper.box;
@@ -103,7 +107,7 @@ public sealed interface BPFType<T> {
     record AnnotatedClass(String klass, List<Annotation> annotations) {
 
         public AnnotatedClass(Class<?> klass, List<Annotation> annotations) {
-            this(klass.getName(), annotations);
+            this(cts(klass.getName()), annotations);
         }
 
         @Override
@@ -187,11 +191,11 @@ public sealed interface BPFType<T> {
     }
 
     default String toJavaUse() {
-        return javaClass().klass;
+        return cts(javaClass().klass);
     }
 
     default String toJavaUseInGenerics() {
-        return toJavaUse();
+        return cts(toJavaUse());
     }
 
     String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName);
@@ -287,7 +291,7 @@ public sealed interface BPFType<T> {
     }
 
     /**
-     * Integer
+     * Integer (and float for simplicity) types
      */
     record BPFIntType<I>(String bpfName, MemoryLayout layout, MemoryParser<I> parser, MemorySetter<I> setter,
                          AnnotatedClass javaClass, int encoding) implements BPFType<I> {
@@ -359,17 +363,16 @@ public sealed interface BPFType<T> {
         /**
          * Create a new BPFIntType and register it
          */
-        private static <T, V extends ValueLayout> BPFIntType<T> createType(String bpfName, String specFieldName,
+        private static <T> BPFIntType<T> createType(String bpfName, String specFieldName,
                                                                            Class<T> klass,
-                                                                           V layout,
+                                                    MemoryLayout layout,
                                                                            MemoryParser<T> parser,
                                                                            MemorySetter<T> setter, boolean signed) {
             var type = new BPFIntType<>(bpfName, layout, parser, setter, new AnnotatedClass(klass, signed ?
                     List.of(AnnotationInstances.UNSIGNED) : List.of()), signed ? ENCODING_SIGNED : 0);
-            if (registeredTypes.containsKey(type.javaClass())) {
-                throw new IllegalArgumentException("Type " + type.javaClass() + " already registered as " + registeredTypes.get(type.javaClass()).bpfName());
+            if (!registeredTypes.containsKey(type.javaClass())) {
+                registeredTypes.put(type.javaClass(), type);
             }
-            registeredTypes.put(type.javaClass(), type);
             typeToSpecName.put(type, specFieldName);
             return type;
         }
@@ -393,6 +396,14 @@ public sealed interface BPFType<T> {
         }, (segment, obj) -> {
             segment.set(ValueLayout.JAVA_BYTE, 0, obj);
         }, false);
+
+        public static final BPFIntType<Byte> SIGNED_CHAR = createType("signed char", "SIGNED_CHAR", Byte.class,
+                ValueLayout.JAVA_BYTE,
+                segment -> {
+                    return segment.get(ValueLayout.JAVA_BYTE, 0);
+                }, (segment, obj) -> {
+                    segment.set(ValueLayout.JAVA_BYTE, 0, obj);
+                }, true);
 
         public static final BPFInternalTypedef<Byte> UINT8 = new BPFInternalTypedef<>("u8", CHAR);
 
@@ -468,6 +479,72 @@ public sealed interface BPFType<T> {
             segment.set(ValueLayout.JAVA_LONG, 0, obj);
         }, false);
 
+        public static final BPFInternalTypedef<Long> UINT64_T = new BPFInternalTypedef<>("u64", UINT64);
+
+        /**
+         * 128 bit integer
+         */
+        public record Int128(long lower, long upper) {
+            public Int128(BigInteger value) {
+                this(value.longValue(), value.shiftRight(64).longValue());
+            }
+
+            public BigInteger toBigInteger() {
+                return BigInteger.valueOf(upper).shiftLeft(64).add(BigInteger.valueOf(lower));
+            }
+
+            public UnsignedInt128 toUnsigned() {
+                return new UnsignedInt128(lower, upper);
+            }
+        }
+
+        /**
+         * 128 bit unsigned integer, maybe fix
+         */
+        public record UnsignedInt128(long lower, long upper) {
+            public UnsignedInt128(BigInteger value) {
+                this(value.longValue(), value.shiftRight(64).longValue());
+            }
+
+            public BigInteger toBigInteger() {
+                return BigInteger.valueOf(upper).shiftLeft(64).add(BigInteger.valueOf(lower));
+            }
+        }
+
+        public static final BPFIntType<Int128> INT128 = createType("__int128", "INT128", Int128.class,
+                MemoryLayout.structLayout(
+                ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG), segment -> {
+            return new Int128(segment.get(ValueLayout.JAVA_LONG, 0), segment.get(ValueLayout.JAVA_LONG, 8));
+        }, (MemorySegment segment, Int128 obj) -> {
+            segment.set(ValueLayout.JAVA_LONG, 0, obj.lower());
+            segment.set(ValueLayout.JAVA_LONG, 8, obj.upper());
+        }, true);
+
+        public static final BPFIntType<UnsignedInt128> UINT128 = createType("__int128 unsigned", "UINT128",
+                UnsignedInt128.class,
+                BPFIntType.INT128.layout, segment -> {
+                    return new UnsignedInt128(segment.get(ValueLayout.JAVA_LONG, 0),
+                            segment.get(ValueLayout.JAVA_LONG, 8));
+                }, (MemorySegment segment, UnsignedInt128 obj) -> {
+                    segment.set(ValueLayout.JAVA_LONG, 0, obj.lower());
+                    segment.set(ValueLayout.JAVA_LONG, 8, obj.upper());
+                }, false);
+
+        // for float and double
+        public static final BPFIntType<Float> FLOAT = createType("float", "FLOAT", Float.class, ValueLayout.JAVA_FLOAT,
+                segment -> {
+                    return segment.get(ValueLayout.JAVA_FLOAT, 0);
+                }, (segment, obj) -> {
+                    segment.set(ValueLayout.JAVA_FLOAT, 0, obj);
+                }, false);
+
+        public static final BPFIntType<Double> DOUBLE = createType("double", "DOUBLE", Double.class,
+                ValueLayout.JAVA_DOUBLE,
+                segment -> {
+                    return segment.get(ValueLayout.JAVA_DOUBLE, 0);
+                }, (segment, obj) -> {
+                    segment.set(ValueLayout.JAVA_DOUBLE, 0, obj);
+                }, false);
 
         /**
          * <code>void*</code>
@@ -571,6 +648,11 @@ public sealed interface BPFType<T> {
             return CAST.Declarator.structMember(type.toCUse(), CAST.Expression.variable(name),
                     ebpfSize == null ? null : CAST.Expression.verbatim(ebpfSize));
         }
+
+        static CAST.Declarator.StructMember createPaddingStructMember(int paddingId, int paddingSize) {
+            return CAST.Declarator.structMember(CAST.Declarator.array(CAST.Declarator.identifier("char"),
+                    CAST.Expression.constant(paddingSize)), CAST.Expression.variable("__padding" + paddingId));
+        }
     }
 
     /**
@@ -580,13 +662,24 @@ public sealed interface BPFType<T> {
      * @param type   type of the member
      * @param getter function that takes the struct and returns the member
      */
-    record UBPFStructMember<P, T>(String name, BPFType<T> type, Function<P, T> getter, @Nullable String ebpfSize) {
+    record UBPFStructMember<P, T>(String name, BPFType<T> type, Function<P, T> getter, @Nullable String ebpfSize,
+                                  Optional<Integer> offset) {
+
+        public UBPFStructMember(String name, BPFType<T> type, Function<P, T> getter, @Nullable String ebpfSize) {
+            this(name, type, getter, ebpfSize, Optional.empty());
+        }
 
         public UBPFStructMember(String name, BPFType<T> type, Function<P, T> getter) {
             this(name, type, getter, null);
         }
+
         public BPFStructMember<P, T> position(int offset) {
-            return new BPFStructMember<>(name, type, offset, getter, ebpfSize);
+            if (this.offset.isPresent()) {
+                if (offset > this.offset.get()) {
+                    throw new IllegalArgumentException("Offset " + offset + " is greater than byte offset " + this.offset.get());
+                }
+            }
+            return new BPFStructMember<>(name, type, this.offset.orElse(offset), getter, ebpfSize);
         }
     }
 
@@ -621,6 +714,7 @@ public sealed interface BPFType<T> {
         private final AnnotatedClass javaClass;
         private final Function<List<Object>, T> constructor;
         private final SourceClassKind sourceClassKind;
+        private final boolean typedefed;
 
         /**
          * Create a new struct type with manually set layout,
@@ -634,7 +728,7 @@ public sealed interface BPFType<T> {
          */
         public BPFStructType(String bpfName, List<BPFStructMember<T, ?>> members, AnnotatedClass javaClass,
                              Function<List<Object>, T> constructor) {
-            this(bpfName, members, javaClass, constructor, SourceClassKind.RECORD);
+            this(bpfName, members, javaClass, constructor, SourceClassKind.RECORD, false);
         }
 
         /**
@@ -648,7 +742,8 @@ public sealed interface BPFType<T> {
          * @param constructor constructor that takes the members in the same order as in the constructor
          */
         public BPFStructType(String bpfName, List<BPFStructMember<T, ?>> members, AnnotatedClass javaClass,
-                             Function<List<Object>, T> constructor, SourceClassKind sourceClassKind) {
+                             Function<List<Object>, T> constructor, SourceClassKind sourceClassKind,
+                             boolean typedefed) {
             this.bpfName = bpfName;
             this.layout = createLayout(members);
             this.alignment = members.stream().mapToLong(m -> m.type.alignment()).max().orElse(1);
@@ -656,6 +751,22 @@ public sealed interface BPFType<T> {
             this.javaClass = javaClass;
             this.constructor = constructor;
             this.sourceClassKind = sourceClassKind;
+            this.typedefed = typedefed;
+
+            // check names are unique
+            Set<String> names = new HashSet<>();
+            for (var member : members) {
+                if (!names.add(member.name())) {
+                    throw new IllegalArgumentException("Duplicate member name " + member.name());
+                }
+                if (member.type instanceof BPFType.BPFInlineUnionType<?> unionType) {
+                    for (var unionMember : unionType.members()) {
+                        if (!names.add(unionMember.name())) {
+                            throw new IllegalArgumentException("Duplicate member name in inline union " + unionMember.name());
+                        }
+                    }
+                }
+            }
         }
 
         public static <T> BPFStructType<T> autoLayout(String bpfName, List<UBPFStructMember<T, ?>> members,
@@ -666,7 +777,14 @@ public sealed interface BPFType<T> {
         public static <T> BPFStructType<T> autoLayout(String bpfName, List<UBPFStructMember<T, ?>> members,
                                                       AnnotatedClass javaClass, Function<List<Object>, T> constructor,
                                                       SourceClassKind sourceClassKind) {
-            return new BPFStructType<>(bpfName, layoutMembers(members), javaClass, constructor, sourceClassKind);
+            return autoLayout(bpfName, members, javaClass, constructor, sourceClassKind, false);
+        }
+
+        public static <T> BPFStructType<T> autoLayout(String bpfName, List<UBPFStructMember<T, ?>> members,
+                                                      AnnotatedClass javaClass, Function<List<Object>, T> constructor,
+                                                      SourceClassKind sourceClassKind, boolean typedefed) {
+            return new BPFStructType<>(bpfName, layoutMembers(members), javaClass, constructor, sourceClassKind,
+                    typedefed);
         }
 
         /**
@@ -682,6 +800,8 @@ public sealed interface BPFType<T> {
                     if (padding > 0) {
                         layouts.add(MemoryLayout.paddingLayout(padding));
                     }
+                } else if (member.offset > 0) {
+                    layouts.add(MemoryLayout.paddingLayout(member.offset));
                 }
                 layouts.add(member.type.layout().withName(member.name()));
             }
@@ -785,8 +905,25 @@ public sealed interface BPFType<T> {
 
         @Override
         public Optional<CAST.Declarator> toCDeclaration() {
+            List<StructMember> cmembers = new ArrayList<>();
+            var paddingCount = 0;
+            long offset = 0;
+            for (var member : members) {
+                offset = padSize(offset, member.type.alignment());
+                if (offset < member.offset) {
+                    cmembers.add(BPFStructMember.createPaddingStructMember(paddingCount,
+                            (int) (member.offset - offset)));
+                    paddingCount++;
+                }
+                cmembers.add(member.toCStructMember());
+                offset += member.type.size();
+            }
+            if (typedefed) {
+                return Optional.of(CAST.Declarator.typedefedStruct(CAST.Expression.variable(bpfName),
+                        cmembers));
+            }
             return Optional.of(CAST.Declarator.struct(CAST.Expression.variable(bpfName),
-                    members.stream().map(BPFStructMember::toCStructMember).toList()));
+                    cmembers));
         }
 
         @Override
@@ -796,6 +933,9 @@ public sealed interface BPFType<T> {
 
         @Override
         public CAST.Declarator toCUse() {
+            if (typedefed) {
+                return CAST.Declarator.identifier(bpfName);
+            }
             return CAST.Declarator.structIdentifier(CAST.Expression.variable(bpfName));
         }
 
@@ -805,34 +945,77 @@ public sealed interface BPFType<T> {
                 String className = this.javaClass.klass;
                 ClassName bpfStructType = ClassName.get(BPF_PACKAGE, "BPFType.BPFStructType");
                 TypeName fieldType = ParameterizedTypeName.get(bpfStructType, ClassName.get("", className));
-                Function<BPFStructMember<?, ?>, String> accessor = m -> switch (sourceClassKind) {
-                    case RECORD -> className + "::" + m.name();
-                    case CLASS, CLASS_WITH_CONSTRUCTOR -> "o -> (" + m.type().toJavaUseInGenerics() + ")(Object)o." + m.name;
+                Function<BPFStructMember<?, ?>, String> accessor = m -> {
+                    if (m.type instanceof BPFType.BPFInlineUnionType<?> inlineUnion) {
+                        return "o -> (" + m.type.toJavaUse() + ")" + inlineUnion.javaExpressionToCreateInlineUnion(field -> switch (sourceClassKind) {
+                            case RECORD -> "o." + field + "()";
+                            case CLASS, CLASS_WITH_CONSTRUCTOR -> "o." + field;
+                        });
+                    }
+                    return switch (sourceClassKind) {
+                        case RECORD -> className + "::" + m.name();
+                        case CLASS, CLASS_WITH_CONSTRUCTOR -> "o -> (" + m.type().toJavaUseInGenerics() + ")(Object)o" +
+                                "." + m.name;
+                    };
                 };
                 String memberExpression =
                         members.stream().map(m -> "new " + BPF_TYPE + ".UBPFStructMember<" + className + ", " + m.type().toJavaUseInGenerics() + ">(" + "\"" + m.name() + "\"," +
-                                " " + typeToSpecName.apply(m.type()) + ", " + accessor.apply(m) +
+                                " " + typeToSpecName.apply(m.type()) + ", " + accessor.apply(m) + ", null," + (m.offset == 0 ? "java.util.Optional.empty()" : "java.util.Optional.of(" + m.offset + ")") +
                                 ")").collect(Collectors.joining(", "));
 
                 ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
+
+
+
                 String constructorExpr = switch (sourceClassKind) {
                     case RECORD, CLASS_WITH_CONSTRUCTOR -> {
-                        String creatorExpr =
-                                IntStream.range(0, members.size()).mapToObj(i -> "(" + members.get(i).type.toJavaUse() + ")" +
+                        StringJoiner joiner = new StringJoiner(", ");
+                        for (int i = 0; i < members.size(); i++) {
+                            var member = members.get(i);
+                            if (member.type instanceof BPFType.BPFInlineUnionType<?> inlineUnion) {
+                                inlineUnion.javaExpressionToAccessMembers("fields.get(" + i + ")").stream().map(e ->
+                                        "(" + e.getValue().type().toJavaUse() + ")" +
+                                        "me.bechberger.ebpf.type.BoxHelper.unbox(" + e.getKey() + ", " +
+                                        e.getValue().type.toJavaUse() + ".class)").forEach(joiner::add);
+                            } else {
+                                String s = "(" + member.type.toJavaUse() + ")" +
                                         "me.bechberger.ebpf.type.BoxHelper.unbox(fields.get(" + i + "), " +
-                                        members.get(i).type.toJavaUse() + ".class)").collect(Collectors.joining(", "));
+                                        member.type.toJavaUse() + ".class)";
+                                joiner.add(s);
+                            }
+                        }
+                        String creatorExpr = joiner.toString();
                         yield "new " + className + "(" + creatorExpr + ")";
                     }
-                    case CLASS ->
-                            "{ var o = new " + className + "(); " + members.stream().map(m -> "o." + m.name() + " = " +
-                                    "me.bechberger.ebpf.type.BoxHelper.unbox(fields.get(" + members.indexOf(m) + "), " +
-                                    m.type().toJavaUse() + ".class)").collect(Collectors.joining("; ")) + "; return o; }";
+                    case CLASS -> {
+                        StringJoiner joiner = new StringJoiner("; ");
+                        for (BPFStructMember<T, ?> m : members) {
+                            if (m.type instanceof BPFType.BPFInlineUnionType<?> inlineUnion) {
+                                for (var e :
+                                        inlineUnion.javaExpressionToAccessMembers("fields.get(" + members.indexOf(m) + ")")) {
+                                    var javaType = e.getValue().type().toJavaUse();
+                                    joiner.add("o." + e.getValue().name() + " = " +
+                                            "me.bechberger.ebpf.type.BoxHelper.unbox(" + e.getKey() + "," + javaType + ".class)");
+                                }
+                            } else {
+                                String s = "o." + m.name() + " = " +
+                                        "me.bechberger.ebpf.type.BoxHelper.unbox(fields.get(" + members.indexOf(m) +
+                                        "), " +
+                                        m.type().toJavaUse() + ".class)";
+                                joiner.add(s);
+                            }
+                        }
+                        yield "{ var o = new " + className + "(); " + joiner.toString() + "; return o; }";
+                    }
                 };
 
                 return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC)
                         .initializer("$T.autoLayout($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " +
-                                        "java.util.List" + ".of()" + "), " + "fields -> $L)", bpfStructType, bpfName,
-                                memberExpression, bpfType, ClassName.get("", className), constructorExpr).build();
+                                        "java.util.List" + ".of()" + "), " + "fields -> $L, $L, $L)", bpfStructType,
+                                bpfName,
+                                memberExpression, bpfType, ClassName.get("", className), constructorExpr,
+                                SourceClassKind.class.getName().replace('$', '.') + "." + sourceClassKind,
+                                typedefed).build();
             });
         }
 
@@ -1189,16 +1372,35 @@ public sealed interface BPFType<T> {
 
     /**
      * Union
-     *
-     * @param bpfName
-     * @param members members of the union
      */
-    record BPFUnionType<T extends Union>(String bpfName, List<BPFUnionMember<T, ?>> members, AnnotatedClass javaClass,
-                                         Function<Map<String, Object>, T> constructor) implements BPFType<T> {
+    sealed class BPFUnionType<T extends Union> implements BPFType<T> {
+        private final String bpfName;
+        private final List<BPFUnionMember<T, ?>> members;
+        final AnnotatedClass javaClass;
+        private final Function<Map<String, Object>, T> constructor;
+        private final boolean typedefed;
+
+        /**
+         * @param bpfName
+         * @param members members of the union
+         */
+        public BPFUnionType(String bpfName, List<BPFUnionMember<T, ?>> members, AnnotatedClass javaClass,
+                            Function<Map<String, Object>, T> constructor, boolean typedefed) {
+            this.bpfName = bpfName;
+            this.members = members;
+            this.javaClass = javaClass;
+            this.constructor = constructor;
+            this.typedefed = typedefed;
+        }
+
+        public BPFUnionType(String bpfName, List<BPFUnionMember<T, ?>> members, AnnotatedClass javaClass,
+                            Function<Map<String, Object>, T> constructor) {
+            this(bpfName, members, javaClass, constructor, false);
+        }
 
         @Override
         public MemoryLayout layout() {
-            return MemoryLayout.sequenceLayout(size(), ValueLayout.JAVA_BYTE);
+            return MemoryLayout.sequenceLayout(size(), JAVA_BYTE);
         }
 
         @Override
@@ -1286,19 +1488,26 @@ public sealed interface BPFType<T> {
         }
 
         @Override
-        public Optional<CAST.Declarator> toCDeclaration() {
-            return Optional.of(CAST.Declarator.union(CAST.Expression.variable(bpfName),
-                    members.stream().map(BPFUnionMember::toCUnionMember).toList()));
+        public Optional<Declarator> toCDeclaration() {
+            var membs = members.stream().map(BPFUnionMember::toCUnionMember).toList();
+            if (typedefed) {
+                return Optional.of(Declarator.typedefedUnion(variable(bpfName),
+                        membs));
+            }
+            return Optional.of(Declarator.union(variable(bpfName), membs));
         }
 
         @Override
-        public Optional<CAST.Statement> toCDeclarationStatement() {
-            return toCDeclaration().map(d -> CAST.Statement.declarationStatement(d, null));
+        public Optional<Statement> toCDeclarationStatement() {
+            if (typedefed) {
+                return toCDeclaration().map(d -> Statement.typedef(d, null));
+            }
+            return toCDeclaration().map(d -> Statement.declarationStatement(d, null));
         }
 
         @Override
-        public CAST.Declarator toCUse() {
-            return CAST.Declarator.unionIdentifier(CAST.Expression.variable(bpfName));
+        public Declarator toCUse() {
+            return Declarator.unionIdentifier(variable(bpfName));
         }
 
         @Override
@@ -1310,7 +1519,7 @@ public sealed interface BPFType<T> {
                 String memberExpression =
                         members.stream().map(m -> "new " + BPF_TYPE + ".BPFUnionMember<" + className + ", " + m.type().toJavaUseInGenerics() + ">(" + "\"" + m.name() + "\"," + " " + typeToSpecName.apply(m.type()) + ", (" + className + " u) -> (" + m.type().toJavaUseInGenerics() + ") (Object)u." + m.name() + ")").collect(Collectors.joining(", "));
                 ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
-                return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC).initializer("new $T<>($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " + "java.util.List" + ".of()" + "), members -> new $T().init(members))", baseType, bpfName, memberExpression, bpfType, ClassName.get("", className), ClassName.get("", className)).build();
+                return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC).initializer("new $T<>($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " + "java.util.List" + ".of()" + "), members -> new $T().init(members), $L)", baseType, bpfName, memberExpression, bpfType, ClassName.get("", className), ClassName.get("", className), typedefed).build();
             });
         }
 
@@ -1323,11 +1532,168 @@ public sealed interface BPFType<T> {
         public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
             return typeToSpecFieldName.apply(this);
         }
+
+        @Override
+        public String bpfName() {
+            return bpfName;
+        }
+
+        public List<BPFUnionMember<T, ?>> members() {
+            return members;
+        }
+
+        @Override
+        public AnnotatedClass javaClass() {
+            return javaClass;
+        }
+
+        public Function<Map<String, Object>, T> constructor() {
+            return constructor;
+        }
+
+        public boolean typedefed() {
+            return typedefed;
+        }
+
+        @Override
+        public String toString() {
+            return "BPFUnionType[" +
+                    "bpfName=" + bpfName + ", " +
+                    "members=" + members + ", " +
+                    "javaClass=" + javaClass + ", " +
+                    "constructor=" + constructor + ", " +
+                    "typedefed=" + typedefed + ']';
+        }
+
     }
 
-    record BPFEnumMember(String name, String cName, int value) {
-        CAST.Declarator.EnumMember toCEnumMember() {
-            return CAST.Declarator.enumMember(CAST.Expression.variable(cName), value);
+    final class InlineUnion extends Union {
+        private Map<String, Object> map;
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <U extends Union> U init(Map<String, Object> originalValues) {
+            map = originalValues;
+            return (U) this;
+        }
+
+        @SuppressWarnings("unchecked")
+        public <T> T get(String name) {
+            return (T) map.get(name);
+        }
+    }
+
+    record BPFInlineUnionMember<P, T>(String name, BPFType<T> type, Function<P, T> getter) {
+
+        @SuppressWarnings("unchecked")
+        BPFUnionMember<InlineUnion, T> toUnionMember() {
+            return new BPFUnionMember<>(name, type, (InlineUnion m) -> (T) m.map.get(name));
+        }
+    }
+
+    /**
+     * For unions inlined in structs
+     */
+    final class BPFInlineUnionType<T> extends BPFUnionType<InlineUnion> {
+
+        private final List<BPFInlineUnionMember<T, ?>> inlineMembers;
+        private final AnnotatedClass structClass;
+        private final SourceClassKind sourceClassKind;
+
+        /**
+         * can't be typedefed
+         */
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        public BPFInlineUnionType(String bpfName, List<BPFInlineUnionMember<T, ?>> inlineMembers,
+                                  AnnotatedClass structClass, SourceClassKind sourceClassKind) {
+            super(bpfName,
+                    (List<BPFUnionMember<InlineUnion, ?>>) (List) inlineMembers.stream().map(BPFInlineUnionMember::toUnionMember).toList(), new AnnotatedClass(InlineUnion.class, List.of()), m -> new InlineUnion().init(m), false);
+            this.inlineMembers = inlineMembers;
+            this.structClass = structClass;
+            this.sourceClassKind = sourceClassKind;
+        }
+
+        @Override
+        public Optional<BiFunction<String, Function<BPFType<?>, String>, FieldSpec>> toFieldSpecGenerator() {
+            return Optional.of((fieldName, typeToSpecName) -> {
+                String className = this.structClass.klass;
+                ClassName baseType = ClassName.get(BPF_PACKAGE, "BPFType.BPFInlineUnionType");
+                TypeName fieldType = ParameterizedTypeName.get(baseType, ClassName.get("", className));
+
+                String memberExpression =
+                        inlineMembers.stream().map(m -> "new " + BPF_TYPE + ".BPFInlineUnionMember<" + className + "," +
+                                " " + m.type().toJavaUseInGenerics() + ">(" + "\"" + m.name() + "\"," + " " + m.type().toJavaFieldSpecUse(typeToSpecName) + ", (" + className + " u) -> (" + m.type().toJavaUseInGenerics() + ") (Object)u." + m.name() + (sourceClassKind == SourceClassKind.RECORD ? "()" : "") + ")").collect(Collectors.joining(", "));
+                ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
+                return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC).initializer("new $T<>($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " + "java.util.List" + ".of()" + "), $L)", baseType, bpfName(), memberExpression, bpfType, ClassName.get("", className), cts(SourceClassKind.class) + "." + sourceClassKind.name()).build();
+            });
+        }
+
+        private String createTypeExpression(Function<BPFType<?>, String> typeToSpecFieldName) {
+            var tmpName = "_________NAME";
+            var fieldStr = toFieldSpecGenerator().get().apply(tmpName, typeToSpecFieldName).toString();
+            var res = fieldStr.split(tmpName + " = ", 2)[1].trim();
+            return res.substring(0, res.length() - 1); // remove semicolon
+        }
+
+        @Override
+        public Optional<Declarator> toCDeclaration() {
+            return Optional.empty(); // defined inline
+        }
+
+        @Override
+        public Optional<Statement> toCDeclarationStatement() {
+            return Optional.empty(); // defined inline
+        }
+
+        @Override
+        public Declarator toCUse() {
+            var membs = members().stream().map(BPFUnionMember::toCUnionMember).toList();
+            return Declarator.inlineUnion(membs);
+        }
+
+        BPFInlineUnionMember<T, ?> getInlineMember(String memberName) {
+            return inlineMembers.stream().filter(m -> m.name().equals(memberName)).findFirst().orElseThrow();
+        }
+
+        /**
+         * Generate something like {@code ((InlineUnion) $parentExpression).get($memberName)}
+         */
+        public String javaExpressionToAccessMember(String parentExpression, String memberName) {
+            return "((" + cts(InlineUnion.class) + ")" + parentExpression + ").get(\"" + memberName + "\")";
+        }
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        public List<Map.Entry<String, BPFInlineUnionMember<T, ?>>> javaExpressionToAccessMembers(String parentExpression) {
+            return (List<Entry<String, BPFInlineUnionMember<T, ?>>>) (List) inlineMembers.stream().map(m -> Map.entry(javaExpressionToAccessMember(parentExpression, m.name()), m)).toList();
+        }
+
+        /**
+         * Generate something like {@code new InlineUnion().init(Map.ofEntries(Map.entry("unionA",
+         * o.unionA), Map.entry("unionB", o.unionB))} to create an {@link InlineUnion} from the parent struct
+         */
+        public String javaExpressionToCreateInlineUnion(Function<String, String> fieldAccessor) {
+            return "new " + cts(InlineUnion.class) + "().init(java.util.Map.ofEntries(" +
+                    inlineMembers.stream().map(m -> "java.util.Map.entry(\"" + m.name() + "\", " + fieldAccessor.apply(m.name()) + ")").collect(Collectors.joining(", ")) + "))";
+        }
+
+        static String cts(Class<?> klass) {
+            return cts(klass.getName());
+        }
+
+        static String cts(String klass) {
+            return klass.replace('$', '.');
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+            return createTypeExpression(typeToSpecFieldName);
+        }
+    }
+
+    record BPFEnumMember(String name, String cName, long value) {
+        CAST.Declarator.EnumMember toCEnumMember(BPFType<?> memberType) {
+            return CAST.Declarator.enumMember(CAST.Expression.variable(cName), memberType.size() == 8 ?
+                    CAST.Expression.constant(value) : CAST.Expression.constant((int)value));
         }
     }
 
@@ -1336,17 +1702,28 @@ public sealed interface BPFType<T> {
      */
     final class BPFEnumType<T extends Enum<?>> implements BPFType<T> {
         private final String bpfName;
+        private final BPFType<?> memberType;
         private final List<BPFEnumMember> members;
         private final AnnotatedClass javaClass;
         private final Function<Integer, T> indexToEnum;
-        private final Map<Integer, Integer> memberValueToIndex;
+        private final Map<Long, Integer> memberValueToIndex;
+
+        public BPFEnumType(String bpfName, List<BPFEnumMember> members, AnnotatedClass javaClass, Function<Integer,
+                T> indexToEnum) {
+            this(bpfName, UINT32, members, javaClass, indexToEnum);
+        }
 
         /**
          * @param members constant members of the enum
          */
-        public BPFEnumType(String bpfName, List<BPFEnumMember> members, AnnotatedClass javaClass, Function<Integer,
+        public BPFEnumType(String bpfName, BPFType<?> memberType, List<BPFEnumMember> members,
+                           AnnotatedClass javaClass, Function<Integer,
                 T> indexToEnum) {
+            if (memberType.size() > 8) {
+                throw new IllegalArgumentException("Enum member type must be 8 bytes or less");
+            }
             this.bpfName = bpfName;
+            this.memberType = memberType;
             this.members = members;
             this.javaClass = javaClass;
             this.indexToEnum = indexToEnum;
@@ -1358,17 +1735,17 @@ public sealed interface BPFType<T> {
 
         @Override
         public MemoryLayout layout() {
-            return UINT32.layout();
+            return memberType.layout();
         }
 
         @Override
         public long size() {
-            return UINT32.size();
+            return memberType.size();
         }
 
         @Override
         public long alignment() {
-            return UINT32.alignment();
+            return memberType.alignment();
         }
 
         public BPFEnumMember getMember(String memberName) {
@@ -1378,7 +1755,13 @@ public sealed interface BPFType<T> {
         @Override
         public MemoryParser<T> parser() {
             return segment -> {
-                int value = UINT32.parseMemory(segment);
+                var val = memberType.parseMemory(segment);
+                long value;
+                if (val instanceof Number number) {
+                    value = number.longValue();
+                } else {
+                    throw new RuntimeException("Enum value must be a number");
+                }
                 var index = memberValueToIndex.get(value);
                 if (index == null) {
                     throw new RuntimeException("Unknown enum value " + value);
@@ -1388,9 +1771,22 @@ public sealed interface BPFType<T> {
         }
 
         @Override
+        @SuppressWarnings({"unchecked", "rawtypes"})
         public MemorySetter<T> setter() {
             return (segment, member) -> {
-                UINT32.setMemory(segment, members.get(((java.lang.Enum<?>) member).ordinal()).value());
+                var val = members.get(((java.lang.Enum<?>) member).ordinal()).value();
+                switch ((int) memberType.size()) {
+                    case 1 -> {
+                        if (memberType.javaClass().klass.contains("Character")) {
+                            segment.set(ValueLayout.JAVA_BYTE, 0, (byte) (char) val);
+                        } else {
+                            segment.set(ValueLayout.JAVA_BYTE, 0, (byte) val);
+                        }
+                    }
+                    case 2 -> segment.set(ValueLayout.JAVA_SHORT, 0, (short) val);
+                    case 4 -> segment.set(ValueLayout.JAVA_INT, 0, (int)val);
+                    case 8 -> segment.set(ValueLayout.JAVA_LONG, 0, val);
+                }
             };
         }
 
@@ -1411,7 +1807,7 @@ public sealed interface BPFType<T> {
         @Override
         public Optional<Declarator> toCDeclaration() {
             return Optional.of(Declarator._enum(variable(bpfName),
-                    members.stream().map(BPFEnumMember::toCEnumMember).toList()));
+                    members.stream().map(m -> m.toCEnumMember(memberType)).toList()));
         }
 
         @Override
@@ -1431,11 +1827,12 @@ public sealed interface BPFType<T> {
                 ClassName baseType = ClassName.get(BPF_PACKAGE, "BPFType.BPFEnumType");
                 TypeName fieldType = ParameterizedTypeName.get(baseType, ClassName.get("", className));
                 String memberExpression =
-                        members.stream().map(m -> "new " + BPF_TYPE + ".BPFEnumMember(" + "\"" + m.name() + "\", \"" + m.cName() + "\", " + m.value() + ")").collect(Collectors.joining(", "));
+                        members.stream().map(m -> "new " + BPF_TYPE + ".BPFEnumMember(" + "\"" + m.name() + "\", \"" + m.cName() + "\", " + m.value() + "L)").collect(Collectors.joining(", "));
                 ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");
                 return FieldSpec.builder(fieldType, fieldName).addModifiers(Modifier.FINAL, Modifier.STATIC)
-                        .initializer("new $T<>($S, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " + "java.util.List" + ".of()" + "), index -> $T.values()[index])",
-                                baseType, bpfName, memberExpression, bpfType, ClassName.get("", className), ClassName.get("", className)).build();
+                        .initializer("new $T<>($S, $L, java.util.List.of($L), new $T.AnnotatedClass($T" + ".class, " + "java.util.List" + ".of()" + "), index -> $T.values()[index])",
+                                baseType, bpfName, memberType.toJavaFieldSpecUse(typeToSpecName), memberExpression,
+                                bpfType, ClassName.get("", className), ClassName.get("", className)).build();
             });
         }
 
@@ -1470,14 +1867,14 @@ public sealed interface BPFType<T> {
         /**
          * Get the enum value from the passed value
          */
-        public T fromValue(int value) {
+        public T fromValue(long value) {
             return indexToEnum.apply(memberValueToIndex.get(value));
         }
 
         /**
          * Get the value of the passed enum
          */
-        public int toValue(T value) {
+        public long toValue(T value) {
             return members.get(((java.lang.Enum<?>) value).ordinal()).value();
         }
     }
@@ -1612,4 +2009,57 @@ public sealed interface BPFType<T> {
                     that.possibleMembers);
         }
     }
+
+    record Void() {
+    }
+
+    final class BPFVoidType implements BPFType<Void> {
+        @Override
+        public String bpfName() {
+            return "void";
+        }
+
+        @Override
+        public MemoryLayout layout() {
+            return JAVA_BYTE;
+        }
+
+        @Override
+        public MemoryParser<Void> parser() {
+            return (segment) -> new Void();
+        }
+
+        @Override
+        public MemorySetter<Void> setter() {
+            return (segment, obj) -> {
+            };
+        }
+
+        @Override
+        public long alignment() {
+            return 1;
+        }
+
+        @Override
+        public AnnotatedClass javaClass() {
+            return new AnnotatedClass(Void.class, List.of());
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+            return BPF_TYPE + ".VOID";
+        }
+
+        @Override
+        public String toJavaUse() {
+            return "void";
+        }
+
+        @Override
+        public String toJavaUseInGenerics() {
+            return "?";
+        }
+    };
+
+    BPFType<Void> VOID = new BPFVoidType();
 }

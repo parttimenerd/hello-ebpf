@@ -1,0 +1,1057 @@
+{
+  "bpf_bind": {
+    "Name": "bpf_bind",
+    "Definition": "static long (* const bpf_bind)(struct bpf_sock_addr *ctx, struct sockaddr *addr, int addr_len) = (void *) 64;",
+    "Description": " bpf_bind\n\n \tBind the socket associated to *ctx* to the address pointed by\n \t*addr*, of length *addr_len*. This allows for making outgoing\n \tconnection from the desired IP address, which can be useful for\n \texample when all processes inside a cgroup should use one\n \tsingle IP address on a host that has multiple IP configured.\n\n \tThis helper works for IPv4 and IPv6, TCP and UDP sockets. The\n \tdomain (*addr*\\ **-\u003esa_family**) must be **AF_INET** (or\n \t**AF_INET6**). It's advised to pass zero port (**sin_port**\n \tor **sin6_port**) which triggers IP_BIND_ADDRESS_NO_PORT-like\n \tbehavior and lets the kernel efficiently pick up an unused\n \tport as long as 4-tuple is unique. Passing non-zero port might\n \tlead to degraded performance.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_bprm_opts_set": {
+    "Name": "bpf_bprm_opts_set",
+    "Definition": "static long (* const bpf_bprm_opts_set)(struct linux_binprm *bprm, __u64 flags) = (void *) 159;",
+    "Description": " bpf_bprm_opts_set\n\n \tSet or clear certain options on *bprm*:\n\n \t**BPF_F_BPRM_SECUREEXEC** Set the secureexec bit\n \twhich sets the **AT_SECURE** auxv for glibc. The bit\n \tis cleared if the flag is not specified.\n\n Returns\n \t**-EINVAL** if invalid *flags* are passed, zero otherwise.\n"
+  },
+  "bpf_btf_find_by_name_kind": {
+    "Name": "bpf_btf_find_by_name_kind",
+    "Definition": "static long (* const bpf_btf_find_by_name_kind)(char *name, int name_sz, __u32 kind, int flags) = (void *) 167;",
+    "Description": " bpf_btf_find_by_name_kind\n\n \tFind BTF type with given name and kind in vmlinux BTF or in module's BTFs.\n\n Returns\n \tReturns btf_id and btf_obj_fd in lower and upper 32 bits.\n"
+  },
+  "bpf_cgrp_storage_delete": {
+    "Name": "bpf_cgrp_storage_delete",
+    "Definition": "static long (* const bpf_cgrp_storage_delete)(void *map, struct cgroup *cgroup) = (void *) 211;",
+    "Description": " bpf_cgrp_storage_delete\n\n \tDelete a bpf_local_storage from a *cgroup*.\n\n Returns\n \t0 on success.\n\n \t**-ENOENT** if the bpf_local_storage cannot be found.\n"
+  },
+  "bpf_cgrp_storage_get": {
+    "Name": "bpf_cgrp_storage_get",
+    "Definition": "static void *(* const bpf_cgrp_storage_get)(void *map, struct cgroup *cgroup, void *value, __u64 flags) = (void *) 210;",
+    "Description": " bpf_cgrp_storage_get\n\n \tGet a bpf_local_storage from the *cgroup*.\n\n \tLogically, it could be thought of as getting the value from\n \ta *map* with *cgroup* as the **key**.  From this\n \tperspective,  the usage is not much different from\n \t**bpf_map_lookup_elem**\\ (*map*, **\u0026**\\ *cgroup*) except this\n \thelper enforces the key must be a cgroup struct and the map must also\n \tbe a **BPF_MAP_TYPE_CGRP_STORAGE**.\n\n \tIn reality, the local-storage value is embedded directly inside of the\n \t*cgroup* object itself, rather than being located in the\n \t**BPF_MAP_TYPE_CGRP_STORAGE** map. When the local-storage value is\n \tqueried for some *map* on a *cgroup* object, the kernel will perform an\n \tO(n) iteration over all of the live local-storage values for that\n \t*cgroup* object until the local-storage value for the *map* is found.\n\n \tAn optional *flags* (**BPF_LOCAL_STORAGE_GET_F_CREATE**) can be\n \tused such that a new bpf_local_storage will be\n \tcreated if one does not exist.  *value* can be used\n \ttogether with **BPF_LOCAL_STORAGE_GET_F_CREATE** to specify\n \tthe initial value of a bpf_local_storage.  If *value* is\n \t**NULL**, the new bpf_local_storage will be zero initialized.\n\n Returns\n \tA bpf_local_storage pointer is returned on success.\n\n \t**NULL** if not found or there was an error in adding\n \ta new bpf_local_storage.\n"
+  },
+  "bpf_check_mtu": {
+    "Name": "bpf_check_mtu",
+    "Definition": "static long (* const bpf_check_mtu)(void *ctx, __u32 ifindex, __u32 *mtu_len, __s32 len_diff, __u64 flags) = (void *) 163;",
+    "Description": " bpf_check_mtu\n\n \tCheck packet size against exceeding MTU of net device (based\n \ton *ifindex*).  This helper will likely be used in combination\n \twith helpers that adjust/change the packet size.\n\n \tThe argument *len_diff* can be used for querying with a planned\n \tsize change. This allows to check MTU prior to changing packet\n \tctx. Providing a *len_diff* adjustment that is larger than the\n \tactual packet size (resulting in negative packet size) will in\n \tprinciple not exceed the MTU, which is why it is not considered\n \ta failure.  Other BPF helpers are needed for performing the\n \tplanned size change; therefore the responsibility for catching\n \ta negative packet size belongs in those helpers.\n\n \tSpecifying *ifindex* zero means the MTU check is performed\n \tagainst the current net device.  This is practical if this isn't\n \tused prior to redirect.\n\n \tOn input *mtu_len* must be a valid pointer, else verifier will\n \treject BPF program.  If the value *mtu_len* is initialized to\n \tzero then the ctx packet size is use.  When value *mtu_len* is\n \tprovided as input this specify the L3 length that the MTU check\n \tis done against. Remember XDP and TC length operate at L2, but\n \tthis value is L3 as this correlate to MTU and IP-header tot_len\n \tvalues which are L3 (similar behavior as bpf_fib_lookup).\n\n \tThe Linux kernel route table can configure MTUs on a more\n \tspecific per route level, which is not provided by this helper.\n \tFor route level MTU checks use the **bpf_fib_lookup**\\ ()\n \thelper.\n\n \t*ctx* is either **struct xdp_md** for XDP programs or\n \t**struct sk_buff** for tc cls_act programs.\n\n \tThe *flags* argument can be a combination of one or more of the\n \tfollowing values:\n\n \t**BPF_MTU_CHK_SEGS**\n \t\tThis flag will only works for *ctx* **struct sk_buff**.\n \t\tIf packet context contains extra packet segment buffers\n \t\t(often knows as GSO skb), then MTU check is harder to\n \t\tcheck at this point, because in transmit path it is\n \t\tpossible for the skb packet to get re-segmented\n \t\t(depending on net device features).  This could still be\n \t\ta MTU violation, so this flag enables performing MTU\n \t\tcheck against segments, with a different violation\n \t\treturn code to tell it apart. Check cannot use len_diff.\n\n \tOn return *mtu_len* pointer contains the MTU value of the net\n \tdevice.  Remember the net device configured MTU is the L3 size,\n \twhich is returned here and XDP and TC length operate at L2.\n \tHelper take this into account for you, but remember when using\n \tMTU value in your BPF-code.\n\n\n Returns\n \t* 0 on success, and populate MTU value in *mtu_len* pointer.\n\n \t* \u003c 0 if any input argument is invalid (*mtu_len* not updated)\n\n \tMTU violations return positive values, but also populate MTU\n \tvalue in *mtu_len* pointer, as this can be needed for\n \timplementing PMTU handing:\n\n \t* **BPF_MTU_CHK_RET_FRAG_NEEDED**\n \t* **BPF_MTU_CHK_RET_SEGS_TOOBIG**\n"
+  },
+  "bpf_clone_redirect": {
+    "Name": "bpf_clone_redirect",
+    "Definition": "static long (* const bpf_clone_redirect)(struct __sk_buff *skb, __u32 ifindex, __u64 flags) = (void *) 13;",
+    "Description": " bpf_clone_redirect\n\n \tClone and redirect the packet associated to *skb* to another\n \tnet device of index *ifindex*. Both ingress and egress\n \tinterfaces can be used for redirection. The **BPF_F_INGRESS**\n \tvalue in *flags* is used to make the distinction (ingress path\n \tis selected if the flag is present, egress path otherwise).\n \tThis is the only flag supported for now.\n\n \tIn comparison with **bpf_redirect**\\ () helper,\n \t**bpf_clone_redirect**\\ () has the associated cost of\n \tduplicating the packet buffer, but this can be executed out of\n \tthe eBPF program. Conversely, **bpf_redirect**\\ () is more\n \tefficient, but it is handled through an action code where the\n \tredirection happens only after the eBPF program has returned.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure. Positive\n \terror indicates a potential drop or congestion in the target\n \tdevice. The particular positive error codes are not defined.\n"
+  },
+  "bpf_copy_from_user": {
+    "Name": "bpf_copy_from_user",
+    "Definition": "static long (* const bpf_copy_from_user)(void *dst, __u32 size, const void *user_ptr) = (void *) 148;",
+    "Description": " bpf_copy_from_user\n\n \tRead *size* bytes from user space address *user_ptr* and store\n \tthe data in *dst*. This is a wrapper of **copy_from_user**\\ ().\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_copy_from_user_task": {
+    "Name": "bpf_copy_from_user_task",
+    "Definition": "static long (* const bpf_copy_from_user_task)(void *dst, __u32 size, const void *user_ptr, struct task_struct *tsk, __u64 flags) = (void *) 191;",
+    "Description": " bpf_copy_from_user_task\n\n \tRead *size* bytes from user space address *user_ptr* in *tsk*'s\n \taddress space, and stores the data in *dst*. *flags* is not\n \tused yet and is provided for future extensibility. This helper\n \tcan only be used by sleepable programs.\n\n Returns\n \t0 on success, or a negative error in case of failure. On error\n \t*dst* buffer is zeroed out.\n"
+  },
+  "bpf_csum_diff": {
+    "Name": "bpf_csum_diff",
+    "Definition": "static __s64 (* const bpf_csum_diff)(__be32 *from, __u32 from_size, __be32 *to, __u32 to_size, __wsum seed) = (void *) 28;",
+    "Description": " bpf_csum_diff\n\n \tCompute a checksum difference, from the raw buffer pointed by\n \t*from*, of length *from_size* (that must be a multiple of 4),\n \ttowards the raw buffer pointed by *to*, of size *to_size*\n \t(same remark). An optional *seed* can be added to the value\n \t(this can be cascaded, the seed may come from a previous call\n \tto the helper).\n\n \tThis is flexible enough to be used in several ways:\n\n \t* With *from_size* == 0, *to_size* \u003e 0 and *seed* set to\n \t  checksum, it can be used when pushing new data.\n \t* With *from_size* \u003e 0, *to_size* == 0 and *seed* set to\n \t  checksum, it can be used when removing data from a packet.\n \t* With *from_size* \u003e 0, *to_size* \u003e 0 and *seed* set to 0, it\n \t  can be used to compute a diff. Note that *from_size* and\n \t  *to_size* do not need to be equal.\n\n \tThis helper can be used in combination with\n \t**bpf_l3_csum_replace**\\ () and **bpf_l4_csum_replace**\\ (), to\n \twhich one can feed in the difference computed with\n \t**bpf_csum_diff**\\ ().\n\n Returns\n \tThe checksum result, or a negative error code in case of\n \tfailure.\n"
+  },
+  "bpf_csum_level": {
+    "Name": "bpf_csum_level",
+    "Definition": "static long (* const bpf_csum_level)(struct __sk_buff *skb, __u64 level) = (void *) 135;",
+    "Description": " bpf_csum_level\n\n \tChange the skbs checksum level by one layer up or down, or\n \treset it entirely to none in order to have the stack perform\n \tchecksum validation. The level is applicable to the following\n \tprotocols: TCP, UDP, GRE, SCTP, FCOE. For example, a decap of\n \t| ETH | IP | UDP | GUE | IP | TCP | into | ETH | IP | TCP |\n \tthrough **bpf_skb_adjust_room**\\ () helper with passing in\n \t**BPF_F_ADJ_ROOM_NO_CSUM_RESET** flag would require one\tcall\n \tto **bpf_csum_level**\\ () with **BPF_CSUM_LEVEL_DEC** since\n \tthe UDP header is removed. Similarly, an encap of the latter\n \tinto the former could be accompanied by a helper call to\n \t**bpf_csum_level**\\ () with **BPF_CSUM_LEVEL_INC** if the\n \tskb is still intended to be processed in higher layers of the\n \tstack instead of just egressing at tc.\n\n \tThere are three supported level settings at this time:\n\n \t* **BPF_CSUM_LEVEL_INC**: Increases skb-\u003ecsum_level for skbs\n \t  with CHECKSUM_UNNECESSARY.\n \t* **BPF_CSUM_LEVEL_DEC**: Decreases skb-\u003ecsum_level for skbs\n \t  with CHECKSUM_UNNECESSARY.\n \t* **BPF_CSUM_LEVEL_RESET**: Resets skb-\u003ecsum_level to 0 and\n \t  sets CHECKSUM_NONE to force checksum validation by the stack.\n \t* **BPF_CSUM_LEVEL_QUERY**: No-op, returns the current\n \t  skb-\u003ecsum_level.\n\n Returns\n \t0 on success, or a negative error in case of failure. In the\n \tcase of **BPF_CSUM_LEVEL_QUERY**, the current skb-\u003ecsum_level\n \tis returned or the error code -EACCES in case the skb is not\n \tsubject to CHECKSUM_UNNECESSARY.\n"
+  },
+  "bpf_csum_update": {
+    "Name": "bpf_csum_update",
+    "Definition": "static __s64 (* const bpf_csum_update)(struct __sk_buff *skb, __wsum csum) = (void *) 40;",
+    "Description": " bpf_csum_update\n\n \tAdd the checksum *csum* into *skb*\\ **-\u003ecsum** in case the\n \tdriver has supplied a checksum for the entire packet into that\n \tfield. Return an error otherwise. This helper is intended to be\n \tused in combination with **bpf_csum_diff**\\ (), in particular\n \twhen the checksum needs to be updated after data has been\n \twritten into the packet through direct packet access.\n\n Returns\n \tThe checksum on success, or a negative error code in case of\n \tfailure.\n"
+  },
+  "bpf_current_task_under_cgroup": {
+    "Name": "bpf_current_task_under_cgroup",
+    "Definition": "static long (* const bpf_current_task_under_cgroup)(void *map, __u32 index) = (void *) 37;",
+    "Description": " bpf_current_task_under_cgroup\n\n \tCheck whether the probe is being run is the context of a given\n \tsubset of the cgroup2 hierarchy. The cgroup2 to test is held by\n \t*map* of type **BPF_MAP_TYPE_CGROUP_ARRAY**, at *index*.\n\n Returns\n \tThe return value depends on the result of the test, and can be:\n\n \t* 1, if current task belongs to the cgroup2.\n \t* 0, if current task does not belong to the cgroup2.\n \t* A negative error code, if an error occurred.\n"
+  },
+  "bpf_d_path": {
+    "Name": "bpf_d_path",
+    "Definition": "static long (* const bpf_d_path)(struct path *path, char *buf, __u32 sz) = (void *) 147;",
+    "Description": " bpf_d_path\n\n \tReturn full path for given **struct path** object, which\n \tneeds to be the kernel BTF *path* object. The path is\n \treturned in the provided buffer *buf* of size *sz* and\n \tis zero terminated.\n\n\n Returns\n \tOn success, the strictly positive length of the string,\n \tincluding the trailing NUL character. On error, a negative\n \tvalue.\n"
+  },
+  "bpf_dynptr_data": {
+    "Name": "bpf_dynptr_data",
+    "Definition": "static void *(* const bpf_dynptr_data)(const struct bpf_dynptr *ptr, __u32 offset, __u32 len) = (void *) 203;",
+    "Description": " bpf_dynptr_data\n\n \tGet a pointer to the underlying dynptr data.\n\n \t*len* must be a statically known value. The returned data slice\n \tis invalidated whenever the dynptr is invalidated.\n\n \tskb and xdp type dynptrs may not use bpf_dynptr_data. They should\n \tinstead use bpf_dynptr_slice and bpf_dynptr_slice_rdwr.\n\n Returns\n \tPointer to the underlying dynptr data, NULL if the dynptr is\n \tread-only, if the dynptr is invalid, or if the offset and length\n \tis out of bounds.\n"
+  },
+  "bpf_dynptr_from_mem": {
+    "Name": "bpf_dynptr_from_mem",
+    "Definition": "static long (* const bpf_dynptr_from_mem)(void *data, __u32 size, __u64 flags, struct bpf_dynptr *ptr) = (void *) 197;",
+    "Description": " bpf_dynptr_from_mem\n\n \tGet a dynptr to local memory *data*.\n\n \t*data* must be a ptr to a map value.\n \tThe maximum *size* supported is DYNPTR_MAX_SIZE.\n \t*flags* is currently unused.\n\n Returns\n \t0 on success, -E2BIG if the size exceeds DYNPTR_MAX_SIZE,\n \t-EINVAL if flags is not 0.\n"
+  },
+  "bpf_dynptr_read": {
+    "Name": "bpf_dynptr_read",
+    "Definition": "static long (* const bpf_dynptr_read)(void *dst, __u32 len, const struct bpf_dynptr *src, __u32 offset, __u64 flags) = (void *) 201;",
+    "Description": " bpf_dynptr_read\n\n \tRead *len* bytes from *src* into *dst*, starting from *offset*\n \tinto *src*.\n \t*flags* is currently unused.\n\n Returns\n \t0 on success, -E2BIG if *offset* + *len* exceeds the length\n \tof *src*'s data, -EINVAL if *src* is an invalid dynptr or if\n \t*flags* is not 0.\n"
+  },
+  "bpf_dynptr_write": {
+    "Name": "bpf_dynptr_write",
+    "Definition": "static long (* const bpf_dynptr_write)(const struct bpf_dynptr *dst, __u32 offset, void *src, __u32 len, __u64 flags) = (void *) 202;",
+    "Description": " bpf_dynptr_write\n\n \tWrite *len* bytes from *src* into *dst*, starting from *offset*\n \tinto *dst*.\n\n \t*flags* must be 0 except for skb-type dynptrs.\n\n \tFor skb-type dynptrs:\n \t    *  All data slices of the dynptr are automatically\n \t       invalidated after **bpf_dynptr_write**\\ (). This is\n \t       because writing may pull the skb and change the\n \t       underlying packet buffer.\n\n \t    *  For *flags*, please see the flags accepted by\n \t       **bpf_skb_store_bytes**\\ ().\n\n Returns\n \t0 on success, -E2BIG if *offset* + *len* exceeds the length\n \tof *dst*'s data, -EINVAL if *dst* is an invalid dynptr or if *dst*\n \tis a read-only dynptr or if *flags* is not correct. For skb-type dynptrs,\n \tother errors correspond to errors returned by **bpf_skb_store_bytes**\\ ().\n"
+  },
+  "bpf_fib_lookup": {
+    "Name": "bpf_fib_lookup",
+    "Definition": "static long (* const bpf_fib_lookup)(void *ctx, struct bpf_fib_lookup *params, int plen, __u32 flags) = (void *) 69;",
+    "Description": " bpf_fib_lookup\n\n \tDo FIB lookup in kernel tables using parameters in *params*.\n \tIf lookup is successful and result shows packet is to be\n \tforwarded, the neighbor tables are searched for the nexthop.\n \tIf successful (ie., FIB lookup shows forwarding and nexthop\n \tis resolved), the nexthop address is returned in ipv4_dst\n \tor ipv6_dst based on family, smac is set to mac address of\n \tegress device, dmac is set to nexthop mac address, rt_metric\n \tis set to metric from route (IPv4/IPv6 only), and ifindex\n \tis set to the device index of the nexthop from the FIB lookup.\n\n \t*plen* argument is the size of the passed in struct.\n \t*flags* argument can be a combination of one or more of the\n \tfollowing values:\n\n \t**BPF_FIB_LOOKUP_DIRECT**\n \t\tDo a direct table lookup vs full lookup using FIB\n \t\trules.\n \t**BPF_FIB_LOOKUP_TBID**\n \t\tUsed with BPF_FIB_LOOKUP_DIRECT.\n \t\tUse the routing table ID present in *params*-\u003etbid\n \t\tfor the fib lookup.\n \t**BPF_FIB_LOOKUP_OUTPUT**\n \t\tPerform lookup from an egress perspective (default is\n \t\tingress).\n \t**BPF_FIB_LOOKUP_SKIP_NEIGH**\n \t\tSkip the neighbour table lookup. *params*-\u003edmac\n \t\tand *params*-\u003esmac will not be set as output. A common\n \t\tuse case is to call **bpf_redirect_neigh**\\ () after\n \t\tdoing **bpf_fib_lookup**\\ ().\n \t**BPF_FIB_LOOKUP_SRC**\n \t\tDerive and set source IP addr in *params*-\u003eipv{4,6}_src\n \t\tfor the nexthop. If the src addr cannot be derived,\n \t\t**BPF_FIB_LKUP_RET_NO_SRC_ADDR** is returned. In this\n \t\tcase, *params*-\u003edmac and *params*-\u003esmac are not set either.\n\n \t*ctx* is either **struct xdp_md** for XDP programs or\n \t**struct sk_buff** tc cls_act programs.\n\n Returns\n \t* \u003c 0 if any input argument is invalid\n \t*   0 on success (packet is forwarded, nexthop neighbor exists)\n \t* \u003e 0 one of **BPF_FIB_LKUP_RET_** codes explaining why the\n \t  packet is not forwarded or needs assist from full stack\n\n \tIf lookup fails with BPF_FIB_LKUP_RET_FRAG_NEEDED, then the MTU\n \twas exceeded and output params-\u003emtu_result contains the MTU.\n"
+  },
+  "bpf_find_vma": {
+    "Name": "bpf_find_vma",
+    "Definition": "static long (* const bpf_find_vma)(struct task_struct *task, __u64 addr, void *callback_fn, void *callback_ctx, __u64 flags) = (void *) 180;",
+    "Description": " bpf_find_vma\n\n \tFind vma of *task* that contains *addr*, call *callback_fn*\n \tfunction with *task*, *vma*, and *callback_ctx*.\n \tThe *callback_fn* should be a static function and\n \tthe *callback_ctx* should be a pointer to the stack.\n \tThe *flags* is used to control certain aspects of the helper.\n \tCurrently, the *flags* must be 0.\n\n \tThe expected callback signature is\n\n \tlong (\\*callback_fn)(struct task_struct \\*task, struct vm_area_struct \\*vma, void \\*callback_ctx);\n\n\n Returns\n \t0 on success.\n \t**-ENOENT** if *task-\u003emm* is NULL, or no vma contains *addr*.\n \t**-EBUSY** if failed to try lock mmap_lock.\n \t**-EINVAL** for invalid **flags**.\n"
+  },
+  "bpf_for_each_map_elem": {
+    "Name": "bpf_for_each_map_elem",
+    "Definition": "static long (* const bpf_for_each_map_elem)(void *map, void *callback_fn, void *callback_ctx, __u64 flags) = (void *) 164;",
+    "Description": " bpf_for_each_map_elem\n\n \tFor each element in **map**, call **callback_fn** function with\n \t**map**, **callback_ctx** and other map-specific parameters.\n \tThe **callback_fn** should be a static function and\n \tthe **callback_ctx** should be a pointer to the stack.\n \tThe **flags** is used to control certain aspects of the helper.\n \tCurrently, the **flags** must be 0.\n\n \tThe following are a list of supported map types and their\n \trespective expected callback signatures:\n\n \tBPF_MAP_TYPE_HASH, BPF_MAP_TYPE_PERCPU_HASH,\n \tBPF_MAP_TYPE_LRU_HASH, BPF_MAP_TYPE_LRU_PERCPU_HASH,\n \tBPF_MAP_TYPE_ARRAY, BPF_MAP_TYPE_PERCPU_ARRAY\n\n \tlong (\\*callback_fn)(struct bpf_map \\*map, const void \\*key, void \\*value, void \\*ctx);\n\n \tFor per_cpu maps, the map_value is the value on the cpu where the\n \tbpf_prog is running.\n\n \tIf **callback_fn** return 0, the helper will continue to the next\n \telement. If return value is 1, the helper will skip the rest of\n \telements and return. Other return values are not used now.\n\n\n Returns\n \tThe number of traversed map elements for success, **-EINVAL** for\n \tinvalid **flags**.\n"
+  },
+  "bpf_get_attach_cookie": {
+    "Name": "bpf_get_attach_cookie",
+    "Definition": "static __u64 (* const bpf_get_attach_cookie)(void *ctx) = (void *) 174;",
+    "Description": " bpf_get_attach_cookie\n\n \tGet bpf_cookie value provided (optionally) during the program\n \tattachment. It might be different for each individual\n \tattachment, even if BPF program itself is the same.\n \tExpects BPF program context *ctx* as a first argument.\n\n \tSupported for the following program types:\n \t\t- kprobe/uprobe;\n \t\t- tracepoint;\n \t\t- perf_event.\n\n Returns\n \tValue specified by user at BPF link creation/attachment time\n \tor 0, if it was not specified.\n"
+  },
+  "bpf_get_branch_snapshot": {
+    "Name": "bpf_get_branch_snapshot",
+    "Definition": "static long (* const bpf_get_branch_snapshot)(void *entries, __u32 size, __u64 flags) = (void *) 176;",
+    "Description": " bpf_get_branch_snapshot\n\n \tGet branch trace from hardware engines like Intel LBR. The\n \thardware engine is stopped shortly after the helper is\n \tcalled. Therefore, the user need to filter branch entries\n \tbased on the actual use case. To capture branch trace\n \tbefore the trigger point of the BPF program, the helper\n \tshould be called at the beginning of the BPF program.\n\n \tThe data is stored as struct perf_branch_entry into output\n \tbuffer *entries*. *size* is the size of *entries* in bytes.\n \t*flags* is reserved for now and must be zero.\n\n\n Returns\n \tOn success, number of bytes written to *buf*. On error, a\n \tnegative value.\n\n \t**-EINVAL** if *flags* is not zero.\n\n \t**-ENOENT** if architecture does not support branch records.\n"
+  },
+  "bpf_get_cgroup_classid": {
+    "Name": "bpf_get_cgroup_classid",
+    "Definition": "static __u32 (* const bpf_get_cgroup_classid)(struct __sk_buff *skb) = (void *) 17;",
+    "Description": " bpf_get_cgroup_classid\n\n \tRetrieve the classid for the current task, i.e. for the net_cls\n \tcgroup to which *skb* belongs.\n\n \tThis helper can be used on TC egress path, but not on ingress.\n\n \tThe net_cls cgroup provides an interface to tag network packets\n \tbased on a user-provided identifier for all traffic coming from\n \tthe tasks belonging to the related cgroup. See also the related\n \tkernel documentation, available from the Linux sources in file\n \t*Documentation/admin-guide/cgroup-v1/net_cls.rst*.\n\n \tThe Linux kernel has two versions for cgroups: there are\n \tcgroups v1 and cgroups v2. Both are available to users, who can\n \tuse a mixture of them, but note that the net_cls cgroup is for\n \tcgroup v1 only. This makes it incompatible with BPF programs\n \trun on cgroups, which is a cgroup-v2-only feature (a socket can\n \tonly hold data for one version of cgroups at a time).\n\n \tThis helper is only available is the kernel was compiled with\n \tthe **CONFIG_CGROUP_NET_CLASSID** configuration option set to\n \t\"**y**\" or to \"**m**\".\n\n Returns\n \tThe classid, or 0 for the default unconfigured classid.\n"
+  },
+  "bpf_get_current_ancestor_cgroup_id": {
+    "Name": "bpf_get_current_ancestor_cgroup_id",
+    "Definition": "static __u64 (* const bpf_get_current_ancestor_cgroup_id)(int ancestor_level) = (void *) 123;",
+    "Description": " bpf_get_current_ancestor_cgroup_id\n\n \tReturn id of cgroup v2 that is ancestor of the cgroup associated\n \twith the current task at the *ancestor_level*. The root cgroup\n \tis at *ancestor_level* zero and each step down the hierarchy\n \tincrements the level. If *ancestor_level* == level of cgroup\n \tassociated with the current task, then return value will be the\n \tsame as that of **bpf_get_current_cgroup_id**\\ ().\n\n \tThe helper is useful to implement policies based on cgroups\n \tthat are upper in hierarchy than immediate cgroup associated\n \twith the current task.\n\n \tThe format of returned id and helper limitations are same as in\n \t**bpf_get_current_cgroup_id**\\ ().\n\n Returns\n \tThe id is returned or 0 in case the id could not be retrieved.\n"
+  },
+  "bpf_get_current_cgroup_id": {
+    "Name": "bpf_get_current_cgroup_id",
+    "Definition": "static __u64 (* const bpf_get_current_cgroup_id)(void) = (void *) 80;",
+    "Description": " bpf_get_current_cgroup_id\n\n \tGet the current cgroup id based on the cgroup within which\n \tthe current task is running.\n\n Returns\n \tA 64-bit integer containing the current cgroup id based\n \ton the cgroup within which the current task is running.\n"
+  },
+  "bpf_get_current_comm": {
+    "Name": "bpf_get_current_comm",
+    "Definition": "static long (* const bpf_get_current_comm)(void *buf, __u32 size_of_buf) = (void *) 16;",
+    "Description": " bpf_get_current_comm\n\n \tCopy the **comm** attribute of the current task into *buf* of\n \t*size_of_buf*. The **comm** attribute contains the name of\n \tthe executable (excluding the path) for the current task. The\n \t*size_of_buf* must be strictly positive. On success, the\n \thelper makes sure that the *buf* is NUL-terminated. On failure,\n \tit is filled with zeroes.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_get_current_pid_tgid": {
+    "Name": "bpf_get_current_pid_tgid",
+    "Definition": "static __u64 (* const bpf_get_current_pid_tgid)(void) = (void *) 14;",
+    "Description": " bpf_get_current_pid_tgid\n\n \tGet the current pid and tgid.\n\n Returns\n \tA 64-bit integer containing the current tgid and pid, and\n \tcreated as such:\n \t*current_task*\\ **-\u003etgid \u003c\u003c 32 \\|**\n \t*current_task*\\ **-\u003epid**.\n"
+  },
+  "bpf_get_current_task": {
+    "Name": "bpf_get_current_task",
+    "Definition": "static __u64 (* const bpf_get_current_task)(void) = (void *) 35;",
+    "Description": " bpf_get_current_task\n\n \tGet the current task.\n\n Returns\n \tA pointer to the current task struct.\n"
+  },
+  "bpf_get_current_task_btf": {
+    "Name": "bpf_get_current_task_btf",
+    "Definition": "static struct task_struct *(* const bpf_get_current_task_btf)(void) = (void *) 158;",
+    "Description": " bpf_get_current_task_btf\n\n \tReturn a BTF pointer to the \"current\" task.\n \tThis pointer can also be used in helpers that accept an\n \t*ARG_PTR_TO_BTF_ID* of type *task_struct*.\n\n Returns\n \tPointer to the current task.\n"
+  },
+  "bpf_get_current_uid_gid": {
+    "Name": "bpf_get_current_uid_gid",
+    "Definition": "static __u64 (* const bpf_get_current_uid_gid)(void) = (void *) 15;",
+    "Description": " bpf_get_current_uid_gid\n\n \tGet the current uid and gid.\n\n Returns\n \tA 64-bit integer containing the current GID and UID, and\n \tcreated as such: *current_gid* **\u003c\u003c 32 \\|** *current_uid*.\n"
+  },
+  "bpf_get_func_arg": {
+    "Name": "bpf_get_func_arg",
+    "Definition": "static long (* const bpf_get_func_arg)(void *ctx, __u32 n, __u64 *value) = (void *) 183;",
+    "Description": " bpf_get_func_arg\n\n \tGet **n**-th argument register (zero based) of the traced function (for tracing programs)\n \treturned in **value**.\n\n\n Returns\n \t0 on success.\n \t**-EINVAL** if n \u003e= argument register count of traced function.\n"
+  },
+  "bpf_get_func_arg_cnt": {
+    "Name": "bpf_get_func_arg_cnt",
+    "Definition": "static long (* const bpf_get_func_arg_cnt)(void *ctx) = (void *) 185;",
+    "Description": " bpf_get_func_arg_cnt\n\n \tGet number of registers of the traced function (for tracing programs) where\n \tfunction arguments are stored in these registers.\n\n\n Returns\n \tThe number of argument registers of the traced function.\n"
+  },
+  "bpf_get_func_ip": {
+    "Name": "bpf_get_func_ip",
+    "Definition": "static __u64 (* const bpf_get_func_ip)(void *ctx) = (void *) 173;",
+    "Description": " bpf_get_func_ip\n\n \tGet address of the traced function (for tracing and kprobe programs).\n\n \tWhen called for kprobe program attached as uprobe it returns\n \tprobe address for both entry and return uprobe.\n\n\n Returns\n \tAddress of the traced function for kprobe.\n \t0 for kprobes placed within the function (not at the entry).\n \tAddress of the probe for uprobe and return uprobe.\n"
+  },
+  "bpf_get_func_ret": {
+    "Name": "bpf_get_func_ret",
+    "Definition": "static long (* const bpf_get_func_ret)(void *ctx, __u64 *value) = (void *) 184;",
+    "Description": " bpf_get_func_ret\n\n \tGet return value of the traced function (for tracing programs)\n \tin **value**.\n\n\n Returns\n \t0 on success.\n \t**-EOPNOTSUPP** for tracing programs other than BPF_TRACE_FEXIT or BPF_MODIFY_RETURN.\n"
+  },
+  "bpf_get_hash_recalc": {
+    "Name": "bpf_get_hash_recalc",
+    "Definition": "static __u32 (* const bpf_get_hash_recalc)(struct __sk_buff *skb) = (void *) 34;",
+    "Description": " bpf_get_hash_recalc\n\n \tRetrieve the hash of the packet, *skb*\\ **-\u003ehash**. If it is\n \tnot set, in particular if the hash was cleared due to mangling,\n \trecompute this hash. Later accesses to the hash can be done\n \tdirectly with *skb*\\ **-\u003ehash**.\n\n \tCalling **bpf_set_hash_invalid**\\ (), changing a packet\n \tprototype with **bpf_skb_change_proto**\\ (), or calling\n \t**bpf_skb_store_bytes**\\ () with the\n \t**BPF_F_INVALIDATE_HASH** are actions susceptible to clear\n \tthe hash and to trigger a new computation for the next call to\n \t**bpf_get_hash_recalc**\\ ().\n\n Returns\n \tThe 32-bit hash.\n"
+  },
+  "bpf_get_listener_sock": {
+    "Name": "bpf_get_listener_sock",
+    "Definition": "static struct bpf_sock *(* const bpf_get_listener_sock)(struct bpf_sock *sk) = (void *) 98;",
+    "Description": " bpf_get_listener_sock\n\n \tReturn a **struct bpf_sock** pointer in **TCP_LISTEN** state.\n \t**bpf_sk_release**\\ () is unnecessary and not allowed.\n\n Returns\n \tA **struct bpf_sock** pointer on success, or **NULL** in\n \tcase of failure.\n"
+  },
+  "bpf_get_local_storage": {
+    "Name": "bpf_get_local_storage",
+    "Definition": "static void *(* const bpf_get_local_storage)(void *map, __u64 flags) = (void *) 81;",
+    "Description": " bpf_get_local_storage\n\n \tGet the pointer to the local storage area.\n \tThe type and the size of the local storage is defined\n \tby the *map* argument.\n \tThe *flags* meaning is specific for each map type,\n \tand has to be 0 for cgroup local storage.\n\n \tDepending on the BPF program type, a local storage area\n \tcan be shared between multiple instances of the BPF program,\n \trunning simultaneously.\n\n \tA user should care about the synchronization by himself.\n \tFor example, by using the **BPF_ATOMIC** instructions to alter\n \tthe shared data.\n\n Returns\n \tA pointer to the local storage area.\n"
+  },
+  "bpf_get_netns_cookie": {
+    "Name": "bpf_get_netns_cookie",
+    "Definition": "static __u64 (* const bpf_get_netns_cookie)(void *ctx) = (void *) 122;",
+    "Description": " bpf_get_netns_cookie\n\n \tRetrieve the cookie (generated by the kernel) of the network\n \tnamespace the input *ctx* is associated with. The network\n \tnamespace cookie remains stable for its lifetime and provides\n \ta global identifier that can be assumed unique. If *ctx* is\n \tNULL, then the helper returns the cookie for the initial\n \tnetwork namespace. The cookie itself is very similar to that\n \tof **bpf_get_socket_cookie**\\ () helper, but for network\n \tnamespaces instead of sockets.\n\n Returns\n \tA 8-byte long opaque number.\n"
+  },
+  "bpf_get_ns_current_pid_tgid": {
+    "Name": "bpf_get_ns_current_pid_tgid",
+    "Definition": "static long (* const bpf_get_ns_current_pid_tgid)(__u64 dev, __u64 ino, struct bpf_pidns_info *nsdata, __u32 size) = (void *) 120;",
+    "Description": " bpf_get_ns_current_pid_tgid\n\n \tReturns 0 on success, values for *pid* and *tgid* as seen from the current\n \t*namespace* will be returned in *nsdata*.\n\n Returns\n \t0 on success, or one of the following in case of failure:\n\n \t**-EINVAL** if dev and inum supplied don't match dev_t and inode number\n \twith nsfs of current task, or if dev conversion to dev_t lost high bits.\n\n \t**-ENOENT** if pidns does not exists for the current task.\n"
+  },
+  "bpf_get_numa_node_id": {
+    "Name": "bpf_get_numa_node_id",
+    "Definition": "static long (* const bpf_get_numa_node_id)(void) = (void *) 42;",
+    "Description": " bpf_get_numa_node_id\n\n \tReturn the id of the current NUMA node. The primary use case\n \tfor this helper is the selection of sockets for the local NUMA\n \tnode, when the program is attached to sockets using the\n \t**SO_ATTACH_REUSEPORT_EBPF** option (see also **socket(7)**),\n \tbut the helper is also available to other eBPF program types,\n \tsimilarly to **bpf_get_smp_processor_id**\\ ().\n\n Returns\n \tThe id of current NUMA node.\n"
+  },
+  "bpf_get_prandom_u32": {
+    "Name": "bpf_get_prandom_u32",
+    "Definition": "static __u32 (* const bpf_get_prandom_u32)(void) = (void *) 7;",
+    "Description": " bpf_get_prandom_u32\n\n \tGet a pseudo-random number.\n\n \tFrom a security point of view, this helper uses its own\n \tpseudo-random internal state, and cannot be used to infer the\n \tseed of other random functions in the kernel. However, it is\n \tessential to note that the generator used by the helper is not\n \tcryptographically secure.\n\n Returns\n \tA random 32-bit unsigned value.\n"
+  },
+  "bpf_get_retval": {
+    "Name": "bpf_get_retval",
+    "Definition": "static int (* const bpf_get_retval)(void) = (void *) 186;",
+    "Description": " bpf_get_retval\n\n \tGet the BPF program's return value that will be returned to the upper layers.\n\n \tThis helper is currently supported by cgroup programs and only by the hooks\n \twhere BPF program's return value is returned to the userspace via errno.\n\n Returns\n \tThe BPF program's return value.\n"
+  },
+  "bpf_get_route_realm": {
+    "Name": "bpf_get_route_realm",
+    "Definition": "static __u32 (* const bpf_get_route_realm)(struct __sk_buff *skb) = (void *) 24;",
+    "Description": " bpf_get_route_realm\n\n \tRetrieve the realm or the route, that is to say the\n \t**tclassid** field of the destination for the *skb*. The\n \tidentifier retrieved is a user-provided tag, similar to the\n \tone used with the net_cls cgroup (see description for\n \t**bpf_get_cgroup_classid**\\ () helper), but here this tag is\n \theld by a route (a destination entry), not by a task.\n\n \tRetrieving this identifier works with the clsact TC egress hook\n \t(see also **tc-bpf(8)**), or alternatively on conventional\n \tclassful egress qdiscs, but not on TC ingress path. In case of\n \tclsact TC egress hook, this has the advantage that, internally,\n \tthe destination entry has not been dropped yet in the transmit\n \tpath. Therefore, the destination entry does not need to be\n \tartificially held via **netif_keep_dst**\\ () for a classful\n \tqdisc until the *skb* is freed.\n\n \tThis helper is available only if the kernel was compiled with\n \t**CONFIG_IP_ROUTE_CLASSID** configuration option.\n\n Returns\n \tThe realm of the route for the packet associated to *skb*, or 0\n \tif none was found.\n"
+  },
+  "bpf_get_smp_processor_id": {
+    "Name": "bpf_get_smp_processor_id",
+    "Definition": "static __u32 (* const bpf_get_smp_processor_id)(void) = (void *) 8;",
+    "Description": " bpf_get_smp_processor_id\n\n \tGet the SMP (symmetric multiprocessing) processor id. Note that\n \tall programs run with migration disabled, which means that the\n \tSMP processor id is stable during all the execution of the\n \tprogram.\n\n Returns\n \tThe SMP id of the processor running the program.\n"
+  },
+  "bpf_get_socket_cookie": {
+    "Name": "bpf_get_socket_cookie",
+    "Definition": "static __u64 (* const bpf_get_socket_cookie)(void *ctx) = (void *) 46;",
+    "Description": " bpf_get_socket_cookie\n\n \tIf the **struct sk_buff** pointed by *skb* has a known socket,\n \tretrieve the cookie (generated by the kernel) of this socket.\n \tIf no cookie has been set yet, generate a new cookie. Once\n \tgenerated, the socket cookie remains stable for the life of the\n \tsocket. This helper can be useful for monitoring per socket\n \tnetworking traffic statistics as it provides a global socket\n \tidentifier that can be assumed unique.\n\n Returns\n \tA 8-byte long unique number on success, or 0 if the socket\n \tfield is missing inside *skb*.\n"
+  },
+  "bpf_get_socket_uid": {
+    "Name": "bpf_get_socket_uid",
+    "Definition": "static __u32 (* const bpf_get_socket_uid)(struct __sk_buff *skb) = (void *) 47;",
+    "Description": " bpf_get_socket_uid\n\n \tGet the owner UID of the socked associated to *skb*.\n\n Returns\n \tThe owner UID of the socket associated to *skb*. If the socket\n \tis **NULL**, or if it is not a full socket (i.e. if it is a\n \ttime-wait or a request socket instead), **overflowuid** value\n \tis returned (note that **overflowuid** might also be the actual\n \tUID value for the socket).\n"
+  },
+  "bpf_get_stack": {
+    "Name": "bpf_get_stack",
+    "Definition": "static long (* const bpf_get_stack)(void *ctx, void *buf, __u32 size, __u64 flags) = (void *) 67;",
+    "Description": " bpf_get_stack\n\n \tReturn a user or a kernel stack in bpf program provided buffer.\n \tTo achieve this, the helper needs *ctx*, which is a pointer\n \tto the context on which the tracing program is executed.\n \tTo store the stacktrace, the bpf program provides *buf* with\n \ta nonnegative *size*.\n\n \tThe last argument, *flags*, holds the number of stack frames to\n \tskip (from 0 to 255), masked with\n \t**BPF_F_SKIP_FIELD_MASK**. The next bits can be used to set\n \tthe following flags:\n\n \t**BPF_F_USER_STACK**\n \t\tCollect a user space stack instead of a kernel stack.\n \t**BPF_F_USER_BUILD_ID**\n \t\tCollect (build_id, file_offset) instead of ips for user\n \t\tstack, only valid if **BPF_F_USER_STACK** is also\n \t\tspecified.\n\n \t\t*file_offset* is an offset relative to the beginning\n \t\tof the executable or shared object file backing the vma\n \t\twhich the *ip* falls in. It is *not* an offset relative\n \t\tto that object's base address. Accordingly, it must be\n \t\tadjusted by adding (sh_addr - sh_offset), where\n \t\tsh_{addr,offset} correspond to the executable section\n \t\tcontaining *file_offset* in the object, for comparisons\n \t\tto symbols' st_value to be valid.\n\n \t**bpf_get_stack**\\ () can collect up to\n \t**PERF_MAX_STACK_DEPTH** both kernel and user frames, subject\n \tto sufficient large buffer size. Note that\n \tthis limit can be controlled with the **sysctl** program, and\n \tthat it should be manually increased in order to profile long\n \tuser stacks (such as stacks for Java programs). To do so, use:\n\n \t::\n\n \t\t# sysctl kernel.perf_event_max_stack=\u003cnew value\u003e\n\n Returns\n \tThe non-negative copied *buf* length equal to or less than\n \t*size* on success, or a negative error in case of failure.\n"
+  },
+  "bpf_get_stackid": {
+    "Name": "bpf_get_stackid",
+    "Definition": "static long (* const bpf_get_stackid)(void *ctx, void *map, __u64 flags) = (void *) 27;",
+    "Description": " bpf_get_stackid\n\n \tWalk a user or a kernel stack and return its id. To achieve\n \tthis, the helper needs *ctx*, which is a pointer to the context\n \ton which the tracing program is executed, and a pointer to a\n \t*map* of type **BPF_MAP_TYPE_STACK_TRACE**.\n\n \tThe last argument, *flags*, holds the number of stack frames to\n \tskip (from 0 to 255), masked with\n \t**BPF_F_SKIP_FIELD_MASK**. The next bits can be used to set\n \ta combination of the following flags:\n\n \t**BPF_F_USER_STACK**\n \t\tCollect a user space stack instead of a kernel stack.\n \t**BPF_F_FAST_STACK_CMP**\n \t\tCompare stacks by hash only.\n \t**BPF_F_REUSE_STACKID**\n \t\tIf two different stacks hash into the same *stackid*,\n \t\tdiscard the old one.\n\n \tThe stack id retrieved is a 32 bit long integer handle which\n \tcan be further combined with other data (including other stack\n \tids) and used as a key into maps. This can be useful for\n \tgenerating a variety of graphs (such as flame graphs or off-cpu\n \tgraphs).\n\n \tFor walking a stack, this helper is an improvement over\n \t**bpf_probe_read**\\ (), which can be used with unrolled loops\n \tbut is not efficient and consumes a lot of eBPF instructions.\n \tInstead, **bpf_get_stackid**\\ () can collect up to\n \t**PERF_MAX_STACK_DEPTH** both kernel and user frames. Note that\n \tthis limit can be controlled with the **sysctl** program, and\n \tthat it should be manually increased in order to profile long\n \tuser stacks (such as stacks for Java programs). To do so, use:\n\n \t::\n\n \t\t# sysctl kernel.perf_event_max_stack=\u003cnew value\u003e\n\n Returns\n \tThe positive or null stack id on success, or a negative error\n \tin case of failure.\n"
+  },
+  "bpf_get_task_stack": {
+    "Name": "bpf_get_task_stack",
+    "Definition": "static long (* const bpf_get_task_stack)(struct task_struct *task, void *buf, __u32 size, __u64 flags) = (void *) 141;",
+    "Description": " bpf_get_task_stack\n\n \tReturn a user or a kernel stack in bpf program provided buffer.\n \tNote: the user stack will only be populated if the *task* is\n \tthe current task; all other tasks will return -EOPNOTSUPP.\n \tTo achieve this, the helper needs *task*, which is a valid\n \tpointer to **struct task_struct**. To store the stacktrace, the\n \tbpf program provides *buf* with a nonnegative *size*.\n\n \tThe last argument, *flags*, holds the number of stack frames to\n \tskip (from 0 to 255), masked with\n \t**BPF_F_SKIP_FIELD_MASK**. The next bits can be used to set\n \tthe following flags:\n\n \t**BPF_F_USER_STACK**\n \t\tCollect a user space stack instead of a kernel stack.\n \t\tThe *task* must be the current task.\n \t**BPF_F_USER_BUILD_ID**\n \t\tCollect buildid+offset instead of ips for user stack,\n \t\tonly valid if **BPF_F_USER_STACK** is also specified.\n\n \t**bpf_get_task_stack**\\ () can collect up to\n \t**PERF_MAX_STACK_DEPTH** both kernel and user frames, subject\n \tto sufficient large buffer size. Note that\n \tthis limit can be controlled with the **sysctl** program, and\n \tthat it should be manually increased in order to profile long\n \tuser stacks (such as stacks for Java programs). To do so, use:\n\n \t::\n\n \t\t# sysctl kernel.perf_event_max_stack=\u003cnew value\u003e\n\n Returns\n \tThe non-negative copied *buf* length equal to or less than\n \t*size* on success, or a negative error in case of failure.\n"
+  },
+  "bpf_getsockopt": {
+    "Name": "bpf_getsockopt",
+    "Definition": "static long (* const bpf_getsockopt)(void *bpf_socket, int level, int optname, void *optval, int optlen) = (void *) 57;",
+    "Description": " bpf_getsockopt\n\n \tEmulate a call to **getsockopt()** on the socket associated to\n \t*bpf_socket*, which must be a full socket. The *level* at\n \twhich the option resides and the name *optname* of the option\n \tmust be specified, see **getsockopt(2)** for more information.\n \tThe retrieved value is stored in the structure pointed by\n \t*opval* and of length *optlen*.\n\n \t*bpf_socket* should be one of the following:\n\n \t* **struct bpf_sock_ops** for **BPF_PROG_TYPE_SOCK_OPS**.\n \t* **struct bpf_sock_addr** for **BPF_CGROUP_INET4_CONNECT**,\n \t  **BPF_CGROUP_INET6_CONNECT** and **BPF_CGROUP_UNIX_CONNECT**.\n\n \tThis helper actually implements a subset of **getsockopt()**.\n \tIt supports the same set of *optname*\\ s that is supported by\n \tthe **bpf_setsockopt**\\ () helper.  The exceptions are\n \t**TCP_BPF_*** is **bpf_setsockopt**\\ () only and\n \t**TCP_SAVED_SYN** is **bpf_getsockopt**\\ () only.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_ima_file_hash": {
+    "Name": "bpf_ima_file_hash",
+    "Definition": "static long (* const bpf_ima_file_hash)(struct file *file, void *dst, __u32 size) = (void *) 193;",
+    "Description": " bpf_ima_file_hash\n\n \tReturns a calculated IMA hash of the *file*.\n \tIf the hash is larger than *size*, then only *size*\n \tbytes will be copied to *dst*\n\n Returns\n \tThe **hash_algo** is returned on success,\n \t**-EOPNOTSUP** if the hash calculation failed or **-EINVAL** if\n \tinvalid arguments are passed.\n"
+  },
+  "bpf_ima_inode_hash": {
+    "Name": "bpf_ima_inode_hash",
+    "Definition": "static long (* const bpf_ima_inode_hash)(struct inode *inode, void *dst, __u32 size) = (void *) 161;",
+    "Description": " bpf_ima_inode_hash\n\n \tReturns the stored IMA hash of the *inode* (if it's available).\n \tIf the hash is larger than *size*, then only *size*\n \tbytes will be copied to *dst*\n\n Returns\n \tThe **hash_algo** is returned on success,\n \t**-EOPNOTSUP** if IMA is disabled or **-EINVAL** if\n \tinvalid arguments are passed.\n"
+  },
+  "bpf_inode_storage_delete": {
+    "Name": "bpf_inode_storage_delete",
+    "Definition": "static int (* const bpf_inode_storage_delete)(void *map, void *inode) = (void *) 146;",
+    "Description": " bpf_inode_storage_delete\n\n \tDelete a bpf_local_storage from an *inode*.\n\n Returns\n \t0 on success.\n\n \t**-ENOENT** if the bpf_local_storage cannot be found.\n"
+  },
+  "bpf_inode_storage_get": {
+    "Name": "bpf_inode_storage_get",
+    "Definition": "static void *(* const bpf_inode_storage_get)(void *map, void *inode, void *value, __u64 flags) = (void *) 145;",
+    "Description": " bpf_inode_storage_get\n\n \tGet a bpf_local_storage from an *inode*.\n\n \tLogically, it could be thought of as getting the value from\n \ta *map* with *inode* as the **key**.  From this\n \tperspective,  the usage is not much different from\n \t**bpf_map_lookup_elem**\\ (*map*, **\u0026**\\ *inode*) except this\n \thelper enforces the key must be an inode and the map must also\n \tbe a **BPF_MAP_TYPE_INODE_STORAGE**.\n\n \tUnderneath, the value is stored locally at *inode* instead of\n \tthe *map*.  The *map* is used as the bpf-local-storage\n \t\"type\". The bpf-local-storage \"type\" (i.e. the *map*) is\n \tsearched against all bpf_local_storage residing at *inode*.\n\n \tAn optional *flags* (**BPF_LOCAL_STORAGE_GET_F_CREATE**) can be\n \tused such that a new bpf_local_storage will be\n \tcreated if one does not exist.  *value* can be used\n \ttogether with **BPF_LOCAL_STORAGE_GET_F_CREATE** to specify\n \tthe initial value of a bpf_local_storage.  If *value* is\n \t**NULL**, the new bpf_local_storage will be zero initialized.\n\n Returns\n \tA bpf_local_storage pointer is returned on success.\n\n \t**NULL** if not found or there was an error in adding\n \ta new bpf_local_storage.\n"
+  },
+  "bpf_jiffies64": {
+    "Name": "bpf_jiffies64",
+    "Definition": "static __u64 (* const bpf_jiffies64)(void) = (void *) 118;",
+    "Description": " bpf_jiffies64\n\n \tObtain the 64bit jiffies\n\n Returns\n \tThe 64 bit jiffies\n"
+  },
+  "bpf_kallsyms_lookup_name": {
+    "Name": "bpf_kallsyms_lookup_name",
+    "Definition": "static long (* const bpf_kallsyms_lookup_name)(const char *name, int name_sz, int flags, __u64 *res) = (void *) 179;",
+    "Description": " bpf_kallsyms_lookup_name\n\n \tGet the address of a kernel symbol, returned in *res*. *res* is\n \tset to 0 if the symbol is not found.\n\n Returns\n \tOn success, zero. On error, a negative value.\n\n \t**-EINVAL** if *flags* is not zero.\n\n \t**-EINVAL** if string *name* is not the same size as *name_sz*.\n\n \t**-ENOENT** if symbol is not found.\n\n \t**-EPERM** if caller does not have permission to obtain kernel address.\n"
+  },
+  "bpf_kptr_xchg": {
+    "Name": "bpf_kptr_xchg",
+    "Definition": "static void *(* const bpf_kptr_xchg)(void *map_value, void *ptr) = (void *) 194;",
+    "Description": " bpf_kptr_xchg\n\n \tExchange kptr at pointer *map_value* with *ptr*, and return the\n \told value. *ptr* can be NULL, otherwise it must be a referenced\n \tpointer which will be released when this helper is called.\n\n Returns\n \tThe old value of kptr (which can be NULL). The returned pointer\n \tif not NULL, is a reference which must be released using its\n \tcorresponding release function, or moved into a BPF map before\n \tprogram exit.\n"
+  },
+  "bpf_ktime_get_boot_ns": {
+    "Name": "bpf_ktime_get_boot_ns",
+    "Definition": "static __u64 (* const bpf_ktime_get_boot_ns)(void) = (void *) 125;",
+    "Description": " bpf_ktime_get_boot_ns\n\n \tReturn the time elapsed since system boot, in nanoseconds.\n \tDoes include the time the system was suspended.\n \tSee: **clock_gettime**\\ (**CLOCK_BOOTTIME**)\n\n Returns\n \tCurrent *ktime*.\n"
+  },
+  "bpf_ktime_get_coarse_ns": {
+    "Name": "bpf_ktime_get_coarse_ns",
+    "Definition": "static __u64 (* const bpf_ktime_get_coarse_ns)(void) = (void *) 160;",
+    "Description": " bpf_ktime_get_coarse_ns\n\n \tReturn a coarse-grained version of the time elapsed since\n \tsystem boot, in nanoseconds. Does not include time the system\n \twas suspended.\n\n \tSee: **clock_gettime**\\ (**CLOCK_MONOTONIC_COARSE**)\n\n Returns\n \tCurrent *ktime*.\n"
+  },
+  "bpf_ktime_get_ns": {
+    "Name": "bpf_ktime_get_ns",
+    "Definition": "static __u64 (* const bpf_ktime_get_ns)(void) = (void *) 5;",
+    "Description": " bpf_ktime_get_ns\n\n \tReturn the time elapsed since system boot, in nanoseconds.\n \tDoes not include time the system was suspended.\n \tSee: **clock_gettime**\\ (**CLOCK_MONOTONIC**)\n\n Returns\n \tCurrent *ktime*.\n"
+  },
+  "bpf_ktime_get_tai_ns": {
+    "Name": "bpf_ktime_get_tai_ns",
+    "Definition": "static __u64 (* const bpf_ktime_get_tai_ns)(void) = (void *) 208;",
+    "Description": " bpf_ktime_get_tai_ns\n\n \tA nonsettable system-wide clock derived from wall-clock time but\n \tignoring leap seconds.  This clock does not experience\n \tdiscontinuities and backwards jumps caused by NTP inserting leap\n \tseconds as CLOCK_REALTIME does.\n\n \tSee: **clock_gettime**\\ (**CLOCK_TAI**)\n\n Returns\n \tCurrent *ktime*.\n"
+  },
+  "bpf_l3_csum_replace": {
+    "Name": "bpf_l3_csum_replace",
+    "Definition": "static long (* const bpf_l3_csum_replace)(struct __sk_buff *skb, __u32 offset, __u64 from, __u64 to, __u64 size) = (void *) 10;",
+    "Description": " bpf_l3_csum_replace\n\n \tRecompute the layer 3 (e.g. IP) checksum for the packet\n \tassociated to *skb*. Computation is incremental, so the helper\n \tmust know the former value of the header field that was\n \tmodified (*from*), the new value of this field (*to*), and the\n \tnumber of bytes (2 or 4) for this field, stored in *size*.\n \tAlternatively, it is possible to store the difference between\n \tthe previous and the new values of the header field in *to*, by\n \tsetting *from* and *size* to 0. For both methods, *offset*\n \tindicates the location of the IP checksum within the packet.\n\n \tThis helper works in combination with **bpf_csum_diff**\\ (),\n \twhich does not update the checksum in-place, but offers more\n \tflexibility and can handle sizes larger than 2 or 4 for the\n \tchecksum to update.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_l4_csum_replace": {
+    "Name": "bpf_l4_csum_replace",
+    "Definition": "static long (* const bpf_l4_csum_replace)(struct __sk_buff *skb, __u32 offset, __u64 from, __u64 to, __u64 flags) = (void *) 11;",
+    "Description": " bpf_l4_csum_replace\n\n \tRecompute the layer 4 (e.g. TCP, UDP or ICMP) checksum for the\n \tpacket associated to *skb*. Computation is incremental, so the\n \thelper must know the former value of the header field that was\n \tmodified (*from*), the new value of this field (*to*), and the\n \tnumber of bytes (2 or 4) for this field, stored on the lowest\n \tfour bits of *flags*. Alternatively, it is possible to store\n \tthe difference between the previous and the new values of the\n \theader field in *to*, by setting *from* and the four lowest\n \tbits of *flags* to 0. For both methods, *offset* indicates the\n \tlocation of the IP checksum within the packet. In addition to\n \tthe size of the field, *flags* can be added (bitwise OR) actual\n \tflags. With **BPF_F_MARK_MANGLED_0**, a null checksum is left\n \tuntouched (unless **BPF_F_MARK_ENFORCE** is added as well), and\n \tfor updates resulting in a null checksum the value is set to\n \t**CSUM_MANGLED_0** instead. Flag **BPF_F_PSEUDO_HDR** indicates\n \tthe checksum is to be computed against a pseudo-header.\n\n \tThis helper works in combination with **bpf_csum_diff**\\ (),\n \twhich does not update the checksum in-place, but offers more\n \tflexibility and can handle sizes larger than 2 or 4 for the\n \tchecksum to update.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_load_hdr_opt": {
+    "Name": "bpf_load_hdr_opt",
+    "Definition": "static long (* const bpf_load_hdr_opt)(struct bpf_sock_ops *skops, void *searchby_res, __u32 len, __u64 flags) = (void *) 142;",
+    "Description": " bpf_load_hdr_opt\n\n \tLoad header option.  Support reading a particular TCP header\n \toption for bpf program (**BPF_PROG_TYPE_SOCK_OPS**).\n\n \tIf *flags* is 0, it will search the option from the\n \t*skops*\\ **-\u003eskb_data**.  The comment in **struct bpf_sock_ops**\n \thas details on what skb_data contains under different\n \t*skops*\\ **-\u003eop**.\n\n \tThe first byte of the *searchby_res* specifies the\n \tkind that it wants to search.\n\n \tIf the searching kind is an experimental kind\n \t(i.e. 253 or 254 according to RFC6994).  It also\n \tneeds to specify the \"magic\" which is either\n \t2 bytes or 4 bytes.  It then also needs to\n \tspecify the size of the magic by using\n \tthe 2nd byte which is \"kind-length\" of a TCP\n \theader option and the \"kind-length\" also\n \tincludes the first 2 bytes \"kind\" and \"kind-length\"\n \titself as a normal TCP header option also does.\n\n \tFor example, to search experimental kind 254 with\n \t2 byte magic 0xeB9F, the searchby_res should be\n \t[ 254, 4, 0xeB, 0x9F, 0, 0, .... 0 ].\n\n \tTo search for the standard window scale option (3),\n \tthe *searchby_res* should be [ 3, 0, 0, .... 0 ].\n \tNote, kind-length must be 0 for regular option.\n\n \tSearching for No-Op (0) and End-of-Option-List (1) are\n \tnot supported.\n\n \t*len* must be at least 2 bytes which is the minimal size\n \tof a header option.\n\n \tSupported flags:\n\n \t* **BPF_LOAD_HDR_OPT_TCP_SYN** to search from the\n \t  saved_syn packet or the just-received syn packet.\n\n\n Returns\n \t\u003e 0 when found, the header option is copied to *searchby_res*.\n \tThe return value is the total length copied. On failure, a\n \tnegative error code is returned:\n\n \t**-EINVAL** if a parameter is invalid.\n\n \t**-ENOMSG** if the option is not found.\n\n \t**-ENOENT** if no syn packet is available when\n \t**BPF_LOAD_HDR_OPT_TCP_SYN** is used.\n\n \t**-ENOSPC** if there is not enough space.  Only *len* number of\n \tbytes are copied.\n\n \t**-EFAULT** on failure to parse the header options in the\n \tpacket.\n\n \t**-EPERM** if the helper cannot be used under the current\n \t*skops*\\ **-\u003eop**.\n"
+  },
+  "bpf_loop": {
+    "Name": "bpf_loop",
+    "Definition": "static long (* const bpf_loop)(__u32 nr_loops, void *callback_fn, void *callback_ctx, __u64 flags) = (void *) 181;",
+    "Description": " bpf_loop\n\n \tFor **nr_loops**, call **callback_fn** function\n \twith **callback_ctx** as the context parameter.\n \tThe **callback_fn** should be a static function and\n \tthe **callback_ctx** should be a pointer to the stack.\n \tThe **flags** is used to control certain aspects of the helper.\n \tCurrently, the **flags** must be 0. Currently, nr_loops is\n \tlimited to 1 \u003c\u003c 23 (~8 million) loops.\n\n \tlong (\\*callback_fn)(u32 index, void \\*ctx);\n\n \twhere **index** is the current index in the loop. The index\n \tis zero-indexed.\n\n \tIf **callback_fn** returns 0, the helper will continue to the next\n \tloop. If return value is 1, the helper will skip the rest of\n \tthe loops and return. Other return values are not used now,\n \tand will be rejected by the verifier.\n\n\n Returns\n \tThe number of loops performed, **-EINVAL** for invalid **flags**,\n \t**-E2BIG** if **nr_loops** exceeds the maximum number of loops.\n"
+  },
+  "bpf_lwt_push_encap": {
+    "Name": "bpf_lwt_push_encap",
+    "Definition": "static long (* const bpf_lwt_push_encap)(struct __sk_buff *skb, __u32 type, void *hdr, __u32 len) = (void *) 73;",
+    "Description": " bpf_lwt_push_encap\n\n \tEncapsulate the packet associated to *skb* within a Layer 3\n \tprotocol header. This header is provided in the buffer at\n \taddress *hdr*, with *len* its size in bytes. *type* indicates\n \tthe protocol of the header and can be one of:\n\n \t**BPF_LWT_ENCAP_SEG6**\n \t\tIPv6 encapsulation with Segment Routing Header\n \t\t(**struct ipv6_sr_hdr**). *hdr* only contains the SRH,\n \t\tthe IPv6 header is computed by the kernel.\n \t**BPF_LWT_ENCAP_SEG6_INLINE**\n \t\tOnly works if *skb* contains an IPv6 packet. Insert a\n \t\tSegment Routing Header (**struct ipv6_sr_hdr**) inside\n \t\tthe IPv6 header.\n \t**BPF_LWT_ENCAP_IP**\n \t\tIP encapsulation (GRE/GUE/IPIP/etc). The outer header\n \t\tmust be IPv4 or IPv6, followed by zero or more\n \t\tadditional headers, up to **LWT_BPF_MAX_HEADROOM**\n \t\ttotal bytes in all prepended headers. Please note that\n \t\tif **skb_is_gso**\\ (*skb*) is true, no more than two\n \t\theaders can be prepended, and the inner header, if\n \t\tpresent, should be either GRE or UDP/GUE.\n\n \t**BPF_LWT_ENCAP_SEG6**\\ \\* types can be called by BPF programs\n \tof type **BPF_PROG_TYPE_LWT_IN**; **BPF_LWT_ENCAP_IP** type can\n \tbe called by bpf programs of types **BPF_PROG_TYPE_LWT_IN** and\n \t**BPF_PROG_TYPE_LWT_XMIT**.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_lwt_seg6_action": {
+    "Name": "bpf_lwt_seg6_action",
+    "Definition": "static long (* const bpf_lwt_seg6_action)(struct __sk_buff *skb, __u32 action, void *param, __u32 param_len) = (void *) 76;",
+    "Description": " bpf_lwt_seg6_action\n\n \tApply an IPv6 Segment Routing action of type *action* to the\n \tpacket associated to *skb*. Each action takes a parameter\n \tcontained at address *param*, and of length *param_len* bytes.\n \t*action* can be one of:\n\n \t**SEG6_LOCAL_ACTION_END_X**\n \t\tEnd.X action: Endpoint with Layer-3 cross-connect.\n \t\tType of *param*: **struct in6_addr**.\n \t**SEG6_LOCAL_ACTION_END_T**\n \t\tEnd.T action: Endpoint with specific IPv6 table lookup.\n \t\tType of *param*: **int**.\n \t**SEG6_LOCAL_ACTION_END_B6**\n \t\tEnd.B6 action: Endpoint bound to an SRv6 policy.\n \t\tType of *param*: **struct ipv6_sr_hdr**.\n \t**SEG6_LOCAL_ACTION_END_B6_ENCAP**\n \t\tEnd.B6.Encap action: Endpoint bound to an SRv6\n \t\tencapsulation policy.\n \t\tType of *param*: **struct ipv6_sr_hdr**.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_lwt_seg6_adjust_srh": {
+    "Name": "bpf_lwt_seg6_adjust_srh",
+    "Definition": "static long (* const bpf_lwt_seg6_adjust_srh)(struct __sk_buff *skb, __u32 offset, __s32 delta) = (void *) 75;",
+    "Description": " bpf_lwt_seg6_adjust_srh\n\n \tAdjust the size allocated to TLVs in the outermost IPv6\n \tSegment Routing Header contained in the packet associated to\n \t*skb*, at position *offset* by *delta* bytes. Only offsets\n \tafter the segments are accepted. *delta* can be as well\n \tpositive (growing) as negative (shrinking).\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_lwt_seg6_store_bytes": {
+    "Name": "bpf_lwt_seg6_store_bytes",
+    "Definition": "static long (* const bpf_lwt_seg6_store_bytes)(struct __sk_buff *skb, __u32 offset, const void *from, __u32 len) = (void *) 74;",
+    "Description": " bpf_lwt_seg6_store_bytes\n\n \tStore *len* bytes from address *from* into the packet\n \tassociated to *skb*, at *offset*. Only the flags, tag and TLVs\n \tinside the outermost IPv6 Segment Routing Header can be\n \tmodified through this helper.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_map_delete_elem": {
+    "Name": "bpf_map_delete_elem",
+    "Definition": "static long (* const bpf_map_delete_elem)(void *map, const void *key) = (void *) 3;",
+    "Description": " bpf_map_delete_elem\n\n \tDelete entry with *key* from *map*.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_map_lookup_elem": {
+    "Name": "bpf_map_lookup_elem",
+    "Definition": "static void *(* const bpf_map_lookup_elem)(void *map, const void *key) = (void *) 1;",
+    "Description": " bpf_map_lookup_elem\n\n \tPerform a lookup in *map* for an entry associated to *key*.\n\n Returns\n \tMap value associated to *key*, or **NULL** if no entry was\n \tfound.\n"
+  },
+  "bpf_map_lookup_percpu_elem": {
+    "Name": "bpf_map_lookup_percpu_elem",
+    "Definition": "static void *(* const bpf_map_lookup_percpu_elem)(void *map, const void *key, __u32 cpu) = (void *) 195;",
+    "Description": " bpf_map_lookup_percpu_elem\n\n \tPerform a lookup in *percpu map* for an entry associated to\n \t*key* on *cpu*.\n\n Returns\n \tMap value associated to *key* on *cpu*, or **NULL** if no entry\n \twas found or *cpu* is invalid.\n"
+  },
+  "bpf_map_peek_elem": {
+    "Name": "bpf_map_peek_elem",
+    "Definition": "static long (* const bpf_map_peek_elem)(void *map, void *value) = (void *) 89;",
+    "Description": " bpf_map_peek_elem\n\n \tGet an element from *map* without removing it.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_map_pop_elem": {
+    "Name": "bpf_map_pop_elem",
+    "Definition": "static long (* const bpf_map_pop_elem)(void *map, void *value) = (void *) 88;",
+    "Description": " bpf_map_pop_elem\n\n \tPop an element from *map*.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_map_push_elem": {
+    "Name": "bpf_map_push_elem",
+    "Definition": "static long (* const bpf_map_push_elem)(void *map, const void *value, __u64 flags) = (void *) 87;",
+    "Description": " bpf_map_push_elem\n\n \tPush an element *value* in *map*. *flags* is one of:\n\n \t**BPF_EXIST**\n \t\tIf the queue/stack is full, the oldest element is\n \t\tremoved to make room for this.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_map_update_elem": {
+    "Name": "bpf_map_update_elem",
+    "Definition": "static long (* const bpf_map_update_elem)(void *map, const void *key, const void *value, __u64 flags) = (void *) 2;",
+    "Description": " bpf_map_update_elem\n\n \tAdd or update the value of the entry associated to *key* in\n \t*map* with *value*. *flags* is one of:\n\n \t**BPF_NOEXIST**\n \t\tThe entry for *key* must not exist in the map.\n \t**BPF_EXIST**\n \t\tThe entry for *key* must already exist in the map.\n \t**BPF_ANY**\n \t\tNo condition on the existence of the entry for *key*.\n\n \tFlag value **BPF_NOEXIST** cannot be used for maps of types\n \t**BPF_MAP_TYPE_ARRAY** or **BPF_MAP_TYPE_PERCPU_ARRAY**  (all\n \telements always exist), the helper would return an error.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_msg_apply_bytes": {
+    "Name": "bpf_msg_apply_bytes",
+    "Definition": "static long (* const bpf_msg_apply_bytes)(struct sk_msg_md *msg, __u32 bytes) = (void *) 61;",
+    "Description": " bpf_msg_apply_bytes\n\n \tFor socket policies, apply the verdict of the eBPF program to\n \tthe next *bytes* (number of bytes) of message *msg*.\n\n \tFor example, this helper can be used in the following cases:\n\n \t* A single **sendmsg**\\ () or **sendfile**\\ () system call\n \t  contains multiple logical messages that the eBPF program is\n \t  supposed to read and for which it should apply a verdict.\n \t* An eBPF program only cares to read the first *bytes* of a\n \t  *msg*. If the message has a large payload, then setting up\n \t  and calling the eBPF program repeatedly for all bytes, even\n \t  though the verdict is already known, would create unnecessary\n \t  overhead.\n\n \tWhen called from within an eBPF program, the helper sets a\n \tcounter internal to the BPF infrastructure, that is used to\n \tapply the last verdict to the next *bytes*. If *bytes* is\n \tsmaller than the current data being processed from a\n \t**sendmsg**\\ () or **sendfile**\\ () system call, the first\n \t*bytes* will be sent and the eBPF program will be re-run with\n \tthe pointer for start of data pointing to byte number *bytes*\n \t**+ 1**. If *bytes* is larger than the current data being\n \tprocessed, then the eBPF verdict will be applied to multiple\n \t**sendmsg**\\ () or **sendfile**\\ () calls until *bytes* are\n \tconsumed.\n\n \tNote that if a socket closes with the internal counter holding\n \ta non-zero value, this is not a problem because data is not\n \tbeing buffered for *bytes* and is sent as it is received.\n\n Returns\n \t0\n"
+  },
+  "bpf_msg_cork_bytes": {
+    "Name": "bpf_msg_cork_bytes",
+    "Definition": "static long (* const bpf_msg_cork_bytes)(struct sk_msg_md *msg, __u32 bytes) = (void *) 62;",
+    "Description": " bpf_msg_cork_bytes\n\n \tFor socket policies, prevent the execution of the verdict eBPF\n \tprogram for message *msg* until *bytes* (byte number) have been\n \taccumulated.\n\n \tThis can be used when one needs a specific number of bytes\n \tbefore a verdict can be assigned, even if the data spans\n \tmultiple **sendmsg**\\ () or **sendfile**\\ () calls. The extreme\n \tcase would be a user calling **sendmsg**\\ () repeatedly with\n \t1-byte long message segments. Obviously, this is bad for\n \tperformance, but it is still valid. If the eBPF program needs\n \t*bytes* bytes to validate a header, this helper can be used to\n \tprevent the eBPF program to be called again until *bytes* have\n \tbeen accumulated.\n\n Returns\n \t0\n"
+  },
+  "bpf_msg_pop_data": {
+    "Name": "bpf_msg_pop_data",
+    "Definition": "static long (* const bpf_msg_pop_data)(struct sk_msg_md *msg, __u32 start, __u32 len, __u64 flags) = (void *) 91;",
+    "Description": " bpf_msg_pop_data\n\n \tWill remove *len* bytes from a *msg* starting at byte *start*.\n \tThis may result in **ENOMEM** errors under certain situations if\n \tan allocation and copy are required due to a full ring buffer.\n \tHowever, the helper will try to avoid doing the allocation\n \tif possible. Other errors can occur if input parameters are\n \tinvalid either due to *start* byte not being valid part of *msg*\n \tpayload and/or *pop* value being to large.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_msg_pull_data": {
+    "Name": "bpf_msg_pull_data",
+    "Definition": "static long (* const bpf_msg_pull_data)(struct sk_msg_md *msg, __u32 start, __u32 end, __u64 flags) = (void *) 63;",
+    "Description": " bpf_msg_pull_data\n\n \tFor socket policies, pull in non-linear data from user space\n \tfor *msg* and set pointers *msg*\\ **-\u003edata** and *msg*\\\n \t**-\u003edata_end** to *start* and *end* bytes offsets into *msg*,\n \trespectively.\n\n \tIf a program of type **BPF_PROG_TYPE_SK_MSG** is run on a\n \t*msg* it can only parse data that the (**data**, **data_end**)\n \tpointers have already consumed. For **sendmsg**\\ () hooks this\n \tis likely the first scatterlist element. But for calls relying\n \ton the **sendpage** handler (e.g. **sendfile**\\ ()) this will\n \tbe the range (**0**, **0**) because the data is shared with\n \tuser space and by default the objective is to avoid allowing\n \tuser space to modify data while (or after) eBPF verdict is\n \tbeing decided. This helper can be used to pull in data and to\n \tset the start and end pointer to given values. Data will be\n \tcopied if necessary (i.e. if data was not linear and if start\n \tand end pointers do not point to the same chunk).\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n \tAll values for *flags* are reserved for future usage, and must\n \tbe left at zero.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_msg_push_data": {
+    "Name": "bpf_msg_push_data",
+    "Definition": "static long (* const bpf_msg_push_data)(struct sk_msg_md *msg, __u32 start, __u32 len, __u64 flags) = (void *) 90;",
+    "Description": " bpf_msg_push_data\n\n \tFor socket policies, insert *len* bytes into *msg* at offset\n \t*start*.\n\n \tIf a program of type **BPF_PROG_TYPE_SK_MSG** is run on a\n \t*msg* it may want to insert metadata or options into the *msg*.\n \tThis can later be read and used by any of the lower layer BPF\n \thooks.\n\n \tThis helper may fail if under memory pressure (a malloc\n \tfails) in these cases BPF programs will get an appropriate\n \terror and BPF programs will need to handle them.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_msg_redirect_hash": {
+    "Name": "bpf_msg_redirect_hash",
+    "Definition": "static long (* const bpf_msg_redirect_hash)(struct sk_msg_md *msg, void *map, void *key, __u64 flags) = (void *) 71;",
+    "Description": " bpf_msg_redirect_hash\n\n \tThis helper is used in programs implementing policies at the\n \tsocket level. If the message *msg* is allowed to pass (i.e. if\n \tthe verdict eBPF program returns **SK_PASS**), redirect it to\n \tthe socket referenced by *map* (of type\n \t**BPF_MAP_TYPE_SOCKHASH**) using hash *key*. Both ingress and\n \tegress interfaces can be used for redirection. The\n \t**BPF_F_INGRESS** value in *flags* is used to make the\n \tdistinction (ingress path is selected if the flag is present,\n \tegress path otherwise). This is the only flag supported for now.\n\n Returns\n \t**SK_PASS** on success, or **SK_DROP** on error.\n"
+  },
+  "bpf_msg_redirect_map": {
+    "Name": "bpf_msg_redirect_map",
+    "Definition": "static long (* const bpf_msg_redirect_map)(struct sk_msg_md *msg, void *map, __u32 key, __u64 flags) = (void *) 60;",
+    "Description": " bpf_msg_redirect_map\n\n \tThis helper is used in programs implementing policies at the\n \tsocket level. If the message *msg* is allowed to pass (i.e. if\n \tthe verdict eBPF program returns **SK_PASS**), redirect it to\n \tthe socket referenced by *map* (of type\n \t**BPF_MAP_TYPE_SOCKMAP**) at index *key*. Both ingress and\n \tegress interfaces can be used for redirection. The\n \t**BPF_F_INGRESS** value in *flags* is used to make the\n \tdistinction (ingress path is selected if the flag is present,\n \tegress path otherwise). This is the only flag supported for now.\n\n Returns\n \t**SK_PASS** on success, or **SK_DROP** on error.\n"
+  },
+  "bpf_override_return": {
+    "Name": "bpf_override_return",
+    "Definition": "static long (* const bpf_override_return)(struct pt_regs *regs, __u64 rc) = (void *) 58;",
+    "Description": " bpf_override_return\n\n \tUsed for error injection, this helper uses kprobes to override\n \tthe return value of the probed function, and to set it to *rc*.\n \tThe first argument is the context *regs* on which the kprobe\n \tworks.\n\n \tThis helper works by setting the PC (program counter)\n \tto an override function which is run in place of the original\n \tprobed function. This means the probed function is not run at\n \tall. The replacement function just returns with the required\n \tvalue.\n\n \tThis helper has security implications, and thus is subject to\n \trestrictions. It is only available if the kernel was compiled\n \twith the **CONFIG_BPF_KPROBE_OVERRIDE** configuration\n \toption, and in this case it only works on functions tagged with\n \t**ALLOW_ERROR_INJECTION** in the kernel code.\n\n \tAlso, the helper is only available for the architectures having\n \tthe CONFIG_FUNCTION_ERROR_INJECTION option. As of this writing,\n \tx86 architecture is the only one to support this feature.\n\n Returns\n \t0\n"
+  },
+  "bpf_per_cpu_ptr": {
+    "Name": "bpf_per_cpu_ptr",
+    "Definition": "static void *(* const bpf_per_cpu_ptr)(const void *percpu_ptr, __u32 cpu) = (void *) 153;",
+    "Description": " bpf_per_cpu_ptr\n\n \tTake a pointer to a percpu ksym, *percpu_ptr*, and return a\n \tpointer to the percpu kernel variable on *cpu*. A ksym is an\n \textern variable decorated with '__ksym'. For ksym, there is a\n \tglobal var (either static or global) defined of the same name\n \tin the kernel. The ksym is percpu if the global var is percpu.\n \tThe returned pointer points to the global percpu var on *cpu*.\n\n \tbpf_per_cpu_ptr() has the same semantic as per_cpu_ptr() in the\n \tkernel, except that bpf_per_cpu_ptr() may return NULL. This\n \thappens if *cpu* is larger than nr_cpu_ids. The caller of\n \tbpf_per_cpu_ptr() must check the returned value.\n\n Returns\n \tA pointer pointing to the kernel percpu variable on *cpu*, or\n \tNULL, if *cpu* is invalid.\n"
+  },
+  "bpf_perf_event_output": {
+    "Name": "bpf_perf_event_output",
+    "Definition": "static long (* const bpf_perf_event_output)(void *ctx, void *map, __u64 flags, void *data, __u64 size) = (void *) 25;",
+    "Description": " bpf_perf_event_output\n\n \tWrite raw *data* blob into a special BPF perf event held by\n \t*map* of type **BPF_MAP_TYPE_PERF_EVENT_ARRAY**. This perf\n \tevent must have the following attributes: **PERF_SAMPLE_RAW**\n \tas **sample_type**, **PERF_TYPE_SOFTWARE** as **type**, and\n \t**PERF_COUNT_SW_BPF_OUTPUT** as **config**.\n\n \tThe *flags* are used to indicate the index in *map* for which\n \tthe value must be put, masked with **BPF_F_INDEX_MASK**.\n \tAlternatively, *flags* can be set to **BPF_F_CURRENT_CPU**\n \tto indicate that the index of the current CPU core should be\n \tused.\n\n \tThe value to write, of *size*, is passed through eBPF stack and\n \tpointed by *data*.\n\n \tThe context of the program *ctx* needs also be passed to the\n \thelper.\n\n \tOn user space, a program willing to read the values needs to\n \tcall **perf_event_open**\\ () on the perf event (either for\n \tone or for all CPUs) and to store the file descriptor into the\n \t*map*. This must be done before the eBPF program can send data\n \tinto it. An example is available in file\n \t*samples/bpf/trace_output_user.c* in the Linux kernel source\n \ttree (the eBPF program counterpart is in\n \t*samples/bpf/trace_output_kern.c*).\n\n \t**bpf_perf_event_output**\\ () achieves better performance\n \tthan **bpf_trace_printk**\\ () for sharing data with user\n \tspace, and is much better suitable for streaming data from eBPF\n \tprograms.\n\n \tNote that this helper is not restricted to tracing use cases\n \tand can be used with programs attached to TC or XDP as well,\n \twhere it allows for passing data to user space listeners. Data\n \tcan be:\n\n \t* Only custom structs,\n \t* Only the packet payload, or\n \t* A combination of both.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_perf_event_read": {
+    "Name": "bpf_perf_event_read",
+    "Definition": "static __u64 (* const bpf_perf_event_read)(void *map, __u64 flags) = (void *) 22;",
+    "Description": " bpf_perf_event_read\n\n \tRead the value of a perf event counter. This helper relies on a\n \t*map* of type **BPF_MAP_TYPE_PERF_EVENT_ARRAY**. The nature of\n \tthe perf event counter is selected when *map* is updated with\n \tperf event file descriptors. The *map* is an array whose size\n \tis the number of available CPUs, and each cell contains a value\n \trelative to one CPU. The value to retrieve is indicated by\n \t*flags*, that contains the index of the CPU to look up, masked\n \twith **BPF_F_INDEX_MASK**. Alternatively, *flags* can be set to\n \t**BPF_F_CURRENT_CPU** to indicate that the value for the\n \tcurrent CPU should be retrieved.\n\n \tNote that before Linux 4.13, only hardware perf event can be\n \tretrieved.\n\n \tAlso, be aware that the newer helper\n \t**bpf_perf_event_read_value**\\ () is recommended over\n \t**bpf_perf_event_read**\\ () in general. The latter has some ABI\n \tquirks where error and counter value are used as a return code\n \t(which is wrong to do since ranges may overlap). This issue is\n \tfixed with **bpf_perf_event_read_value**\\ (), which at the same\n \ttime provides more features over the **bpf_perf_event_read**\\\n \t() interface. Please refer to the description of\n \t**bpf_perf_event_read_value**\\ () for details.\n\n Returns\n \tThe value of the perf event counter read from the map, or a\n \tnegative error code in case of failure.\n"
+  },
+  "bpf_perf_event_read_value": {
+    "Name": "bpf_perf_event_read_value",
+    "Definition": "static long (* const bpf_perf_event_read_value)(void *map, __u64 flags, struct bpf_perf_event_value *buf, __u32 buf_size) = (void *) 55;",
+    "Description": " bpf_perf_event_read_value\n\n \tRead the value of a perf event counter, and store it into *buf*\n \tof size *buf_size*. This helper relies on a *map* of type\n \t**BPF_MAP_TYPE_PERF_EVENT_ARRAY**. The nature of the perf event\n \tcounter is selected when *map* is updated with perf event file\n \tdescriptors. The *map* is an array whose size is the number of\n \tavailable CPUs, and each cell contains a value relative to one\n \tCPU. The value to retrieve is indicated by *flags*, that\n \tcontains the index of the CPU to look up, masked with\n \t**BPF_F_INDEX_MASK**. Alternatively, *flags* can be set to\n \t**BPF_F_CURRENT_CPU** to indicate that the value for the\n \tcurrent CPU should be retrieved.\n\n \tThis helper behaves in a way close to\n \t**bpf_perf_event_read**\\ () helper, save that instead of\n \tjust returning the value observed, it fills the *buf*\n \tstructure. This allows for additional data to be retrieved: in\n \tparticular, the enabled and running times (in *buf*\\\n \t**-\u003eenabled** and *buf*\\ **-\u003erunning**, respectively) are\n \tcopied. In general, **bpf_perf_event_read_value**\\ () is\n \trecommended over **bpf_perf_event_read**\\ (), which has some\n \tABI issues and provides fewer functionalities.\n\n \tThese values are interesting, because hardware PMU (Performance\n \tMonitoring Unit) counters are limited resources. When there are\n \tmore PMU based perf events opened than available counters,\n \tkernel will multiplex these events so each event gets certain\n \tpercentage (but not all) of the PMU time. In case that\n \tmultiplexing happens, the number of samples or counter value\n \twill not reflect the case compared to when no multiplexing\n \toccurs. This makes comparison between different runs difficult.\n \tTypically, the counter value should be normalized before\n \tcomparing to other experiments. The usual normalization is done\n \tas follows.\n\n \t::\n\n \t\tnormalized_counter = counter * t_enabled / t_running\n\n \tWhere t_enabled is the time enabled for event and t_running is\n \tthe time running for event since last normalization. The\n \tenabled and running times are accumulated since the perf event\n \topen. To achieve scaling factor between two invocations of an\n \teBPF program, users can use CPU id as the key (which is\n \ttypical for perf array usage model) to remember the previous\n \tvalue and do the calculation inside the eBPF program.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_perf_prog_read_value": {
+    "Name": "bpf_perf_prog_read_value",
+    "Definition": "static long (* const bpf_perf_prog_read_value)(struct bpf_perf_event_data *ctx, struct bpf_perf_event_value *buf, __u32 buf_size) = (void *) 56;",
+    "Description": " bpf_perf_prog_read_value\n\n \tFor an eBPF program attached to a perf event, retrieve the\n \tvalue of the event counter associated to *ctx* and store it in\n \tthe structure pointed by *buf* and of size *buf_size*. Enabled\n \tand running times are also stored in the structure (see\n \tdescription of helper **bpf_perf_event_read_value**\\ () for\n \tmore details).\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_probe_read": {
+    "Name": "bpf_probe_read",
+    "Definition": "static long (* const bpf_probe_read)(void *dst, __u32 size, const void *unsafe_ptr) = (void *) 4;",
+    "Description": " bpf_probe_read\n\n \tFor tracing programs, safely attempt to read *size* bytes from\n \tkernel space address *unsafe_ptr* and store the data in *dst*.\n\n \tGenerally, use **bpf_probe_read_user**\\ () or\n \t**bpf_probe_read_kernel**\\ () instead.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_probe_read_kernel": {
+    "Name": "bpf_probe_read_kernel",
+    "Definition": "static long (* const bpf_probe_read_kernel)(void *dst, __u32 size, const void *unsafe_ptr) = (void *) 113;",
+    "Description": " bpf_probe_read_kernel\n\n \tSafely attempt to read *size* bytes from kernel space address\n \t*unsafe_ptr* and store the data in *dst*.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_probe_read_kernel_str": {
+    "Name": "bpf_probe_read_kernel_str",
+    "Definition": "static long (* const bpf_probe_read_kernel_str)(void *dst, __u32 size, const void *unsafe_ptr) = (void *) 115;",
+    "Description": " bpf_probe_read_kernel_str\n\n \tCopy a NUL terminated string from an unsafe kernel address *unsafe_ptr*\n \tto *dst*. Same semantics as with **bpf_probe_read_user_str**\\ () apply.\n\n Returns\n \tOn success, the strictly positive length of the string, including\n \tthe trailing NUL character. On error, a negative value.\n"
+  },
+  "bpf_probe_read_str": {
+    "Name": "bpf_probe_read_str",
+    "Definition": "static long (* const bpf_probe_read_str)(void *dst, __u32 size, const void *unsafe_ptr) = (void *) 45;",
+    "Description": " bpf_probe_read_str\n\n \tCopy a NUL terminated string from an unsafe kernel address\n \t*unsafe_ptr* to *dst*. See **bpf_probe_read_kernel_str**\\ () for\n \tmore details.\n\n \tGenerally, use **bpf_probe_read_user_str**\\ () or\n \t**bpf_probe_read_kernel_str**\\ () instead.\n\n Returns\n \tOn success, the strictly positive length of the string,\n \tincluding the trailing NUL character. On error, a negative\n \tvalue.\n"
+  },
+  "bpf_probe_read_user": {
+    "Name": "bpf_probe_read_user",
+    "Definition": "static long (* const bpf_probe_read_user)(void *dst, __u32 size, const void *unsafe_ptr) = (void *) 112;",
+    "Description": " bpf_probe_read_user\n\n \tSafely attempt to read *size* bytes from user space address\n \t*unsafe_ptr* and store the data in *dst*.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_probe_read_user_str": {
+    "Name": "bpf_probe_read_user_str",
+    "Definition": "static long (* const bpf_probe_read_user_str)(void *dst, __u32 size, const void *unsafe_ptr) = (void *) 114;",
+    "Description": " bpf_probe_read_user_str\n\n \tCopy a NUL terminated string from an unsafe user address\n \t*unsafe_ptr* to *dst*. The *size* should include the\n \tterminating NUL byte. In case the string length is smaller than\n \t*size*, the target is not padded with further NUL bytes. If the\n \tstring length is larger than *size*, just *size*-1 bytes are\n \tcopied and the last byte is set to NUL.\n\n \tOn success, returns the number of bytes that were written,\n \tincluding the terminal NUL. This makes this helper useful in\n \ttracing programs for reading strings, and more importantly to\n \tget its length at runtime. See the following snippet:\n\n \t::\n\n \t\tSEC(\"kprobe/sys_open\")\n \t\tvoid bpf_sys_open(struct pt_regs *ctx)\n \t\t{\n \t\t        char buf[PATHLEN]; // PATHLEN is defined to 256\n \t\t        int res = bpf_probe_read_user_str(buf, sizeof(buf),\n \t\t\t                                  ctx-\u003edi);\n\n \t\t\t// Consume buf, for example push it to\n \t\t\t// userspace via bpf_perf_event_output(); we\n \t\t\t// can use res (the string length) as event\n \t\t\t// size, after checking its boundaries.\n \t\t}\n\n \tIn comparison, using **bpf_probe_read_user**\\ () helper here\n \tinstead to read the string would require to estimate the length\n \tat compile time, and would often result in copying more memory\n \tthan necessary.\n\n \tAnother useful use case is when parsing individual process\n \targuments or individual environment variables navigating\n \t*current*\\ **-\u003emm-\u003earg_start** and *current*\\\n \t**-\u003emm-\u003eenv_start**: using this helper and the return value,\n \tone can quickly iterate at the right offset of the memory area.\n\n Returns\n \tOn success, the strictly positive length of the output string,\n \tincluding the trailing NUL character. On error, a negative\n \tvalue.\n"
+  },
+  "bpf_probe_write_user": {
+    "Name": "bpf_probe_write_user",
+    "Definition": "static long (* const bpf_probe_write_user)(void *dst, const void *src, __u32 len) = (void *) 36;",
+    "Description": " bpf_probe_write_user\n\n \tAttempt in a safe way to write *len* bytes from the buffer\n \t*src* to *dst* in memory. It only works for threads that are in\n \tuser context, and *dst* must be a valid user space address.\n\n \tThis helper should not be used to implement any kind of\n \tsecurity mechanism because of TOC-TOU attacks, but rather to\n \tdebug, divert, and manipulate execution of semi-cooperative\n \tprocesses.\n\n \tKeep in mind that this feature is meant for experiments, and it\n \thas a risk of crashing the system and running programs.\n \tTherefore, when an eBPF program using this helper is attached,\n \ta warning including PID and process name is printed to kernel\n \tlogs.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_rc_keydown": {
+    "Name": "bpf_rc_keydown",
+    "Definition": "static long (* const bpf_rc_keydown)(void *ctx, __u32 protocol, __u64 scancode, __u32 toggle) = (void *) 78;",
+    "Description": " bpf_rc_keydown\n\n \tThis helper is used in programs implementing IR decoding, to\n \treport a successfully decoded key press with *scancode*,\n \t*toggle* value in the given *protocol*. The scancode will be\n \ttranslated to a keycode using the rc keymap, and reported as\n \tan input key down event. After a period a key up event is\n \tgenerated. This period can be extended by calling either\n \t**bpf_rc_keydown**\\ () again with the same values, or calling\n \t**bpf_rc_repeat**\\ ().\n\n \tSome protocols include a toggle bit, in case the button was\n \treleased and pressed again between consecutive scancodes.\n\n \tThe *ctx* should point to the lirc sample as passed into\n \tthe program.\n\n \tThe *protocol* is the decoded protocol number (see\n \t**enum rc_proto** for some predefined values).\n\n \tThis helper is only available is the kernel was compiled with\n \tthe **CONFIG_BPF_LIRC_MODE2** configuration option set to\n \t\"**y**\".\n\n Returns\n \t0\n"
+  },
+  "bpf_rc_pointer_rel": {
+    "Name": "bpf_rc_pointer_rel",
+    "Definition": "static long (* const bpf_rc_pointer_rel)(void *ctx, __s32 rel_x, __s32 rel_y) = (void *) 92;",
+    "Description": " bpf_rc_pointer_rel\n\n \tThis helper is used in programs implementing IR decoding, to\n \treport a successfully decoded pointer movement.\n\n \tThe *ctx* should point to the lirc sample as passed into\n \tthe program.\n\n \tThis helper is only available is the kernel was compiled with\n \tthe **CONFIG_BPF_LIRC_MODE2** configuration option set to\n \t\"**y**\".\n\n Returns\n \t0\n"
+  },
+  "bpf_rc_repeat": {
+    "Name": "bpf_rc_repeat",
+    "Definition": "static long (* const bpf_rc_repeat)(void *ctx) = (void *) 77;",
+    "Description": " bpf_rc_repeat\n\n \tThis helper is used in programs implementing IR decoding, to\n \treport a successfully decoded repeat key message. This delays\n \tthe generation of a key up event for previously generated\n \tkey down event.\n\n \tSome IR protocols like NEC have a special IR message for\n \trepeating last button, for when a button is held down.\n\n \tThe *ctx* should point to the lirc sample as passed into\n \tthe program.\n\n \tThis helper is only available is the kernel was compiled with\n \tthe **CONFIG_BPF_LIRC_MODE2** configuration option set to\n \t\"**y**\".\n\n Returns\n \t0\n"
+  },
+  "bpf_read_branch_records": {
+    "Name": "bpf_read_branch_records",
+    "Definition": "static long (* const bpf_read_branch_records)(struct bpf_perf_event_data *ctx, void *buf, __u32 size, __u64 flags) = (void *) 119;",
+    "Description": " bpf_read_branch_records\n\n \tFor an eBPF program attached to a perf event, retrieve the\n \tbranch records (**struct perf_branch_entry**) associated to *ctx*\n \tand store it in the buffer pointed by *buf* up to size\n \t*size* bytes.\n\n Returns\n \tOn success, number of bytes written to *buf*. On error, a\n \tnegative value.\n\n \tThe *flags* can be set to **BPF_F_GET_BRANCH_RECORDS_SIZE** to\n \tinstead return the number of bytes required to store all the\n \tbranch entries. If this flag is set, *buf* may be NULL.\n\n \t**-EINVAL** if arguments invalid or **size** not a multiple\n \tof **sizeof**\\ (**struct perf_branch_entry**\\ ).\n\n \t**-ENOENT** if architecture does not support branch records.\n"
+  },
+  "bpf_redirect": {
+    "Name": "bpf_redirect",
+    "Definition": "static long (* const bpf_redirect)(__u32 ifindex, __u64 flags) = (void *) 23;",
+    "Description": " bpf_redirect\n\n \tRedirect the packet to another net device of index *ifindex*.\n \tThis helper is somewhat similar to **bpf_clone_redirect**\\\n \t(), except that the packet is not cloned, which provides\n \tincreased performance.\n\n \tExcept for XDP, both ingress and egress interfaces can be used\n \tfor redirection. The **BPF_F_INGRESS** value in *flags* is used\n \tto make the distinction (ingress path is selected if the flag\n \tis present, egress path otherwise). Currently, XDP only\n \tsupports redirection to the egress interface, and accepts no\n \tflag at all.\n\n \tThe same effect can also be attained with the more generic\n \t**bpf_redirect_map**\\ (), which uses a BPF map to store the\n \tredirect target instead of providing it directly to the helper.\n\n Returns\n \tFor XDP, the helper returns **XDP_REDIRECT** on success or\n \t**XDP_ABORTED** on error. For other program types, the values\n \tare **TC_ACT_REDIRECT** on success or **TC_ACT_SHOT** on\n \terror.\n"
+  },
+  "bpf_redirect_map": {
+    "Name": "bpf_redirect_map",
+    "Definition": "static long (* const bpf_redirect_map)(void *map, __u64 key, __u64 flags) = (void *) 51;",
+    "Description": " bpf_redirect_map\n\n \tRedirect the packet to the endpoint referenced by *map* at\n \tindex *key*. Depending on its type, this *map* can contain\n \treferences to net devices (for forwarding packets through other\n \tports), or to CPUs (for redirecting XDP frames to another CPU;\n \tbut this is only implemented for native XDP (with driver\n \tsupport) as of this writing).\n\n \tThe lower two bits of *flags* are used as the return code if\n \tthe map lookup fails. This is so that the return value can be\n \tone of the XDP program return codes up to **XDP_TX**, as chosen\n \tby the caller. The higher bits of *flags* can be set to\n \tBPF_F_BROADCAST or BPF_F_EXCLUDE_INGRESS as defined below.\n\n \tWith BPF_F_BROADCAST the packet will be broadcasted to all the\n \tinterfaces in the map, with BPF_F_EXCLUDE_INGRESS the ingress\n \tinterface will be excluded when do broadcasting.\n\n \tSee also **bpf_redirect**\\ (), which only supports redirecting\n \tto an ifindex, but doesn't require a map to do so.\n\n Returns\n \t**XDP_REDIRECT** on success, or the value of the two lower bits\n \tof the *flags* argument on error.\n"
+  },
+  "bpf_redirect_neigh": {
+    "Name": "bpf_redirect_neigh",
+    "Definition": "static long (* const bpf_redirect_neigh)(__u32 ifindex, struct bpf_redir_neigh *params, int plen, __u64 flags) = (void *) 152;",
+    "Description": " bpf_redirect_neigh\n\n \tRedirect the packet to another net device of index *ifindex*\n \tand fill in L2 addresses from neighboring subsystem. This helper\n \tis somewhat similar to **bpf_redirect**\\ (), except that it\n \tpopulates L2 addresses as well, meaning, internally, the helper\n \trelies on the neighbor lookup for the L2 address of the nexthop.\n\n \tThe helper will perform a FIB lookup based on the skb's\n \tnetworking header to get the address of the next hop, unless\n \tthis is supplied by the caller in the *params* argument. The\n \t*plen* argument indicates the len of *params* and should be set\n \tto 0 if *params* is NULL.\n\n \tThe *flags* argument is reserved and must be 0. The helper is\n \tcurrently only supported for tc BPF program types, and enabled\n \tfor IPv4 and IPv6 protocols.\n\n Returns\n \tThe helper returns **TC_ACT_REDIRECT** on success or\n \t**TC_ACT_SHOT** on error.\n"
+  },
+  "bpf_redirect_peer": {
+    "Name": "bpf_redirect_peer",
+    "Definition": "static long (* const bpf_redirect_peer)(__u32 ifindex, __u64 flags) = (void *) 155;",
+    "Description": " bpf_redirect_peer\n\n \tRedirect the packet to another net device of index *ifindex*.\n \tThis helper is somewhat similar to **bpf_redirect**\\ (), except\n \tthat the redirection happens to the *ifindex*' peer device and\n \tthe netns switch takes place from ingress to ingress without\n \tgoing through the CPU's backlog queue.\n\n \tThe *flags* argument is reserved and must be 0. The helper is\n \tcurrently only supported for tc BPF program types at the\n \tingress hook and for veth and netkit target device types. The\n \tpeer device must reside in a different network namespace.\n\n Returns\n \tThe helper returns **TC_ACT_REDIRECT** on success or\n \t**TC_ACT_SHOT** on error.\n"
+  },
+  "bpf_reserve_hdr_opt": {
+    "Name": "bpf_reserve_hdr_opt",
+    "Definition": "static long (* const bpf_reserve_hdr_opt)(struct bpf_sock_ops *skops, __u32 len, __u64 flags) = (void *) 144;",
+    "Description": " bpf_reserve_hdr_opt\n\n \tReserve *len* bytes for the bpf header option.  The\n \tspace will be used by **bpf_store_hdr_opt**\\ () later in\n \t**BPF_SOCK_OPS_WRITE_HDR_OPT_CB**.\n\n \tIf **bpf_reserve_hdr_opt**\\ () is called multiple times,\n \tthe total number of bytes will be reserved.\n\n \tThis helper can only be called during\n \t**BPF_SOCK_OPS_HDR_OPT_LEN_CB**.\n\n\n Returns\n \t0 on success, or negative error in case of failure:\n\n \t**-EINVAL** if a parameter is invalid.\n\n \t**-ENOSPC** if there is not enough space in the header.\n\n \t**-EPERM** if the helper cannot be used under the current\n \t*skops*\\ **-\u003eop**.\n"
+  },
+  "bpf_ringbuf_discard": {
+    "Name": "bpf_ringbuf_discard",
+    "Definition": "static void (* const bpf_ringbuf_discard)(void *data, __u64 flags) = (void *) 133;",
+    "Description": " bpf_ringbuf_discard\n\n \tDiscard reserved ring buffer sample, pointed to by *data*.\n \tIf **BPF_RB_NO_WAKEUP** is specified in *flags*, no notification\n \tof new data availability is sent.\n \tIf **BPF_RB_FORCE_WAKEUP** is specified in *flags*, notification\n \tof new data availability is sent unconditionally.\n \tIf **0** is specified in *flags*, an adaptive notification\n \tof new data availability is sent.\n\n \tSee 'bpf_ringbuf_output()' for the definition of adaptive notification.\n\n Returns\n \tNothing. Always succeeds.\n"
+  },
+  "bpf_ringbuf_discard_dynptr": {
+    "Name": "bpf_ringbuf_discard_dynptr",
+    "Definition": "static void (* const bpf_ringbuf_discard_dynptr)(struct bpf_dynptr *ptr, __u64 flags) = (void *) 200;",
+    "Description": " bpf_ringbuf_discard_dynptr\n\n \tDiscard reserved ring buffer sample through the dynptr\n \tinterface. This is a no-op if the dynptr is invalid/null.\n\n \tFor more information on *flags*, please see\n \t'bpf_ringbuf_discard'.\n\n Returns\n \tNothing. Always succeeds.\n"
+  },
+  "bpf_ringbuf_output": {
+    "Name": "bpf_ringbuf_output",
+    "Definition": "static long (* const bpf_ringbuf_output)(void *ringbuf, void *data, __u64 size, __u64 flags) = (void *) 130;",
+    "Description": " bpf_ringbuf_output\n\n \tCopy *size* bytes from *data* into a ring buffer *ringbuf*.\n \tIf **BPF_RB_NO_WAKEUP** is specified in *flags*, no notification\n \tof new data availability is sent.\n \tIf **BPF_RB_FORCE_WAKEUP** is specified in *flags*, notification\n \tof new data availability is sent unconditionally.\n \tIf **0** is specified in *flags*, an adaptive notification\n \tof new data availability is sent.\n\n \tAn adaptive notification is a notification sent whenever the user-space\n \tprocess has caught up and consumed all available payloads. In case the user-space\n \tprocess is still processing a previous payload, then no notification is needed\n \tas it will process the newly added payload automatically.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_ringbuf_query": {
+    "Name": "bpf_ringbuf_query",
+    "Definition": "static __u64 (* const bpf_ringbuf_query)(void *ringbuf, __u64 flags) = (void *) 134;",
+    "Description": " bpf_ringbuf_query\n\n \tQuery various characteristics of provided ring buffer. What\n \texactly is queries is determined by *flags*:\n\n \t* **BPF_RB_AVAIL_DATA**: Amount of data not yet consumed.\n \t* **BPF_RB_RING_SIZE**: The size of ring buffer.\n \t* **BPF_RB_CONS_POS**: Consumer position (can wrap around).\n \t* **BPF_RB_PROD_POS**: Producer(s) position (can wrap around).\n\n \tData returned is just a momentary snapshot of actual values\n \tand could be inaccurate, so this facility should be used to\n \tpower heuristics and for reporting, not to make 100% correct\n \tcalculation.\n\n Returns\n \tRequested value, or 0, if *flags* are not recognized.\n"
+  },
+  "bpf_ringbuf_reserve": {
+    "Name": "bpf_ringbuf_reserve",
+    "Definition": "static void *(* const bpf_ringbuf_reserve)(void *ringbuf, __u64 size, __u64 flags) = (void *) 131;",
+    "Description": " bpf_ringbuf_reserve\n\n \tReserve *size* bytes of payload in a ring buffer *ringbuf*.\n \t*flags* must be 0.\n\n Returns\n \tValid pointer with *size* bytes of memory available; NULL,\n \totherwise.\n"
+  },
+  "bpf_ringbuf_reserve_dynptr": {
+    "Name": "bpf_ringbuf_reserve_dynptr",
+    "Definition": "static long (* const bpf_ringbuf_reserve_dynptr)(void *ringbuf, __u32 size, __u64 flags, struct bpf_dynptr *ptr) = (void *) 198;",
+    "Description": " bpf_ringbuf_reserve_dynptr\n\n \tReserve *size* bytes of payload in a ring buffer *ringbuf*\n \tthrough the dynptr interface. *flags* must be 0.\n\n \tPlease note that a corresponding bpf_ringbuf_submit_dynptr or\n \tbpf_ringbuf_discard_dynptr must be called on *ptr*, even if the\n \treservation fails. This is enforced by the verifier.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_ringbuf_submit": {
+    "Name": "bpf_ringbuf_submit",
+    "Definition": "static void (* const bpf_ringbuf_submit)(void *data, __u64 flags) = (void *) 132;",
+    "Description": " bpf_ringbuf_submit\n\n \tSubmit reserved ring buffer sample, pointed to by *data*.\n \tIf **BPF_RB_NO_WAKEUP** is specified in *flags*, no notification\n \tof new data availability is sent.\n \tIf **BPF_RB_FORCE_WAKEUP** is specified in *flags*, notification\n \tof new data availability is sent unconditionally.\n \tIf **0** is specified in *flags*, an adaptive notification\n \tof new data availability is sent.\n\n \tSee 'bpf_ringbuf_output()' for the definition of adaptive notification.\n\n Returns\n \tNothing. Always succeeds.\n"
+  },
+  "bpf_ringbuf_submit_dynptr": {
+    "Name": "bpf_ringbuf_submit_dynptr",
+    "Definition": "static void (* const bpf_ringbuf_submit_dynptr)(struct bpf_dynptr *ptr, __u64 flags) = (void *) 199;",
+    "Description": " bpf_ringbuf_submit_dynptr\n\n \tSubmit reserved ring buffer sample, pointed to by *data*,\n \tthrough the dynptr interface. This is a no-op if the dynptr is\n \tinvalid/null.\n\n \tFor more information on *flags*, please see\n \t'bpf_ringbuf_submit'.\n\n Returns\n \tNothing. Always succeeds.\n"
+  },
+  "bpf_send_signal": {
+    "Name": "bpf_send_signal",
+    "Definition": "static long (* const bpf_send_signal)(__u32 sig) = (void *) 109;",
+    "Description": " bpf_send_signal\n\n \tSend signal *sig* to the process of the current task.\n \tThe signal may be delivered to any of this process's threads.\n\n Returns\n \t0 on success or successfully queued.\n\n \t**-EBUSY** if work queue under nmi is full.\n\n \t**-EINVAL** if *sig* is invalid.\n\n \t**-EPERM** if no permission to send the *sig*.\n\n \t**-EAGAIN** if bpf program can try again.\n"
+  },
+  "bpf_send_signal_thread": {
+    "Name": "bpf_send_signal_thread",
+    "Definition": "static long (* const bpf_send_signal_thread)(__u32 sig) = (void *) 117;",
+    "Description": " bpf_send_signal_thread\n\n \tSend signal *sig* to the thread corresponding to the current task.\n\n Returns\n \t0 on success or successfully queued.\n\n \t**-EBUSY** if work queue under nmi is full.\n\n \t**-EINVAL** if *sig* is invalid.\n\n \t**-EPERM** if no permission to send the *sig*.\n\n \t**-EAGAIN** if bpf program can try again.\n"
+  },
+  "bpf_seq_printf": {
+    "Name": "bpf_seq_printf",
+    "Definition": "static long (* const bpf_seq_printf)(struct seq_file *m, const char *fmt, __u32 fmt_size, const void *data, __u32 data_len) = (void *) 126;",
+    "Description": " bpf_seq_printf\n\n \t**bpf_seq_printf**\\ () uses seq_file **seq_printf**\\ () to print\n \tout the format string.\n \tThe *m* represents the seq_file. The *fmt* and *fmt_size* are for\n \tthe format string itself. The *data* and *data_len* are format string\n \targuments. The *data* are a **u64** array and corresponding format string\n \tvalues are stored in the array. For strings and pointers where pointees\n \tare accessed, only the pointer values are stored in the *data* array.\n \tThe *data_len* is the size of *data* in bytes - must be a multiple of 8.\n\n \tFormats **%s**, **%p{i,I}{4,6}** requires to read kernel memory.\n \tReading kernel memory may fail due to either invalid address or\n \tvalid address but requiring a major memory fault. If reading kernel memory\n \tfails, the string for **%s** will be an empty string, and the ip\n \taddress for **%p{i,I}{4,6}** will be 0. Not returning error to\n \tbpf program is consistent with what **bpf_trace_printk**\\ () does for now.\n\n Returns\n \t0 on success, or a negative error in case of failure:\n\n \t**-EBUSY** if per-CPU memory copy buffer is busy, can try again\n \tby returning 1 from bpf program.\n\n \t**-EINVAL** if arguments are invalid, or if *fmt* is invalid/unsupported.\n\n \t**-E2BIG** if *fmt* contains too many format specifiers.\n\n \t**-EOVERFLOW** if an overflow happened: The same object will be tried again.\n"
+  },
+  "bpf_seq_printf_btf": {
+    "Name": "bpf_seq_printf_btf",
+    "Definition": "static long (* const bpf_seq_printf_btf)(struct seq_file *m, struct btf_ptr *ptr, __u32 ptr_size, __u64 flags) = (void *) 150;",
+    "Description": " bpf_seq_printf_btf\n\n \tUse BTF to write to seq_write a string representation of\n \t*ptr*-\u003eptr, using *ptr*-\u003etype_id as per bpf_snprintf_btf().\n \t*flags* are identical to those used for bpf_snprintf_btf.\n\n Returns\n \t0 on success or a negative error in case of failure.\n"
+  },
+  "bpf_seq_write": {
+    "Name": "bpf_seq_write",
+    "Definition": "static long (* const bpf_seq_write)(struct seq_file *m, const void *data, __u32 len) = (void *) 127;",
+    "Description": " bpf_seq_write\n\n \t**bpf_seq_write**\\ () uses seq_file **seq_write**\\ () to write the data.\n \tThe *m* represents the seq_file. The *data* and *len* represent the\n \tdata to write in bytes.\n\n Returns\n \t0 on success, or a negative error in case of failure:\n\n \t**-EOVERFLOW** if an overflow happened: The same object will be tried again.\n"
+  },
+  "bpf_set_hash": {
+    "Name": "bpf_set_hash",
+    "Definition": "static long (* const bpf_set_hash)(struct __sk_buff *skb, __u32 hash) = (void *) 48;",
+    "Description": " bpf_set_hash\n\n \tSet the full hash for *skb* (set the field *skb*\\ **-\u003ehash**)\n \tto value *hash*.\n\n Returns\n \t0\n"
+  },
+  "bpf_set_hash_invalid": {
+    "Name": "bpf_set_hash_invalid",
+    "Definition": "static void (* const bpf_set_hash_invalid)(struct __sk_buff *skb) = (void *) 41;",
+    "Description": " bpf_set_hash_invalid\n\n \tInvalidate the current *skb*\\ **-\u003ehash**. It can be used after\n \tmangling on headers through direct packet access, in order to\n \tindicate that the hash is outdated and to trigger a\n \trecalculation the next time the kernel tries to access this\n \thash or when the **bpf_get_hash_recalc**\\ () helper is called.\n\n Returns\n \tvoid.\n"
+  },
+  "bpf_set_retval": {
+    "Name": "bpf_set_retval",
+    "Definition": "static int (* const bpf_set_retval)(int retval) = (void *) 187;",
+    "Description": " bpf_set_retval\n\n \tSet the BPF program's return value that will be returned to the upper layers.\n\n \tThis helper is currently supported by cgroup programs and only by the hooks\n \twhere BPF program's return value is returned to the userspace via errno.\n\n \tNote that there is the following corner case where the program exports an error\n \tvia bpf_set_retval but signals success via 'return 1':\n\n \t\tbpf_set_retval(-EPERM);\n \t\treturn 1;\n\n \tIn this case, the BPF program's return value will use helper's -EPERM. This\n \tstill holds true for cgroup/bind{4,6} which supports extra 'return 3' success case.\n\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_setsockopt": {
+    "Name": "bpf_setsockopt",
+    "Definition": "static long (* const bpf_setsockopt)(void *bpf_socket, int level, int optname, void *optval, int optlen) = (void *) 49;",
+    "Description": " bpf_setsockopt\n\n \tEmulate a call to **setsockopt()** on the socket associated to\n \t*bpf_socket*, which must be a full socket. The *level* at\n \twhich the option resides and the name *optname* of the option\n \tmust be specified, see **setsockopt(2)** for more information.\n \tThe option value of length *optlen* is pointed by *optval*.\n\n \t*bpf_socket* should be one of the following:\n\n \t* **struct bpf_sock_ops** for **BPF_PROG_TYPE_SOCK_OPS**.\n \t* **struct bpf_sock_addr** for **BPF_CGROUP_INET4_CONNECT**,\n \t  **BPF_CGROUP_INET6_CONNECT** and **BPF_CGROUP_UNIX_CONNECT**.\n\n \tThis helper actually implements a subset of **setsockopt()**.\n \tIt supports the following *level*\\ s:\n\n \t* **SOL_SOCKET**, which supports the following *optname*\\ s:\n \t  **SO_RCVBUF**, **SO_SNDBUF**, **SO_MAX_PACING_RATE**,\n \t  **SO_PRIORITY**, **SO_RCVLOWAT**, **SO_MARK**,\n \t  **SO_BINDTODEVICE**, **SO_KEEPALIVE**, **SO_REUSEADDR**,\n \t  **SO_REUSEPORT**, **SO_BINDTOIFINDEX**, **SO_TXREHASH**.\n \t* **IPPROTO_TCP**, which supports the following *optname*\\ s:\n \t  **TCP_CONGESTION**, **TCP_BPF_IW**,\n \t  **TCP_BPF_SNDCWND_CLAMP**, **TCP_SAVE_SYN**,\n \t  **TCP_KEEPIDLE**, **TCP_KEEPINTVL**, **TCP_KEEPCNT**,\n \t  **TCP_SYNCNT**, **TCP_USER_TIMEOUT**, **TCP_NOTSENT_LOWAT**,\n \t  **TCP_NODELAY**, **TCP_MAXSEG**, **TCP_WINDOW_CLAMP**,\n \t  **TCP_THIN_LINEAR_TIMEOUTS**, **TCP_BPF_DELACK_MAX**,\n \t  **TCP_BPF_RTO_MIN**.\n \t* **IPPROTO_IP**, which supports *optname* **IP_TOS**.\n \t* **IPPROTO_IPV6**, which supports the following *optname*\\ s:\n \t  **IPV6_TCLASS**, **IPV6_AUTOFLOWLABEL**.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_sk_ancestor_cgroup_id": {
+    "Name": "bpf_sk_ancestor_cgroup_id",
+    "Definition": "static __u64 (* const bpf_sk_ancestor_cgroup_id)(void *sk, int ancestor_level) = (void *) 129;",
+    "Description": " bpf_sk_ancestor_cgroup_id\n\n \tReturn id of cgroup v2 that is ancestor of cgroup associated\n \twith the *sk* at the *ancestor_level*.  The root cgroup is at\n \t*ancestor_level* zero and each step down the hierarchy\n \tincrements the level. If *ancestor_level* == level of cgroup\n \tassociated with *sk*, then return value will be same as that\n \tof **bpf_sk_cgroup_id**\\ ().\n\n \tThe helper is useful to implement policies based on cgroups\n \tthat are upper in hierarchy than immediate cgroup associated\n \twith *sk*.\n\n \tThe format of returned id and helper limitations are same as in\n \t**bpf_sk_cgroup_id**\\ ().\n\n Returns\n \tThe id is returned or 0 in case the id could not be retrieved.\n"
+  },
+  "bpf_sk_assign": {
+    "Name": "bpf_sk_assign",
+    "Definition": "static long (* const bpf_sk_assign)(void *ctx, void *sk, __u64 flags) = (void *) 124;",
+    "Description": " bpf_sk_assign\n\n \tHelper is overloaded depending on BPF program type. This\n \tdescription applies to **BPF_PROG_TYPE_SCHED_CLS** and\n \t**BPF_PROG_TYPE_SCHED_ACT** programs.\n\n \tAssign the *sk* to the *skb*. When combined with appropriate\n \trouting configuration to receive the packet towards the socket,\n \twill cause *skb* to be delivered to the specified socket.\n \tSubsequent redirection of *skb* via  **bpf_redirect**\\ (),\n \t**bpf_clone_redirect**\\ () or other methods outside of BPF may\n \tinterfere with successful delivery to the socket.\n\n \tThis operation is only valid from TC ingress path.\n\n \tThe *flags* argument must be zero.\n\n Returns\n \t0 on success, or a negative error in case of failure:\n\n \t**-EINVAL** if specified *flags* are not supported.\n\n \t**-ENOENT** if the socket is unavailable for assignment.\n\n \t**-ENETUNREACH** if the socket is unreachable (wrong netns).\n\n \t**-EOPNOTSUPP** if the operation is not supported, for example\n \ta call from outside of TC ingress.\n"
+  },
+  "bpf_sk_cgroup_id": {
+    "Name": "bpf_sk_cgroup_id",
+    "Definition": "static __u64 (* const bpf_sk_cgroup_id)(void *sk) = (void *) 128;",
+    "Description": " bpf_sk_cgroup_id\n\n \tReturn the cgroup v2 id of the socket *sk*.\n\n \t*sk* must be a non-**NULL** pointer to a socket, e.g. one\n \treturned from **bpf_sk_lookup_xxx**\\ (),\n \t**bpf_sk_fullsock**\\ (), etc. The format of returned id is\n \tsame as in **bpf_skb_cgroup_id**\\ ().\n\n \tThis helper is available only if the kernel was compiled with\n \tthe **CONFIG_SOCK_CGROUP_DATA** configuration option.\n\n Returns\n \tThe id is returned or 0 in case the id could not be retrieved.\n"
+  },
+  "bpf_sk_fullsock": {
+    "Name": "bpf_sk_fullsock",
+    "Definition": "static struct bpf_sock *(* const bpf_sk_fullsock)(struct bpf_sock *sk) = (void *) 95;",
+    "Description": " bpf_sk_fullsock\n\n \tThis helper gets a **struct bpf_sock** pointer such\n \tthat all the fields in this **bpf_sock** can be accessed.\n\n Returns\n \tA **struct bpf_sock** pointer on success, or **NULL** in\n \tcase of failure.\n"
+  },
+  "bpf_sk_lookup_tcp": {
+    "Name": "bpf_sk_lookup_tcp",
+    "Definition": "static struct bpf_sock *(* const bpf_sk_lookup_tcp)(void *ctx, struct bpf_sock_tuple *tuple, __u32 tuple_size, __u64 netns, __u64 flags) = (void *) 84;",
+    "Description": " bpf_sk_lookup_tcp\n\n \tLook for TCP socket matching *tuple*, optionally in a child\n \tnetwork namespace *netns*. The return value must be checked,\n \tand if non-**NULL**, released via **bpf_sk_release**\\ ().\n\n \tThe *ctx* should point to the context of the program, such as\n \tthe skb or socket (depending on the hook in use). This is used\n \tto determine the base network namespace for the lookup.\n\n \t*tuple_size* must be one of:\n\n \t**sizeof**\\ (*tuple*\\ **-\u003eipv4**)\n \t\tLook for an IPv4 socket.\n \t**sizeof**\\ (*tuple*\\ **-\u003eipv6**)\n \t\tLook for an IPv6 socket.\n\n \tIf the *netns* is a negative signed 32-bit integer, then the\n \tsocket lookup table in the netns associated with the *ctx*\n \twill be used. For the TC hooks, this is the netns of the device\n \tin the skb. For socket hooks, this is the netns of the socket.\n \tIf *netns* is any other signed 32-bit value greater than or\n \tequal to zero then it specifies the ID of the netns relative to\n \tthe netns associated with the *ctx*. *netns* values beyond the\n \trange of 32-bit integers are reserved for future use.\n\n \tAll values for *flags* are reserved for future usage, and must\n \tbe left at zero.\n\n \tThis helper is available only if the kernel was compiled with\n \t**CONFIG_NET** configuration option.\n\n Returns\n \tPointer to **struct bpf_sock**, or **NULL** in case of failure.\n \tFor sockets with reuseport option, the **struct bpf_sock**\n \tresult is from *reuse*\\ **-\u003esocks**\\ [] using the hash of the\n \ttuple.\n"
+  },
+  "bpf_sk_lookup_udp": {
+    "Name": "bpf_sk_lookup_udp",
+    "Definition": "static struct bpf_sock *(* const bpf_sk_lookup_udp)(void *ctx, struct bpf_sock_tuple *tuple, __u32 tuple_size, __u64 netns, __u64 flags) = (void *) 85;",
+    "Description": " bpf_sk_lookup_udp\n\n \tLook for UDP socket matching *tuple*, optionally in a child\n \tnetwork namespace *netns*. The return value must be checked,\n \tand if non-**NULL**, released via **bpf_sk_release**\\ ().\n\n \tThe *ctx* should point to the context of the program, such as\n \tthe skb or socket (depending on the hook in use). This is used\n \tto determine the base network namespace for the lookup.\n\n \t*tuple_size* must be one of:\n\n \t**sizeof**\\ (*tuple*\\ **-\u003eipv4**)\n \t\tLook for an IPv4 socket.\n \t**sizeof**\\ (*tuple*\\ **-\u003eipv6**)\n \t\tLook for an IPv6 socket.\n\n \tIf the *netns* is a negative signed 32-bit integer, then the\n \tsocket lookup table in the netns associated with the *ctx*\n \twill be used. For the TC hooks, this is the netns of the device\n \tin the skb. For socket hooks, this is the netns of the socket.\n \tIf *netns* is any other signed 32-bit value greater than or\n \tequal to zero then it specifies the ID of the netns relative to\n \tthe netns associated with the *ctx*. *netns* values beyond the\n \trange of 32-bit integers are reserved for future use.\n\n \tAll values for *flags* are reserved for future usage, and must\n \tbe left at zero.\n\n \tThis helper is available only if the kernel was compiled with\n \t**CONFIG_NET** configuration option.\n\n Returns\n \tPointer to **struct bpf_sock**, or **NULL** in case of failure.\n \tFor sockets with reuseport option, the **struct bpf_sock**\n \tresult is from *reuse*\\ **-\u003esocks**\\ [] using the hash of the\n \ttuple.\n"
+  },
+  "bpf_sk_redirect_hash": {
+    "Name": "bpf_sk_redirect_hash",
+    "Definition": "static long (* const bpf_sk_redirect_hash)(struct __sk_buff *skb, void *map, void *key, __u64 flags) = (void *) 72;",
+    "Description": " bpf_sk_redirect_hash\n\n \tThis helper is used in programs implementing policies at the\n \tskb socket level. If the sk_buff *skb* is allowed to pass (i.e.\n \tif the verdict eBPF program returns **SK_PASS**), redirect it\n \tto the socket referenced by *map* (of type\n \t**BPF_MAP_TYPE_SOCKHASH**) using hash *key*. Both ingress and\n \tegress interfaces can be used for redirection. The\n \t**BPF_F_INGRESS** value in *flags* is used to make the\n \tdistinction (ingress path is selected if the flag is present,\n \tegress otherwise). This is the only flag supported for now.\n\n Returns\n \t**SK_PASS** on success, or **SK_DROP** on error.\n"
+  },
+  "bpf_sk_redirect_map": {
+    "Name": "bpf_sk_redirect_map",
+    "Definition": "static long (* const bpf_sk_redirect_map)(struct __sk_buff *skb, void *map, __u32 key, __u64 flags) = (void *) 52;",
+    "Description": " bpf_sk_redirect_map\n\n \tRedirect the packet to the socket referenced by *map* (of type\n \t**BPF_MAP_TYPE_SOCKMAP**) at index *key*. Both ingress and\n \tegress interfaces can be used for redirection. The\n \t**BPF_F_INGRESS** value in *flags* is used to make the\n \tdistinction (ingress path is selected if the flag is present,\n \tegress path otherwise). This is the only flag supported for now.\n\n Returns\n \t**SK_PASS** on success, or **SK_DROP** on error.\n"
+  },
+  "bpf_sk_release": {
+    "Name": "bpf_sk_release",
+    "Definition": "static long (* const bpf_sk_release)(void *sock) = (void *) 86;",
+    "Description": " bpf_sk_release\n\n \tRelease the reference held by *sock*. *sock* must be a\n \tnon-**NULL** pointer that was returned from\n \t**bpf_sk_lookup_xxx**\\ ().\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_sk_select_reuseport": {
+    "Name": "bpf_sk_select_reuseport",
+    "Definition": "static long (* const bpf_sk_select_reuseport)(struct sk_reuseport_md *reuse, void *map, void *key, __u64 flags) = (void *) 82;",
+    "Description": " bpf_sk_select_reuseport\n\n \tSelect a **SO_REUSEPORT** socket from a\n \t**BPF_MAP_TYPE_REUSEPORT_SOCKARRAY** *map*.\n \tIt checks the selected socket is matching the incoming\n \trequest in the socket buffer.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_sk_storage_delete": {
+    "Name": "bpf_sk_storage_delete",
+    "Definition": "static long (* const bpf_sk_storage_delete)(void *map, void *sk) = (void *) 108;",
+    "Description": " bpf_sk_storage_delete\n\n \tDelete a bpf-local-storage from a *sk*.\n\n Returns\n \t0 on success.\n\n \t**-ENOENT** if the bpf-local-storage cannot be found.\n \t**-EINVAL** if sk is not a fullsock (e.g. a request_sock).\n"
+  },
+  "bpf_sk_storage_get": {
+    "Name": "bpf_sk_storage_get",
+    "Definition": "static void *(* const bpf_sk_storage_get)(void *map, void *sk, void *value, __u64 flags) = (void *) 107;",
+    "Description": " bpf_sk_storage_get\n\n \tGet a bpf-local-storage from a *sk*.\n\n \tLogically, it could be thought of getting the value from\n \ta *map* with *sk* as the **key**.  From this\n \tperspective,  the usage is not much different from\n \t**bpf_map_lookup_elem**\\ (*map*, **\u0026**\\ *sk*) except this\n \thelper enforces the key must be a full socket and the map must\n \tbe a **BPF_MAP_TYPE_SK_STORAGE** also.\n\n \tUnderneath, the value is stored locally at *sk* instead of\n \tthe *map*.  The *map* is used as the bpf-local-storage\n \t\"type\". The bpf-local-storage \"type\" (i.e. the *map*) is\n \tsearched against all bpf-local-storages residing at *sk*.\n\n \t*sk* is a kernel **struct sock** pointer for LSM program.\n \t*sk* is a **struct bpf_sock** pointer for other program types.\n\n \tAn optional *flags* (**BPF_SK_STORAGE_GET_F_CREATE**) can be\n \tused such that a new bpf-local-storage will be\n \tcreated if one does not exist.  *value* can be used\n \ttogether with **BPF_SK_STORAGE_GET_F_CREATE** to specify\n \tthe initial value of a bpf-local-storage.  If *value* is\n \t**NULL**, the new bpf-local-storage will be zero initialized.\n\n Returns\n \tA bpf-local-storage pointer is returned on success.\n\n \t**NULL** if not found or there was an error in adding\n \ta new bpf-local-storage.\n"
+  },
+  "bpf_skb_adjust_room": {
+    "Name": "bpf_skb_adjust_room",
+    "Definition": "static long (* const bpf_skb_adjust_room)(struct __sk_buff *skb, __s32 len_diff, __u32 mode, __u64 flags) = (void *) 50;",
+    "Description": " bpf_skb_adjust_room\n\n \tGrow or shrink the room for data in the packet associated to\n \t*skb* by *len_diff*, and according to the selected *mode*.\n\n \tBy default, the helper will reset any offloaded checksum\n \tindicator of the skb to CHECKSUM_NONE. This can be avoided\n \tby the following flag:\n\n \t* **BPF_F_ADJ_ROOM_NO_CSUM_RESET**: Do not reset offloaded\n \t  checksum data of the skb to CHECKSUM_NONE.\n\n \tThere are two supported modes at this time:\n\n \t* **BPF_ADJ_ROOM_MAC**: Adjust room at the mac layer\n \t  (room space is added or removed between the layer 2 and\n \t  layer 3 headers).\n\n \t* **BPF_ADJ_ROOM_NET**: Adjust room at the network layer\n \t  (room space is added or removed between the layer 3 and\n \t  layer 4 headers).\n\n \tThe following flags are supported at this time:\n\n \t* **BPF_F_ADJ_ROOM_FIXED_GSO**: Do not adjust gso_size.\n \t  Adjusting mss in this way is not allowed for datagrams.\n\n \t* **BPF_F_ADJ_ROOM_ENCAP_L3_IPV4**,\n \t  **BPF_F_ADJ_ROOM_ENCAP_L3_IPV6**:\n \t  Any new space is reserved to hold a tunnel header.\n \t  Configure skb offsets and other fields accordingly.\n\n \t* **BPF_F_ADJ_ROOM_ENCAP_L4_GRE**,\n \t  **BPF_F_ADJ_ROOM_ENCAP_L4_UDP**:\n \t  Use with ENCAP_L3 flags to further specify the tunnel type.\n\n \t* **BPF_F_ADJ_ROOM_ENCAP_L2**\\ (*len*):\n \t  Use with ENCAP_L3/L4 flags to further specify the tunnel\n \t  type; *len* is the length of the inner MAC header.\n\n \t* **BPF_F_ADJ_ROOM_ENCAP_L2_ETH**:\n \t  Use with BPF_F_ADJ_ROOM_ENCAP_L2 flag to further specify the\n \t  L2 type as Ethernet.\n\n \t* **BPF_F_ADJ_ROOM_DECAP_L3_IPV4**,\n \t  **BPF_F_ADJ_ROOM_DECAP_L3_IPV6**:\n \t  Indicate the new IP header version after decapsulating the outer\n \t  IP header. Used when the inner and outer IP versions are different.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_ancestor_cgroup_id": {
+    "Name": "bpf_skb_ancestor_cgroup_id",
+    "Definition": "static __u64 (* const bpf_skb_ancestor_cgroup_id)(struct __sk_buff *skb, int ancestor_level) = (void *) 83;",
+    "Description": " bpf_skb_ancestor_cgroup_id\n\n \tReturn id of cgroup v2 that is ancestor of cgroup associated\n \twith the *skb* at the *ancestor_level*.  The root cgroup is at\n \t*ancestor_level* zero and each step down the hierarchy\n \tincrements the level. If *ancestor_level* == level of cgroup\n \tassociated with *skb*, then return value will be same as that\n \tof **bpf_skb_cgroup_id**\\ ().\n\n \tThe helper is useful to implement policies based on cgroups\n \tthat are upper in hierarchy than immediate cgroup associated\n \twith *skb*.\n\n \tThe format of returned id and helper limitations are same as in\n \t**bpf_skb_cgroup_id**\\ ().\n\n Returns\n \tThe id is returned or 0 in case the id could not be retrieved.\n"
+  },
+  "bpf_skb_cgroup_classid": {
+    "Name": "bpf_skb_cgroup_classid",
+    "Definition": "static __u64 (* const bpf_skb_cgroup_classid)(struct __sk_buff *skb) = (void *) 151;",
+    "Description": " bpf_skb_cgroup_classid\n\n \tSee **bpf_get_cgroup_classid**\\ () for the main description.\n \tThis helper differs from **bpf_get_cgroup_classid**\\ () in that\n \tthe cgroup v1 net_cls class is retrieved only from the *skb*'s\n \tassociated socket instead of the current process.\n\n Returns\n \tThe id is returned or 0 in case the id could not be retrieved.\n"
+  },
+  "bpf_skb_cgroup_id": {
+    "Name": "bpf_skb_cgroup_id",
+    "Definition": "static __u64 (* const bpf_skb_cgroup_id)(struct __sk_buff *skb) = (void *) 79;",
+    "Description": " bpf_skb_cgroup_id\n\n \tReturn the cgroup v2 id of the socket associated with the *skb*.\n \tThis is roughly similar to the **bpf_get_cgroup_classid**\\ ()\n \thelper for cgroup v1 by providing a tag resp. identifier that\n \tcan be matched on or used for map lookups e.g. to implement\n \tpolicy. The cgroup v2 id of a given path in the hierarchy is\n \texposed in user space through the f_handle API in order to get\n \tto the same 64-bit id.\n\n \tThis helper can be used on TC egress path, but not on ingress,\n \tand is available only if the kernel was compiled with the\n \t**CONFIG_SOCK_CGROUP_DATA** configuration option.\n\n Returns\n \tThe id is returned or 0 in case the id could not be retrieved.\n"
+  },
+  "bpf_skb_change_head": {
+    "Name": "bpf_skb_change_head",
+    "Definition": "static long (* const bpf_skb_change_head)(struct __sk_buff *skb, __u32 len, __u64 flags) = (void *) 43;",
+    "Description": " bpf_skb_change_head\n\n \tGrows headroom of packet associated to *skb* and adjusts the\n \toffset of the MAC header accordingly, adding *len* bytes of\n \tspace. It automatically extends and reallocates memory as\n \trequired.\n\n \tThis helper can be used on a layer 3 *skb* to push a MAC header\n \tfor redirection into a layer 2 device.\n\n \tAll values for *flags* are reserved for future usage, and must\n \tbe left at zero.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_change_proto": {
+    "Name": "bpf_skb_change_proto",
+    "Definition": "static long (* const bpf_skb_change_proto)(struct __sk_buff *skb, __be16 proto, __u64 flags) = (void *) 31;",
+    "Description": " bpf_skb_change_proto\n\n \tChange the protocol of the *skb* to *proto*. Currently\n \tsupported are transition from IPv4 to IPv6, and from IPv6 to\n \tIPv4. The helper takes care of the groundwork for the\n \ttransition, including resizing the socket buffer. The eBPF\n \tprogram is expected to fill the new headers, if any, via\n \t**skb_store_bytes**\\ () and to recompute the checksums with\n \t**bpf_l3_csum_replace**\\ () and **bpf_l4_csum_replace**\\\n \t(). The main case for this helper is to perform NAT64\n \toperations out of an eBPF program.\n\n \tInternally, the GSO type is marked as dodgy so that headers are\n \tchecked and segments are recalculated by the GSO/GRO engine.\n \tThe size for GSO target is adapted as well.\n\n \tAll values for *flags* are reserved for future usage, and must\n \tbe left at zero.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_change_tail": {
+    "Name": "bpf_skb_change_tail",
+    "Definition": "static long (* const bpf_skb_change_tail)(struct __sk_buff *skb, __u32 len, __u64 flags) = (void *) 38;",
+    "Description": " bpf_skb_change_tail\n\n \tResize (trim or grow) the packet associated to *skb* to the\n \tnew *len*. The *flags* are reserved for future usage, and must\n \tbe left at zero.\n\n \tThe basic idea is that the helper performs the needed work to\n \tchange the size of the packet, then the eBPF program rewrites\n \tthe rest via helpers like **bpf_skb_store_bytes**\\ (),\n \t**bpf_l3_csum_replace**\\ (), **bpf_l3_csum_replace**\\ ()\n \tand others. This helper is a slow path utility intended for\n \treplies with control messages. And because it is targeted for\n \tslow path, the helper itself can afford to be slow: it\n \timplicitly linearizes, unclones and drops offloads from the\n \t*skb*.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_change_type": {
+    "Name": "bpf_skb_change_type",
+    "Definition": "static long (* const bpf_skb_change_type)(struct __sk_buff *skb, __u32 type) = (void *) 32;",
+    "Description": " bpf_skb_change_type\n\n \tChange the packet type for the packet associated to *skb*. This\n \tcomes down to setting *skb*\\ **-\u003epkt_type** to *type*, except\n \tthe eBPF program does not have a write access to *skb*\\\n \t**-\u003epkt_type** beside this helper. Using a helper here allows\n \tfor graceful handling of errors.\n\n \tThe major use case is to change incoming *skb*s to\n \t**PACKET_HOST** in a programmatic way instead of having to\n \trecirculate via **redirect**\\ (..., **BPF_F_INGRESS**), for\n \texample.\n\n \tNote that *type* only allows certain values. At this time, they\n \tare:\n\n \t**PACKET_HOST**\n \t\tPacket is for us.\n \t**PACKET_BROADCAST**\n \t\tSend packet to all.\n \t**PACKET_MULTICAST**\n \t\tSend packet to group.\n \t**PACKET_OTHERHOST**\n \t\tSend packet to someone else.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_ecn_set_ce": {
+    "Name": "bpf_skb_ecn_set_ce",
+    "Definition": "static long (* const bpf_skb_ecn_set_ce)(struct __sk_buff *skb) = (void *) 97;",
+    "Description": " bpf_skb_ecn_set_ce\n\n \tSet ECN (Explicit Congestion Notification) field of IP header\n \tto **CE** (Congestion Encountered) if current value is **ECT**\n \t(ECN Capable Transport). Otherwise, do nothing. Works with IPv6\n \tand IPv4.\n\n Returns\n \t1 if the **CE** flag is set (either by the current helper call\n \tor because it was already present), 0 if it is not set.\n"
+  },
+  "bpf_skb_get_tunnel_key": {
+    "Name": "bpf_skb_get_tunnel_key",
+    "Definition": "static long (* const bpf_skb_get_tunnel_key)(struct __sk_buff *skb, struct bpf_tunnel_key *key, __u32 size, __u64 flags) = (void *) 20;",
+    "Description": " bpf_skb_get_tunnel_key\n\n \tGet tunnel metadata. This helper takes a pointer *key* to an\n \tempty **struct bpf_tunnel_key** of **size**, that will be\n \tfilled with tunnel metadata for the packet associated to *skb*.\n \tThe *flags* can be set to **BPF_F_TUNINFO_IPV6**, which\n \tindicates that the tunnel is based on IPv6 protocol instead of\n \tIPv4.\n\n \tThe **struct bpf_tunnel_key** is an object that generalizes the\n \tprincipal parameters used by various tunneling protocols into a\n \tsingle struct. This way, it can be used to easily make a\n \tdecision based on the contents of the encapsulation header,\n \t\"summarized\" in this struct. In particular, it holds the IP\n \taddress of the remote end (IPv4 or IPv6, depending on the case)\n \tin *key*\\ **-\u003eremote_ipv4** or *key*\\ **-\u003eremote_ipv6**. Also,\n \tthis struct exposes the *key*\\ **-\u003etunnel_id**, which is\n \tgenerally mapped to a VNI (Virtual Network Identifier), making\n \tit programmable together with the **bpf_skb_set_tunnel_key**\\\n \t() helper.\n\n \tLet's imagine that the following code is part of a program\n \tattached to the TC ingress interface, on one end of a GRE\n \ttunnel, and is supposed to filter out all messages coming from\n \tremote ends with IPv4 address other than 10.0.0.1:\n\n \t::\n\n \t\tint ret;\n \t\tstruct bpf_tunnel_key key = {};\n\n \t\tret = bpf_skb_get_tunnel_key(skb, \u0026key, sizeof(key), 0);\n \t\tif (ret \u003c 0)\n \t\t\treturn TC_ACT_SHOT;\t// drop packet\n\n \t\tif (key.remote_ipv4 != 0x0a000001)\n \t\t\treturn TC_ACT_SHOT;\t// drop packet\n\n \t\treturn TC_ACT_OK;\t\t// accept packet\n\n \tThis interface can also be used with all encapsulation devices\n \tthat can operate in \"collect metadata\" mode: instead of having\n \tone network device per specific configuration, the \"collect\n \tmetadata\" mode only requires a single device where the\n \tconfiguration can be extracted from this helper.\n\n \tThis can be used together with various tunnels such as VXLan,\n \tGeneve, GRE or IP in IP (IPIP).\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_get_tunnel_opt": {
+    "Name": "bpf_skb_get_tunnel_opt",
+    "Definition": "static long (* const bpf_skb_get_tunnel_opt)(struct __sk_buff *skb, void *opt, __u32 size) = (void *) 29;",
+    "Description": " bpf_skb_get_tunnel_opt\n\n \tRetrieve tunnel options metadata for the packet associated to\n \t*skb*, and store the raw tunnel option data to the buffer *opt*\n \tof *size*.\n\n \tThis helper can be used with encapsulation devices that can\n \toperate in \"collect metadata\" mode (please refer to the related\n \tnote in the description of **bpf_skb_get_tunnel_key**\\ () for\n \tmore details). A particular example where this can be used is\n \tin combination with the Geneve encapsulation protocol, where it\n \tallows for pushing (with **bpf_skb_get_tunnel_opt**\\ () helper)\n \tand retrieving arbitrary TLVs (Type-Length-Value headers) from\n \tthe eBPF program. This allows for full customization of these\n \theaders.\n\n Returns\n \tThe size of the option data retrieved.\n"
+  },
+  "bpf_skb_get_xfrm_state": {
+    "Name": "bpf_skb_get_xfrm_state",
+    "Definition": "static long (* const bpf_skb_get_xfrm_state)(struct __sk_buff *skb, __u32 index, struct bpf_xfrm_state *xfrm_state, __u32 size, __u64 flags) = (void *) 66;",
+    "Description": " bpf_skb_get_xfrm_state\n\n \tRetrieve the XFRM state (IP transform framework, see also\n \t**ip-xfrm(8)**) at *index* in XFRM \"security path\" for *skb*.\n\n \tThe retrieved value is stored in the **struct bpf_xfrm_state**\n \tpointed by *xfrm_state* and of length *size*.\n\n \tAll values for *flags* are reserved for future usage, and must\n \tbe left at zero.\n\n \tThis helper is available only if the kernel was compiled with\n \t**CONFIG_XFRM** configuration option.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_load_bytes": {
+    "Name": "bpf_skb_load_bytes",
+    "Definition": "static long (* const bpf_skb_load_bytes)(const void *skb, __u32 offset, void *to, __u32 len) = (void *) 26;",
+    "Description": " bpf_skb_load_bytes\n\n \tThis helper was provided as an easy way to load data from a\n \tpacket. It can be used to load *len* bytes from *offset* from\n \tthe packet associated to *skb*, into the buffer pointed by\n \t*to*.\n\n \tSince Linux 4.7, usage of this helper has mostly been replaced\n \tby \"direct packet access\", enabling packet data to be\n \tmanipulated with *skb*\\ **-\u003edata** and *skb*\\ **-\u003edata_end**\n \tpointing respectively to the first byte of packet data and to\n \tthe byte after the last byte of packet data. However, it\n \tremains useful if one wishes to read large quantities of data\n \tat once from a packet into the eBPF stack.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_load_bytes_relative": {
+    "Name": "bpf_skb_load_bytes_relative",
+    "Definition": "static long (* const bpf_skb_load_bytes_relative)(const void *skb, __u32 offset, void *to, __u32 len, __u32 start_header) = (void *) 68;",
+    "Description": " bpf_skb_load_bytes_relative\n\n \tThis helper is similar to **bpf_skb_load_bytes**\\ () in that\n \tit provides an easy way to load *len* bytes from *offset*\n \tfrom the packet associated to *skb*, into the buffer pointed\n \tby *to*. The difference to **bpf_skb_load_bytes**\\ () is that\n \ta fifth argument *start_header* exists in order to select a\n \tbase offset to start from. *start_header* can be one of:\n\n \t**BPF_HDR_START_MAC**\n \t\tBase offset to load data from is *skb*'s mac header.\n \t**BPF_HDR_START_NET**\n \t\tBase offset to load data from is *skb*'s network header.\n\n \tIn general, \"direct packet access\" is the preferred method to\n \taccess packet data, however, this helper is in particular useful\n \tin socket filters where *skb*\\ **-\u003edata** does not always point\n \tto the start of the mac header and where \"direct packet access\"\n \tis not available.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_output": {
+    "Name": "bpf_skb_output",
+    "Definition": "static long (* const bpf_skb_output)(void *ctx, void *map, __u64 flags, void *data, __u64 size) = (void *) 111;",
+    "Description": " bpf_skb_output\n\n \tWrite raw *data* blob into a special BPF perf event held by\n \t*map* of type **BPF_MAP_TYPE_PERF_EVENT_ARRAY**. This perf\n \tevent must have the following attributes: **PERF_SAMPLE_RAW**\n \tas **sample_type**, **PERF_TYPE_SOFTWARE** as **type**, and\n \t**PERF_COUNT_SW_BPF_OUTPUT** as **config**.\n\n \tThe *flags* are used to indicate the index in *map* for which\n \tthe value must be put, masked with **BPF_F_INDEX_MASK**.\n \tAlternatively, *flags* can be set to **BPF_F_CURRENT_CPU**\n \tto indicate that the index of the current CPU core should be\n \tused.\n\n \tThe value to write, of *size*, is passed through eBPF stack and\n \tpointed by *data*.\n\n \t*ctx* is a pointer to in-kernel struct sk_buff.\n\n \tThis helper is similar to **bpf_perf_event_output**\\ () but\n \trestricted to raw_tracepoint bpf programs.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_pull_data": {
+    "Name": "bpf_skb_pull_data",
+    "Definition": "static long (* const bpf_skb_pull_data)(struct __sk_buff *skb, __u32 len) = (void *) 39;",
+    "Description": " bpf_skb_pull_data\n\n \tPull in non-linear data in case the *skb* is non-linear and not\n \tall of *len* are part of the linear section. Make *len* bytes\n \tfrom *skb* readable and writable. If a zero value is passed for\n \t*len*, then all bytes in the linear part of *skb* will be made\n \treadable and writable.\n\n \tThis helper is only needed for reading and writing with direct\n \tpacket access.\n\n \tFor direct packet access, testing that offsets to access\n \tare within packet boundaries (test on *skb*\\ **-\u003edata_end**) is\n \tsusceptible to fail if offsets are invalid, or if the requested\n \tdata is in non-linear parts of the *skb*. On failure the\n \tprogram can just bail out, or in the case of a non-linear\n \tbuffer, use a helper to make the data available. The\n \t**bpf_skb_load_bytes**\\ () helper is a first solution to access\n \tthe data. Another one consists in using **bpf_skb_pull_data**\n \tto pull in once the non-linear parts, then retesting and\n \teventually access the data.\n\n \tAt the same time, this also makes sure the *skb* is uncloned,\n \twhich is a necessary condition for direct write. As this needs\n \tto be an invariant for the write part only, the verifier\n \tdetects writes and adds a prologue that is calling\n \t**bpf_skb_pull_data()** to effectively unclone the *skb* from\n \tthe very beginning in case it is indeed cloned.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_set_tstamp": {
+    "Name": "bpf_skb_set_tstamp",
+    "Definition": "static long (* const bpf_skb_set_tstamp)(struct __sk_buff *skb, __u64 tstamp, __u32 tstamp_type) = (void *) 192;",
+    "Description": " bpf_skb_set_tstamp\n\n \tChange the __sk_buff-\u003etstamp_type to *tstamp_type*\n \tand set *tstamp* to the __sk_buff-\u003etstamp together.\n\n \tIf there is no need to change the __sk_buff-\u003etstamp_type,\n \tthe tstamp value can be directly written to __sk_buff-\u003etstamp\n \tinstead.\n\n \tBPF_SKB_TSTAMP_DELIVERY_MONO is the only tstamp that\n \twill be kept during bpf_redirect_*().  A non zero\n \t*tstamp* must be used with the BPF_SKB_TSTAMP_DELIVERY_MONO\n \t*tstamp_type*.\n\n \tA BPF_SKB_TSTAMP_UNSPEC *tstamp_type* can only be used\n \twith a zero *tstamp*.\n\n \tOnly IPv4 and IPv6 skb-\u003eprotocol are supported.\n\n \tThis function is most useful when it needs to set a\n \tmono delivery time to __sk_buff-\u003etstamp and then\n \tbpf_redirect_*() to the egress of an iface.  For example,\n \tchanging the (rcv) timestamp in __sk_buff-\u003etstamp at\n \tingress to a mono delivery time and then bpf_redirect_*()\n \tto sch_fq@phy-dev.\n\n Returns\n \t0 on success.\n \t**-EINVAL** for invalid input\n \t**-EOPNOTSUPP** for unsupported protocol\n"
+  },
+  "bpf_skb_set_tunnel_key": {
+    "Name": "bpf_skb_set_tunnel_key",
+    "Definition": "static long (* const bpf_skb_set_tunnel_key)(struct __sk_buff *skb, struct bpf_tunnel_key *key, __u32 size, __u64 flags) = (void *) 21;",
+    "Description": " bpf_skb_set_tunnel_key\n\n \tPopulate tunnel metadata for packet associated to *skb.* The\n \ttunnel metadata is set to the contents of *key*, of *size*. The\n \t*flags* can be set to a combination of the following values:\n\n \t**BPF_F_TUNINFO_IPV6**\n \t\tIndicate that the tunnel is based on IPv6 protocol\n \t\tinstead of IPv4.\n \t**BPF_F_ZERO_CSUM_TX**\n \t\tFor IPv4 packets, add a flag to tunnel metadata\n \t\tindicating that checksum computation should be skipped\n \t\tand checksum set to zeroes.\n \t**BPF_F_DONT_FRAGMENT**\n \t\tAdd a flag to tunnel metadata indicating that the\n \t\tpacket should not be fragmented.\n \t**BPF_F_SEQ_NUMBER**\n \t\tAdd a flag to tunnel metadata indicating that a\n \t\tsequence number should be added to tunnel header before\n \t\tsending the packet. This flag was added for GRE\n \t\tencapsulation, but might be used with other protocols\n \t\tas well in the future.\n \t**BPF_F_NO_TUNNEL_KEY**\n \t\tAdd a flag to tunnel metadata indicating that no tunnel\n \t\tkey should be set in the resulting tunnel header.\n\n \tHere is a typical usage on the transmit path:\n\n \t::\n\n \t\tstruct bpf_tunnel_key key;\n \t\t     populate key ...\n \t\tbpf_skb_set_tunnel_key(skb, \u0026key, sizeof(key), 0);\n \t\tbpf_clone_redirect(skb, vxlan_dev_ifindex, 0);\n\n \tSee also the description of the **bpf_skb_get_tunnel_key**\\ ()\n \thelper for additional information.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_set_tunnel_opt": {
+    "Name": "bpf_skb_set_tunnel_opt",
+    "Definition": "static long (* const bpf_skb_set_tunnel_opt)(struct __sk_buff *skb, void *opt, __u32 size) = (void *) 30;",
+    "Description": " bpf_skb_set_tunnel_opt\n\n \tSet tunnel options metadata for the packet associated to *skb*\n \tto the option data contained in the raw buffer *opt* of *size*.\n\n \tSee also the description of the **bpf_skb_get_tunnel_opt**\\ ()\n \thelper for additional information.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_store_bytes": {
+    "Name": "bpf_skb_store_bytes",
+    "Definition": "static long (* const bpf_skb_store_bytes)(struct __sk_buff *skb, __u32 offset, const void *from, __u32 len, __u64 flags) = (void *) 9;",
+    "Description": " bpf_skb_store_bytes\n\n \tStore *len* bytes from address *from* into the packet\n \tassociated to *skb*, at *offset*. *flags* are a combination of\n \t**BPF_F_RECOMPUTE_CSUM** (automatically recompute the\n \tchecksum for the packet after storing the bytes) and\n \t**BPF_F_INVALIDATE_HASH** (set *skb*\\ **-\u003ehash**, *skb*\\\n \t**-\u003eswhash** and *skb*\\ **-\u003el4hash** to 0).\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_under_cgroup": {
+    "Name": "bpf_skb_under_cgroup",
+    "Definition": "static long (* const bpf_skb_under_cgroup)(struct __sk_buff *skb, void *map, __u32 index) = (void *) 33;",
+    "Description": " bpf_skb_under_cgroup\n\n \tCheck whether *skb* is a descendant of the cgroup2 held by\n \t*map* of type **BPF_MAP_TYPE_CGROUP_ARRAY**, at *index*.\n\n Returns\n \tThe return value depends on the result of the test, and can be:\n\n \t* 0, if the *skb* failed the cgroup2 descendant test.\n \t* 1, if the *skb* succeeded the cgroup2 descendant test.\n \t* A negative error code, if an error occurred.\n"
+  },
+  "bpf_skb_vlan_pop": {
+    "Name": "bpf_skb_vlan_pop",
+    "Definition": "static long (* const bpf_skb_vlan_pop)(struct __sk_buff *skb) = (void *) 19;",
+    "Description": " bpf_skb_vlan_pop\n\n \tPop a VLAN header from the packet associated to *skb*.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skb_vlan_push": {
+    "Name": "bpf_skb_vlan_push",
+    "Definition": "static long (* const bpf_skb_vlan_push)(struct __sk_buff *skb, __be16 vlan_proto, __u16 vlan_tci) = (void *) 18;",
+    "Description": " bpf_skb_vlan_push\n\n \tPush a *vlan_tci* (VLAN tag control information) of protocol\n \t*vlan_proto* to the packet associated to *skb*, then update\n \tthe checksum. Note that if *vlan_proto* is different from\n \t**ETH_P_8021Q** and **ETH_P_8021AD**, it is considered to\n \tbe **ETH_P_8021Q**.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_skc_lookup_tcp": {
+    "Name": "bpf_skc_lookup_tcp",
+    "Definition": "static struct bpf_sock *(* const bpf_skc_lookup_tcp)(void *ctx, struct bpf_sock_tuple *tuple, __u32 tuple_size, __u64 netns, __u64 flags) = (void *) 99;",
+    "Description": " bpf_skc_lookup_tcp\n\n \tLook for TCP socket matching *tuple*, optionally in a child\n \tnetwork namespace *netns*. The return value must be checked,\n \tand if non-**NULL**, released via **bpf_sk_release**\\ ().\n\n \tThis function is identical to **bpf_sk_lookup_tcp**\\ (), except\n \tthat it also returns timewait or request sockets. Use\n \t**bpf_sk_fullsock**\\ () or **bpf_tcp_sock**\\ () to access the\n \tfull structure.\n\n \tThis helper is available only if the kernel was compiled with\n \t**CONFIG_NET** configuration option.\n\n Returns\n \tPointer to **struct bpf_sock**, or **NULL** in case of failure.\n \tFor sockets with reuseport option, the **struct bpf_sock**\n \tresult is from *reuse*\\ **-\u003esocks**\\ [] using the hash of the\n \ttuple.\n"
+  },
+  "bpf_skc_to_mptcp_sock": {
+    "Name": "bpf_skc_to_mptcp_sock",
+    "Definition": "static struct mptcp_sock *(* const bpf_skc_to_mptcp_sock)(void *sk) = (void *) 196;",
+    "Description": " bpf_skc_to_mptcp_sock\n\n \tDynamically cast a *sk* pointer to a *mptcp_sock* pointer.\n\n Returns\n \t*sk* if casting is valid, or **NULL** otherwise.\n"
+  },
+  "bpf_skc_to_tcp6_sock": {
+    "Name": "bpf_skc_to_tcp6_sock",
+    "Definition": "static struct tcp6_sock *(* const bpf_skc_to_tcp6_sock)(void *sk) = (void *) 136;",
+    "Description": " bpf_skc_to_tcp6_sock\n\n \tDynamically cast a *sk* pointer to a *tcp6_sock* pointer.\n\n Returns\n \t*sk* if casting is valid, or **NULL** otherwise.\n"
+  },
+  "bpf_skc_to_tcp_request_sock": {
+    "Name": "bpf_skc_to_tcp_request_sock",
+    "Definition": "static struct tcp_request_sock *(* const bpf_skc_to_tcp_request_sock)(void *sk) = (void *) 139;",
+    "Description": " bpf_skc_to_tcp_request_sock\n\n \tDynamically cast a *sk* pointer to a *tcp_request_sock* pointer.\n\n Returns\n \t*sk* if casting is valid, or **NULL** otherwise.\n"
+  },
+  "bpf_skc_to_tcp_sock": {
+    "Name": "bpf_skc_to_tcp_sock",
+    "Definition": "static struct tcp_sock *(* const bpf_skc_to_tcp_sock)(void *sk) = (void *) 137;",
+    "Description": " bpf_skc_to_tcp_sock\n\n \tDynamically cast a *sk* pointer to a *tcp_sock* pointer.\n\n Returns\n \t*sk* if casting is valid, or **NULL** otherwise.\n"
+  },
+  "bpf_skc_to_tcp_timewait_sock": {
+    "Name": "bpf_skc_to_tcp_timewait_sock",
+    "Definition": "static struct tcp_timewait_sock *(* const bpf_skc_to_tcp_timewait_sock)(void *sk) = (void *) 138;",
+    "Description": " bpf_skc_to_tcp_timewait_sock\n\n \tDynamically cast a *sk* pointer to a *tcp_timewait_sock* pointer.\n\n Returns\n \t*sk* if casting is valid, or **NULL** otherwise.\n"
+  },
+  "bpf_skc_to_udp6_sock": {
+    "Name": "bpf_skc_to_udp6_sock",
+    "Definition": "static struct udp6_sock *(* const bpf_skc_to_udp6_sock)(void *sk) = (void *) 140;",
+    "Description": " bpf_skc_to_udp6_sock\n\n \tDynamically cast a *sk* pointer to a *udp6_sock* pointer.\n\n Returns\n \t*sk* if casting is valid, or **NULL** otherwise.\n"
+  },
+  "bpf_skc_to_unix_sock": {
+    "Name": "bpf_skc_to_unix_sock",
+    "Definition": "static struct unix_sock *(* const bpf_skc_to_unix_sock)(void *sk) = (void *) 178;",
+    "Description": " bpf_skc_to_unix_sock\n\n \tDynamically cast a *sk* pointer to a *unix_sock* pointer.\n\n Returns\n \t*sk* if casting is valid, or **NULL** otherwise.\n"
+  },
+  "bpf_snprintf": {
+    "Name": "bpf_snprintf",
+    "Definition": "static long (* const bpf_snprintf)(char *str, __u32 str_size, const char *fmt, __u64 *data, __u32 data_len) = (void *) 165;",
+    "Description": " bpf_snprintf\n\n \tOutputs a string into the **str** buffer of size **str_size**\n \tbased on a format string stored in a read-only map pointed by\n \t**fmt**.\n\n \tEach format specifier in **fmt** corresponds to one u64 element\n \tin the **data** array. For strings and pointers where pointees\n \tare accessed, only the pointer values are stored in the *data*\n \tarray. The *data_len* is the size of *data* in bytes - must be\n \ta multiple of 8.\n\n \tFormats **%s** and **%p{i,I}{4,6}** require to read kernel\n \tmemory. Reading kernel memory may fail due to either invalid\n \taddress or valid address but requiring a major memory fault. If\n \treading kernel memory fails, the string for **%s** will be an\n \tempty string, and the ip address for **%p{i,I}{4,6}** will be 0.\n \tNot returning error to bpf program is consistent with what\n \t**bpf_trace_printk**\\ () does for now.\n\n\n Returns\n \tThe strictly positive length of the formatted string, including\n \tthe trailing zero character. If the return value is greater than\n \t**str_size**, **str** contains a truncated string, guaranteed to\n \tbe zero-terminated except when **str_size** is 0.\n\n \tOr **-EBUSY** if the per-CPU memory copy buffer is busy.\n"
+  },
+  "bpf_snprintf_btf": {
+    "Name": "bpf_snprintf_btf",
+    "Definition": "static long (* const bpf_snprintf_btf)(char *str, __u32 str_size, struct btf_ptr *ptr, __u32 btf_ptr_size, __u64 flags) = (void *) 149;",
+    "Description": " bpf_snprintf_btf\n\n \tUse BTF to store a string representation of *ptr*-\u003eptr in *str*,\n \tusing *ptr*-\u003etype_id.  This value should specify the type\n \tthat *ptr*-\u003eptr points to. LLVM __builtin_btf_type_id(type, 1)\n \tcan be used to look up vmlinux BTF type ids. Traversing the\n \tdata structure using BTF, the type information and values are\n \tstored in the first *str_size* - 1 bytes of *str*.  Safe copy of\n \tthe pointer data is carried out to avoid kernel crashes during\n \toperation.  Smaller types can use string space on the stack;\n \tlarger programs can use map data to store the string\n \trepresentation.\n\n \tThe string can be subsequently shared with userspace via\n \tbpf_perf_event_output() or ring buffer interfaces.\n \tbpf_trace_printk() is to be avoided as it places too small\n \ta limit on string size to be useful.\n\n \t*flags* is a combination of\n\n \t**BTF_F_COMPACT**\n \t\tno formatting around type information\n \t**BTF_F_NONAME**\n \t\tno struct/union member names/types\n \t**BTF_F_PTR_RAW**\n \t\tshow raw (unobfuscated) pointer values;\n \t\tequivalent to printk specifier %px.\n \t**BTF_F_ZERO**\n \t\tshow zero-valued struct/union members; they\n \t\tare not displayed by default\n\n\n Returns\n \tThe number of bytes that were written (or would have been\n \twritten if output had to be truncated due to string size),\n \tor a negative error in cases of failure.\n"
+  },
+  "bpf_sock_from_file": {
+    "Name": "bpf_sock_from_file",
+    "Definition": "static struct socket *(* const bpf_sock_from_file)(struct file *file) = (void *) 162;",
+    "Description": " bpf_sock_from_file\n\n \tIf the given file represents a socket, returns the associated\n \tsocket.\n\n Returns\n \tA pointer to a struct socket on success or NULL if the file is\n \tnot a socket.\n"
+  },
+  "bpf_sock_hash_update": {
+    "Name": "bpf_sock_hash_update",
+    "Definition": "static long (* const bpf_sock_hash_update)(struct bpf_sock_ops *skops, void *map, void *key, __u64 flags) = (void *) 70;",
+    "Description": " bpf_sock_hash_update\n\n \tAdd an entry to, or update a sockhash *map* referencing sockets.\n \tThe *skops* is used as a new value for the entry associated to\n \t*key*. *flags* is one of:\n\n \t**BPF_NOEXIST**\n \t\tThe entry for *key* must not exist in the map.\n \t**BPF_EXIST**\n \t\tThe entry for *key* must already exist in the map.\n \t**BPF_ANY**\n \t\tNo condition on the existence of the entry for *key*.\n\n \tIf the *map* has eBPF programs (parser and verdict), those will\n \tbe inherited by the socket being added. If the socket is\n \talready attached to eBPF programs, this results in an error.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_sock_map_update": {
+    "Name": "bpf_sock_map_update",
+    "Definition": "static long (* const bpf_sock_map_update)(struct bpf_sock_ops *skops, void *map, void *key, __u64 flags) = (void *) 53;",
+    "Description": " bpf_sock_map_update\n\n \tAdd an entry to, or update a *map* referencing sockets. The\n \t*skops* is used as a new value for the entry associated to\n \t*key*. *flags* is one of:\n\n \t**BPF_NOEXIST**\n \t\tThe entry for *key* must not exist in the map.\n \t**BPF_EXIST**\n \t\tThe entry for *key* must already exist in the map.\n \t**BPF_ANY**\n \t\tNo condition on the existence of the entry for *key*.\n\n \tIf the *map* has eBPF programs (parser and verdict), those will\n \tbe inherited by the socket being added. If the socket is\n \talready attached to eBPF programs, this results in an error.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_sock_ops_cb_flags_set": {
+    "Name": "bpf_sock_ops_cb_flags_set",
+    "Definition": "static long (* const bpf_sock_ops_cb_flags_set)(struct bpf_sock_ops *bpf_sock, int argval) = (void *) 59;",
+    "Description": " bpf_sock_ops_cb_flags_set\n\n \tAttempt to set the value of the **bpf_sock_ops_cb_flags** field\n \tfor the full TCP socket associated to *bpf_sock_ops* to\n \t*argval*.\n\n \tThe primary use of this field is to determine if there should\n \tbe calls to eBPF programs of type\n \t**BPF_PROG_TYPE_SOCK_OPS** at various points in the TCP\n \tcode. A program of the same type can change its value, per\n \tconnection and as necessary, when the connection is\n \testablished. This field is directly accessible for reading, but\n \tthis helper must be used for updates in order to return an\n \terror if an eBPF program tries to set a callback that is not\n \tsupported in the current kernel.\n\n \t*argval* is a flag array which can combine these flags:\n\n \t* **BPF_SOCK_OPS_RTO_CB_FLAG** (retransmission time out)\n \t* **BPF_SOCK_OPS_RETRANS_CB_FLAG** (retransmission)\n \t* **BPF_SOCK_OPS_STATE_CB_FLAG** (TCP state change)\n \t* **BPF_SOCK_OPS_RTT_CB_FLAG** (every RTT)\n\n \tTherefore, this function can be used to clear a callback flag by\n \tsetting the appropriate bit to zero. e.g. to disable the RTO\n \tcallback:\n\n \t**bpf_sock_ops_cb_flags_set(bpf_sock,**\n \t\t**bpf_sock-\u003ebpf_sock_ops_cb_flags \u0026 ~BPF_SOCK_OPS_RTO_CB_FLAG)**\n\n \tHere are some examples of where one could call such eBPF\n \tprogram:\n\n \t* When RTO fires.\n \t* When a packet is retransmitted.\n \t* When the connection terminates.\n \t* When a packet is sent.\n \t* When a packet is received.\n\n Returns\n \tCode **-EINVAL** if the socket is not a full TCP socket;\n \totherwise, a positive number containing the bits that could not\n \tbe set is returned (which comes down to 0 if all bits were set\n \tas required).\n"
+  },
+  "bpf_spin_lock": {
+    "Name": "bpf_spin_lock",
+    "Definition": "static long (* const bpf_spin_lock)(struct bpf_spin_lock *lock) = (void *) 93;",
+    "Description": " bpf_spin_lock\n\n \tAcquire a spinlock represented by the pointer *lock*, which is\n \tstored as part of a value of a map. Taking the lock allows to\n \tsafely update the rest of the fields in that value. The\n \tspinlock can (and must) later be released with a call to\n \t**bpf_spin_unlock**\\ (\\ *lock*\\ ).\n\n \tSpinlocks in BPF programs come with a number of restrictions\n \tand constraints:\n\n \t* **bpf_spin_lock** objects are only allowed inside maps of\n \t  types **BPF_MAP_TYPE_HASH** and **BPF_MAP_TYPE_ARRAY** (this\n \t  list could be extended in the future).\n \t* BTF description of the map is mandatory.\n \t* The BPF program can take ONE lock at a time, since taking two\n \t  or more could cause dead locks.\n \t* Only one **struct bpf_spin_lock** is allowed per map element.\n \t* When the lock is taken, calls (either BPF to BPF or helpers)\n \t  are not allowed.\n \t* The **BPF_LD_ABS** and **BPF_LD_IND** instructions are not\n \t  allowed inside a spinlock-ed region.\n \t* The BPF program MUST call **bpf_spin_unlock**\\ () to release\n \t  the lock, on all execution paths, before it returns.\n \t* The BPF program can access **struct bpf_spin_lock** only via\n \t  the **bpf_spin_lock**\\ () and **bpf_spin_unlock**\\ ()\n \t  helpers. Loading or storing data into the **struct\n \t  bpf_spin_lock** *lock*\\ **;** field of a map is not allowed.\n \t* To use the **bpf_spin_lock**\\ () helper, the BTF description\n \t  of the map value must be a struct and have **struct\n \t  bpf_spin_lock** *anyname*\\ **;** field at the top level.\n \t  Nested lock inside another struct is not allowed.\n \t* The **struct bpf_spin_lock** *lock* field in a map value must\n \t  be aligned on a multiple of 4 bytes in that value.\n \t* Syscall with command **BPF_MAP_LOOKUP_ELEM** does not copy\n \t  the **bpf_spin_lock** field to user space.\n \t* Syscall with command **BPF_MAP_UPDATE_ELEM**, or update from\n \t  a BPF program, do not update the **bpf_spin_lock** field.\n \t* **bpf_spin_lock** cannot be on the stack or inside a\n \t  networking packet (it can only be inside of a map values).\n \t* **bpf_spin_lock** is available to root only.\n \t* Tracing programs and socket filter programs cannot use\n \t  **bpf_spin_lock**\\ () due to insufficient preemption checks\n \t  (but this may change in the future).\n \t* **bpf_spin_lock** is not allowed in inner maps of map-in-map.\n\n Returns\n \t0\n"
+  },
+  "bpf_spin_unlock": {
+    "Name": "bpf_spin_unlock",
+    "Definition": "static long (* const bpf_spin_unlock)(struct bpf_spin_lock *lock) = (void *) 94;",
+    "Description": " bpf_spin_unlock\n\n \tRelease the *lock* previously locked by a call to\n \t**bpf_spin_lock**\\ (\\ *lock*\\ ).\n\n Returns\n \t0\n"
+  },
+  "bpf_store_hdr_opt": {
+    "Name": "bpf_store_hdr_opt",
+    "Definition": "static long (* const bpf_store_hdr_opt)(struct bpf_sock_ops *skops, const void *from, __u32 len, __u64 flags) = (void *) 143;",
+    "Description": " bpf_store_hdr_opt\n\n \tStore header option.  The data will be copied\n \tfrom buffer *from* with length *len* to the TCP header.\n\n \tThe buffer *from* should have the whole option that\n \tincludes the kind, kind-length, and the actual\n \toption data.  The *len* must be at least kind-length\n \tlong.  The kind-length does not have to be 4 byte\n \taligned.  The kernel will take care of the padding\n \tand setting the 4 bytes aligned value to th-\u003edoff.\n\n \tThis helper will check for duplicated option\n \tby searching the same option in the outgoing skb.\n\n \tThis helper can only be called during\n \t**BPF_SOCK_OPS_WRITE_HDR_OPT_CB**.\n\n\n Returns\n \t0 on success, or negative error in case of failure:\n\n \t**-EINVAL** If param is invalid.\n\n \t**-ENOSPC** if there is not enough space in the header.\n \tNothing has been written\n\n \t**-EEXIST** if the option already exists.\n\n \t**-EFAULT** on failure to parse the existing header options.\n\n \t**-EPERM** if the helper cannot be used under the current\n \t*skops*\\ **-\u003eop**.\n"
+  },
+  "bpf_strncmp": {
+    "Name": "bpf_strncmp",
+    "Definition": "static long (* const bpf_strncmp)(const char *s1, __u32 s1_sz, const char *s2) = (void *) 182;",
+    "Description": " bpf_strncmp\n\n \tDo strncmp() between **s1** and **s2**. **s1** doesn't need\n \tto be null-terminated and **s1_sz** is the maximum storage\n \tsize of **s1**. **s2** must be a read-only string.\n\n Returns\n \tAn integer less than, equal to, or greater than zero\n \tif the first **s1_sz** bytes of **s1** is found to be\n \tless than, to match, or be greater than **s2**.\n"
+  },
+  "bpf_strtol": {
+    "Name": "bpf_strtol",
+    "Definition": "static long (* const bpf_strtol)(const char *buf, unsigned long buf_len, __u64 flags, long *res) = (void *) 105;",
+    "Description": " bpf_strtol\n\n \tConvert the initial part of the string from buffer *buf* of\n \tsize *buf_len* to a long integer according to the given base\n \tand save the result in *res*.\n\n \tThe string may begin with an arbitrary amount of white space\n \t(as determined by **isspace**\\ (3)) followed by a single\n \toptional '**-**' sign.\n\n \tFive least significant bits of *flags* encode base, other bits\n \tare currently unused.\n\n \tBase must be either 8, 10, 16 or 0 to detect it automatically\n \tsimilar to user space **strtol**\\ (3).\n\n Returns\n \tNumber of characters consumed on success. Must be positive but\n \tno more than *buf_len*.\n\n \t**-EINVAL** if no valid digits were found or unsupported base\n \twas provided.\n\n \t**-ERANGE** if resulting value was out of range.\n"
+  },
+  "bpf_strtoul": {
+    "Name": "bpf_strtoul",
+    "Definition": "static long (* const bpf_strtoul)(const char *buf, unsigned long buf_len, __u64 flags, unsigned long *res) = (void *) 106;",
+    "Description": " bpf_strtoul\n\n \tConvert the initial part of the string from buffer *buf* of\n \tsize *buf_len* to an unsigned long integer according to the\n \tgiven base and save the result in *res*.\n\n \tThe string may begin with an arbitrary amount of white space\n \t(as determined by **isspace**\\ (3)).\n\n \tFive least significant bits of *flags* encode base, other bits\n \tare currently unused.\n\n \tBase must be either 8, 10, 16 or 0 to detect it automatically\n \tsimilar to user space **strtoul**\\ (3).\n\n Returns\n \tNumber of characters consumed on success. Must be positive but\n \tno more than *buf_len*.\n\n \t**-EINVAL** if no valid digits were found or unsupported base\n \twas provided.\n\n \t**-ERANGE** if resulting value was out of range.\n"
+  },
+  "bpf_sys_bpf": {
+    "Name": "bpf_sys_bpf",
+    "Definition": "static long (* const bpf_sys_bpf)(__u32 cmd, void *attr, __u32 attr_size) = (void *) 166;",
+    "Description": " bpf_sys_bpf\n\n \tExecute bpf syscall with given arguments.\n\n Returns\n \tA syscall result.\n"
+  },
+  "bpf_sys_close": {
+    "Name": "bpf_sys_close",
+    "Definition": "static long (* const bpf_sys_close)(__u32 fd) = (void *) 168;",
+    "Description": " bpf_sys_close\n\n \tExecute close syscall for given FD.\n\n Returns\n \tA syscall result.\n"
+  },
+  "bpf_sysctl_get_current_value": {
+    "Name": "bpf_sysctl_get_current_value",
+    "Definition": "static long (* const bpf_sysctl_get_current_value)(struct bpf_sysctl *ctx, char *buf, unsigned long buf_len) = (void *) 102;",
+    "Description": " bpf_sysctl_get_current_value\n\n \tGet current value of sysctl as it is presented in /proc/sys\n \t(incl. newline, etc), and copy it as a string into provided\n \tby program buffer *buf* of size *buf_len*.\n\n \tThe whole value is copied, no matter what file position user\n \tspace issued e.g. sys_read at.\n\n \tThe buffer is always NUL terminated, unless it's zero-sized.\n\n Returns\n \tNumber of character copied (not including the trailing NUL).\n\n \t**-E2BIG** if the buffer wasn't big enough (*buf* will contain\n \ttruncated name in this case).\n\n \t**-EINVAL** if current value was unavailable, e.g. because\n \tsysctl is uninitialized and read returns -EIO for it.\n"
+  },
+  "bpf_sysctl_get_name": {
+    "Name": "bpf_sysctl_get_name",
+    "Definition": "static long (* const bpf_sysctl_get_name)(struct bpf_sysctl *ctx, char *buf, unsigned long buf_len, __u64 flags) = (void *) 101;",
+    "Description": " bpf_sysctl_get_name\n\n \tGet name of sysctl in /proc/sys/ and copy it into provided by\n \tprogram buffer *buf* of size *buf_len*.\n\n \tThe buffer is always NUL terminated, unless it's zero-sized.\n\n \tIf *flags* is zero, full name (e.g. \"net/ipv4/tcp_mem\") is\n \tcopied. Use **BPF_F_SYSCTL_BASE_NAME** flag to copy base name\n \tonly (e.g. \"tcp_mem\").\n\n Returns\n \tNumber of character copied (not including the trailing NUL).\n\n \t**-E2BIG** if the buffer wasn't big enough (*buf* will contain\n \ttruncated name in this case).\n"
+  },
+  "bpf_sysctl_get_new_value": {
+    "Name": "bpf_sysctl_get_new_value",
+    "Definition": "static long (* const bpf_sysctl_get_new_value)(struct bpf_sysctl *ctx, char *buf, unsigned long buf_len) = (void *) 103;",
+    "Description": " bpf_sysctl_get_new_value\n\n \tGet new value being written by user space to sysctl (before\n \tthe actual write happens) and copy it as a string into\n \tprovided by program buffer *buf* of size *buf_len*.\n\n \tUser space may write new value at file position \u003e 0.\n\n \tThe buffer is always NUL terminated, unless it's zero-sized.\n\n Returns\n \tNumber of character copied (not including the trailing NUL).\n\n \t**-E2BIG** if the buffer wasn't big enough (*buf* will contain\n \ttruncated name in this case).\n\n \t**-EINVAL** if sysctl is being read.\n"
+  },
+  "bpf_sysctl_set_new_value": {
+    "Name": "bpf_sysctl_set_new_value",
+    "Definition": "static long (* const bpf_sysctl_set_new_value)(struct bpf_sysctl *ctx, const char *buf, unsigned long buf_len) = (void *) 104;",
+    "Description": " bpf_sysctl_set_new_value\n\n \tOverride new value being written by user space to sysctl with\n \tvalue provided by program in buffer *buf* of size *buf_len*.\n\n \t*buf* should contain a string in same form as provided by user\n \tspace on sysctl write.\n\n \tUser space may write new value at file position \u003e 0. To override\n \tthe whole sysctl value file position should be set to zero.\n\n Returns\n \t0 on success.\n\n \t**-E2BIG** if the *buf_len* is too big.\n\n \t**-EINVAL** if sysctl is being read.\n"
+  },
+  "bpf_tail_call": {
+    "Name": "bpf_tail_call",
+    "Definition": "static long (* const bpf_tail_call)(void *ctx, void *prog_array_map, __u32 index) = (void *) 12;",
+    "Description": " bpf_tail_call\n\n \tThis special helper is used to trigger a \"tail call\", or in\n \tother words, to jump into another eBPF program. The same stack\n \tframe is used (but values on stack and in registers for the\n \tcaller are not accessible to the callee). This mechanism allows\n \tfor program chaining, either for raising the maximum number of\n \tavailable eBPF instructions, or to execute given programs in\n \tconditional blocks. For security reasons, there is an upper\n \tlimit to the number of successive tail calls that can be\n \tperformed.\n\n \tUpon call of this helper, the program attempts to jump into a\n \tprogram referenced at index *index* in *prog_array_map*, a\n \tspecial map of type **BPF_MAP_TYPE_PROG_ARRAY**, and passes\n \t*ctx*, a pointer to the context.\n\n \tIf the call succeeds, the kernel immediately runs the first\n \tinstruction of the new program. This is not a function call,\n \tand it never returns to the previous program. If the call\n \tfails, then the helper has no effect, and the caller continues\n \tto run its subsequent instructions. A call can fail if the\n \tdestination program for the jump does not exist (i.e. *index*\n \tis superior to the number of entries in *prog_array_map*), or\n \tif the maximum number of tail calls has been reached for this\n \tchain of programs. This limit is defined in the kernel by the\n \tmacro **MAX_TAIL_CALL_CNT** (not accessible to user space),\n \twhich is currently set to 33.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_task_pt_regs": {
+    "Name": "bpf_task_pt_regs",
+    "Definition": "static long (* const bpf_task_pt_regs)(struct task_struct *task) = (void *) 175;",
+    "Description": " bpf_task_pt_regs\n\n \tGet the struct pt_regs associated with **task**.\n\n Returns\n \tA pointer to struct pt_regs.\n"
+  },
+  "bpf_task_storage_delete": {
+    "Name": "bpf_task_storage_delete",
+    "Definition": "static long (* const bpf_task_storage_delete)(void *map, struct task_struct *task) = (void *) 157;",
+    "Description": " bpf_task_storage_delete\n\n \tDelete a bpf_local_storage from a *task*.\n\n Returns\n \t0 on success.\n\n \t**-ENOENT** if the bpf_local_storage cannot be found.\n"
+  },
+  "bpf_task_storage_get": {
+    "Name": "bpf_task_storage_get",
+    "Definition": "static void *(* const bpf_task_storage_get)(void *map, struct task_struct *task, void *value, __u64 flags) = (void *) 156;",
+    "Description": " bpf_task_storage_get\n\n \tGet a bpf_local_storage from the *task*.\n\n \tLogically, it could be thought of as getting the value from\n \ta *map* with *task* as the **key**.  From this\n \tperspective,  the usage is not much different from\n \t**bpf_map_lookup_elem**\\ (*map*, **\u0026**\\ *task*) except this\n \thelper enforces the key must be a task_struct and the map must also\n \tbe a **BPF_MAP_TYPE_TASK_STORAGE**.\n\n \tUnderneath, the value is stored locally at *task* instead of\n \tthe *map*.  The *map* is used as the bpf-local-storage\n \t\"type\". The bpf-local-storage \"type\" (i.e. the *map*) is\n \tsearched against all bpf_local_storage residing at *task*.\n\n \tAn optional *flags* (**BPF_LOCAL_STORAGE_GET_F_CREATE**) can be\n \tused such that a new bpf_local_storage will be\n \tcreated if one does not exist.  *value* can be used\n \ttogether with **BPF_LOCAL_STORAGE_GET_F_CREATE** to specify\n \tthe initial value of a bpf_local_storage.  If *value* is\n \t**NULL**, the new bpf_local_storage will be zero initialized.\n\n Returns\n \tA bpf_local_storage pointer is returned on success.\n\n \t**NULL** if not found or there was an error in adding\n \ta new bpf_local_storage.\n"
+  },
+  "bpf_tcp_check_syncookie": {
+    "Name": "bpf_tcp_check_syncookie",
+    "Definition": "static long (* const bpf_tcp_check_syncookie)(void *sk, void *iph, __u32 iph_len, struct tcphdr *th, __u32 th_len) = (void *) 100;",
+    "Description": " bpf_tcp_check_syncookie\n\n \tCheck whether *iph* and *th* contain a valid SYN cookie ACK for\n \tthe listening socket in *sk*.\n\n \t*iph* points to the start of the IPv4 or IPv6 header, while\n \t*iph_len* contains **sizeof**\\ (**struct iphdr**) or\n \t**sizeof**\\ (**struct ipv6hdr**).\n\n \t*th* points to the start of the TCP header, while *th_len*\n \tcontains the length of the TCP header (at least\n \t**sizeof**\\ (**struct tcphdr**)).\n\n Returns\n \t0 if *iph* and *th* are a valid SYN cookie ACK, or a negative\n \terror otherwise.\n"
+  },
+  "bpf_tcp_gen_syncookie": {
+    "Name": "bpf_tcp_gen_syncookie",
+    "Definition": "static __s64 (* const bpf_tcp_gen_syncookie)(void *sk, void *iph, __u32 iph_len, struct tcphdr *th, __u32 th_len) = (void *) 110;",
+    "Description": " bpf_tcp_gen_syncookie\n\n \tTry to issue a SYN cookie for the packet with corresponding\n \tIP/TCP headers, *iph* and *th*, on the listening socket in *sk*.\n\n \t*iph* points to the start of the IPv4 or IPv6 header, while\n \t*iph_len* contains **sizeof**\\ (**struct iphdr**) or\n \t**sizeof**\\ (**struct ipv6hdr**).\n\n \t*th* points to the start of the TCP header, while *th_len*\n \tcontains the length of the TCP header with options (at least\n \t**sizeof**\\ (**struct tcphdr**)).\n\n Returns\n \tOn success, lower 32 bits hold the generated SYN cookie in\n \tfollowed by 16 bits which hold the MSS value for that cookie,\n \tand the top 16 bits are unused.\n\n \tOn failure, the returned value is one of the following:\n\n \t**-EINVAL** SYN cookie cannot be issued due to error\n\n \t**-ENOENT** SYN cookie should not be issued (no SYN flood)\n\n \t**-EOPNOTSUPP** kernel configuration does not enable SYN cookies\n\n \t**-EPROTONOSUPPORT** IP packet version is not 4 or 6\n"
+  },
+  "bpf_tcp_raw_check_syncookie_ipv4": {
+    "Name": "bpf_tcp_raw_check_syncookie_ipv4",
+    "Definition": "static long (* const bpf_tcp_raw_check_syncookie_ipv4)(struct iphdr *iph, struct tcphdr *th) = (void *) 206;",
+    "Description": " bpf_tcp_raw_check_syncookie_ipv4\n\n \tCheck whether *iph* and *th* contain a valid SYN cookie ACK\n \twithout depending on a listening socket.\n\n \t*iph* points to the IPv4 header.\n\n \t*th* points to the TCP header.\n\n Returns\n \t0 if *iph* and *th* are a valid SYN cookie ACK.\n\n \tOn failure, the returned value is one of the following:\n\n \t**-EACCES** if the SYN cookie is not valid.\n"
+  },
+  "bpf_tcp_raw_check_syncookie_ipv6": {
+    "Name": "bpf_tcp_raw_check_syncookie_ipv6",
+    "Definition": "static long (* const bpf_tcp_raw_check_syncookie_ipv6)(struct ipv6hdr *iph, struct tcphdr *th) = (void *) 207;",
+    "Description": " bpf_tcp_raw_check_syncookie_ipv6\n\n \tCheck whether *iph* and *th* contain a valid SYN cookie ACK\n \twithout depending on a listening socket.\n\n \t*iph* points to the IPv6 header.\n\n \t*th* points to the TCP header.\n\n Returns\n \t0 if *iph* and *th* are a valid SYN cookie ACK.\n\n \tOn failure, the returned value is one of the following:\n\n \t**-EACCES** if the SYN cookie is not valid.\n\n \t**-EPROTONOSUPPORT** if CONFIG_IPV6 is not builtin.\n"
+  },
+  "bpf_tcp_raw_gen_syncookie_ipv4": {
+    "Name": "bpf_tcp_raw_gen_syncookie_ipv4",
+    "Definition": "static __s64 (* const bpf_tcp_raw_gen_syncookie_ipv4)(struct iphdr *iph, struct tcphdr *th, __u32 th_len) = (void *) 204;",
+    "Description": " bpf_tcp_raw_gen_syncookie_ipv4\n\n \tTry to issue a SYN cookie for the packet with corresponding\n \tIPv4/TCP headers, *iph* and *th*, without depending on a\n \tlistening socket.\n\n \t*iph* points to the IPv4 header.\n\n \t*th* points to the start of the TCP header, while *th_len*\n \tcontains the length of the TCP header (at least\n \t**sizeof**\\ (**struct tcphdr**)).\n\n Returns\n \tOn success, lower 32 bits hold the generated SYN cookie in\n \tfollowed by 16 bits which hold the MSS value for that cookie,\n \tand the top 16 bits are unused.\n\n \tOn failure, the returned value is one of the following:\n\n \t**-EINVAL** if *th_len* is invalid.\n"
+  },
+  "bpf_tcp_raw_gen_syncookie_ipv6": {
+    "Name": "bpf_tcp_raw_gen_syncookie_ipv6",
+    "Definition": "static __s64 (* const bpf_tcp_raw_gen_syncookie_ipv6)(struct ipv6hdr *iph, struct tcphdr *th, __u32 th_len) = (void *) 205;",
+    "Description": " bpf_tcp_raw_gen_syncookie_ipv6\n\n \tTry to issue a SYN cookie for the packet with corresponding\n \tIPv6/TCP headers, *iph* and *th*, without depending on a\n \tlistening socket.\n\n \t*iph* points to the IPv6 header.\n\n \t*th* points to the start of the TCP header, while *th_len*\n \tcontains the length of the TCP header (at least\n \t**sizeof**\\ (**struct tcphdr**)).\n\n Returns\n \tOn success, lower 32 bits hold the generated SYN cookie in\n \tfollowed by 16 bits which hold the MSS value for that cookie,\n \tand the top 16 bits are unused.\n\n \tOn failure, the returned value is one of the following:\n\n \t**-EINVAL** if *th_len* is invalid.\n\n \t**-EPROTONOSUPPORT** if CONFIG_IPV6 is not builtin.\n"
+  },
+  "bpf_tcp_send_ack": {
+    "Name": "bpf_tcp_send_ack",
+    "Definition": "static long (* const bpf_tcp_send_ack)(void *tp, __u32 rcv_nxt) = (void *) 116;",
+    "Description": " bpf_tcp_send_ack\n\n \tSend out a tcp-ack. *tp* is the in-kernel struct **tcp_sock**.\n \t*rcv_nxt* is the ack_seq to be sent out.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_tcp_sock": {
+    "Name": "bpf_tcp_sock",
+    "Definition": "static struct bpf_tcp_sock *(* const bpf_tcp_sock)(struct bpf_sock *sk) = (void *) 96;",
+    "Description": " bpf_tcp_sock\n\n \tThis helper gets a **struct bpf_tcp_sock** pointer from a\n \t**struct bpf_sock** pointer.\n\n Returns\n \tA **struct bpf_tcp_sock** pointer on success, or **NULL** in\n \tcase of failure.\n"
+  },
+  "bpf_this_cpu_ptr": {
+    "Name": "bpf_this_cpu_ptr",
+    "Definition": "static void *(* const bpf_this_cpu_ptr)(const void *percpu_ptr) = (void *) 154;",
+    "Description": " bpf_this_cpu_ptr\n\n \tTake a pointer to a percpu ksym, *percpu_ptr*, and return a\n \tpointer to the percpu kernel variable on this cpu. See the\n \tdescription of 'ksym' in **bpf_per_cpu_ptr**\\ ().\n\n \tbpf_this_cpu_ptr() has the same semantic as this_cpu_ptr() in\n \tthe kernel. Different from **bpf_per_cpu_ptr**\\ (), it would\n \tnever return NULL.\n\n Returns\n \tA pointer pointing to the kernel percpu variable on this cpu.\n"
+  },
+  "bpf_timer_cancel": {
+    "Name": "bpf_timer_cancel",
+    "Definition": "static long (* const bpf_timer_cancel)(struct bpf_timer *timer) = (void *) 172;",
+    "Description": " bpf_timer_cancel\n\n \tCancel the timer and wait for callback_fn to finish if it was running.\n\n Returns\n \t0 if the timer was not active.\n \t1 if the timer was active.\n \t**-EINVAL** if *timer* was not initialized with bpf_timer_init() earlier.\n \t**-EDEADLK** if callback_fn tried to call bpf_timer_cancel() on its\n \town timer which would have led to a deadlock otherwise.\n"
+  },
+  "bpf_timer_init": {
+    "Name": "bpf_timer_init",
+    "Definition": "static long (* const bpf_timer_init)(struct bpf_timer *timer, void *map, __u64 flags) = (void *) 169;",
+    "Description": " bpf_timer_init\n\n \tInitialize the timer.\n \tFirst 4 bits of *flags* specify clockid.\n \tOnly CLOCK_MONOTONIC, CLOCK_REALTIME, CLOCK_BOOTTIME are allowed.\n \tAll other bits of *flags* are reserved.\n \tThe verifier will reject the program if *timer* is not from\n \tthe same *map*.\n\n Returns\n \t0 on success.\n \t**-EBUSY** if *timer* is already initialized.\n \t**-EINVAL** if invalid *flags* are passed.\n \t**-EPERM** if *timer* is in a map that doesn't have any user references.\n \tThe user space should either hold a file descriptor to a map with timers\n \tor pin such map in bpffs. When map is unpinned or file descriptor is\n \tclosed all timers in the map will be cancelled and freed.\n"
+  },
+  "bpf_timer_set_callback": {
+    "Name": "bpf_timer_set_callback",
+    "Definition": "static long (* const bpf_timer_set_callback)(struct bpf_timer *timer, void *callback_fn) = (void *) 170;",
+    "Description": " bpf_timer_set_callback\n\n \tConfigure the timer to call *callback_fn* static function.\n\n Returns\n \t0 on success.\n \t**-EINVAL** if *timer* was not initialized with bpf_timer_init() earlier.\n \t**-EPERM** if *timer* is in a map that doesn't have any user references.\n \tThe user space should either hold a file descriptor to a map with timers\n \tor pin such map in bpffs. When map is unpinned or file descriptor is\n \tclosed all timers in the map will be cancelled and freed.\n"
+  },
+  "bpf_timer_start": {
+    "Name": "bpf_timer_start",
+    "Definition": "static long (* const bpf_timer_start)(struct bpf_timer *timer, __u64 nsecs, __u64 flags) = (void *) 171;",
+    "Description": " bpf_timer_start\n\n \tSet timer expiration N nanoseconds from the current time. The\n \tconfigured callback will be invoked in soft irq context on some cpu\n \tand will not repeat unless another bpf_timer_start() is made.\n \tIn such case the next invocation can migrate to a different cpu.\n \tSince struct bpf_timer is a field inside map element the map\n \towns the timer. The bpf_timer_set_callback() will increment refcnt\n \tof BPF program to make sure that callback_fn code stays valid.\n \tWhen user space reference to a map reaches zero all timers\n \tin a map are cancelled and corresponding program's refcnts are\n \tdecremented. This is done to make sure that Ctrl-C of a user\n \tprocess doesn't leave any timers running. If map is pinned in\n \tbpffs the callback_fn can re-arm itself indefinitely.\n \tbpf_map_update/delete_elem() helpers and user space sys_bpf commands\n \tcancel and free the timer in the given map element.\n \tThe map can contain timers that invoke callback_fn-s from different\n \tprograms. The same callback_fn can serve different timers from\n \tdifferent maps if key/value layout matches across maps.\n \tEvery bpf_timer_set_callback() can have different callback_fn.\n\n \t*flags* can be one of:\n\n \t**BPF_F_TIMER_ABS**\n \t\tStart the timer in absolute expire value instead of the\n \t\tdefault relative one.\n \t**BPF_F_TIMER_CPU_PIN**\n \t\tTimer will be pinned to the CPU of the caller.\n\n\n Returns\n \t0 on success.\n \t**-EINVAL** if *timer* was not initialized with bpf_timer_init() earlier\n \tor invalid *flags* are passed.\n"
+  },
+  "bpf_trace_printk": {
+    "Name": "bpf_trace_printk",
+    "Definition": "static long (* const bpf_trace_printk)(const char *fmt, __u32 fmt_size, ...) = (void *) 6;",
+    "Description": " bpf_trace_printk\n\n \tThis helper is a \"printk()-like\" facility for debugging. It\n \tprints a message defined by format *fmt* (of size *fmt_size*)\n \tto file *\\/sys/kernel/tracing/trace* from TraceFS, if\n \tavailable. It can take up to three additional **u64**\n \targuments (as an eBPF helpers, the total number of arguments is\n \tlimited to five).\n\n \tEach time the helper is called, it appends a line to the trace.\n \tLines are discarded while *\\/sys/kernel/tracing/trace* is\n \topen, use *\\/sys/kernel/tracing/trace_pipe* to avoid this.\n \tThe format of the trace is customizable, and the exact output\n \tone will get depends on the options set in\n \t*\\/sys/kernel/tracing/trace_options* (see also the\n \t*README* file under the same directory). However, it usually\n \tdefaults to something like:\n\n \t::\n\n \t\ttelnet-470   [001] .N.. 419421.045894: 0x00000001: \u003cformatted msg\u003e\n\n \tIn the above:\n\n \t\t* ``telnet`` is the name of the current task.\n \t\t* ``470`` is the PID of the current task.\n \t\t* ``001`` is the CPU number on which the task is\n \t\t  running.\n \t\t* In ``.N..``, each character refers to a set of\n \t\t  options (whether irqs are enabled, scheduling\n \t\t  options, whether hard/softirqs are running, level of\n \t\t  preempt_disabled respectively). **N** means that\n \t\t  **TIF_NEED_RESCHED** and **PREEMPT_NEED_RESCHED**\n \t\t  are set.\n \t\t* ``419421.045894`` is a timestamp.\n \t\t* ``0x00000001`` is a fake value used by BPF for the\n \t\t  instruction pointer register.\n \t\t* ``\u003cformatted msg\u003e`` is the message formatted with\n \t\t  *fmt*.\n\n \tThe conversion specifiers supported by *fmt* are similar, but\n \tmore limited than for printk(). They are **%d**, **%i**,\n \t**%u**, **%x**, **%ld**, **%li**, **%lu**, **%lx**, **%lld**,\n \t**%lli**, **%llu**, **%llx**, **%p**, **%s**. No modifier (size\n \tof field, padding with zeroes, etc.) is available, and the\n \thelper will return **-EINVAL** (but print nothing) if it\n \tencounters an unknown specifier.\n\n \tAlso, note that **bpf_trace_printk**\\ () is slow, and should\n \tonly be used for debugging purposes. For this reason, a notice\n \tblock (spanning several lines) is printed to kernel logs and\n \tstates that the helper should not be used \"for production use\"\n \tthe first time this helper is used (or more precisely, when\n \t**trace_printk**\\ () buffers are allocated). For passing values\n \tto user space, perf events should be preferred.\n\n Returns\n \tThe number of bytes written to the buffer, or a negative error\n \tin case of failure.\n"
+  },
+  "bpf_trace_vprintk": {
+    "Name": "bpf_trace_vprintk",
+    "Definition": "static long (* const bpf_trace_vprintk)(const char *fmt, __u32 fmt_size, const void *data, __u32 data_len) = (void *) 177;",
+    "Description": " bpf_trace_vprintk\n\n \tBehaves like **bpf_trace_printk**\\ () helper, but takes an array of u64\n \tto format and can handle more format args as a result.\n\n \tArguments are to be used as in **bpf_seq_printf**\\ () helper.\n\n Returns\n \tThe number of bytes written to the buffer, or a negative error\n \tin case of failure.\n"
+  },
+  "bpf_user_ringbuf_drain": {
+    "Name": "bpf_user_ringbuf_drain",
+    "Definition": "static long (* const bpf_user_ringbuf_drain)(void *map, void *callback_fn, void *ctx, __u64 flags) = (void *) 209;",
+    "Description": " bpf_user_ringbuf_drain\n\n \tDrain samples from the specified user ring buffer, and invoke\n \tthe provided callback for each such sample:\n\n \tlong (\\*callback_fn)(const struct bpf_dynptr \\*dynptr, void \\*ctx);\n\n \tIf **callback_fn** returns 0, the helper will continue to try\n \tand drain the next sample, up to a maximum of\n \tBPF_MAX_USER_RINGBUF_SAMPLES samples. If the return value is 1,\n \tthe helper will skip the rest of the samples and return. Other\n \treturn values are not used now, and will be rejected by the\n \tverifier.\n\n Returns\n \tThe number of drained samples if no error was encountered while\n \tdraining samples, or 0 if no samples were present in the ring\n \tbuffer. If a user-space producer was epoll-waiting on this map,\n \tand at least one sample was drained, they will receive an event\n \tnotification notifying them of available space in the ring\n \tbuffer. If the BPF_RB_NO_WAKEUP flag is passed to this\n \tfunction, no wakeup notification will be sent. If the\n \tBPF_RB_FORCE_WAKEUP flag is passed, a wakeup notification will\n \tbe sent even if no sample was drained.\n\n \tOn failure, the returned value is one of the following:\n\n \t**-EBUSY** if the ring buffer is contended, and another calling\n \tcontext was concurrently draining the ring buffer.\n\n \t**-EINVAL** if user-space is not properly tracking the ring\n \tbuffer due to the producer position not being aligned to 8\n \tbytes, a sample not being aligned to 8 bytes, or the producer\n \tposition not matching the advertised length of a sample.\n\n \t**-E2BIG** if user-space has tried to publish a sample which is\n \tlarger than the size of the ring buffer, or which cannot fit\n \twithin a struct bpf_dynptr.\n"
+  },
+  "bpf_xdp_adjust_head": {
+    "Name": "bpf_xdp_adjust_head",
+    "Definition": "static long (* const bpf_xdp_adjust_head)(struct xdp_md *xdp_md, int delta) = (void *) 44;",
+    "Description": " bpf_xdp_adjust_head\n\n \tAdjust (move) *xdp_md*\\ **-\u003edata** by *delta* bytes. Note that\n \tit is possible to use a negative value for *delta*. This helper\n \tcan be used to prepare the packet for pushing or popping\n \theaders.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_xdp_adjust_meta": {
+    "Name": "bpf_xdp_adjust_meta",
+    "Definition": "static long (* const bpf_xdp_adjust_meta)(struct xdp_md *xdp_md, int delta) = (void *) 54;",
+    "Description": " bpf_xdp_adjust_meta\n\n \tAdjust the address pointed by *xdp_md*\\ **-\u003edata_meta** by\n \t*delta* (which can be positive or negative). Note that this\n \toperation modifies the address stored in *xdp_md*\\ **-\u003edata**,\n \tso the latter must be loaded only after the helper has been\n \tcalled.\n\n \tThe use of *xdp_md*\\ **-\u003edata_meta** is optional and programs\n \tare not required to use it. The rationale is that when the\n \tpacket is processed with XDP (e.g. as DoS filter), it is\n \tpossible to push further meta data along with it before passing\n \tto the stack, and to give the guarantee that an ingress eBPF\n \tprogram attached as a TC classifier on the same device can pick\n \tthis up for further post-processing. Since TC works with socket\n \tbuffers, it remains possible to set from XDP the **mark** or\n \t**priority** pointers, or other pointers for the socket buffer.\n \tHaving this scratch space generic and programmable allows for\n \tmore flexibility as the user is free to store whatever meta\n \tdata they need.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_xdp_adjust_tail": {
+    "Name": "bpf_xdp_adjust_tail",
+    "Definition": "static long (* const bpf_xdp_adjust_tail)(struct xdp_md *xdp_md, int delta) = (void *) 65;",
+    "Description": " bpf_xdp_adjust_tail\n\n \tAdjust (move) *xdp_md*\\ **-\u003edata_end** by *delta* bytes. It is\n \tpossible to both shrink and grow the packet tail.\n \tShrink done via *delta* being a negative integer.\n\n \tA call to this helper is susceptible to change the underlying\n \tpacket buffer. Therefore, at load time, all checks on pointers\n \tpreviously done by the verifier are invalidated and must be\n \tperformed again, if the helper is used in combination with\n \tdirect packet access.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_xdp_get_buff_len": {
+    "Name": "bpf_xdp_get_buff_len",
+    "Definition": "static __u64 (* const bpf_xdp_get_buff_len)(struct xdp_md *xdp_md) = (void *) 188;",
+    "Description": " bpf_xdp_get_buff_len\n\n \tGet the total size of a given xdp buff (linear and paged area)\n\n Returns\n \tThe total size of a given xdp buffer.\n"
+  },
+  "bpf_xdp_load_bytes": {
+    "Name": "bpf_xdp_load_bytes",
+    "Definition": "static long (* const bpf_xdp_load_bytes)(struct xdp_md *xdp_md, __u32 offset, void *buf, __u32 len) = (void *) 189;",
+    "Description": " bpf_xdp_load_bytes\n\n \tThis helper is provided as an easy way to load data from a\n \txdp buffer. It can be used to load *len* bytes from *offset* from\n \tthe frame associated to *xdp_md*, into the buffer pointed by\n \t*buf*.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_xdp_output": {
+    "Name": "bpf_xdp_output",
+    "Definition": "static long (* const bpf_xdp_output)(void *ctx, void *map, __u64 flags, void *data, __u64 size) = (void *) 121;",
+    "Description": " bpf_xdp_output\n\n \tWrite raw *data* blob into a special BPF perf event held by\n \t*map* of type **BPF_MAP_TYPE_PERF_EVENT_ARRAY**. This perf\n \tevent must have the following attributes: **PERF_SAMPLE_RAW**\n \tas **sample_type**, **PERF_TYPE_SOFTWARE** as **type**, and\n \t**PERF_COUNT_SW_BPF_OUTPUT** as **config**.\n\n \tThe *flags* are used to indicate the index in *map* for which\n \tthe value must be put, masked with **BPF_F_INDEX_MASK**.\n \tAlternatively, *flags* can be set to **BPF_F_CURRENT_CPU**\n \tto indicate that the index of the current CPU core should be\n \tused.\n\n \tThe value to write, of *size*, is passed through eBPF stack and\n \tpointed by *data*.\n\n \t*ctx* is a pointer to in-kernel struct xdp_buff.\n\n \tThis helper is similar to **bpf_perf_eventoutput**\\ () but\n \trestricted to raw_tracepoint bpf programs.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  },
+  "bpf_xdp_store_bytes": {
+    "Name": "bpf_xdp_store_bytes",
+    "Definition": "static long (* const bpf_xdp_store_bytes)(struct xdp_md *xdp_md, __u32 offset, void *buf, __u32 len) = (void *) 190;",
+    "Description": " bpf_xdp_store_bytes\n\n \tStore *len* bytes from buffer *buf* into the frame\n \tassociated to *xdp_md*, at *offset*.\n\n Returns\n \t0 on success, or a negative error in case of failure.\n"
+  }
+}

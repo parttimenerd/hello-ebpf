@@ -13,19 +13,20 @@ import me.bechberger.ebpf.bpf.processor.DefinedTypes.BPFName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.JavaName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.SpecFieldName;
 import me.bechberger.ebpf.type.*;
-import me.bechberger.ebpf.type.BPFType.BPFEnumMember;
+import me.bechberger.ebpf.type.BPFType.*;
 import me.bechberger.ebpf.type.BPFType.BPFStructType.SourceClassKind;
-import me.bechberger.ebpf.type.BPFType.BPFTypedef;
-import me.bechberger.ebpf.type.BPFType.BPFUnionMember;
-import me.bechberger.ebpf.type.BPFType.CustomBPFType;
 import me.bechberger.ebpf.type.Enum;
 import me.bechberger.ebpf.type.Typedef;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.AnnotatedConstruct;
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -194,6 +195,10 @@ class TypeProcessor {
 
     boolean shouldGenerateCCode(TypeElement innerElement) {
         return !getAnnotationMirror(innerElement, TYPE_ANNOTATION).map(a -> getAnnotationValue(a, "noCCodeGeneration", false)).orElse(false);
+    }
+
+    boolean isTypedefedType(TypeElement innerElement) {
+        return getAnnotationMirror(innerElement, TYPE_ANNOTATION).map(a -> getAnnotationValue(a, "typedefed", false)).orElse(false);
     }
 
     /**
@@ -391,7 +396,7 @@ class TypeProcessor {
     }
 
     private Optional<? extends TypeBackedBPFTypeLike<?>> processBPFTypeRecord(TypeElement typeElement) {
-        String className = typeElement.getQualifiedName().toString();
+        String className = typeElement.getQualifiedName().toString().replace("$", ".");
         var name = getTypeRecordBpfName(typeElement);
 
         var t = isValidDataType(typeElement);
@@ -405,20 +410,28 @@ class TypeProcessor {
     }
 
     private Optional<TypeBackedBPFEnumType<?>> processBPFTypeEnum(TypeElement typeElement, String className, BPFName name) {
+        var elementTypeParameter = typeElement.getInterfaces().stream()
+                .filter(t -> t.toString().startsWith(TypedEnum.class.getCanonicalName())).findFirst().map(
+                        t -> ((DeclaredType) t).getTypeArguments().get(1)
+                ).flatMap(t -> processBPFTypeRecordMemberType(typeElement, getAnnotationValuesForRecordMember(t), t));
+
         var enumMembers = typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.ENUM_CONSTANT).map(e -> (VariableElement) e).toList();
         var members = new ArrayList<BPFEnumMember>();
-        int currentValue = 0;
+        long currentValue = 0;
         Map<String, Element> cNames = new HashMap<>();
         for (var member : enumMembers) {
-            int value = getAnnotationMirror(member, "me.bechberger.ebpf.annotations.bpf.EnumMember")
-                    .map(a -> getAnnotationValue(a, "value", -1)).orElse(currentValue);
-            if (value == -1) {
+            long value = getAnnotationMirror(member, "me.bechberger.ebpf.annotations.bpf.EnumMember")
+                    .map(a -> getAnnotationValue(a, "value", -1L)).orElse(currentValue);
+            if (value == -1L) {
                 this.processingEnv.getMessager().printError("Enum member " + member.getSimpleName() + " must have a value", member);
                 return Optional.empty();
             }
             var memberName = member.getSimpleName().toString();
             var memberCNameValue = getAnnotationMirror(member, "me.bechberger.ebpf.annotations.bpf.EnumMember")
-                    .map(a -> getAnnotationValue(a, "name", "")).orElse(toConstantCase(name.name() + "_" + memberName));
+                    .map(a -> getAnnotationValue(a, "name", "")).orElse("");
+            if (memberCNameValue.isEmpty()) {
+                memberCNameValue = toConstantCase(name.name() + "_" + memberName);
+            }
             if (cNames.containsKey(memberCNameValue)) {
                 this.processingEnv.getMessager().printError("Enum member " + member.getSimpleName() + " has a duplicate name, " + typeElement.getSimpleName() + "::" + cNames.get(memberCNameValue) + " has the same C name", member);
                 return Optional.empty();
@@ -428,7 +441,10 @@ class TypeProcessor {
             currentValue = value + 1;
         }
         BPFType.AnnotatedClass annotatedClass = new BPFType.AnnotatedClass(className, List.of());
-        return Optional.of(new TypeBackedBPFEnumType<>(new BPFType.BPFEnumType<>(name.name(), members, annotatedClass, null)));
+        if (elementTypeParameter.isEmpty()) {
+            return Optional.of(new TypeBackedBPFEnumType<>(new BPFType.BPFEnumType<>(name.name(), members, annotatedClass, null)));
+        }
+        return Optional.of(new TypeBackedBPFEnumType<>(new BPFType.BPFEnumType<>(name.name(), elementTypeParameter.orElseThrow().toBPFType(this::getBPFTypeForJavaName).toCustomType(), members, annotatedClass, null)));
     }
 
     @SuppressWarnings({"unchecked"})
@@ -473,7 +489,7 @@ class TypeProcessor {
 
         return Optional.of(new TypeBackedBPFStructType<>(BPFType.BPFStructType.autoLayout(name.name(),
                 (List<BPFType.UBPFStructMember<Object, ?>>) (List) result.members.get(),
-                annotatedClass, null, result.kind)));
+                annotatedClass, null, result.kind, isTypedefedType(typeElement))));
     }
 
     private StructProcResult processBPFTypeRecordStruct(TypeElement typeElement, String className, BPFName name) {
@@ -486,7 +502,7 @@ class TypeProcessor {
         }
         var constructor = (ExecutableElement) constructors.getFirst();
         return new StructProcResult(
-                processBPFTypeRecordMembers(constructor.getParameters()), SourceClassKind.RECORD);
+                processBPFTypeRecordMembers(constructor.getParameters(), className, true, SourceClassKind.RECORD), SourceClassKind.RECORD);
     }
 
     private StructProcResult processBPFTypeClassStruct(TypeElement typeElement, String className, BPFName name) {
@@ -514,8 +530,9 @@ class TypeProcessor {
             return new StructProcResult(Optional.empty(), null);
         }
 
+        var kind = hasConstructorWithFieldsInOrder ? SourceClassKind.CLASS_WITH_CONSTRUCTOR : SourceClassKind.CLASS;
         return new StructProcResult(
-                processBPFTypeRecordMembers(fields), hasConstructorWithFieldsInOrder ? SourceClassKind.CLASS_WITH_CONSTRUCTOR : SourceClassKind.CLASS);
+                processBPFTypeRecordMembers(fields, className, true, kind), kind);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -529,7 +546,7 @@ class TypeProcessor {
         }
         var constructor = (ExecutableElement) constructors.getFirst();
         Optional<List<BPFType.UBPFStructMember<?, ?>>> membersOpt =
-                processBPFTypeRecordMembers(typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e).toList());
+                processBPFTypeRecordMembers(typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e).toList(), className, false, SourceClassKind.CLASS);
         if (membersOpt.isEmpty()) {
             return Optional.empty();
         }
@@ -539,7 +556,8 @@ class TypeProcessor {
         BPFType.AnnotatedClass annotatedClass = new BPFType.AnnotatedClass(className, List.of());
 
         return Optional.of(new TypeBackedBPFUnionType<>(new BPFType.BPFUnionType<>(name.name(),
-                (List<BPFUnionMember<Union,?>>) (List) members.stream().map(m -> new BPFUnionMember<>(m.name(), m.type(), null)).toList(), annotatedClass, null)));
+                (List<BPFUnionMember<Union,?>>) (List) members.stream().map(m -> new BPFUnionMember<>(m.name(), m.type(), null)).toList(), annotatedClass, null,
+                 isTypedefedType(typeElement))));
     }
 
     private boolean hasInitializer(VariableElement element) {
@@ -559,20 +577,86 @@ class TypeProcessor {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private Optional<List<BPFType.UBPFStructMember<?, ?>>> processBPFTypeRecordMembers(List<? extends VariableElement> recordMembers) {
+    private Optional<List<BPFType.UBPFStructMember<?, ?>>> processBPFTypeRecordMembers(List<? extends VariableElement> recordMembers, String className, boolean allowInlineUnionAnnotation, SourceClassKind kind) {
         var list = recordMembers.stream().map(this::processBPFTypeRecordMember).toList();
+
         if (list.stream().anyMatch(Optional::isEmpty) || !checkThatNoMemberHasAnInitializer(recordMembers)) {
             return Optional.empty();
         }
-        return Optional.of((List<BPFType.UBPFStructMember<?, ?>>)(List)list.stream().map(Optional::orElseThrow).toList());
+
+        var cleanedList = list.stream().map(Optional::orElseThrow).toList();
+        // problem: cleanedList potentially contains struct members annotated with @InlineUnion
+        if (cleanedList.stream().noneMatch(m -> m.inlineUnionId().isPresent())) {
+            return Optional.of((List<BPFType.UBPFStructMember<?, ?>>)(List) cleanedList.stream().map(UBPFStructMemberPotentiallyInlineUnion::member).toList());
+        }
+
+        if (!allowInlineUnionAnnotation) {
+            this.processingEnv.getMessager().printError("InlineUnion annotation is only allowed for records", IntStream.range(0, recordMembers.size()).mapToObj(i -> cleanedList.get(i).inlineUnionId.isPresent() ? recordMembers.get(i) : null).filter(Objects::nonNull).findFirst().orElseThrow());
+            return Optional.empty();
+        }
+
+        List<UBPFStructMember<?, ?>> result = new ArrayList<>();
+        Set<Integer> previousInlineUnionIds = new HashSet<>();
+        @Nullable Integer curId = null;
+        Optional<Integer> curOffset = Optional.empty();
+        List<UBPFStructMember<?, ?>> memberForCurrentInlineUnion = new ArrayList<>();
+        BiConsumer<Integer, Optional<Integer>> addCurrentInlineUnion = (id, offset) -> {
+            List<BPFInlineUnionMember<Object, Object>> inlineMembers = (List<BPFInlineUnionMember<Object, Object>>) (List)memberForCurrentInlineUnion.stream().map(m -> new BPFInlineUnionMember<>(m.name(), m.type(), null)).toList();
+            var type = new BPFType.BPFInlineUnionType<>("__union" + id, (List<BPFInlineUnionMember<Object,?>>) (List) inlineMembers, new AnnotatedClass(className, List.of()), kind);
+            result.add(new UBPFStructMember<Object, Object>("__union" + id, (BPFType) type, null, null, offset));
+            memberForCurrentInlineUnion.clear();
+        };
+        int count = 0;
+        for (var member : cleanedList) {
+            if (member.inlineUnionId().isEmpty()) { // everything as normal
+                result.add(member.member());
+                if (curId != null) {
+                    previousInlineUnionIds.add(curId);
+                    addCurrentInlineUnion.accept(curId, curOffset);
+                    curId = null;
+                    curOffset = null;
+                }
+                continue;
+            }
+            var inlineUnionId = member.inlineUnionId().get();
+            var realMember = member.member();
+            if (previousInlineUnionIds.contains(inlineUnionId)) {
+                this.processingEnv.getMessager().printError("Members with the same InlineUnion annotation id have to follow each other", recordMembers.get(count));
+                return Optional.empty();
+            }
+            if (curId != null && !curId.equals(member.inlineUnionId().get())) {
+                previousInlineUnionIds.add(curId);
+                addCurrentInlineUnion.accept(curId, curOffset);
+                curId = null;
+            }
+            if (curId == null) {
+                curOffset = member.member().offset();
+            } else {
+                if (!curOffset.equals(member.member().offset())) {
+                    this.processingEnv.getMessager().printError("Members with the same InlineUnion annotation id have to have the same offset", recordMembers.get(count));
+                    return Optional.empty();
+                }
+            }
+            curId = member.inlineUnionId().get();
+            memberForCurrentInlineUnion.add(realMember);
+            count++;
+        }
+        if (curId != null) {
+            addCurrentInlineUnion.accept(curId, curOffset);
+        }
+        return Optional.of(result);
     }
 
-    private Optional<BPFType.UBPFStructMember<?, ?>> processBPFTypeRecordMember(VariableElement element) {
+    record UBPFStructMemberPotentiallyInlineUnion(UBPFStructMember<?, ?> member, Optional<Integer> inlineUnionId) {}
+
+    private Optional<UBPFStructMemberPotentiallyInlineUnion> processBPFTypeRecordMember(VariableElement element) {
         AnnotationValues annotations = getAnnotationValuesForRecordMember(element);
+        Optional<Integer> inlineUnionId = Optional.ofNullable(getAnnotationMirror(element.asType(), "me.bechberger.ebpf.annotations.bpf.InlineUnion")
+                .map(a -> AnnotationUtils.<Integer>getAnnotationValue(a, "value", null)).orElse(null));
         TypeMirror type = element.asType();
-        var bpfType = processBPFTypeRecordMemberType(element, annotations, type);
-        return bpfType.map(t -> new BPFType.UBPFStructMember<>(element.getSimpleName().toString(),
-                t.toBPFType(this::getBPFTypeForJavaName).toCustomType(), null, null));
+        var bpfType = processBPFTypeRecordMemberType(element, annotations.dropOffset(), type);
+        return bpfType.map(t -> new UBPFStructMemberPotentiallyInlineUnion(new BPFType.UBPFStructMember<>(element.getSimpleName().toString(),
+                t.toBPFType(this::getBPFTypeForJavaName).toCustomType(), null, null, annotations.offset()), inlineUnionId));
     }
 
     private static final Set<String> integerTypes = Set.of("int", "long", "short", "byte", "char");
@@ -764,7 +848,7 @@ class TypeProcessor {
         var bpfName = new BPFName(getAnnotationValue(optAnn.get(), "name", typeElement.getSimpleName().toString()));
         var fieldNameString = getAnnotationValue(optAnn.get(), "specFieldName", "").replace("$class", javaName.name());
         if (typeElement.getEnclosingElement() instanceof TypeElement outerClass) {
-            fieldNameString = fieldNameString.replace("$outerClass", outerClass.getQualifiedName().toString());
+            fieldNameString = fieldNameString.replace("$outerClass", outerClass.getQualifiedName().toString().replace('$', '.'));
         }
         var fieldName = new SpecFieldName(fieldNameString);
         if (!fieldNameString.contains(".")) {

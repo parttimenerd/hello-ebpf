@@ -1,11 +1,14 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.CustomType;
 import me.bechberger.ebpf.annotations.bpf.EnumMember;
+import me.bechberger.ebpf.annotations.bpf.InlineUnion;
 import me.bechberger.ebpf.annotations.bpf.Type;
+import me.bechberger.ebpf.bpf.raw.__pthread_list_t;
 import me.bechberger.ebpf.type.Enum;
 import me.bechberger.ebpf.type.Enum.EnumSupport;
 import me.bechberger.ebpf.type.*;
@@ -167,7 +170,75 @@ public class TypeProcessingTest {
         }
 
         @Type
+        enum KindLong implements Enum<KindLong>, TypedEnum<KindLong, Long> {
+            @EnumMember(value = 100000000000L)
+            A
+        }
+
+        @Type
+        enum KindShort implements Enum<KindShort>, TypedEnum<KindShort, Short> {
+            @EnumMember(value = 23)
+            A
+        }
+
+        @Type
         record RecordWithEnumArray(@Size(2) Kind[] values) {
+        }
+
+        @Type
+        record RecordWithCustomOffset(@Offset(4) int a) {
+        }
+
+        @Type
+        static class ClassWithCustomOffset {
+            @Offset(12) @Size(3) int[] b;
+        }
+
+        @Type(typedefed = true)
+        record RecordWithTypedefedType(@Size(10) int[] values) {
+        }
+
+        /**
+         * Record with an inline union member
+         * <p>
+         * {@code :
+         * struct StructWithInlineUnion {
+         *   int a;
+         *   union {
+         *     int x;
+         *     int y;
+         *   };
+         * }
+         * }
+         */
+        @Type
+        static class StructWithInlineUnion extends Struct {
+            int a;
+            @InlineUnion(1)
+            int x;
+            @InlineUnion(1)
+            long y;
+        }
+
+        @Type
+        static class StructWithMultipleInlineUnions extends Struct {
+            @InlineUnion(1) int unionA;
+            @InlineUnion(1) long unionB;
+            @InlineUnion(2) int unionC;
+        }
+
+        @Type
+        record RecordStructWithInlineUnion(int a, @InlineUnion(2) int unionA, @InlineUnion(2) long unionB) {
+        }
+
+        @Type
+        static class StructWithMultipleInlineUnionsAndOffsets extends Struct {
+            @InlineUnion(1) int unionA;
+            @InlineUnion(1) long unionB;
+            @Offset(16)
+            @InlineUnion(2) int unionC;
+            @Offset(16)
+            @InlineUnion(2) long unionD;
         }
     }
 
@@ -556,6 +627,54 @@ public class TypeProcessingTest {
     }
 
     @Test
+    public void testKindLongEnum() {
+        Assertions.assertAll(
+                () -> assertEquals(100000000000L, KindLong.A.value(), "A has value 100000000000"),
+                () -> assertEquals("A(100000000000)", KindLong.A.toStr())
+        );
+        for (var kind : KindLong.values()) {
+            assertEquals(kind, EnumSupport.fromValue(KindLong.class, kind.value()));
+        }
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class, KindLong.class);
+        assertEquals(8, type.size());
+        assertEquals("""
+                enum KindLong {
+                  KIND_LONG_A = 100000000000L
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+        var record = KindLong.A;
+        try (var arena = Arena.ofConfined()) {
+            var memory = type.allocate(arena, record);
+            assertEquals(100000000000L, memory.get(ValueLayout.JAVA_LONG, 0));
+            assertEquals(record, type.parseMemory(memory));
+        }
+    }
+
+    @Test
+    public void testKindShortEnum() {
+        Assertions.assertAll(
+                () -> assertEquals(23, KindShort.A.value(), "A has value 23"),
+                () -> assertEquals("A(23)", KindShort.A.toStr())
+        );
+        for (var kind : KindShort.values()) {
+            assertEquals(kind, EnumSupport.fromValue(KindShort.class, kind.value()));
+        }
+        var type = BPFProgram.getTypeForClass(SimpleRecordTestProgram.class, KindShort.class);
+        assertEquals(2, type.size());
+        assertEquals("""
+                enum KindShort {
+                  KIND_SHORT_A = 23
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+        var record = KindShort.A;
+        try (var arena = Arena.ofConfined()) {
+            var memory = type.allocate(arena, record);
+            assertEquals(23, memory.get(ValueLayout.JAVA_SHORT, 0));
+            assertEquals(record, type.parseMemory(memory));
+        }
+    }
+
+    @Test
     public void testRecordWithEnumArray() {
         var type = BPFProgram.getStructTypeForClass(SimpleRecordTestProgram.class,
                 SimpleRecordTestProgram.RecordWithEnumArray.class);
@@ -574,6 +693,180 @@ public class TypeProcessingTest {
             assertEquals(0, memory.get(ValueLayout.JAVA_INT, 0));
             assertEquals(23, memory.get(ValueLayout.JAVA_INT, 4));
             assertArrayEquals(record.values, type.parseMemory(memory).values);
+        }
+    }
+
+    @Test
+    public void testRecordWithCustomOffset() {
+        var type = BPFProgram.getStructTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.RecordWithCustomOffset.class);
+        assertEquals(8, type.size());
+        assertEquals(4, type.getMember("a").offset());
+        assertEquals(4, type.getMember("a").type().size());
+        assertEquals(4, type.getMember("a").type().alignment());
+        assertEquals("""
+                struct RecordWithCustomOffset {
+                  char __padding0[4];
+                  s32 a;
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+    }
+
+    @Test
+    public void testClassWithCustomOffsets() {
+        var type = BPFProgram.getStructTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.ClassWithCustomOffset.class);
+        assertEquals(12 + 3 * 4, type.size());
+        assertEquals(12, type.getMember("b").offset());
+        assertEquals("""
+                struct ClassWithCustomOffset {
+                  char __padding0[12];
+                  s32 b[3];
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+    }
+
+    @Test
+    public void testRecordWithTypedefedType() {
+        var type = BPFProgram.getStructTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.RecordWithTypedefedType.class);
+        assertEquals("""
+                typedef struct {
+                  s32 values[10];
+                } RecordWithTypedefedType;
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+        assertEquals("RecordWithTypedefedType", type.toCUse().toPrettyString());
+    }
+
+    @Test
+    public void testStructWithInlineUnion() {
+        var type = BPFProgram.getStructTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.StructWithInlineUnion.class);
+        assertEquals(16, type.size());
+        assertEquals(8, type.alignment()); // because of the long in the union, checked with godbolt
+        assertEquals(2, type.members().size());
+        // the inline union is just syntactic sugar for a union
+        assertInstanceOf(BPFUnionType.class, type.members().get(1).type());
+        assertEquals("""
+                struct StructWithInlineUnion {
+                  s32 a;
+                  union {
+                    s32 x;
+                    s64 y;
+                  };
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+        var record = new SimpleRecordTestProgram.StructWithInlineUnion();
+        record.a = 42;
+        record.x = 43;
+        try (var arena = Arena.ofConfined()) {
+            var memory = type.allocate(arena, record);
+            assertEquals(42, memory.get(ValueLayout.JAVA_INT, 0));
+            assertEquals(43, memory.get(ValueLayout.JAVA_INT, 8));
+            var parsed = type.parseMemory(memory);
+            assertEquals(record.a, parsed.a);
+            assertEquals(record.x, parsed.x);
+            assertEquals(record.x, parsed.y);
+        }
+
+        // TODO: also support in Generator: anon union in struct is converted into an inlined union
+    }
+
+    @Test
+    public void testStructWithMultipleInlineUnions() {
+        var type = BPFProgram.getStructTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.StructWithMultipleInlineUnions.class);
+        assertEquals(12, type.size());
+        assertEquals(8, type.alignment());
+        assertEquals(2, type.members().size());
+        assertEquals("""
+                struct StructWithMultipleInlineUnions {
+                  union {
+                    s32 unionA;
+                    s64 unionB;
+                  };
+                  union {
+                    s32 unionC;
+                  };
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+        var record = new SimpleRecordTestProgram.StructWithMultipleInlineUnions();
+        record.unionA = 42;
+        record.unionB = 43;
+        record.unionC = 44;
+        try (var arena = Arena.ofConfined()) {
+            var memory = type.allocate(arena, record);
+            assertEquals(42, memory.get(ValueLayout.JAVA_INT, 0));
+            assertEquals(44, memory.get(ValueLayout.JAVA_INT, 8));
+            var parsed = type.parseMemory(memory);
+            assertEquals(record.unionA, parsed.unionA);
+            assertEquals(record.unionA, parsed.unionB);
+            assertEquals(record.unionC, parsed.unionC);
+        }
+    }
+
+    @Test
+    public void testRecordStructWithInlineUnion() {
+        var type = BPFProgram.getStructTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.RecordStructWithInlineUnion.class);
+        assertEquals(16, type.size());
+        assertEquals(8, type.alignment());
+        assertEquals(2, type.members().size());
+        assertEquals("""
+                struct RecordStructWithInlineUnion {
+                  s32 a;
+                  union {
+                    s32 unionA;
+                    s64 unionB;
+                  };
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+        var record = new SimpleRecordTestProgram.RecordStructWithInlineUnion(42, 43, 44);
+        try (var arena = Arena.ofConfined()) {
+            var memory = type.allocate(arena, record);
+            assertEquals(42, memory.get(ValueLayout.JAVA_INT, 0));
+            assertEquals(43, memory.get(ValueLayout.JAVA_LONG, 8));
+            var parsed = type.parseMemory(memory);
+            assertEquals(record.a, parsed.a);
+            assertEquals(record.unionA, parsed.unionA);
+            assertEquals(record.unionA, parsed.unionB);
+        }
+    }
+
+    @Test
+    public void testStructWithMultipleInlineUnionsAndOffsets() {
+        var type = BPFProgram.getStructTypeForClass(SimpleRecordTestProgram.class,
+                SimpleRecordTestProgram.StructWithMultipleInlineUnionsAndOffsets.class);
+        assertEquals(24, type.size());
+        assertEquals(8, type.alignment());
+        assertEquals(2, type.members().size());
+        assertEquals("""
+                struct StructWithMultipleInlineUnionsAndOffsets {
+                  union {
+                    s32 unionA;
+                    s64 unionB;
+                  };
+                  char __padding0[8];
+                  union {
+                    s32 unionC;
+                    s64 unionD;
+                  };
+                };
+                """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
+        var record = new SimpleRecordTestProgram.StructWithMultipleInlineUnionsAndOffsets();
+        record.unionA = 42;
+        record.unionB = 43;
+        record.unionC = 44;
+        record.unionD = 45;
+        try (var arena = Arena.ofConfined()) {
+            var memory = type.allocate(arena, record);
+            assertEquals(42, memory.get(ValueLayout.JAVA_INT, 0));
+            assertEquals(44, memory.get(ValueLayout.JAVA_INT, 16));
+            var parsed = type.parseMemory(memory);
+            assertEquals(record.unionA, parsed.unionA);
+            assertEquals(record.unionA, parsed.unionB);
+            assertEquals(record.unionC, parsed.unionC);
+            assertEquals(record.unionC, parsed.unionD);
         }
     }
 }

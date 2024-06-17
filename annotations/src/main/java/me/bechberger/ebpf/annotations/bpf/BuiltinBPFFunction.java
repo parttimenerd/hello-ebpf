@@ -33,9 +33,10 @@ public @interface BuiltinBPFFunction {
      *     <li>$name: The name of the function</li>
      *     <li>$args: The arguments of the function, comma separated</li>
      *     <li>$argN: Argument N, starting at one</li>
-     *     <li>$argN_M: Arguments N to M (inclusive), comma separated</li>
-     *     <li>$argN_: Arguments N to the last argument, comma separated</li>
+     *     <li>$argsN_: Arguments N to the last argument, comma separated</li>
      * </ul>
+     * <p>
+     * if only an identifier is given, then this will be treated as {@code <identifier>($args)}
      * <p>
      * Example: {@snippet :
      *    @BuiltinBPFFunction("$name($args)")
@@ -50,7 +51,7 @@ public @interface BuiltinBPFFunction {
      *    // will be translated to
      *    ((int)function(1, 2))
      *
-     *    @BuiltinBPFFunction("func($arg1, $arg2_, $arg1)")
+     *    @BuiltinBPFFunction("func($arg1, $args2_, $arg1)")
      *    void func(int a, int b, int c);
      *    func(1, 2, 3)
      *    // will be translated to
