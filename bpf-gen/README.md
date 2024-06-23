@@ -3,6 +3,8 @@ bpf-gen
 
 Generating Java type definitions for BTF files.
 
+The generated classes are shipped with the [bpf-runtime](../bpf-runtime) artifact.
+
 Background
 ----------
 This tool uses the output of
@@ -39,10 +41,10 @@ mvn -pl '!bpf' package
 
 Run
 ---
-It needs a lot of RAM, give it as much as you can.
+It needs a lot of RAM, at least 16 GB, better 20 GB.
 
 ```shell
-MAVEN_OPTS="-Xmx80g -Xss1000m"
+MAVEN_OPTS="-Xss1000m"
 ```
 
-It produces around 3M lines of code, around 160M of text.
+It produces around 3M lines of code, around 160MB of text.
