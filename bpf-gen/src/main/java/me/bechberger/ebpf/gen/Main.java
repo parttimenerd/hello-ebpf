@@ -22,7 +22,7 @@ import java.nio.file.Path;
 import java.util.logging.Logger;
 
 /**
- * Usage: java ... <folder> <helper-json-file> [<package name, default: me.bechberger.ebpf.runtime>]
+ * Usage: java ... <folder> <helper-json-file> [...]
  */
 @Command(name = "bpf-gen", mixinStandardHelpOptions = true,
         description = "Generates eBPF code from Java classes")
@@ -35,12 +35,20 @@ public class Main implements Runnable {
     @Parameters(index = "1", description = "JSON file containing the helper function descriptions")
     private Path helperJsonFile;
 
-    @Parameters(index = "2", description = "Package name of the generated Java class", defaultValue = "me.bechberger" +
+    @Parameters(index = "2", description = "Package name of the generated Java classes for the runtime", defaultValue = "me.bechberger" +
             ".ebpf.runtime")
-    private final String packageName = "me.bechberger.ebpf.runtime";
+    private String runtimePackageName = "me.bechberger.ebpf.runtime";
+
+    @Parameters(index = "3", description = "Package name of the generated Java class for the helpers", defaultValue = "me.bechberger" +
+            ".ebpf.runtime.helpers")
+    private String helperPackageName = "me.bechberger.ebpf.runtime.helpers";
+
+    @Parameters(index = "4", description = "Package name of the generated interfaces", defaultValue = "me.bechberger" +
+            ".ebpf.runtime.interfaces")
+    private String interfacePackageName = "me.bechberger.ebpf.runtime.interfaces";
 
     @Option(names = {"-v", "--verbose"}, description = "Be verbose")
-    private final boolean verbose = false;
+    private boolean verbose = false;
 
     @Override
     public void run() {
@@ -48,20 +56,16 @@ public class Main implements Runnable {
             Logger.getGlobal().setLevel(java.util.logging.Level.ALL);
         }
         try {
-            var syscalls = SystemCallUtil.parse();
-            for (var syscall : syscalls) {
-                System.out.printf("Syscall %s: %s %n", syscall.name(), syscall.definition());
-                System.out.println(syscall.funcDefinition().toMethodSpec(new Generator(packageName)));
-            }
-            /*
-            var gen = new Generator(packageName);
+            var gen = new Generator(runtimePackageName);
             gen.process();
-            var res = gen.storeInFolder(folder);
-            System.out.printf("Generated code for %d BTF types (%.2f %% of all types)%n", res.supportedTypes(), 100.0
-             * res.supportedTypes() / (res.supportedTypes() + res.unsupportedTypes()));
-            var helperProcessor = new HelperJSONProcessor(packageName);
+            var generated = gen.generateBPFRuntimeJavaFiles();
+            generated.storeInFolder(folder);
+            var translator = gen.createNameTranslator();
+            var helperProcessor = new HelperJSONProcessor(helperPackageName, translator);
             helperProcessor.process(helperJsonFile);
-            helperProcessor.storeInFolder(folder);*/
+            helperProcessor.createClass(generated).storeInFolder(folder);
+            var syscalls = SystemCallProcessor.parse(translator);
+            SystemCallProcessor.createSystemClassInterface(interfacePackageName, syscalls, generated).storeInFolder(folder);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

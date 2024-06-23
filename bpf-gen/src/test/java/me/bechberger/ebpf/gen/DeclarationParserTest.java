@@ -35,12 +35,12 @@ public class DeclarationParserTest {
             // and var args
             "static void (* const print)(...) = (void*) 0;|void print(java.lang.Object... args)",
             // and real-world examples
-            "static long (* const bpf_trace_printk)(const char *fmt, __u32 fmt_size, ...) = (void *) 6;|long bpf_trace_printk(java.lang.String fmt, @Unsigned int fmt_size, java.lang.Object... args)",
+            "static long (* const bpf_trace_printk)(const char *fmt, __u32 fmt_size, ...) = (void *) 6;|long bpf_trace_printk(String fmt, @Unsigned int fmt_size, java.lang.Object... args)",
             "static long (* const bpf_xdp_output)(void *ctx, void *map, __u64 flags, void *data, __u64 size) = (void *) 121;|long bpf_xdp_output(Ptr<?> ctx, Ptr<?> map, @Unsigned long flags, Ptr<?> data, @Unsigned long size)",
             "static long (* const bpf_probe_read_user_str)(void *dst, __u32 size, const void *unsafe_ptr) = (void *) 114;|long bpf_probe_read_user_str(Ptr<?> dst, @Unsigned int size, Ptr<?> unsafe_ptr)",
             "static long (* const bpf_msg_apply_bytes)(struct sk_msg_md *msg, __u32 bytes) = (void *) 61;|long bpf_msg_apply_bytes(Ptr<sk_msg_md> msg, @Unsigned int bytes)",
             "static long (* const bpf_sysctl_get_current_value)(struct bpf_sysctl *ctx, char *buf, unsigned long buf_len) = (void *) 102;" +
-                    "|long bpf_sysctl_get_current_value(Ptr<bpf_sysctl> ctx, java.lang.String buf, @Unsigned long buf_len)",
+                    "|long bpf_sysctl_get_current_value(Ptr<bpf_sysctl> ctx, String buf, @Unsigned long buf_len)",
             "static long (* const fn)(void (*func)())|long fn(Ptr<?> func)",
             "static long (* const fn)(void (*func)(), int a)|long fn(Ptr<?> func, int a)",
             "static long (* const fn)(void (*func)(int a), int a)|long fn(Ptr<?> func, int a)",
@@ -68,11 +68,11 @@ public class DeclarationParserTest {
             "int pkey_mprotect(void addr[.len], size_t len, int prot, int pkey);|int pkey_mprotect(Ptr<?> addr, @Unsigned long len, int prot, int pkey)",
             "int futimens(int fd, const struct timespec times[_Nullable 2]);|int futimens(int fd, timespec @Size(2) @Nullable [] times)",
             "int timer_create(clockid_t clockid, struct sigevent *_Nullable restrict sevp, timer_t *restrict timerid);|int timer_create(clockid_t clockid, Ptr<@Nullable sigevent> sevp, Ptr<timer_t> timerid)",
-            "int statx(int dirfd, const char *restrict pathname, int flags, unsigned int mask, struct statx *restrict statxbuf);|int statx(int dirfd, java.lang.String pathname, int flags, @Unsigned int mask, Ptr<statx> statxbuf)",
+            "int statx(int dirfd, const char *restrict pathname, int flags, unsigned int mask, struct statx *restrict statxbuf);|int statx(int dirfd, String pathname, int flags, @Unsigned int mask, Ptr<statx> statxbuf)",
             "long ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);|long ptrace(__ptrace_request request, pid_t pid, Ptr<?> addr, Ptr<?> data)",
             "int clone(int (*fn)(void *_Nullable))|int clone(Ptr<?> fn)",
             "int clone(int (*fn)(void *_Nullable, int* i))|int clone(Ptr<?> fn)",
-            "int execve(const char *pathname, char *const _Nullable argv[], char *const _Nullable envp[]);|int execve(java.lang.String pathname, Ptr<Ptr<java.lang. @Nullable String>> argv, Ptr<Ptr<java.lang. @Nullable String>> envp)",*/
+            "int execve(const char *pathname, char *const _Nullable argv[], char *const _Nullable envp[]);|int execve(String pathname, Ptr<Ptr<java.lang. @Nullable String>> argv, Ptr<Ptr<java.lang. @Nullable String>> envp)",*/
             "long get_mempolicy(int *mode, unsigned long nodemask[(.maxnode + ULONG_WIDTH ‐ 1) / ULONG_WIDTH]);|long get_mempolicy(Ptr<java.lang.Integer> mode, Ptr<java.lang. @Unsigned Long> nodemask)",
     }, delimiter = '|')
     public void testParseFunctionDeclaration(String c, String java) {
@@ -88,7 +88,8 @@ public class DeclarationParserTest {
         var decl = "ssize_t writev(int fd, const struct iovec *iov, int iovcnt);";
         var func = DeclarationParser.parseFunctionDeclaration(decl);
         var expected = """
-                @BuiltinBPFFunction("((ssize_t)writev($arg1, (const struct iovec*)$arg2, $arg3))")
+                @NotUsableInJava
+                @BuiltinBPFFunction("writev($arg1, (const struct iovec*)$arg2, $arg3)")
                 public static ssize_t writev(int fd, Ptr<iovec> iov, int iovcnt) {
                   throw new MethodIsBPFRelatedFunction();
                 }
@@ -101,6 +102,7 @@ public class DeclarationParserTest {
         var decl = "int sigreturn(const int* i, ...);";
         var func = DeclarationParser.parseFunctionDeclaration(decl);
         var expected = """
+                @NotUsableInJava
                 @BuiltinBPFFunction("sigreturn((const int*)$arg1, $arg2)")
                 public static int sigreturn(Ptr<java.lang.Integer> i, java.lang.Object... args) {
                   throw new MethodIsBPFRelatedFunction();
@@ -114,6 +116,7 @@ public class DeclarationParserTest {
         var decl = "int sigreturn(int* i);";
         var func = DeclarationParser.parseFunctionDeclaration(decl);
         var expected = """
+                @NotUsableInJava
                 @BuiltinBPFFunction("sigreturn")
                 public static int sigreturn(Ptr<java.lang.Integer> i) {
                   throw new MethodIsBPFRelatedFunction();

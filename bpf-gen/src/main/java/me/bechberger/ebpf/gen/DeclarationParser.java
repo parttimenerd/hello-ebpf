@@ -1,6 +1,7 @@
 package me.bechberger.ebpf.gen;
 
 import me.bechberger.ebpf.gen.Generator.Kind;
+import me.bechberger.ebpf.gen.Generator.NameTranslator;
 import me.bechberger.ebpf.gen.Generator.Type;
 import me.bechberger.ebpf.gen.Generator.Type.*;
 import org.jetbrains.annotations.Nullable;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
-import static me.bechberger.ebpf.gen.SystemCallUtil.clean;
+import static me.bechberger.ebpf.gen.SystemCallProcessor.clean;
 
 /**
  * Parse C declarations to generate {@link FuncType} instances
@@ -46,6 +47,9 @@ public class DeclarationParser {
         }
     }
 
+    public static FuncType parseFunctionDeclaration(String declaration) {
+        return parseFunctionDeclaration(new NameTranslator(new Generator("")), declaration);
+    }
     /**
      * Parse a C function declaration to generate a {@link FuncType} instance
      * <p>
@@ -54,12 +58,16 @@ public class DeclarationParser {
      * @param declaration the C declaration
      * @return the {@link FuncType} instance
      */
-    public static FuncType parseFunctionDeclaration(String declaration) {
+    public static FuncType parseFunctionDeclaration(NameTranslator translator, String declaration) {
         try {
-            return parseFunctionDeclarationParts(declaration).toFuncType();
+            return parseFunctionDeclarationParts(declaration).toFuncType(translator);
         } catch (CannotParseException e) {
             throw new CannotParseException("Cannot parse function declaration: " + declaration, e);
         }
+    }
+
+    public static FuncType parseFunctionVariableDeclaration(String declaration) {
+        return parseFunctionVariableDeclaration(new NameTranslator(new Generator("")), declaration);
     }
 
     /**
@@ -67,9 +75,9 @@ public class DeclarationParser {
      * {@code static long (* const bpf_bind)(struct bpf_sock_addr *ctx, struct sockaddr *addr, int addr_len) = (void
      * *) 64;}
      */
-    public static FuncType parseFunctionVariableDeclaration(String declaration) {
+    public static FuncType parseFunctionVariableDeclaration(NameTranslator translator, String declaration) {
         try {
-            return parseFunctionDeclarationVariableParts(declaration).toFuncType();
+            return parseFunctionDeclarationVariableParts(declaration).toFuncType(translator);
         } catch (CannotParseException e) {
             throw new CannotParseException("Cannot parse function variable declaration: " + declaration, e);
         }
@@ -81,7 +89,11 @@ public class DeclarationParser {
     record FuncDeclParts(String returnType, String name, String[] params) {
 
         FuncType toFuncType() {
-            var parsedParams = Stream.of(params).map(DeclarationParser::parseFunctionParameter).toList();
+            return toFuncType(new NameTranslator(new Generator("")));
+        }
+
+        FuncType toFuncType(NameTranslator translator) {
+            var parsedParams = Stream.of(params).map(p -> parseFunctionParameter(translator, p)).toList();
             boolean isVariadic = false;
             List<FuncParameter> parameters = new ArrayList<>();
             for (int i = 0; i < parsedParams.size(); i++) {
@@ -97,7 +109,7 @@ public class DeclarationParser {
                     parameters.add(param.param);
                 }
             }
-            return new FuncType(name, new FuncProtoType(parameters, parseType(returnType), isVariadic));
+            return new FuncType(name, new FuncProtoType(parameters, parseType(translator, returnType), isVariadic));
         }
     }
 
@@ -234,7 +246,7 @@ public class DeclarationParser {
      *
      * @return null for any variadic ({@code ...})
      */
-    static ParamParseResult parseFunctionParameter(String param) {
+    static ParamParseResult parseFunctionParameter(NameTranslator translator, String param) {
 
         if (param.contains("(*") && param.contains(")")) {
             return parseFunctionTypeParameter(param);
@@ -257,7 +269,7 @@ public class DeclarationParser {
             // remove array expression
             var bracket = m.group();
             param = param.substring(0, param.length() - bracket.length()).trim();
-            var elemTypeResult = parseFunctionParameter(param);
+            var elemTypeResult = parseFunctionParameter(translator, param);
             if (elemTypeResult.kind != ParamParseResultKind.PARAM) {
                 throw new DeclarationParser.CannotParseException("Cannot parse parameter: " + param);
             }
@@ -269,11 +281,11 @@ public class DeclarationParser {
             if (arraySizeExpression.matches("[0-9]+")) {
                 // a size we can work with, so create an array
                 var size = Integer.parseInt(arraySizeExpression);
-                return ParamParseResult.param(new FuncParameter(elemTypeResult.param.name(), new ArrayType(elemType,
+                return ParamParseResult.param(new FuncParameter(elemTypeResult.param.name(), new ArrayType(elemType.resolve(),
                         size, nullable)));
             }
             // we cannot parse the size, so we just create a pointer
-            return ParamParseResult.param(new FuncParameter(elemTypeResult.param.name(), new PtrType(elemType,
+            return ParamParseResult.param(new FuncParameter(elemTypeResult.param.name(), new PtrType(elemType.resolve(),
                     nullable)));
         }
         // last match
@@ -286,10 +298,10 @@ public class DeclarationParser {
             }
             return ParamParseResult.none();
         }
-        return ParamParseResult.param(new FuncParameter(name, parseType(type)));
+        return ParamParseResult.param(new FuncParameter(name, parseType(translator, type)));
     }
 
-    public static Type parseType(String type) {
+    public static Type parseType(NameTranslator translator, String type) {
         type = type.strip();
         if (type.equals("void")) {
             return new VoidType();
@@ -298,11 +310,11 @@ public class DeclarationParser {
             return new IntType(KnownTypes.getKnowIntUnchecked(type));
         }
         if (type.endsWith("*")) {
-            var t = parseType(type.substring(0, type.length() - 1));
+            var t = parseType(translator, type.substring(0, type.length() - 1));
             return new PtrType(t);
         }
         if (type.endsWith("_Nullable")) { // a nullable pointer
-            var t = parseType(type.substring(0, type.length() - 9));
+            var t = parseType(translator, type.substring(0, type.length() - 9));
             // assume that this is a pointer
             if (!(t instanceof PtrType)) {
                 throw new DeclarationParser.CannotParseException(type + " cannot be nullable");
@@ -310,36 +322,43 @@ public class DeclarationParser {
             return new PtrType(((PtrType) t).resolvedPointee(), true);
         }
         if (type.endsWith("restrict")) {
-            var t = parseType(type.substring(0, type.length() - 8));
+            var t = parseType(translator, type.substring(0, type.length() - 8));
             return new MirrorType(Kind.RESTRICT, t);
         }
         if (type.startsWith("const ")) {
-            var t = parseType(type.substring(6));
+            var t = parseType(translator, type.substring(6));
             return new MirrorType(Kind.CONST, t);
         }
         if (type.startsWith("volatile ")) {
-            var t = parseType(type.substring(9));
+            var t = parseType(translator, type.substring(9));
             return new MirrorType(Kind.VOLATILE, t);
         }
         if (type.endsWith("*const")) {
             // we drop the const here, to make it easier
-            var t = parseType(type.substring(0, type.length() - 5));
+            var t = parseType(translator, type.substring(0, type.length() - 5));
             return new PtrType(t);
         }
         if (!type.contains(" ")) {
-            return new VerbatimType(type, type);
+            var translated = translator.translate(type);
+            if (KnownTypes.isKnownInt(translated.cName())) {
+                return new IntType(KnownTypes.getKnowIntUnchecked(translated.cName()));
+            }
+            return translated;
         }
         if (type.startsWith("struct ")) {
             var name = type.substring(7);
-            return new VerbatimType(type, name);
+            var translated = translator.translate(name);
+            return new VerbatimType("struct " + translated.cName(), translated);
         }
         if (type.startsWith("union ")) {
             var name = type.substring(6);
-            return new VerbatimType(type, name);
+            var translated = translator.translate(name);
+            return new VerbatimType("union " + translated.cName(), translated);
         }
         if (type.startsWith("enum ")) {
             var name = type.substring(5);
-            return new VerbatimType(type, name);
+            var translated = translator.translate(name);
+            return new VerbatimType("enum " + translated.cName(), translated);
         }
         throw new CannotParseException("Cannot parse type: " + type);
     }

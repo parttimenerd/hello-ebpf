@@ -1,5 +1,6 @@
 package me.bechberger.ebpf.gen;
 
+import me.bechberger.ebpf.gen.Generator.GeneratorConfig;
 import me.bechberger.ebpf.gen.Generator.Kind;
 import me.bechberger.ebpf.gen.Generator.Type;
 import me.bechberger.ebpf.gen.Generator.Type.*;
@@ -101,10 +102,11 @@ class GeneratorTest {
         assertTypeEquals("foo", type);
         assertEquals("""
                 @Type(
-                    noCCodeGeneration = true
+                    noCCodeGeneration = true,
+                    cType = "struct foo"
                 )
+                @NotUsableInJava
                 public static class foo extends Struct {
-                  @Offset(0)
                   public @Unsigned int a;
                 }
                 """, Objects.requireNonNull(type.toTypeSpec(gen)).toString());
@@ -116,29 +118,13 @@ class GeneratorTest {
         assertTypeEquals("foo", type);
         assertEquals("""
                 @Type(
-                    noCCodeGeneration = true
+                    noCCodeGeneration = true,
+                    cType = "union foo"
                 )
+                @NotUsableInJava
                 public static class foo extends Union {
-                  @Offset(0)
                   public @Unsigned int a;
-                }
-                """, Objects.requireNonNull(type.toTypeSpec(gen)).toString());
-    }
-
-    @Test
-    public void testTypedefedBasicStruct() {
-        var structType = new Generator.Type.StructType("foo", List.of(new Generator.Type.TypeMember("a", UNSIGNED_INT, 0)));
-        var type = new Generator.Type.TypeDefType("foo", structType);
-        assertTypeEquals("foo", type);
-        assertEquals("""
-                @Type(
-                    typedefed = true,
-                    noCCodeGeneration = true
-                )
-                public static class foo extends Struct {
-                  @Offset(0)
-                  public @Unsigned int a;
-                }
+                }             
                 """, Objects.requireNonNull(type.toTypeSpec(gen)).toString());
     }
 
@@ -148,23 +134,24 @@ class GeneratorTest {
         assertTypeEquals("foo", type);
         assertEquals("""
                 @Type(
-                    noCCodeGeneration = true
+                    noCCodeGeneration = true,
+                    cType = "enum foo"
                 )
                 public enum foo implements Enum<foo>, TypedEnum<foo, java.lang. @Unsigned Integer> {
                   @EnumMember(
-                      value = 0,
+                      value = 0L,
                       name = "A"
                   )
                   A,
-                
+                                
                   @EnumMember(
-                      value = 1,
+                      value = 1L,
                       name = "B"
                   )
                   B,
-                
+                                
                   @EnumMember(
-                      value = 2,
+                      value = 2L,
                       name = "C"
                   )
                   C
@@ -180,24 +167,6 @@ class GeneratorTest {
         var fields = type.toFieldSpecs(gen);
         assertEquals(1, fields.size());
         assertEquals("public static final @Unsigned int A = 42;", fields.getFirst().toString().trim());
-    }
-
-    @Test
-    public void testTypedefedEnum() {
-        var type = new TypeDefType("B", new Generator.Type.EnumType("A", 4, true, List.of(new EnumMember("A", 42))));
-        assertEquals("""
-        @Type(
-            typedefed = true,
-            noCCodeGeneration = true
-        )
-        public enum A implements Enum<A>, TypedEnum<A, java.lang. @Unsigned Integer> {
-          @EnumMember(
-              value = 42,
-              name = "A"
-          )
-          A
-        }
-        """.trim(), Objects.requireNonNull(type.toTypeSpec(gen)).toString().trim());
     }
 
     @Test
@@ -229,20 +198,19 @@ class GeneratorTest {
                 new Generator.Type.TypeMember("c", intType, 8 * 8)));
         assertEquals("""
                 @Type(
-                    noCCodeGeneration = true
+                    noCCodeGeneration = true,
+                    cType = "struct foo"
                 )
+                @NotUsableInJava
                 public static class foo extends Struct {
-                  @Offset(0)
                   @InlineUnion(-1)
                   public @Unsigned int a;
-                
-                  @Offset(0)
+                                
                   @InlineUnion(-1)
                   public long b;
-                
-                  @Offset(8)
+                                
                   public @Unsigned int c;
-                }
+                } 
                 """, Objects.requireNonNull(type.toTypeSpec(gen)).toString());
     }
 
@@ -252,24 +220,12 @@ class GeneratorTest {
         var proto = new Generator.Type.FuncProtoType(List.of(new FuncParameter("a", intType), new FuncParameter("b", intType)), intType);
         var func = new Generator.Type.FuncType("foo", proto);
         assertEquals("""
-                @BuiltinBPFFunction("foo($arg1, $arg2)")
+                @NotUsableInJava
+                @BuiltinBPFFunction("foo")
                 public static @Unsigned int foo(@Unsigned int a, @Unsigned int b) {
-                  throw new java.lang.UnsupportedOperationException();
+                  throw new MethodIsBPFRelatedFunction();
                 }
                 """, func.toMethodSpec(gen).toString());
-    }
-
-    @Test
-    public void testTypedefedFunction() {
-        var intType = UNSIGNED_INT;
-        var proto = new Generator.Type.FuncProtoType(List.of(new FuncParameter("a", intType), new FuncParameter("b", intType)), intType);
-        var func = new Generator.Type.TypeDefType( "foo", proto);
-        assertEquals("""
-                @BuiltinBPFFunction("foo($arg1, $arg2)")
-                public static @Unsigned int foo(@Unsigned int a, @Unsigned int b) {
-                  throw new java.lang.UnsupportedOperationException();
-                }
-                """, Objects.requireNonNull(func.toMethodSpec(gen)).toString());
     }
 
     @Test
@@ -278,46 +234,12 @@ class GeneratorTest {
         var proto = new Generator.Type.FuncProtoType(List.of(new FuncParameter("default", intType)), intType);
         var func = new Generator.Type.FuncType("foo", proto);
         assertEquals("""
-                @BuiltinBPFFunction("foo($arg1)")
+                @NotUsableInJava
+                @BuiltinBPFFunction("foo")
                 public static @Unsigned int foo(@Unsigned int _default) {
-                  throw new java.lang.UnsupportedOperationException();
+                  throw new MethodIsBPFRelatedFunction();
                 }
                 """, func.toMethodSpec(gen).toString());
-    }
-
-    @Test
-    public void testJavaFileGeneration() {
-        var structType = new Generator.Type.StructType(1,"foo", List.of(new Generator.Type.TypeMember("a", UNSIGNED_INT, 0)));
-        gen.put(structType);
-        assertEquals("""
-                /** Auto-generated */
-                package me.bechberger.ebpf.runtime;
-
-                import me.bechberger.ebpf.annotations.Offset;
-                import me.bechberger.ebpf.annotations.Size;
-                import me.bechberger.ebpf.annotations.Unsigned;
-                import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
-                import me.bechberger.ebpf.annotations.bpf.EnumMember;
-                import me.bechberger.ebpf.annotations.bpf.InlineUnion;
-                import me.bechberger.ebpf.annotations.bpf.Type;
-                import me.bechberger.ebpf.type.Enum;
-                import me.bechberger.ebpf.type.Ptr;
-                import me.bechberger.ebpf.type.Ptr;
-                import me.bechberger.ebpf.type.Struct;
-                import me.bechberger.ebpf.type.TypedEnum;
-                import me.bechberger.ebpf.type.TypedefBase;
-                import me.bechberger.ebpf.type.Union;
-                
-                public final class BPFRuntime {
-                  @Type(
-                      noCCodeGeneration = true
-                  )
-                  public static class foo extends Struct {
-                    @Offset(0)
-                    public @Unsigned int a;
-                  }
-                }
-                """, gen.generateJavaFile("BPFRuntime", "").result());
     }
 
     @Test
@@ -326,9 +248,10 @@ class GeneratorTest {
         var proto = new Generator.Type.FuncProtoType(List.of(new FuncParameter("a", new MirrorType(Kind.CONST, intType))), intType);
         var func = new Generator.Type.FuncType("foo", proto);
         assertEquals("""
+                @NotUsableInJava
                 @BuiltinBPFFunction("foo((const unsigned int)$arg1)")
                 public static @Unsigned int foo(@Unsigned int a) {
-                  throw new java.lang.UnsupportedOperationException();
+                  throw new MethodIsBPFRelatedFunction();
                 }
                 """, func.toMethodSpec(gen).toString());
     }
@@ -337,7 +260,7 @@ class GeneratorTest {
     public void testCharPtrIsConvertedToString() {
         var charType = new Generator.Type.IntType(KnownTypes.getKnowIntUnchecked("char"));
         var ptrType = new Generator.Type.PtrType(charType);
-        assertEquals("java.lang.String", ptrType.toTypeName(gen).toString());
+        assertEquals("String", ptrType.toTypeName(gen).toString());
     }
 
     void assertTypeEquals(String expected, Type type) {
@@ -351,27 +274,4 @@ class GeneratorTest {
         assertEquals(expected, type.toTypeName(gen).toString());
         assertEquals(expectedGeneric, Objects.requireNonNull(type.toGenericTypeName(gen)).toString());
     }
-
-    /**
-     * Try to emit functions that later emit something like
-     * {@code
-     *  SEC("fentry/do_unlinkat")
-     *  int BPF_PROG(do_unlinkat, int dfd, struct filename *name)
-     * }
-     * and are probably modelled in Java as
-     * {@snippet :
-     *    @BPFFunction(
-     *        callTemplate = "do_unlinkat",
-     *        headerTemplate = "int BPF_PROG(do_unlinkat, int dfd, struct filename *name)",
-     *        section = "fentry/do_unlinkat"
-     *    )
-     *    public default int do_unlinkat(int dfd, Ptr<filename> name) {
-     *     throw new MethodIsBPFRelatedFunction();
-     *    }
-     * }
-     */
-    /*@Test
-    public void testEmittingFEntryStyleFunctions() {
-
-    }*/
 }

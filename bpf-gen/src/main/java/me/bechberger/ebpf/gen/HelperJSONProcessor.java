@@ -2,7 +2,10 @@ package me.bechberger.ebpf.gen;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import me.bechberger.ebpf.gen.Generator.GeneratorConfig;
+import me.bechberger.ebpf.gen.Generator.NameTranslator;
 import me.bechberger.ebpf.gen.Generator.Type.FuncType;
+import me.bechberger.ebpf.gen.Generator.TypeJavaFiles;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,12 +36,17 @@ public class HelperJSONProcessor {
     private static final String CLASS_NAME = "BPFHelpers";
 
     private final Generator generator;
-    private final org.commonmark.parser.Parser markdownParser = org.commonmark.parser.Parser.builder().build();
-    private final org.commonmark.renderer.html.HtmlRenderer htmlRenderer =
-            org.commonmark.renderer.html.HtmlRenderer.builder().build();
+    private final NameTranslator translator;
+    private final Markdown markdown = new Markdown();
+
+
+    public HelperJSONProcessor(String basePackage, NameTranslator translator) {
+        generator = new Generator(basePackage);
+        this.translator = translator;
+    }
 
     public HelperJSONProcessor(String basePackage) {
-        generator = new Generator(basePackage);
+        this(basePackage, new NameTranslator(new Generator("")));
     }
 
     public void process(Path jsonFile) {
@@ -61,11 +69,11 @@ public class HelperJSONProcessor {
         var name = helperObject.getString("Name");
         var definition = helperObject.getString("Definition");
         var description = helperObject.getString("Description");
-        var funcType = DeclarationParser.parseFunctionVariableDeclaration(definition);
+        var funcType = DeclarationParser.parseFunctionVariableDeclaration(translator, definition);
         if (!name.equals(funcType.name())) {
             throw new RuntimeException("Name in JSON does not match name in definition: " + name + " != " + funcType.name());
         }
-        return funcType.setJavaDoc(descriptionToJavaDoc(description));
+        return funcType.setJavaDoc(descriptionToJavaDoc(description, !funcType.impl().returnsVoid()));
     }
 
     record DescriptionParts(String mainDescription, String returnDescription) {
@@ -104,23 +112,25 @@ public class HelperJSONProcessor {
         return new DescriptionParts(String.join("\n", mainDescription), String.join("\n", returnDescription));
     }
 
-    private String descriptionToJavaDoc(String description) {
+    private String descriptionToJavaDoc(String description, boolean withReturn) {
         var parts = splitDescription(description);
-        return markdownToHTML(parts.mainDescription) + "\n" + "@return " + markdownToHTML(parts.returnDescription);
-    }
-
-    private String markdownToHTML(String markdown) {
-        var html = htmlRenderer.render(markdownParser.parse(markdown)).strip();
-        if (html.startsWith("<p>") && html.endsWith("</p>")) {
-            return html.substring(3, html.length() - 4);
-        }
-        return html;
+        return markdown.markdownToHTML(parts.mainDescription) + (withReturn ? "\n" + "@return " + markdown.markdownToHTML(parts.returnDescription) : "");
     }
 
     /**
      * Store the generated Java file in the package in the given folder
      */
-    public void storeInFolder(Path outputDirectory) {
-        generator.storeInFolder(outputDirectory, CLASS_NAME, "BPF helper functions");
+    TypeJavaFiles createClass(TypeJavaFiles generated) {
+        return generator.generateJavaFiles(new GeneratorConfig("BPFHelpers") {
+            @Override
+            public String classDescription() {
+                return "BPF helper functions";
+            }
+
+            @Override
+            public List<String> additionalImports() {
+                return generated.generateStaticImportsForAll();
+            }
+        });
     }
 }

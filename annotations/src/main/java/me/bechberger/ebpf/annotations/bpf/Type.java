@@ -65,4 +65,6 @@ public @interface Type {
      * {@code typedef ... name;} when defining it
      */
     boolean typedefed() default false;
+
+    String cType() default "";
 }

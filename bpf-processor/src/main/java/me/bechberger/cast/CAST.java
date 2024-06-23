@@ -1,5 +1,6 @@
 package me.bechberger.cast;
 
+import me.bechberger.cast.CAST.Declarator.PointerDeclarator;
 import me.bechberger.cast.CAST.Declarator.Pointery;
 import me.bechberger.cast.CAST.PrimaryExpression.Constant;
 import me.bechberger.cast.CAST.PrimaryExpression.Variable;
@@ -73,7 +74,7 @@ public interface CAST {
         }
 
         static PrimaryExpression.Variable variable(String name) {
-            return new PrimaryExpression.Variable(name);
+            return name == null ? null : new PrimaryExpression.Variable(name);
         }
 
         static PrimaryExpression.Variable variable(String name, PrimaryExpression.CAnnotation... annotations) {
@@ -157,6 +158,11 @@ public interface CAST {
 
             public String annotationsString() {
                 return Arrays.stream(annotations).map(CAnnotation::toPrettyString).collect(Collectors.joining(" "));
+            }
+
+            @Override
+            public String toString() {
+                return toPrettyString("", "");
             }
         }
 
@@ -569,7 +575,10 @@ public interface CAST {
     sealed interface Declarator extends Expression {
 
         interface Pointery {
-            String toPrettyVariableDefinition(@Nullable Expression name, String indent);
+            default String toPrettyVariableDefinition(@Nullable Expression name, String indent) {
+                return toPrettyVariableDefinition(name, null, indent);
+            }
+            String toPrettyVariableDefinition(@Nullable Expression name, @Nullable String tag, String indent);
         }
 
         record PointerDeclarator(Declarator declarator) implements Declarator, Pointery {
@@ -584,17 +593,27 @@ public interface CAST {
             }
 
             @Override
-            public String toPrettyVariableDefinition(@Nullable Expression name, String indent) {
+            public String toPrettyVariableDefinition(@Nullable Expression name, @Nullable String tag, String indent) {
+                if (declarator instanceof TaggedDeclarator tagged) {
+                    if (tagged.declarator instanceof Pointery pointery) {
+                        var combinedTag = tag == null ? tagged.tag : tag + " " + tagged.tag;
+                        return pointery.toPrettyVariableDefinition(name, combinedTag, indent) + (pointery instanceof FunctionDeclarator ? "" : "*");
+                    }
+                    return tagged.toPrettyString() + "*";
+                }
+                if (declarator instanceof FunctionDeclarator fun) {
+                    return fun.toPrettyVariableDefinition(name, tag, indent);
+                }
                 if (name == null) {
                     return toPrettyString(indent, "");
                 }
                 if (declarator instanceof ArrayDeclarator arr) {
-                    return arr.toPrettyVariableDefinition(Expression.parenthesizedExpression(OperatorExpression.pointer(name)), indent);
+                    return arr.toPrettyVariableDefinition(Expression.parenthesizedExpression(OperatorExpression.pointer(name)), tag, indent);
                 }
                 if (declarator instanceof PointerDeclarator ptr) {
-                    return ptr.toPrettyVariableDefinition(OperatorExpression.pointer(name), indent);
+                    return ptr.toPrettyVariableDefinition(OperatorExpression.pointer(name), tag, indent);
                 }
-                return indent + declarator.toPrettyString() + " *" + name.toPrettyString();
+                return indent + declarator.toPrettyString() + (tag == null ? " " : tag + " ") + "*" + name.toPrettyString();
             }
         }
 
@@ -610,14 +629,14 @@ public interface CAST {
             }
 
             @Override
-            public String toPrettyVariableDefinition(@Nullable Expression name, String indent) {
+            public String toPrettyVariableDefinition(@Nullable Expression name, @Nullable String tag, String indent) {
                 List<String> sizes = new ArrayList<>();
                 CAST cur = this;
                 while (cur instanceof ArrayDeclarator arr) {
                     sizes.add(((ArrayDeclarator) cur).sizeBracket());
                     cur = arr.declarator;
                 }
-                return indent + cur.toPrettyString() + (name != null ? " " + name.toPrettyString() : "") +
+                return indent + cur.toPrettyString() + (tag == null ? "" : " " + tag) +  (name != null ? " " + name.toPrettyString() : "") +
                         String.join("", sizes);
             }
 
@@ -646,7 +665,7 @@ public interface CAST {
                     if (declarator instanceof UnionDeclarator union && union.name == null) {
                         return declarator.toPrettyString(indent, increment) + ";";
                     }
-                    return declarator.toPrettyString(indent, increment) + " " + name.toPrettyString() + ";";
+                    return declarator.toPrettyString(indent, increment) + (name == null ? "" : " " + name.toPrettyString()) + ";";
                 }
                 return indent + declarator.toPrettyString() + " (" + name.toPrettyString() + ", " + ebpfSize.toPrettyString() + ");";
             }
@@ -692,6 +711,9 @@ public interface CAST {
             public String toPrettyString(String indent, String increment) {
                 if (declarator instanceof Pointery arr) {
                     return arr.toPrettyVariableDefinition(name, indent) + ";";
+                }
+                if (name == null) {
+                    return declarator.toPrettyString(indent, increment) + ";";
                 }
                 return declarator.toPrettyString(indent, increment) + " " + name.toPrettyString() + ";";
             }
@@ -763,20 +785,32 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
+                if (name == null) {
+                    return declarator.toPrettyString(indent, increment);
+                }
                 return declarator.toPrettyString(indent, increment) + " " + name.toPrettyString();
             }
         }
 
         record FunctionDeclarator(Variable name, Declarator returnValue,
-                                  List<FunctionParameter> parameters) implements Declarator {
+                                  List<FunctionParameter> parameters) implements Declarator, Pointery {
             @Override
             public List<? extends Expression> children() {
                 return Stream.concat(Stream.of(name, returnValue), parameters.stream()).collect(Collectors.toList());
             }
 
+            private String paramDecl() {
+                return "(" + parameters.stream().map(CAST::toPrettyString).collect(Collectors.joining(", ")) + ")";
+            }
+
             @Override
             public String toPrettyString(String indent, String increment) {
-                return returnValue.toPrettyString(indent, increment) + " " + name + "(" + parameters.stream().map(CAST::toPrettyString).collect(Collectors.joining(", ")) + ")";
+                return returnValue.toPrettyString(indent, increment) + " " + name + paramDecl();
+            }
+
+            @Override
+            public String toPrettyVariableDefinition(@Nullable Expression name, @Nullable String tag, String indent) {
+                return returnValue.toPrettyString(indent, "") + " (" + (tag == null ? "" : " " + tag) + "*" + (name == null ? "" : name.toPrettyString()) + ")" + paramDecl();
             }
         }
 

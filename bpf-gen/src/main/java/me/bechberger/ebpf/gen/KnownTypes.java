@@ -41,7 +41,7 @@ public class KnownTypes {
     /**
      * Integer (and float for simplicity) type with known properties, with is mapped to a Java type.
      */
-    record KnownInt(String cName, int bits, String encoding, KnownTypes.JavaType javaType, BPFIntType<?> bpfType) {
+    public record KnownInt(String cName, int bits, String encoding, KnownTypes.JavaType javaType, BPFIntType<?> bpfType) {
         boolean isSigned() {
             return encoding.equals("SIGNED");
         }
@@ -129,9 +129,9 @@ public class KnownTypes {
      * Return the proper name for {@ocode s32, u16, __u64, ...}
      */
     static String normalizeNames(String name) {
-        if (name.matches("(__)?[su][0-9]+")) {
+        if (name.matches("(__)?[suSU][0-9]+")) {
             boolean isUnsigned = name.contains("u");
-            int width = Integer.parseInt(name.split("[su]")[1]);
+            int width = Integer.parseInt(name.split("[suSU]")[1]);
             return getKnownInt(width, !isUnsigned).orElseThrow().cName();
         }
         return switch (name) {
