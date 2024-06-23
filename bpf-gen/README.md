@@ -36,3 +36,13 @@ In parent folder
 ```shell
 mvn -pl '!bpf' package
 ```
+
+Run
+---
+It needs a lot of RAM, give it as much as you can.
+
+```shell
+MAVEN_OPTS="-Xmx80g -Xss1000m"
+```
+
+It produces around 3M lines of code, around 160M of text.

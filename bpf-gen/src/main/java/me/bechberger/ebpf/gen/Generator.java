@@ -36,6 +36,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static me.bechberger.ebpf.gen.Generator.JSONObjectWithType.getNameOrNull;
+import static me.bechberger.ebpf.gen.SystemCallProcessor.toCamelCase;
 
 public class Generator {
 
@@ -2261,6 +2262,19 @@ public class Generator {
             }
         }
 
+        // for every group check that there is no type with the same name
+        // if so, prefix it with "_"
+        for (var group : groups.values().stream().toList()) {
+            String newName = group.className();
+            while (alreadyEmitted.contains(newName)) {
+                newName = "_" + newName;
+            }
+            if (!newName.equals(group.className())) {
+                groups.put(newName, new TypeGroup(this, config, basePackage, className, newName, group.types));
+                groups.remove(group.className());
+            }
+        }
+
         Map<TypeGroup, Integer> sizes = new HashMap<>();
         for (var group : groups.values()) {
             sizes.put(group, group.types.size());
@@ -2507,9 +2521,10 @@ public class Generator {
                     return "Generated class for many BPF runtime types";
                 }
                 if (className.equals(baseClassName)) {
-                    return "Generated class for BPF runtime types";
+                    return "Generated class for BPF runtime types that don't fit in other classes";
                 }
-                return "Generated class for BPF runtime types in the group " + className;
+                return "Generated class for BPF runtime types that start with " +
+                        className.replaceAll("Definitions$", "").toLowerCase();
             }
 
             @Override
@@ -2522,7 +2537,8 @@ public class Generator {
                 if (typeName.matches("_*[a-z0-9A-Z]+_[a-z].*")) {
                     // return first [a-z]+ part even with multiple leading _
                     var parts = typeName.split("_+");
-                    return Arrays.stream(parts).filter(s -> !s.isEmpty()).findFirst().orElse("").toLowerCase();
+                    return toCamelCase(Arrays.stream(parts).filter(s -> !s.isEmpty()).findFirst().orElse("").toLowerCase() +
+                            "_definitions");
                 }
                 return "";
             }
@@ -2534,7 +2550,7 @@ public class Generator {
 
             @Override
             public int maxGroupSizeForMerging() {
-                return 20;
+                return 10;
             }
         };
     }

@@ -78,6 +78,9 @@ public class SystemCallProcessor {
 
         for (var line : syscallsLines) {
             var parts = line.split("\\s+");
+            if (parts.length < 2 || !parts[0].contains("(")) {
+                continue;
+            }
             var name = parts[0].substring(0, parts[0].indexOf("("));
             syscallNames.add(name);
             if (syscalls.containsKey(name)) {

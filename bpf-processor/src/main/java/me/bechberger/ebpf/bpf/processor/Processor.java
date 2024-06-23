@@ -415,7 +415,10 @@ public class Processor extends AbstractProcessor {
             // like /usr/include/aarch64-linux-gnu
             includePath = Path.of("/usr/include").resolve(System.getProperty("os.arch") + "-linux-gnu");
             if (!Files.exists(includePath)) {
-                throw new RuntimeException("Could not find include path " + includePath);
+                includePath = Path.of("/usr/include/linux");
+                if (!Files.exists(includePath)) {
+                    throw new RuntimeException("Could not find include path " + includePath);
+                }
             }
         }
         return includePath;
