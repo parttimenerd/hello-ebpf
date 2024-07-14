@@ -1,9 +1,6 @@
 package me.bechberger.ebpf.annotations.bpf;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Annotates a class that can be used like a {@link Type} annotated record,
@@ -31,6 +28,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@Documented
 public @interface CustomType {
     /** Name of the type in C, uses the class name by default */
     String name() default "";

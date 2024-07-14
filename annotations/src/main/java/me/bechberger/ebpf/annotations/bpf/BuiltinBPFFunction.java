@@ -1,9 +1,6 @@
 package me.bechberger.ebpf.annotations.bpf;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Marks a function as a builtin BPF function, which is not defined in the program.
@@ -22,6 +19,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
+@Documented
 public @interface BuiltinBPFFunction {
 
     /**

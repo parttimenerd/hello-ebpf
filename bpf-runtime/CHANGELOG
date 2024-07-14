@@ -1,6 +1,14 @@
 # Changelog
 
-## 0.1.1
+## 0.1.4
+
+- Make all annotations documented
+
+## 0.1.3
+
+- Fix function template for variadic functions
+
+## 0.1.2
 
 - `@BPFBuiltinFunction` is now present in the class files
 

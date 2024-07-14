@@ -1,5 +1,6 @@
 package me.bechberger.ebpf.annotations.bpf;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
@@ -20,6 +21,7 @@ import java.lang.annotation.Target;
  * }
  */
 @Target(ElementType.TYPE)
+@Documented
 public @interface BPF {
     /**
      * License of the eBPF program, the EBPF_PROGRAM contains a <code>SEC("license")</code> variable

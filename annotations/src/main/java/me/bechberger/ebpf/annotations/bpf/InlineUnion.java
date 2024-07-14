@@ -1,9 +1,6 @@
 package me.bechberger.ebpf.annotations.bpf;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Annotation to specify that a struct member is part of an inline union
@@ -23,6 +20,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.FIELD, ElementType.TYPE_USE, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@Documented
 public @interface InlineUnion {
     /** Identifier of the inlined union */
     int value();

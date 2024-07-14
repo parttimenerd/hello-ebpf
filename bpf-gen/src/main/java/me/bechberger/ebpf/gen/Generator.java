@@ -1597,6 +1597,9 @@ public class Generator {
                         var t = param.type.resolve().toCType();
                         return "(" + (t instanceof Pointery ? ((Pointery) t).toPrettyVariableDefinition(null, "") : t.toPrettyString()) + ")$arg" + (i + 1);
                     }
+                    if (i == parameters.size() - 1 && variadic) {
+                        return "$arg" + (i + 1) + "_";
+                    }
                     return "$arg" + (i + 1);
                 }).toList();
                 var anyConversion = params.stream().anyMatch(a -> a.contains("(") || a.contains(")"));

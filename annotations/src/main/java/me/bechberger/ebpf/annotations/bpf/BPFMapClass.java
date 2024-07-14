@@ -1,16 +1,14 @@
 package me.bechberger.ebpf.annotations.bpf;
 
 import java.io.FileDescriptor;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Specify that a class is a BPF map class
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@Documented
 public @interface BPFMapClass {
     /**
      * Template for the generated C code

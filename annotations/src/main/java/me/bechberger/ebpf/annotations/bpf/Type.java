@@ -3,10 +3,7 @@ package me.bechberger.ebpf.annotations.bpf;
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.Unsigned;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Annotates a record or a class for with a struct, union or typedef type is generated
@@ -52,6 +49,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@Documented
 public @interface Type {
 
     /** Name of the generated BPFStructType, uses the type as default */
