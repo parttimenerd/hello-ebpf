@@ -7,7 +7,7 @@ import java.lang.annotation.*;
  */
 @Target({ElementType.TYPE_USE, ElementType.TYPE})
 @Repeatable(Sizes.class)
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Size {
     int value();
 }

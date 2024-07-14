@@ -11,7 +11,7 @@ These bindings are regularly updated and published on Maven Central:
 <dependency>
     <groupId>me.bechberger</groupId>
     <artifactId>bpf-runtime</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 </dependency>
 ```
 
@@ -32,7 +32,7 @@ Run it with at least 20GB of RAM.
 Release
 -------
 
-Run `./release.sh` after updating the version in the README and the pom.
+Run `./deploy.sh` after updating the version in the README and the pom.
 
 License
 -------

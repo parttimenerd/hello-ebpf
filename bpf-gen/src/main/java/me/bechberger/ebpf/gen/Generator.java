@@ -967,6 +967,7 @@ public class Generator {
                                 .addMember("value", "$LL", value)
                                 .addMember("name", "$S", name)
                                 .build())
+                        .addJavadoc("{@code $L = $L}", name, value)
                         .build();
             }
 

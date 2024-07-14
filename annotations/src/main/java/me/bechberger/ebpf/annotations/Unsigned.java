@@ -9,6 +9,6 @@ import java.lang.annotation.Target;
  * Marks an integer type as unsigned
  */
 @Target({ElementType.TYPE_USE, ElementType.TYPE})
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Unsigned {
 }

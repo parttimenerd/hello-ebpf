@@ -1,5 +1,10 @@
 package me.bechberger.ebpf.annotations.bpf;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * Specify a function that is callable from C code and has an implementation
  * or an interface.
@@ -15,6 +20,8 @@ package me.bechberger.ebpf.annotations.bpf;
  *    }
  * }
  */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface BPFFunction {
 
     /**

@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
  *}
  */
 @Target({ElementType.FIELD, ElementType.TYPE_USE, ElementType.TYPE})
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface InlineUnion {
     /** Identifier of the inlined union */
     int value();

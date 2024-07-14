@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
  * this defines a hash map with 1024 entries.
  */
 @Target(ElementType.TYPE_USE)
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface BPFMapDefinition {
     /**
      * Maximum number of entries in the map.

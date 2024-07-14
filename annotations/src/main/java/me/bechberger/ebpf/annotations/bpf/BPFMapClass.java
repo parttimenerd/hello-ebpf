@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * Specify that a class is a BPF map class
  */
 @Target(ElementType.TYPE)
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface BPFMapClass {
     /**
      * Template for the generated C code

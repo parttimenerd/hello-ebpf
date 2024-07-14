@@ -1,10 +1,9 @@
 package me.bechberger.ebpf.annotations.bpf;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 @Target({ElementType.TYPE, ElementType.TYPE_USE})
+@Retention(RetentionPolicy.RUNTIME)
 public @interface OriginalNames {
     OriginalName[] value();
 }

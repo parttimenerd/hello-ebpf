@@ -124,7 +124,7 @@ public class HelperJSONProcessor {
         return generator.generateJavaFiles(new GeneratorConfig("BPFHelpers") {
             @Override
             public String classDescription() {
-                return "BPF helper functions";
+                return "BPF helper functions, based on <a href=\"https://ebpf-docs.dylanreimerink.nl/linux/helper-function/\">ebpf-docs</a>";
             }
 
             @Override

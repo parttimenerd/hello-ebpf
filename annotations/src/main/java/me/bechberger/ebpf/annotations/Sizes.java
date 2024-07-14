@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * (Implicitely) used when defining arrays of sized types
  */
 @Target({ElementType.TYPE_USE, ElementType.TYPE})
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Sizes {
     Size[] value();
 }

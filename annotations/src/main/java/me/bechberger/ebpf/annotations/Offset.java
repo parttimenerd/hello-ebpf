@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Offset in bytes for a field in a struct, from the start of the struct
  */
 @Target({ElementType.TYPE, ElementType.TYPE_USE})
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Offset {
     /**
      * Offset in bytes
