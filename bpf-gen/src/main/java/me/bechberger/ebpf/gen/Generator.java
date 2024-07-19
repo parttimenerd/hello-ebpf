@@ -23,8 +23,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Modifier;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -156,9 +154,7 @@ public class Generator {
         /**
          * Enumeration up to 64-bit values
          */
-        ENUM64,
-        VERBATIM,
-        ANY
+        ENUM64, VERBATIM, ANY
     }
 
     record JSONObjectWithType(JSONObject jsonObject, Kind kind) {
@@ -220,7 +216,7 @@ public class Generator {
 
     public void process() {
         try {
-            process((JSONArray) BTF.getBTFJSONTypes());
+            process(BTF.getBTFJSONTypes());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -230,26 +226,11 @@ public class Generator {
         process(types.stream().map(t -> new JSONObjectWithType((JSONObject) t)).toList());
     }
 
-    private static final List<Class<?>> preimportedClasses = List.of(
-            Struct.class,
-            Enum.class,
-            Offset.class,
-            Size.class,
-            Unsigned.class,
-            me.bechberger.ebpf.annotations.bpf.Type.class,
-            TypedefBase.class,
-            Ptr.class,
-            TypedEnum.class,
-            me.bechberger.ebpf.annotations.bpf.EnumMember.class,
-            me.bechberger.ebpf.annotations.bpf.InlineUnion.class,
-            Union.class,
-            Ptr.class,
-            BuiltinBPFFunction.class,
-            Nullable.class,
-            MethodIsBPFRelatedFunction.class,
-            NotUsableInJava.class,
-            OriginalName.class
-    );
+    private static final List<Class<?>> preimportedClasses = List.of(Struct.class, Enum.class, Offset.class,
+            Size.class, Unsigned.class, me.bechberger.ebpf.annotations.bpf.Type.class, TypedefBase.class, Ptr.class,
+            TypedEnum.class, me.bechberger.ebpf.annotations.bpf.EnumMember.class,
+            me.bechberger.ebpf.annotations.bpf.InlineUnion.class, Union.class, Ptr.class, BuiltinBPFFunction.class,
+            Nullable.class, MethodIsBPFRelatedFunction.class, NotUsableInJava.class, OriginalName.class);
 
     private static final Set<Class<?>> preimportedClassesSet = new HashSet<>(preimportedClasses);
 
@@ -343,9 +324,9 @@ public class Generator {
         }
 
         static AnnotationSpec createAnnotations(boolean typedefed, @Nullable Declarator declarator) {
-            var builder = addTypedefedIfNeeded(AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.bpf.Type.class)),
-                    typedefed)
-                    .addMember("noCCodeGeneration", "$L", true);
+            var builder =
+                    addTypedefedIfNeeded(AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.bpf.Type.class)),
+                            typedefed).addMember("noCCodeGeneration", "$L", true);
             if (declarator != null) {
                 builder.addMember("cType", "$S", declarator.toPrettyString().replaceAll("\\s+", " "));
             }
@@ -418,7 +399,8 @@ public class Generator {
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 // nothing to do
             }
         }
@@ -471,7 +453,8 @@ public class Generator {
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 typeNames.add(toTypeName(gen));
             }
         }
@@ -527,8 +510,7 @@ public class Generator {
                 }
                 var skippingMore = resolvedPointeeSkippingMirrorTypesAndTypedef();
                 if (skippingMore instanceof FwdType fwdType) {
-                    return ParameterizedTypeName.get(cts(Ptr.class), WildcardTypeName.subtypeOf(Object.class))
-                            .annotated(AnnotationSpec.builder(cts(OriginalName.class)).addMember("value", "$S", fwdType.toCType().toPrettyString()).build());
+                    return ParameterizedTypeName.get(cts(Ptr.class), WildcardTypeName.subtypeOf(Object.class)).annotated(AnnotationSpec.builder(cts(OriginalName.class)).addMember("value", "$S", fwdType.toCType().toPrettyString()).build());
                 }
 
                 // unpack typedefs
@@ -570,7 +552,8 @@ public class Generator {
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 if (!typeNames.add(toTypeName(gen))) { // already added
                     return;
                 }
@@ -636,7 +619,8 @@ public class Generator {
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 typeNames.add(toTypeName(gen));
                 elementType.resolve().collectUsedTypes(gen, goIntoStructOrUnion, typeNames);
             }
@@ -672,15 +656,12 @@ public class Generator {
                     return IntStream.range(0, unionType.members.size()).mapToObj(i -> {
                         var m = unionType.members.get(i);
                         var builder = FieldSpec.builder(Objects.requireNonNull(m.type.resolve().toTypeName(gen)),
-                                        escapeName(m.name() == null ? startName + "$" + i : m.name()))
-                                .addModifiers(Modifier.PUBLIC);
+                                escapeName(m.name() == null ? startName + "$" + i : m.name())).addModifiers(Modifier.PUBLIC);
                         if (!ignoreBitOffset) {
                             builder.addAnnotation(AnnotationSpec.builder(cts(Offset.class)).addMember("value", "$L",
                                     byteOffset).build());
                         }
-                        return builder.addAnnotation(AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.bpf.InlineUnion.class))
-                                .addMember("value", unionType.id + "")
-                                .build()).build();
+                        return builder.addAnnotation(AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.bpf.InlineUnion.class)).addMember("value", unionType.id + "").build()).build();
                     }).toList();
                 }
                 var properName = name(index);
@@ -691,8 +672,8 @@ public class Generator {
                 if (typeName == null) {
                     return List.of();
                 }
-                var builder = FieldSpec.builder(Objects.requireNonNull(typeName), escapeName(properName))
-                        .addModifiers(Modifier.PUBLIC);
+                var builder =
+                        FieldSpec.builder(Objects.requireNonNull(typeName), escapeName(properName)).addModifiers(Modifier.PUBLIC);
                 if (!ignoreBitOffset) {
                     builder.addAnnotation(AnnotationSpec.builder(cts(Offset.class)).addMember("value", "$L",
                             byteOffset).build());
@@ -705,7 +686,7 @@ public class Generator {
             }
         }
 
-        static sealed abstract class NameSettable implements PotentiallyNamedType {
+        sealed abstract class NameSettable implements PotentiallyNamedType {
             @Nullable
             String name;
             @Nullable
@@ -745,7 +726,7 @@ public class Generator {
             }
         }
 
-        static final class StructType extends NameSettable {
+        final class StructType extends NameSettable {
             private final int id;
             private final List<TypeMember> members;
 
@@ -776,10 +757,8 @@ public class Generator {
                                            boolean typedefed, Class<?> superClass) {
                 var typeName = type.toTypeName(gen);
                 assert typeName instanceof ClassName;
-                var builder = TypeSpec.classBuilder(((ClassName) typeName).simpleName())
-                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                        .addAnnotation(createAnnotations(typedefed, type.toCType(typedefed)))
-                        .superclass(cts(superClass));
+                var builder = TypeSpec.classBuilder(((ClassName) typeName).simpleName()).addModifiers(Modifier.PUBLIC
+                        , Modifier.STATIC).addAnnotation(createAnnotations(typedefed, type.toCType(typedefed))).superclass(cts(superClass));
                 if (markAllCombinedTypesAsNotUsableInJava) {
                     builder.addAnnotation(cts(NotUsableInJava.class));
                 }
@@ -833,9 +812,8 @@ public class Generator {
                 if (obj == this) return true;
                 if (obj == null || obj.getClass() != this.getClass()) return false;
                 var that = (StructType) obj;
-                return this.id == that.id &&
-                        Objects.equals(this.name, that.name) &&
-                        Objects.equals(this.members, that.members);
+                return this.id == that.id && Objects.equals(this.name, that.name) && Objects.equals(this.members,
+                        that.members);
             }
 
             @Override
@@ -845,14 +823,12 @@ public class Generator {
 
             @Override
             public String toString() {
-                return "StructType[" +
-                        "id=" + id + ", " +
-                        "name=" + name + ", " +
-                        "members=" + members + ']';
+                return "StructType[" + "id=" + id + ", " + "name=" + name + ", " + "members=" + members + ']';
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 var typeName = toTypeName(gen);
                 typeNames.add(typeName);
                 if (goIntoStructOrUnion.test(typeName)) {
@@ -861,7 +837,7 @@ public class Generator {
             }
         }
 
-        static final class UnionType extends NameSettable {
+        final class UnionType extends NameSettable {
             private final int id;
             private final List<TypeMember> members;
 
@@ -928,9 +904,8 @@ public class Generator {
                 if (obj == this) return true;
                 if (obj == null || obj.getClass() != this.getClass()) return false;
                 var that = (UnionType) obj;
-                return this.id == that.id &&
-                        Objects.equals(this.name, that.name) &&
-                        Objects.equals(this.members, that.members);
+                return this.id == that.id && Objects.equals(this.name, that.name) && Objects.equals(this.members,
+                        that.members);
             }
 
             @Override
@@ -940,14 +915,12 @@ public class Generator {
 
             @Override
             public String toString() {
-                return "UnionType[" +
-                        "id=" + id + ", " +
-                        "name=" + name + ", " +
-                        "members=" + members + ']';
+                return "UnionType[" + "id=" + id + ", " + "name=" + name + ", " + "members=" + members + ']';
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 var typeName = toTypeName(gen);
                 typeNames.add(typeName);
                 if (goIntoStructOrUnion.test(typeName)) {
@@ -962,38 +935,30 @@ public class Generator {
              * Generate something like {@code  @EnumMember(value = 23, name = "KIND_A") B}
              */
             TypeSpec toEnumFieldContant(Generator gen) {
-                return TypeSpec.anonymousClassBuilder("")
-                        .addAnnotation(AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.bpf.EnumMember.class))
-                                .addMember("value", "$LL", value)
-                                .addMember("name", "$S", name)
-                                .build())
-                        .addJavadoc("{@code $L = $L}", name, value)
-                        .build();
+                return TypeSpec.anonymousClassBuilder("").addAnnotation(AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.bpf.EnumMember.class)).addMember("value", "$LL", value).addMember("name", "$S", name).build()).addJavadoc("{@code $L = $L}", name, value).build();
             }
 
             /**
              * Generate something like {@code public static final int KIND_A = 23;}
              */
             FieldSpec toConstantFieldSpec(Generator gen, KnownInt valueType) {
-                return FieldSpec.builder(valueType.javaType().type(), escapeName(name))
-                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                        .initializer("$L" + (valueType.bits() > 32 ? "L" : ""), value)
-                        .build();
+                return FieldSpec.builder(valueType.javaType().type(), escapeName(name)).addModifiers(Modifier.PUBLIC,
+                        Modifier.STATIC, Modifier.FINAL).initializer("$L" + (valueType.bits() > 32 ? "L" : ""),
+                        value).build();
             }
         }
 
         /**
          * An enum if named, else just a set of fields
          */
-        static final class EnumType extends NameSettable implements PotentiallyNamedType {
+        final class EnumType extends NameSettable implements PotentiallyNamedType {
             private final int id;
-            private String synthName;
+            private final String synthName;
             private final int byteSize;
             private final boolean unsigned;
             private final List<EnumMember> members;
 
-            public EnumType(int id, @Nullable String name, int byteSize, boolean unsigned,
-                            List<EnumMember> members) {
+            public EnumType(int id, @Nullable String name, int byteSize, boolean unsigned, List<EnumMember> members) {
                 super(name);
                 this.id = id;
                 this.name = name;
@@ -1043,7 +1008,7 @@ public class Generator {
                 if (strings.isEmpty()) {
                     return "";
                 }
-                var first = strings.get(0);
+                var first = strings.getFirst();
                 for (int i = 0; i < first.length(); i++) {
                     char c = first.charAt(i);
                     for (var s : strings) {
@@ -1070,12 +1035,8 @@ public class Generator {
                     return null;
                 }
                 var valueType = valueType();
-                var builder = TypeSpec.enumBuilder(javaName())
-                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                        .addAnnotation(createAnnotations(typedefed, toCType(typedefed)))
-                        .addSuperinterface(ParameterizedTypeName.get(cts(Enum.class), gen.createClassName(javaName())))
-                        .addSuperinterface(ParameterizedTypeName.get(cts(TypedEnum.class),
-                                gen.createClassName(javaName()), valueType.javaType().inGenerics()));
+                var builder =
+                        TypeSpec.enumBuilder(javaName()).addModifiers(Modifier.PUBLIC, Modifier.STATIC).addAnnotation(createAnnotations(typedefed, toCType(typedefed))).addSuperinterface(ParameterizedTypeName.get(cts(Enum.class), gen.createClassName(javaName()))).addSuperinterface(ParameterizedTypeName.get(cts(TypedEnum.class), gen.createClassName(javaName()), valueType.javaType().inGenerics()));
                 for (var member : members) {
                     builder.addEnumConstant(escapeName(member.name()), member.toEnumFieldContant(gen));
                 }
@@ -1133,11 +1094,7 @@ public class Generator {
                 if (obj == this) return true;
                 if (obj == null || obj.getClass() != this.getClass()) return false;
                 var that = (EnumType) obj;
-                return this.id == that.id &&
-                        Objects.equals(this.name, that.name) &&
-                        this.byteSize == that.byteSize &&
-                        this.unsigned == that.unsigned &&
-                        Objects.equals(this.members, that.members);
+                return this.id == that.id && Objects.equals(this.name, that.name) && this.byteSize == that.byteSize && this.unsigned == that.unsigned && Objects.equals(this.members, that.members);
             }
 
             @Override
@@ -1147,16 +1104,13 @@ public class Generator {
 
             @Override
             public String toString() {
-                return "EnumType[" +
-                        "id=" + id + ", " +
-                        "name=" + name + ", " +
-                        "byteSize=" + byteSize + ", " +
-                        "unsigned=" + unsigned + ", " +
-                        "members=" + members + ']';
+                return "EnumType[" + "id=" + id + ", " + "name=" + name + ", " + "byteSize=" + byteSize + ", " +
+                        "unsigned=" + unsigned + ", " + "members=" + members + ']';
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 typeNames.add(toTypeName(gen));
             }
         }
@@ -1203,7 +1157,8 @@ public class Generator {
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 // nothing to do
             }
         }
@@ -1255,7 +1210,8 @@ public class Generator {
             }
 
             public TypeName toGenericTypeName(Generator gen, boolean addOriginalName) {
-                var tn = type.resolve() instanceof TypeDefType t ? t.toGenericTypeName(gen, false) : type.resolve().toGenericTypeName(gen);
+                var tn = type.resolve() instanceof TypeDefType t ? t.toGenericTypeName(gen, false) :
+                        type.resolve().toGenericTypeName(gen);
                 if (tn == null) {
                     return toTypeName(gen);
                 }
@@ -1280,38 +1236,31 @@ public class Generator {
                 if (t instanceof StructType || t instanceof UnionType || t instanceof EnumType) {
                     return t.toTypeSpec(gen, true);
                 }
-                return TypeSpec.classBuilder(name)
-                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                        .addAnnotation(createAnnotations(typedefed, toCType(typedefed)))
-                        .superclass(ParameterizedTypeName.get(cts(TypedefBase.class), t.toGenericTypeName(gen)))
-                        .addMethod(MethodSpec.constructorBuilder()
-                                .addModifiers(Modifier.PUBLIC)
-                                .addParameter(Objects.requireNonNullElse(t.toGenericTypeName(gen),
-                                        ClassName.get(Object.class)), "val")
-                                .addStatement("super(val)")
-                                .build())
-                        .build();
+                return TypeSpec.classBuilder(name).addModifiers(Modifier.PUBLIC, Modifier.STATIC).addAnnotation(createAnnotations(typedefed, toCType(typedefed))).superclass(ParameterizedTypeName.get(cts(TypedefBase.class), t.toGenericTypeName(gen))).addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(Objects.requireNonNullElse(t.toGenericTypeName(gen), ClassName.get(Object.class)), "val").addStatement("super(val)").build()).build();
             }
 
             private TypeName findUnderlyingTypeName(Generator gen) {
                 var t = type.resolve();
                 while (true) {
-                    if (t instanceof TypeDefType typedefType) {
-                        var underly = typedefType.findUnderlyingTypeName(gen);
-                        if (underly != null) {
-                            return underly;
+                    switch (t) {
+                        case TypeDefType typedefType -> {
+                            var underly = typedefType.findUnderlyingTypeName(gen);
+                            if (underly != null) {
+                                return underly;
+                            }
+                            return typedefType.toTypeName(gen, false);
                         }
-                        return typedefType.toTypeName(gen, false);
-                    } else if (t instanceof MirrorType mirrorType) {
-                        t = mirrorType.type.resolve();
-                    } else if (t instanceof EnumType enumType) {
-                        return enumType.toTypeName(gen);
-                    } else {
-                        var underly = t.toTypeName(gen);
-                        if (underly != null) {
-                            return underly;
+                        case MirrorType mirrorType -> t = mirrorType.type.resolve();
+                        case EnumType enumType -> {
+                            return enumType.toTypeName(gen);
                         }
-                        return gen.createClassName(name);
+                        case null, default -> {
+                            var underly = t.toTypeName(gen);
+                            if (underly != null) {
+                                return underly;
+                            }
+                            return gen.createClassName(name);
+                        }
                     }
                 }
             }
@@ -1340,7 +1289,8 @@ public class Generator {
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 if (dontEmitTypeDefs) {
                     if (findUnderlyingTypeName(gen) != null) {
                         return;
@@ -1417,7 +1367,8 @@ public class Generator {
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 type.resolve().collectUsedTypes(gen, goIntoStructOrUnion, typeNames);
             }
         }
@@ -1471,7 +1422,8 @@ public class Generator {
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 impl.collectUsedTypes(gen, goIntoStructOrUnion, typeNames);
             }
         }
@@ -1494,19 +1446,19 @@ public class Generator {
                 return toParameterSpec(gen, index, type.resolve().toTypeName(gen));
             }
 
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 type.resolve().collectUsedTypes(gen, goIntoStructOrUnion, typeNames);
             }
         }
 
-        static final class FuncProtoType implements Type {
+        final class FuncProtoType implements Type {
             private final int id;
             private final List<FuncParameter> parameters;
             private final Type returnType;
             private final boolean variadic;
 
-            public FuncProtoType(int id, List<FuncParameter> parameters, Type returnType,
-                                 boolean variadic) {
+            public FuncProtoType(int id, List<FuncParameter> parameters, Type returnType, boolean variadic) {
                 this.id = id;
                 this.variadic = variadic || isVariadic(parameters);
                 this.parameters = modifyLastIfVariadic(parameters, this.variadic);
@@ -1534,7 +1486,8 @@ public class Generator {
                 if (isVariadic) {
                     var list = new ArrayList<>(parameters);
                     var lastParam = list.getLast();
-                    list.set(parameters.size() - 1, new FuncParameter(lastParam.name, new ArrayType(new AnyType(), -1)));
+                    list.set(parameters.size() - 1, new FuncParameter(lastParam.name, new ArrayType(new AnyType(),
+                            -1)));
                     return list;
                 }
                 return parameters;
@@ -1552,12 +1505,8 @@ public class Generator {
 
             @Override
             public MethodSpec toMethodSpec(Generator gen, String name, @Nullable String javaDoc) {
-                var builder = MethodSpec.methodBuilder(name)
-                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                        .addAnnotation(cts(NotUsableInJava.class))
-                        .addAnnotation(AnnotationSpec.builder(cts(BuiltinBPFFunction.class)).addMember("value", "$S",
-                                toBPFFunctionConversionString(name)).build())
-                        .returns(returnType.toTypeName(gen)).varargs(variadic);
+                var builder =
+                        MethodSpec.methodBuilder(name).addModifiers(Modifier.PUBLIC, Modifier.STATIC).addAnnotation(cts(NotUsableInJava.class)).addAnnotation(AnnotationSpec.builder(cts(BuiltinBPFFunction.class)).addMember("value", "$S", toBPFFunctionConversionString(name)).build()).returns(returnType.toTypeName(gen)).varargs(variadic);
                 for (int i = 0; i < parameters.size(); i++) {
                     var param = parameters.get(i);
                     if (param.type.resolve() instanceof VoidType) { // this can never be
@@ -1595,7 +1544,8 @@ public class Generator {
                     var param = parameters.get(i);
                     if (param.type.resolve().shouldAddCast() && (!variadic || i < parameters.size() - 1)) {
                         var t = param.type.resolve().toCType();
-                        return "(" + (t instanceof Pointery ? ((Pointery) t).toPrettyVariableDefinition(null, "") : t.toPrettyString()) + ")$arg" + (i + 1);
+                        return "(" + (t instanceof Pointery ? ((Pointery) t).toPrettyVariableDefinition(null, "") :
+                                t.toPrettyString()) + ")$arg" + (i + 1);
                     }
                     if (i == parameters.size() - 1 && variadic) {
                         return "$arg" + (i + 1) + "_";
@@ -1635,10 +1585,7 @@ public class Generator {
                 if (obj == this) return true;
                 if (obj == null || obj.getClass() != this.getClass()) return false;
                 var that = (FuncProtoType) obj;
-                return this.id == that.id &&
-                        Objects.equals(this.parameters, that.parameters) &&
-                        Objects.equals(this.returnType, that.returnType) &&
-                        this.variadic == that.variadic;
+                return this.id == that.id && Objects.equals(this.parameters, that.parameters) && Objects.equals(this.returnType, that.returnType) && this.variadic == that.variadic;
             }
 
             @Override
@@ -1648,15 +1595,12 @@ public class Generator {
 
             @Override
             public String toString() {
-                return "FuncProtoType[" +
-                        "id=" + id + ", " +
-                        "parameters=" + parameters + ", " +
-                        "returnType=" + returnType + ", " +
-                        "variadic=" + variadic + ']';
+                return "FuncProtoType[" + "id=" + id + ", " + "parameters=" + parameters + ", " + "returnType=" + returnType + ", " + "variadic=" + variadic + ']';
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 parameters.forEach(p -> p.collectUsedTypes(gen, goIntoStructOrUnion, typeNames));
                 if (returnType != null) {
                     returnType.collectUsedTypes(gen, goIntoStructOrUnion, typeNames);
@@ -1685,9 +1629,8 @@ public class Generator {
 
             @Override
             public List<FieldSpec> toFieldSpecs(Generator gen) {
-                return List.of(FieldSpec.builder(type.toTypeName(gen), escapeName(name))
-                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                        .build());
+                return List.of(FieldSpec.builder(type.toTypeName(gen), escapeName(name)).addModifiers(Modifier.PUBLIC
+                        , Modifier.STATIC).build());
             }
 
             @Override
@@ -1701,7 +1644,8 @@ public class Generator {
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 type.collectUsedTypes(gen, goIntoStructOrUnion, typeNames);
             }
         }
@@ -1761,7 +1705,8 @@ public class Generator {
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 // nothing to do
             }
         }
@@ -1801,7 +1746,8 @@ public class Generator {
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 // nothing to do
             }
         }
@@ -1837,7 +1783,8 @@ public class Generator {
             }
 
             @Override
-            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion, Set<TypeName> typeNames) {
+            public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
+                                         Set<TypeName> typeNames) {
                 typeNames.add(toTypeName(gen));
             }
         }
@@ -2102,9 +2049,8 @@ public class Generator {
          * the class name is either the default class or the group for non-default groups
          */
         TypeSpec.Builder createTypeSpecBuilder(Generator gen, String className) {
-            var builder = TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                    .addAnnotation(AnnotationSpec.builder(SuppressWarnings.class)
-                            .addMember("value", "$S", "unused").build());
+            var builder =
+                    TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC, Modifier.FINAL).addAnnotation(AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unused").build());
             if (!classDescription(className).isEmpty()) {
                 builder.addJavadoc(classDescription(className));
             }
@@ -2119,7 +2065,9 @@ public class Generator {
             return List.of(SuppressWarnings.class);
         }
 
-        /** Get the group class part of the type, e.g. "xdp" for "xdp_md", {@code ""} is the default group */
+        /**
+         * Get the group class part of the type, e.g. "xdp" for "xdp_md", {@code ""} is the default group
+         */
         String group(String typeName) {
             return "";
         }
@@ -2153,7 +2101,7 @@ public class Generator {
                     type = ptrType.resolvedPointee();
                 } else if (type instanceof TypeDefType typedefType) {
                     var resolved = typedefType.type.resolve();
-                    if (resolved instanceof NameSettable typedefed && typedefed.javaName() == null){
+                    if (resolved instanceof NameSettable typedefed && typedefed.javaName() == null) {
                         typedefed.setJavaName(typedefType.name()); // we know the name
                         return null;
                     }
@@ -2172,14 +2120,14 @@ public class Generator {
         for (var type : types) {
             if (type instanceof TypeDefType typedefType) {
                 var resolved = typedefType.type.resolve();
-                if (resolved instanceof NameSettable typedefed && typedefed.javaName() == null){
+                if (resolved instanceof NameSettable typedefed && typedefed.javaName() == null) {
                     typedefed.setJavaName(typedefType.name()); // we know the name
                 }
             }
         }
 
         for (var type : types) {
-            List<TypeMember> members = null;
+            List<TypeMember> members;
             switch (type) {
                 case StructType structType -> members = structType.members();
                 case UnionType unionType -> members = unionType.members();
@@ -2213,15 +2161,14 @@ public class Generator {
                     withAnonymousParentTypes.add(type);
                     continue;
                 }
-                var usageNames =
-                        usagesList.stream().map(usage -> (usage.memberName == null ? "anon_member" : usage.memberName) + "_of_" + usage.type.javaName()).distinct().toList();
+                var usageNames = usagesList.stream().map(usage -> (usage.memberName == null ? "anon_member" :
+                        usage.memberName) + "_of_" + usage.type.javaName()).distinct().toList();
                 if (usageNames.size() == 1) {
                     type.setJavaName(usageNames.getFirst());
-                    changed = true;
                 } else {
                     type.setJavaName(usageNames.stream().sorted().limit(3).collect(Collectors.joining("_and_")));
-                    changed = true;
                 }
+                changed = true;
             }
             work = new HashSet<>(withAnonymousParentTypes);
         }
@@ -2255,10 +2202,12 @@ public class Generator {
                 if (alreadyEmitted.contains(name)) {
                     continue;
                 }
-                boolean emittedSomething = type.toTypeSpec(this) != null || !type.toFieldSpecs(this).isEmpty() || !config.createMethodSpec(this, type).isEmpty();
+                boolean emittedSomething =
+                        type.toTypeSpec(this) != null || !type.toFieldSpecs(this).isEmpty() || !config.createMethodSpec(this, type).isEmpty();
                 if (emittedSomething) {
                     var groupName = escapeName(config.group(name).isEmpty() ? className : config.group(name));
-                    var group = groups.computeIfAbsent(groupName, k -> new TypeGroup(this, config, basePackage, className, k, new ArrayList<>()));
+                    var group = groups.computeIfAbsent(groupName, k -> new TypeGroup(this, config, basePackage,
+                            className, k, new ArrayList<>()));
                     group.types.add(type);
                     alreadyEmitted.add(name);
                     typeMap.put(type.toTypeName(this), type);
@@ -2285,7 +2234,8 @@ public class Generator {
         }
 
         // find whether there are groups that can be merged
-        var mergeableGroups = sizes.entrySet().stream().filter(e -> e.getValue() <= config.maxGroupSizeForMerging()).toList();
+        var mergeableGroups =
+                sizes.entrySet().stream().filter(e -> e.getValue() <= config.maxGroupSizeForMerging()).toList();
 
         // create merged group
 
@@ -2298,7 +2248,8 @@ public class Generator {
         }
 
         if (mergedGroups.size() > 1) {
-            var mergedGroup = new TypeGroup(this, config, basePackage, className, config.mergedClassName(), collectedTypesForMerge);
+            var mergedGroup = new TypeGroup(this, config, basePackage, className, config.mergedClassName(),
+                    collectedTypesForMerge);
             groups.put(config.mergedClassName(), mergedGroup);
             // remove merged groups
             mergedGroups.forEach(e -> {
@@ -2322,7 +2273,9 @@ public class Generator {
             }
             var usedTypesFromRuntime = new HashSet<TypeName>();
             for (var type : groupEntry.getValue().types) {
-                type.collectUsedTypes(this, t -> config.group(t.toString()).isEmpty() || t.equals(type.toTypeName(this)), usedTypesFromRuntime);
+                type.collectUsedTypes(this,
+                        t -> config.group(t.toString()).isEmpty() || t.equals(type.toTypeName(this)),
+                        usedTypesFromRuntime);
             }
             for (var usedType : usedTypesFromRuntime) {
                 if (!config.group(usedType.toString()).isEmpty()) {
@@ -2361,72 +2314,75 @@ public class Generator {
         private final String className;
         private final List<Type> types;
 
-            private TypeGroup(Generator gen, GeneratorConfig config, String packageName, String defaultClassName, String className, List<Type> types) {
-                this.gen = gen;
-                this.config = config;
-                this.packageName = packageName;
-                this.defaultClassName = defaultClassName;
-                this.className = className;
-                this.types = types;
-            }
+        private TypeGroup(Generator gen, GeneratorConfig config, String packageName, String defaultClassName,
+                          String className, List<Type> types) {
+            this.gen = gen;
+            this.config = config;
+            this.packageName = packageName;
+            this.defaultClassName = defaultClassName;
+            this.className = className;
+            this.types = types;
+        }
 
-            TypeSpec computeType() {
-                var typeSpec = config.createTypeSpecBuilder(gen, className);
-                for (var type : types) {
-                    var t = type.toTypeSpec(gen);
-                    if (t != null) {
-                        typeSpec.addType(t);
-                    }
-                    for (var field : type.toFieldSpecs(gen)) {
-                        typeSpec.addField(field);
-                    }
-                    var methods = config.createMethodSpec(gen, type);
-                    if (!methods.isEmpty()) {
-                        methods.forEach(typeSpec::addMethod);
-                    }
+        TypeSpec computeType() {
+            var typeSpec = config.createTypeSpecBuilder(gen, className);
+            for (var type : types) {
+                var t = type.toTypeSpec(gen);
+                if (t != null) {
+                    typeSpec.addType(t);
                 }
-                return typeSpec.build();
-            }
-
-            Set<TypeName> usedTypes() {
-                var typeNames = new HashSet<TypeName>();
-                var ownTypeNames = types.stream().map(t -> t.toTypeName(gen)).filter(Objects::nonNull).collect(Collectors.toSet());
-                types.forEach(t -> t.collectUsedTypes(gen, ownTypeNames::contains, typeNames));
-                return typeNames;
-            }
-
-            Set<String> usedGroupClassNames() {
-                var usedTypes = usedTypes();
-                return usedTypes.stream().map(Object::toString).map(t -> {
-                    var g = config.group(t);
-                    return g.isEmpty() ? defaultClassName : g;
-                }).filter(Objects::nonNull).filter(t -> t.equals(className)).collect(Collectors.toSet());
-            }
-
-            List<String> createImportLines(List<String> moreImportedClasses) {
-                List<String> imports = Stream.concat(config.preimportedClasses().stream(),
-                        preimportedClasses.stream()).distinct().map(c -> "import " + c.getName() + ";").collect(Collectors.toList());
-                imports.addAll(config.additionalImports());
-                for (var t : moreImportedClasses) {
-                    if (t.equals(className)) {
-                        continue;
-                    }
-                    imports.add("import static " + packageName + "." + t + ".*;");
+                for (var field : type.toFieldSpecs(gen)) {
+                    typeSpec.addField(field);
                 }
-                Collections.sort(imports);
-                return imports;
+                var methods = config.createMethodSpec(gen, type);
+                if (!methods.isEmpty()) {
+                    methods.forEach(typeSpec::addMethod);
+                }
             }
+            return typeSpec.build();
+        }
 
-            String javaFile(List<String> moreImportedClasses) {
-                return """
-                        /** Auto-generated */
-                        package %s;
-                                        
-                        %s
-                                        
-                        %s
-                        """.formatted(packageName, String.join("\n", createImportLines(moreImportedClasses)), computeType().toString().trim());
+        Set<TypeName> usedTypes() {
+            var typeNames = new HashSet<TypeName>();
+            var ownTypeNames =
+                    types.stream().map(t -> t.toTypeName(gen)).filter(Objects::nonNull).collect(Collectors.toSet());
+            types.forEach(t -> t.collectUsedTypes(gen, ownTypeNames::contains, typeNames));
+            return typeNames;
+        }
+
+        Set<String> usedGroupClassNames() {
+            var usedTypes = usedTypes();
+            return usedTypes.stream().map(Object::toString).map(t -> {
+                var g = config.group(t);
+                return g.isEmpty() ? defaultClassName : g;
+            }).filter(Objects::nonNull).filter(t -> t.equals(className)).collect(Collectors.toSet());
+        }
+
+        List<String> createImportLines(List<String> moreImportedClasses) {
+            List<String> imports =
+                    Stream.concat(config.preimportedClasses().stream(), preimportedClasses.stream()).distinct().map(c -> "import " + c.getName() + ";").collect(Collectors.toList());
+            imports.addAll(config.additionalImports());
+            for (var t : moreImportedClasses) {
+                if (t.equals(className)) {
+                    continue;
+                }
+                imports.add("import static " + packageName + "." + t + ".*;");
             }
+            Collections.sort(imports);
+            return imports;
+        }
+
+        String javaFile(List<String> moreImportedClasses) {
+            return """
+                    /** Auto-generated */
+                    package %s;
+                                            
+                    %s
+                                            
+                    %s
+                    """.formatted(packageName, String.join("\n", createImportLines(moreImportedClasses)),
+                    computeType().toString().trim());
+        }
 
         public Generator gen() {
             return gen;
@@ -2457,12 +2413,7 @@ public class Generator {
             if (obj == this) return true;
             if (obj == null || obj.getClass() != this.getClass()) return false;
             var that = (TypeGroup) obj;
-            return Objects.equals(this.gen, that.gen) &&
-                    Objects.equals(this.config, that.config) &&
-                    Objects.equals(this.packageName, that.packageName) &&
-                    Objects.equals(this.defaultClassName, that.defaultClassName) &&
-                    Objects.equals(this.className, that.className) &&
-                    Objects.equals(this.types, that.types);
+            return Objects.equals(this.gen, that.gen) && Objects.equals(this.config, that.config) && Objects.equals(this.packageName, that.packageName) && Objects.equals(this.defaultClassName, that.defaultClassName) && Objects.equals(this.className, that.className) && Objects.equals(this.types, that.types);
         }
 
         @Override
@@ -2472,16 +2423,11 @@ public class Generator {
 
         @Override
         public String toString() {
-            return "TypeGroup[" +
-                    "gen=" + gen + ", " +
-                    "config=" + config + ", " +
-                    "packageName=" + packageName + ", " +
-                    "defaultClassName=" + defaultClassName + ", " +
-                    "className=" + className + ", " +
-                    "types=" + types + ']';
+            return "TypeGroup[" + "gen=" + gen + ", " + "config=" + config + ", " + "packageName=" + packageName + "," +
+                    " " + "defaultClassName=" + defaultClassName + ", " + "className=" + className + ", " + "types=" + types + ']';
         }
 
-        }
+    }
 
     public record TypeJavaFiles(String packageName, Map<String, String> javaFilePerClass) {
 
@@ -2513,10 +2459,13 @@ public class Generator {
 
     public TypeJavaFiles generateJavaFiles(GeneratorConfig config) {
         var groups = groupTypes(config.baseClassName, config);
-        return new TypeJavaFiles(basePackage, groups.stream().collect(Collectors.toMap(t -> t.className, t -> t.javaFile(groups.stream().map(g -> g.className).collect(Collectors.toList())))));
+        return new TypeJavaFiles(basePackage, groups.stream().collect(Collectors.toMap(t -> t.className,
+                t -> t.javaFile(groups.stream().map(g -> g.className).collect(Collectors.toList())))));
     }
 
-    /** Config for create bpf runtime classes */
+    /**
+     * Config for create bpf runtime classes
+     */
     public GeneratorConfig createBPFRuntimeConfig() {
         return new GeneratorConfig("runtime") {
             @Override
@@ -2527,8 +2476,8 @@ public class Generator {
                 if (className.equals(baseClassName)) {
                     return "Generated class for BPF runtime types that don't fit in other classes";
                 }
-                return "Generated class for BPF runtime types that start with " +
-                        className.replaceAll("Definitions$", "").toLowerCase();
+                return "Generated class for BPF runtime types that start with " + className.replaceAll("Definitions$"
+                        , "").toLowerCase();
             }
 
             @Override
@@ -2541,8 +2490,7 @@ public class Generator {
                 if (typeName.matches("_*[a-z0-9A-Z]+_[a-z].*")) {
                     // return first [a-z]+ part even with multiple leading _
                     var parts = typeName.split("_+");
-                    return toCamelCase(Arrays.stream(parts).filter(s -> !s.isEmpty()).findFirst().orElse("").toLowerCase() +
-                            "_definitions");
+                    return toCamelCase(Arrays.stream(parts).filter(s -> !s.isEmpty()).findFirst().orElse("").toLowerCase() + "_definitions");
                 }
                 return "";
             }
@@ -2572,9 +2520,7 @@ public class Generator {
     }
 
     public Set<TypeName> generatedJavaTypeNames() {
-        return Stream.concat(types.stream(), additionalTypes.stream()).filter(Objects::nonNull)
-                .map(t -> t.toTypeName(this)).filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+        return Stream.concat(types.stream(), additionalTypes.stream()).filter(Objects::nonNull).map(t -> t.toTypeName(this)).filter(Objects::nonNull).collect(Collectors.toSet());
     }
 
     public static class NameTranslator {
@@ -2585,7 +2531,8 @@ public class Generator {
             }
         }
 
-        record Translation(String javaType, String genericJavaType) {}
+        record Translation(String javaType, String genericJavaType) {
+        }
 
         private final Map<String, Translation> translations;
         private final Set<String> types;
@@ -2595,26 +2542,27 @@ public class Generator {
         public NameTranslator(Generator gen) {
             this.translations = new HashMap<>();
             this.types = new HashSet<>();
-            Stream.concat(gen.types.stream(), gen.additionalTypes.stream()).filter(Objects::nonNull)
-                    .forEach(t -> {
-                        if (t instanceof TypeDefType typedef) {
-                            types.add(typedef.name());
-                            types.add(typedef.toTypeName(gen).toString());
-                            if (!translations.containsKey(typedef.name())) {
-                                translations.put(typedef.name(), new Translation(typedef.toTypeName(gen).toString(),
-                                        Objects.requireNonNullElseGet(typedef.toGenericTypeName(gen), () -> typedef.toTypeName(gen)).toString()));
-                            }
-                        }
-                        if (t instanceof NamedType) {
-                            types.add(((NamedType) t).javaName());
-                        }
-                    });
+            Stream.concat(gen.types.stream(), gen.additionalTypes.stream()).filter(Objects::nonNull).forEach(t -> {
+                if (t instanceof TypeDefType typedef) {
+                    types.add(typedef.name());
+                    types.add(typedef.toTypeName(gen).toString());
+                    if (!translations.containsKey(typedef.name())) {
+                        translations.put(typedef.name(), new Translation(typedef.toTypeName(gen).toString(),
+                                Objects.requireNonNullElseGet(typedef.toGenericTypeName(gen),
+                                        () -> typedef.toTypeName(gen)).toString()));
+                    }
+                }
+                if (t instanceof NamedType) {
+                    types.add(((NamedType) t).javaName());
+                }
+            });
         }
 
         public VerbatimType translate(String name) {
             if (!KnownTypes.normalizeNames(name).equals(name)) {
                 var knownInt = KnownTypes.getKnowIntUnchecked(name);
-                return new VerbatimType(knownInt.cName(), knownInt.javaType().type().toString(), knownInt.javaType().inGenerics().toString());
+                return new VerbatimType(knownInt.cName(), knownInt.javaType().type().toString(),
+                        knownInt.javaType().inGenerics().toString());
             }
             if (translations.containsKey(name)) {
                 var res = translations.get(name);
@@ -2630,17 +2578,20 @@ public class Generator {
         }
 
         public NameTranslator put(String name, String javaType, String genericJavaType) {
-            this.translations.put(name, new Translation(translate(javaType).javaName, translate(genericJavaType).genericJavaName));
+            this.translations.put(name, new Translation(translate(javaType).javaName,
+                    translate(genericJavaType).genericJavaName));
             return this;
         }
 
         public NameTranslator put(String name, String javaType) {
-            this.translations.put(name, new Translation(translate(javaType).javaName, translate(javaType).genericJavaName));
+            this.translations.put(name, new Translation(translate(javaType).javaName,
+                    translate(javaType).genericJavaName));
             return this;
         }
 
         public NameTranslator put(String name, KnownInt knownInt) {
-            this.translations.put(name, new Translation(knownInt.javaType().type().toString(), knownInt.javaType().inGenerics().toString()));
+            this.translations.put(name, new Translation(knownInt.javaType().type().toString(),
+                    knownInt.javaType().inGenerics().toString()));
             return this;
         }
 

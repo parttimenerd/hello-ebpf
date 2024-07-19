@@ -35,6 +35,7 @@
                         <arg>--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
                         <arg>--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
                         <arg>--add-exports=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED</arg>
+                        <arg>--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>

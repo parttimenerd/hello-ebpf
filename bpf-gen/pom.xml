@@ -94,11 +94,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.jetbrains</groupId>
-      <artifactId>annotations</artifactId>
-      <version>24.0.1</version>
-    </dependency>
-    <dependency>
       <groupId>me.bechberger</groupId>
       <artifactId>ebpf-annotations</artifactId>
       <version>${project.version}</version>

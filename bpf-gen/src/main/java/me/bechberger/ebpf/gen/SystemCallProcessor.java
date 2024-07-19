@@ -3,7 +3,7 @@ package me.bechberger.ebpf.gen;
 import com.squareup.javapoet.*;
 import com.squareup.javapoet.TypeSpec.Builder;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
-import me.bechberger.ebpf.bpf.raw.Lib.syscall;
+import me.bechberger.ebpf.annotations.bpf.BPFInterface;
 import me.bechberger.ebpf.gen.DeclarationParser.CannotParseException;
 import me.bechberger.ebpf.gen.Generator.GeneratorConfig;
 import me.bechberger.ebpf.gen.Generator.NameTranslator;
@@ -38,7 +38,9 @@ public class SystemCallProcessor {
         }
     }
 
-    /** Add types from https://github.com/torvalds/linux/blob/master/include/linux/types.h */
+    /**
+     * Add types from <a href="https://github.com/torvalds/linux/blob/master/include/linux/types.h">...</a>
+     */
     public static NameTranslator addNecessaryTypesToNameTranslator(NameTranslator translator) {
         translator.put("socklen_t", KnownTypes.getKnownInt(64, false).orElseThrow());
         translator.put("idtype_t", KnownTypes.getKnownInt(32, true).orElseThrow());
@@ -48,7 +50,7 @@ public class SystemCallProcessor {
         return translator;
     }
 
-    public static List<SystemCall> parse(NameTranslator translator) throws IOException, InterruptedException {
+    public static List<SystemCall> parse(NameTranslator translator) {
         Map<String, SystemCall> syscalls = new HashMap<>();
         addNecessaryTypesToNameTranslator(translator);
 
@@ -99,11 +101,11 @@ public class SystemCallProcessor {
             syscalls.putAll(parseManPage(translator, name, manPage));
         }
 
-        return syscalls.entrySet().stream().filter(e -> syscallNames.contains(e.getKey()))
-                .sorted(Entry.comparingByKey()).map(Entry::getValue).collect(Collectors.toList());
+        return syscalls.entrySet().stream().filter(e -> syscallNames.contains(e.getKey())).sorted(Entry.comparingByKey()).map(Entry::getValue).collect(Collectors.toList());
     }
 
-    static TypeJavaFiles createSystemClassInterface(String basePackage, List<SystemCall> systemCalls, TypeJavaFiles generated) {
+    static TypeJavaFiles createSystemClassInterface(String basePackage, List<SystemCall> systemCalls,
+                                                    TypeJavaFiles generated) {
         var generator = new Generator(basePackage);
         systemCalls.stream().filter(s -> !s.isUnknown()).forEach(s -> generator.addAdditionalType(s.funcDefinition()));
         return generator.generateJavaFiles(new GeneratorConfig("SystemCallHooks") {
@@ -122,9 +124,7 @@ public class SystemCallProcessor {
 
             @Override
             public Builder createTypeSpecBuilder(Generator gen, String className) {
-                return TypeSpec.interfaceBuilder(className).addModifiers(Modifier.PUBLIC)
-                        .addAnnotation(AnnotationSpec.builder(SuppressWarnings.class)
-                        .addMember("value", "$S", "unused").build());
+                return TypeSpec.interfaceBuilder(className).addModifiers(Modifier.PUBLIC).addAnnotation(AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unused").build()).addAnnotation(BPFInterface.class);
             }
 
             @Override
@@ -153,7 +153,8 @@ public class SystemCallProcessor {
         }
     }
 
-    private static Map<String, SystemCall> parseManPage(NameTranslator translator, String name, @Nullable List<String> manPage) {
+    private static Map<String, SystemCall> parseManPage(NameTranslator translator, String name,
+                                                        @Nullable List<String> manPage) {
         // call man 2 name
         Map<String, SystemCall> ret = new HashMap<>();
         if (manPage == null) {
@@ -173,7 +174,8 @@ public class SystemCallProcessor {
                 var javadoc = new Markdown().markdownToHTML(amendedDescription);
                 FuncType funcType = null;
                 try {
-                    funcType = DeclarationParser.parseFunctionDeclaration(translator, strippedDefinition).setJavaDoc(javadoc);
+                    funcType =
+                            DeclarationParser.parseFunctionDeclaration(translator, strippedDefinition).setJavaDoc(javadoc);
                 } catch (Exception e) {
                     //logger.log(Level.INFO, "Cannot parse function variable declaration: " + strippedDefinition, e);
                 }
@@ -238,14 +240,14 @@ public class SystemCallProcessor {
         }
         var open = line.chars().filter(c -> c == '(').count();
         var close = line.chars().filter(c -> c == ')').count();
-        String definition = line.strip();
+        StringBuilder definition = new StringBuilder(line.strip());
         int j = startIndex + 1;
         while (open != close) {
             line = clean(lines.get(j));
-            if (!definition.endsWith("(") && !line.startsWith(")")) {
-                definition += " ";
+            if (!definition.toString().endsWith("(") && !line.startsWith(")")) {
+                definition.append(" ");
             }
-            definition += line;
+            definition.append(line);
             open += line.chars().filter(c -> c == '(').count();
             close += line.chars().filter(c -> c == ')').count();
             j++;
@@ -253,14 +255,15 @@ public class SystemCallProcessor {
                 throw new CannotParseException("Could parse definition for " + name);
             }
         }
-        return definition;
+        return definition.toString();
     }
 
     static Map<String, SystemCallProcessor.SystemCall> parseManPage(String name, String manPage) {
         return parseManPage(new Generator("").createNameTranslator(), name, manPage);
     }
 
-    static Map<String, SystemCallProcessor.SystemCall> parseManPage(NameTranslator translator, String name, String manPage) {
+    static Map<String, SystemCallProcessor.SystemCall> parseManPage(NameTranslator translator, String name,
+                                                                    String manPage) {
         return parseManPage(translator, name, Arrays.stream(manPage.split("\n")).toList());
     }
 
@@ -282,7 +285,9 @@ public class SystemCallProcessor {
         return Arrays.stream(namesLine.trim().split("[–-]")[0].split(",")).map(String::trim).toList();
     }
 
-    /** From snake to camel case, upper case */
+    /**
+     * From snake to camel case, upper case
+     */
     static String toCamelCase(String string) {
         return Arrays.stream(string.split("_")).filter(s -> !s.isEmpty()).map(s -> s.substring(0, 1).toUpperCase() + (s.length() == 1 ? "" : s.substring(1))).collect(Collectors.joining());
     }
@@ -300,7 +305,8 @@ public class SystemCallProcessor {
         return ret;
     }
 
-    static MethodSpec createSystemCallRelatedMethod(Generator gen, FuncType syscall, boolean isEntry, boolean isKProbe, @Nullable MethodSpec refJavaDoc) {
+    static MethodSpec createSystemCallRelatedMethod(Generator gen, FuncType syscall, boolean isEntry,
+                                                    boolean isKProbe, @Nullable MethodSpec refJavaDoc) {
         var impl = syscall.impl();
 
         String section;
@@ -332,25 +338,20 @@ public class SystemCallProcessor {
         String docFmt;
         if (isEntry) {
             docFmt = """
-                        Enter the system call {@code %s}
-                        %s""";
+                    Enter the system call {@code %s}
+                    %s""";
         } else {
             docFmt = """
-                        Exit the system call {@code %s}
-                        %s""";
+                    Exit the system call {@code %s}
+                    %s""";
             if (!impl.returnsVoid()) {
                 docFmt += """
-                        
+                                                
                         @param ret return value of the system call
                         """;
             }
         }
         String doc = docFmt.formatted(syscall.name(), ""); // TODO: fix java doc
-        /*if (refJavaDoc == null) {
-            doc = docFmt.formatted(syscall.name(), clean(syscall.javaDoc()));
-        } else {
-            doc = docFmt.formatted(syscall.name(), "@see #" + refJavaDoc.name);
-        }*/
         var spec = impl.toMethodSpec(gen, namePrefix + toCamelCase(syscall.name()), doc);
 
         // problem: this is not an interface method, and it has the wrong annotation
@@ -358,25 +359,21 @@ public class SystemCallProcessor {
         builder.modifiers.clear();
         builder.addModifiers(Modifier.PUBLIC, Modifier.DEFAULT);
         builder.annotations.clear();
-        var headerTemplateArgs = impl.parameters().stream().map(p -> p.type().resolve().toCType().toPrettyString() + " " + p.name()).collect(Collectors.toList());
+        var headerTemplateArgs = impl.parameters().stream().map(p -> p.type().resolve().toCType().toPrettyString() +
+                " " + p.name()).collect(Collectors.toList());
         if (!isEntry && !impl.returnsVoid()) {
             headerTemplateArgs.add(impl.returnType().toCType().toPrettyString() + " ret");
-            builder.parameters.add(ParameterSpec.builder(impl.returnType().toTypeName(gen), "ret").build());
+            builder.parameters.add(ParameterSpec.builder(Objects.requireNonNull(impl.returnType().toTypeName(gen)),
+                    "ret").build());
         }
 
         builder.returns(TypeName.VOID);
         builder.varargs(false);
-        var headerTemplate = "int %s(do_%s%s%s)".formatted(
-                macro,
-                syscall.name(),
-                isEntry ? "" : "_exit",
-                headerTemplateArgs.isEmpty() ? "" : ", " + String.join(", ", headerTemplateArgs)
-        );
-        builder.addAnnotation(
-                AnnotationSpec.builder(ClassName.get("", BPFFunction.class.getSimpleName()))
-                        .addMember("headerTemplate", "$S", headerTemplate)
-                        .addMember("lastStatement", "$S", "return 0;")
-                        .addMember("section", "$S", section).build());
+        var headerTemplate = "int %s(do_%s%s%s)".formatted(macro, syscall.name(), isEntry ? "" : "_exit",
+                headerTemplateArgs.isEmpty() ? "" : ", " + String.join(", ", headerTemplateArgs));
+        builder.addAnnotation(AnnotationSpec.builder(ClassName.get("", BPFFunction.class.getSimpleName())).addMember(
+                "headerTemplate", "$S", headerTemplate).addMember("lastStatement", "$S", "return 0;").addMember(
+                        "section", "$S", section).addMember("autoAttach", "$L", true).build());
         return builder.build();
     }
 }

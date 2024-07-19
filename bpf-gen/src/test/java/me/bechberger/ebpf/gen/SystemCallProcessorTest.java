@@ -3,12 +3,10 @@ package me.bechberger.ebpf.gen;
 import com.squareup.javapoet.MethodSpec;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SystemCallProcessorTest {
 
@@ -16,27 +14,27 @@ public class SystemCallProcessorTest {
     public void testSimpleManPage() {
         String manPageExcerpt = """
                 vfork(2)                                                                                                                                                                                                                          System Calls Manual                                                                                                                                                                                                                          vfork(2)
-                
+                                
                 NAME
                        vfork - description
-                
+                                
                 LIBRARY
                        Bla
-                
+                                
                 SYNOPSIS
                        #include <unistd.h>
-                
+                                
                        pid_t vfork(void);
-                
+                                
                    More bla
-                
+                                
                 DESCRIPTION
                    Standard description
                        (From POSIX.1) Standard Description
-                
+                                
                    Linux description
                        vfork(), blub
-                
+                                
                        More description
                 """;
         var syscalls = SystemCallProcessor.parseManPage("vfork", manPageExcerpt);
@@ -52,19 +50,19 @@ public class SystemCallProcessorTest {
     public void testManPageWithMultipleSystemCalls() {
         String manPageExcerpt = """
                 vfork(2)                                                                                                                                                                                                                          System Calls Manual                                                                                                                                                                                                                          vfork(2)
-                
+                                
                 NAME
                        vfork, vfork2 - description
                 LIBRARY
                        Bla
-                
+                                
                 SYNOPSIS
                        #include <unistd.h>
-                
+                                
                        pid_t vfork(void);
                        pid_t vfork_(void);
                        pid_t vfork2(int a);
-                
+                                
                    More bla
                 """;
         var syscalls = SystemCallProcessor.parseManPage("vfork", manPageExcerpt);
@@ -81,20 +79,20 @@ public class SystemCallProcessorTest {
     public void testManPageWithMultilineSystemCallDefinition() {
         String manPageExcerpt = """
                 vfork(2)                                                                                                                                                                                                                          System Calls Manual                                                                                                                                                                                                                          vfork(2)
-                
+                                
                 NAME
                        vfork - description
-                
+                                
                 LIBRARY
                        Bla
-                
+                                
                 SYNOPSIS
                        #include <unistd.h>
-                
+                                
                        pid_t vfork(
                            void
                        );
-                
+                                
                    More bla
                 """;
         var syscalls = SystemCallProcessor.parseManPage("vfork", manPageExcerpt);
@@ -108,16 +106,16 @@ public class SystemCallProcessorTest {
     public void testManPageWithMultipleMultilineSystemCallDefinitions() {
         String manPageExcerpt = """
                 vfork(2)                                                                                                                                                                                                                          System Calls Manual                                                                                                                                                                                                                          vfork(2)
-                
+                                
                 NAME
                        vfork,vfork2, vfork3 - description
-                
+                                
                 LIBRARY
                        Bla
-                
+                                
                 SYNOPSIS
                        #include <unistd.h>
-                
+                                
                        pid_t vfork(
                            void
                        );
@@ -144,18 +142,18 @@ public class SystemCallProcessorTest {
     public void testManPageWithSystemCallWithoutGLibcWrapper() {
         String manPageExcerpt = """
                 vfork(2)                                                                                                                                                                                                                          System Calls Manual                                                                                                                                                                                                                          vfork(2)
-                
+                                
                 NAME
                        vfork - description
-                
+                                
                 LIBRARY
                        Bla
-                
+                                
                 SYNOPSIS
                        #include <unistd.h>
-                
+                                
                        long syscall(SYS_vfork, struct clone_args *cl_args, size_t size);
-                
+                                
                    More bla
                 """;
         var syscalls = SystemCallProcessor.parseManPage("vfork", manPageExcerpt);
@@ -169,23 +167,23 @@ public class SystemCallProcessorTest {
         String manPageExcerpt = """
                 NAME
                        vfork3, vfork, clone3 - create a child process
-                
+                                
                 LIBRARY
                        Standard C library (libc, -lc)
-                
+                                
                 SYNOPSIS
                        /* Prototype for the glibc wrapper function */
-                
+                                
                        #define _GNU_SOURCE
                        #include <sched.h>
-                
+                                
                        int vfork(int (*fn)(void *_Nullable));
-                
+                                
                        long syscall(SYS_vfork3, struct clone_args *cl_args, size_t size);
-                
+                                
                        Text that contains vfork3().
-                
-                
+                                
+                                
                 """;
         var syscalls = SystemCallProcessor.parseManPage("vfork", manPageExcerpt);
         assertEquals(Set.of("vfork3", "vfork"), syscalls.keySet());
@@ -197,19 +195,19 @@ public class SystemCallProcessorTest {
     public void testManPageWhereReturnTypeIsOnAnotherLine() {
         String manPageExcerpt = """
                 vfork(2)                                                                                                                                                                                                                          System Calls Manual                                                                                                                                                                                                                          vfork(2)
-                
+                                
                 NAME
                        vfork - description
-                
+                                
                 LIBRARY
                        Bla
-                
+                                
                 SYNOPSIS
                        #include <unistd.h>
-                
+                                
                        pid_t
                        vfork(void);
-                
+                                
                    More bla
                 """;
         var syscalls = SystemCallProcessor.parseManPage("vfork", manPageExcerpt);
@@ -222,44 +220,45 @@ public class SystemCallProcessorTest {
     public void testManPageWithSyscall() {
         String manPageExcerpt = """
                 vfork(2)                                                                                                                                                                                                                          System Calls Manual                                                                                                                                                                                                                          vfork(2)
-                
+                                
                 NAME
                        vfork - description
-                
+                                
                 LIBRARY
                        Bla
-                
+                                
                 SYNOPSIS
                        #include <unistd.h>
-                
+                                
                        void *syscall(SYS_vfork, unsigned long addr, unsigned long length,
                                      unsigned long prot, unsigned long flags);
-                
+                                
                    More bla
                 """;
         var syscalls = SystemCallProcessor.parseManPage("vfork", manPageExcerpt);
         assertEquals(Set.of("vfork"), syscalls.keySet());
         var syscall = syscalls.get("vfork");
-        assertEquals("void* vfork(unsigned long addr, unsigned long length, unsigned long prot, unsigned long flags);", syscall.definition());
+        assertEquals("void* vfork(unsigned long addr, unsigned long length, unsigned long prot, unsigned long flags);"
+                , syscall.definition());
     }
 
     @Test
     public void testManPageWithDeprecatedSyscall() {
         String manPageExcerpt = """
                 vfork(2)                                                                                                                                                                                                                          System Calls Manual                                                                                                                                                                                                                          vfork(2)
-                
+                                
                 NAME
                        vfork - description
-                
+                                
                 LIBRARY
                        Bla
-                
+                                
                 SYNOPSIS
                        #include <unistd.h>
-                
+                                
                        pid_t getpgrp(void);                            /* POSIX.1 version */
                        [[deprecated]] pid_t vfork(pid_t pid);        /* BSD version */
-                
+                                
                    More bla
                 """;
         var syscalls = SystemCallProcessor.parseManPage("vfork", manPageExcerpt);
@@ -280,13 +279,14 @@ public class SystemCallProcessorTest {
                 SYNOPSIS
                        #include <unistd.h>
                                 
-                       char* unlink(const char *pathname);            
+                       char* unlink(const char *pathname);
                 """;
         var syscalls = SystemCallProcessor.parseManPage("unlink", manPage);
         assertEquals(1, syscalls.size());
         var syscall = syscalls.get("unlink");
         var gen = new Generator("");
-        var resultingCode = SystemCallProcessor.createSystemCallRelatedInterfaceMethods(gen, syscall.funcDefinition()).stream().map(MethodSpec::toString).collect(Collectors.joining("\n\n"));
+        var resultingCode = SystemCallProcessor.createSystemCallRelatedInterfaceMethods(gen,
+                syscall.funcDefinition()).stream().map(MethodSpec::toString).collect(Collectors.joining("\n\n"));
         assertEquals("""
                 /**
                  * Enter the system call {@code unlink}

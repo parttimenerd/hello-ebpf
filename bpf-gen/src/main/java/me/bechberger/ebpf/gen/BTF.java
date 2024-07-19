@@ -18,11 +18,11 @@ public class BTF {
         tempDirectory.toFile().deleteOnExit();
         var tempFile = tempDirectory.resolve("vmlinux.json");
         var errorFile = tempDirectory.resolve("error.txt");
-        var process = new ProcessBuilder("bpftool", "btf", "dump", "file", "/sys/kernel/btf/vmlinux", "format",
-                "raw", "-j").redirectOutput(tempFile.toFile()).redirectError(errorFile.toFile()).start();
+        var process = new ProcessBuilder("bpftool", "btf", "dump", "file", "/sys/kernel/btf/vmlinux", "format", "raw"
+                , "-j").redirectOutput(tempFile.toFile()).redirectError(errorFile.toFile()).start();
         if (process.waitFor() != 0) {
-            logger.severe("Could not obtain vmlinux.h header file via 'bpftool btf "
-                    + "dump file /sys/kernel/btf/vmlinux format c'\n" + Files.readString(errorFile));
+            logger.severe("Could not obtain vmlinux.h header file via 'bpftool btf " + "dump file " +
+                    "/sys/kernel/btf/vmlinux format c'\n" + Files.readString(errorFile));
         }
         return tempFile;
     }

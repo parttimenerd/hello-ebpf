@@ -41,7 +41,8 @@ public class KnownTypes {
     /**
      * Integer (and float for simplicity) type with known properties, with is mapped to a Java type.
      */
-    public record KnownInt(String cName, int bits, String encoding, KnownTypes.JavaType javaType, BPFIntType<?> bpfType) {
+    public record KnownInt(String cName, int bits, String encoding, KnownTypes.JavaType javaType,
+                           BPFIntType<?> bpfType) {
         boolean isSigned() {
             return encoding.equals("SIGNED");
         }
@@ -51,36 +52,29 @@ public class KnownTypes {
         }
     }
 
-    private static final KnownInt[] knownInts = {
-            new KnownInt("_Bool", 8, "BOOL", JavaType.create(TypeName.BOOLEAN, Boolean.class), BPFIntType.BOOL),
-            new KnownInt("char", 8, "(none)", JavaType.create(TypeName.CHAR, Character.class), BPFIntType.CHAR),
-            new KnownInt("signed char", 8, "SIGNED", JavaType.create(TypeName.BYTE, Byte.class),
-                    BPFIntType.SIGNED_CHAR),
-            new KnownInt("unsigned char", 8, "(none)", JavaType.createUnsigned(TypeName.CHAR, Character.class),
-                    BPFIntType.CHAR),
-            new KnownInt("short int", 16, "SIGNED", JavaType.create(TypeName.SHORT, Short.class), BPFIntType.INT16),
-            new KnownInt("short unsigned int", 16, "(none)", JavaType.createUnsigned(TypeName.SHORT, Short.class),
-                    BPFIntType.UINT16),
+    private static final KnownInt[] knownInts = {new KnownInt("_Bool", 8, "BOOL", JavaType.create(TypeName.BOOLEAN,
+            Boolean.class), BPFIntType.BOOL), new KnownInt("char", 8, "(none)", JavaType.create(TypeName.CHAR,
+            Character.class), BPFIntType.CHAR), new KnownInt("signed char", 8, "SIGNED",
+            JavaType.create(TypeName.BYTE, Byte.class), BPFIntType.SIGNED_CHAR), new KnownInt("unsigned char", 8,
+            "(none)", JavaType.createUnsigned(TypeName.CHAR, Character.class), BPFIntType.CHAR), new KnownInt("short " +
+            "int", 16, "SIGNED", JavaType.create(TypeName.SHORT, Short.class), BPFIntType.INT16), new KnownInt("short" +
+            " unsigned int", 16, "(none)", JavaType.createUnsigned(TypeName.SHORT, Short.class), BPFIntType.UINT16),
             new KnownInt("int", 32, "SIGNED", JavaType.create(TypeName.INT, Integer.class), BPFIntType.INT32),
             new KnownInt("unsigned int", 32, "(none)", JavaType.createUnsigned(TypeName.INT, Integer.class),
-                    BPFIntType.UINT32),
-            new KnownInt("long int", 64, "SIGNED", JavaType.create(TypeName.LONG, Long.class), BPFIntType.INT64),
-            new KnownInt("long unsigned int", 64, "(none)", JavaType.createUnsigned(TypeName.LONG, Long.class),
-                    BPFIntType.UINT64),
-            new KnownInt("long long int", 64, "SIGNED", JavaType.create(TypeName.LONG, Long.class), BPFIntType.INT64),
-            new KnownInt("long long unsigned int", 64, "(none)", JavaType.createUnsigned(TypeName.LONG, Long.class),
-                    BPFIntType.UINT64),
+                    BPFIntType.UINT32), new KnownInt("long int", 64, "SIGNED", JavaType.create(TypeName.LONG,
+            Long.class), BPFIntType.INT64), new KnownInt("long unsigned int", 64, "(none)",
+            JavaType.createUnsigned(TypeName.LONG, Long.class), BPFIntType.UINT64), new KnownInt("long long int", 64,
+            "SIGNED", JavaType.create(TypeName.LONG, Long.class), BPFIntType.INT64), new KnownInt("long long unsigned" +
+            " int", 64, "(none)", JavaType.createUnsigned(TypeName.LONG, Long.class), BPFIntType.UINT64),
             new KnownInt("__int128", 128, "SIGNED", JavaType.create(ClassName.get(Int128.class), Int128.class),
-                    BPFIntType.INT128),
-            new KnownInt("__int128 unsigned", 128, "(none)", JavaType.createUnsigned(ClassName.get(Int128.class),
-                    Int128.class), BPFIntType.UINT128),
-            new KnownInt("ssizetype", 64, "SIGNED", JavaType.create(TypeName.LONG, Long.class), BPFIntType.INT64),
+                    BPFIntType.INT128), new KnownInt("__int128 unsigned", 128, "(none)",
+            JavaType.createUnsigned(ClassName.get(Int128.class), Int128.class), BPFIntType.UINT128), new KnownInt(
+                    "ssizetype", 64, "SIGNED", JavaType.create(TypeName.LONG, Long.class), BPFIntType.INT64),
             new KnownInt("float", 32, "(none)", JavaType.create(TypeName.FLOAT, Float.class), BPFIntType.FLOAT),
-            new KnownInt("double", 64, "(none)", JavaType.create(TypeName.DOUBLE, Double.class), BPFIntType.DOUBLE)
-    };
+            new KnownInt("double", 64, "(none)", JavaType.create(TypeName.DOUBLE, Double.class), BPFIntType.DOUBLE)};
 
-    private static final Map<String, KnownTypes.KnownInt> cNameToKnownInt = Arrays.stream(knownInts)
-            .collect(Collectors.toMap(KnownInt::cName, Function.identity()));
+    private static final Map<String, KnownTypes.KnownInt> cNameToKnownInt =
+            Arrays.stream(knownInts).collect(Collectors.toMap(KnownInt::cName, Function.identity()));
 
     /**
      * Get the known int type for the given C name.
@@ -97,18 +91,14 @@ public class KnownTypes {
                 return Optional.of(knownInt);
             } else {
                 // log differing properties
-                logger.warning("Known int type " + cName + " has differing properties: " + knownInt.bits() + " bits " +
-                        "and " + knownInt.encoding() + " encoding, not " + bits + " bits and " + encoding + " " +
-                        "encoding");
+                logger.warning("Known int type " + cName + " has differing properties: " + knownInt.bits() + " bits " + "and " + knownInt.encoding() + " encoding, not " + bits + " bits and " + encoding + " " + "encoding");
             }
         }
         return Optional.empty();
     }
 
     static Optional<KnownInt> getKnownInt(int bits, boolean signed) {
-        return Arrays.stream(knownInts)
-                .filter(knownInt -> knownInt.bits() == bits && knownInt.isSigned() == signed)
-                .findFirst();
+        return Arrays.stream(knownInts).filter(knownInt -> knownInt.bits() == bits && knownInt.isSigned() == signed).findFirst();
     }
 
     /**
@@ -135,9 +125,8 @@ public class KnownTypes {
             return getKnownInt(width, !isUnsigned).orElseThrow().cName();
         }
         return switch (name) {
-            case "unsigned long" -> "long unsigned int";
+            case "unsigned long", "size_t" -> "long unsigned int";
             case "long" -> "long int";
-            case "size_t" -> "long unsigned int";
             default -> name;
         };
     }

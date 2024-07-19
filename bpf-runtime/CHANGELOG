@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.1.5
+
+- Improved the annotations of the `SystemCallHooks` interface
+
 ## 0.1.4
 
 - Make all annotations documented

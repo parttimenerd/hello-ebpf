@@ -24,8 +24,7 @@ import java.util.logging.Logger;
 /**
  * Usage: java ... <folder> <helper-json-file> [...]
  */
-@Command(name = "bpf-gen", mixinStandardHelpOptions = true,
-        description = "Generates eBPF code from Java classes")
+@Command(name = "bpf-gen", mixinStandardHelpOptions = true, description = "Generates eBPF code from Java classes")
 public class Main implements Runnable {
 
     // create with picocli
@@ -35,16 +34,16 @@ public class Main implements Runnable {
     @Parameters(index = "1", description = "JSON file containing the helper function descriptions")
     private Path helperJsonFile;
 
-    @Parameters(index = "2", description = "Package name of the generated Java classes for the runtime", defaultValue = "me.bechberger" +
-            ".ebpf.runtime")
+    @Parameters(index = "2", description = "Package name of the generated Java classes for the runtime",
+            defaultValue = "me.bechberger" + ".ebpf.runtime")
     private String runtimePackageName = "me.bechberger.ebpf.runtime";
 
-    @Parameters(index = "3", description = "Package name of the generated Java class for the helpers", defaultValue = "me.bechberger" +
-            ".ebpf.runtime.helpers")
+    @Parameters(index = "3", description = "Package name of the generated Java class for the helpers", defaultValue =
+            "me.bechberger" + ".ebpf.runtime.helpers")
     private String helperPackageName = "me.bechberger.ebpf.runtime.helpers";
 
-    @Parameters(index = "4", description = "Package name of the generated interfaces", defaultValue = "me.bechberger" +
-            ".ebpf.runtime.interfaces")
+    @Parameters(index = "4", description = "Package name of the generated interfaces", defaultValue =
+            "me.bechberger" + ".ebpf.runtime.interfaces")
     private String interfacePackageName = "me.bechberger.ebpf.runtime.interfaces";
 
     @Option(names = {"-v", "--verbose"}, description = "Be verbose")

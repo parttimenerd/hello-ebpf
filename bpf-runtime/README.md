@@ -1,6 +1,6 @@
-Raw BPF Bindings
+BPF Runtime
 ================
-[![Maven Central](https://img.shields.io/maven-central/v/me.bechberger/rawbpf)](https://search.maven.org/artifact/me.bechberger/rawbpf)
+[![Maven Central](https://img.shields.io/maven-central/v/me.bechberger/bpf-runtime)](https://search.maven.org/artifact/me.bechberger/bpf-runtime)
 
 Definitions for Linux eBPF types and other helpers and interfaces,
 generated from the Linux kernel sources by using [../bpf-gen](../bpf-gen).
@@ -11,15 +11,9 @@ These bindings are regularly updated and published on Maven Central:
 <dependency>
     <groupId>me.bechberger</groupId>
     <artifactId>bpf-runtime</artifactId>
-    <version>0.1.4</version>
+    <version>0.1.5</version>
 </dependency>
 ```
-
-Requirements
-------------
-- Java 22
-- Linux 64-bit
-- btftool
 
 Build
 -----

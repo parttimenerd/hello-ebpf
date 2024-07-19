@@ -114,7 +114,8 @@ public class HelperJSONProcessor {
 
     private String descriptionToJavaDoc(String description, boolean withReturn) {
         var parts = splitDescription(description);
-        return markdown.markdownToHTML(parts.mainDescription) + (withReturn ? "\n" + "@return " + markdown.markdownToHTML(parts.returnDescription) : "");
+        return markdown.markdownToHTML(parts.mainDescription) + (withReturn ?
+                "\n" + "@return " + markdown.markdownToHTML(parts.returnDescription) : "");
     }
 
     /**
@@ -124,7 +125,8 @@ public class HelperJSONProcessor {
         return generator.generateJavaFiles(new GeneratorConfig("BPFHelpers") {
             @Override
             public String classDescription() {
-                return "BPF helper functions, based on <a href=\"https://ebpf-docs.dylanreimerink.nl/linux/helper-function/\">ebpf-docs</a>";
+                return "BPF helper functions, based on <a href=\"https://ebpf-docs.dylanreimerink" +
+                        ".nl/linux/helper-function/\">ebpf-docs</a>";
             }
 
             @Override

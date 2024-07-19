@@ -50,6 +50,7 @@ public class DeclarationParser {
     public static FuncType parseFunctionDeclaration(String declaration) {
         return parseFunctionDeclaration(new NameTranslator(new Generator("")), declaration);
     }
+
     /**
      * Parse a C function declaration to generate a {@link FuncType} instance
      * <p>
@@ -197,7 +198,6 @@ public class DeclarationParser {
      * Split a string at the top level commas, keeping paranthese groups together, stripping the parts
      * <p>
      * Example: {@code int (i), int j} will be split into {@code ["int (i)", "int j"]}
-     *
      */
     static String[] topCommaSplit(String input) {
         List<String> parts = new ArrayList<>();
@@ -222,9 +222,7 @@ public class DeclarationParser {
     }
 
     enum ParamParseResultKind {
-        VARARGS,
-        PARAM,
-        NONE
+        VARARGS, PARAM, NONE
     }
 
     record ParamParseResult(ParamParseResultKind kind, @Nullable FuncParameter param) {
@@ -281,12 +279,12 @@ public class DeclarationParser {
             if (arraySizeExpression.matches("[0-9]+")) {
                 // a size we can work with, so create an array
                 var size = Integer.parseInt(arraySizeExpression);
-                return ParamParseResult.param(new FuncParameter(elemTypeResult.param.name(), new ArrayType(elemType.resolve(),
-                        size, nullable)));
+                return ParamParseResult.param(new FuncParameter(elemTypeResult.param.name(),
+                        new ArrayType(elemType.resolve(), size, nullable)));
             }
             // we cannot parse the size, so we just create a pointer
-            return ParamParseResult.param(new FuncParameter(elemTypeResult.param.name(), new PtrType(elemType.resolve(),
-                    nullable)));
+            return ParamParseResult.param(new FuncParameter(elemTypeResult.param.name(),
+                    new PtrType(elemType.resolve(), nullable)));
         }
         // last match
         var name = m.group();
