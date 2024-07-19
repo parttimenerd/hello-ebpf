@@ -1,6 +1,9 @@
 package me.bechberger.ebpf.type;
 
+import me.bechberger.ebpf.annotations.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.EnumMember;
+import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
@@ -81,15 +84,26 @@ public interface Enum<T extends java.lang.Enum<T> & Enum<T>> {
         }
     }
 
+    /**
+     * Value of the enum member
+     */
     @SuppressWarnings("unchecked")
+    @BuiltinBPFFunction("(long)($this)")
     default long value() {
         return EnumSupport.value((T) this);
     }
 
+    @BuiltinBPFFunction("($arg1)")
     @SuppressWarnings("unchecked")
     default @Nullable T fromValue(long value) {
         // get EnumMember annotation value
         return EnumSupport.fromValue((Class<T>) this.getClass(), value);
+    }
+
+    @BuiltinBPFFunction("($T1)($arg1)")
+    @NotUsableInJava
+    static <T extends java.lang.Enum<T> & Enum<T>> T ofValue(long value) {
+        throw new MethodIsBPFRelatedFunction();
     }
 
     default String toStr() {

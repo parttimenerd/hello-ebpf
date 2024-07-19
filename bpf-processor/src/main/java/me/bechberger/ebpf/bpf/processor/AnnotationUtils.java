@@ -2,14 +2,13 @@ package me.bechberger.ebpf.bpf.processor;
 
 import javax.lang.model.AnnotatedConstruct;
 import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-class AnnotationUtils {
+public class AnnotationUtils {
 
     public final static String SIZE_ANNOTATION = "me.bechberger.ebpf.annotations.Size";
     public final static String SIZES_ANNOTATION = "me.bechberger.ebpf.annotations.Sizes";
@@ -50,7 +49,7 @@ class AnnotationUtils {
         return getAnnotationMirror(element, annotationName).isPresent();
     }
 
-    record AnnotationValues(boolean unsigned, List<Integer> size, Optional<Integer> offset) {
+    public record AnnotationValues(boolean unsigned, List<Integer> size, Optional<Integer> offset) {
         AnnotationValues dropSize() {
             return new AnnotationValues(unsigned, size.subList(1, size.size()), offset);
         }
@@ -89,6 +88,12 @@ class AnnotationUtils {
             }
             return !error;
         }
+
+        public AnnotationValues addSizes(List<Integer> sizes) {
+            var newSizes = new ArrayList<>(size);
+            newSizes.addAll(sizes);
+            return new AnnotationValues(unsigned, newSizes, offset);
+        }
     }
 
     static AnnotationValues getAnnotationValuesForRecordMember(VariableElement element) {
@@ -96,7 +101,7 @@ class AnnotationUtils {
     }
 
     @SuppressWarnings("unchecked")
-    static AnnotationValues getAnnotationValuesForRecordMember(AnnotatedConstruct element) {
+    public static AnnotationValues getAnnotationValuesForRecordMember(AnnotatedConstruct element) {
         boolean unsigned = hasAnnotation(element, UNSIGNED_ANNOTATION);
         List<Integer> sizes = new ArrayList<>();
         Consumer<AnnotatedConstruct> process = con -> {

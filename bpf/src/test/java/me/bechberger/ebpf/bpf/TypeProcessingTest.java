@@ -3,11 +3,8 @@ package me.bechberger.ebpf.bpf;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.Unsigned;
-import me.bechberger.ebpf.annotations.bpf.BPF;
-import me.bechberger.ebpf.annotations.bpf.CustomType;
-import me.bechberger.ebpf.annotations.bpf.EnumMember;
+import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.annotations.bpf.InlineUnion;
-import me.bechberger.ebpf.annotations.bpf.Type;
 import me.bechberger.ebpf.bpf.raw.__pthread_list_t;
 import me.bechberger.ebpf.type.Enum;
 import me.bechberger.ebpf.type.Enum.EnumSupport;
@@ -868,5 +865,36 @@ public class TypeProcessingTest {
             assertEquals(record.unionC, parsed.unionC);
             assertEquals(record.unionC, parsed.unionD);
         }
+    }
+
+    @BPFInterface(before = "int x = 0;", after = "int y = 0;")
+    @Includes({"string.h", "unistd.h"})
+    interface Lib {
+
+    }
+
+    @BPF(includes = "vmlinux.h")
+    @Includes("string.h")
+    static abstract class TestLibsProgram extends BPFProgram implements Lib {
+        public static final String EBPF_PROGRAM = """
+                #include "vmlinux.h";
+                int z = 1;
+                """;
+    }
+
+    @Test
+    public void testIncludesAndInterface() {
+        var code = BPFProgram.getCode(TestLibsProgram.class);
+        assertEquals("""
+                #include "vmlinux.h";
+                #include <unistd.h>
+                #include <string.h>
+                
+                int x = 0;
+                
+                int z = 1;
+                
+                int y = 0;
+                """.strip(), code.strip());
     }
 }

@@ -15,8 +15,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.lang.System.*;
-
 /**
  * Use XDP to block incoming packages from specific URLs
  * <p>
@@ -135,9 +133,9 @@ public abstract class XDPPacketFilter extends BPFProgram implements Runnable {
     }
 
     void printBlockedLog() {
-        out.println("Blocked packages:");
+        System.out.println("Blocked packages:");
         blockingStats.forEach((ip, count) -> {
-            out.println("  Blocked " + count + " packages from " +
+            System.out.println("  Blocked " + count + " packages from " +
                     XDPUtil.intToIpAddress(ip) +
                     " (" + ipToUrlMap.get(ip) + ")");
         });
@@ -165,7 +163,7 @@ public abstract class XDPPacketFilter extends BPFProgram implements Runnable {
             var cmd = new CommandLine(program);
             cmd.parseArgs(args);
             if (cmd.isUsageHelpRequested()) {
-                cmd.usage(out);
+                cmd.usage(System.out);
                 return;
             }
             program.run();

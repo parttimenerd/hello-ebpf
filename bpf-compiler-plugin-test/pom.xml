@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>bpf-compiler-plugin-test</artifactId>
+  <packaging>jar</packaging>
+
+  <name>bpf-compiler-plugin-test</name>
+  <url>https://github.com/parttimenerd/hello-ebpf</url>
+  <version>0.1.0-SNAPSHOT</version>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>parttimenerd</id>
+      <name>Johannes Bechberger</name>
+      <email>me@mostlynerdless.de</email>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/parttimenerd/hello-ebpf.git</connection>
+    <developerConnection>scm:git:https://github.com/parttimenerd/hello-ebpf.git</developerConnection>
+    <url>https://github.com/parttimenerd/hello-ebpf</url>
+  </scm>
+  <inceptionYear>2023</inceptionYear>
+  <description>Test for the compiler plugin</description>
+
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>22</maven.compiler.source>
+    <maven.compiler.target>22</maven.compiler.target>
+  </properties>
+
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <annotationProcessors>
+            <annotationProcessor>me.bechberger.ebpf.bpf.processor.Processor</annotationProcessor>
+          </annotationProcessors>
+          <compilerArgs>
+            <arg>-Xplugin:BPFCompilerPlugin</arg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.6.0</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <finalName>${project.artifactId}</finalName>
+          <appendAssemblyId>false</appendAssemblyId>
+        </configuration>
+        <executions>
+          <execution>
+            <id>all-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M7</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.4.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>me.bechberger</groupId>
+      <artifactId>bpf</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>me.bechberger</groupId>
+        <artifactId>bpf-processor</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>me.bechberger</groupId>
+      <artifactId>bpf-compiler-plugin</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <parent>
+    <groupId>me.bechberger</groupId>
+    <artifactId>hello-ebpf</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+</project>

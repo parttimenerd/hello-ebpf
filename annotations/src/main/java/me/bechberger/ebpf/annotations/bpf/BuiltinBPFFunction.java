@@ -17,7 +17,7 @@ import java.lang.annotation.*;
  *    bpf_trace_printk("Hello, %s!", "world");
  * }
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface BuiltinBPFFunction {

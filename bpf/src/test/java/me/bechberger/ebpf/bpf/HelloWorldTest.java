@@ -2,7 +2,6 @@ package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.bpf.BPFProgram.BPFProgramNotFound;
-import me.bechberger.ebpf.samples.HelloWorld;
 import me.bechberger.ebpf.shared.TraceLog;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;

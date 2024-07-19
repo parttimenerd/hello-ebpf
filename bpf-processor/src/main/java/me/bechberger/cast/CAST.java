@@ -1,15 +1,20 @@
 package me.bechberger.cast;
 
-import me.bechberger.cast.CAST.Declarator.PointerDeclarator;
+import me.bechberger.cast.CAST.Declarator.FunctionHeader;
 import me.bechberger.cast.CAST.Declarator.Pointery;
+import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
 import me.bechberger.cast.CAST.PrimaryExpression.Constant;
+import me.bechberger.cast.CAST.PrimaryExpression.Constant.FloatConstant;
 import me.bechberger.cast.CAST.PrimaryExpression.Variable;
+import me.bechberger.cast.CAST.Statement.VerbatimStatement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static me.bechberger.cast.CAST.OperatorExpression.stripPrint;
 
 /**
  * Represents an abstract syntax tree for C,
@@ -22,7 +27,7 @@ import java.util.stream.Stream;
  *           structMember(Declarator.identifier("int"), variable("b")))
  *       ), variable("myVar", sec("a"))
  *  )
- * }
+ *}
  */
 public interface CAST {
 
@@ -30,19 +35,24 @@ public interface CAST {
 
     Statement toStatement();
 
-    /** Generate pretty printed code */
+    /**
+     * Generate pretty printed code
+     */
     default String toPrettyString() {
         return toPrettyString("", "  ");
     }
 
-    /** Generate pretty printed code */
+    /**
+     * Generate pretty printed code
+     */
     String toPrettyString(String indent, String increment);
 
     static String toStringLiteral(String value) {
         return "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
     }
 
-    sealed interface Expression extends CAST permits Declarator, InitDeclarator, Initializer, OperatorExpression, PrimaryExpression {
+    sealed interface Expression extends CAST permits Declarator, InitDeclarator, Initializer, OperatorExpression,
+            PrimaryExpression {
 
         @Override
         List<? extends Expression> children();
@@ -54,7 +64,7 @@ public interface CAST {
 
         static PrimaryExpression.Constant<?> constant(Object value) {
             switch (value) {
-                case Integer i  -> {
+                case Integer i -> {
                     return new PrimaryExpression.Constant.IntegerConstant(i);
                 }
                 case Long l -> {
@@ -67,7 +77,19 @@ public interface CAST {
                     return new PrimaryExpression.Constant.StringConstant(s);
                 }
                 case Double d -> {
-                    return new PrimaryExpression.Constant.FloatConstant(d);
+                    return new PrimaryExpression.Constant.DoubleConstant(d);
+                }
+                case Float f -> {
+                    return new FloatConstant(f);
+                }
+                case Byte b -> {
+                    return new PrimaryExpression.Constant.IntegerConstant((int) b);
+                }
+                case Short s -> {
+                    return new PrimaryExpression.Constant.IntegerConstant((int) s);
+                }
+                case Boolean b -> {
+                    return new PrimaryExpression.Constant.IntegerConstant(b ? 1 : 0);
                 }
                 default -> throw new IllegalArgumentException("Unsupported constant type: " + value.getClass());
             }
@@ -204,7 +226,14 @@ public interface CAST {
                 }
             }
 
-            record FloatConstant(Double value) implements Constant<Double> {
+            record FloatConstant(Float value) implements Constant<Float> {
+                @Override
+                public String toPrettyString(String indent, String increment) {
+                    return indent + value;
+                }
+            }
+
+            record DoubleConstant(Double value) implements Constant<Double> {
                 @Override
                 public String toPrettyString(String indent, String increment) {
                     return indent + value;
@@ -236,6 +265,13 @@ public interface CAST {
             @Override
             public String toPrettyString(String indent, String increment) {
                 return indent + code;
+            }
+        }
+
+        record TypeExpression(Declarator declarator) implements PrimaryExpression {
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                return indent + declarator.toPrettyString();
             }
         }
     }
@@ -337,44 +373,35 @@ public interface CAST {
             return Arrays.asList(expressions);
         }
 
+        static String stripPrint(Expression expr) {
+            var str = expr.toPrettyString();
+            if (str.startsWith("(") && str.endsWith(")") && !str.contains(")") && !str.contains("(")) {
+                return str.substring(1, str.length() - 1);
+            }
+            return str;
+        }
+
+        static String stripPrintOp(Expression op, Operator ownOp) {
+            String stripped = stripPrint(op);
+            if (op instanceof OperatorExpression expr && expr.operator.precedence >= ownOp.precedence && expr.operator != ownOp && !stripped.matches("[0-9A-Za-z_]+")) {
+                return "(" + stripped + ")";
+            }
+            return stripped;
+        }
+
         /**
          * Takes care of operator precedence and associativity
          */
         @Override
         public String toPrettyString(String indent, String increment) {
-// idea:
-// if the operator is a binary operator, we need to check the precedence of the children
-// if the precedence of the child is lower, we need to wrap it in parentheses
-// if the precedence is the same, we need to check if the operator is left or right associative
-// if it is left associative, we need to wrap the left child in parentheses
-// if it is right associative, we need to wrap the right child in parentheses
-// if the operator is a unary operator, we need to check if the child is a binary operator
-// if the child is a binary operator, we need to wrap it in parentheses
-// if the operator is a postfix operator, we need to wrap the child in parentheses
-// if the operator is an assignment operator, we need to wrap the left child in parentheses
-// if the operator is a ternary operator, we need to wrap the children in parentheses
-// if the operator is a member access operator, we need to wrap the right child in parentheses
-// if the operator is a subscript operator, we need to wrap the right child in parentheses
-// if the operator is a function call operator, we need to wrap the left child in parentheses
-// if the operator is a dereference operator, we need to wrap the child in parentheses
-// if the operator is an address of operator, we need to wrap the child in parentheses
-// if the operator is a sizeof operator, we need to wrap the child in parentheses
-// if the operator is a logical not operator, we need to wrap the child in parentheses
-// if the operator is a bitwise not operator, we need to wrap the child in parentheses
-// if the operator is a unary plus operator, we need to wrap the child in parentheses
-// if the operator is a unary minus operator, we need to wrap the child in parentheses
-// if the operator is a suffix increment operator, we need to wrap the child in parentheses
-// if the operator is a suffix decrement operator, we need to wrap the child in parentheses
-// if the operator is a prefix increment operator, we need to wrap the child in parentheses
-// if the operator is a prefix decrement operator, we need to wrap the child in parentheses
-// if the operator is a bitwise and operator, we need to wrap the children in parentheses
-
-// if the operator is a binary operator, we need to check the precedence of the children
-
-// if the operator is a unary operator, we need to check if the child is a binary operator
             if (operator().precedence == 3) {
                 Expression operator1 = children().getFirst();
-                String op1String = operator1.toPrettyString();
+                String op1String = stripPrint(operator1);
+
+                if (operator() == Operator.CAST) {
+                    return indent + "(" + op1String + ")" + stripPrintOp(children().get(1), operator());
+                }
+
                 if (operator1 instanceof OperatorExpression operatorExpression) {
                     if (operatorExpression.operator().precedence < operator().precedence) {
                         op1String = "(" + op1String + ")";
@@ -382,89 +409,62 @@ public interface CAST {
                 }
                 return indent + operator() + op1String;
             } else {
-// if the operator is a postfix operator, we need to wrap the child in parentheses
                 if (operator().precedence == 2) {
                     Expression operator1 = children().getFirst();
-                    String op1String = operator1.toPrettyString();
-                    if (operator1 instanceof OperatorExpression) {
-                        op1String = "(" + op1String + ")";
+                    String op1String = stripPrintOp(operator1, operator);
+                    if (operator == Operator.SUBSCRIPT) {
+                        String op2String = stripPrint(children().get(1));
+                        return indent + op1String + "[" + op2String + "]";
+                    }
+                    if (operator == Operator.MEMBER_ACCESS) {
+                        String op2String = stripPrint(children().get(1));
+                        return indent + op1String + "." + op2String;
                     }
                     return indent + op1String + operator();
                 } else {
-// if the operator is an assignment operator, we need to wrap the left child in parentheses
                     if (operator().precedence == 16) {
-                        Expression operator1 = children().get(0);
-                        Expression operator2 = children().get(1);
-                        String op1String = operator1.toPrettyString();
-                        String op2String = operator2.toPrettyString();
-                        if (operator1 instanceof OperatorExpression) {
-                            op1String = "(" + op1String + ")";
-                        }
-                        if (operator2 instanceof OperatorExpression operatorExpression) {
-                            if (operatorExpression.operator().precedence < operator().precedence) {
-                                op2String = "(" + op2String + ")";
-                            }
-                        }
-                        return indent + op1String + " " + operator() + " " + op2String;
-                    } else {
-// if the operator is a ternary operator, we need to wrap the children in parentheses
                         if (operator() == Operator.CONDITIONAL) {
                             Expression operator1 = children().get(0);
                             Expression operator2 = children().get(1);
                             Expression operator3 = children().get(2);
-                            String op1String = operator1.toPrettyString();
-                            String op2String = operator2.toPrettyString();
-                            String op3String = operator3.toPrettyString();
-                            if (operator1 instanceof OperatorExpression) {
-                                op1String = "(" + op1String + ")";
-                            }
-                            if (operator2 instanceof OperatorExpression) {
-                                op2String = "(" + op2String + ")";
-                            }
-                            if (operator3 instanceof OperatorExpression) {
-                                op3String = "(" + op3String + ")";
-                            }
+                            String op1String = stripPrintOp(operator1, operator);
+                            String op2String = stripPrintOp(operator2, operator);
+                            String op3String = stripPrintOp(operator3, operator);
                             return indent + op1String + " ? " + op2String + " : " + op3String;
-                        } else if (operator() == Operator.MEMBER_ACCESS) {
+                        }
+                        Expression operator1 = children().get(0);
+                        Expression operator2 = children().get(1);
+                        String op1String = stripPrintOp(operator1, operator);
+                        String op2String = stripPrintOp(operator2, operator);
+                        return indent + op1String + " " + operator() + " " + op2String;
+                    } else {
+// if the operator is a ternary operator, we need to wrap the children in parentheses
+                        if (operator() == Operator.MEMBER_ACCESS) {
                             Expression operator1 = children().get(0);
                             Expression operator2 = children().get(1);
-                            String op1String = operator1.toPrettyString();
-                            String op2String = operator2.toPrettyString();
-                            if (operator2 instanceof OperatorExpression) {
-                                op2String = "(" + op2String + ")";
-                            }
+                            String op1String = stripPrintOp(operator1, operator);
+                            String op2String = stripPrintOp(operator2, operator);
                             return indent + op1String + "." + op2String;
                         } else if (operator() == Operator.SUBSCRIPT) {
                             Expression operator1 = children().get(0);
                             Expression operator2 = children().get(1);
-                            String op1String = operator1.toPrettyString();
-                            String op2String = operator2.toPrettyString();
-                            if (operator2 instanceof OperatorExpression) {
-                                op2String = "(" + op2String + ")";
-                            }
+                            String op1String = stripPrintOp(operator1, operator);
+                            String op2String = stripPrintOp(operator2, operator);
                             return indent + op1String + "[" + op2String + "]";
                         } else if (operator() == Operator.FUNCTION_CALL) {
                             Expression func = children().getFirst();
-                            String funcString = func.toPrettyString();
+                            String funcString = stripPrint(func);
                             if (func instanceof OperatorExpression) {
                                 funcString = "(" + funcString + ")";
                             }
-                            return indent +  funcString + "(" + children().stream().skip(1).map(CAST::toPrettyString).collect(Collectors.joining(", ")) + ")";
+                            return indent + funcString + "(" + children().stream().skip(1).map(OperatorExpression::stripPrint).collect(Collectors.joining(", ")) + ")";
                         } else if (operator() == Operator.SIZEOF) {
                             Expression operator1 = children().getFirst();
-                            String op1String = operator1.toPrettyString();
-                            if (operator1 instanceof OperatorExpression) {
-                                op1String = "(" + op1String + ")";
-                            }
+                            String op1String = stripPrint(operator1);
                             return indent + "sizeof(" + op1String + ")";
-                        } else if (operator() == Operator.CAST) {
-                            return indent + "(" + children().get(0).toPrettyString() + ")" + children().get(1);
                         } else if (operator().isUnitary()) {
                             Expression operator1 = children().getFirst();
-                            String op1String = operator1.toPrettyString();
-                            if (operator1 instanceof OperatorExpression) {
-                                op1String = "(" + op1String + ")";
-                            }
+                            String op1String = stripPrintOp(operator1, operator);
                             if (operator().associativity == Operator.Associativity.RIGHT) {
                                 return indent + operator() + op1String;
                             } else {
@@ -473,8 +473,8 @@ public interface CAST {
                         } else {
                             Expression operator1 = children().get(0);
                             Expression operator2 = children().get(1);
-                            String op1String = operator1.toPrettyString();
-                            String op2String = operator2.toPrettyString();
+                            String op1String = stripPrint(operator1);
+                            String op2String = stripPrint(operator2);
                             if (operator1 instanceof OperatorExpression operatorExpression) {
                                 if (operatorExpression.operator().precedence < operator().precedence) {
                                     op1String = "(" + op1String + ")";
@@ -539,7 +539,7 @@ public interface CAST {
             return new OperatorExpression(Operator.DEREFERENCE, expression);
         }
 
-        public static OperatorExpression cast(PrimaryExpression.Variable type, Expression expression) {
+        public static OperatorExpression cast(Declarator type, Expression expression) {
             return new OperatorExpression(Operator.CAST, type, expression);
         }
     }
@@ -553,7 +553,7 @@ public interface CAST {
 
         @Override
         public String toPrettyString(String indent, String increment) {
-            return indent + (name == null ? "" : name.toPrettyString() + " = ") + expression.toPrettyString();
+            return indent + (name == null ? "" : "." + name.toPrettyString() + " = ") + expression.toPrettyString();
         }
     }
 
@@ -578,6 +578,7 @@ public interface CAST {
             default String toPrettyVariableDefinition(@Nullable Expression name, String indent) {
                 return toPrettyVariableDefinition(name, null, indent);
             }
+
             String toPrettyVariableDefinition(@Nullable Expression name, @Nullable String tag, String indent);
         }
 
@@ -636,7 +637,8 @@ public interface CAST {
                     sizes.add(((ArrayDeclarator) cur).sizeBracket());
                     cur = arr.declarator;
                 }
-                return indent + cur.toPrettyString() + (tag == null ? "" : " " + tag) +  (name != null ? " " + name.toPrettyString() : "") +
+                return indent + cur.toPrettyString() + (tag == null ? "" : " " + tag) + (name != null ?
+                        " " + name.toPrettyString() : "") +
                         String.join("", sizes);
             }
 
@@ -665,7 +667,8 @@ public interface CAST {
                     if (declarator instanceof UnionDeclarator union && union.name == null) {
                         return declarator.toPrettyString(indent, increment) + ";";
                     }
-                    return declarator.toPrettyString(indent, increment) + (name == null ? "" : " " + name.toPrettyString()) + ";";
+                    return declarator.toPrettyString(indent, increment) + (name == null ? "" :
+                            " " + name.toPrettyString()) + ";";
                 }
                 return indent + declarator.toPrettyString() + " (" + name.toPrettyString() + ", " + ebpfSize.toPrettyString() + ");";
             }
@@ -788,12 +791,19 @@ public interface CAST {
                 if (name == null) {
                     return declarator.toPrettyString(indent, increment);
                 }
+                if (declarator instanceof Pointery ptr) {
+                    return ptr.toPrettyVariableDefinition(name, indent);
+                }
                 return declarator.toPrettyString(indent, increment) + " " + name.toPrettyString();
             }
         }
 
+        sealed interface FunctionHeader extends CAST {
+
+        }
+
         record FunctionDeclarator(Variable name, Declarator returnValue,
-                                  List<FunctionParameter> parameters) implements Declarator, Pointery {
+                                  List<FunctionParameter> parameters) implements Declarator, Pointery, FunctionHeader {
             @Override
             public List<? extends Expression> children() {
                 return Stream.concat(Stream.of(name, returnValue), parameters.stream()).collect(Collectors.toList());
@@ -811,6 +821,23 @@ public interface CAST {
             @Override
             public String toPrettyVariableDefinition(@Nullable Expression name, @Nullable String tag, String indent) {
                 return returnValue.toPrettyString(indent, "") + " (" + (tag == null ? "" : " " + tag) + "*" + (name == null ? "" : name.toPrettyString()) + ")" + paramDecl();
+            }
+        }
+
+        record VerbatimFunctionDeclarator(String header) implements FunctionHeader {
+            @Override
+            public List<? extends CAST> children() {
+                return List.of();
+            }
+
+            @Override
+            public String toPrettyString(String indent, String increment) {
+                return indent + header;
+            }
+
+            @Override
+            public Statement toStatement() {
+                return new VerbatimStatement(header);
             }
         }
 
@@ -976,6 +1003,10 @@ public interface CAST {
             return this;
         }
 
+        default String toPrettyStringWithoutBraces(String indent, String increment) {
+            return toPrettyString(indent, increment);
+        }
+
         record ExpressionStatement(Expression expression) implements Statement {
 
             @Override
@@ -989,7 +1020,8 @@ public interface CAST {
             }
         }
 
-        record VariableDefinition(Declarator type, PrimaryExpression.Variable name, @Nullable Expression value) implements Statement {
+        record VariableDefinition(Declarator type, PrimaryExpression.Variable name,
+                                  @Nullable Expression value) implements Statement {
 
             @Override
             public List<? extends CAST> children() {
@@ -1001,7 +1033,7 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                String app = value == null ? "" : " = " + value.toPrettyString();
+                String app = value == null ? "" : " = " + stripPrint(value);
                 if (type instanceof Pointery arr) {
                     return arr.toPrettyVariableDefinition(Expression.variable(name.name), indent) + (name.annotations.length == 0 ? "" : " " + name.annotationsString()) + app + ";";
                 }
@@ -1019,7 +1051,14 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "{\n" + statements.stream().map(s -> s.toPrettyString(indent + increment, increment)).collect(Collectors.joining("\n")) + "\n" + indent + "}";
+                return indent + "{\n" + toPrettyStringWithoutBraces(indent + increment, increment) + "\n" + indent +
+                        "}";
+            }
+
+            @Override
+            public String toPrettyStringWithoutBraces(String indent, String increment) {
+                return statements.stream().map(s -> s.toPrettyString(indent, increment)).collect(Collectors.joining(
+                        "\n"));
             }
         }
 
@@ -1034,9 +1073,17 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "if (" + condition.toPrettyString() + ")\n" + thenStatement.toPrettyString(indent + increment,
-                        increment) + (elseStatement == null ? "" :
-                        " else\n" + elseStatement.toPrettyString(indent + increment, increment));
+                String code =
+                        indent + "if (" + stripPrint(condition) + ") {\n" + thenStatement.toPrettyStringWithoutBraces(indent + increment,
+                        increment) + "\n" + indent + "}";
+                if (elseStatement != null) {
+                    if (elseStatement instanceof IfStatement) {
+                        return code + " else " + elseStatement.toPrettyString(indent, increment).strip();
+                    }
+                    return code + " else {\n" + elseStatement.toPrettyStringWithoutBraces(indent + increment,
+                            increment) + "\n" + indent + "}";
+                }
+                return code;
             }
         }
 
@@ -1049,34 +1096,40 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "while (" + condition.toPrettyString() + ")\n" + body.toPrettyString(indent + increment, increment);
+                return indent + "while (" + stripPrint(condition) + ") {\n" + body.toPrettyStringWithoutBraces(indent + increment, increment) + "\n" + indent + "}";
             }
         }
 
-        record ForStatement(@Nullable Expression init, @Nullable Expression condition, @Nullable Expression increment,
+        record ForStatement(List<Statement> init, @Nullable Expression condition, List<Statement> increment,
                             Statement body) implements Statement {
 
             @Override
             public List<? extends CAST> children() {
                 List<CAST> children = new ArrayList<>();
                 if (init != null) {
-                    children.add(init);
+                    children.addAll(init);
                 }
                 if (condition != null) {
                     children.add(condition);
                 }
                 if (increment != null) {
-                    children.add(increment);
+                    children.addAll(increment);
                 }
                 children.add(body);
                 return children;
             }
 
+            private String prettyList(List<Statement> list) {
+                return list.stream().map(Statement::toPrettyString)
+                        .map(s -> s.endsWith(";") ? s.substring(0, s.length() - 1) : s)
+                        .collect(Collectors.joining(", "));
+            }
+
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "for (" + (init == null ? "" : init.toPrettyString()) + "; " + (condition == null ? "" : condition.toPrettyString()) +
-                        "; " + (increment == null ? "" : increment) + ")\n" + body.toPrettyString(indent + increment,
-                        increment);
+                return indent + "for (" + prettyList(init) + "; " + (condition == null ? "" :
+                        condition.toPrettyString()) +
+                        "; " + prettyList(this.increment) + ") {\n" + body.toPrettyStringWithoutBraces(indent + increment, increment) + "\n" + indent + "}";
             }
         }
 
@@ -1089,7 +1142,7 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "return" + (expression == null ? "" : " " + expression.toPrettyString()) + ";";
+                return indent + "return" + (expression == null ? "" : " " + stripPrint(expression)) + ";";
             }
         }
 
@@ -1141,7 +1194,8 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + declarator.toPrettyString() + (initializer == null ? "" : " = " + initializer.toPrettyString()) + ";";
+                return indent + declarator.toPrettyString() + (initializer == null ? "" :
+                        " = " + stripPrint(initializer)) + ";";
             }
         }
 
@@ -1158,17 +1212,24 @@ public interface CAST {
             }
         }
 
-        record FunctionDeclarationStatement(Declarator.FunctionDeclarator declarator,
-                                            CompoundStatement body) implements Statement {
+        record FunctionDeclarationStatement(FunctionHeader declarator,
+                                            CompoundStatement body,
+                                            CAnnotation... annotations) implements Statement {
 
             @Override
             public List<? extends CAST> children() {
-                return List.of(declarator, body);
+                List<CAST> children = new ArrayList<>();
+                children.add(declarator);
+                children.add(body);
+                children.addAll(Arrays.asList(annotations));
+                return children;
             }
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return declarator.toPrettyString(indent, increment) + "\n" + body.toPrettyString(indent + increment, increment);
+                var anns = Arrays.stream(annotations).map(CAST::toPrettyString).collect(Collectors.joining(" "));
+                return indent + (anns.isEmpty() ? "" : anns + " ") + declarator.toPrettyString("", increment) + " {\n"
+                        + body.toPrettyStringWithoutBraces(indent + increment, increment) + "\n" + indent + "}";
             }
         }
 
@@ -1183,6 +1244,22 @@ public interface CAST {
             public String toPrettyString(String indent, String increment) {
                 return indent + "#define " + name + " " + value.toPrettyString();
             }
+
+            @Override
+            public int hashCode() {
+                return toPrettyString().hashCode();
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                if (this == obj) {
+                    return true;
+                }
+                if (obj == null || getClass() != obj.getClass()) {
+                    return false;
+                }
+                return toPrettyString().equals(((Define) obj).toPrettyString());
+            }
         }
 
         record Include(String file) implements Statement {
@@ -1194,7 +1271,28 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + "#include " + file;
+                return indent + "#include <" + file + ">";
+            }
+
+            @Override
+            public int hashCode() {
+                return file.hashCode();
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                if (this == obj) {
+                    return true;
+                }
+                if (obj == null || getClass() != obj.getClass()) {
+                    return false;
+                }
+                return file.equals(((Include) obj).file);
+            }
+
+            public boolean isAlreadyPresent(List<String> codeLines) {
+                return codeLines.stream().anyMatch(l -> l.contains("#include <" + file + ">") || l.contains("#include" +
+                        " \"" + file + "\""));
             }
         }
 
@@ -1283,11 +1381,6 @@ public interface CAST {
 
         static Statement whileStatement(Expression condition, Statement body) {
             return new WhileStatement(condition, body);
-        }
-
-        static Statement forStatement(@Nullable Expression init, @Nullable Expression condition,
-                                      @Nullable Expression increment, Statement body) {
-            return new ForStatement(init, condition, increment, body);
         }
 
         static Statement returnStatement(@Nullable Expression expression) {

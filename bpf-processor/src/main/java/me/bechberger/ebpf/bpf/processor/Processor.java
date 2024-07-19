@@ -3,17 +3,17 @@ package me.bechberger.ebpf.bpf.processor;
 import com.squareup.javapoet.*;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Statement.Define;
+import me.bechberger.cast.CAST.Statement.Include;
+import me.bechberger.ebpf.annotations.bpf.BPFImpl;
 import me.bechberger.ebpf.bpf.processor.TypeProcessor.GlobalVariableDefinition;
 import me.bechberger.ebpf.bpf.processor.TypeProcessor.TypeProcessorResult;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
+import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
+import javax.sound.sampled.Line;
 import javax.tools.Diagnostic;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,15 +28,16 @@ import java.util.stream.IntStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
- * Annotation processor that processes classes annotated with {@code @BPF}.
+ * Annotation compiler that processes classes annotated with {@code @BPF}.
  * <p>
- * The processor compiles the eBPF program and takes care of {@code @Type} inner types.
+ * The compiler compiles the eBPF program and takes care of {@code @Type} inner types.
  */
 @SupportedAnnotationTypes({"me.bechberger.ebpf.annotations.bpf.BPF"})
 @SupportedSourceVersion(SourceVersion.RELEASE_22)
 public class Processor extends AbstractProcessor {
 
     private static final String BPF = "me.bechberger.ebpf.annotations.bpf.BPF";
+    private final CompilationCache cache = new CompilationCache(Paths.get("."));
 
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
         this.processingEnv.getMessager().printNote("Processing BPF annotations");
@@ -61,7 +62,6 @@ public class Processor extends AbstractProcessor {
      * </ul>
      */
     public void processBPFProgram(TypeElement typeElement) {
-        System.out.println("Processing BPFProgram: " + typeElement.getQualifiedName());
         if (typeElement.getSuperclass() == null || !typeElement.getSuperclass().toString().equals("me.bechberger" +
                 ".ebpf" + ".bpf.BPFProgram")) {
             this.processingEnv.getMessager().printError("Class " + typeElement.getSimpleName() + " is annotated with "
@@ -76,6 +76,9 @@ public class Processor extends AbstractProcessor {
         TypeProcessorResult typeProcessorResult;
         try {
             typeProcessorResult = new TypeProcessor(processingEnv).processBPFTypeRecords(typeElement);
+            if (typeProcessorResult == null) {
+                return;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -84,11 +87,10 @@ public class Processor extends AbstractProcessor {
         if (combinedCode == null) {
             return;
         }
-        byte[] bytes = compile(combinedCode);
+        byte[] bytes = compile(combinedCode, Path.of(this.processingEnv.getElementUtils().getFileObjectOf(typeElement).toUri().getPath()));
         if (bytes == null) {
             return;
         }
-        System.out.println("Compiled eBPF program " + bytes.length + " bytes");
         this.processingEnv.getMessager().printMessage(Diagnostic.Kind.OTHER, "Compiled eBPF program", typeElement);
 
         ImplName implName = typeToImplName(typeElement);
@@ -105,7 +107,6 @@ public class Processor extends AbstractProcessor {
             try (var writer = file.openWriter()) {
                 writer.write(javaFile.toString());
             }
-            System.err.println("Wrote file " + file.toUri());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -160,6 +161,12 @@ public class Processor extends AbstractProcessor {
         }
     }
 
+    public static String compileAndEncode(ProcessingEnvironment env, String code, Path file) {
+        var processor = new Processor();
+        processor.processingEnv = env;
+        return gzipBase64Encode(processor.compile(new CombinedCode(code, null, null, List.of()), file));
+    }
+
     /**
      * Create a class that implements the class of typeElement and overrides the getByteCode method to return the
      * compiled eBPF program, but store the compiled eBPF program as a base64 encoded string in a static final field
@@ -176,14 +183,28 @@ public class Processor extends AbstractProcessor {
                                 CombinedCode code, List<GlobalVariableDefinition> globalVariableDefinitions) {
         var suppressWarnings = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "{\"unchecked\", \"rawtypes\"}").build();
         var spec =
-                TypeSpec.classBuilder(name).addAnnotation(suppressWarnings).superclass(baseType).addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                TypeSpec.classBuilder(name)
+                        .addAnnotation(suppressWarnings).superclass(baseType)
+                        .addAnnotation(AnnotationSpec.builder(BPFImpl.class).build())
+                        .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                         .addField(FieldSpec.builder(String.class, "BYTE_CODE", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                                 .addJavadoc("Base64 encoded and gzipped eBPF byte-code of the program\n{@snippet : \n" + sanitizeCodeForJavadoc(code.ebpfProgram) + "\n}")
-                                .initializer("$S", gzipBase64Encode(byteCode)).build());// insert the spec fields
+                                .initializer("$S", gzipBase64Encode(byteCode)).build())
+                        .addField(FieldSpec.builder(String.class, "CODE", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                                .initializer("$S", code.ebpfProgram).build());
         bpfTypeFields.forEach(spec::addField);
+        spec.addMethod(MethodSpec.methodBuilder("getByteCodeBytesStatic")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(String.class)
+                .addStatement("return BYTE_CODE").build());
         spec.addMethod(MethodSpec.methodBuilder("getByteCode")
-                .addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(byte[].class)
-                .addStatement("return me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(BYTE_CODE)").build());
+                .addModifiers(Modifier.PUBLIC).returns(byte[].class)
+                .addStatement("return me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(getByteCodeBytesStatic())").build());
+        spec.addMethod(MethodSpec.methodBuilder("getCodeStatic")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(String.class)
+                .addStatement("return CODE").build());
+        spec.addMethod(MethodSpec.methodBuilder("getCode")
+                .addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(String.class)
+                .addStatement("return getCodeStatic()").build());
         spec.addMethod(MethodSpec.methodBuilder("getAutoAttachablePrograms").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC)
                 .returns(ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(String.class)))
                 .addStatement("return java.util.List.of($L)", code.autoAttachablePrograms.stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(", "))).build());
@@ -213,7 +234,7 @@ public class Processor extends AbstractProcessor {
             return spec;
         }
 
-        var globalVariablesType = ClassName.get("me.bechberger.ebpf.bpf", "GlobalVariable.Globals");
+        var globalVariablesType = ClassName.get("me.bechberger.ebpf.bpf", "GlobalVariable", "Globals");
 
         spec.addStatement("$T globalVariables = $T.forProgram(this)", globalVariablesType, globalVariablesType)
                 .addStatement("globalVariables.initGlobals(java.util.List.of($L))", globalVariableDefinitions.stream().map(this::createGlobalVariableInitInfoExpression).collect(Collectors.joining(", ")));
@@ -232,10 +253,9 @@ public class Processor extends AbstractProcessor {
      * The combined ebpf program code
      * @param ebpfProgram base ebpf program for the EBPF_PROGRAM variable
      * @param codeField field that contains the EBPF_PROGRAM
-     * @param codeLineMapping line number in generated -> original line number
      */
-    record CombinedCode(String ebpfProgram, VariableElement codeField, Map<Integer, Integer> codeLineMapping,
-                        TypeProcessorResult tp, Set<Integer> generatedLines, List<String> autoAttachablePrograms) {
+    record CombinedCode(String ebpfProgram, VariableElement codeField,
+                        TypeProcessorResult tp, List<String> autoAttachablePrograms) {
     }
 
     private @Nullable CombinedCode combineEBPFProgram(TypeElement typeElement, TypeProcessorResult tpResult) {
@@ -243,9 +263,9 @@ public class Processor extends AbstractProcessor {
                 typeElement.getEnclosedElements().stream().filter(e -> e.getKind().isField() && e.getSimpleName().toString().equals("EBPF_PROGRAM")).findFirst();
         // check that the class has a static field EBPF_PROGRAM of type String or Path
         if (elem.isEmpty()) {
-            this.processingEnv.getMessager().printError("Class " + typeElement.getSimpleName() + " is annotated with "
-                    + "BPF but does not contain a String field EBPF_PROGRAM which contains the field", typeElement);
-            return null;
+           // this.processingEnv.getMessager().printError("Class " + typeElement.getSimpleName() + " is annotated with "
+            //        + "BPF but does not contain a String field EBPF_PROGRAM which contains the field", typeElement);
+            return combineEBPFProgram(typeElement, null, "", tpResult);
         }
         var element = (VariableElement) elem.get();
         // check that element is of correct type
@@ -318,8 +338,6 @@ public class Processor extends AbstractProcessor {
 
     /** Combines the code */
     private @Nullable Processor.CombinedCode combineEBPFProgram(TypeElement outer, VariableElement field, String ebpfProgram, TypeProcessorResult tpResult) {
-        Map<Integer, Integer> codeLineMapping = new HashMap<>(); // line number in generated -> original line number
-
         var unstrippedLines = ebpfProgram.lines().toList();
         var lastInclude = IntStream.range(0, unstrippedLines.size()).filter(i -> unstrippedLines.get(i).contains("#include")).max().orElse(-1);
         List<String> lines;
@@ -330,21 +348,35 @@ public class Processor extends AbstractProcessor {
             lines = unstrippedLines;
         }
         var resultLines = new ArrayList<>(lines.subList(0, lastInclude + 1));
-        if (lastInclude != -1) {
-            IntStream.range(0, lastInclude + 1).forEach(i -> codeLineMapping.put(i, i));
-            resultLines.add("");
-        }
+
+        // we add the includes
+        tpResult.additions().includes().stream().map(Include::new).filter(include -> !include.isAlreadyPresent(resultLines)).forEach(include -> {
+            resultLines.add(include.toPrettyString());
+        });
+
+        Consumer<List<?>> addEmptyLineIfNeeded = (list) -> {
+            if (!list.isEmpty() && !resultLines.getLast().isBlank()) {
+                resultLines.add("");
+            }
+        };
 
         Consumer<String> addLine = l -> resultLines.addAll(l.lines().toList());
+
+        // add the before lines
+        addEmptyLineIfNeeded.accept(tpResult.additions().before());
+        tpResult.additions().before().forEach(addLine);
 
         var filteredDefines = tpResult.defines().stream().filter(d -> {
             var tester = "#define " + d.name() + " ";
             return lines.stream().noneMatch(l -> l.startsWith(tester));
         }).toList();
 
-        filteredDefines.stream().map(Define::toPrettyString).forEach(addLine);
+        addEmptyLineIfNeeded.accept(filteredDefines);
 
-        resultLines.add("");
+        filteredDefines.stream().map(Define::toPrettyString).forEach(addLine);
+        if (!filteredDefines.isEmpty()) {
+            resultLines.add("");
+        }
 
         var license = lines.stream().filter(l -> l.matches(".*SEC *\\(\"license\"\\).*")).findFirst().orElse(null);
         if (tpResult.licenseDefinition() == null) {
@@ -360,17 +392,21 @@ public class Processor extends AbstractProcessor {
 
         // we already inserted the includes and the defines
         // now we insert the struct definitions
+        addEmptyLineIfNeeded.accept(tpResult.definingStatements());
         tpResult.definingStatements().stream().map(CAST::toPrettyString).forEach(l -> {
             addLine.accept(l);
             resultLines.add("");
         });
 
         // and the defined maps
+        addEmptyLineIfNeeded.accept(tpResult.mapDefinitions());
         tpResult.mapDefinitions().stream().map(m -> m.structDefinition().toPrettyString()).forEach(l -> {
             addLine.accept(l);
             resultLines.add("");
         });
 
+        // and the global variables
+        addEmptyLineIfNeeded.accept(tpResult.globalVariableDefinitions());
         tpResult.globalVariableDefinitions().forEach(v -> {
             String line = v.globalVariable().toPrettyString();
             addLine.accept(line);
@@ -379,16 +415,27 @@ public class Processor extends AbstractProcessor {
 
         // now
         var afterIncludes = lines.subList(lastInclude + 1, lines.size());
-        for (int i = 0; i < afterIncludes.size(); i++) {
-            codeLineMapping.put(resultLines.size() + i, lastInclude + 1 + i);
+        if (afterIncludes.isEmpty() || !afterIncludes.getFirst().isBlank()) {
+            addEmptyLineIfNeeded.accept(afterIncludes);
         }
         resultLines.addAll(afterIncludes);
+
+        // add the after lines
+        addEmptyLineIfNeeded.accept(tpResult.additions().after());
+        tpResult.additions().after().forEach(addLine);
+
         if (license == null && tpResult.licenseDefinition() != null) {
+            addEmptyLineIfNeeded.accept(List.of(""));
             addLine.accept(tpResult.licenseDefinition().toStatement().toPrettyString());
         }
-        var generatedLines = IntStream.range(0, resultLines.size()).filter(i -> !codeLineMapping.containsKey(i)).boxed().collect(Collectors.toSet());
+
+        // remove end new lines
+        while (!resultLines.isEmpty() && resultLines.getLast().isBlank()) {
+            resultLines.removeLast();
+        }
+
         List<String> autoAttachablePrograms = findAutoAttachablePrograms(ebpfProgram);
-        return new CombinedCode(String.join("\n", resultLines), field, codeLineMapping, tpResult, generatedLines, autoAttachablePrograms);
+        return new CombinedCode(String.join("\n", resultLines), field, tpResult, autoAttachablePrograms);
     }
 
     private static String findNewestClangVersion() {
@@ -424,7 +471,7 @@ public class Processor extends AbstractProcessor {
         return includePath;
     }
 
-    private byte[] compile(CombinedCode code) {
+    private byte[] compile(CombinedCode code, Path ebpfFile) {
         if (dontCompile()) {
             System.out.println("EBPF program to compile:");
             System.out.println("-".repeat(10));
@@ -439,7 +486,11 @@ public class Processor extends AbstractProcessor {
         // compile the eBPF program
         // if the compilation fails, print an error
         // if the compilation succeeds, return the byte code
-        System.out.println("Compiling eBPF program include path : " + findIncludePath());
+        this.processingEnv.getMessager().printNote("Compiling eBPF program include path : " + findIncludePath());
+        var cached = cache.getCached(code.ebpfProgram);
+        if (cached != null) {
+            return cached;
+        }
         try {
             var tempFile = Files.createTempFile("ebpf", ".o");
             tempFile.toFile().deleteOnExit();
@@ -457,45 +508,30 @@ public class Processor extends AbstractProcessor {
                 }
                 String errorString = error.toString();
                 this.processingEnv.getMessager().printError("Could not compile eBPF program", code.codeField);
-                this.processingEnv.getMessager().printError(errorString, code.codeField);
-                printErrorMessages(code, errorString);
-                throw new RuntimeException("Could not compile eBPF program");
+                printErrorMessages(code, errorString, ebpfFile);
+                return new byte[0];
+                //throw new RuntimeException("Could not compile eBPF program");
             }
-            return Files.readAllBytes(tempFile);
+            var bytes = Files.readAllBytes(tempFile);
+            cache.cache(code.ebpfProgram, bytes);
+            return bytes;
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void printErrorMessages(CombinedCode code, String errorString) {
-        Path file = Paths.get(this.processingEnv.getElementUtils().getFileObjectOf(code.codeField).getName());
-        Map<Integer, Line> lineMap = getLineMap(code);
-        for (String line : errorString.split("\n")) {
-            // example "<stdin>:5:58: error: expected ';' after expression"
-            if (line.startsWith("<stdin>:")) {
-                String[] parts = line.split(":", 4);
-                int lineNumber = Integer.parseInt(parts[1]);
-                int column = Integer.parseInt(parts[2]);
-                String message = parts[3];
-                Line l = lineMap.get(lineNumber);
-                if (l != null) {
-                    // format [ERROR] filename:[line,column] message
-                    System.err.println(file + ":[" + l.line + "," + (l.start + column) + "] " + message);
-                } else {
-                    System.err.println(line);
-                }
-            } else {
-                System.err.println(line);
-            }
-            var suggestions = suggestionsForMessage(line);
-            if (!suggestions.isEmpty()) {
-                System.out.println("Suggestions:");
-                for (String suggestion : suggestions) {
-                    System.out.println("  " + suggestion);
-                }
-            }
+    private void printErrorMessages(CombinedCode code, String errorString, Path ebpfFile) {
+        var processor = CompilerErrorProcessor.fromClangOutput(errorString, ebpfFile);
+        var colorize = Objects.equals(System.getenv("EBPF_COLORIZE"),"true");
+        var out = processor.toPrettyString(colorize);
+        if (ebpfFile.toString().endsWith(".c")) {
+            this.processingEnv.getMessager().printError(out);
+        } else {
+            System.err.println(out);
         }
     }
+
+
 
     private List<String> suggestionsForMessage(String message) {
         List<String> suggestions = new ArrayList<>();
@@ -511,72 +547,6 @@ public class Processor extends AbstractProcessor {
     private record Line(int line, int start) {
     }
 
-    private Map<Integer, Line> getLineMap(CombinedCode code) {
-        Path file = Paths.get(this.processingEnv.getElementUtils().getFileObjectOf(code.codeField).getName());
-        List<String> linesInGeneratedEBPFProgram = code.ebpfProgram.lines().toList();
-        List<String> strippedLinesInGeneratedEBPFProgram = linesInGeneratedEBPFProgram.stream().map(String::strip).toList();
-        List<String> linesInSourceFile;
-        try {
-            linesInSourceFile = Files.readAllLines(file);
-        } catch (IOException e) {
-            this.processingEnv.getMessager().printError("Could not read file " + file, code.codeField);
-            return Map.of();
-        }
-        List<String> strippedLinesInSourceFile = linesInSourceFile.stream().map(String::strip).toList();
-        Map<Integer, Line> generatedToSourceLine = new HashMap<>();
-
-        int genIndex = 0;
-        int sourceIndex = 0;
-        boolean start = true;
-        while (sourceIndex < strippedLinesInSourceFile.size() && genIndex < strippedLinesInGeneratedEBPFProgram.size()) {
-            // omit clearly generated lines
-            while (code.generatedLines.contains(genIndex)) {
-                genIndex++;
-            }
-            if (genIndex >= strippedLinesInGeneratedEBPFProgram.size()) {
-                break;
-            }
-            String strippedGenLine = strippedLinesInGeneratedEBPFProgram.get(genIndex);
-            int newSourceIndex = strippedLinesInSourceFile.subList(sourceIndex, strippedLinesInSourceFile.size())
-                    .indexOf(strippedGenLine) + sourceIndex;
-
-            if (newSourceIndex == -1 + sourceIndex) {
-                return Map.of();
-            }
-
-            boolean newStart = false;
-            // check that there is no """ in between new and old source index
-            for (int i = sourceIndex; i <= newSourceIndex && !start; i++) {
-                if (strippedLinesInSourceFile.get(i).equals("\"\"\"")) {
-                    genIndex = 0;
-                    sourceIndex = i;
-                    generatedToSourceLine.clear();
-                    start = true;
-                    newStart = true;
-                    break;
-                }
-            }
-
-            if (newStart) {
-                continue;
-            }
-            sourceIndex = newSourceIndex;
-
-            String sourceLine = linesInSourceFile.get(sourceIndex);
-            String genLine = linesInGeneratedEBPFProgram.get(genIndex);
-            int lineStart = sourceLine.indexOf(genLine);
-            if (lineStart == -1) {
-                return Map.of();
-            }
-            generatedToSourceLine.put(genIndex, new Line(sourceIndex, lineStart));
-            start = false;
-            sourceIndex++;
-            genIndex++;
-        }
-
-        return generatedToSourceLine;
-    }
-
     private @Nullable Optional<Path> obtainedPathToVMLinuxHeader = null;
 
     private @Nullable Path getPathToVMLinuxHeader() {
@@ -590,7 +560,6 @@ public class Processor extends AbstractProcessor {
         // obtain the path to the vmlinux.h header file
         // if it is not found, print an error
         try {
-            System.out.println("Obtaining vmlinux.h header file");
             // first check in the module path
             Path vmlinuxHeader = getPath("vmlinux.h");
             if (vmlinuxHeader != null && Files.exists(vmlinuxHeader)) {

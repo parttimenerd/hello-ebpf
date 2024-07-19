@@ -1,14 +1,20 @@
 package me.bechberger.ebpf.bpf.processor;
 
 import com.squareup.javapoet.FieldSpec;
+import com.sun.tools.javac.code.Attribute.Constant;
+import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
+import me.bechberger.ebpf.annotations.bpf.BPF;
+import me.bechberger.ebpf.annotations.bpf.BPFInterface;
+import me.bechberger.ebpf.annotations.bpf.Type;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils.AnnotationValues;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils.AnnotationValues.AnnotationKind;
 import me.bechberger.ebpf.bpf.processor.BPFTypeLike.*;
+import me.bechberger.ebpf.bpf.processor.BPFTypeLike.VerbatimBPFOnlyType.PrefixKind;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.BPFName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.JavaName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.SpecFieldName;
@@ -20,13 +26,10 @@ import me.bechberger.ebpf.type.Typedef;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.AnnotatedConstruct;
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -34,8 +37,7 @@ import java.util.stream.Stream;
 
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 
-import static me.bechberger.cast.CAST.Expression.constant;
-import static me.bechberger.cast.CAST.Expression.variable;
+import static me.bechberger.cast.CAST.Expression.*;
 import static me.bechberger.cast.CAST.Statement.*;
 import static me.bechberger.ebpf.NameUtil.toConstantCase;
 import static me.bechberger.ebpf.bpf.processor.AnnotationUtils.*;
@@ -43,7 +45,7 @@ import static me.bechberger.ebpf.bpf.processor.AnnotationUtils.*;
 /**
  * Handles {@code @Type} annotated records
  */
-class TypeProcessor {
+public class TypeProcessor {
 
     public final static String TYPE_ANNOTATION = "me.bechberger.ebpf.annotations.bpf.Type";
     public final static String BPF_PACKAGE = "me.bechberger.ebpf.type";
@@ -52,6 +54,8 @@ class TypeProcessor {
     public final static String BPF_MAP_CLASS = "me.bechberger.ebpf.annotations.bpf.BPFMapClass";
 
     private final ProcessingEnvironment processingEnv;
+    private final boolean allowUnsizedStrings;
+    private final TypeUtils typeUtils;
     /** only use this where necessary because it is not part of the public API */
     private final JavacProcessingEnvironment javacProcessingEnv;
     private TypeElement outerTypeElement;
@@ -62,9 +66,22 @@ class TypeProcessor {
     /** For generating the C code later */
     private List<CustomBPFType<?>> usedCustomBPFTypes;
 
-    TypeProcessor(ProcessingEnvironment processingEnv) {
+    /**
+     * Creates a new TypeProcessor
+     *
+     * @param processingEnv environment to use
+     * @param allowUnsizedStrings allow Strings without {@link me.bechberger.ebpf.annotations.Size} annotation,
+     *                            useful for code translation
+     */
+    public TypeProcessor(ProcessingEnvironment processingEnv, boolean allowUnsizedStrings) {
         this.processingEnv = processingEnv;
+        this.typeUtils = new TypeUtils(processingEnv.getTypeUtils(), processingEnv.getElementUtils());
         this.javacProcessingEnv = (JavacProcessingEnvironment) processingEnv;
+        this.allowUnsizedStrings = allowUnsizedStrings;
+    }
+
+    public TypeProcessor(ProcessingEnvironment processingEnv) {
+        this(processingEnv, false);
     }
 
     /** Returns all records annotated with {@code @Type} and types specified in the {@link me.bechberger.ebpf.annotations.bpf.BPF} annotation */
@@ -85,7 +102,7 @@ class TypeProcessor {
         return false;
     }
 
-    enum DataTypeKind {
+    public enum DataTypeKind {
         STRUCT,
         UNION,
         TYPEDEF,
@@ -93,43 +110,27 @@ class TypeProcessor {
         NONE
     }
 
-    private TypeMirror getTypeMirror(Class<?> klass) {
-        return processingEnv.getElementUtils().getTypeElement(klass.getCanonicalName()).asType();
-    }
-
-    private boolean hasSuperClass(Element element, Class<?> klass) {
-        return processingEnv.getTypeUtils().isSameType(((TypeElement) element).getSuperclass(), getTypeMirror(klass));
-    }
-
-    private boolean hasClassIgnoringTypeParameters(Element element, String klass) {
-        return processingEnv.getTypeUtils().erasure(element.asType()).toString().equals(klass);
-    }
-
-    private boolean hasSameSuperclassIgnoringTypeParameters(Element element, Class<?> klass) {
-        return processingEnv.getTypeUtils().isSameType(
-                processingEnv.getTypeUtils().erasure(((TypeElement) element).getSuperclass()),
-                processingEnv.getTypeUtils().erasure(getTypeMirror(klass)));
-    }
-
-    private boolean implementsInterface(Element element, Class<?> klass) {
-        return ((TypeElement) element).getInterfaces().stream().anyMatch(t -> processingEnv.getTypeUtils().isSameType(t, getTypeMirror(klass)));
-    }
-
-    private boolean implementsInterfaceIgnoringTypeParameters(Element element, Class<?> klass) {
-        var erasedKlass = processingEnv.getTypeUtils().erasure(getTypeMirror(klass));
-        return ((TypeElement) element).getInterfaces().stream().anyMatch(t -> processingEnv.getTypeUtils().isSameType(
-                processingEnv.getTypeUtils().erasure(t), erasedKlass));
+    private boolean isNotUsableInJava(TypeElement element) {
+        return hasAnnotation(element, "me.bechberger.ebpf.annotations.bpf.NotUsableInJava");
     }
 
     private TypeProcessor.DataTypeKind isValidDataType(Element element) {
-        boolean implementsTypedef = implementsInterfaceIgnoringTypeParameters(element, Typedef.class);
+        return isValidDataType(element, true);
+    }
+
+    public TypeProcessor.DataTypeKind isValidDataType(Element element, boolean log) {
+        boolean implementsTypedef = typeUtils.implementsInterfaceIgnoringTypeParameters(element, Typedef.class);
         if (element.getKind() == ElementKind.ENUM) {
             if (implementsTypedef) {
-                this.processingEnv.getMessager().printError("Class " + element.getSimpleName() + " is an enum but implements the Typedef interface", element);
+                if (log) {
+                    this.processingEnv.getMessager().printError("Class " + element.getSimpleName() + " is an enum but implements the Typedef interface", element);
+                }
                 return DataTypeKind.NONE;
             }
-            if (!implementsInterfaceIgnoringTypeParameters(element, Enum.class)) {
-                this.processingEnv.getMessager().printError("Enum " + element + " must implement the Enum interface", element);
+            if (!typeUtils.implementsInterfaceIgnoringTypeParameters(element, Enum.class)) {
+                if (log) {
+                    this.processingEnv.getMessager().printError("Enum " + element + " must implement the Enum interface", element);
+                }
                 return DataTypeKind.NONE;
             }
             return DataTypeKind.ENUM;
@@ -137,7 +138,9 @@ class TypeProcessor {
         if (element.getKind() == ElementKind.RECORD) {
             // check that it has no super class
             if (((TypeElement) element).getSuperclass().getKind() != TypeKind.NONE && !((TypeElement) element).getSuperclass().toString().equals("java.lang.Record")){
-                this.processingEnv.getMessager().printError("Class " + element.getSimpleName() + " is a record but has a super class", element);
+                if (log) {
+                    this.processingEnv.getMessager().printError("Class " + element.getSimpleName() + " is a record but has a super class", element);
+                }
                 return DataTypeKind.NONE;
             }
             if (implementsTypedef) {
@@ -148,25 +151,31 @@ class TypeProcessor {
         if (element.getKind() == ElementKind.CLASS) {
             // check that it is a static class
             if (!element.getModifiers().contains(Modifier.STATIC)) {
-                this.processingEnv.getMessager().printError("Class " + element.getSimpleName() + " is a class but not static", element);
+                if (log) {
+                    this.processingEnv.getMessager().printError("Class " + element.getSimpleName() + " is a class but not static", element);
+                }
                 return DataTypeKind.NONE;
             }
             // check if it is a union
-            if (hasSuperClass(element, Union.class)) {
+            if (typeUtils.hasSuperClass(element, Union.class)) {
                 if (implementsTypedef) {
-                    this.processingEnv.getMessager().printError("Class " + element + " is a union and must not implement the Typedef interface", element);
+                    if (log) {
+                        this.processingEnv.getMessager().printError("Class " + element + " is a union and must not implement the Typedef interface", element);
+                    }
                 }
                 return DataTypeKind.UNION;
             }
-            if (hasSameSuperclassIgnoringTypeParameters(element, TypedefBase.class)) {
-                if (implementsTypedef) {
+            if (typeUtils.hasSameSuperclassIgnoringTypeParameters(element, TypedefBase.class)) {
+                if (implementsTypedef && log) {
                     this.processingEnv.getMessager().printError("Class " + element + " is a typedef and must not extend also TypedefBase", element);
                 }
                 return DataTypeKind.TYPEDEF;
             }
             // check if it either extends Object or Struct, so it can be a struct
-            if (!hasSuperClass(element, Object.class) && !hasSuperClass(element, Struct.class) && ((TypeElement)element).getSuperclass().getKind() != TypeKind.NONE) {
-                this.processingEnv.getMessager().printError("Class " + element + " is a class but does not extend Object, Union or Struct", element);
+            if (!typeUtils.hasSuperClass(element, Object.class) && !typeUtils.hasSuperClass(element, Struct.class) && ((TypeElement)element).getSuperclass().getKind() != TypeKind.NONE) {
+                if (log) {
+                    this.processingEnv.getMessager().printError("Class " + element + " is a class but does not extend Object, Union or Struct", element);
+                }
             }
             return DataTypeKind.STRUCT;
         }
@@ -188,9 +197,9 @@ class TypeProcessor {
         }).toList();
     }
 
-    record TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements,
+    public record TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements,
                                @Nullable Statement licenseDefinition, List<MapDefinition> mapDefinitions,
-                               List<GlobalVariableDefinition> globalVariableDefinitions) {
+                               List<GlobalVariableDefinition> globalVariableDefinitions, InterfaceAdditions additions) {
     }
 
     boolean shouldGenerateCCode(TypeElement innerElement) {
@@ -207,7 +216,7 @@ class TypeProcessor {
      * @param outerTypeElement the class to process that contains the records
      * @return a list of field specs that define the related {@code BPFStructType} instances
      */
-    public TypeProcessorResult processBPFTypeRecords(TypeElement outerTypeElement) {
+    public @Nullable TypeProcessorResult processBPFTypeRecords(TypeElement outerTypeElement) {
         this.outerTypeElement = outerTypeElement;
         List<TypeElement> predefinedTypeElements = getRequiredBPFTypeElements(outerTypeElement);
         // we initialize the defined types with the predefined types
@@ -230,7 +239,8 @@ class TypeProcessor {
             }
             var type = processBPFTypeRecord(unprocessed.getFirst());
             if (type.isEmpty()) {
-                return new TypeProcessorResult(List.of(), List.of(), List.of(), null, List.of(), createGlobalVariableDefinitions(outerTypeElement, typeToSpecField));
+                return new TypeProcessorResult(List.of(), List.of(), List.of(), null, List.of(), createGlobalVariableDefinitions(outerTypeElement, typeToSpecField),
+                        new InterfaceAdditions(List.of(), List.of(), List.of()));
             }
             alreadyDefinedTypes.put(type.get().getJavaName(), type.get());
             processedTypes.add(unprocessed.getFirst());
@@ -263,16 +273,21 @@ class TypeProcessor {
                 actualType.toCDeclarationStatement().ifPresent(definingStatements::add);
             }
         }
-
+        var additions = getInterfaceAdditions(outerTypeElement.asType());
+        if (additions == null) {
+            return null;
+        }
         return new TypeProcessorResult(fields, createDefineStatements(outerTypeElement), definingStatements,
-                getLicenseDefinitionStatement(outerTypeElement), mapDefinitions, createGlobalVariableDefinitions(outerTypeElement, typeToSpecField));
+                getLicenseDefinitionStatement(outerTypeElement), mapDefinitions,
+                createGlobalVariableDefinitions(outerTypeElement, typeToSpecField),
+                additions);
     }
 
     static record GlobalVariableDefinition(Statement globalVariable, String name, String typeField, String initializer) {}
 
     private List<GlobalVariableDefinition> createGlobalVariableDefinitions(TypeElement outerTypeElement, Function<BPFTypeLike<?>, SpecFieldName> typeToSpecField) {
         return outerTypeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e)
-                .filter(e -> hasClassIgnoringTypeParameters(e, "me.bechberger.ebpf.bpf.GlobalVariable"))
+                .filter(e -> typeUtils.hasClassIgnoringTypeParameters(e, "me.bechberger.ebpf.bpf.GlobalVariable"))
                 .map(e -> processGlobalVariable(e, typeToSpecField)).filter(Objects::nonNull).toList();
     }
 
@@ -357,7 +372,63 @@ class TypeProcessor {
         return variableDefinition(Declarator.array(Declarator.identifier("char"), null), variable("_license", CAnnotation.sec("license")), constant(license));
     }
 
-    private @Nullable CAST.Statement.Define processField(VariableElement field) {
+    public record InterfaceAdditions(List<String> includes, List<String> before, List<String> after) {}
+
+    private InterfaceAdditions getInterfaceAdditions(TypeMirror outerType) {
+        List<String> includes = new ArrayList<>();
+        var outerTypeElement = (TypeElement) ((DeclaredType) outerType).asElement();
+        var annotation = outerTypeElement.getAnnotation(BPF.class);
+        if (annotation != null) {
+            includes.addAll(List.of(annotation.includes()));
+        }
+        includes.addAll(getIncludesOfInterface(outerType));
+        List<String> before = new ArrayList<>();
+        List<String> after = new ArrayList<>();
+
+        boolean hadError = false;
+
+        for (var inter : getInterfaces(outerType)) {
+            var interAnnotation = ((ClassType) inter).asElement().getAnnotation(BPFInterface.class);
+            if (interAnnotation == null) {
+                continue;
+            }
+            var beforeLine = interAnnotation.before();
+            if (!beforeLine.isEmpty()) {
+                before.add(beforeLine.strip());
+            }
+            var afterLine = interAnnotation.after();
+            if (!afterLine.isEmpty()) {
+                after.add(afterLine.strip());
+            }
+            for (var include : getIncludesOfInterface(inter)) {
+                if (!includes.contains(include)) {
+                    includes.add(include);
+                }
+            }
+        }
+        if (hadError) {
+            return null;
+        }
+        return new InterfaceAdditions(includes, before, after);
+    }
+
+    private List<TypeMirror> getInterfaces(TypeMirror outerType) {
+        var outerTypeElement = (TypeElement) ((DeclaredType) outerType).asElement();
+        var interfaces = new ArrayList<TypeMirror>();
+        outerTypeElement.getInterfaces().forEach(t -> {
+            interfaces.add(t);
+            interfaces.addAll(getInterfaces(t));
+        });
+        return interfaces;
+    }
+
+    private List<String> getIncludesOfInterface(TypeMirror outerType) {
+        var annotation = getAnnotationMirror(((ClassType)outerType).asElement(), "me.bechberger.ebpf.annotations.bpf.Includes");
+        return annotation.map(annotationMirror -> AnnotationUtils.getAnnotationValue(annotationMirror, "value", List.of())
+                .stream().map(v -> (String)((Constant)v).getValue()).toList()).orElse(List.of());
+    }
+
+    public @Nullable CAST.Statement.Define processField(VariableElement field) {
         // check that the field is static, final and of type boolean, ..., int, long, float, double or String
         // create a #define statement for the field
         // return the #define statement
@@ -423,8 +494,7 @@ class TypeProcessor {
             long value = getAnnotationMirror(member, "me.bechberger.ebpf.annotations.bpf.EnumMember")
                     .map(a -> getAnnotationValue(a, "value", -1L)).orElse(currentValue);
             if (value == -1L) {
-                this.processingEnv.getMessager().printError("Enum member " + member.getSimpleName() + " must have a value", member);
-                return Optional.empty();
+                value = currentValue;
             }
             var memberName = member.getSimpleName().toString();
             var memberCNameValue = getAnnotationMirror(member, "me.bechberger.ebpf.annotations.bpf.EnumMember")
@@ -689,8 +759,8 @@ class TypeProcessor {
         return lastPart.equals("String") || lastPart.equals("java.lang.String");
     }
 
-    private Optional<BPFTypeMirror> processBPFTypeRecordMemberType(Element element, AnnotationValues annotations,
-                                                                   TypeMirror type) {
+    public Optional<BPFTypeMirror> processBPFTypeRecordMemberType(Element element, AnnotationValues annotations,
+                                                                  TypeMirror type) {
         if (type.getKind() == TypeKind.ARRAY) {
             return processArrayType(element,
                     annotations,
@@ -706,6 +776,10 @@ class TypeProcessor {
 
         var typeElement = (TypeElement) processingEnv.getTypeUtils().asElement(type);
 
+        if (typeElement == null) {
+            return Optional.of(t -> BPFTypeLike.of(BPFType.VOID));
+        }
+
         if (isPointerType(typeElement)) {
             return processPointerType(element, annotations, type);
         }
@@ -716,7 +790,7 @@ class TypeProcessor {
         }
         var t = isValidDataType(typeElement);
         if (t != DataTypeKind.NONE) {
-            return processDefinedDataType(element, annotations, type);
+            return processDefinedDataType(element, annotations, type, t);
         }
         this.processingEnv.getMessager().printError("Unsupported type " + type, element);
         return Optional.empty();
@@ -730,8 +804,12 @@ class TypeProcessor {
         if (!annotations.checkSupportedAnnotations(m -> this.processingEnv.getMessager().printError(m, element))) {
             return Optional.empty();
         }
-        var genericType = ((DeclaredType)type).getTypeArguments().getFirst();
-        System.err.println("Generic type " + genericType);
+        var genericTypes = ((DeclaredType)type).getTypeArguments();
+        if (genericTypes.size() != 1) {
+            this.processingEnv.getMessager().printError("Pointer type must have exactly one type argument", element);
+            return Optional.empty();
+        }
+        var genericType = genericTypes.getFirst();
         var innerType = processBPFTypeRecordMemberType(element, getAnnotationValuesForRecordMember(genericType), genericType);
         if (innerType.isEmpty()) {
             return Optional.empty();
@@ -766,7 +844,7 @@ class TypeProcessor {
     }
 
     @FunctionalInterface
-    interface BPFTypeMirror {
+    public interface BPFTypeMirror {
 
         BPFTypeLike<?> toBPFType(Function<JavaName, BPFTypeLike<?>> nameToCustomType);
     }
@@ -805,18 +883,35 @@ class TypeProcessor {
                 AnnotationValues.AnnotationKind.SIZE)) {
             return Optional.empty();
         }
-        if (annotations.size().isEmpty()) {
+        if (annotations.size().isEmpty() && !allowUnsizedStrings) {
             this.processingEnv.getMessager().printError("Size annotation required for string types", element);
             return Optional.empty();
         }
-        return Optional.of(t -> BPFTypeLike.of(new BPFType.StringType(annotations.size().getFirst())));
+        return Optional.of(t -> BPFTypeLike.of(new BPFType.StringType(annotations.size().isEmpty() ? -1 : annotations.size().getFirst())));
     }
 
-    private Optional<BPFTypeMirror> processDefinedDataType(Element element, AnnotationValues annotations, TypeMirror type) {
+    private Optional<BPFTypeMirror> processDefinedDataType(Element element, AnnotationValues annotations, TypeMirror type, DataTypeKind kind) {
         if (!checkAnnotatedType(element, annotations)) {
             return Optional.empty();
         }
         TypeElement typeElement = (TypeElement) processingEnv.getTypeUtils().asElement(type);
+        if (this.definedTypes == null) { // used from the compiler plugin
+            var annotation = typeElement.getAnnotation(Type.class);
+            String cType = annotation.cType();
+            if (!annotation.cType().isEmpty()) { // C type is defined
+                return Optional.of(t -> new VerbatimBPFOnlyType<>(cType, PrefixKind.NORMAL));
+            }
+            var name = getTypeRecordBpfName(typeElement).name();
+            var parts = name.split("\\$");
+            var properName = parts[parts.length - 1];
+            return Optional.of(t -> new VerbatimBPFOnlyType<>(properName, switch (kind) {
+                case STRUCT -> PrefixKind.STRUCT;
+                case UNION -> PrefixKind.UNION;
+                case ENUM -> PrefixKind.ENUM;
+                case NONE -> PrefixKind.NORMAL;
+                default -> throw new IllegalStateException("Unexpected value: " + kind);
+            }));
+        }
         SpecFieldName fieldName = definedTypes.getOrCreateFieldName(typeElement);
         var typeName = definedTypes.bpfNameToName(definedTypes.specFieldNameToName(fieldName));
         return Optional.of(t -> t.apply(typeName));
@@ -832,7 +927,11 @@ class TypeProcessor {
         }
         TypeElement typeElement = (TypeElement) processingEnv.getTypeUtils().asElement(type);
         if (!definedTypes.isTypeDefined(typeElement)) {
-            addCustomType(typeElement);
+            var info = getCustomTypeInfo(typeElement);
+            if (info == null) {
+                return Optional.empty();
+            }
+            addCustomType(info);
         }
         Optional<SpecFieldName> fieldName = definedTypes.getFieldName(typeElement);
         if (fieldName.isEmpty()) {
@@ -842,8 +941,11 @@ class TypeProcessor {
         return Optional.of(t -> t.apply(typeName));
     }
 
-    private void addCustomType(TypeElement typeElement) {
+    public @Nullable CustomTypeInfo getCustomTypeInfo(TypeElement typeElement) {
         var optAnn = getAnnotationMirror(typeElement, "me.bechberger.ebpf.annotations.bpf.CustomType");
+        if (optAnn.isEmpty()) {
+            return null;
+        }
         var javaName = new JavaName(typeElement);
         var bpfName = new BPFName(getAnnotationValue(optAnn.get(), "name", typeElement.getSimpleName().toString()));
         var fieldNameString = getAnnotationValue(optAnn.get(), "specFieldName", "").replace("$class", javaName.name());
@@ -854,15 +956,22 @@ class TypeProcessor {
         if (!fieldNameString.contains(".")) {
             // probably a field of the current class
             this.processingEnv.getMessager().printError("specFieldName must be set", typeElement);
-            return;
+            return null;
         }
         var isStruct = getAnnotationValue(optAnn.get(), "isStruct", false);
         var cCode = getAnnotationValue(optAnn.get(), "cCode", "").replace("$name", bpfName.name());
-        definedTypes.insertType(typeElement, bpfName, fieldName);
-        usedCustomBPFTypes.add(new CustomBPFType<>(javaName.name(), javaName.name(), javaName.name(), bpfName.name(), () -> {
-            return isStruct ? Declarator.structIdentifier(variable(bpfName.name())) : Declarator.identifier(bpfName.name());
-        },  f -> fieldName.name(), () -> cCode.isEmpty() ? Optional.<Statement>empty() : Optional.of(verbatim(cCode))));
+
+        return new CustomTypeInfo(typeElement, javaName, bpfName, fieldName, isStruct, cCode);
     }
+
+   public record CustomTypeInfo(TypeElement typeElement, JavaName javaName, BPFName bpfName, SpecFieldName fieldName, boolean isStruct, String cCode) {}
+
+   private void addCustomType(CustomTypeInfo customType) {
+       definedTypes.insertType(customType.typeElement, customType.bpfName, customType.fieldName);
+       usedCustomBPFTypes.add(new CustomBPFType<>(customType.javaName.name(), customType.javaName.name(), customType.javaName.name(), customType.bpfName.name(), () -> {
+           return customType.isStruct ? Declarator.structIdentifier(variable(customType.bpfName.name())) : Declarator.identifier(customType.bpfName.name());
+       },  f -> customType.fieldName.name(), () -> customType.cCode.isEmpty() ? Optional.<Statement>empty() : Optional.of(Statement.verbatim(customType.cCode))));
+   }
 
     private DefinedTypes getDefinedTypes(List<TypeElement> innerTypeElements) {
         return new DefinedTypes(this, innerTypeElements, this::typeToFieldName);

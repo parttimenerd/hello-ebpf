@@ -1,5 +1,8 @@
 package me.bechberger.ebpf.bpf.processor;
 
+import me.bechberger.cast.CAST;
+import me.bechberger.cast.CAST.Declarator.StructIdentifierDeclarator;
+import me.bechberger.cast.CAST.Declarator.UnionIdentifierDeclarator;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.BPFName;
 import me.bechberger.ebpf.bpf.processor.DefinedTypes.JavaName;
 import me.bechberger.ebpf.type.BPFType;
@@ -11,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-sealed interface BPFTypeLike<T> {
+public interface BPFTypeLike<T> {
 
     @Nullable
     DefinedTypes.SpecFieldName getSpecFieldName(DefinedTypes types);
@@ -27,6 +30,77 @@ sealed interface BPFTypeLike<T> {
     String toJavaUse();
 
     String toJavaUseInGenerics();
+
+    final class VerbatimBPFOnlyType<T> implements BPFTypeLike<T> {
+
+        public enum PrefixKind {
+            STRUCT,
+            UNION,
+            ENUM,
+            NORMAL
+        }
+
+        final String bpfName;
+        final PrefixKind prefixKind;
+
+        public VerbatimBPFOnlyType(String bpfName, PrefixKind prefixKind) {
+            this.bpfName = bpfName;
+            this.prefixKind = prefixKind;
+        }
+
+        @Override
+        public DefinedTypes.SpecFieldName getSpecFieldName(DefinedTypes types) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public JavaName getJavaName() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public BPFName getBPFName() {
+            return new BPFName(bpfName);
+        }
+
+        @Override
+        public String getBPFNameWithStructPrefixIfNeeded() {
+            return switch (prefixKind) {
+                case STRUCT -> "struct " + bpfName;
+                case UNION -> "union " + bpfName;
+                case ENUM -> "enum " + bpfName;
+                case NORMAL -> bpfName;
+            };
+        }
+
+        @Override
+        public String toJavaFieldSpecUse(Function<BPFType<?>, String> typeToSpecFieldName) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String toJavaUse() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String toJavaUseInGenerics() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public CustomBPFType<T> toCustomType() {
+            return new CustomBPFType<>(null, null, null, bpfName, () -> {
+                var name = CAST.Expression.variable(bpfName);
+                return switch (prefixKind) {
+                    case STRUCT -> new StructIdentifierDeclarator(name);
+                    case UNION -> new UnionIdentifierDeclarator(name);
+                    case ENUM -> new CAST.Declarator.EnumIdentifierDeclarator(name);
+                    case NORMAL -> new CAST.Declarator.IdentifierDeclarator(name);
+                };
+            }, null, null);
+        }
+    }
 
     static <T> BPFTypeLike<T> of(BPFType<T> type) {
         return switch (type) {

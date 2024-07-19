@@ -9,6 +9,10 @@ import me.bechberger.cast.CAST.Declarator;
 import me.bechberger.cast.CAST.Declarator.StructMember;
 import me.bechberger.cast.CAST.Statement;
 import me.bechberger.ebpf.annotations.AnnotationInstances;
+import me.bechberger.ebpf.annotations.bpf.BPFFunction;
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
+import me.bechberger.ebpf.annotations.bpf.CustomType;
+import me.bechberger.ebpf.annotations.bpf.Type;
 import me.bechberger.ebpf.type.BPFType.BPFStructType.SourceClassKind;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +51,7 @@ public sealed interface BPFType<T> {
     String BPF_PACKAGE = "me.bechberger.ebpf.type";
     String BPF_TYPE = BPF_PACKAGE + ".BPFType";
 
-    /** Used in the type processor */
+    /** Used in the type compiler */
     record CustomBPFType<T>(String javaName, String javaUse, String javaUseInGenerics, String bpfName, Supplier<Declarator> cUse, Function<Function<BPFType<?>, String>, String> specFieldNameCreator, Supplier<Optional<? extends Statement>> cDeclaration) implements BPFType<T> {
 
         @Override
@@ -484,7 +488,16 @@ public sealed interface BPFType<T> {
         /**
          * 128 bit integer
          */
-        public record Int128(long lower, long upper) {
+        @CustomType(isStruct = false, name = "__int128", specFieldName = "$outerClass.INT128")
+        public record Int128(
+                @BuiltinBPFFunction("(s64)(($this) >> 64)") long upper,
+                @BuiltinBPFFunction("(s64)($this)") long lower) {
+
+            @BuiltinBPFFunction("(((__int128)$arg1) << 64) | ($arg2)")
+            public static Int128 of(long upper, long lower) {
+                return new Int128(upper, lower);
+            }
+
             public Int128(BigInteger value) {
                 this(value.longValue(), value.shiftRight(64).longValue());
             }
@@ -493,6 +506,7 @@ public sealed interface BPFType<T> {
                 return BigInteger.valueOf(upper).shiftLeft(64).add(BigInteger.valueOf(lower));
             }
 
+            @BuiltinBPFFunction("$this")
             public UnsignedInt128 toUnsigned() {
                 return new UnsignedInt128(lower, upper);
             }
@@ -501,7 +515,16 @@ public sealed interface BPFType<T> {
         /**
          * 128 bit unsigned integer, maybe fix
          */
-        public record UnsignedInt128(long lower, long upper) {
+        @CustomType(isStruct = false, name = "__int128 unsigned", specFieldName = "$outerClass.UINT128")
+        public record UnsignedInt128(
+                @BuiltinBPFFunction("(s64)(($this) >> 64)") long upper,
+                @BuiltinBPFFunction("(s64)($this)") long lower) {
+
+            @BuiltinBPFFunction("(((__int128 unsigned)$arg1) << 64) | ($arg2)")
+            public static UnsignedInt128 of(long upper, long lower) {
+                return new UnsignedInt128(upper, lower);
+            }
+
             public UnsignedInt128(BigInteger value) {
                 this(value.longValue(), value.shiftRight(64).longValue());
             }
@@ -514,7 +537,7 @@ public sealed interface BPFType<T> {
         public static final BPFIntType<Int128> INT128 = createType("__int128", "INT128", Int128.class,
                 MemoryLayout.structLayout(
                 ValueLayout.JAVA_LONG, ValueLayout.JAVA_LONG), segment -> {
-            return new Int128(segment.get(ValueLayout.JAVA_LONG, 0), segment.get(ValueLayout.JAVA_LONG, 8));
+            return new Int128(segment.get(ValueLayout.JAVA_LONG, 8), segment.get(ValueLayout.JAVA_LONG, 0));
         }, (MemorySegment segment, Int128 obj) -> {
             segment.set(ValueLayout.JAVA_LONG, 0, obj.lower());
             segment.set(ValueLayout.JAVA_LONG, 8, obj.upper());
@@ -523,8 +546,8 @@ public sealed interface BPFType<T> {
         public static final BPFIntType<UnsignedInt128> UINT128 = createType("__int128 unsigned", "UINT128",
                 UnsignedInt128.class,
                 BPFIntType.INT128.layout, segment -> {
-                    return new UnsignedInt128(segment.get(ValueLayout.JAVA_LONG, 0),
-                            segment.get(ValueLayout.JAVA_LONG, 8));
+                    return new UnsignedInt128(segment.get(ValueLayout.JAVA_LONG, 8),
+                            segment.get(ValueLayout.JAVA_LONG, 0));
                 }, (MemorySegment segment, UnsignedInt128 obj) -> {
                     segment.set(ValueLayout.JAVA_LONG, 0, obj.lower());
                     segment.set(ValueLayout.JAVA_LONG, 8, obj.upper());
@@ -1175,12 +1198,14 @@ public sealed interface BPFType<T> {
      * <p>
      * Important: the string is null-terminated, therefore the max length of the string is length-1 ASCII character.
      * The string is truncated if it is longer than length-1.
+     * <p>
+     * Length -1 is used to indicate a string with a dynamic length
      */
     record StringType(int length) implements BPFType<String> {
 
         @Override
         public String bpfName() {
-            return "char[" + length + "]";
+            return length == -1 ? "char*" : "char[" + length + "]";
         }
 
         @Override
@@ -1190,11 +1215,17 @@ public sealed interface BPFType<T> {
 
         @Override
         public MemoryParser<String> parser() {
+            if (length == -1) {
+                throw new RuntimeException("Cannot parse string with dynamic length");
+            }
             return segment -> segment.getString(0);
         }
 
         @Override
         public MemorySetter<String> setter() {
+            if (length == -1) {
+                throw new RuntimeException("Cannot set string with dynamic length");
+            }
             return (segment, obj) -> {
                 byte[] bytes = obj.getBytes();
                 if (bytes.length + 1 < length) {
@@ -1217,6 +1248,9 @@ public sealed interface BPFType<T> {
 
         @Override
         public AnnotatedClass javaClass() {
+            if (length == -1) {
+                return new AnnotatedClass(String.class, List.of());
+            }
             return new AnnotatedClass(String.class, List.of(AnnotationInstances.size(length)));
         }
 
@@ -1227,6 +1261,9 @@ public sealed interface BPFType<T> {
 
         @Override
         public CAST.Declarator toCUse() {
+            if (length == -1) {
+                return CAST.Declarator.pointer(CHAR.toCUse());
+            }
             return CAST.Declarator.array(CHAR.toCUse(), CAST.Expression.constant(length));
         }
 

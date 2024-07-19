@@ -1,6 +1,9 @@
 package me.bechberger.ebpf.type;
 
 import me.bechberger.ebpf.annotations.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
+import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Represents a pointer to a value in Java code that is translated to a pointer in C code.
@@ -15,15 +18,128 @@ import me.bechberger.ebpf.annotations.MethodIsBPFRelatedFunction;
  */
 public class Ptr<T> {
     /** Dereference this pointer */
+    @BuiltinBPFFunction("*($this)")
+    @NotUsableInJava
     public T val() {
         throw new MethodIsBPFRelatedFunction();
     }
 
-    public static <T> Ptr<T> of(T value) {
+    /** Create a pointer of the passed value,
+     * <p>
+     *  Has to be a proper l-value (?) that has a place in memory,
+     *  e.g. {@code Ptr.of(3)} is not allowed.
+     */
+    @BuiltinBPFFunction("&($arg1)")
+    @NotUsableInJava
+    public static <T> Ptr<T> of(@Nullable T value) {
         throw new MethodIsBPFRelatedFunction();
     }
 
-    public static <T> Ptr<T> ofNull() {
+    /**
+     * Short-cut for {@code Ptr.of(null)}
+     */
+    @BuiltinBPFFunction("((void*)0)")
+    @NotUsableInJava
+    public static Ptr<?> ofNull() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Cast this Ptr to {@code Ptr<S>}
+     */
+    @BuiltinBPFFunction("(($T1*)$this)")
+    @NotUsableInJava
+    public <S> Ptr<S> cast() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Increment this pointer
+     */
+    @BuiltinBPFFunction("($this + $arg1)")
+    @NotUsableInJava
+    public Ptr<T> add(int increment) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Access the value at the index of this pointer
+     */
+    @BuiltinBPFFunction("($this[$arg1])")
+    @NotUsableInJava
+    public T get(int index) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Set the value at the index of this pointer
+     */
+    @BuiltinBPFFunction("($this)[$arg1] = $arg2")
+    @NotUsableInJava
+    public void set(int index, T value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("*($this) = $arg1")
+    @NotUsableInJava
+    public void set(T value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Create a pointer of the passed array
+     */
+    @BuiltinBPFFunction("($arg1)")
+    @NotUsableInJava
+    public static <T> Ptr<T> of(T[] value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("($arg1)")
+    @NotUsableInJava
+    public static Ptr<Integer> of(int[] value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("($arg1)")
+    @NotUsableInJava
+    public static Ptr<Long> of(long[] value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("($arg1)")
+    @NotUsableInJava
+    public static Ptr<Short> of(short[] value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("($arg1)")
+    @NotUsableInJava
+    public static Ptr<Byte> of(byte[] value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("($arg1)")
+    @NotUsableInJava
+    public static Ptr<Character> of(char[] value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("($arg1)")
+    @NotUsableInJava
+    public static Ptr<Float> of(float[] value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("($arg1)")
+    @NotUsableInJava
+    public static Ptr<Double> of(double[] value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("($arg1)")
+    @NotUsableInJava
+    public static Ptr<Boolean> of(boolean[] value) {
         throw new MethodIsBPFRelatedFunction();
     }
 }

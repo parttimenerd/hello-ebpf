@@ -59,6 +59,9 @@
             <arg>-J- -add-opens=...</arg>
           </compilerArgs>
           but we can omit it by just using the .mvn/jvm.config file-->
+          <compilerArgs>
+            <arg>-Xplugin:BPFCompilerPlugin</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
       <plugin>
@@ -111,6 +114,16 @@
         <groupId>me.bechberger</groupId>
         <artifactId>bpf-processor</artifactId>
         <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>me.bechberger</groupId>
+      <artifactId>bpf-compiler-plugin</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>me.bechberger</groupId>
+        <artifactId>bpf-runtime</artifactId>
+        <version>0.1.4</version>
     </dependency>
     <dependency>
       <groupId>me.bechberger</groupId>

@@ -1,5 +1,6 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.bpf.BPFProgram.BTF.BTFType.VariableSectionInfo;
 import me.bechberger.ebpf.bpf.map.BPFMap;
 import me.bechberger.ebpf.bpf.raw.Lib_1;
@@ -146,6 +147,7 @@ public class GlobalVariable<T> {
     /**
      * Set the value of this global variable
      */
+    @BuiltinBPFFunction("$this = $arg1")
     public void set(T value) {
         globals.set(name, this, value);
     }
@@ -153,6 +155,7 @@ public class GlobalVariable<T> {
     /**
      * Get the current value of this global variable
      */
+    @BuiltinBPFFunction("$this")
     public T get() {
         return globals.get(name, type);
     }

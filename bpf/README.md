@@ -17,7 +17,7 @@ You can find the annotation processor in the [bpf-processor](../bpf-processor) m
 and the library with examples in this module.
 
 The mean idea with the annotation processor is that it transforms an example like 
-[this](src/main/java/me/bechberger/ebpf/samples/HelloWorld.java) into something like this:
+[this](src/main/samples/HelloWorld.java) into something like this:
 
 ```java
 @BPF

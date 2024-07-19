@@ -34,7 +34,7 @@
     </scm>
 
     <inceptionYear>2023</inceptionYear>
-    <description>Java bindings for libbcc (eBPF) modelled after the Python bindings.</description>
+    <description>A library for writing eBPF programs in Java with ease.</description>
 
     <build>
         <plugins>
@@ -112,6 +112,8 @@
         <module>shared</module>
         <module>bcc</module>
         <module>bpf-processor</module>
+        <module>bpf-compiler-plugin</module>
+        <module>bpf-compiler-plugin-test</module>
         <module>bpf</module>
         <module>bpf-gen</module>
     </modules>
