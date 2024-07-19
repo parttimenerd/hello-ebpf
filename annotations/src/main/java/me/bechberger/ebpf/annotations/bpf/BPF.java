@@ -18,6 +18,7 @@ import java.lang.annotation.Target;
  *          }
  *     }
  * }
+ * }
  */
 @Target(ElementType.TYPE)
 public @interface BPF {
@@ -28,4 +29,14 @@ public @interface BPF {
     String license() default "";
     /** Types that should be included in the generated eBPF program */
     Class<?>[] includeTypes() default {};
+
+    /**
+     * Included C libraries, additional ones can also be added with the {@link Includes} annotation
+     */
+    String[] includes() default {
+            "vmlinux.h",
+            "bpf/bpf_helpers.h",
+            "bpf/bpf_endian.h",
+            "bpf/bpf_tracing.h"
+    };
 }
