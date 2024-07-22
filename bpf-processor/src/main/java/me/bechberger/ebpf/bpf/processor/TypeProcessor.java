@@ -10,7 +10,7 @@ import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFInterface;
-import me.bechberger.ebpf.annotations.bpf.Type;
+import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils.AnnotationValues;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils.AnnotationValues.AnnotationKind;
 import me.bechberger.ebpf.bpf.processor.BPFTypeLike.*;
@@ -47,7 +47,7 @@ import static me.bechberger.ebpf.bpf.processor.AnnotationUtils.*;
  */
 public class TypeProcessor {
 
-    public final static String TYPE_ANNOTATION = "me.bechberger.ebpf.annotations.bpf.Type";
+    public final static String TYPE_ANNOTATION = "me.bechberger.ebpf.annotations.Type";
     public final static String BPF_PACKAGE = "me.bechberger.ebpf.type";
     public final static String BPF_TYPE = "me.bechberger.ebpf.type.BPFType";
     public final static String BPF_MAP_DEFINITION = "me.bechberger.ebpf.annotations.bpf.BPFMapDefinition";
@@ -183,7 +183,7 @@ public class TypeProcessor {
     }
 
     private boolean isCustomTypeAnnotatedRecord(Element element) {
-        return getAnnotationMirror(element, "me.bechberger.ebpf.annotations.bpf.CustomType").isPresent();
+        return getAnnotationMirror(element, "me.bechberger.ebpf.annotations.CustomType").isPresent();
     }
 
     /** Returns all types specified in the {@link me.bechberger.ebpf.annotations.bpf.BPF} annotation */
@@ -423,7 +423,7 @@ public class TypeProcessor {
     }
 
     private List<String> getIncludesOfInterface(TypeMirror outerType) {
-        var annotation = getAnnotationMirror(((ClassType)outerType).asElement(), "me.bechberger.ebpf.annotations.bpf.Includes");
+        var annotation = getAnnotationMirror(((ClassType)outerType).asElement(), "me.bechberger.ebpf.annotations.Includes");
         return annotation.map(annotationMirror -> AnnotationUtils.getAnnotationValue(annotationMirror, "value", List.of())
                 .stream().map(v -> (String)((Constant)v).getValue()).toList()).orElse(List.of());
     }
@@ -458,9 +458,9 @@ public class TypeProcessor {
      * Obtains the name from the Type annotation, if not present uses the simple name of the type
      */
     BPFName getTypeRecordBpfName(TypeElement typeElement) {
-        var annotation = getAnnotationMirror(typeElement, "me.bechberger.ebpf.annotations.bpf.Type");
+        var annotation = getAnnotationMirror(typeElement, "me.bechberger.ebpf.annotations.Type");
         if (annotation.isEmpty()) {
-            annotation = getAnnotationMirror(typeElement, "me.bechberger.ebpf.annotations.bpf.CustomType");
+            annotation = getAnnotationMirror(typeElement, "me.bechberger.ebpf.annotations.CustomType");
         }
         return new BPFName(annotation.flatMap(a -> Optional.ofNullable(getAnnotationValue(a, "name", (String)null)))
                 .orElse(typeElement.getSimpleName().toString()));
@@ -491,13 +491,13 @@ public class TypeProcessor {
         long currentValue = 0;
         Map<String, Element> cNames = new HashMap<>();
         for (var member : enumMembers) {
-            long value = getAnnotationMirror(member, "me.bechberger.ebpf.annotations.bpf.EnumMember")
+            long value = getAnnotationMirror(member, "me.bechberger.ebpf.annotations.EnumMember")
                     .map(a -> getAnnotationValue(a, "value", -1L)).orElse(currentValue);
             if (value == -1L) {
                 value = currentValue;
             }
             var memberName = member.getSimpleName().toString();
-            var memberCNameValue = getAnnotationMirror(member, "me.bechberger.ebpf.annotations.bpf.EnumMember")
+            var memberCNameValue = getAnnotationMirror(member, "me.bechberger.ebpf.annotations.EnumMember")
                     .map(a -> getAnnotationValue(a, "name", "")).orElse("");
             if (memberCNameValue.isEmpty()) {
                 memberCNameValue = toConstantCase(name.name() + "_" + memberName);
@@ -721,7 +721,7 @@ public class TypeProcessor {
 
     private Optional<UBPFStructMemberPotentiallyInlineUnion> processBPFTypeRecordMember(VariableElement element) {
         AnnotationValues annotations = getAnnotationValuesForRecordMember(element);
-        Optional<Integer> inlineUnionId = Optional.ofNullable(getAnnotationMirror(element.asType(), "me.bechberger.ebpf.annotations.bpf.InlineUnion")
+        Optional<Integer> inlineUnionId = Optional.ofNullable(getAnnotationMirror(element.asType(), "me.bechberger.ebpf.annotations.InlineUnion")
                 .map(a -> AnnotationUtils.<Integer>getAnnotationValue(a, "value", null)).orElse(null));
         TypeMirror type = element.asType();
         var bpfType = processBPFTypeRecordMemberType(element, annotations.dropOffset(), type);
@@ -942,7 +942,7 @@ public class TypeProcessor {
     }
 
     public @Nullable CustomTypeInfo getCustomTypeInfo(TypeElement typeElement) {
-        var optAnn = getAnnotationMirror(typeElement, "me.bechberger.ebpf.annotations.bpf.CustomType");
+        var optAnn = getAnnotationMirror(typeElement, "me.bechberger.ebpf.annotations.CustomType");
         if (optAnn.isEmpty()) {
             return null;
         }

@@ -1,4 +1,4 @@
-package me.bechberger.ebpf.annotations.bpf;
+package me.bechberger.ebpf.annotations;
 
 import java.lang.annotation.*;
 
@@ -6,11 +6,11 @@ import java.lang.annotation.*;
  * Annotation to specify the value of an enum member
  * <p>
  * Example: {@snippet :
- *     @Type
+ *     import me.bechberger.ebpf.annotations.Type;@Type
  *     enum Kind implements Enum<Kind> {
  *         A, @EnumMember(value = 23, name = "KIND_A") B, C, D
  *     }
- * }
+ *}
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

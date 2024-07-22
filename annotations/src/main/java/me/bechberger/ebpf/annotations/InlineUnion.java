@@ -1,4 +1,4 @@
-package me.bechberger.ebpf.annotations.bpf;
+package me.bechberger.ebpf.annotations;
 
 import java.lang.annotation.*;
 
@@ -10,7 +10,7 @@ import java.lang.annotation.*;
  * Be aware that it's not fully supported to write to a union member in non C-code
  * <p>
  * Example: {@snippet :
- *     @Type
+ *     import me.bechberger.ebpf.annotations.Type;@Type
  *     class Event extends Struct {
  *        @Unsigned int pid;
  *        @InlineUnion(1) UINT128 ipv6;

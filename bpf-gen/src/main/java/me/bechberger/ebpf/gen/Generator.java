@@ -7,13 +7,12 @@ import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Declarator;
 import me.bechberger.cast.CAST.Declarator.*;
 import me.bechberger.cast.CAST.Expression;
-import me.bechberger.ebpf.annotations.MethodIsBPFRelatedFunction;
-import me.bechberger.ebpf.annotations.Offset;
-import me.bechberger.ebpf.annotations.Size;
-import me.bechberger.ebpf.annotations.Unsigned;
+import me.bechberger.ebpf.annotations.*;
+import me.bechberger.ebpf.annotations.EnumMember;
+import me.bechberger.ebpf.annotations.InlineUnion;
+import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
-import me.bechberger.ebpf.annotations.bpf.OriginalName;
 import me.bechberger.ebpf.gen.Generator.Type.*;
 import me.bechberger.ebpf.gen.KnownTypes.KnownInt;
 import me.bechberger.ebpf.type.*;
@@ -227,9 +226,9 @@ public class Generator {
     }
 
     private static final List<Class<?>> preimportedClasses = List.of(Struct.class, Enum.class, Offset.class,
-            Size.class, Unsigned.class, me.bechberger.ebpf.annotations.bpf.Type.class, TypedefBase.class, Ptr.class,
-            TypedEnum.class, me.bechberger.ebpf.annotations.bpf.EnumMember.class,
-            me.bechberger.ebpf.annotations.bpf.InlineUnion.class, Union.class, Ptr.class, BuiltinBPFFunction.class,
+            Size.class, Unsigned.class, me.bechberger.ebpf.annotations.Type.class, TypedefBase.class, Ptr.class,
+            TypedEnum.class, EnumMember.class,
+            InlineUnion.class, Union.class, Ptr.class, BuiltinBPFFunction.class,
             Nullable.class, MethodIsBPFRelatedFunction.class, NotUsableInJava.class, OriginalName.class);
 
     private static final Set<Class<?>> preimportedClassesSet = new HashSet<>(preimportedClasses);
@@ -325,7 +324,7 @@ public class Generator {
 
         static AnnotationSpec createAnnotations(boolean typedefed, @Nullable Declarator declarator) {
             var builder =
-                    addTypedefedIfNeeded(AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.bpf.Type.class)),
+                    addTypedefedIfNeeded(AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.Type.class)),
                             typedefed).addMember("noCCodeGeneration", "$L", true);
             if (declarator != null) {
                 builder.addMember("cType", "$S", declarator.toPrettyString().replaceAll("\\s+", " "));
@@ -661,7 +660,7 @@ public class Generator {
                             builder.addAnnotation(AnnotationSpec.builder(cts(Offset.class)).addMember("value", "$L",
                                     byteOffset).build());
                         }
-                        return builder.addAnnotation(AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.bpf.InlineUnion.class)).addMember("value", unionType.id + "").build()).build();
+                        return builder.addAnnotation(AnnotationSpec.builder(cts(InlineUnion.class)).addMember("value", unionType.id + "").build()).build();
                     }).toList();
                 }
                 var properName = name(index);
@@ -935,7 +934,7 @@ public class Generator {
              * Generate something like {@code  @EnumMember(value = 23, name = "KIND_A") B}
              */
             TypeSpec toEnumFieldContant(Generator gen) {
-                return TypeSpec.anonymousClassBuilder("").addAnnotation(AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.bpf.EnumMember.class)).addMember("value", "$LL", value).addMember("name", "$S", name).build()).addJavadoc("{@code $L = $L}", name, value).build();
+                return TypeSpec.anonymousClassBuilder("").addAnnotation(AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.EnumMember.class)).addMember("value", "$LL", value).addMember("name", "$S", name).build()).addJavadoc("{@code $L = $L}", name, value).build();
             }
 
             /**

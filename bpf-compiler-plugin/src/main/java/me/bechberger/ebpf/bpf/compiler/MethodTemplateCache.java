@@ -7,7 +7,7 @@ import me.bechberger.cast.CAST.Expression;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFFunctionAlternative;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
-import me.bechberger.ebpf.annotations.bpf.Type;
+import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.bpf.compiler.CompilerPlugin.TypedTreePath;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplate.CallArgs;
 import org.jetbrains.annotations.Nullable;

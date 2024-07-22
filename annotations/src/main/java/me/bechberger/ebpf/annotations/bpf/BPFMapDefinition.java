@@ -1,5 +1,7 @@
 package me.bechberger.ebpf.annotations.bpf;
 
+import me.bechberger.ebpf.annotations.Type;
+
 import java.lang.annotation.*;
 
 /**

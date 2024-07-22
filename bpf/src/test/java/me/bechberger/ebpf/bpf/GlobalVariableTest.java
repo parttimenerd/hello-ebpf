@@ -2,15 +2,12 @@ package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
-import me.bechberger.ebpf.annotations.bpf.Type;
+import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.bpf.GlobalVariableTest.Program.InnerRecord;
 import me.bechberger.ebpf.bpf.map.BPFArray;
-import me.bechberger.ebpf.shared.TraceLog;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-import java.time.Duration;
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

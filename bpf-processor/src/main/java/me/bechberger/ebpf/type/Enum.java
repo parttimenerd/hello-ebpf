@@ -1,8 +1,8 @@
 package me.bechberger.ebpf.type;
 
-import me.bechberger.ebpf.annotations.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
-import me.bechberger.ebpf.annotations.bpf.EnumMember;
+import me.bechberger.ebpf.annotations.EnumMember;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
  * The value is either specified by the {@link EnumMember} annotation or is +1 of the previous member, starting at 0
  * <p>
  * Example: {@snippet :
- *     @Type
+ *     import me.bechberger.ebpf.annotations.EnumMember;@Type
  *     enum Kind implements Enum<Kind> {
  *         A, // value 0
  *         // value 23
@@ -22,7 +22,7 @@ import java.lang.reflect.Field;
  *         C, // value 24
  *         D  // value 25
  *     }
- * }
+ *}
  * @param <T> The enum type
  */
 public interface Enum<T extends java.lang.Enum<T> & Enum<T>> {

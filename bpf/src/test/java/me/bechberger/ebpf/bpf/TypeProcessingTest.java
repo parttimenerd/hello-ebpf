@@ -1,11 +1,8 @@
 package me.bechberger.ebpf.bpf;
 
-import me.bechberger.ebpf.annotations.Offset;
-import me.bechberger.ebpf.annotations.Size;
-import me.bechberger.ebpf.annotations.Unsigned;
+import me.bechberger.ebpf.annotations.*;
 import me.bechberger.ebpf.annotations.bpf.*;
-import me.bechberger.ebpf.annotations.bpf.InlineUnion;
-import me.bechberger.ebpf.bpf.raw.__pthread_list_t;
+import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.type.Enum;
 import me.bechberger.ebpf.type.Enum.EnumSupport;
 import me.bechberger.ebpf.type.*;

@@ -1,4 +1,4 @@
-package me.bechberger.ebpf.annotations;
+package me.bechberger.ebpf.annotations.bpf;
 
 /**
  * Exception to indicate that a method should not be executed by

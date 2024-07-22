@@ -1,5 +1,6 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.bpf.BPFProgram.BTF.BTFType.VariableSectionInfo;
 import me.bechberger.ebpf.bpf.map.BPFMap;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
  * Requirements
  * <ul>
  *     <li>The type arguments has to be a type that would also be valid in
- *     {@link me.bechberger.ebpf.annotations.bpf.Type}</li>
+ *     {@link Type}</li>
  *     <li>The variable has to be final and non-static</li>
  *     <li>The variable has to be initialized with a value wrapped in a {@link GlobalVariable} constructor</li>
  * </ul>

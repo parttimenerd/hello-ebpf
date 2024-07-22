@@ -1,18 +1,12 @@
 package me.bechberger.ebpf.bpf;
 
-import me.bechberger.ebpf.annotations.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
-import me.bechberger.ebpf.runtime.EthtoolDefinitions.ethhdr;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
-import me.bechberger.ebpf.runtime.helpers.BPFHelpers;
-import me.bechberger.ebpf.runtime.runtime.iphdr;
 import me.bechberger.ebpf.type.Ptr;
-import org.jetbrains.annotations.Nullable;
-
-import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_trace_printk;
 
 /**
  * Interface for the XDP hook to check incoming packets

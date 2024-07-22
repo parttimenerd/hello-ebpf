@@ -1,7 +1,4 @@
-package me.bechberger.ebpf.annotations.bpf;
-
-import me.bechberger.ebpf.annotations.Size;
-import me.bechberger.ebpf.annotations.Unsigned;
+package me.bechberger.ebpf.annotations;
 
 import java.lang.annotation.*;
 

@@ -1,4 +1,4 @@
-package me.bechberger.ebpf.annotations.bpf;
+package me.bechberger.ebpf.annotations;
 
 import java.lang.annotation.*;
 

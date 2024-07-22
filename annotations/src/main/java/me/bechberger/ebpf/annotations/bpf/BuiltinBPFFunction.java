@@ -25,7 +25,7 @@ public @interface BuiltinBPFFunction {
     /**
      * Call template to call the function in C, or just the function name to call with the arguments directly.
      * <p>
-     * The method body has to throw a {@link me.bechberger.ebpf.annotations.MethodIsBPFRelatedFunction} exception.
+     * The method body has to throw a {@link MethodIsBPFRelatedFunction} exception.
      * <p>
      * The signature is defined via a template with the following placeholders:
      * <ul>

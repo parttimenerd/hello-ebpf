@@ -13,7 +13,7 @@ import me.bechberger.cast.CAST.PrimaryExpression.Constant.IntegerConstant;
 import me.bechberger.cast.CAST.PrimaryExpression.VerbatimExpression;
 import me.bechberger.cast.CAST.Statement.*;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
-import me.bechberger.ebpf.annotations.bpf.EnumMember;
+import me.bechberger.ebpf.annotations.EnumMember;
 import me.bechberger.ebpf.bpf.compiler.CompilerPlugin.TypedTreePath;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplate.CallArgs;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplateCache.TemplateRenderException;

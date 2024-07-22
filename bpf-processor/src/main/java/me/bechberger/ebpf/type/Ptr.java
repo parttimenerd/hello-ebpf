@@ -1,6 +1,6 @@
 package me.bechberger.ebpf.type;
 
-import me.bechberger.ebpf.annotations.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import org.jetbrains.annotations.Nullable;

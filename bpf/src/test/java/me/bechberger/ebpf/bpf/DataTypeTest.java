@@ -3,7 +3,7 @@ package me.bechberger.ebpf.bpf;
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
-import me.bechberger.ebpf.annotations.bpf.Type;
+import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.bpf.map.BPFArray;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
