@@ -3,6 +3,11 @@ Hello eBPF
 
 <!--[![Early Access](https://github.com/parttimenerd/hello-ebpf/actions/workflows/early-access.yml/badge.svg)](https://github.com/parttimenerd/hello-ebpf/actions/workflows/early-access.yml)-->
 
+__The BCC part is discontinued, as the underlying libbcc library has too many problems to count
+(see [Andrii Nakryiko's blog post](https://facebookmicrosites.github.io/bpf/blog/2020/02/19/bpf-portability-and-co-re.html) for a list of issues).
+The support in hello-ebpf is therefore discontinued and is archived in the [bcc branch](https://github.com/parttimenerd/hello-ebpf/tree/bcc)
+of this repository.__
+
 There are [user land libraries](https://ebpf.io/what-is-ebpf/#development-toolchains) for [eBPF](https://ebpf.io) that allow you to
 write eBPF applications in C++, Rust, Go, Python and even
 Lua. But there are none for Java, which is a pity.
