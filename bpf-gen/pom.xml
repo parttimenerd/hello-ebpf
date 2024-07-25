@@ -9,7 +9,7 @@
 
   <name>bpf-gen</name>
   <url>https://github.com/parttimenerd/hello-ebpf</url>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.1-SNAPSHOT</version>
 
   <licenses>
     <license>
@@ -139,6 +139,6 @@
   <parent>
     <groupId>me.bechberger</groupId>
     <artifactId>hello-ebpf</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.1-SNAPSHOT</version>
   </parent>
 </project>

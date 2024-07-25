@@ -38,6 +38,8 @@ public class CompilerPluginTest {
                                 
                 int func(int x, int y);
                 int func2(int x);
+                
+                void emptyBuiltin();
                 """;
 
         @BuiltinBPFFunction
@@ -63,13 +65,20 @@ public class CompilerPluginTest {
         }
 
         @BPFFunction
-        public int math2(int x) {
-            return func2(x, x + 1) + 2;
+        public void empty() {
+
+        }
+
+        @BuiltinBPFFunction()
+        public void emptyBuiltin() {
+            throw new MethodIsBPFRelatedFunction();
         }
 
         @BPFFunction
-        public void empty() {
-
+        public int math2(int x) {
+            empty();
+            emptyBuiltin();
+            return func2(x, x + 1) + 2;
         }
     }
 
@@ -81,6 +90,8 @@ public class CompilerPluginTest {
                 int func(int x, int y);
                 int func2(int x);
                                 
+                void emptyBuiltin();
+                                
                 s32 simpleReturn(s32 x) {
                   return 1;
                 }
@@ -89,12 +100,14 @@ public class CompilerPluginTest {
                   return func(x, x + 1) + 1;
                 }
                                 
-                s32 math2(s32 x) {
-                  return x + 2;
-                }
-                                
                 void empty() {
                                 
+                }
+                                
+                s32 math2(s32 x) {
+                  empty();
+                  emptyBuiltin();
+                  return x + 2;
                 }
                 """, BPFProgram.getCode(SimpleProgram.class));
     }
@@ -114,7 +127,7 @@ public class CompilerPluginTest {
 
         @BPFFunction
         public int cast(Ptr<Integer> intPtr) {
-            Ptr<Short> ptr = intPtr.cast();
+            Ptr<Short> ptr = intPtr.<Short>cast();
             return ptr.val();
         }
 
@@ -507,7 +520,7 @@ public class CompilerPluginTest {
 
         @BPFFunction
         TestEnum ofValue(int ordinal) {
-            return Enum.ofValue(ordinal);
+            return Enum.<TestEnum>ofValue(ordinal);
         }
 
         @BPFFunction

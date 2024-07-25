@@ -48,7 +48,7 @@ public interface CAST {
     String toPrettyString(String indent, String increment);
 
     static String toStringLiteral(String value) {
-        return "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
+        return "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n") + "\"";
     }
 
     sealed interface Expression extends CAST permits Declarator, InitDeclarator, Initializer, OperatorExpression,

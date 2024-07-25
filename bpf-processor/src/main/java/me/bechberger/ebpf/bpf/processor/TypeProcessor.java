@@ -897,6 +897,10 @@ public class TypeProcessor {
         TypeElement typeElement = (TypeElement) processingEnv.getTypeUtils().asElement(type);
         if (this.definedTypes == null) { // used from the compiler plugin
             var annotation = typeElement.getAnnotation(Type.class);
+            if (annotation == null) {
+                this.processingEnv.getMessager().printError("Type " + typeElement.getSimpleName() + " must be annotated with @Type", element);
+                return Optional.empty();
+            }
             String cType = annotation.cType();
             if (!annotation.cType().isEmpty()) { // C type is defined
                 return Optional.of(t -> new VerbatimBPFOnlyType<>(cType, PrefixKind.NORMAL));

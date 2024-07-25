@@ -1,8 +1,8 @@
 #!/bin/sh
 # Move to the directory where the script is located
-cd "$(dirname "$0")"/bcc || exit
+cd "$(dirname "$0")"/bpf || exit
 
-# if empty arguments or help flag, print help of ./run.sh and prefix with "debug port is "5005"
+# if empty arguments or help flag, print help of ./run_bpf.sh and prefix with "debug port is "5005"
 if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     echo "Usage: $0 <sample>"
     echo "Debug port is 5005"

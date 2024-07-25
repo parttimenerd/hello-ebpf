@@ -471,6 +471,17 @@ public class Processor extends AbstractProcessor {
         return includePath;
     }
 
+    private static String getArch() {
+        var arch = System.getProperty("os.arch");
+        if (arch.equals("amd64")) {
+            return "x86";
+        }
+        if (arch.equals("aarch64")) {
+            return "arm64";
+        }
+        return arch;
+    }
+
     private byte[] compile(CombinedCode code, Path ebpfFile) {
         if (dontCompile()) {
             System.out.println("EBPF program to compile:");
@@ -487,7 +498,7 @@ public class Processor extends AbstractProcessor {
         // if the compilation fails, print an error
         // if the compilation succeeds, return the byte code
         this.processingEnv.getMessager().printNote("Compiling eBPF program include path : " + findIncludePath());
-        var cached = cache.getCached(code.ebpfProgram);
+        var cached = cache.getCached(code.ebpfProgram + "|" + getArch());
         if (cached != null) {
             return cached;
         }
@@ -495,7 +506,9 @@ public class Processor extends AbstractProcessor {
             var tempFile = Files.createTempFile("ebpf", ".o");
             tempFile.toFile().deleteOnExit();
             var process = new ProcessBuilder(newestClang, "-O2", "-g", "-target", "bpf", "-c", "-o",
-                    tempFile.toString(), "-I", vmlinuxHeader.getParent().toString(), "-x", "c", "-", "--sysroot=/", "-I" + findIncludePath()).redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE).start();
+                    tempFile.toString(), "-I", vmlinuxHeader.getParent().toString(),
+                    "-D__TARGET_ARCH_" + getArch(),
+                    "-x", "c", "-", "--sysroot=/", "-I" + findIncludePath()).redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE).start();
             process.getOutputStream().write(code.ebpfProgram.getBytes());
             process.getOutputStream().close();
             ByteArrayOutputStream error = new ByteArrayOutputStream();
@@ -513,7 +526,7 @@ public class Processor extends AbstractProcessor {
                 //throw new RuntimeException("Could not compile eBPF program");
             }
             var bytes = Files.readAllBytes(tempFile);
-            cache.cache(code.ebpfProgram, bytes);
+            cache.cache(code.ebpfProgram + "|" + getArch(), bytes);
             return bytes;
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);

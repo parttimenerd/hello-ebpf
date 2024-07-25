@@ -85,7 +85,7 @@
                     <executable>python3</executable>
                     <workingDirectory>..</workingDirectory>
                     <arguments>
-                        <argument>${basedir}/../rawbcc/bin/jextract_bindings.py</argument>
+                        <argument>${basedir}/bin/jextract_bindings.py</argument>
                         <argument>${basedir}/src/main/java</argument>
                         <argument>me.bechberger.ebpf.bpf.raw</argument>
                         <argument>Lib</argument>

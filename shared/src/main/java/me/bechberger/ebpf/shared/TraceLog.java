@@ -13,8 +13,6 @@ import static me.bechberger.ebpf.shared.Constants.TRACEFS;
 
 /**
  * TraceLog provides a simple interface to the kernel debug trace pipe.
- * <p>
- * Inspired transitively (and probably derived) from the bcc project
  */
 public class TraceLog {
 

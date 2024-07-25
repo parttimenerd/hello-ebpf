@@ -1,23 +1,10 @@
 BPF
 ===
 
-BCC is easy to use, but it has it's problems:
-- it compiles the eBPF program at runtime
-- having no pre-compilation means that the eBPF program is not checked for errors until it is loaded
-- the user has to install the BCC tools and headers which includes LLVM
-- the libbcc binaries on Ubuntu are outdated
+The main BPF library that contains the BPF map and program implementations,
+allowing to load BPF programs into the kernel.
 
-So, I'm experimenting with using [libbpf](https://www.kernel.org/doc/html/next/bpf/libbpf/libbpf_overview.html),
-compiling the eBPF program at in an annotation processor and using writing my own Java wrapper for libbpf.
-This will remedy all the problems mentioned above.
-The only caveat is that I have to start again. But this time,
-I'm creating a well-tested Java-esque API, not a mirror of a Python wrapper.
-
-You can find the annotation processor in the [bpf-processor](../bpf-processor) module
-and the library with examples in this module.
-
-The mean idea with the annotation processor is that it transforms an example like 
-[this](src/main/samples/HelloWorld.java) into something like this:
+Example:
 
 ```java
 @BPF

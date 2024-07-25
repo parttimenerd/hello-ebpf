@@ -8,31 +8,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-// based on bcc/utils.py
 public class Util {
-    /**
-     *
-
-     def _read_cpu_range(path):
-     cpus = []
-     with open(path, 'r') as f:
-     cpus_range_str = f.read()
-     for cpu_range in cpus_range_str.split(','):
-     rangeop = cpu_range.find('-')
-     if rangeop == -1:
-     cpus.append(int(cpu_range))
-     else:
-     start = int(cpu_range[:rangeop])
-     end = int(cpu_range[rangeop+1:])
-     cpus.extend(range(start, end+1))
-     return cpus
-
-     def get_online_cpus():
-     return _read_cpu_range('/sys/devices/system/cpu/online')
-
-     def get_possible_cpus():
-     return _read_cpu_range('/sys/devices/system/cpu/possible')
-     */
     public static List<Integer> getOnlineCPUs() {
         return readCPURange("/sys/devices/system/cpu/online");
     }

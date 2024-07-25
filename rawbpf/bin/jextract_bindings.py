@@ -1,17 +1,17 @@
 #!/usr/bin/python3
 
 """
-This script downloads jextract and uses it to generate the bcc and bpf bindings.
+This script downloads jextract and uses it to generate the bpf bindings.
 
-The main libbcc/libbpf class is BPF.java and is located in the package.
+The main libbpf class is BPF.java and is located in the package.
 
 Why do we need this script?
 ---------------------------
-We want to use Project Panama to call libbcc/libbpf from Java, we
+We want to use Project Panama to call libbpf from Java, we
 use jextract for this.
 But we have to download jextract as it's probably not installed
-and also jextract has some issues with the libbcc/libbpf header files.
-So we have to slightly modify the libbcc/libbpf header files before
+and also jextract has some issues with the libbpf header files.
+So we have to slightly modify the libbpf header files before
 passing them to jextract (but we combine all header files into
 one).
 

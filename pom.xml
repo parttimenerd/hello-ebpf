@@ -6,7 +6,7 @@
 
     <groupId>me.bechberger</groupId>
     <artifactId>hello-ebpf</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>hello-ebpf</name>
@@ -110,12 +110,12 @@
     <modules>
         <module>annotations</module>
         <module>shared</module>
-        <module>bcc</module>
         <module>bpf-processor</module>
         <module>bpf-compiler-plugin</module>
         <module>bpf-compiler-plugin-test</module>
         <module>bpf</module>
         <module>bpf-gen</module>
+        <module>bpf-samples</module>
     </modules>
 
     <distributionManagement>

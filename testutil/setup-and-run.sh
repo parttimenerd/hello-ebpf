@@ -13,8 +13,4 @@ if [[ -d "/run/input/lib/modules" ]]; then
   find /run/input/lib/modules -type f -name bpf_testmod.ko -exec insmod {} \;
 fi
 
-# used for debugging to check if bcc works at all
-#script_dir="$(dirname "$(realpath "$0")")"
-#timeout 5 python3 $script_dir/../pysamples/bcc/hello_world.py
-
 $* && touch /run/output/status

@@ -35,11 +35,11 @@ jobs:
       - name: mvn package
         run: ./mvnw -ntp -B package -DskipTests
 
-      - name: upload bcc/target/bcc.jar
+      - name: upload bpf/target/bpf.jar
         uses: actions/upload-artifact@v4
         with:
-          name: bcc.jar
-          path: bcc/target/bcc.jar
+          name: bpf.jar
+          path: bpf/target/bpf.jar
 
   vm-test:
     if: false
@@ -62,7 +62,7 @@ jobs:
           distribution: 'adopt'
 
       - run: sudo pip3 install https://github.com/amluto/virtme/archive/beb85146cd91de37ae455eccb6ab67c393e6e290.zip
-      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends qemu-system-x86 bpfcc-tools libbpfcc libbpfcc-dev linux-headers-$(uname -r) linux-cloud-tools-generic gcc-multilib
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends qemu-system-x86 linux-headers-$(uname -r) linux-cloud-tools-generic gcc-multilib
 
       - name: Test
         run: |

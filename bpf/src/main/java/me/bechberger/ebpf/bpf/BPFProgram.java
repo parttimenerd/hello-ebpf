@@ -239,10 +239,10 @@ public abstract class BPFProgram implements AutoCloseable {
     public List<String> getAllAutoAttachablePrograms() {
         // get all methods that are annotated with BPFFunction and where autoAttach is true
         var names = new ArrayList<>(getAutoAttachablePrograms());
-        for (var method : getClass().getMethods()) {
+        for (var method : getClass().getSuperclass().getDeclaredMethods()) {
             var annotation = method.getAnnotation(BPFFunction.class);
             if (annotation != null && annotation.autoAttach()) {
-                names.add(annotation.section());
+                names.add(annotation.name().isEmpty() ? method.getName() : annotation.name());
             }
         }
         return names;
@@ -434,7 +434,6 @@ public abstract class BPFProgram implements AutoCloseable {
             throw new IllegalArgumentException("Improper link");
         }
         Lib.bpf_link__destroy(link.segment);
-        System.out.println("Detached program " + getClass().getCanonicalName());
         attachedPrograms.remove(link);
     }
 

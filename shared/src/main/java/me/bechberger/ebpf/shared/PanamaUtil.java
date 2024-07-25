@@ -20,18 +20,6 @@ public class PanamaUtil {
     public static final char O_WRONLY = 1;
     public static final char O_RDWR = 2;
 
-    private static final boolean HAS_BCC_BATCH_FUNCTIONS;
-    static {
-        boolean b = false;
-        try {
-            PanamaUtil.lookup("bpf_lookup_and_delete_batch");
-            b = true;
-        } catch (NoSuchElementException e) {
-            // ignore
-        }
-        HAS_BCC_BATCH_FUNCTIONS = b;
-    }
-
     /**
      * Convert a memory segment to a string, returns null if segment is NULL
      */
@@ -51,16 +39,6 @@ public class PanamaUtil {
         return Linker.nativeLinker().defaultLookup().find(symbol)
                 .or(() -> SymbolLookup.loaderLookup().find(symbol))
                 .orElseThrow(() -> new NoSuchElementException("Symbol not found: " + symbol));
-    }
-
-    /**
-     * Check if the batch functions of bcc (like bpf_lookup_and_delete_batch) are available.
-     * <p>
-     * Some versions of bcc (on some platforms) apparently do not have these functions.
-     * @return true if the batch functions are available
-     */
-    public static boolean hasBCCBatchFunctions() {
-        return HAS_BCC_BATCH_FUNCTIONS;
     }
 
     /**

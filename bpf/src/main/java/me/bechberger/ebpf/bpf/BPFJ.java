@@ -10,7 +10,16 @@ import me.bechberger.ebpf.type.Ptr;
  */
 public class BPFJ {
 
-    @BuiltinBPFFunction("bpf_trace_printk($arg1, $strlen$arg1, $args2_)")
+    /**
+     * Print a message to the trace log
+     * <p>
+     * Example: {@snippet :
+     *     BPFJ.bpf_trace_printk("Hello, %s from BPF and more!", "World");
+     *}
+     * @param fmt format string
+     * @param args arguments to the format string
+     */
+    @BuiltinBPFFunction("bpf_trace_printk($arg1, sizeof($arg1), $args2_)")
     @NotUsableInJava
     public static void bpf_trace_printk(String fmt, Object... args) {
         throw new MethodIsBPFRelatedFunction();

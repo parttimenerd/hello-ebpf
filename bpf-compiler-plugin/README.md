@@ -6,7 +6,7 @@ It runs in conjunction with [bpf-processor](../bpf-processor) to compile the C c
 
 This is in its earliest stages of experimentation.
 
-## Idea
+## Concept
 
 Write something like
 

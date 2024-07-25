@@ -258,9 +258,11 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                     renderedParts.get(i + 1).isEmpty() &&
                     parts.get(i + 1) instanceof SubArgs &&
                     rendered.strip().endsWith(",")) {
-                continue;
+                var stripped = rendered.strip();
+                sb.append(stripped, 0, stripped.length() - 1);
+            } else {
+                sb.append(renderedParts.get(i));
             }
-            sb.append(renderedParts.get(i));
         }
         return new VerbatimExpression(sb.toString());
     }
