@@ -11,8 +11,24 @@ These bindings are regularly updated and published on Maven Central:
 <dependency>
     <groupId>me.bechberger</groupId>
     <artifactId>bpf-runtime</artifactId>
-    <version>0.1.9</version>
+    <version>0.1.10-SNAPSHOT</version>
 </dependency>
+```
+
+You might have to add the https://s01.oss.sonatype.org/content/repositories/snapshots/ repo:
+```xml
+<repositories>
+    <repository>
+        <id>snapshots</id>
+        <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        <releases>
+            <enabled>false</enabled>
+        </releases>
+        <snapshots>
+            <enabled>true</enabled>
+        </snapshots>
+    </repository>
+</repositories>
 ```
 
 Build
