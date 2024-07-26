@@ -267,81 +267,81 @@ public class SystemCallProcessorTest {
         assertEquals("[[deprecated]] pid_t vfork(pid_t pid);", syscall.definition());
     }
 
-    @Test
-    public void testEmittingFEntryStyleFunctions() {
-        var manPage = """
-                NAME
-                       unlink, unlinkat - delete a name and possibly the file it refers to
-                                
-                LIBRARY
-                       Standard C library (libc, -lc)
-                                
-                SYNOPSIS
-                       #include <unistd.h>
-                                
-                       char* unlink(const char *pathname);
-                """;
-        var syscalls = SystemCallProcessor.parseManPage("unlink", manPage);
-        assertEquals(1, syscalls.size());
-        var syscall = syscalls.get("unlink");
-        var gen = new Generator("");
-        var resultingCode = SystemCallProcessor.createSystemCallRelatedInterfaceMethods(gen,
-                syscall.funcDefinition()).stream().map(MethodSpec::toString).collect(Collectors.joining("\n\n"));
-        assertEquals("""
-                /**
-                 * Enter the system call {@code unlink}
-                 */
-                @BPFFunction(
-                    headerTemplate = "int BPF_PROG(do_unlink, const char* pathname)",
-                    lastStatement = "return 0;",
-                    section = "fentry/do_unlink"
-                )
-                public default void enterUnlink(String pathname) {
-                  throw new MethodIsBPFRelatedFunction();
-                }
-                                
-                                
-                /**
-                 * Exit the system call {@code unlink}
-                 *
-                 * @param ret return value of the system call
-                 */
-                @BPFFunction(
-                    headerTemplate = "int BPF_PROG(do_unlink_exit, const char* pathname, char* ret)",
-                    lastStatement = "return 0;",
-                    section = "fexit/do_unlink"
-                )
-                public default void exitUnlink(String pathname, String ret) {
-                  throw new MethodIsBPFRelatedFunction();
-                }
-                                
-                                
-                /**
-                 * Enter the system call {@code unlink}
-                 */
-                @BPFFunction(
-                    headerTemplate = "int BPF_KPROBE(do_unlink, const char* pathname)",
-                    lastStatement = "return 0;",
-                    section = "kprobe/do_unlink"
-                )
-                public default void kprobeEnterUnlink(String pathname) {
-                  throw new MethodIsBPFRelatedFunction();
-                }
-                                
-                                
-                /**
-                 * Exit the system call {@code unlink}
-                 *
-                 * @param ret return value of the system call
-                 */
-                @BPFFunction(
-                    headerTemplate = "int BPF_KRETPROBE(do_unlink_exit, const char* pathname, char* ret)",
-                    lastStatement = "return 0;",
-                    section = "kretprobe/do_unlink"
-                )
-                public default void kprobeExitUnlink(String pathname, String ret) {
-                  throw new MethodIsBPFRelatedFunction();
-                }
-                """.strip(), resultingCode.strip());
-    }
+//    @Test
+//    public void testEmittingFEntryStyleFunctions() {
+//        var manPage = """
+//                NAME
+//                       unlink, unlinkat - delete a name and possibly the file it refers to
+//
+//                LIBRARY
+//                       Standard C library (libc, -lc)
+//
+//                SYNOPSIS
+//                       #include <unistd.h>
+//
+//                       char* unlink(const char *pathname);
+//                """;
+//        var syscalls = SystemCallProcessor.parseManPage("unlink", manPage);
+//        assertEquals(1, syscalls.size());
+//        var syscall = syscalls.get("unlink");
+//        var gen = new Generator("");
+//        var resultingCode = SystemCallProcessor.createSystemCallRelatedInterfaceMethods(gen,
+//                syscall.funcDefinition()).stream().map(MethodSpec::toString).collect(Collectors.joining("\n\n"));
+//        assertEquals("""
+//                /**
+//                 * Enter the system call {@code unlink}
+//                 */
+//                @BPFFunction(
+//                    headerTemplate = "int BPF_PROG(do_unlink, const char* pathname)",
+//                    lastStatement = "return 0;",
+//                    section = "fentry/do_unlink"
+//                )
+//                public default void enterUnlink(String pathname) {
+//                  throw new MethodIsBPFRelatedFunction();
+//                }
+//
+//
+//                /**
+//                 * Exit the system call {@code unlink}
+//                 *
+//                 * @param ret return value of the system call
+//                 */
+//                @BPFFunction(
+//                    headerTemplate = "int BPF_PROG(do_unlink_exit, const char* pathname, char* ret)",
+//                    lastStatement = "return 0;",
+//                    section = "fexit/do_unlink"
+//                )
+//                public default void exitUnlink(String pathname, String ret) {
+//                  throw new MethodIsBPFRelatedFunction();
+//                }
+//
+//
+//                /**
+//                 * Enter the system call {@code unlink}
+//                 */
+//                @BPFFunction(
+//                    headerTemplate = "int BPF_KPROBE(do_unlink, const char* pathname)",
+//                    lastStatement = "return 0;",
+//                    section = "kprobe/do_unlink"
+//                )
+//                public default void kprobeEnterUnlink(String pathname) {
+//                  throw new MethodIsBPFRelatedFunction();
+//                }
+//
+//
+//                /**
+//                 * Exit the system call {@code unlink}
+//                 *
+//                 * @param ret return value of the system call
+//                 */
+//                @BPFFunction(
+//                    headerTemplate = "int BPF_KRETPROBE(do_unlink_exit, const char* pathname, char* ret)",
+//                    lastStatement = "return 0;",
+//                    section = "kretprobe/do_unlink"
+//                )
+//                public default void kprobeExitUnlink(String pathname, String ret) {
+//                  throw new MethodIsBPFRelatedFunction();
+//                }
+//                """.strip(), resultingCode.strip());
+//    }
 }

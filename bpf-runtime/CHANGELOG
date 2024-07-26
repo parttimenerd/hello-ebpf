@@ -1,10 +1,14 @@
 # Changelog
 
-# 0.1.6
+## 0.1.7
+
+- Fix SystemCallHooks interface
+
+## 0.1.6
 
 - Moved annotations
 
-# 0.1.5
+## 0.1.5
 
 - Improved the annotations of the `SystemCallHooks` interface
 

@@ -64,7 +64,7 @@ public class Main implements Runnable {
             helperProcessor.process(helperJsonFile);
             helperProcessor.createClass(generated).storeInFolder(folder);
             var syscalls = SystemCallProcessor.parse(translator);
-            SystemCallProcessor.createSystemClassInterface(interfacePackageName, syscalls, generated).storeInFolder(folder);
+            SystemCallProcessor.createSystemClassInterface(gen, interfacePackageName, syscalls, generated).storeInFolder(folder);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

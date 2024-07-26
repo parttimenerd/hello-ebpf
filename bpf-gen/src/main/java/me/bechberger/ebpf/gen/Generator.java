@@ -1505,7 +1505,9 @@ public class Generator {
             @Override
             public MethodSpec toMethodSpec(Generator gen, String name, @Nullable String javaDoc) {
                 var builder =
-                        MethodSpec.methodBuilder(name).addModifiers(Modifier.PUBLIC, Modifier.STATIC).addAnnotation(cts(NotUsableInJava.class)).addAnnotation(AnnotationSpec.builder(cts(BuiltinBPFFunction.class)).addMember("value", "$S", toBPFFunctionConversionString(name)).build()).returns(returnType.toTypeName(gen)).varargs(variadic);
+                        MethodSpec.methodBuilder(name).addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                                .addAnnotation(cts(NotUsableInJava.class))
+                                .addAnnotation(AnnotationSpec.builder(cts(BuiltinBPFFunction.class)).addMember("value", "$S", toBPFFunctionConversionString(name)).build()).returns(returnType.toTypeName(gen)).varargs(variadic);
                 for (int i = 0; i < parameters.size(); i++) {
                     var param = parameters.get(i);
                     if (param.type.resolve() instanceof VoidType) { // this can never be
@@ -1790,6 +1792,7 @@ public class Generator {
     }
 
     private final ArrayList<@Nullable Type> types = new ArrayList<>(List.of((Type) new VoidType()));
+    private final Map<String, NamedType> namedTypes = new HashMap<>();
     private final List<Type> additionalTypes = new ArrayList<>();
 
     void put(Type type) {
@@ -1804,6 +1807,13 @@ public class Generator {
             types.add(null);
         }
         types.set(type.id(), type);
+        if (type instanceof NamedType namedType) {
+            namedTypes.put(namedType.name(), namedType);
+        }
+    }
+
+    @Nullable NamedType getByName(String name) {
+        return namedTypes.get(name);
     }
 
     private Type get(int id) {

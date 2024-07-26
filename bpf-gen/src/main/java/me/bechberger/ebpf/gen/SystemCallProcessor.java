@@ -104,7 +104,8 @@ public class SystemCallProcessor {
         return syscalls.entrySet().stream().filter(e -> syscallNames.contains(e.getKey())).sorted(Entry.comparingByKey()).map(Entry::getValue).collect(Collectors.toList());
     }
 
-    static TypeJavaFiles createSystemClassInterface(String basePackage, List<SystemCall> systemCalls,
+    static TypeJavaFiles createSystemClassInterface(Generator runtimeGenerator, String basePackage,
+                                                    List<SystemCall> systemCalls,
                                                     TypeJavaFiles generated) {
         var generator = new Generator(basePackage);
         systemCalls.stream().filter(s -> !s.isUnknown()).forEach(s -> generator.addAdditionalType(s.funcDefinition()));
@@ -117,7 +118,7 @@ public class SystemCallProcessor {
             @Override
             public List<MethodSpec> createMethodSpec(Generator gen, Type type) {
                 if (type instanceof FuncType) {
-                    return createSystemCallRelatedInterfaceMethods(gen, (FuncType) type);
+                    return createSystemCallRelatedInterfaceMethods(runtimeGenerator, gen, (FuncType) type);
                 }
                 return List.of();
             }
@@ -295,41 +296,59 @@ public class SystemCallProcessor {
     /**
      * Generates the fentry and fexit related interface methods for a given system call.
      */
-    static List<MethodSpec> createSystemCallRelatedInterfaceMethods(Generator gen, FuncType syscall) {
+    static List<MethodSpec> createSystemCallRelatedInterfaceMethods(Generator runtimeGenerator, Generator gen, FuncType syscall) {
         var ret = new ArrayList<MethodSpec>();
-        var m = createSystemCallRelatedMethod(gen, syscall, true, false, null);
+        var m = createSystemCallRelatedMethod(runtimeGenerator, gen, syscall, true, false, null);
         ret.add(m);
-        ret.add(createSystemCallRelatedMethod(gen, syscall, false, false, m));
-        ret.add(createSystemCallRelatedMethod(gen, syscall, true, true, m));
-        ret.add(createSystemCallRelatedMethod(gen, syscall, false, true, m));
-        return ret;
+        ret.add(createSystemCallRelatedMethod(runtimeGenerator, gen, syscall, false, false, m));
+        ret.add(createSystemCallRelatedMethod(runtimeGenerator, gen, syscall, true, true, m));
+        ret.add(createSystemCallRelatedMethod(runtimeGenerator, gen, syscall, false, true, m));
+        return ret.stream().filter(Objects::nonNull).toList();
     }
 
-    static MethodSpec createSystemCallRelatedMethod(Generator gen, FuncType syscall, boolean isEntry,
-                                                    boolean isKProbe, @Nullable MethodSpec refJavaDoc) {
-        var impl = syscall.impl();
+    static @Nullable MethodSpec createSystemCallRelatedMethod(Generator runtimeGenerator, Generator gen,
+                                                              FuncType syscall, boolean isEntry,
+                                                              boolean isKProbe, @Nullable MethodSpec refJavaDoc) {
+        // idea: check whether there is a function called `do_sys_NAME` in the runtime
+        // if not, then ignore this system call
+        // we don't want to deal with arch-specific system calls for now
+
+        Type.NamedType runtimeType = null;
+        for (String prefix : List.of("do_sys_", "do_", "__do_sys_")) {
+            runtimeType = runtimeGenerator.getByName(prefix + syscall.name());
+            if (runtimeType != null) {
+                break;
+            }
+        }
+        if (runtimeType == null) {
+            return null;
+        }
+        if (!(runtimeType instanceof FuncType funcType)) {
+            return null;
+        }
+        var impl = funcType.impl();
 
         String section;
         String macro;
         String namePrefix;
         if (isEntry) {
             if (isKProbe) {
-                section = "kprobe/do_" + syscall.name();
+                section = "kprobe/" + runtimeType.name();
                 macro = "BPF_KPROBE";
                 namePrefix = "kprobeEnter";
             } else {
-                section = "fentry/do_" + syscall.name();
+                section = "fentry/" + runtimeType.name();
                 macro = "BPF_PROG";
                 namePrefix = "enter";
             }
 
         } else {
             if (isKProbe) {
-                section = "kretprobe/do_" + syscall.name();
+                section = "kretprobe/" + runtimeType.name();
                 macro = "BPF_KRETPROBE";
                 namePrefix = "kprobeExit";
             } else {
-                section = "fexit/do_" + syscall.name();
+                section = "fexit/" + runtimeType.name();
                 macro = "BPF_PROG";
                 namePrefix = "exit";
             }
@@ -369,11 +388,12 @@ public class SystemCallProcessor {
 
         builder.returns(TypeName.VOID);
         builder.varargs(false);
-        var headerTemplate = "int %s(do_%s%s%s)".formatted(macro, syscall.name(), isEntry ? "" : "_exit",
+        var headerTemplate = "int %s($name%s%s)".formatted(macro, isEntry ? "" : "_exit",
                 headerTemplateArgs.isEmpty() ? "" : ", " + String.join(", ", headerTemplateArgs));
         builder.addAnnotation(AnnotationSpec.builder(ClassName.get("", BPFFunction.class.getSimpleName())).addMember(
                 "headerTemplate", "$S", headerTemplate).addMember("lastStatement", "$S", "return 0;").addMember(
-                        "section", "$S", section).addMember("autoAttach", "$L", true).build());
+                        "section", "$S", section)
+                .addMember("autoAttach", "$L", true).build());
         return builder.build();
     }
 }
