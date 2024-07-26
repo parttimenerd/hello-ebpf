@@ -1504,10 +1504,16 @@ public class Generator {
 
             @Override
             public MethodSpec toMethodSpec(Generator gen, String name, @Nullable String javaDoc) {
+                var builtinFunctionAnnBuilder = AnnotationSpec.builder(cts(BuiltinBPFFunction.class));
+                var funcConversion = toBPFFunctionConversionString(name);
+                if (funcConversion != null) {
+                    builtinFunctionAnnBuilder.addMember("value", "$S", funcConversion);
+                }
+                var builtinFunctionAnn = builtinFunctionAnnBuilder.build();
                 var builder =
                         MethodSpec.methodBuilder(name).addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                                 .addAnnotation(cts(NotUsableInJava.class))
-                                .addAnnotation(AnnotationSpec.builder(cts(BuiltinBPFFunction.class)).addMember("value", "$S", toBPFFunctionConversionString(name)).build()).returns(returnType.toTypeName(gen)).varargs(variadic);
+                                .addAnnotation(builtinFunctionAnn).returns(returnType.toTypeName(gen)).varargs(variadic);
                 for (int i = 0; i < parameters.size(); i++) {
                     var param = parameters.get(i);
                     if (param.type.resolve() instanceof VoidType) { // this can never be
@@ -1540,7 +1546,7 @@ public class Generator {
             /**
              * Convert to a string that can be used in the {@link BuiltinBPFFunction} annotation
              */
-            public String toBPFFunctionConversionString(String name) {
+            public @Nullable String toBPFFunctionConversionString(String name) {
                 var params = IntStream.range(0, parameters.size()).mapToObj(i -> {
                     var param = parameters.get(i);
                     if (param.type.resolve().shouldAddCast() && (!variadic || i < parameters.size() - 1)) {
@@ -1555,8 +1561,12 @@ public class Generator {
                 }).toList();
                 var anyConversion = params.stream().anyMatch(a -> a.contains("(") || a.contains(")"));
                 String call = anyConversion ? name + "(" + String.join(", ", params) + ")" : name;
-                return returnsVoid() || !returnType.shouldAddCast() ? call :
+                String ret = returnsVoid() || !returnType.shouldAddCast() ? call :
                         "((" + returnType.toCType().toPrettyString() + ")" + call + ")";
+                if (ret.equals(name)) {
+                    return null;
+                }
+                return ret;
             }
 
             @Override
