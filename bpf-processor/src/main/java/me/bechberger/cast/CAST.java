@@ -282,7 +282,7 @@ public interface CAST {
      */
     enum Operator {
         SUFFIX_INCREMENT("++", 2), SUFFIX_DECREMENT("--", 2), FUNCTION_CALL("()", 2), SUBSCRIPT("[]", 2),
-        MEMBER_ACCESS(".", 2), POSTFIX_INCREMENT("++", 3), POSTFIX_DECREMENT("--", 3), UNARY_PLUS("+", 3),
+        PTR_MEMBER_ACCESS("->", 2), MEMBER_ACCESS(".", 2), POSTFIX_INCREMENT("++", 3), POSTFIX_DECREMENT("--", 3), UNARY_PLUS("+", 3),
         UNARY_MINUS("-", 3), LOGICAL_NOT("!", 3), BITWISE_NOT("~", 3), DEREFERENCE("*", 3), ADDRESS_OF("&", 3),
         SIZEOF("sizeof", 3), CAST("cast", 3), MULTIPLICATION("*", 5), DIVISION("/", 5), MODULUS("%", 5), ADDITION("+"
                 , 6), SUBTRACTION("-", 6), SHIFT_LEFT("<<", 7), SHIFT_RIGHT(">>", 7), LESS_THAN("<", 9),
@@ -419,6 +419,10 @@ public interface CAST {
                     if (operator == Operator.MEMBER_ACCESS) {
                         String op2String = stripPrint(children().get(1));
                         return indent + op1String + "." + op2String;
+                    }
+                    if (operator == Operator.PTR_MEMBER_ACCESS) {
+                        String op2String = stripPrint(children().get(1));
+                        return indent + op1String + "->" + op2String;
                     }
                     return indent + op1String + operator();
                 } else {
@@ -1003,6 +1007,12 @@ public interface CAST {
             return this;
         }
 
+
+        /** Replace all statements that start with {@code return } with the passed statement */
+        default Statement replaceReturnStatement(Statement newLastStatement) {
+            return this;
+        }
+
         default String toPrettyStringWithoutBraces(String indent, String increment) {
             return toPrettyString(indent, increment);
         }
@@ -1060,6 +1070,24 @@ public interface CAST {
                 return statements.stream().map(s -> s.toPrettyString(indent, increment)).collect(Collectors.joining(
                         "\n"));
             }
+
+            @Override
+            public CompoundStatement replaceReturnStatement(Statement newLastStatement) {
+                return new CompoundStatement(statements.stream()
+                        .map(s -> isReturnStatement(s) ? newLastStatement : s.replaceReturnStatement(newLastStatement))
+                        .collect(Collectors.toList()));
+            }
+
+            private boolean isReturnStatement(Statement statement) {
+                if (statement instanceof ReturnStatement) {
+                    return true;
+                }
+                if (statement instanceof VerbatimStatement) {
+                    String str = statement.toPrettyString();
+                    return str.startsWith("return ") || str.equals("return;");
+                }
+                return false;
+            }
         }
 
         record IfStatement(Expression condition, Statement thenStatement,
@@ -1085,6 +1113,12 @@ public interface CAST {
                 }
                 return code;
             }
+
+            @Override
+            public IfStatement replaceReturnStatement(Statement newLastStatement) {
+                return new IfStatement(condition, thenStatement.replaceReturnStatement(newLastStatement),
+                        elseStatement == null ? null : elseStatement.replaceReturnStatement(newLastStatement));
+            }
         }
 
         record WhileStatement(Expression condition, Statement body) implements Statement {
@@ -1097,6 +1131,11 @@ public interface CAST {
             @Override
             public String toPrettyString(String indent, String increment) {
                 return indent + "while (" + stripPrint(condition) + ") {\n" + body.toPrettyStringWithoutBraces(indent + increment, increment) + "\n" + indent + "}";
+            }
+
+            @Override
+            public WhileStatement replaceReturnStatement(Statement newLastStatement) {
+                return new WhileStatement(condition, body.replaceReturnStatement(newLastStatement));
             }
         }
 
@@ -1130,6 +1169,11 @@ public interface CAST {
                 return indent + "for (" + prettyList(init) + "; " + (condition == null ? "" :
                         condition.toPrettyString()) +
                         "; " + prettyList(this.increment) + ") {\n" + body.toPrettyStringWithoutBraces(indent + increment, increment) + "\n" + indent + "}";
+            }
+
+            @Override
+            public ForStatement replaceReturnStatement(Statement newLastStatement) {
+                return new ForStatement(init, condition, increment, body.replaceReturnStatement(newLastStatement));
             }
         }
 

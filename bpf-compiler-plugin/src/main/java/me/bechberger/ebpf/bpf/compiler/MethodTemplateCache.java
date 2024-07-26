@@ -137,14 +137,14 @@ public class MethodTemplateCache {
                     throw new TemplateRenderException("Method " + symbol.getQualifiedName() + " is not a record field" +
                             " accessor and is not annotated with @BuiltinBPFFunction");
                 }
-                return MethodTemplate.parse(symbol.getSimpleName().toString(), "$this.$name");
+                return MethodTemplate.parse(symbol.getSimpleName().toString(), "$this.$name", symbol);
             }
             throw new TemplateRenderException("Method " + symbol.getQualifiedName() + " is not annotated with " +
                     "@BuiltinBPFFunction");
         }
         var template = ann != null ? ann.value() : ann2.callTemplate();
         try {
-            return MethodTemplate.parse(symbol.getSimpleName().toString(), template);
+            return MethodTemplate.parse(symbol.getSimpleName().toString(), template, symbol);
         } catch (TemplateRenderException e) {
             compilerPlugin.logError(path, invocation, "Can't parse template for method " + symbol.getSimpleName() +
                     ": " + e.getMessage());

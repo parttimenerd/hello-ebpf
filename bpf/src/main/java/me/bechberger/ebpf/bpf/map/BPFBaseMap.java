@@ -1,9 +1,18 @@
 package me.bechberger.ebpf.bpf.map;
 
+import me.bechberger.ebpf.annotations.EnumMember;
+import me.bechberger.ebpf.annotations.bpf.BPFFunctionAlternative;
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
+import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.bpf.BPFError;
 import me.bechberger.ebpf.bpf.raw.Lib;
+import me.bechberger.ebpf.runtime.runtime;
+import me.bechberger.ebpf.runtime.runtime.key;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.shared.PanamaUtil;
+import me.bechberger.ebpf.type.Enum;
+import me.bechberger.ebpf.type.Ptr;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,12 +55,24 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
     }
 
     /** Modes of putting a value into the map */
-    public enum PutMode {
+    public enum PutMode implements Enum<PutMode> {
         /** Create a new entry or update an existing entry */
+        @EnumMember(
+                value = runtime.BPF_ANY,
+                name = "BPF_ANY"
+        )
         BPF_ANY(Lib.BPF_ANY()),
         /** Create a new entry only if there is no existing entry */
+        @EnumMember(
+                value = runtime.BPF_NOEXIST,
+                name = "BPF_NOEXIST"
+        )
         BPF_NOEXIST(Lib.BPF_NOEXIST()),
         /** Update an existing entry only */
+        @EnumMember(
+                value = runtime.BPF_EXIST,
+                name = "BPF_EXIST"
+        )
         BPF_EXIST(Lib.BPF_EXIST());
 
         private final int mode;
@@ -63,10 +84,14 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
 
     /**
      * Put a value into the map, updates it if its already there
-     * @param key key
-     * @param value value
-     * @return false on error
+     * <p>Usage in ebpf:</p>
+     * Update the value in the map with the given key
+     * @param key key key if pointery, otherwise an lvalue (like a variable)
+     * @param value value if pointery, otherwise an lvalue (like a variable)
+     * @return success?
+     * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_update_elem(Ptr, Ptr, Ptr, long)
      */
+    @BuiltinBPFFunction("!bpf_map_update_elem(&($this), $pointery$arg1, $pointery$arg2, $arg3)")
     public boolean put(K key, V value, PutMode mode) {
         try (var arena = Arena.ofConfined()) {
             var keySegment = keyType.allocate(arena, Objects.requireNonNull(key));
@@ -76,7 +101,16 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
         }
     }
 
-    /** Put value into the map, updates it if it's already there */
+    /** Put value into the map, updates it if it's already there
+     *
+     * <p>Usage in ebpf:</p>
+     * Update the value in the map with the given key
+     * @param key key key if pointery, otherwise an lvalue (like a variable)
+     * @param value value if pointery, otherwise an lvalue (like a variable)
+     * @return success?
+     * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_update_elem(Ptr, Ptr, Ptr, long)
+     */
+    @BuiltinBPFFunction("!bpf_map_update_elem(&($this), $pointery$arg1, $pointery$arg2, BPF_ANY)")
     public boolean put(K key, V value) {
         return put(key, value, PutMode.BPF_ANY);
     }
@@ -86,6 +120,7 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
      * @param key key
      * @return value or null if not found
      */
+    @BPFFunctionAlternative("bpf_get")
     public V get(K key) {
         try (var arena = Arena.ofConfined()) {
             var keySegment = keyType.allocate(arena, Objects.requireNonNull(key));
@@ -244,5 +279,29 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
         for (Map.Entry<K, V> entry : this) {
             action.accept(entry.getKey(), entry.getValue());
         }
+    }
+
+    /**
+     * Obtain a pointer to the element in the map with the given key,
+     * or {@link Ptr#ofNull()} if the key is not present
+     *
+     * @param key key if pointery, otherwise an lvalue (like a variable)
+     * @return pointer to the value or {@link Ptr#ofNull()}
+     *
+     * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_lookup_elem(Ptr, Ptr)
+     */
+    @BuiltinBPFFunction("bpf_map_lookup_elem(&($this), $pointery$arg1)")
+    @NotUsableInJava
+    public Ptr<V> bpf_get(K key) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     *
+     * @param key
+     */
+    @BuiltinBPFFunction("bpf_map_delete_elem(&($this), $arg1)")
+    public void bpf_delete(K key) {
+        delete(key);
     }
 }

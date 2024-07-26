@@ -119,6 +119,16 @@ public class BPFJ {
      */
     @BuiltinBPFFunction("bpf_probe_read_kernel_str($arg1, sizeof($arg1), $arg2)")
     @NotUsableInJava
+    public static void bpf_probe_read_kernel_str(String dest, String source) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Read the source string from the kernel and write it to the destination
+     * @see BPFHelpers#bpf_probe_read_kernel_str(Ptr, int, Ptr)
+     */
+    @BuiltinBPFFunction("bpf_probe_read_kernel_str($arg1, sizeof($arg1), $arg2)")
+    @NotUsableInJava
     public static long bpf_probe_read_kernel_str(char[] dest, char[] source) {
         throw new MethodIsBPFRelatedFunction();
     }

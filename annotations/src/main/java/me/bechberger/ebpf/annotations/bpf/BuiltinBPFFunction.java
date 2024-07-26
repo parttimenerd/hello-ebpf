@@ -29,11 +29,18 @@ public @interface BuiltinBPFFunction {
      * <p>
      * The signature is defined via a template with the following placeholders:
      * <ul>
-     *     <li>$return: The return type</li>
-     *     <li>$name: The name of the function</li>
-     *     <li>$args: The arguments of the function, comma separated</li>
-     *     <li>$argN: Argument N, starting at one</li>
-     *     <li>$argsN_: Arguments N to the last argument, comma separated</li>
+     *     <li>{@code $return}: The return type</li>
+     *     <li>{@code $name}: The name of the function</li>
+     *     <li>{@code $args}: The arguments of the function, comma separated</li>
+     *     <li>{@code $argN}: Argument N, starting at one</li>
+     *     <li>{@code $argsN_}: Arguments N to the last argument, comma separated</li>
+     *     <li>{@code $this}: The object the method is called on</li>
+     *     <li>{@code $T1, $T2, ...}: Type parameters</li>
+     *     <li>{@code $C1, $T2, ...}: Type parameters of the type of {@code $this}</li>
+     *     <li>{@code $strlen$this}: length of the {@code $this} interpreted as a string literal</li>
+     *     <li>{@code $strlen$argN}: length of the {@code $argN} interpreted as a string literal</li>
+     *     <li>{@code $str$argN}: Asserts that {@code $argN} is a string literal</li>
+     *     <li>{@code $pointery$argN}: if {@code $argN} is not a pointer (or an array or a string), then prefix it with {@code &} and assume that it is an lvalue</li>
      * </ul>
      * <p>
      * Example: {@snippet :

@@ -1,10 +1,14 @@
 package me.bechberger.ebpf.bpf.map;
 
 import me.bechberger.ebpf.annotations.bpf.BPFMapClass;
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
+import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.bpf.BPFError;
 import me.bechberger.ebpf.bpf.raw.Lib;
 import me.bechberger.ebpf.bpf.raw.ring_buffer_sample_fn;
 import me.bechberger.ebpf.type.BPFType;
+import me.bechberger.ebpf.type.Ptr;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.FunctionDescriptor;
@@ -14,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.foreign.ValueLayout.JAVA_INT;
+import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_ringbuf_reserve;
 import static me.bechberger.ebpf.shared.PanamaUtil.*;
 
 /**
@@ -233,8 +238,30 @@ public class BPFRingBuffer<E> extends BPFMap {
     @Override
     public void close() {
         System.out.println("Closing ring buffer");
-        Lib.ring_buffer__free(rb);
-        ringArena.close();
         super.close();
+        //Lib.ring_buffer__free(rb); // TODO: why?
+        //ringArena.close();
+    }
+
+    /**
+     * Reserve and return a slot in the ring buffer, or {@code null} if the ring buffer is full
+     *
+     * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_ringbuf_reserve(Ptr, long, long)
+     */
+    @BuiltinBPFFunction("bpf_ringbuf_reserve(&($this), sizeof($C1), 0)")
+    @NotUsableInJava
+    public Ptr<E> reserve() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Submit an event to the ring buffer
+     *
+     * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_ringbuf_submit(Ptr, long)
+     */
+    @BuiltinBPFFunction("bpf_ringbuf_submit($arg1, 0)")
+    @NotUsableInJava
+    public void submit(Ptr<E> event) {
+        throw new MethodIsBPFRelatedFunction();
     }
 }

@@ -3,6 +3,7 @@ package me.bechberger.ebpf.bpf.compiler;
 import com.sun.source.tree.*;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree.*;
 import me.bechberger.cast.CAST;
@@ -126,8 +127,11 @@ class Translator {
         return callIfNonNull(declarator, body,
                 (d, b) -> {
                     if (!bpfAnn.lastStatement().isBlank()) {
-                        var statements = new ArrayList<>(b.statements());
-                        statements.add(new VerbatimStatement(bpfAnn.lastStatement()));
+                        var returnStatement = new VerbatimStatement(bpfAnn.lastStatement());
+                        var statements = new ArrayList<>(b.replaceReturnStatement(returnStatement).statements());
+                        if (statements.isEmpty() || !(statements.getLast().equals(returnStatement))) {
+                            statements.add(returnStatement);
+                        }
                         b = new CompoundStatement(statements);
                     }
                     if (bpfAnn.section().isBlank()) {
@@ -271,11 +275,24 @@ class Translator {
                 yield array != null && index != null ? new OperatorExpression(Operator.SUBSCRIPT, array, index) : null;
             }
             case AssignmentTree assignmentTree -> {
-                var variable = variable(assignmentTree.getVariable().toString());
+                var variable = translate(assignmentTree.getVariable());
                 var expr = assignmentTree.getExpression();
                 Expression value = translate(expr);
-                yield variable != null && value != null ? new OperatorExpression(Operator.ASSIGNMENT, variable,
-                        value) : null;
+                if (variable == null || value == null) {
+                    yield null;
+                }
+                if (variable instanceof OperatorExpression vexpr && vexpr.operator() == Operator.MEMBER_ACCESS) {
+                    if (vexpr.expressions()[0] instanceof OperatorExpression base && base.operator() == Operator.CAST) {
+                        if (base.expressions()[1] instanceof VerbatimExpression valExpr && valExpr.code().startsWith("*(") && valExpr.code().endsWith(")")) {
+                            // we can be certain that this is an assignment to a pointers' value
+                            // replace *(X).Y with X->Y
+                            var strippedValExpr = new VerbatimExpression(valExpr.code().substring(1));
+                            yield new OperatorExpression(Operator.ASSIGNMENT, new OperatorExpression(Operator.PTR_MEMBER_ACCESS, strippedValExpr, vexpr.expressions()[1]), value);
+                        }
+                    }
+                }
+
+                yield new OperatorExpression(Operator.ASSIGNMENT, variable, value);
             }
             case BinaryTree binaryTree -> {
                 if (compilerPlugin.isSameType(methodPath, binaryTree, String.class)) {
@@ -422,6 +439,10 @@ class Translator {
                         logError(expression, "Unsupported type cast to " + type + " use 'Ptr::cast' instead");
                         yield null;
                     }
+                    if (type instanceof ClassType && ((ClassType) type).asElement().getQualifiedName().toString().equals(Ptr.class.getName())) {
+                        logError(expression, "Unsupported type cast to " + type + " use 'Ptr.<Type>cast(...)' instead");
+                        yield null;
+                    }
                     typeExpression = translateType(compilerPlugin.trees.getElement(methodPath.path(typeCastTree)),
                             type);
                 }
@@ -538,10 +559,12 @@ class Translator {
         var methodTree = (JCMethodInvocation) methodInvocationTree;
         MethodSymbol symbol;
         Expression thisExpression = null;
+        JCExpression thisJavacExpression = null;
         switch (methodTree.meth) {
             case JCFieldAccess access -> {
                 symbol = (MethodSymbol) access.sym;
                 thisExpression = translate(access.selected);
+                thisJavacExpression = access.selected;
             }
             case JCIdent ident -> symbol = (MethodSymbol) ident.sym;
             default -> {
@@ -576,6 +599,7 @@ class Translator {
             }
         }
         List<Declarator> declarators = new ArrayList<>();
+        List<Declarator> typeDeclarators = new ArrayList<>();
         for (var templateArg : methodTree.getTypeArguments()) {
             var type = translateType(compilerPlugin.trees.getElement(methodPath.path(templateArg)),
                     compilerPlugin.trees.getTypeMirror(methodPath.path(templateArg)));
@@ -586,12 +610,18 @@ class Translator {
             }
             declarators.add(type);
         }
+        if (thisJavacExpression instanceof JCIdent methodIdent) {
+            for (var templateArg : methodIdent.sym.type.getTypeArguments()) {
+                var type = translateTypeForClassTypeArguments(templateArg.asElement(), templateArg);
+                typeDeclarators.add(type);
+            }
+        }
         if (hasError) {
             return null;
         }
         try {
             return compilerPlugin.methodTemplateCache.render(methodPath, methodInvocationTree, symbol,
-                    new CallArgs(thisExpression, arguments, declarators));
+                    new CallArgs(thisExpression, arguments, declarators, typeDeclarators));
         } catch (TemplateRenderException e) {
             logError(calledMethod, e.getMessage());
             return null;
@@ -601,6 +631,9 @@ class Translator {
     @Nullable
     CAST.Expression translate(LiteralTree literalTree) {
         try {
+            if (literalTree.getValue() == null) {
+                return new VerbatimExpression("NULL");
+            }
             return constant(literalTree.getValue());
         } catch (IllegalArgumentException e) {
             logError(literalTree, "Unsupported literal value " + literalTree.getValue());
@@ -637,6 +670,27 @@ class Translator {
                 }
                 return new IdentifierDeclarator(name);
             }
+        }
+        var t = typeProcessor.processBPFTypeRecordMemberType(element, anns, type);
+        return t.map(m -> m.toBPFType(j -> new VerbatimBPFOnlyType(j.name(), PrefixKind.NORMAL)).toCustomType().toCUse()).orElse(null);
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    @Nullable
+    CAST.Declarator translateTypeForClassTypeArguments(Element element, Type type) {
+        TypeProcessor typeProcessor = new TypeProcessor(compilerPlugin.createProcessingEnvironment(), true);
+        var anns = AnnotationUtils.getAnnotationValuesForRecordMember(type);
+        var typeElementOrIdent = compilerPlugin.task.getTypes().asElement(type);
+        if (!(typeElementOrIdent instanceof TypeElement typeElement)) {
+            return null;
+        }
+        var customTypeInfo = typeProcessor.getCustomTypeInfo(typeElement);
+        if (customTypeInfo != null) {
+            var name = variable(customTypeInfo.bpfName().name());
+            if (customTypeInfo.isStruct()) {
+                return new StructIdentifierDeclarator(name);
+            }
+            return new IdentifierDeclarator(name);
         }
         var t = typeProcessor.processBPFTypeRecordMemberType(element, anns, type);
         return t.map(m -> m.toBPFType(j -> new VerbatimBPFOnlyType(j.name(), PrefixKind.NORMAL)).toCustomType().toCUse()).orElse(null);

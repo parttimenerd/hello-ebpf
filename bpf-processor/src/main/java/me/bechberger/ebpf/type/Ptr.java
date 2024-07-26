@@ -138,7 +138,7 @@ public class Ptr<T> {
     /**
      * Create a pointer that points to the character of the string
      */
-    @BuiltinBPFFunction
+    @BuiltinBPFFunction("$arg1")
     @NotUsableInJava
     public static Ptr<Character> of(String value) {
         throw new MethodIsBPFRelatedFunction();

@@ -123,7 +123,7 @@
     <dependency>
         <groupId>me.bechberger</groupId>
         <artifactId>bpf-runtime</artifactId>
-        <version>0.1.7</version>
+        <version>0.1.10-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>me.bechberger</groupId>
@@ -148,4 +148,15 @@
     <artifactId>hello-ebpf</artifactId>
     <version>0.1.1-SNAPSHOT</version>
   </parent>
+
+  <repositories>
+    <repository>
+      <id>mavenCentral</id>
+      <url>https://repo1.maven.org/maven2/</url>
+    </repository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+  </repositories>
 </project>

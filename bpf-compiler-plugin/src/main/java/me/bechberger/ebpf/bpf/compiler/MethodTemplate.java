@@ -1,5 +1,6 @@
 package me.bechberger.ebpf.bpf.compiler;
 
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Expression;
 import me.bechberger.cast.CAST.PrimaryExpression.Constant;
@@ -7,8 +8,11 @@ import me.bechberger.cast.CAST.PrimaryExpression.VerbatimExpression;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplate.TemplatePart.*;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplateCache.TemplateRenderException;
+import me.bechberger.ebpf.type.Ptr;
+import me.bechberger.ebpf.type.TypeUtils;
 import org.jetbrains.annotations.Nullable;
 
+import javax.lang.model.type.TypeKind;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +24,12 @@ import java.util.stream.IntStream;
 public record MethodTemplate(String methodName, String raw, List<TemplatePart> parts) {
 
     public record CallArgs(@Nullable CAST.Expression thisExpression,
-                           List<? extends Expression> arguments, List<CAST.Declarator> typeArguments) {
+                           List<? extends Expression> arguments,
+                           List<CAST.Declarator> typeArguments,
+                           List<CAST.Declarator> classTypeArguments) {
+        public CallArgs(@Nullable CAST.Expression thisExpression, List<? extends Expression> arguments, List<CAST.Declarator> typeArguments) {
+            this(thisExpression, arguments, typeArguments, List.of());
+        }
     }
 
     public record CallProps(String methodName, CallArgs args) {
@@ -131,9 +140,33 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                 return props.args.typeArguments.get(n).toPrettyString();
             }
         }
+
+        record ClassTypeArgument(int n) implements TemplatePart {
+            @Override
+            public String render(CallProps props) {
+                if (n >= props.args.classTypeArguments.size()) {
+                    throw new TemplateRenderException("Template class type argument " + (n + 1) + " not given");
+                }
+                return props.args.classTypeArguments.get(n).toPrettyString();
+            }
+        }
+
+        record PointeryArg(int n) implements TemplatePart {
+            @Override
+            public String render(CallProps props) {
+                if (n >= props.args.arguments.size()) {
+                    throw new TemplateRenderException("Argument " + (n + 1) + " not given for $pointery" + (n + 1));
+                }
+                return "&" + props.args.arguments.get(n).toPrettyString();
+            }
+        }
     }
 
     static MethodTemplate parse(String methodName, String template) {
+        return parse(methodName, template, null);
+    }
+
+    static MethodTemplate parse(String methodName, String template, @Nullable MethodSymbol methodSymbol) {
         if (template.isEmpty()) {
             return new MethodTemplate(methodName, template, List.of());
         }
@@ -150,19 +183,23 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
             }
             boolean hadStrLenBefore = false;
             boolean hadStrBefore = false;
+            boolean hadPointeryBefore = false;
             if (part.startsWith("strlen")) {
                 if (part.equals("strlen")) {
                     hadStrLenBefore = true;
                     i++;
                     part = parts[i];
                 }
-            }
-            if (part.startsWith("str")) {
+            } else if (part.startsWith("str")) {
                 if (part.equals("str")) {
                     hadStrBefore = true;
                     i++;
                     part = parts[i];
                 }
+            } else if (part.equals("pointery")) {
+                hadPointeryBefore = true;
+                i++;
+                part = parts[i];
             }
 
             if (part.startsWith("name")) {
@@ -213,6 +250,19 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                                 templateParts.add(new StrArg(num));
                             } else if (hadStrLenBefore) {
                                 templateParts.add(new StrLenArg(num));
+                            } else if (hadPointeryBefore) {
+                                // only if non pointery itself
+                                if (methodSymbol == null) {
+                                    throw new AssertionError();
+                                }
+                                var type = methodSymbol.getParameters().get(num).asType();
+                                var typeName = type.baseType().asElement().getQualifiedName().toString();
+                                if (type.getKind() == TypeKind.ARRAY || typeName.equals("java.lang.String") ||
+                                        typeName.equals(Ptr.class.getName())) {
+                                    templateParts.add(new Arg(num));
+                                } else {
+                                    templateParts.add(new PointeryArg(num));
+                                }
                             } else {
                                 templateParts.add(new Arg(num));
                             }
@@ -223,6 +273,13 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                             templateParts.add(new TypeArgument(Integer.parseInt(numStr) - 1));
                         } catch (NumberFormatException e) {
                             throw new TemplateRenderException("Invalid type argument number: $" + part);
+                        }
+                    }
+                    case "C" -> {
+                        try {
+                            templateParts.add(new ClassTypeArgument(Integer.parseInt(numStr) - 1));
+                        } catch (NumberFormatException e) {
+                            throw new TemplateRenderException("Invalid class type argument number: $" + part);
                         }
                     }
                     default -> throw new TemplateRenderException("Unknown template part: $" + part);
