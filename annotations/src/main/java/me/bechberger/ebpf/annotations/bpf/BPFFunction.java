@@ -1,6 +1,7 @@
 package me.bechberger.ebpf.annotations.bpf;
 
 import java.lang.annotation.*;
+import java.util.Set;
 
 /**
  * Specify a function that is callable from C code and has an implementation
@@ -68,4 +69,6 @@ public @interface BPFFunction {
      * Name of the function in C
      */
     String name() default "";
+
+    Set<String> autoAttachableSections = Set.of("fentry/", "fexit/", "kprobe/", "kretprobe");
 }

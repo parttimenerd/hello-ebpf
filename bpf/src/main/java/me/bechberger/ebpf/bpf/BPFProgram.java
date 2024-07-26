@@ -8,6 +8,8 @@ import me.bechberger.ebpf.bpf.raw.Lib;
 import me.bechberger.ebpf.bpf.raw.LibraryLoader;
 import me.bechberger.ebpf.bpf.raw.btf_type;
 import me.bechberger.ebpf.bpf.raw.btf_var_secinfo;
+import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
+import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.shared.PanamaUtil;
 import me.bechberger.ebpf.shared.PanamaUtil.HandlerWithErrno;
@@ -15,6 +17,7 @@ import me.bechberger.ebpf.shared.TraceLog;
 import me.bechberger.ebpf.shared.TraceLog.TraceFields;
 import me.bechberger.ebpf.type.BPFType.BPFStructType;
 import me.bechberger.ebpf.type.BPFType.BPFUnionType;
+import me.bechberger.ebpf.type.Ptr;
 import me.bechberger.ebpf.type.Union;
 import org.jetbrains.annotations.Nullable;
 
@@ -240,12 +243,21 @@ public abstract class BPFProgram implements AutoCloseable {
         // get all methods that are annotated with BPFFunction and where autoAttach is true
         var names = new ArrayList<>(getAutoAttachablePrograms());
         var programClass = getClass().getSuperclass();
+        var erroneous = new ArrayList<String>();
         for (var method : programClass.getDeclaredMethods()) {
             var annotation = findParentAnnotation(programClass, method, BPFFunction.class);
-
             if (annotation != null && annotation.autoAttach()) {
+                var baseSection = annotation.section().split("/")[0];
+                if (!BPFFunction.autoAttachableSections.contains(baseSection)) {
+                    erroneous.add(method.getName() + " with section " + annotation.section());
+                    continue;
+                }
                 names.add(annotation.name().isEmpty() ? method.getName() : annotation.name());
             }
+        }
+        if (!erroneous.isEmpty()) {
+            throw new BPFError("Auto-attachable sections are: " + BPFFunction.autoAttachableSections +
+                    ", but the following methods have invalid sections: " + erroneous);
         }
         return names;
     }
@@ -403,6 +415,9 @@ public abstract class BPFProgram implements AutoCloseable {
             throw new BPFAttachError(prog.name, ret.err());
         }
         var link = new BPFLink(ret.result());
+        if (link.segment.address() == 0) {
+            throw new BPFAttachError(prog.name, ret.err());
+        }
         attachedPrograms.add(link);
         return link;
     }

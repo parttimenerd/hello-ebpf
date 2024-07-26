@@ -3,6 +3,7 @@ package me.bechberger.ebpf.bpf.compiler;
 import com.sun.source.tree.*;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree.*;
@@ -431,20 +432,31 @@ class Translator {
                     };
                     typeExpression = bpfType.toCUse();
                 } else {
-                    var type = compilerPlugin.trees.getElement(methodPath.path(typeTree)).asType();
-                    if (type.toString().equals("java.lang.Object")) {
-                        yield expr;
+                    var element = compilerPlugin.trees.getElement(methodPath.path(typeTree));
+                    if (element != null) {
+                        var type = element.asType();
+                        if (type.toString().equals("java.lang.Object")) {
+                            yield expr;
+                        }
+                        if (type.toString().equals(Ptr.class.getName())) {
+                            logError(expression, "Unsupported type cast to " + type + " use 'Ptr::cast' instead");
+                            yield null;
+                        }
+                        if (type instanceof ClassType && ((ClassType) type).asElement().getQualifiedName().toString().equals(Ptr.class.getName())) {
+                            logError(expression, "Unsupported type cast to " + type + " use 'Ptr.<Type>cast(...)' instead");
+                            yield null;
+                        }
                     }
-                    if (type.toString().equals(Ptr.class.getName())) {
-                        logError(expression, "Unsupported type cast to " + type + " use 'Ptr::cast' instead");
-                        yield null;
+                    var typeCastTreeElement = compilerPlugin.trees.getElement(methodPath.path(typeCastTree));
+                    if (typeTree instanceof JCAnnotatedType annType) {
+                        typeExpression = translateTypeForClassTypeArguments(compilerPlugin.trees.getElement(methodPath.path()), annType.type);
+                    } else {
+                        if (element == null) {
+                            logError(typeCastTree, "Unsupported type cast: " + typeCastTreeElement);
+                            yield null;
+                        }
+                        typeExpression = translateType(typeCastTreeElement, element.asType());
                     }
-                    if (type instanceof ClassType && ((ClassType) type).asElement().getQualifiedName().toString().equals(Ptr.class.getName())) {
-                        logError(expression, "Unsupported type cast to " + type + " use 'Ptr.<Type>cast(...)' instead");
-                        yield null;
-                    }
-                    typeExpression = translateType(compilerPlugin.trees.getElement(methodPath.path(typeCastTree)),
-                            type);
                 }
                 yield typeExpression != null && expr != null ? new OperatorExpression(Operator.CAST, typeExpression,
                         expr) : null;
@@ -565,6 +577,12 @@ class Translator {
                 symbol = (MethodSymbol) access.sym;
                 thisExpression = translate(access.selected);
                 thisJavacExpression = access.selected;
+                if (compilerPlugin.methodTemplateCache.isAutoUnboxing(symbol)) {
+                    // ((Integer)X).intValue() -> X
+                    if (thisExpression instanceof OperatorExpression opExpr && opExpr.operator() == Operator.CAST) {
+                        return opExpr.expressions()[1];
+                    }
+                }
             }
             case JCIdent ident -> symbol = (MethodSymbol) ident.sym;
             default -> {
@@ -612,8 +630,12 @@ class Translator {
         }
         if (thisJavacExpression instanceof JCIdent methodIdent) {
             for (var templateArg : methodIdent.sym.type.getTypeArguments()) {
-                var type = translateTypeForClassTypeArguments(templateArg.asElement(), templateArg);
-                typeDeclarators.add(type);
+                if (templateArg.asElement() instanceof TypeVariableSymbol) {
+                    typeDeclarators.add(null);
+                } else {
+                    var type = translateTypeForClassTypeArguments(templateArg.asElement(), templateArg);
+                    typeDeclarators.add(type);
+                }
             }
         }
         if (hasError) {
@@ -681,17 +703,17 @@ class Translator {
         TypeProcessor typeProcessor = new TypeProcessor(compilerPlugin.createProcessingEnvironment(), true);
         var anns = AnnotationUtils.getAnnotationValuesForRecordMember(type);
         var typeElementOrIdent = compilerPlugin.task.getTypes().asElement(type);
-        if (!(typeElementOrIdent instanceof TypeElement typeElement)) {
-            return null;
-        }
-        var customTypeInfo = typeProcessor.getCustomTypeInfo(typeElement);
-        if (customTypeInfo != null) {
-            var name = variable(customTypeInfo.bpfName().name());
-            if (customTypeInfo.isStruct()) {
-                return new StructIdentifierDeclarator(name);
+        if (typeElementOrIdent instanceof TypeElement typeElement) {
+            var customTypeInfo = typeProcessor.getCustomTypeInfo(typeElement);
+            if (customTypeInfo != null) {
+                var name = variable(customTypeInfo.bpfName().name());
+                if (customTypeInfo.isStruct()) {
+                    return new StructIdentifierDeclarator(name);
+                }
+                return new IdentifierDeclarator(name);
             }
-            return new IdentifierDeclarator(name);
         }
+
         var t = typeProcessor.processBPFTypeRecordMemberType(element, anns, type);
         return t.map(m -> m.toBPFType(j -> new VerbatimBPFOnlyType(j.name(), PrefixKind.NORMAL)).toCustomType().toCUse()).orElse(null);
     }

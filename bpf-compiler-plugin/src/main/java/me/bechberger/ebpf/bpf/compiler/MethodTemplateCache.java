@@ -32,8 +32,10 @@ public class MethodTemplateCache {
                     entry("length", "$strlen$this"),
                     entry("charAt", "$this[$arg1]"),
                     entry("getBytes", "($this)")
-            ),
-            // Autoboxing
+            )
+    );
+
+    private static final Map<String, Map<String, MethodTemplate>> AUTO_BOXING = Map.of(
             "java.lang.Short", Map.ofEntries(
                     entry("shortValue", "($this)"),
                     entry("valueOf", "($arg1)")
@@ -109,7 +111,16 @@ public class MethodTemplateCache {
         if (SPECIAL_CASES.containsKey(className)) {
             return SPECIAL_CASES.get(className).get(methodName);
         }
+        if (AUTO_BOXING.containsKey(className)) {
+            return AUTO_BOXING.get(className).get(methodName);
+        }
         return null;
+    }
+
+    public boolean isAutoUnboxing(MethodSymbol symbol) {
+        String className = symbol.owner.getQualifiedName().toString();
+        String methodName = symbol.getSimpleName().toString();
+        return AUTO_BOXING.containsKey(className) && AUTO_BOXING.get(className).containsKey(methodName);
     }
 
     private MethodTemplate create(TypedTreePath<?> path, Tree invocation, MethodSymbol symbol) {

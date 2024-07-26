@@ -23,12 +23,24 @@ public interface XDPHook {
 
     /**
      * XDP hook function that get's passed all incoming packets
-     * @param ctx
+     * @param ctx XDP context which includes the network packet
      * @return what to do with the packet ({@link xdp_action#XDP_PASS}, ...)
      */
     @BPFFunction(section = "xdp")
     @NotUsableInJava
-    xdp_action xdp_handle_packet(Ptr<xdp_md> ctx);
+    xdp_action xdpHandlePacket(Ptr<xdp_md> ctx);
+
+    /**
+     * Attach this program to a network interface
+     * @param ifindex network interface index, e.g. via {@link XDPUtil#getNetworkInterfaceIndex()}
+     */
+    default void xdpAttach(int ifindex) {
+        if (this instanceof BPFProgram program) {
+            program.xdpAttach(program.getProgramByName("xdpHandlePacket"), ifindex);
+        } else {
+            throw new IllegalStateException("This is not a BPF program");
+        }
+    }
 
     /**
      * Converts a short from host byte order to network byte order

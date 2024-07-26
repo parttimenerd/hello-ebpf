@@ -729,7 +729,7 @@ public class TypeProcessor {
                 t.toBPFType(this::getBPFTypeForJavaName).toCustomType(), null, null, annotations.offset()), inlineUnionId));
     }
 
-    private static final Set<String> integerTypes = Set.of("int", "long", "short", "byte", "char");
+    private static final Set<String> integerTypes = Set.of("int", "long", "short", "byte", "char", "boolean");
 
     private static String lastPart(String s) {
         return s.substring(s.lastIndexOf(" ") + 1);
@@ -774,10 +774,15 @@ public class TypeProcessor {
             return processStringType(element, annotations, type);
         }
 
-        var typeElement = (TypeElement) processingEnv.getTypeUtils().asElement(type);
+        var typeElem = processingEnv.getTypeUtils().asElement(type);
 
-        if (typeElement == null) {
+        if (typeElem == null) {
             return Optional.of(t -> BPFTypeLike.of(BPFType.VOID));
+        }
+
+        if (!(typeElem instanceof TypeElement typeElement)) {
+            this.processingEnv.getMessager().printError("Unsupported type " + type + " in " + element, element);
+            return Optional.empty();
         }
 
         if (isPointerType(typeElement)) {

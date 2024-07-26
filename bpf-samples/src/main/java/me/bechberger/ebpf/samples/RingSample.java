@@ -54,8 +54,7 @@ public abstract class RingSample extends BPFProgram implements SystemCallHooks {
         // Get the PID of the process.
         evt.val().pid = (int)bpf_get_current_pid_tgid();
 
-        // Read the filename from the second argument
-        // The x86 arch/ABI have first argument in di and second in si registers (man syscall)
+        // Read the filename
         BPFJ.bpf_probe_read_kernel_str(evt.val().filename, filenameCopy);
 
         bpf_get_current_comm(Ptr.of(comm), TASK_COMM_LEN);

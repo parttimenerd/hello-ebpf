@@ -134,7 +134,7 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
         record TypeArgument(int n) implements TemplatePart {
             @Override
             public String render(CallProps props) {
-                if (n >= props.args.typeArguments.size()) {
+                if (n >= props.args.typeArguments.size() || props.args.typeArguments.get(n) == null){
                     throw new TemplateRenderException("Template type argument " + (n + 1) + " not given");
                 }
                 return props.args.typeArguments.get(n).toPrettyString();
@@ -144,7 +144,7 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
         record ClassTypeArgument(int n) implements TemplatePart {
             @Override
             public String render(CallProps props) {
-                if (n >= props.args.classTypeArguments.size()) {
+                if (n >= props.args.classTypeArguments.size() || props.args.classTypeArguments.get(n) == null){
                     throw new TemplateRenderException("Template class type argument " + (n + 1) + " not given");
                 }
                 return props.args.classTypeArguments.get(n).toPrettyString();
