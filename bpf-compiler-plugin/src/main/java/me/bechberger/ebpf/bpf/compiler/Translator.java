@@ -346,9 +346,15 @@ class Translator {
                             if (kind != DataTypeKind.ENUM) {
                                 // handle constants
                                 var classElement = (ClassSymbol) element;
-                                var memberSymbol = (VariableElement) classElement.getEnclosedElements().stream()
+                                var memberSymbolOpt = classElement.getEnclosedElements().stream()
                                         .filter(e -> e.getSimpleName().toString().equals(member))
-                                        .findFirst().orElseThrow();
+                                        .findFirst();
+                                if (memberSymbolOpt.isEmpty()) {
+                                    // it could still be a record member
+                                    logError(memberSelectTree, "Can't find member: " + classElement.getQualifiedName() + "." + member);
+                                    yield null;
+                                }
+                                var memberSymbol = (VariableElement) memberSymbolOpt.orElseThrow();
                                 var define =
                                         new TypeProcessor(compilerPlugin.createProcessingEnvironment(), true).processField(memberSymbol);
                                 if (define == null) {

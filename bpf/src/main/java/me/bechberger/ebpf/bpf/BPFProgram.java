@@ -239,13 +239,36 @@ public abstract class BPFProgram implements AutoCloseable {
     public List<String> getAllAutoAttachablePrograms() {
         // get all methods that are annotated with BPFFunction and where autoAttach is true
         var names = new ArrayList<>(getAutoAttachablePrograms());
-        for (var method : getClass().getSuperclass().getDeclaredMethods()) {
-            var annotation = method.getAnnotation(BPFFunction.class);
+        var programClass = getClass().getSuperclass();
+        for (var method : programClass.getDeclaredMethods()) {
+            var annotation = findParentAnnotation(programClass, method, BPFFunction.class);
+
             if (annotation != null && annotation.autoAttach()) {
                 names.add(annotation.name().isEmpty() ? method.getName() : annotation.name());
             }
         }
         return names;
+    }
+
+    private <T extends Annotation> @Nullable T findParentAnnotation(Class<?> programClass, Method method, Class<T> annotationClass) {
+        var annotation = method.getAnnotation(annotationClass);
+        if (annotation != null) {
+            return annotation;
+        }
+        for (var iface : programClass.getInterfaces()) {
+            try {
+                var ifaceMethod = iface.getMethod(method.getName(), method.getParameterTypes());
+                annotation = ifaceMethod.getAnnotation(annotationClass);
+                if (annotation != null) {
+                    return annotation;
+                } else {
+                    return findParentAnnotation(iface, ifaceMethod, annotationClass);
+                }
+            } catch (NoSuchMethodException ignored) {
+                // Method not found in this interface, ignore and continue
+            }
+        }
+        return null;
     }
 
     /**

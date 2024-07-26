@@ -36,8 +36,6 @@ public @interface BuiltinBPFFunction {
      *     <li>$argsN_: Arguments N to the last argument, comma separated</li>
      * </ul>
      * <p>
-     * if only an identifier is given, then this will be treated as {@code <identifier>($args)}
-     * <p>
      * Example: {@snippet :
      *    @BuiltinBPFFunction("$name($args)")
      *    void func(int a, int b);
@@ -58,5 +56,5 @@ public @interface BuiltinBPFFunction {
      *    func(1, 2, 3, 1)
      * }
      */
-    String value() default "$name";
+    String value() default "$name($args)";
 }

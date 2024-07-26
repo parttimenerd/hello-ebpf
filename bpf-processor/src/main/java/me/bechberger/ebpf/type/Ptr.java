@@ -80,6 +80,10 @@ public class Ptr<T> {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    /**
+     * Set the value of this pointer
+     * @param value value to set
+     */
     @BuiltinBPFFunction("*($this) = $arg1")
     @NotUsableInJava
     public void set(T value) {
@@ -87,7 +91,7 @@ public class Ptr<T> {
     }
 
     /**
-     * Create a pointer of the passed array
+     * Create a pointer that points to the first array element
      */
     @BuiltinBPFFunction("($arg1)")
     @NotUsableInJava
@@ -95,48 +99,81 @@ public class Ptr<T> {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    /**
+     * Create a pointer that points to the first array element
+     */
     @BuiltinBPFFunction("($arg1)")
     @NotUsableInJava
     public static Ptr<Integer> of(int[] value) {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    /**
+     * Create a pointer that points to the first array element
+     */
     @BuiltinBPFFunction("($arg1)")
     @NotUsableInJava
     public static Ptr<Long> of(long[] value) {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    /**
+     * Create a pointer that points to the first array element
+     */
     @BuiltinBPFFunction("($arg1)")
     @NotUsableInJava
     public static Ptr<Short> of(short[] value) {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    /**
+     * Create a pointer that points to the first array element
+     */
     @BuiltinBPFFunction("($arg1)")
     @NotUsableInJava
     public static Ptr<Byte> of(byte[] value) {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    /**
+     * Create a pointer that points to the character of the string
+     */
+    @BuiltinBPFFunction
+    @NotUsableInJava
+    public static Ptr<Character> of(String value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Create a pointer that points to the first array element
+     */
     @BuiltinBPFFunction("($arg1)")
     @NotUsableInJava
     public static Ptr<Character> of(char[] value) {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    /**
+     * Create a pointer that points to the first array element
+     */
     @BuiltinBPFFunction("($arg1)")
     @NotUsableInJava
     public static Ptr<Float> of(float[] value) {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    /**
+     * Create a pointer that points to the first array element
+     */
     @BuiltinBPFFunction("($arg1)")
     @NotUsableInJava
     public static Ptr<Double> of(double[] value) {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    /**
+     * Create a pointer that points to the first array element
+     */
     @BuiltinBPFFunction("($arg1)")
     @NotUsableInJava
     public static Ptr<Boolean> of(boolean[] value) {

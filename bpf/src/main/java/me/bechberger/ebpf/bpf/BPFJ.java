@@ -3,6 +3,7 @@ package me.bechberger.ebpf.bpf;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
+import me.bechberger.ebpf.runtime.helpers.BPFHelpers;
 import me.bechberger.ebpf.type.Ptr;
 
 /**
@@ -80,6 +81,12 @@ public class BPFJ {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    @BuiltinBPFFunction("sizeof($arg1)")
+    @NotUsableInJava
+    public static int sizeof(Object obj) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
     /**
      * Set the value of a field of an object in BPF, even if the object
      * would be immutable in Java
@@ -93,6 +100,46 @@ public class BPFJ {
     @BuiltinBPFFunction("($arg1).$str$arg2 = $arg3")
     @NotUsableInJava
     public static <T> void setField(T val, String fieldName, Object value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Read the source string from the kernel and write it to the destination
+     * @see BPFHelpers#bpf_probe_read_kernel_str(Ptr, int, Ptr)
+     */
+    @BuiltinBPFFunction("bpf_probe_read_kernel_str($arg1, sizeof($arg1), $arg2)")
+    @NotUsableInJava
+    public static void bpf_probe_read_kernel_str(char[] dest, String source) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Read the source string from the kernel and write it to the destination
+     * @see BPFHelpers#bpf_probe_read_kernel_str(Ptr, int, Ptr)
+     */
+    @BuiltinBPFFunction("bpf_probe_read_kernel_str($arg1, sizeof($arg1), $arg2)")
+    @NotUsableInJava
+    public static long bpf_probe_read_kernel_str(char[] dest, char[] source) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Read the source string from the kernel and write it to the destination
+     * @see BPFHelpers#bpf_probe_read_kernel_str(Ptr, int, Ptr)
+     */
+    @BuiltinBPFFunction("bpf_probe_read_kernel_str($arg1, sizeof($arg1), $arg2)")
+    @NotUsableInJava
+    public static long bpf_probe_read_kernel_str(char[] dest, Ptr<T> source) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Read the source object from the kernel and write it to the destination
+     * @param dest destination object, has to be a variable
+     * @see BPFHelpers#bpf_probe_read_kernel(Ptr, int, Ptr)
+     */
+    @BuiltinBPFFunction("bpf_probe_read_kernel(&($arg1), sizeof($arg1), $arg2)")
+    public static <T> long bpf_probe_read_kernel(T dest, Ptr<T> src) {
         throw new MethodIsBPFRelatedFunction();
     }
 }
