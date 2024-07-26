@@ -11,7 +11,7 @@ These bindings are regularly updated and published on Maven Central:
 <dependency>
     <groupId>me.bechberger</groupId>
     <artifactId>bpf-runtime</artifactId>
-    <version>0.1.7</version>
+    <version>0.1.8</version>
 </dependency>
 ```
 

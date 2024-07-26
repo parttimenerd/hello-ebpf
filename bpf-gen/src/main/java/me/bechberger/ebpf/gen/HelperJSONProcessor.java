@@ -10,6 +10,7 @@ import me.bechberger.ebpf.gen.Generator.TypeJavaFiles;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -58,7 +59,7 @@ public class HelperJSONProcessor {
     }
 
     private void process(JSONObject types) {
-        types.values().stream().map(e -> processHelperObject((JSONObject) e)).forEach(generator::addAdditionalType);
+        types.values().stream().map(e -> processHelperObject((JSONObject) e)).sorted(Comparator.comparing(FuncType::name)).forEach(generator::addAdditionalType);
     }
 
     private FuncType processHelperObject(JSONObject helperObject) {

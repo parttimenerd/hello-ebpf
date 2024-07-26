@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.8
+
+- Sorter helpers
+- Mention `bpf_probe_read_kernel` methods in the `SystemCallHooks` interface
+
 ## 0.1.7
 
 - Fix SystemCallHooks interface

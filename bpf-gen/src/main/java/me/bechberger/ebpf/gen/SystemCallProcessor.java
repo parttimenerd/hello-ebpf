@@ -105,6 +105,7 @@ public class SystemCallProcessor {
     }
 
     static TypeJavaFiles createSystemClassInterface(Generator runtimeGenerator, String basePackage,
+                                                    String helpersPackage,
                                                     List<SystemCall> systemCalls,
                                                     TypeJavaFiles generated) {
         var generator = new Generator(basePackage);
@@ -135,7 +136,9 @@ public class SystemCallProcessor {
 
             @Override
             public List<String> additionalImports() {
-                return generated.generateStaticImportsForAll();
+                List<String> imports = new ArrayList<>(generated.generateStaticImportsForAll());
+                imports.add("import " + helpersPackage + ".BPFHelpers;");
+                return imports;
             }
         });
     }
@@ -354,23 +357,34 @@ public class SystemCallProcessor {
             }
         }
 
+        String viaStr = isKProbe ? " via kprobes " : " via fentry/fexit ";
+
+        String accessStr = """
+                Access the pointer/String argument of the system call arguments via
+                {@link BPFHelpers#bpf_probe_read_kernel_str(Ptr, int, Ptr)},
+                {@link BPFHelpers#bpf_probe_read_kernel(Ptr, int, Ptr)}, as well as
+                the similar methods in BPFJ.
+                Passing the arguments directly to other {@link BPFHelpers} should mostly work.""";
+
         String docFmt;
         if (isEntry) {
             docFmt = """
-                    Enter the system call {@code %s}
-                    %s""";
+                    Enter the system call {@code %s} %s
+                    %s
+                    <p>""" + accessStr;
         } else {
             docFmt = """
-                    Exit the system call {@code %s}
-                    %s""";
+                    Exit the system call {@code %s} %s
+                    %s
+                    <p>""" + accessStr;
             if (!impl.returnsVoid()) {
                 docFmt += """
-                                                
+                        
                         @param ret return value of the system call
                         """;
             }
         }
-        String doc = docFmt.formatted(syscall.name(), ""); // TODO: fix java doc
+        String doc = docFmt.formatted(syscall.name(), viaStr, ""); // TODO: fix java doc
         var spec = impl.toMethodSpec(gen, namePrefix + toCamelCase(syscall.name()), doc);
 
         // problem: this is not an interface method, and it has the wrong annotation

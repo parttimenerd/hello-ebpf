@@ -129,7 +129,7 @@ public class BPFJ {
      */
     @BuiltinBPFFunction("bpf_probe_read_kernel_str($arg1, sizeof($arg1), $arg2)")
     @NotUsableInJava
-    public static long bpf_probe_read_kernel_str(char[] dest, Ptr<T> source) {
+    public static long bpf_probe_read_kernel_str(char[] dest, Ptr<Character> source) {
         throw new MethodIsBPFRelatedFunction();
     }
 
