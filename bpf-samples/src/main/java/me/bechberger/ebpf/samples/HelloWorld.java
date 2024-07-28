@@ -22,8 +22,6 @@ import static me.bechberger.ebpf.bpf.BPFJ.sizeof;
 @BPF(license = "GPL")
 public abstract class HelloWorld extends BPFProgram implements SystemCallHooks {
 
-    final GlobalVariable<Integer> counter = new GlobalVariable<>(0);
-
     @Override
     public void enterOpenat2(int dfd, String filename, Ptr<open_how> how) {
         bpf_trace_printk("Hello, World!");

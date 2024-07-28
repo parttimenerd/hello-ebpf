@@ -1,4 +1,8 @@
 #!/bin/sh
+# Debug a sample program from the bpf-samples module
+# Usage: ./debug.sh <sample> [args]
+# This script will start the program with debug port 5005
+
 # Move to the directory where the script is located
 cd "$(dirname "$0")"/bpf || exit
 

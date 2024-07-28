@@ -91,15 +91,41 @@ limactl shell hello-ebpf
 sudo -s PATH=$PATH
 ```
 
-Build
------
-To build the project, make sure you have all prerequisites installed, then just run:
+Blog Posts
+----------
+Posts covering the development of this project:
 
-```shell
-./build.sh
-```
+- Dec 01, 2023: [Finding all used Classes, Methods, and Functions of a Python Module](https://mostlynerdless.de/blog/2023/12/01/finding-all-used-classes-methods-and-functions-of-a-python-module/)
+- Dec 11, 2023: [From C to Java Code using Panama](https://mostlynerdless.de/blog/2023/12/11/from-c-to-java-code-using-panama/)
+- Jan 01, 2024: [Hello eBPF: Developing eBPF Apps in Java (1)](https://mostlynerdless.de/blog/2023/12/31/hello-ebpf-developing-ebpf-apps-in-java-1/)
+- Jan 12, 2024: [Hello eBPF: Recording data in basic eBPF maps (2)](https://mostlynerdless.de/blog/2024/01/12/hello-ebpf-recording-data-in-basic-ebpf-maps-2/)
+- Jan 29, 2024: [Hello eBPF: Recording data in perf event buffers (3)](https://mostlynerdless.de/blog/2024/01/29/hello-ebpf-recording-data-in-event-buffers-3/)
+- Feb 12, 2024: [Hello eBPF: Tail calls and your first eBPF application (4)](https://mostlynerdless.de/blog/2024/02/12/hello-ebpf-tail-calls-and-your-first-ebpf-application-4/)
+- Feb 26, 2024: [Hello eBPF: First steps with libbpf (5)](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/)
+- Mar 12, 2024: [Hello eBPF: Ring buffers in libbpf (6)](https://mostlynerdless.de/blog/2024/03/12/hello-ebpf-ring-buffers-in-libbpf-6/)
+- Mar 22, 2024: [Hello eBPF: Auto Layouting Structs (7)](https://mostlynerdless.de/blog/2024/03/22/hello-ebpf-auto-layouting-structs-7/)
+- Apr 09, 2024: [Hello eBPF: Generating C Code (8)](https://mostlynerdless.de/blog/2024/04/09/hello-ebpf-generating-c-code-8/)
+- Apr 22, 2024: [Hello eBPF: XDP-based Packet Filter (9)](https://mostlynerdless.de/blog/2024/04/22/hello-ebpf-xdp-based-packet-filter-9/)
+- May 21, 2024: [Hello eBPF: Global Variables (10)](https://mostlynerdless.de/blog/2024/05/21/hello-ebpf-global-variables-10/)
+- Jul 02, 2024: [Hello eBPF: BPF Type Format and 13 Thousand Generated Java Classes (11)](https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/)
 
-Running the examples
+Examples
+--------
+
+I wrote a few samples that showcase the usage of the library in the [bpf-samples](bpf-samples) module,
+you can use them as a starting point for your own eBPF programs.
+
+| Inspiration | Name and Java Class                                                                                          | Description                                                   |
+|-------------|--------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
+|             | [HelloWorld](bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloWorld.java)                           | A simple hello world example                                  |
+|             | [LogOpenAt2Call](bpf-samples/src/main/java/me/bechberger/ebpf/samples/LogOpenAt2Calls.java)                  | Logs all openat2 calls                                        |
+| Ansil H     | [RingSample](bpf-samples/src/main/java/me/bechberger/ebpf/samples/RingSample.java)                           | Record openat2 calls in a ring buffer                         |
+|             | [HashMapSample](bpf-samples/src/main/java/me/bechberger/ebpf/samples/HashMapSample.java)                     | Record openat2 calls in a hash map                            |
+|             | [XDPDropEveryThirdPacket](bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPDropEveryThirdPacket.java) | Use XDP to block every third incoming packet                  |
+| sematext    | [XDPPacketFilter](bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPPacketFilter.java)                 | Use XDP to block incoming packages from specific URLs in Java |
+| sematext    | [XDPPacketFilter2](bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPPacketFilter2.java)               | The previous example but with the eBPF program as C code      |
+
+Running the Examples
 --------------------
 Be sure to run the following in a shell with root privileges that uses JDK 22:
 
@@ -128,6 +154,14 @@ Packet count 11
 
 You can use the `debug.sh` to run an example with a debugger port open at port 5005.
 
+Build
+-----
+To build the project, make sure you have all prerequisites installed, then just run:
+
+```shell
+./build.sh
+```
+
 Usage as a library
 ------------------
 The library is available as a maven package:
@@ -155,38 +189,6 @@ You might have to add the https://s01.oss.sonatype.org/content/repositories/rele
     </repository>
 </repositories>
 ```
-
-Blog Posts
-----------
-Posts covering the development of this project:
-
-- Dec 01, 2023: [Finding all used Classes, Methods, and Functions of a Python Module](https://mostlynerdless.de/blog/2023/12/01/finding-all-used-classes-methods-and-functions-of-a-python-module/)
-- Dec 11, 2023: [From C to Java Code using Panama](https://mostlynerdless.de/blog/2023/12/11/from-c-to-java-code-using-panama/)
-- Jan 01, 2024: [Hello eBPF: Developing eBPF Apps in Java (1)](https://mostlynerdless.de/blog/2023/12/31/hello-ebpf-developing-ebpf-apps-in-java-1/)
-- Jan 12, 2024: [Hello eBPF: Recording data in basic eBPF maps (2)](https://mostlynerdless.de/blog/2024/01/12/hello-ebpf-recording-data-in-basic-ebpf-maps-2/)
-- Jan 29, 2024: [Hello eBPF: Recording data in perf event buffers (3)](https://mostlynerdless.de/blog/2024/01/29/hello-ebpf-recording-data-in-event-buffers-3/)
-- Feb 12, 2024: [Hello eBPF: Tail calls and your first eBPF application (4)](https://mostlynerdless.de/blog/2024/02/12/hello-ebpf-tail-calls-and-your-first-ebpf-application-4/)
-- Feb 26, 2024: [Hello eBPF: First steps with libbpf (5)](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/)
-- Mar 12, 2024: [Hello eBPF: Ring buffers in libbpf (6)](https://mostlynerdless.de/blog/2024/03/12/hello-ebpf-ring-buffers-in-libbpf-6/)
-- Mar 22, 2024: [Hello eBPF: Auto Layouting Structs (7)](https://mostlynerdless.de/blog/2024/03/22/hello-ebpf-auto-layouting-structs-7/)
-- Apr 09, 2024: [Hello eBPF: Generating C Code (8)](https://mostlynerdless.de/blog/2024/04/09/hello-ebpf-generating-c-code-8/)
-- Apr 22, 2024: [Hello eBPF: XDP-based Packet Filter (9)](https://mostlynerdless.de/blog/2024/04/22/hello-ebpf-xdp-based-packet-filter-9/)
-- May 21, 2024: [Hello eBPF: Global Variables (10)](https://mostlynerdless.de/blog/2024/05/21/hello-ebpf-global-variables-10/)
-- Jul 02, 2024: [Hello eBPF: BPF Type Format and 13 Thousand Generated Java Classes (11)](https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/)
-
-Examples
---------
-
-There are a few examples
-
-| Inspiration | Java Class                                                                                     | Description                                           |
-|-------------|------------------------------------------------------------------------------------------------|-------------------------------------------------------|
-| Ansil H     | [HelloWorld](bpf/src/main/java/me/bechberger/ebpf/samples/Helloworld.java)                     | A simple hello world example                          |
-| Ansil H     | [RingSample](bpf/src/main/java/me/bechberger/ebpf/samples/RingSample.java)                     | Record openat calls in a ring buffer                  |
-|             | [TypeProcessingSample](bpf/src/main/java/me/bechberger/ebpf/samples/TypeProcessingSample.java) | RingSample using the @Type annotation                 |
-|             | [HashMapSample](bpf/src/main/java/me/bechberger/ebpf/samples/HashMapSample.java)               | Record openat calls in a hash map                     |
-|             | [TypeProcessingSample](bpf/src/main/java/me/bechberger/ebpf/samples/TypeProcessingSample.java) | RingSample using more code generation                 |
-| sematext    | [XDPPacketFilter](bpf/src/main/java/me/bechberger/ebpf/samples/XDPPacketFilter.java)           | Use XDP to block incoming packages from specific URLs |
 
 Plans
 -----

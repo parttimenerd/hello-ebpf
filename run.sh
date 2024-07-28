@@ -1,4 +1,6 @@
 #!/bin/zsh
+# Run a sample program from the bpf-samples module
+# Usage: ./run.sh <sample> [args]
 
 # Navigate to current folder
 cd "$(dirname "$0")"/bpf-samples || exit
