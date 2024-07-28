@@ -10,13 +10,13 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
-import com.sun.tools.javac.tree.JCTree.JCLiteral;
-import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-import com.sun.tools.javac.tree.JCTree.JCReturn;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
+import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
+import me.bechberger.cast.CAST.Expression;
+import me.bechberger.cast.CAST.Operator;
+import me.bechberger.cast.CAST.OperatorExpression;
 import me.bechberger.cast.CAST.Statement;
 import me.bechberger.cast.CAST.Statement.CompoundStatement;
 import me.bechberger.cast.CAST.Statement.Define;
@@ -88,10 +88,37 @@ public class CompilerPlugin implements Plugin {
                                                               return visitWrapped(node, (path, methodTree) -> {
                                                                   if (shouldProcessMethod(new TypedTreePath<>(path))) {
                                                                       classToMethodCountToImplement.merge((Type.ClassType) trees.getTypeMirror(path.getParentPath()), 1, Integer::sum);
-                                                                      return List.of(new TypedTreePath<>(path));
+                                                                      List<TypedTreePath<MethodTree>> usedMethods = new ArrayList<>();
+                                                                      usedMethods.add(new TypedTreePath<>(path));
+                                                                      super.visitMethod(methodTree, o);
+                                                                      return usedMethods;
                                                                   }
                                                                   return Collections.emptyList();
                                                               });
+                                                          }
+
+                                                          @Override
+                                                          public List<TypedTreePath<MethodTree>> visitMethodInvocation(MethodInvocationTree node, Object p) {
+                                                              var calledMethod = node.getMethodSelect();
+                                                              var methodTree = (JCMethodInvocation) node;
+                                                              MethodSymbol symbol = switch (methodTree.meth) {
+                                                                  case JCFieldAccess access -> (MethodSymbol) access.sym;
+                                                                  case JCIdent ident -> (MethodSymbol) ident.sym;
+                                                                  default -> null;
+                                                              };
+                                                              if (symbol != null && symbol.getAnnotation(BPFFunction.class) != null) {
+                                                                  // problem: method might be compiled, therefore no
+                                                                  // tree available
+                                                                  // possible solution: for every method that we process, add
+                                                                  // an annotation with the code
+                                                                  // then capture the annotations here
+                                                                  // problem transitive: this method might call another method
+                                                                  // so this annotation should also contain the name/method/signature of all
+                                                                  // called methods -> transitive hull is added here then
+                                                                  // + stored code and header
+                                                                  //return List.of(new TypedTreePath<>(curPath));
+                                                              }
+                                                              return List.of();
                                                           }
                                                       }
                 , null), Collections.emptyList());

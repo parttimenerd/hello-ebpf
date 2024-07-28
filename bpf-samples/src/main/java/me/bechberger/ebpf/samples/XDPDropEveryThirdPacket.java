@@ -21,17 +21,13 @@ public abstract class XDPDropEveryThirdPacket extends BPFProgram implements XDPH
 
     @BPFFunction
     public boolean shouldDrop() {
-        return count.get() % 3 == (@Unsigned int)1;
+        return count.get() % 3 == 1;
     }
 
     @Override
     public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
         count.set(count.get() + 1);
-        if (shouldDrop()) {
-            return xdp_action.XDP_DROP;
-        } else {
-            return xdp_action.XDP_PASS;
-        }
+        return shouldDrop() ? xdp_action.XDP_DROP : xdp_action.XDP_PASS;
     }
 
     public static void main(String[] args) throws InterruptedException {
