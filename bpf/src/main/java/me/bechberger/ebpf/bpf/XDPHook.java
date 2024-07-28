@@ -15,11 +15,11 @@ public interface XDPHook {
 
     // some constants that help to identify the type of the packet
 
-    int ETH_P_8021Q = 0x8100;
-    int ETH_P_8021AD = 0x88A8;
-    int ETH_P_IP = 0x0800;
-    int ETH_P_IPV6 = 0x86DD;
-    int ETH_P_ARP = 0x0806;
+    short ETH_P_8021Q = (short)0x8100;
+    short ETH_P_8021AD = (short)0x88A8;
+    short ETH_P_IP = (short)0x0800;
+    short ETH_P_IPV6 = (short)0x86DD;
+    short ETH_P_ARP = (short)0x0806;
 
     /**
      * XDP hook function that get's passed all incoming packets

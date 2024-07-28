@@ -58,7 +58,7 @@ public class Ptr<T> {
      */
     @BuiltinBPFFunction("($this + $arg1)")
     @NotUsableInJava
-    public Ptr<T> add(int increment) {
+    public Ptr<T> add(long increment) {
         throw new MethodIsBPFRelatedFunction();
     }
 
@@ -177,6 +177,50 @@ public class Ptr<T> {
     @BuiltinBPFFunction("($arg1)")
     @NotUsableInJava
     public static Ptr<Boolean> of(boolean[] value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Convert an integer to a pointer
+     */
+    @BuiltinBPFFunction("((void*)$arg1)")
+    @NotUsableInJava
+    public static Ptr<?> voidPointer(long value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /** Interpret as long value */
+    @BuiltinBPFFunction("(long)($arg1)")
+    @NotUsableInJava
+    public long asLong() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /** Is this pointer's address smaller than the other pointer's address? */
+    @BuiltinBPFFunction("$this < $arg1")
+    @NotUsableInJava
+    public boolean lessThan(Ptr<?> other) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /** Is this pointer's address smaller or equal to the other pointer's address? */
+    @BuiltinBPFFunction("$this <= $arg1")
+    @NotUsableInJava
+    public boolean lessOrEqual(Ptr<?> other) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /** Is this pointer's address greater than the other pointer's address? */
+    @BuiltinBPFFunction("$this > $arg1")
+    @NotUsableInJava
+    public boolean greaterThan(Ptr<?> other) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /** Is this pointer's address greater or equal to the other pointer's address? */
+    @BuiltinBPFFunction("$this >= $arg1")
+    @NotUsableInJava
+    public boolean greaterOrEqual(Ptr<?> other) {
         throw new MethodIsBPFRelatedFunction();
     }
 }
