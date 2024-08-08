@@ -31,6 +31,19 @@ public class Util {
         }
     }
 
+    public static byte[] loadGzippedResource(Class<?> klass, String resourceName) {
+        var resource = klass.getClassLoader().getResource(resourceName);
+        if (resource == null) {
+            throw new BPFProgram.BPFLoadError("Resource not found: " + resourceName);
+        }
+        try (var inputStream = resource.openStream()) {
+            GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream);
+            return gzipInputStream.readAllBytes();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Read the byte code from a resource file, used internally
      */

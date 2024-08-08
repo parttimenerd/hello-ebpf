@@ -13,7 +13,6 @@ import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
-import javax.sound.sampled.Line;
 import javax.tools.Diagnostic;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -165,6 +164,16 @@ public class Processor extends AbstractProcessor {
         public String encode() {
             return gzipBase64Encode(byteCode);
         }
+
+        public byte[] gzip() {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try (GZIPOutputStream gos = new GZIPOutputStream(baos)) {
+                gos.write(byteCode);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return baos.toByteArray();
+        }
     }
 
     public static CompileResult compileAndEncode(ProcessingEnvironment env, String code, Path file) {
@@ -205,7 +214,15 @@ public class Processor extends AbstractProcessor {
                 .addStatement("return BYTE_CODE + \"\"").build());
         spec.addMethod(MethodSpec.methodBuilder("getByteCode")
                 .addModifiers(Modifier.PUBLIC).returns(byte[].class)
-                .addStatement("return me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(getByteCodeBytesStatic())").build());
+                                .beginControlFlow("if (getByteCodeResourceName().isEmpty())")
+                                .addStatement("return me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(getByteCodeBytesStatic())")
+                                .nextControlFlow("else")
+                                .addStatement("return me.bechberger.ebpf.bpf.Util.loadGzippedResource($L.class, getByteCodeResourceName())", name)
+                                .endControlFlow()
+                                .build());
+        spec.addMethod(MethodSpec.methodBuilder("getByteCodeResourceName")
+                .addModifiers(Modifier.PUBLIC).returns(String.class)
+                .addStatement("return \"\"").build());
         spec.addMethod(MethodSpec.methodBuilder("getCodeStatic")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(String.class)
                 .addStatement("return CODE").build());
@@ -231,8 +248,8 @@ public class Processor extends AbstractProcessor {
     private String createStringExpression(String s) {
         // split the string into 2 << 16 character parts, as this is the maximum length of a string literal
         var parts = new ArrayList<String>();
-        for (int i = 0; i < s.length(); i += 1 << 16) {
-            parts.add(s.substring(i, Math.min(i + (1 << 16), s.length())));
+        for (int i = 0; i < s.length(); i += 2 << 16) {
+            parts.add(s.substring(i, Math.min(i + (2 << 16), s.length())));
         }
         return parts.stream().map(p -> "\"" + p + "\"").collect(Collectors.joining(" + \"\\n\" + "));
     }

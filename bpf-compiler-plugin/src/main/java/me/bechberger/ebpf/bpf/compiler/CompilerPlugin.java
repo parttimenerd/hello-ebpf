@@ -4,21 +4,18 @@ import com.sun.source.tree.*;
 import com.sun.source.util.*;
 import com.sun.source.util.TaskEvent.Kind;
 import com.sun.tools.javac.api.BasicJavacTask;
+import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
-import jdk.jshell.execution.Util;
-import me.bechberger.cast.CAST.Expression;
-import me.bechberger.cast.CAST.Operator;
-import me.bechberger.cast.CAST.OperatorExpression;
 import me.bechberger.cast.CAST.Statement;
 import me.bechberger.cast.CAST.Statement.CompoundStatement;
 import me.bechberger.cast.CAST.Statement.Define;
@@ -35,6 +32,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
+import javax.tools.JavaFileManager;
+import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.nio.file.Files;
@@ -42,7 +41,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static me.bechberger.ebpf.bpf.compiler.NullHelpers.callIfNonNull;
@@ -404,45 +402,43 @@ public class CompilerPlugin implements Plugin {
         var compiledCode = compile(newCode, cFile);
         // adding fields would be easier, but this doesn't seem to work
 
+        if (compiledCode.encode().length() < 2 << 15) { // strings can only be 2^16 bytes long, so stay below that
         // inline small byte codes and put it in a string
         for (var member : bpfProgram.getMembers()) {
             if (member instanceof JCMethodDecl methodDecl) {
                 var name = methodDecl.name;
                 if (name.contentEquals("getByteCodeBytesStatic")) {
-
-                    var compiledCodeBytes = compiledCode.encode();
-
-                    // problem: we can't just put the byte code in a string, because it might be too large
-                    // solution: split into expressions of 2 << 16 bytes, concatenated
-                    // problem: the analysis of the tree already ran, so type and operator of
-                    // the binary trees are not set
-                    // solution: set them manually by taking them from the return statement
-
-                    var returnStatement = (JCReturn) methodDecl.body.getStatements().getLast();
-
-                    var returnBin = (JCBinary)returnStatement.expr;
-
-                    // split into expressions of 2 << 16 bytes, concatenated
-                    var byteCodeString = new ArrayList<JCExpression>();
-                    var partSize = 2 << 16;
-                    var partNum = (compiledCodeBytes.length() + partSize - 1) / partSize;
-                    var parts = IntStream.range(0, partNum).mapToObj(i -> {
-                        var start = i * partSize;
-                        var end = Math.min((i + 1) * partSize, compiledCodeBytes.length());
-                        var part = compiledCodeBytes.substring(start, end);
-                        return (JCExpression) treeMaker.Literal(part);
-                    }).toList();
-                    var concat = parts.stream().reduce((a, b) -> {
-                        var bin = treeMaker.Binary(JCTree.Tag.PLUS, a, b);
-                        bin.operator = returnBin.operator;
-                        bin.type = returnBin.type;
-                        return bin;
-                    });
-                    returnStatement.expr = concat.orElseThrow();
+                    ((JCReturn) methodDecl.body.getStatements().getLast()).expr = treeMaker.Literal(compiledCode.encode());
                 } else if (name.contentEquals("getCodeStatic")) {
                     ((JCReturn) methodDecl.body.getStatements().getLast()).expr = treeMaker.Literal(newCode);
                 } else if (name.contentEquals("getByteCodeResourceName")) {
-                    ((JCReturn) methodDecl.body.getStatements().getLast()).expr = null;
+                    ((JCReturn) methodDecl.body.getStatements().getLast()).expr = treeMaker.Literal("");
+                }
+            }
+        }
+        } else {
+            var outFolders = ((JavacFileManager) ((JavacTaskImpl) CompilerPlugin.this.task).getContext().get(JavaFileManager.class)).getLocation(StandardLocation.CLASS_OUTPUT);
+            if (!outFolders.iterator().hasNext()) {
+                logError(programPath, bpfProgram, "No output folder found");
+                return;
+            }
+            var resourceName = bpfProgramTypeElement.getQualifiedName() + ".o";
+            var outFolder = outFolders.iterator().next();
+            try {
+                Files.write(outFolder.toPath().resolve(resourceName), compiledCode.gzip());
+            } catch (IOException e) {
+                logError(programPath, bpfProgram, "Could not write byte code to " + outFolder);
+            }
+            for (var member : bpfProgram.getMembers()) {
+                if (member instanceof JCMethodDecl methodDecl) {
+                    var name = methodDecl.name;
+                    if (name.contentEquals("getByteCodeBytesStatic")) {
+                        ((JCReturn) methodDecl.body.getStatements().getLast()).expr = treeMaker.Literal("");
+                    } else if (name.contentEquals("getCodeStatic")) {
+                        ((JCReturn) methodDecl.body.getStatements().getLast()).expr = treeMaker.Literal(newCode);
+                    } else if (name.contentEquals("getByteCodeResourceName")) {
+                        ((JCReturn) methodDecl.body.getStatements().getLast()).expr = treeMaker.Literal(resourceName);
+                    }
                 }
             }
         }
