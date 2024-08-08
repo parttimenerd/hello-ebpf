@@ -4,12 +4,7 @@ import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.bpf.map.*;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer.BPFRingBufferError;
 import me.bechberger.ebpf.bpf.processor.Processor;
-import me.bechberger.ebpf.bpf.raw.Lib;
-import me.bechberger.ebpf.bpf.raw.LibraryLoader;
-import me.bechberger.ebpf.bpf.raw.btf_type;
-import me.bechberger.ebpf.bpf.raw.btf_var_secinfo;
-import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
-import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
+import me.bechberger.ebpf.bpf.raw.*;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.shared.PanamaUtil;
 import me.bechberger.ebpf.shared.PanamaUtil.HandlerWithErrno;
@@ -17,7 +12,6 @@ import me.bechberger.ebpf.shared.TraceLog;
 import me.bechberger.ebpf.shared.TraceLog.TraceFields;
 import me.bechberger.ebpf.type.BPFType.BPFStructType;
 import me.bechberger.ebpf.type.BPFType.BPFUnionType;
-import me.bechberger.ebpf.type.Ptr;
 import me.bechberger.ebpf.type.Union;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,6 +29,8 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import static me.bechberger.ebpf.NameUtil.toConstantCase;
+import static me.bechberger.ebpf.bpf.raw.Lib.BPF_TC_EGRESS;
+import static me.bechberger.ebpf.bpf.raw.Lib.BPF_TC_INGRESS;
 
 /**
  * Base class for bpf programs.
@@ -146,6 +142,9 @@ public abstract class BPFProgram implements AutoCloseable {
     record AttachedXDPIfIndex(int ifindex, int flags) {}
 
     private final Set<AttachedXDPIfIndex> attachedXDPIfIndexes = new HashSet<>();
+
+    record AttachedTCIfIndex(ProgramHandle handle, int ifindex, boolean ingress, int priority) {}
+    private final Set<AttachedTCIfIndex> attachedTCIfIndices = new HashSet<>();
 
     private volatile boolean closed = false;
 
@@ -455,13 +454,55 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     public void xdpAttach(ProgramHandle prog, int ifindex) {
-        int flags = XDPUtil.XDP_FLAGS_UPDATE_IF_NOEXIST | XDPUtil.XDP_FLAGS_DRV_MODE;
+        int flags = NetworkUtil.XDP_FLAGS_UPDATE_IF_NOEXIST | NetworkUtil.XDP_FLAGS_DRV_MODE;
         int fd = Lib.bpf_program__fd(prog.prog());
         int err = Lib.bpf_xdp_attach(ifindex, fd, flags, MemorySegment.NULL);
         if (err > 0) {
             throw new BPFAttachError(prog.name, err);
         }
         attachedXDPIfIndexes.add(new AttachedXDPIfIndex(ifindex, flags));
+    }
+
+    public void tcAttach(ProgramHandle prog, int ifindex, boolean ingress) {
+        var tcIfIndex = new AttachedTCIfIndex(prog, ifindex, ingress, 0);
+        try (var arena = Arena.ofConfined()) {
+            MemorySegment hook = allocateTCHookObject(arena, tcIfIndex);
+            MemorySegment opts = allocateTCOptsObject(arena, tcIfIndex);
+            int err = Lib.bpf_tc_attach(hook, opts);
+            if (err > 0) {
+                throw new BPFAttachError(prog.name, err);
+            }
+            attachedTCIfIndices.add(tcIfIndex);
+        }
+    }
+
+    private MemorySegment allocateTCHookObject(Arena arena, AttachedTCIfIndex tcIfIndex) {
+        MemorySegment hook = arena.allocate(bpf_tc_hook.sizeof());
+        bpf_tc_hook.ifindex(hook, tcIfIndex.ifindex);
+        bpf_tc_hook.attach_point(hook, tcIfIndex.ingress ? BPF_TC_INGRESS() : BPF_TC_EGRESS());
+        return hook;
+    }
+
+    private MemorySegment allocateTCOptsObject(Arena arena, AttachedTCIfIndex tcIfIndex) {
+        MemorySegment opts = arena.allocate(bpf_tc_opts.sizeof());
+        var handleId = Lib.bpf_program__fd(tcIfIndex.handle.prog());
+        if (handleId == 0) {
+            throw new BPFAttachError(tcIfIndex.handle.name, -handleId);
+        }
+        bpf_tc_opts.handle(opts, handleId);
+        bpf_tc_opts.priority(opts, tcIfIndex.priority);
+        return opts;
+    }
+
+    private void tcDetach(AttachedTCIfIndex tcIfIndex) {
+        try (var arena = Arena.ofConfined()) {
+            MemorySegment hook = allocateTCHookObject(arena, tcIfIndex);
+            MemorySegment opts = allocateTCOptsObject(arena, tcIfIndex);
+            int err = Lib.bpf_tc_detach(hook, MemorySegment.NULL);
+            if (err > 0) {
+                throw new BPFError("Detaching " + tcIfIndex.handle.name, err);
+            }
+        }
     }
 
     public void detachProgram(BPFLink link) {
@@ -489,6 +530,9 @@ public abstract class BPFProgram implements AutoCloseable {
         }
         for (var ifindex : new HashSet<>(attachedXDPIfIndexes)) {
             Lib.bpf_xdp_detach(ifindex.ifindex, ifindex.flags, MemorySegment.NULL);
+        }
+        for (var tcIfIndex : new HashSet<>(attachedTCIfIndices)) {
+            tcDetach(tcIfIndex);
         }
         for (var map : new HashSet<>(attachedMaps)) {
             map.close();

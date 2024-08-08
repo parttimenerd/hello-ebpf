@@ -6,7 +6,7 @@ import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.XDPHook;
-import me.bechberger.ebpf.bpf.XDPUtil;
+import me.bechberger.ebpf.bpf.NetworkUtil;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
 import me.bechberger.ebpf.type.Ptr;
@@ -32,7 +32,7 @@ public abstract class XDPDropEveryThirdPacket extends BPFProgram implements XDPH
 
     public static void main(String[] args) throws InterruptedException {
         try (XDPDropEveryThirdPacket program = BPFProgram.load(XDPDropEveryThirdPacket.class)) {
-            program.xdpAttach(XDPUtil.getNetworkInterfaceIndex());
+            program.xdpAttach(NetworkUtil.getNetworkInterfaceIndex());
             while (true) {
                 System.out.println("Packet count " + program.count.get());
                 Thread.sleep(1000);

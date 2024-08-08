@@ -161,10 +161,16 @@ public class Processor extends AbstractProcessor {
         }
     }
 
-    public static String compileAndEncode(ProcessingEnvironment env, String code, Path file) {
+    public record CompileResult(byte[] byteCode) {
+        public String encode() {
+            return gzipBase64Encode(byteCode);
+        }
+    }
+
+    public static CompileResult compileAndEncode(ProcessingEnvironment env, String code, Path file) {
         var processor = new Processor();
         processor.processingEnv = env;
-        return gzipBase64Encode(processor.compile(new CombinedCode(code, null, null, List.of()), file));
+        return new CompileResult(processor.compile(new CombinedCode(code, null, null, List.of()), file));
     }
 
     /**
@@ -182,6 +188,7 @@ public class Processor extends AbstractProcessor {
     private TypeSpec createType(String name, TypeMirror baseType, byte[] byteCode, List<FieldSpec> bpfTypeFields,
                                 CombinedCode code, List<GlobalVariableDefinition> globalVariableDefinitions) {
         var suppressWarnings = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "{\"unchecked\", \"rawtypes\"}").build();
+
         var spec =
                 TypeSpec.classBuilder(name)
                         .addAnnotation(suppressWarnings).superclass(baseType)
@@ -189,13 +196,13 @@ public class Processor extends AbstractProcessor {
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                         .addField(FieldSpec.builder(String.class, "BYTE_CODE", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                                 .addJavadoc("Base64 encoded and gzipped eBPF byte-code of the program\n{@snippet : \n" + sanitizeCodeForJavadoc(code.ebpfProgram) + "\n}")
-                                .initializer("$S", gzipBase64Encode(byteCode)).build())
+                                .initializer("$L", createStringExpression(gzipBase64Encode(byteCode))).build())
                         .addField(FieldSpec.builder(String.class, "CODE", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                                 .initializer("$S", code.ebpfProgram).build());
         bpfTypeFields.forEach(spec::addField);
         spec.addMethod(MethodSpec.methodBuilder("getByteCodeBytesStatic")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(String.class)
-                .addStatement("return BYTE_CODE").build());
+                .addStatement("return BYTE_CODE + \"\"").build());
         spec.addMethod(MethodSpec.methodBuilder("getByteCode")
                 .addModifiers(Modifier.PUBLIC).returns(byte[].class)
                 .addStatement("return me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(getByteCodeBytesStatic())").build());
@@ -219,6 +226,15 @@ public class Processor extends AbstractProcessor {
                     .addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(TypeName.VOID), globalVariableDefinitions).build());
         }
         return spec.build();
+    }
+
+    private String createStringExpression(String s) {
+        // split the string into 2 << 16 character parts, as this is the maximum length of a string literal
+        var parts = new ArrayList<String>();
+        for (int i = 0; i < s.length(); i += 1 << 16) {
+            parts.add(s.substring(i, Math.min(i + (1 << 16), s.length())));
+        }
+        return parts.stream().map(p -> "\"" + p + "\"").collect(Collectors.joining(" + \"\\n\" + "));
     }
 
     /*

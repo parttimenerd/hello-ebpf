@@ -6,7 +6,7 @@ import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.bpf.BPFJ;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.XDPHook;
-import me.bechberger.ebpf.bpf.XDPUtil;
+import me.bechberger.ebpf.bpf.NetworkUtil;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.runtime.EthtoolDefinitions.ethhdr;
 import me.bechberger.ebpf.runtime.VlanDefinitions.vlan_hdr;
@@ -116,7 +116,7 @@ public abstract class XDPPacketFilter extends BPFProgram implements XDPHook, Run
     void setupBlockedIPMap() {
         ipToUrlMap = Arrays.stream(blockedUrls).flatMap(url -> {
             try {
-                return Arrays.stream(InetAddress.getAllByName(url)).map(addr -> Map.entry(XDPUtil.ipAddressToInt(addr), url));
+                return Arrays.stream(InetAddress.getAllByName(url)).map(addr -> Map.entry(NetworkUtil.ipAddressToInt(addr), url));
             } catch (UnknownHostException e) {
                 throw new RuntimeException(e);
             }
@@ -130,7 +130,7 @@ public abstract class XDPPacketFilter extends BPFProgram implements XDPHook, Run
         System.out.println("Blocked packages:");
         blockingStats.forEach((ip, count) -> {
             System.out.println("  Blocked " + count + " packages from " +
-                    XDPUtil.intToIpAddress(ip) +
+                    NetworkUtil.intToIpAddress(ip) +
                     " (" + ipToUrlMap.get(ip) + ")");
         });
     }
@@ -139,9 +139,9 @@ public abstract class XDPPacketFilter extends BPFProgram implements XDPHook, Run
     public void run() {
         setupBlockedIPMap();
         if (runURLRetrieveLoop) {
-            XDPUtil.openURLInLoop(blockedUrls[0]);
+            NetworkUtil.openURLInLoop(blockedUrls[0]);
         }
-        xdpAttach(XDPUtil.getNetworkInterfaceIndex());
+        xdpAttach(NetworkUtil.getNetworkInterfaceIndex());
         while (true) {
             printBlockedLog();
             try {

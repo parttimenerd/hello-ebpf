@@ -32,7 +32,7 @@ public interface XDPHook {
 
     /**
      * Attach this program to a network interface
-     * @param ifindex network interface index, e.g. via {@link XDPUtil#getNetworkInterfaceIndex()}
+     * @param ifindex network interface index, e.g. via {@link NetworkUtil#getNetworkInterfaceIndex()}
      */
     default void xdpAttach(int ifindex) {
         if (this instanceof BPFProgram program) {

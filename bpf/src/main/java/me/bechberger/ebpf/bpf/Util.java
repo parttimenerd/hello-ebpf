@@ -4,6 +4,8 @@ import me.bechberger.ebpf.bpf.raw.Lib;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Base64;
 import java.util.zip.GZIPInputStream;
 
@@ -25,6 +27,21 @@ public class Util {
             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(decodedBytes));
             return gzipInputStream.readAllBytes();
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Read the byte code from a resource file, used internally
+     */
+    public static byte[] readByteCodeFromResource(String resourceName) {
+        try {
+            var resource = BPFProgram.class.getResource(resourceName);
+            if (resource == null) {
+                throw new BPFProgram.BPFLoadError("Resource not found: " + resourceName);
+            }
+            return Files.readAllBytes(Path.of(resource.toURI()));
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
