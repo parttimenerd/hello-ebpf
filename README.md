@@ -108,6 +108,7 @@ Posts covering the development of this project:
 - Apr 22, 2024: [Hello eBPF: XDP-based Packet Filter (9)](https://mostlynerdless.de/blog/2024/04/22/hello-ebpf-xdp-based-packet-filter-9/)
 - May 21, 2024: [Hello eBPF: Global Variables (10)](https://mostlynerdless.de/blog/2024/05/21/hello-ebpf-global-variables-10/)
 - Jul 02, 2024: [Hello eBPF: BPF Type Format and 13 Thousand Generated Java Classes (11)](https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/)
+- Jul 30, 2024: [Hello eBPF: Write your eBPF application in Pure Java (12)](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/)
 
 Examples
 --------
@@ -115,15 +116,16 @@ Examples
 I wrote a few samples that showcase the usage of the library in the [bpf-samples](bpf-samples) module,
 you can use them as a starting point for your own eBPF programs.
 
-| Inspiration | Name and Java Class                                                                                          | Description                                                   |
-|-------------|--------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
-|             | [HelloWorld](bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloWorld.java)                           | A simple hello world example                                  |
-|             | [LogOpenAt2Call](bpf-samples/src/main/java/me/bechberger/ebpf/samples/LogOpenAt2Calls.java)                  | Logs all openat2 calls                                        |
-| Ansil H     | [RingSample](bpf-samples/src/main/java/me/bechberger/ebpf/samples/RingSample.java)                           | Record openat2 calls in a ring buffer                         |
-|             | [HashMapSample](bpf-samples/src/main/java/me/bechberger/ebpf/samples/HashMapSample.java)                     | Record openat2 calls in a hash map                            |
-|             | [XDPDropEveryThirdPacket](bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPDropEveryThirdPacket.java) | Use XDP to block every third incoming packet                  |
-| sematext    | [XDPPacketFilter](bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPPacketFilter.java)                 | Use XDP to block incoming packages from specific URLs in Java |
-| sematext    | [XDPPacketFilter2](bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPPacketFilter2.java)               | The previous example but with the eBPF program as C code      |
+| Inspiration | Name and Java Class                                                                                                        | Description                                                                |
+|-------------|----------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+|             | [HelloWorld](bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloWorld.java)                                         | A simple hello world example                                               |
+|             | [LogOpenAt2Call](bpf-samples/src/main/java/me/bechberger/ebpf/samples/LogOpenAt2Calls.java)                                | Logs all openat2 calls                                                     |
+| Ansil H     | [RingSample](bpf-samples/src/main/java/me/bechberger/ebpf/samples/RingSample.java)                                         | Record openat2 calls in a ring buffer                                      |
+|             | [HashMapSample](bpf-samples/src/main/java/me/bechberger/ebpf/samples/HashMapSample.java)                                   | Record openat2 calls in a hash map                                         |
+|             | [XDPDropEveryThirdPacket](bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPDropEveryThirdPacket.java)               | Use XDP to block every third incoming packet                               |
+| sematext    | [XDPPacketFilter](bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPPacketFilter.java)                               | Use XDP to block incoming packages from specific URLs in Java              |
+| sematext    | [XDPPacketFilter2](bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPPacketFilter2.java)                             | The previous example but with the eBPF program as C code                   |
+|             | [TCDropEveryThirdOutgoingPacket](bpf-samples/src/main/java/me/bechberger/ebpf/samples/TCDropEveryThirdOutgoingPacket.java) | Implement a Traffic Control to block every third outgoing packet at random |
 
 Running the Examples
 --------------------

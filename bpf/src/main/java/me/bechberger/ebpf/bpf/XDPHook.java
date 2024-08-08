@@ -8,6 +8,8 @@ import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
 import me.bechberger.ebpf.type.Ptr;
 
+import java.util.List;
+
 /**
  * Interface for the XDP hook to check incoming packets
  */
@@ -31,15 +33,30 @@ public interface XDPHook {
     xdp_action xdpHandlePacket(Ptr<xdp_md> ctx);
 
     /**
-     * Attach this program to a network interface
-     * @param ifindex network interface index, e.g. via {@link NetworkUtil#getNetworkInterfaceIndex()}
+     * Attach this program to a network interfaces
+     * @param ifindexes network interface indexes, e.g. via {@link NetworkUtil#getNetworkInterfaceIndexes()}
      */
-    default void xdpAttach(int ifindex) {
+    default void xdpAttach(List<Integer> ifindexes) {
         if (this instanceof BPFProgram program) {
-            program.xdpAttach(program.getProgramByName("xdpHandlePacket"), ifindex);
+            program.xdpAttach(program.getProgramByName("xdpHandlePacket"), ifindexes);
         } else {
             throw new IllegalStateException("This is not a BPF program");
         }
+    }
+
+    /**
+     * Attach this program to a network interface
+     * @param ifindex network interface index
+     */
+    default void xdpAttach(int ifindex) {
+        xdpAttach(List.of(ifindex));
+    }
+
+    /**
+     * Attach this program all network interfaces that are up and not a loopback interface
+     */
+    default void xdpAttach() {
+        xdpAttach(NetworkUtil.getNetworkInterfaceIndexes());
     }
 
     /**

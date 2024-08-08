@@ -141,7 +141,7 @@ public abstract class XDPPacketFilter extends BPFProgram implements XDPHook, Run
         if (runURLRetrieveLoop) {
             NetworkUtil.openURLInLoop(blockedUrls[0]);
         }
-        xdpAttach(NetworkUtil.getNetworkInterfaceIndex());
+        xdpAttach();
         while (true) {
             printBlockedLog();
             try {

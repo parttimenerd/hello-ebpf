@@ -29,8 +29,7 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import static me.bechberger.ebpf.NameUtil.toConstantCase;
-import static me.bechberger.ebpf.bpf.raw.Lib.BPF_TC_EGRESS;
-import static me.bechberger.ebpf.bpf.raw.Lib.BPF_TC_INGRESS;
+import static me.bechberger.ebpf.bpf.raw.Lib.*;
 
 /**
  * Base class for bpf programs.
@@ -453,6 +452,12 @@ public abstract class BPFProgram implements AutoCloseable {
         return this;
     }
 
+    public void xdpAttach(ProgramHandle prog, List<Integer> ifindex) {
+        for (var index : ifindex) {
+            xdpAttach(prog, index);
+        }
+    }
+
     public void xdpAttach(ProgramHandle prog, int ifindex) {
         int flags = NetworkUtil.XDP_FLAGS_UPDATE_IF_NOEXIST | NetworkUtil.XDP_FLAGS_DRV_MODE;
         int fd = Lib.bpf_program__fd(prog.prog());
@@ -463,12 +468,29 @@ public abstract class BPFProgram implements AutoCloseable {
         attachedXDPIfIndexes.add(new AttachedXDPIfIndex(ifindex, flags));
     }
 
+    public void tcAttach(ProgramHandle prog, List<Integer> ifindex, boolean ingress) {
+        for (var index : ifindex) {
+            tcAttach(prog, index, ingress);
+        }
+    }
+
     public void tcAttach(ProgramHandle prog, int ifindex, boolean ingress) {
-        var tcIfIndex = new AttachedTCIfIndex(prog, ifindex, ingress, 0);
+        var tcIfIndex = new AttachedTCIfIndex(prog, ifindex, ingress, 1);
         try (var arena = Arena.ofConfined()) {
             MemorySegment hook = allocateTCHookObject(arena, tcIfIndex);
+            // run tc qdisc del dev $DEVICE clsact on the command line
+            // to remove the clsact qdisc if it exists
+            try {
+                Runtime.getRuntime().exec(new String[]{"tc", "qdisc", "del", "dev", NetworkUtil.getNetworkInterfaceName(ifindex), "clsact"}).waitFor();
+            } catch (IOException | InterruptedException e) {
+            }
+            hook = allocateTCHookObject(arena, tcIfIndex);
             MemorySegment opts = allocateTCOptsObject(arena, tcIfIndex);
-            int err = Lib.bpf_tc_attach(hook, opts);
+            int err = Lib.bpf_tc_hook_create(hook);
+            if (err > 0) {
+                throw new BPFAttachError(prog.name, err);
+            }
+            err = Lib.bpf_tc_attach(hook, opts);
             if (err > 0) {
                 throw new BPFAttachError(prog.name, err);
             }
@@ -478,18 +500,25 @@ public abstract class BPFProgram implements AutoCloseable {
 
     private MemorySegment allocateTCHookObject(Arena arena, AttachedTCIfIndex tcIfIndex) {
         MemorySegment hook = arena.allocate(bpf_tc_hook.sizeof());
+        hook.fill((byte) 0);
+        bpf_tc_hook.sz(hook, bpf_tc_hook.sizeof());
         bpf_tc_hook.ifindex(hook, tcIfIndex.ifindex);
         bpf_tc_hook.attach_point(hook, tcIfIndex.ingress ? BPF_TC_INGRESS() : BPF_TC_EGRESS());
+        bpf_tc_hook.parent(hook, 0);
         return hook;
     }
 
     private MemorySegment allocateTCOptsObject(Arena arena, AttachedTCIfIndex tcIfIndex) {
         MemorySegment opts = arena.allocate(bpf_tc_opts.sizeof());
-        var handleId = Lib.bpf_program__fd(tcIfIndex.handle.prog());
-        if (handleId == 0) {
-            throw new BPFAttachError(tcIfIndex.handle.name, -handleId);
+        var progFd = Lib.bpf_program__fd(tcIfIndex.handle.prog());
+        if (progFd <= 0) {
+            throw new BPFAttachError(tcIfIndex.handle.name, -progFd);
         }
-        bpf_tc_opts.handle(opts, handleId);
+        opts.fill((byte) 0);
+        bpf_tc_opts.sz(opts, bpf_tc_opts.sizeof());
+        bpf_tc_opts.handle(opts, 1);
+        bpf_tc_opts.prog_fd(opts, progFd);
+        bpf_tc_opts.prog_id(opts, 0);
         bpf_tc_opts.priority(opts, tcIfIndex.priority);
         return opts;
     }
@@ -498,7 +527,9 @@ public abstract class BPFProgram implements AutoCloseable {
         try (var arena = Arena.ofConfined()) {
             MemorySegment hook = allocateTCHookObject(arena, tcIfIndex);
             MemorySegment opts = allocateTCOptsObject(arena, tcIfIndex);
-            int err = Lib.bpf_tc_detach(hook, MemorySegment.NULL);
+            /*bpf_tc_opts.prog_fd(opts, 0);
+            bpf_tc_opts.prog_id(opts, 0);*/
+            int err = Lib.bpf_tc_detach(hook, opts);
             if (err > 0) {
                 throw new BPFError("Detaching " + tcIfIndex.handle.name, err);
             }
