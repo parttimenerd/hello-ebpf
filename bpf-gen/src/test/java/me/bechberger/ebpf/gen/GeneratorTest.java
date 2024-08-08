@@ -136,18 +136,27 @@ class GeneratorTest {
                     cType = "enum foo"
                 )
                 public enum foo implements Enum<foo>, TypedEnum<foo, java.lang. @Unsigned Integer> {
+                  /**
+                   * {@code A = 0}
+                   */
                   @EnumMember(
                       value = 0L,
                       name = "A"
                   )
                   A,
-                                
+                
+                  /**
+                   * {@code B = 1}
+                   */
                   @EnumMember(
                       value = 1L,
                       name = "B"
                   )
                   B,
-                                
+                
+                  /**
+                   * {@code C = 2}
+                   */
                   @EnumMember(
                       value = 2L,
                       name = "C"
@@ -221,7 +230,7 @@ class GeneratorTest {
         var func = new Generator.Type.FuncType("foo", proto);
         assertEquals("""
                 @NotUsableInJava
-                @BuiltinBPFFunction("foo")
+                @BuiltinBPFFunction
                 public static @Unsigned int foo(@Unsigned int a, @Unsigned int b) {
                   throw new MethodIsBPFRelatedFunction();
                 }
@@ -235,7 +244,7 @@ class GeneratorTest {
         var func = new Generator.Type.FuncType("foo", proto);
         assertEquals("""
                 @NotUsableInJava
-                @BuiltinBPFFunction("foo")
+                @BuiltinBPFFunction
                 public static @Unsigned int foo(@Unsigned int _default) {
                   throw new MethodIsBPFRelatedFunction();
                 }

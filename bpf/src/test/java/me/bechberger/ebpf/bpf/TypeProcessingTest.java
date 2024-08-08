@@ -884,8 +884,8 @@ public class TypeProcessingTest {
         var code = BPFProgram.getCode(TestLibsProgram.class);
         assertEquals("""
                 #include "vmlinux.h";
-                #include <unistd.h>
                 #include <string.h>
+                #include <unistd.h>
                 
                 int x = 0;
                 

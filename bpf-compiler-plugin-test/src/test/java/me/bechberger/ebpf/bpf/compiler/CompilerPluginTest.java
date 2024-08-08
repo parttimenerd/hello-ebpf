@@ -147,12 +147,12 @@ public class CompilerPluginTest {
                   s32 *ptr = &((value));
                   return ptr == ((void*)0) ? 1 : 0;
                 }
-                                
+                
                 s32 cast(s32 *intPtr) {
                   s16 *ptr = ((s16*)intPtr);
-                  return ((s16)*(ptr));
+                  return *(ptr);
                 }
-                                
+                
                 s32* increment(s32 *ptr) {
                   return (ptr + 1);
                 }
@@ -191,13 +191,13 @@ public class CompilerPluginTest {
                 void testPrint() {
                   bpf_trace_printk((const char*)"Hello, World!\\\\n", 15);
                 }
-                                
+                
                 void testJavaPrint() {
-                  bpf_trace_printk("Hello, World!\\\\n", 15);
+                  bpf_trace_printk("Hello, World!\\\\n", sizeof("Hello, World!\\\\n"));
                 }
-                                
+                
                 void testJavaPrint2() {
-                  bpf_trace_printk("Hello, %s!\\\\n", 12, "World");
+                  bpf_trace_printk("Hello, %s!\\\\n", sizeof("Hello, %s!\\\\n"), "World");
                 }
                 """, BPFProgram.getCode(TestPrint.class));
     }
@@ -226,11 +226,11 @@ public class CompilerPluginTest {
                 #include <bpf/bpf_helpers.h>
                                 
                 s32 count SEC(".data");
-                                
+                
                 void testGlobalVariable() {
                   count = (43);
-                  s32 currentCount = ((s32)count);
-                  bpf_trace_printk("Count: %d\\\\n", 11, (currentCount));
+                  s32 currentCount = count;
+                  bpf_trace_printk("Count: %d\\\\n", sizeof("Count: %d\\\\n"), (currentCount));
                 }
                 """, BPFProgram.getCode(TestGlobalVariable.class));
     }
@@ -335,20 +335,20 @@ public class CompilerPluginTest {
                 s32 access(s32 arr[2]) {
                   return arr[0];
                 }
-                                
+                
                 void create() {
                   s32 arr[2];
                   arr[0] = 1;
                   arr[1] = 2;
-                  bpf_trace_printk("Array: %d, %d\\\\n", 15, (arr[0]), (arr[1]));
+                  bpf_trace_printk("Array: %d, %d\\\\n", sizeof("Array: %d, %d\\\\n"), (arr[0]), (arr[1]));
                 }
-                                
+                
                 void create2() {
                   s32 arr[2];
                   s32 arr2[2] = {1, 2};
                   s32 arr3[2] = {1, 2};
                 }
-                                
+                
                 s32* toPtr(s32 arr[2]) {
                   return (arr);
                 }
@@ -921,7 +921,7 @@ public class CompilerPluginTest {
     public void testBPFFunctionTemplatesInterface() {
         assertEqualsDiffed("""
                 SEC("section") int func(char* name, char* y) {
-                  bpf_trace_printk("Hello, %s!\\\\n", 12, name);
+                  bpf_trace_printk("Hello, %s!\\\\n", sizeof("Hello, %s!\\\\n"), name);
                   return 1;
                 }
                 """, BPFProgram.getCode(TestInterfaceImpl.class));

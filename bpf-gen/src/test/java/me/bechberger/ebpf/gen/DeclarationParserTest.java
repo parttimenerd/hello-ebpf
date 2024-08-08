@@ -119,7 +119,7 @@ public class DeclarationParserTest {
         var func = DeclarationParser.parseFunctionDeclaration(decl);
         var expected = """
                 @NotUsableInJava
-                @BuiltinBPFFunction("sigreturn((const int*)$arg1, $arg2)")
+                @BuiltinBPFFunction("sigreturn((const int*)$arg1, $arg2_)")
                 public static int sigreturn(Ptr<java.lang.Integer> i, java.lang.Object... args) {
                   throw new MethodIsBPFRelatedFunction();
                 }
@@ -133,7 +133,7 @@ public class DeclarationParserTest {
         var func = DeclarationParser.parseFunctionDeclaration(decl);
         var expected = """
                 @NotUsableInJava
-                @BuiltinBPFFunction("sigreturn")
+                @BuiltinBPFFunction
                 public static int sigreturn(Ptr<java.lang.Integer> i) {
                   throw new MethodIsBPFRelatedFunction();
                 }
