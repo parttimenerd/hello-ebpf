@@ -1,5 +1,12 @@
 # Changelog
 
+# 0.1.5
+
+- Updated jextract version
+- Cleaned up generation code (jextract accept all code unmodified now)
+  - adds defines
+- Include more Linux header
+
 # 0.1.4
 
 ### Removed

@@ -36,14 +36,14 @@ import tarfile
 BIN_FOLDER = Path(__file__).parent.parent / "bin"
 JEXTRACT_PATH = BIN_FOLDER / "jextract-22"
 JEXTRACT_TOOL_PATH = JEXTRACT_PATH / "bin" / "jextract"
-JEXTRACT_VERSION = "3-13"
+JEXTRACT_VERSION = "5-33"
 
 
 def download_jextract():
     # download jextract
     shutil.rmtree(JEXTRACT_PATH, ignore_errors=True)
     print("Downloading jextract")
-    url = (f"https://download.java.net/java/early_access/jextract/22/3/"
+    url = (f"https://download.java.net/java/early_access/jextract/22/{JEXTRACT_VERSION.split("-")[0]}/"
            f"/openjdk-22-jextract+{JEXTRACT_VERSION}_linux-x64_bin.tar.gz")
     os.makedirs(BIN_FOLDER, exist_ok=True)
     urllib.request.urlretrieve(url, BIN_FOLDER / "jextract.tar.gz")
@@ -72,33 +72,6 @@ def ensure_jextract_in_path():
 
 ensure_jextract_in_path()
 
-def create_combined_lib_header(header: Path, combined_header: Path):
-    os.makedirs(header.parent, exist_ok=True)
-    subprocess.check_output(
-        f"clang -C -E {header} -o {combined_header}", shell=True)
-
-
-def create_modified_lib_header(header: Path, combined_header: Path, modified_header: Path):
-    r"""
-    Find lines that match regexp
-    "union.* __attribute__\(\(aligned\(8\)\)\);" and
-    replace "__attribute__((aligned(8)))" with
-    "var{counter} __attribute__((aligned(8)))"
-    Store the file in MODIFIED_BPF_HEADER
-    """
-    create_combined_lib_header(header, combined_header)
-    with open(combined_header) as f:
-        lines = f.readlines()
-    combined_header.unlink()
-    with open(modified_header, "w") as f:
-        counter = 0
-        for line in lines:
-            if "union" in line and "__attribute__((aligned(8)));" in line:
-                line = line.replace("__attribute__((aligned(8)));",
-                                    f"var{counter} __attribute__((aligned(8)));\n")
-                counter += 1
-            f.write(line)
-
 
 def assert_java22():
     """ assert that we are running JDK 22+ by calling java -version """
@@ -117,10 +90,6 @@ def run_jextract(header: Path, mod_header_folder: Path,
                  delete_dest_path: bool = False):
     assert_java22()
     print("Running jextract")
-    os.makedirs(mod_header_folder, exist_ok=True)
-    combined_header = mod_header_folder / "combined_lib.h"
-    modified_header = mod_header_folder / "mod_lib.h"
-    create_modified_lib_header(header, combined_header, modified_header)
     del_path = dest_path
     if package:
         del_path = dest_path / package.replace(".", "/")
@@ -130,7 +99,7 @@ def run_jextract(header: Path, mod_header_folder: Path,
     subprocess.check_call(
         f"{JEXTRACT_TOOL_PATH} "
         f"--output {dest_path} {'-t ' + package if package else ''} "
-        f"--header-class-name {name} {modified_header}",
+        f"--header-class-name {name} {header}",
         shell=True)
 
 

@@ -7,7 +7,7 @@
     <artifactId>rawbpf</artifactId>
     <groupId>me.bechberger</groupId>
     <name>Raw bindings for libbpf</name>
-    <version>0.1.4</version>
+    <version>0.1.5</version>
     <url>https://github.com/parttimenerd/hello-ebpf</url>
     <licenses>
         <license>
