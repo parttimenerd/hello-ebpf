@@ -126,6 +126,7 @@ you can use them as a starting point for your own eBPF programs.
 | sematext    | [XDPPacketFilter](bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPPacketFilter.java)                               | Use XDP to block incoming packages from specific URLs in Java              |
 | sematext    | [XDPPacketFilter2](bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPPacketFilter2.java)                             | The previous example but with the eBPF program as C code                   |
 |             | [TCDropEveryThirdOutgoingPacket](bpf-samples/src/main/java/me/bechberger/ebpf/samples/TCDropEveryThirdOutgoingPacket.java) | Implement a Traffic Control to block every third outgoing packet at random |
+|             | [PacketLogger](bpf-samples/src/main/java/me/bechberger/ebpf/samples/PacketLogger.java)                                     | TC and XDP based packet logger, capturing incoming and outgoing packets    |
 
 Running the Examples
 --------------------

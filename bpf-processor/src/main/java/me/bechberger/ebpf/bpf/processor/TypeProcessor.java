@@ -725,8 +725,16 @@ public class TypeProcessor {
                 .map(a -> AnnotationUtils.<Integer>getAnnotationValue(a, "value", null)).orElse(null));
         TypeMirror type = element.asType();
         var bpfType = processBPFTypeRecordMemberType(element, annotations.dropOffset(), type);
-        return bpfType.map(t -> new UBPFStructMemberPotentiallyInlineUnion(new BPFType.UBPFStructMember<>(element.getSimpleName().toString(),
-                t.toBPFType(this::getBPFTypeForJavaName).toCustomType(), null, null, annotations.offset()), inlineUnionId));
+        return bpfType.map(t -> {
+
+            var bt = t.toBPFType(this::getBPFTypeForJavaName);
+            if (bt == null) {
+                processingEnv.getMessager().printError("Could not process type " + type + " for member " + element, element);
+                return null;
+            }
+            return new UBPFStructMemberPotentiallyInlineUnion(new BPFType.UBPFStructMember<>(element.getSimpleName().toString(),
+                    bt.toCustomType(), null, null, annotations.offset()), inlineUnionId);
+        });
     }
 
     private static final Set<String> integerTypes = Set.of("int", "long", "short", "byte", "char", "boolean");
@@ -947,7 +955,10 @@ public class TypeProcessor {
            return Optional.empty();
         }
         var typeName = definedTypes.bpfNameToName(definedTypes.specFieldNameToName(fieldName.get()));
-        return Optional.of(t -> t.apply(typeName));
+        return Optional.of(t -> {
+            var customType = usedCustomBPFTypes.stream().filter(ut -> ut.javaName().equals(typeName.name())).findFirst().orElseThrow();
+            return new TypeBackedBPFCustomType<>(customType);
+        });
     }
 
     public @Nullable CustomTypeInfo getCustomTypeInfo(TypeElement typeElement) {

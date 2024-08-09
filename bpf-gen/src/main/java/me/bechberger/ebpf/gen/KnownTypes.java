@@ -53,8 +53,8 @@ public class KnownTypes {
     }
 
     private static final KnownInt[] knownInts = {new KnownInt("_Bool", 8, "BOOL", JavaType.create(TypeName.BOOLEAN,
-            Boolean.class), BPFIntType.BOOL), new KnownInt("char", 8, "(none)", JavaType.create(TypeName.CHAR,
-            Character.class), BPFIntType.CHAR), new KnownInt("signed char", 8, "SIGNED",
+            Boolean.class), BPFIntType.BOOL), new KnownInt("u8", 8, "(none)", JavaType.create(TypeName.CHAR,
+            Character.class), BPFIntType.CHAR), new KnownInt("s8", 8, "SIGNED",
             JavaType.create(TypeName.BYTE, Byte.class), BPFIntType.SIGNED_CHAR), new KnownInt("unsigned char", 8,
             "(none)", JavaType.createUnsigned(TypeName.CHAR, Character.class), BPFIntType.CHAR), new KnownInt("short " +
             "int", 16, "SIGNED", JavaType.create(TypeName.SHORT, Short.class), BPFIntType.INT16), new KnownInt("short" +

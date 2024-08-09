@@ -91,7 +91,7 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
      * @return success?
      * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_update_elem(Ptr, Ptr, Ptr, long)
      */
-    @BuiltinBPFFunction("!bpf_map_update_elem(&($this), $pointery$arg1, $pointery$arg2, $arg3)")
+    @BuiltinBPFFunction("!bpf_map_update_elem(&$this, $pointery$arg1, $pointery$arg2, $arg3)")
     public boolean put(K key, V value, PutMode mode) {
         try (var arena = Arena.ofConfined()) {
             var keySegment = keyType.allocate(arena, Objects.requireNonNull(key));
@@ -110,7 +110,7 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
      * @return success?
      * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_update_elem(Ptr, Ptr, Ptr, long)
      */
-    @BuiltinBPFFunction("!bpf_map_update_elem(&($this), $pointery$arg1, $pointery$arg2, BPF_ANY)")
+    @BuiltinBPFFunction("!bpf_map_update_elem(&$this, $pointery$arg1, $pointery$arg2, BPF_ANY)")
     public boolean put(K key, V value) {
         return put(key, value, PutMode.BPF_ANY);
     }
@@ -290,7 +290,7 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
      *
      * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_lookup_elem(Ptr, Ptr)
      */
-    @BuiltinBPFFunction("bpf_map_lookup_elem(&($this), $pointery$arg1)")
+    @BuiltinBPFFunction("bpf_map_lookup_elem(&$this, $pointery$arg1)")
     @NotUsableInJava
     public Ptr<V> bpf_get(K key) {
         throw new MethodIsBPFRelatedFunction();
@@ -300,7 +300,7 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
      *
      * @param key
      */
-    @BuiltinBPFFunction("bpf_map_delete_elem(&($this), $arg1)")
+    @BuiltinBPFFunction("bpf_map_delete_elem(&$this, $arg1)")
     public void bpf_delete(K key) {
         delete(key);
     }

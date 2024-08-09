@@ -392,14 +392,14 @@ public sealed interface BPFType<T> {
         /**
          * <code>char</code> mapped to {@code byte} (essentially an unsigned byte)
          */
-        public static final BPFIntType<Byte> CHAR = createType("char", "CHAR", Byte.class, ValueLayout.JAVA_BYTE,
+        public static final BPFIntType<Byte> CHAR = createType("u8", "CHAR", Byte.class, ValueLayout.JAVA_BYTE,
                 segment -> {
             return segment.get(ValueLayout.JAVA_BYTE, 0);
         }, (segment, obj) -> {
             segment.set(ValueLayout.JAVA_BYTE, 0, obj);
         }, false);
 
-        public static final BPFIntType<Byte> SIGNED_CHAR = createType("signed char", "SIGNED_CHAR", Byte.class,
+        public static final BPFIntType<Byte> SIGNED_CHAR = createType("s8", "SIGNED_CHAR", Byte.class,
                 ValueLayout.JAVA_BYTE,
                 segment -> {
                     return segment.get(ValueLayout.JAVA_BYTE, 0);
@@ -486,7 +486,8 @@ public sealed interface BPFType<T> {
         /**
          * 128 bit integer
          */
-        @CustomType(isStruct = false, name = "__int128", specFieldName = "$outerClass.INT128")
+        @CustomType(isStruct = false, name = "__int128", specFieldName = "$outerClass.INT128",
+            constructorTemplate = "(__int128)(((__int128)$arg1) << 64 | (__int128) $arg2)")
         public record Int128(
                 @BuiltinBPFFunction("(s64)(($this) >> 64)") long upper,
                 @BuiltinBPFFunction("(s64)($this)") long lower) {
@@ -513,7 +514,8 @@ public sealed interface BPFType<T> {
         /**
          * 128 bit unsigned integer, maybe fix
          */
-        @CustomType(isStruct = false, name = "__int128 unsigned", specFieldName = "$outerClass.UINT128")
+        @CustomType(isStruct = false, name = "__int128 unsigned", specFieldName = "$outerClass.UINT128",
+        constructorTemplate = "(__int128 unsigned)(((__int128 unsigned)$arg1) << 64 | (__int128 unsigned)$arg2)")
         public record UnsignedInt128(
                 @BuiltinBPFFunction("(s64)(($this) >> 64)") long upper,
                 @BuiltinBPFFunction("(s64)($this)") long lower) {

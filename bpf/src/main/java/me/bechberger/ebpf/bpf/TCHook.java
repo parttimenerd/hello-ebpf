@@ -24,7 +24,7 @@ public interface TCHook {
      */
     @BPFFunction(section = "tc")
     @NotUsableInJava
-    default sk_action tcHandleIngress(Ptr<sk_buff> packet) {
+    default sk_action tcHandleIngress(Ptr<__sk_buff> packet) {
         return sk_action.SK_PASS;
     }
 
@@ -36,7 +36,7 @@ public interface TCHook {
      */
     @BPFFunction(section = "tc")
     @NotUsableInJava
-    default sk_action tcHandleEgress(Ptr<sk_buff> packet) {
+    default sk_action tcHandleEgress(Ptr<__sk_buff> packet) {
         return sk_action.SK_PASS;
     }
 
@@ -52,7 +52,7 @@ public interface TCHook {
         }
     }
 
-    /** Attach the ingress handler to all network interfaces that are up */
+    /** Attach the ingress handler to all network interfaces that are up and not loop back */
     default void tcAttachIngress() {
         tcAttachIngress(NetworkUtil.getNetworkInterfaceIndexes());
     }
@@ -69,7 +69,7 @@ public interface TCHook {
         }
     }
 
-    /** Attach the egress handler to all network interfaces that are up */
+    /** Attach the egress handler to all network interfaces that are up and not loopback */
     default void tcAttachEgress() {
         tcAttachEgress(NetworkUtil.getNetworkInterfaceIndexes());
     }

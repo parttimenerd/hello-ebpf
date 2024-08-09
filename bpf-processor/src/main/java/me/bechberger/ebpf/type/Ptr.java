@@ -29,7 +29,7 @@ public class Ptr<T> {
      *  Has to be a proper l-value (?) that has a place in memory,
      *  e.g. {@code Ptr.of(3)} is not allowed.
      */
-    @BuiltinBPFFunction("&($arg1)")
+    @BuiltinBPFFunction("&$arg1")
     @NotUsableInJava
     public static <T> Ptr<T> of(@Nullable T value) {
         throw new MethodIsBPFRelatedFunction();
@@ -50,6 +50,13 @@ public class Ptr<T> {
     @BuiltinBPFFunction("(($T1*)$this)")
     @NotUsableInJava
     public <S> Ptr<S> cast() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /** Assumes that this pointer points to a pointer */
+    @BuiltinBPFFunction("(($T1*)*$this)")
+    @NotUsableInJava
+    public <S> Ptr<S> castValPtr() {
         throw new MethodIsBPFRelatedFunction();
     }
 
@@ -183,14 +190,20 @@ public class Ptr<T> {
     /**
      * Convert an integer to a pointer
      */
-    @BuiltinBPFFunction("((void*)$arg1)")
+    @BuiltinBPFFunction("((void*)(u64)$arg1)")
     @NotUsableInJava
     public static Ptr<?> voidPointer(long value) {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    @BuiltinBPFFunction("((void*)$this)")
+    @NotUsableInJava
+    public Ptr<?> asVoidPointer() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
     /** Interpret as long value */
-    @BuiltinBPFFunction("(long)($arg1)")
+    @BuiltinBPFFunction("(long)($this)")
     @NotUsableInJava
     public long asLong() {
         throw new MethodIsBPFRelatedFunction();
@@ -211,7 +224,7 @@ public class Ptr<T> {
     }
 
     /** Is this pointer's address greater than the other pointer's address? */
-    @BuiltinBPFFunction("$this > $arg1")
+    @BuiltinBPFFunction("((void*)$this) > ((void*)$arg1)")
     @NotUsableInJava
     public boolean greaterThan(Ptr<?> other) {
         throw new MethodIsBPFRelatedFunction();

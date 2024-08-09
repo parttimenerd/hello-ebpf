@@ -1,8 +1,10 @@
 package me.bechberger.ebpf.bpf.compiler;
 
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Expression;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFFunctionAlternative;
@@ -15,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static me.bechberger.cast.CAST.Expression.constant;
 
 /**
  * Processes the templates of {@link BuiltinBPFFunction} annotated methods
@@ -138,6 +142,22 @@ public class MethodTemplateCache {
                 var record = (ClassSymbol) symbol.getEnclosingElement();
                 var recordAnn = record.getAnnotation(Type.class);
                 if (recordAnn == null || !record.isRecord()) {
+                    // check whether it's still support
+                    var similarMembers = record.getEnclosedElements().stream().filter(s -> s.getSimpleName().equals(symbol.getSimpleName())).toList();
+                    var backingVariable = similarMembers.stream().filter(s -> s instanceof Symbol.VarSymbol).findFirst();
+                    if (symbol.isStatic() && similarMembers.size() == 2 && backingVariable.isPresent()) {
+                        // We assume this to be a jextract generated method for a constant, e.g.
+                        //   private static final int IPPROTO_HOPOPTS = (int)0L;
+                        //   public static int IPPROTO_HOPOPTS() {
+                        //      return IPPROTO_HOPOPTS;
+                        //   }
+                        // We just take the variable's constant value
+                        Object constantValue = ((Symbol.VarSymbol) backingVariable.get()).getConstantValue();
+                        if (constantValue != null) {
+                            return MethodTemplate.parse(symbol.getSimpleName().toString(),
+                                    constant(constantValue).toPrettyString(), symbol);
+                        }
+                    }
                     throw new TemplateRenderException("Method " + symbol.getQualifiedName() + " is not in a record " +
                             "annotated with @Type");
                 }

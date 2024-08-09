@@ -166,6 +166,18 @@ public interface BPFTypeLike<T> {
         }
     }
 
+    final class TypeBackedBPFCustomType<T> extends TypeBackedBPFTypeLike<T> {
+
+        public TypeBackedBPFCustomType(CustomBPFType<T> type) {
+            super(type);
+        }
+
+        @Override
+        public CustomBPFType<T> toCustomType() {
+            return (CustomBPFType<T>) type;
+        }
+    }
+
     final class TypeBackedBPFUnionType<T extends Union> extends TypeBackedBPFTypeLike<T> {
 
         public TypeBackedBPFUnionType(BPFUnionType<T> type) {

@@ -1,5 +1,7 @@
 package me.bechberger.ebpf.annotations;
 
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
+
 import java.lang.annotation.*;
 
 /**
@@ -48,4 +50,13 @@ public @interface CustomType {
      * $name is replaced with the specified C name
      */
     String cCode() default "";
+
+    /**
+     * C code that should be generated for the construct>or
+     * <p>
+     * Supports all of the
+     * {@link BuiltinBPFFunction#value()} placeholders, except for {@code $this} and
+     * the type parameter related placeholders
+     */
+    String constructorTemplate();
 }

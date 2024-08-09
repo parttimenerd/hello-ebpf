@@ -14,6 +14,8 @@ import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
 import me.bechberger.cast.CAST.PrimaryExpression.Constant.IntegerConstant;
 import me.bechberger.cast.CAST.PrimaryExpression.VerbatimExpression;
 import me.bechberger.cast.CAST.Statement.*;
+import me.bechberger.ebpf.annotations.AlwaysInline;
+import me.bechberger.ebpf.annotations.CustomType;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.EnumMember;
 import me.bechberger.ebpf.bpf.compiler.CompilerPlugin.TypedTreePath;
@@ -33,6 +35,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -86,6 +89,10 @@ class Translator {
             logError(method, "Unsupported return type: " + method.getReturnType());
             hadError = true;
         }
+        // check if the method returns void
+        if (returnType != null && returnType.toPrettyString().equals("void")) {
+            returnType = Declarator.identifier("int");
+        }
         var params = new ArrayList<FunctionParameter>();
         for (int i = 0; i < method.getParameters().size(); i++) {
             var param = methodElement.getParameters().get(i);
@@ -103,7 +110,8 @@ class Translator {
         }
         var decl = new FunctionDeclarator(variable(name), returnType, params);
         assert annotation != null;
-        return MethodHeaderTemplate.parse(annotation.headerTemplate()).call(decl);
+        var alwaysInline = compilerPlugin.getAnnotationOfMethodOrSuper(methodElement, AlwaysInline.class);
+        return MethodHeaderTemplate.parse(annotation.headerTemplate()).call(decl, alwaysInline != null ? "__always_inline " : "");
     }
 
     CAST.Statement.FunctionDeclarationStatement translate() {
@@ -125,10 +133,11 @@ class Translator {
         }
         var declarator = toDeclarator();
         var body = ignoreBody ? new CompoundStatement(List.of()) : translate(method.getBody());
+        boolean addReturnZero = method.getReturnType().toString().equals("void");
         return callIfNonNull(declarator, body,
                 (d, b) -> {
-                    if (!bpfAnn.lastStatement().isBlank()) {
-                        var returnStatement = new VerbatimStatement(bpfAnn.lastStatement());
+                    if (!bpfAnn.lastStatement().isBlank() || addReturnZero) {
+                        var returnStatement = new VerbatimStatement(bpfAnn.lastStatement().isBlank() ? "return 0;" : bpfAnn.lastStatement());
                         var statements = new ArrayList<>(b.replaceReturnStatement(returnStatement).statements());
                         if (statements.isEmpty() || !(statements.getLast().equals(returnStatement))) {
                             statements.add(returnStatement);
@@ -207,7 +216,12 @@ class Translator {
                 var type = translateType(compilerPlugin.trees.getElement(methodPath.path(variableTree)),
                         typeMirror, sizes);
                 var name = variableTree.getName().toString();
-
+                // new VerbatimExpression("{}")
+                if (initializer instanceof OperatorExpression exp && exp.operator() == Operator.CAST) {
+                    if (exp.expressions()[1] instanceof VerbatimExpression valExpr && valExpr.code().equals("{}")) {
+                        initializer = null;
+                    }
+                }
                 yield type != null ? new CAST.Statement.VariableDefinition(type, variable(name), initializer) : null;
             }
             case IfTree ifTree -> {
@@ -439,11 +453,11 @@ class Translator {
                             yield expr;
                         }
                         if (type.toString().equals(Ptr.class.getName())) {
-                            logError(expression, "Unsupported type cast to " + type + " use 'Ptr::cast' instead");
+                            logError(expression, "Unsupported type cast to " + type + " use 'Ptr::cast' instead: " + typeCastTree);
                             yield null;
                         }
-                        if (type instanceof ClassType && ((ClassType) type).asElement().getQualifiedName().toString().equals(Ptr.class.getName())) {
-                            logError(expression, "Unsupported type cast to " + type + " use 'Ptr.<Type>cast(...)' instead");
+                        if (type instanceof ClassType classType && classType.asElement().getQualifiedName().toString().equals(Ptr.class.getName())) {
+                            logError(expression, "Unsupported type cast to " + type + " use 'Ptr.<Type>cast(...)' instead: " + typeCastTree);
                             yield null;
                         }
                     }
@@ -477,7 +491,28 @@ class Translator {
 
                 var typeKind = typeKind(typeElement);
 
+                var customTypeAnnotation = typeElement.getAnnotation(CustomType.class);
+
+                if (typeKind == DataTypeKind.NONE && customTypeAnnotation != null) {
+                    var template = customTypeAnnotation.constructorTemplate();
+                    var methodTemplate = MethodTemplate.parse(customTypeAnnotation.name(), template);
+                    List<Expression> arguments = new ArrayList<>();
+                    boolean hasError = false;
+                    for (int i = 0; i < newClassTree.getArguments().size(); i++) {
+                        var translated = translate(newClassTree.getArguments().get(i));
+                        if (translated == null) {
+                            hasError = true;
+                        }
+                        arguments.add(translated);
+                    }
+                    if (hasError) {
+                        yield null;
+                    }
+                    yield methodTemplate.call(new CallArgs(null, arguments, List.of()));
+                }
+
                 if (typeKind == DataTypeKind.ENUM || typeKind == DataTypeKind.NONE) {
+
                     logError(expression, "Unsupported constructor call: " + newClassTree);
                     yield null;
                 }
@@ -719,7 +754,16 @@ class Translator {
     }
 
     DataTypeKind typeKind(Element element) {
-        return new TypeProcessor(compilerPlugin.createProcessingEnvironment(), true).isValidDataType(element, false);
+        var typeProcessor = new TypeProcessor(compilerPlugin.createProcessingEnvironment(), true);
+        var customTypeInfo = typeProcessor.getCustomTypeInfo((TypeElement) element);
+        if (customTypeInfo != null) {
+            var name = variable(customTypeInfo.bpfName().name());
+            if (customTypeInfo.isStruct()) {
+                return DataTypeKind.STRUCT;
+            }
+            return DataTypeKind.NONE;
+        }
+        return typeProcessor.isValidDataType(element, false);
     }
 
     record ExpressionAndPossibleSizes(CAST.Expression expression, List<Integer> sizes) {

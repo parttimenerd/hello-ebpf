@@ -62,7 +62,20 @@ public class BPFRingBuffer<E> extends BPFMap {
         /**
          * Called when a new event is received
          */
-        void call(me.bechberger.ebpf.bpf.map.BPFRingBuffer<E> buffer, E event) throws Throwable;
+        void call(BPFRingBuffer<E> buffer, E event) throws Throwable;
+    }
+
+    /**
+     * Callback that is called when a new event is received
+     *
+     * @param <E> type of the event
+     */
+    @FunctionalInterface
+    public interface EventCallbackWOBuffer<E> {
+        /**
+         * Called when a new event is received
+         */
+        void call(E event) throws Throwable;
     }
 
     private final Arena ringArena;
@@ -135,6 +148,10 @@ public class BPFRingBuffer<E> extends BPFMap {
             throw new IllegalStateException("Callback already set");
         }
         this.callback = callback;
+    }
+
+    public void setCallback(EventCallbackWOBuffer<E> callback) {
+        setCallback((_, event) -> callback.call(event));
     }
 
     private static final HandlerWithErrno<MemorySegment> RING_BUFFER_NEW = new HandlerWithErrno<>("ring_buffer__new",
@@ -237,25 +254,38 @@ public class BPFRingBuffer<E> extends BPFMap {
 
     @Override
     public void close() {
-        System.out.println("Closing ring buffer");
         super.close();
-        //Lib.ring_buffer__free(rb); // TODO: why?
+        // Lib.ring_buffer__free(rb); // TODO: why?
         //ringArena.close();
     }
 
     /**
      * Reserve and return a slot in the ring buffer, or {@code null} if the ring buffer is full
-     *
+     * <p>
+     * Be sure to check if the return value is {@code null} before submitting the event.
+     * <p>
+     * <b>Every event has to be either submitted ({@link #submit(Ptr)}) or discarded ({@link #discard(Ptr)})</b>
      * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_ringbuf_reserve(Ptr, long, long)
      */
-    @BuiltinBPFFunction("bpf_ringbuf_reserve(&($this), sizeof($C1), 0)")
+    @BuiltinBPFFunction("bpf_ringbuf_reserve(&$this, sizeof($C1), 0)")
     @NotUsableInJava
     public Ptr<E> reserve() {
         throw new MethodIsBPFRelatedFunction();
     }
 
     /**
-     * Submit an event to the ring buffer
+     * Discard a reserved event
+     *
+     * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_ringbuf_discard(Ptr, long)
+     */
+    @BuiltinBPFFunction("bpf_ringbuf_discard($arg1, 0)")
+    @NotUsableInJava
+    public void discard(Ptr<E> event) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Submit an event to the ring buffer, be sure to obtain it via {@link BPFRingBuffer#reserve() reserve} first
      *
      * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_ringbuf_submit(Ptr, long)
      */

@@ -67,7 +67,8 @@ public class TypeProcessingTest {
                   int x;
                   int y;
                 };
-                """)
+                """,
+                constructorTemplate = "")
         record IntPair(int x, int y) {}
 
         @Type

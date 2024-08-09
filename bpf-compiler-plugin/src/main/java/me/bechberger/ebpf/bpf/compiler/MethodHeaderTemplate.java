@@ -147,9 +147,13 @@ public record MethodHeaderTemplate(String raw, List<TemplatePart> parts) {
     }
 
     public FunctionHeader call(FunctionDeclarator declarator) {
+        return call(declarator, "");
+    }
+
+    public FunctionHeader call(FunctionDeclarator declarator, String prefix) {
         if (raw.equals("$name")) {
-            return declarator;
+            return new VerbatimFunctionDeclarator(prefix + declarator.toPrettyString());
         }
-        return new VerbatimFunctionDeclarator(parts.stream().map(part -> part.render(declarator)).collect(Collectors.joining("")));
+        return new VerbatimFunctionDeclarator(prefix + parts.stream().map(part -> part.render(declarator)).collect(Collectors.joining("")));
     }
 }

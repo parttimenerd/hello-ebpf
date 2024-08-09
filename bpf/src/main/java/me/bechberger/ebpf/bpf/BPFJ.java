@@ -148,7 +148,7 @@ public class BPFJ {
      * @param dest destination object, has to be a variable
      * @see BPFHelpers#bpf_probe_read_kernel(Ptr, int, Ptr)
      */
-    @BuiltinBPFFunction("bpf_probe_read_kernel(&($arg1), sizeof($arg1), $arg2)")
+    @BuiltinBPFFunction("bpf_probe_read_kernel(&$arg1, sizeof($arg1), $arg2)")
     public static <T> long bpf_probe_read_kernel(T dest, Ptr<T> src) {
         throw new MethodIsBPFRelatedFunction();
     }

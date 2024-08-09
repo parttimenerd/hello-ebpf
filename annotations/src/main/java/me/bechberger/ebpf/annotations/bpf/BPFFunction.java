@@ -2,6 +2,7 @@ package me.bechberger.ebpf.annotations.bpf;
 
 import java.lang.annotation.*;
 import java.util.Set;
+import me.bechberger.ebpf.annotations.AlwaysInline;
 
 /**
  * Specify a function that is callable from C code and has an implementation
@@ -17,6 +18,9 @@ import java.util.Set;
  *        throw new MethodIsBPFRelatedFunction();
  *    }
  * }
+ * <p>
+ * Consider annotating methods with {@link AlwaysInline} if they
+ * are called by other BPF functions.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -70,5 +74,5 @@ public @interface BPFFunction {
      */
     String name() default "";
 
-    Set<String> autoAttachableSections = Set.of("fentry/", "fexit/", "kprobe/", "kretprobe");
+    Set<String> autoAttachableSections = Set.of("fentry", "fexit", "kprobe", "kretprobe");
 }

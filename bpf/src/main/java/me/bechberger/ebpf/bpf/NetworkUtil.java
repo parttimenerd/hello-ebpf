@@ -38,9 +38,9 @@ public class NetworkUtil {
         }
     }
 
-    /** Get the indixes of all network interfaces that are up */
+    /** Get the indixes of all network interfaces that are up and not loop back */
     public static List<Integer> getNetworkInterfaceIndexes() {
-        return getNetworkInterfaceIndexes(true);
+        return getNetworkInterfaceIndexes(false);
     }
 
     public static String getNetworkInterfaceName(int index) {
