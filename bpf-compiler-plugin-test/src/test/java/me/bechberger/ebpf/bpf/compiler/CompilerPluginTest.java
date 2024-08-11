@@ -100,8 +100,8 @@ public class CompilerPluginTest {
                   return func(x, x + 1) + 1;
                 }
                                 
-                void empty() {
-                                
+                int empty() {
+                  return 0;
                 }
                                 
                 s32 math2(s32 x) {
@@ -144,7 +144,7 @@ public class CompilerPluginTest {
                                 
                 s32 refAndDeref() {
                   s32 value = 3;
-                  s32 *ptr = &((value));
+                  s32 *ptr = &(value);
                   return ptr == ((void*)0) ? 1 : 0;
                 }
                 
@@ -188,16 +188,19 @@ public class CompilerPluginTest {
                 #include "vmlinux.h"
                 #include <bpf/bpf_helpers.h>
                                 
-                void testPrint() {
+                int testPrint() {
                   bpf_trace_printk((const char*)"Hello, World!\\\\n", 15);
+                  return 0;
                 }
                 
-                void testJavaPrint() {
+                int testJavaPrint() {
                   bpf_trace_printk("Hello, World!\\\\n", sizeof("Hello, World!\\\\n"));
+                  return 0;
                 }
                 
-                void testJavaPrint2() {
+                int testJavaPrint2() {
                   bpf_trace_printk("Hello, %s!\\\\n", sizeof("Hello, %s!\\\\n"), "World");
+                  return 0;
                 }
                 """, BPFProgram.getCode(TestPrint.class));
     }
@@ -227,10 +230,11 @@ public class CompilerPluginTest {
                                 
                 s32 count SEC(".data");
                 
-                void testGlobalVariable() {
+                int testGlobalVariable() {
                   count = (43);
                   s32 currentCount = count;
                   bpf_trace_printk("Count: %d\\\\n", sizeof("Count: %d\\\\n"), (currentCount));
+                  return 0;
                 }
                 """, BPFProgram.getCode(TestGlobalVariable.class));
     }
@@ -282,11 +286,11 @@ public class CompilerPluginTest {
                 #include "vmlinux.h"
                 #include <bpf/bpf_helpers.h>
                                 
-                char stringAt(char *str) {
+                u8 stringAt(u8 *str) {
                   return str[0];
                 }
                                 
-                s8 bytes(char *str) {
+                s8 bytes(u8 *str) {
                   return (str)[0];
                 }
                 """, BPFProgram.getCode(TestString.class));
@@ -336,17 +340,19 @@ public class CompilerPluginTest {
                   return arr[0];
                 }
                 
-                void create() {
+                int create() {
                   s32 arr[2];
                   arr[0] = 1;
                   arr[1] = 2;
                   bpf_trace_printk("Array: %d, %d\\\\n", sizeof("Array: %d, %d\\\\n"), (arr[0]), (arr[1]));
+                  return 0;
                 }
                 
-                void create2() {
+                int create2() {
                   s32 arr[2];
                   s32 arr2[2] = {1, 2};
                   s32 arr3[2] = {1, 2};
+                  return 0;
                 }
                 
                 s32* toPtr(s32 arr[2]) {
@@ -606,7 +612,7 @@ public class CompilerPluginTest {
                   return TEST_CONSTANT;
                 }
                                 
-                char* constantString() {
+                u8* constantString() {
                   return TEST_CONSTANT_STRING;
                 }
                                 
@@ -655,18 +661,19 @@ public class CompilerPluginTest {
                                 
                 struct Event {
                   u32 pid;
-                  char filename[256];
-                  char comm[16];
+                  u8 filename[256];
+                  u8 comm[16];
                 };
                                
                 s32 access(struct Event event) {
                   return event.pid;
                 }
                                 
-                void returnAndCreateEvent(struct Event *evtPtr) {
-                  struct Event event = (struct Event){};
+                int returnAndCreateEvent(struct Event *evtPtr) {
+                  struct Event event;
                   event.pid = 1;
                   *(evtPtr) = event;
+                  return 0;
                 }
                 """, BPFProgram.getCode(TestStruct.class));
     }
@@ -705,7 +712,7 @@ public class CompilerPluginTest {
                 };
                                 
                 s32 use(struct Event event) {
-                  struct Event event2 = (struct Event){};
+                  struct Event event2;
                   event2.pid = event.pid;
                   return event2.pid;
                 }
@@ -756,7 +763,7 @@ public class CompilerPluginTest {
                 }
                                 
                 s64 createAddress() {
-                  union SampleUnion address = (union SampleUnion){};
+                  union SampleUnion address;
                   address.ipv4 = 1;
                   return address.count;
                 }
@@ -796,7 +803,7 @@ public class CompilerPluginTest {
                                 
                 struct Event {
                   u32 pid;
-                  char filename[256];
+                  u8 filename[256];
                 };
                                 
                 s32 access(struct Event event) {
@@ -804,9 +811,10 @@ public class CompilerPluginTest {
                   return event.pid;
                 }
                                 
-                void createEvent() {
+                int createEvent() {
                   struct Event event = (struct Event){.pid = 1, .filename = "file"};
                   (event).pid = (2);
+                  return 0;
                 }
                 """, BPFProgram.getCode(TestRecordStruct.class));
     }
@@ -843,21 +851,19 @@ public class CompilerPluginTest {
     @Test
     public void testInt128() {
         assertEqualsDiffed("""
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                                
-                void create() {
+                int create() {
                   __int128 i = (((__int128)1) << 64) | (2);
+                  return 0;
                 }
-                                
+                
                 s64 lower(__int128 i) {
                   return (s64)(i);
                 }
-                                
+                
                 s64 upper(__int128 i) {
                   return (s64)((i) >> 64);
                 }
-                                
+                
                 s64 lowerUnsigned(__int128 unsigned i) {
                   return (s64)(i);
                 }
@@ -886,12 +892,13 @@ public class CompilerPluginTest {
     @Test
     public void testBPFFunctionTemplates() {
         assertEqualsDiffed("""
-                SEC("section") void called(s32 x, s32 y) {
+                SEC("section") int called(s32 x, s32 y) {
                   (void*)0;
                 }
                                 
-                void caller() {
+                int caller() {
                   called(1, 1);
+                  return 0;
                 }
                 """, BPFProgram.getCode(TestBPFFunctionTemplates.class));
         assertEquals(List.of(), BPFProgram.getAutoAttachableBPFPrograms(TestBPFFunctionTemplates.class));
@@ -920,7 +927,7 @@ public class CompilerPluginTest {
     @Test
     public void testBPFFunctionTemplatesInterface() {
         assertEqualsDiffed("""
-                SEC("section") int func(char* name, char* y) {
+                SEC("section") int func(u8* name, u8* y) {
                   bpf_trace_printk("Hello, %s!\\\\n", sizeof("Hello, %s!\\\\n"), name);
                   return 1;
                 }
@@ -952,7 +959,7 @@ public class CompilerPluginTest {
                 #include "vmlinux.h"
                 #include <bpf/bpf_helpers.h>
                                 
-                void body() {
+                int body() {
                   char* code = "Hello, World!";
                   bpf_trace_printk("%s", 2, code);
                 }
