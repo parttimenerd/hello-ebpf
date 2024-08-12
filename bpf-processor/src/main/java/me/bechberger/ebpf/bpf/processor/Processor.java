@@ -540,7 +540,7 @@ public class Processor extends AbstractProcessor {
             tempFile.toFile().deleteOnExit();
             var process = new ProcessBuilder(newestClang, "-O2", "-g", "-target", "bpf", "-c", "-o",
                     tempFile.toString(), "-I", vmlinuxHeader.getParent().toString(),
-                    "-D__TARGET_ARCH_" + getArch(), "-Wno-parentheses-equality", "-Wno-unused-value",
+                    "-D__TARGET_ARCH_" + getArch(), "-Wno-parentheses-equality", "-Wno-unused-value", "-Wreturn-type",
                     "-x", "c", "-", "--sysroot=/", "-I" + findIncludePath()).redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE).start();
             process.getOutputStream().write(code.ebpfProgram.getBytes());
             process.getOutputStream().close();

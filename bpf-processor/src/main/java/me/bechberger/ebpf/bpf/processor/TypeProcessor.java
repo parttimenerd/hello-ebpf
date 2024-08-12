@@ -11,6 +11,7 @@ import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFInterface;
 import me.bechberger.ebpf.annotations.Type;
+import me.bechberger.ebpf.annotations.bpf.InternalBody;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils.AnnotationValues;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils.AnnotationValues.AnnotationKind;
 import me.bechberger.ebpf.bpf.processor.BPFTypeLike.*;
@@ -388,7 +389,8 @@ public class TypeProcessor {
         boolean hadError = false;
 
         for (var inter : getInterfaces(outerType)) {
-            var interAnnotation = ((ClassType) inter).asElement().getAnnotation(BPFInterface.class);
+            var interElement = ((ClassType) inter).asElement();
+            var interAnnotation = interElement.getAnnotation(BPFInterface.class);
             if (interAnnotation == null) {
                 continue;
             }

@@ -18,14 +18,13 @@ import me.bechberger.ebpf.type.Enum;
 import me.bechberger.ebpf.type.Ptr;
 import me.bechberger.ebpf.type.Struct;
 import me.bechberger.ebpf.type.Union;
-import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class CompilerPluginTest {
 
@@ -969,4 +968,40 @@ public class CompilerPluginTest {
                 }
                 """, BPFProgram.getCode(TestStringBody.class));
     }
+
+    @BPFInterface
+    public interface TestInterfaceWithCode {
+
+        @BPFFunction
+        default void func() {
+            BPFJ.bpf_trace_printk("Hello, World!\\n");
+        }
+
+    }
+
+    @Test
+    public void testInterfaceWithCode() {
+        assertEqualsDiffed("""
+                int func() {
+                  bpf_trace_printk("Hello, World!\\\\n", sizeof("Hello, World!\\\\n"));
+                  return 0;
+                }
+                """, TestInterfaceWithCode.class.getAnnotation(InternalBody.class).value());
+    }
+
+    @BPF
+    static abstract class TestUsingInterfaceWithCode extends BPFProgram implements TestInterfaceWithCode {
+    }
+
+    @Test
+    public void testUsingInterfaceWithCode() {
+        assertEqualsDiffed("""
+                int func() {
+                  bpf_trace_printk("Hello, World!\\\\n", sizeof("Hello, World!\\\\n"));
+                  return 0;
+                }
+                """, BPFProgram.getCode(TestUsingInterfaceWithCode.class));
+    }
+
+
 }

@@ -2,9 +2,10 @@ package me.bechberger.ebpf.bpf.compiler;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.*;
-import com.sun.source.util.TaskEvent.Kind;
 import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.code.Attribute;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
@@ -16,12 +17,16 @@ import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
+import com.sun.tools.javac.util.Pair;
+import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Statement;
 import me.bechberger.cast.CAST.Statement.CompoundStatement;
 import me.bechberger.cast.CAST.Statement.Define;
 import me.bechberger.cast.CAST.Statement.FunctionDeclarationStatement;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFImpl;
+import me.bechberger.ebpf.annotations.bpf.BPFInterface;
+import me.bechberger.ebpf.annotations.bpf.InternalBody;
 import me.bechberger.ebpf.bpf.processor.Processor;
 import me.bechberger.ebpf.type.TypeUtils;
 import org.jetbrains.annotations.Nullable;
@@ -36,6 +41,7 @@ import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -140,6 +146,21 @@ public class CompilerPlugin implements Plugin {
         }, null), Collections.emptyList());
     }
 
+    private List<TypedTreePath<ClassTree>> getBPFInterfaces(CompilationUnitTree compilationUnitTree) {
+        return Objects.requireNonNullElse(compilationUnitTree.accept(new PathCollectingScanner<ClassTree>(compilationUnitTree) {
+            @Override
+            public List<TypedTreePath<ClassTree>> visitClass(ClassTree node, Object ignored) {
+                return visitWrapped(node, (path, classTree) -> {
+                    var result = super.visitClass(classTree, ignored);
+                    if (hasAnnotation(path, classTree.getModifiers(), BPFInterface.class)) {
+                        return reduce(List.of(new TypedTreePath<>(path)), result);
+                    }
+                    return result;
+                });
+            }
+        }, null), Collections.emptyList());
+    }
+
     public record TypedTreePath<T extends Tree>(TreePath path) {
 
         @Override
@@ -178,26 +199,19 @@ public class CompilerPlugin implements Plugin {
 
             @Override
             public void finished(TaskEvent e) {
-                if (e.getKind() == Kind.PARSE) {
-                    e.getCompilationUnit().accept(new TreeScanner<>() {
-                        @Override
-                        public Object visitMethod(MethodTree node, Object o) {
-                            return super.visitMethod(node, o);
-                        }
-                    }, null);
-                    return;
-                }
                 if (e.getKind() != TaskEvent.Kind.ANALYZE) { // we do need all information
                     return;
                 }
                 funcs.addAll(getBPFFunctionsForClass(e.getCompilationUnit()));
                 var impls = getBPFProgramImpls(e.getCompilationUnit());
-                if (impls.isEmpty()) {
+                var interfaces = getBPFInterfaces(e.getCompilationUnit());
+                if (impls.isEmpty() && interfaces.isEmpty()) {
                     return;
                 }
                 funcs.forEach(CompilerPlugin.this::processBPFFunction);
                 funcs.clear();
-                impls.forEach(CompilerPlugin.this::processBPFProgramImpls);
+                interfaces.forEach(CompilerPlugin.this::processBPFInterface);
+                impls.forEach(CompilerPlugin.this::processBPFProgramImpl);
             }
         });
     }
@@ -338,7 +352,68 @@ public class CompilerPlugin implements Plugin {
         });
     }
 
-    private void processBPFProgramImpls(TypedTreePath<ClassTree> programPath) {
+    @SuppressWarnings("unchecked")
+    private void processBPFInterface(TypedTreePath<ClassTree> programPath) {
+        // idea:
+        // Collect all method implementations in the interface,
+        // then add a new @InternalBody annotation to the interface with the code
+
+        var bpfInterface = programPath.leaf();
+        var bpfInterfaceTypeElement = (TypeElement) trees.getElement(programPath.path);
+        logger.printRawLines("Processing BPF interface " + bpfInterface.getSimpleName());
+        // now get all BPFFunctions in the class (and its superclasses)
+        // but only include the ones that are actually implemented
+        // and don't just throw an exception
+        if (bpfInterface.getExtendsClause() != null) {
+            throw new IllegalStateException("BPF interface implementation must not extend another interface");
+        }
+
+        var declsWithDefines = task.getElements().getAllMembers(bpfInterfaceTypeElement).stream()
+                .filter(m -> m instanceof MethodSymbol)
+                .map(m -> task.getTypes().asMemberOf((DeclaredType) bpfInterfaceTypeElement.asType(), (MethodSymbol) m))
+                .filter(m -> m instanceof MethodType)
+                .map(m -> (MethodType) m)
+                .map(methodElementToCode::get)
+                .filter(Objects::nonNull)
+                .toList();
+
+        var defines = declsWithDefines.stream().flatMap(r -> r.requiredDefines().stream()).collect(Collectors.toSet());
+        var decls = declsWithDefines.stream().map(FuncDeclStatementResult::decl).toList();
+
+        System.out.println("decls: " + decls);
+
+        // get BPFInterface annotation
+        var bpfInterfaceAnnotation = bpfInterfaceTypeElement.getAnnotation(BPFInterface.class);
+
+        var combinedCode = combineCode("", decls, defines);
+
+        if (combinedCode.isBlank()) {
+            return; // nothing changed
+        }
+
+        var beforeSymbol = (Symbol.MethodSymbol) ((Type.ClassType)typeUtils.getTypeMirror(InternalBody.class))
+                .asElement().getEnclosedElements().stream()
+                .filter(e -> e instanceof MethodSymbol m && m.getSimpleName().toString().equals("value"))
+                .findFirst().orElseThrow();
+
+        var meta = ((Symbol.ClassSymbol) bpfInterfaceTypeElement).getMetadata();
+        Field attributesField;
+        try {
+            // we have to jump through some hoops to add the annotation
+            attributesField = meta.getClass().getDeclaredField("attributes");
+            attributesField.setAccessible(true);
+            attributesField.set(meta, ((com.sun.tools.javac.util.List<Attribute>)attributesField.get(meta))
+                    .append(new Attribute.Compound((Type.ClassType)typeUtils.getTypeMirror(InternalBody.class),
+                            com.sun.tools.javac.util.List.of(
+                                    new Pair<>(beforeSymbol,
+                                            new Attribute.Constant((Type.ClassType)typeUtils.getTypeMirror(String.class),
+                                                    combinedCode))))));
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void processBPFProgramImpl(TypedTreePath<ClassTree> programPath) {
         var bpfProgram = programPath.leaf();
         var bpfProgramTypeElement = (TypeElement) trees.getElement(programPath.path);
         logger.printRawLines("Processing BPF program " + bpfProgram.getSimpleName());
@@ -359,15 +434,7 @@ public class CompilerPlugin implements Plugin {
                 .filter(m -> m instanceof MethodSymbol)
                 .toList();
 
-        var toImplement = classToMethodCountToImplement.get((Type.ClassType) superClassType);
-
-        if (toImplement == null) {
-            return;
-        }
-
-        if (methods.isEmpty()) {
-            return; // we don't have to do anything
-        }
+        var toImplement = classToMethodCountToImplement.getOrDefault((Type.ClassType) superClassType, 0);
 
         var declsWithDefines =
                 methods.stream().map(m -> task.getTypes().asMemberOf((DeclaredType) superClassElement.asType(), m))
@@ -388,6 +455,15 @@ public class CompilerPlugin implements Plugin {
         // get value of CODE field in the bpfProgram
         var codeField = getMember(bpfProgram, "CODE");
         var code = (String) ((LiteralTree) codeField.getInitializer()).getValue();
+
+        // now get the "body" value of all BPFInterface annotations of all interfaces of the super class
+        var bpfInterfaceBodies = superClassElement.getInterfaces().stream()
+                .map(i -> i.getAnnotation(InternalBody.class))
+                .filter(Objects::nonNull).map(InternalBody::value).filter(b -> !b.isEmpty()).toList();
+
+        // add the code of the interfaces to the code
+        code = bpfInterfaceBodies.stream().collect(Collectors.joining("\n\n", "", code));
+
         var newCode = combineCode(code, decls, defines);
 
         // write the C code in a file close to the source file
