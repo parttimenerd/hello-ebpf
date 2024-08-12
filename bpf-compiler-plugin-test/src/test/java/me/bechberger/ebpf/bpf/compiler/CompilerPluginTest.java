@@ -92,6 +92,14 @@ public class CompilerPluginTest {
                 int func2(int x);
                                 
                 void emptyBuiltin();
+                
+                s32 simpleReturn(s32 x);
+                
+                s32 math(s32 x);
+                
+                int empty();
+                
+                s32 math2(s32 x);
                                 
                 s32 simpleReturn(s32 x) {
                   return 1;
@@ -142,6 +150,12 @@ public class CompilerPluginTest {
     public void testPtr() {
         assertEqualsDiffed("""
                 #include "vmlinux.h"
+                
+                s32 refAndDeref();
+                
+                s32 cast(s32 *intPtr);
+                
+                s32* increment(s32 *ptr);
                                 
                 s32 refAndDeref() {
                   s32 value = 3;
@@ -188,6 +202,12 @@ public class CompilerPluginTest {
         assertEqualsDiffed("""
                 #include "vmlinux.h"
                 #include <bpf/bpf_helpers.h>
+                
+                int testPrint();
+                
+                int testJavaPrint();
+                
+                int testJavaPrint2();
                                 
                 int testPrint() {
                   bpf_trace_printk((const char*)"Hello, World!\\\\n", 15);
@@ -230,6 +250,8 @@ public class CompilerPluginTest {
                 #include <bpf/bpf_helpers.h>
                                 
                 s32 count SEC(".data");
+                
+                int testGlobalVariable();
                 
                 int testGlobalVariable() {
                   count = 43;
@@ -286,7 +308,11 @@ public class CompilerPluginTest {
         assertEqualsDiffed("""
                 #include "vmlinux.h"
                 #include <bpf/bpf_helpers.h>
-                                
+                
+                u8 stringAt(u8 *str);
+                
+                s8 bytes(u8 *str);
+                
                 u8 stringAt(u8 *str) {
                   return str[0];
                 }
@@ -336,6 +362,14 @@ public class CompilerPluginTest {
         assertEqualsDiffed("""
                 #include "vmlinux.h"
                 #include <bpf/bpf_helpers.h>
+                
+                s32 access(s32 arr[2]);
+                
+                int create();
+                
+                int create2();
+                
+                s32* toPtr(s32 arr[2]);
                                 
                 s32 access(s32 arr[2]) {
                   return arr[0];
@@ -413,6 +447,14 @@ public class CompilerPluginTest {
         assertEqualsDiffed("""
                 #include "vmlinux.h"
                 #include <bpf/bpf_helpers.h>
+                
+                s32 forLoop();
+                
+                s32 ifStatement(s32 x);
+                
+                s32 ifEleseStatement(s32 x);
+                
+                s32 ifElseIfElse(s32 x);
                                 
                 s32 forLoop() {
                   s32 sum = 0;
@@ -472,7 +514,9 @@ public class CompilerPluginTest {
         assertEqualsDiffed("""
                 #include "vmlinux.h"
                 #include <bpf/bpf_helpers.h>
-                                
+                
+                s32 testComments();
+                
                 s32 testComments() {
                   return 1;
                 }
@@ -499,6 +543,8 @@ public class CompilerPluginTest {
         assertEqualsDiffed("""
                 #include "vmlinux.h"
                 #include <bpf/bpf_helpers.h>
+                
+                s32 finalVariable();
                                 
                 s32 finalVariable() {
                   s32 i = 0;
@@ -552,6 +598,14 @@ public class CompilerPluginTest {
                   TEST_ENUM_B = 1,
                   D = 2
                 };
+                
+                s32 ordinal(enum TestEnum e);
+                
+                enum TestEnum ofValue(s32 ordinal);
+                
+                enum TestEnum access();
+                
+                enum TestEnum access2();
                 
                 s32 ordinal(enum TestEnum e) {
                   return (s32)(long)(e);
@@ -611,6 +665,12 @@ public class CompilerPluginTest {
                 
                 #define OUTER_CONSTANT 100
                 
+                s32 constant();
+                
+                u8* constantString();
+                
+                s32 outerConstant();
+                
                 s32 constant() {
                   return TEST_CONSTANT;
                 }
@@ -667,6 +727,10 @@ public class CompilerPluginTest {
                   u8 filename[256];
                   u8 comm[16];
                 };
+                
+                s32 access(struct Event event);
+                
+                int returnAndCreateEvent(struct Event *evtPtr);
                                
                 s32 access(struct Event event) {
                   return event.pid;
@@ -713,6 +777,8 @@ public class CompilerPluginTest {
                 struct Event {
                   u32 pid;
                 };
+                
+                s32 use(struct Event event);
                                 
                 s32 use(struct Event event) {
                   struct Event event2;
@@ -755,12 +821,16 @@ public class CompilerPluginTest {
         assertEqualsDiffed("""
                 #include "vmlinux.h"
                 #include <bpf/bpf_helpers.h>
-                                
+                
                 union SampleUnion {
                   u32 ipv4;
                   s64 count;
                 };
-                                
+                          
+                s32 access(union SampleUnion address);
+                
+                s64 createAddress();
+                
                 s32 access(union SampleUnion address) {
                   return address.ipv4;
                 }
@@ -809,6 +879,10 @@ public class CompilerPluginTest {
                   u8 filename[256];
                 };
                 
+                s32 access(struct Event event);
+                
+                int createEvent();
+                
                 s32 access(struct Event event) {
                   s32 i = event.pid;
                   return event.pid;
@@ -854,6 +928,14 @@ public class CompilerPluginTest {
     @Test
     public void testInt128() {
         assertEqualsDiffed("""
+                int create();
+                
+                s64 lower(__int128 i);
+                
+                s64 upper(__int128 i);
+                
+                s64 lowerUnsigned(__int128 unsigned i);
+                
                 int create() {
                   __int128 i = (((__int128)1) << 64) | (2);
                   return 0;
@@ -895,6 +977,11 @@ public class CompilerPluginTest {
     @Test
     public void testBPFFunctionTemplates() {
         assertEqualsDiffed("""
+                
+                int called(s32 x, s32 y);
+                
+                int caller();
+                
                 SEC("section") int called(s32 x, s32 y) {
                   (void*)0;
                 }
@@ -930,6 +1017,8 @@ public class CompilerPluginTest {
     @Test
     public void testBPFFunctionTemplatesInterface() {
         assertEqualsDiffed("""
+                int func(u8* name, u8* y);
+                
                 SEC("section") int func(u8* name, u8* y) {
                   bpf_trace_printk("Hello, %s!\\\\n", sizeof("Hello, %s!\\\\n"), name);
                   return 1;
@@ -961,7 +1050,9 @@ public class CompilerPluginTest {
         assertEqualsDiffed("""
                 #include "vmlinux.h"
                 #include <bpf/bpf_helpers.h>
-                                
+                
+                int body();
+                
                 int body() {
                   char* code = "Hello, World!";
                   bpf_trace_printk("%s", 2, code);
@@ -982,6 +1073,8 @@ public class CompilerPluginTest {
     @Test
     public void testInterfaceWithCode() {
         assertEqualsDiffed("""
+                int func();
+                
                 int func() {
                   bpf_trace_printk("Hello, World!\\\\n", sizeof("Hello, World!\\\\n"));
                   return 0;
@@ -996,6 +1089,8 @@ public class CompilerPluginTest {
     @Test
     public void testUsingInterfaceWithCode() {
         assertEqualsDiffed("""
+                int func();
+                
                 int func() {
                   bpf_trace_printk("Hello, World!\\\\n", sizeof("Hello, World!\\\\n"));
                   return 0;

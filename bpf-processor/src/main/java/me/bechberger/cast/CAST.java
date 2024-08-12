@@ -810,7 +810,6 @@ public interface CAST {
         }
 
         sealed interface FunctionHeader extends CAST {
-
         }
 
         record FunctionDeclarator(Variable name, Declarator returnValue,
@@ -848,7 +847,7 @@ public interface CAST {
 
             @Override
             public Statement toStatement() {
-                return new VerbatimStatement(header);
+                return new VerbatimStatement(header + ";");
             }
         }
 

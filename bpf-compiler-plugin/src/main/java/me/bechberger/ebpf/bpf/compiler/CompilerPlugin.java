@@ -380,8 +380,6 @@ public class CompilerPlugin implements Plugin {
         var defines = declsWithDefines.stream().flatMap(r -> r.requiredDefines().stream()).collect(Collectors.toSet());
         var decls = declsWithDefines.stream().map(FuncDeclStatementResult::decl).toList();
 
-        System.out.println("decls: " + decls);
-
         // get BPFInterface annotation
         var bpfInterfaceAnnotation = bpfInterfaceTypeElement.getAnnotation(BPFInterface.class);
 
@@ -533,12 +531,17 @@ public class CompilerPlugin implements Plugin {
                 .orElseThrow(() -> new IllegalStateException(name + " field not found in " + klass.getSimpleName()));
     }
 
+    boolean canEmitDeclaratorFor(FunctionDeclarationStatement decl) {
+        return !decl.declarator().toPrettyString().matches(".* [A-Z0-9_]+\\([a-z0-9A-Z_]+,.*\\).*");
+    }
+
     String combineCode(String code, List<FunctionDeclarationStatement> decls, Set<Define> defines) {
         var requiredDefines = defines.stream().filter(d -> !code.contains(d.toPrettyString()))
                 .sorted(Comparator.comparing(Define::name)).toList();
         return Stream.concat(Stream.concat(Stream.of(code),
                                 requiredDefines.stream().map(Define::toPrettyString)),
-                        decls.stream().map(FunctionDeclarationStatement::toPrettyString))
+                        Stream.concat(decls.stream().filter(this::canEmitDeclaratorFor).map(d -> d.declarator().toStatement().toPrettyString()),
+                                decls.stream().map(CAST::toPrettyString)))
                 .filter(s -> !s.isEmpty()).collect(Collectors.joining("\n\n"));
     }
 
