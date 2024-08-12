@@ -119,6 +119,9 @@ public class KnownTypes {
      * Return the proper name for {@ocode s32, u16, __u64, ...}
      */
     static String normalizeNames(String name) {
+        if (name.equals("char")) {
+            return "u8";
+        }
         if (name.matches("(__)?[suSU][0-9]+")) {
             boolean isUnsigned = name.contains("u");
             int width = Integer.parseInt(name.split("[suSU]")[1]);

@@ -504,7 +504,7 @@ public class Generator {
             @Override
             public TypeName toTypeName(Generator gen) {
                 var skipping = resolvedPointeeSkippingMirrorTypes();
-                if (skipping instanceof IntType intType && intType.knownInt.cName().equals("char")) {
+                if (skipping instanceof IntType intType && (intType.knownInt.cName().equals("char") || intType.knownInt.cName().equals("u8"))) {
                     return cts(String.class);
                 }
                 var skippingMore = resolvedPointeeSkippingMirrorTypesAndTypedef();

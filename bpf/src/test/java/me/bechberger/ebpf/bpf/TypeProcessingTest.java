@@ -427,7 +427,7 @@ public class TypeProcessingTest {
         assertEquals(ARRAY_SIZE * STRING_SIZE, type.getMember("values").type().size());
         assertEquals("""
                 struct RecordWithStringArray {
-                  char values[$a][$s];
+                  u8 values[$a][$s];
                 };
                 """.replace("$s", "" + STRING_SIZE).replace("$a", "" + ARRAY_SIZE).trim(),
                 type.toCDeclarationStatement().orElseThrow().toPrettyString());
@@ -470,7 +470,7 @@ public class TypeProcessingTest {
         assertEquals("""
                 struct ClassRecord {
                   s32 a;
-                  char b[6];
+                  u8 b[6];
                 };
                 """.trim(), type.toCDeclarationStatement().orElseThrow().toPrettyString());
         var record = new SimpleRecordTestProgram.ClassRecord();
@@ -510,7 +510,7 @@ public class TypeProcessingTest {
                   struct SimpleRecord *recordPointer;
                   u32 *intPointer;
                   s32 (*intArrayPointer)[10];
-                  char (*stringPointer)[10];
+                  u8 (*stringPointer)[10];
                   s32 (*intArrayArrayPointer)[2][2];
                   struct SimpleRecord **recordPointerPointer;
                   s32* (*intPointerArrayPointer)[2];
@@ -527,7 +527,7 @@ public class TypeProcessingTest {
                   struct SimpleRecord *recordPointer;
                   u32 *intPointer;
                   s32 (*intArrayPointer)[10];
-                  char (*stringPointer)[10];
+                  u8 (*stringPointer)[10];
                   s32 (*intArrayArrayPointer)[2][2];
                   struct SimpleRecord **recordPointerPointer;
                   s32* (*intPointerArrayPointer)[2];
