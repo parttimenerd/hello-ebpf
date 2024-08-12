@@ -610,6 +610,9 @@ class Translator {
         switch (methodTree.meth) {
             case JCFieldAccess access -> {
                 symbol = (MethodSymbol) access.sym;
+                if (symbol.isStatic()) {
+                    break;
+                }
                 thisExpression = translate(access.selected);
                 thisJavacExpression = access.selected;
                 if (compilerPlugin.methodTemplateCache.isAutoUnboxing(symbol)) {
@@ -629,7 +632,7 @@ class Translator {
         boolean hasError = false;
         for (int i = 0; i < methodTree.getArguments().size(); i++) {
             var argument = methodTree.getArguments().get(i);
-            if (i == methodTree.getArguments().size() - 1 && symbol.isVarArgs()) {
+            if (symbol.isVarArgs() && i >= symbol.getParameters().size() - 1) {
                 // handle varargs by expanding the last argument
                 if (argument instanceof JCNewArray newArray) {
                     for (var elem : newArray.elems) {
@@ -640,8 +643,11 @@ class Translator {
                         arguments.add(translated);
                     }
                 } else {
-                    logError(argument, "Varargs must be passed as array: " + argument);
-                    hasError = true;
+                    var translated = translate(argument);
+                    if (translated == null) {
+                        hasError = true;
+                    }
+                    arguments.add(translated);
                 }
             } else {
                 var translated = translate(argument);

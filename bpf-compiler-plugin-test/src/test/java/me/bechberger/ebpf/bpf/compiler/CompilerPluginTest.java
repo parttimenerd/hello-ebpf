@@ -18,12 +18,14 @@ import me.bechberger.ebpf.type.Enum;
 import me.bechberger.ebpf.type.Ptr;
 import me.bechberger.ebpf.type.Struct;
 import me.bechberger.ebpf.type.Union;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CompilerPluginTest {
 
@@ -144,7 +146,7 @@ public class CompilerPluginTest {
                                 
                 s32 refAndDeref() {
                   s32 value = 3;
-                  s32 *ptr = &(value);
+                  s32 *ptr = &value;
                   return ptr == ((void*)0) ? 1 : 0;
                 }
                 
@@ -231,9 +233,9 @@ public class CompilerPluginTest {
                 s32 count SEC(".data");
                 
                 int testGlobalVariable() {
-                  count = (43);
+                  count = 43;
                   s32 currentCount = count;
-                  bpf_trace_printk("Count: %d\\\\n", sizeof("Count: %d\\\\n"), (currentCount));
+                  bpf_trace_printk("Count: %d\\\\n", sizeof("Count: %d\\\\n"), currentCount);
                   return 0;
                 }
                 """, BPFProgram.getCode(TestGlobalVariable.class));
@@ -344,7 +346,7 @@ public class CompilerPluginTest {
                   s32 arr[2];
                   arr[0] = 1;
                   arr[1] = 2;
-                  bpf_trace_printk("Array: %d, %d\\\\n", sizeof("Array: %d, %d\\\\n"), (arr[0]), (arr[1]));
+                  bpf_trace_printk("Array: %d, %d\\\\n", sizeof("Array: %d, %d\\\\n"), arr[0], arr[1]);
                   return 0;
                 }
                 
@@ -551,19 +553,19 @@ public class CompilerPluginTest {
                   TEST_ENUM_B = 1,
                   D = 2
                 };
-                                
+                
                 s32 ordinal(enum TestEnum e) {
                   return (s32)(long)(e);
                 }
-                                
+                
                 enum TestEnum ofValue(s32 ordinal) {
-                  return (enum TestEnum)(enum TestEnum)(ordinal);
+                  return (enum TestEnum)(ordinal);
                 }
-                                
+                
                 enum TestEnum access() {
                   return TEST_ENUM_A;
                 }
-                                
+                
                 enum TestEnum access2() {
                   return D;
                 }
@@ -607,17 +609,19 @@ public class CompilerPluginTest {
                                 
                 #define TEST_CONSTANT 100
                 #define TEST_CONSTANT_STRING "Hello, World!"
-                                
+                
+                #define OUTER_CONSTANT 100
+                
                 s32 constant() {
                   return TEST_CONSTANT;
                 }
-                                
+                
                 u8* constantString() {
                   return TEST_CONSTANT_STRING;
                 }
-                                
+                
                 s32 outerConstant() {
-                  return 100;
+                  return OUTER_CONSTANT;
                 }
                 """, BPFProgram.getCode(TestConstants.class));
     }
@@ -805,15 +809,15 @@ public class CompilerPluginTest {
                   u32 pid;
                   u8 filename[256];
                 };
-                                
+                
                 s32 access(struct Event event) {
                   s32 i = event.pid;
                   return event.pid;
                 }
-                                
+                
                 int createEvent() {
                   struct Event event = (struct Event){.pid = 1, .filename = "file"};
-                  (event).pid = (2);
+                  (event).pid = 2;
                   return 0;
                 }
                 """, BPFProgram.getCode(TestRecordStruct.class));
