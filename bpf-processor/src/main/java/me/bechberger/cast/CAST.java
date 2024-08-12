@@ -335,6 +335,10 @@ public interface CAST {
             }
         }
 
+        public boolean isPostfix() {
+            return this.name().startsWith("POSTFIX_");
+        }
+
         public boolean isUnitary() {
             return precedence == 3 || precedence == 2;
         }
@@ -406,6 +410,9 @@ public interface CAST {
                     if (operatorExpression.operator().precedence < operator().precedence) {
                         op1String = "(" + op1String + ")";
                     }
+                }
+                if (operator().isPostfix()) {
+                    return indent + op1String + operator();
                 }
                 return indent + operator() + op1String;
             } else {
