@@ -79,6 +79,9 @@ public class PanamaUtil {
 
     /** Result and errno */
     public record ResultAndErr<R>(R result, int err) {
+        boolean hasError() {
+            return err != 0;
+        }
     }
 
     /**
