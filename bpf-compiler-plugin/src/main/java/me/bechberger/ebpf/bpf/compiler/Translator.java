@@ -539,11 +539,11 @@ class Translator {
                 if (args.isEmpty()) {
                     yield CAST.OperatorExpression.cast(type, new VerbatimExpression("{}"));
                 }
-                if (typeElement.getKind() != ElementKind.RECORD) {
+                /*if (typeElement.getKind() != ElementKind.RECORD) {
                     logError(expression,
                             "No constructor arguments support for class based structs or unions: " + newClassTree);
                     yield null;
-                }
+                }*/
 
                 var record = (ClassSymbol) typeElement;
                 var fieldNames = record.getEnclosedElements().stream()

@@ -86,7 +86,8 @@ public class Processor extends AbstractProcessor {
         if (combinedCode == null) {
             return;
         }
-        byte[] bytes = compile(combinedCode, Path.of(this.processingEnv.getElementUtils().getFileObjectOf(typeElement).toUri().getPath()));
+        // TODO make configurable or throw out
+        byte[] bytes = new byte[0];//compile(combinedCode, Path.of(this.processingEnv.getElementUtils().getFileObjectOf(typeElement).toUri().getPath()));
         if (bytes == null) {
             return;
         }
@@ -541,6 +542,7 @@ public class Processor extends AbstractProcessor {
             var process = new ProcessBuilder(newestClang, "-O2", "-g", "-target", "bpf", "-c", "-o",
                     tempFile.toString(), "-I", vmlinuxHeader.getParent().toString(),
                     "-D__TARGET_ARCH_" + getArch(), "-Wno-parentheses-equality", "-Wno-unused-value", "-Wreturn-type",
+                    "-Wno-incompatible-pointer-types-discards-qualifiers",
                     "-x", "c", "-", "--sysroot=/", "-I" + findIncludePath()).redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE).start();
             process.getOutputStream().write(code.ebpfProgram.getBytes());
             process.getOutputStream().close();

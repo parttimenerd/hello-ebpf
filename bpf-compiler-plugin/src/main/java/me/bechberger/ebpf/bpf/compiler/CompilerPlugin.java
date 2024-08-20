@@ -28,6 +28,7 @@ import me.bechberger.ebpf.annotations.bpf.BPFImpl;
 import me.bechberger.ebpf.annotations.bpf.BPFInterface;
 import me.bechberger.ebpf.annotations.bpf.InternalBody;
 import me.bechberger.ebpf.bpf.processor.Processor;
+import me.bechberger.ebpf.bpf.processor.TypeProcessor;
 import me.bechberger.ebpf.type.TypeUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,6 +47,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -380,10 +383,17 @@ public class CompilerPlugin implements Plugin {
         var defines = declsWithDefines.stream().flatMap(r -> r.requiredDefines().stream()).collect(Collectors.toSet());
         var decls = declsWithDefines.stream().map(FuncDeclStatementResult::decl).toList();
 
+        var result = new TypeProcessor(this.createProcessingEnvironment()).processBPFTypeRecords(bpfInterfaceTypeElement);
+        if (result == null) {
+            logError(programPath, bpfInterface, "Error processing BPF interface " + bpfInterface.getSimpleName());
+            return;
+        }
+
         // get BPFInterface annotation
         var bpfInterfaceAnnotation = bpfInterfaceTypeElement.getAnnotation(BPFInterface.class);
 
-        var combinedCode = combineCode("", decls, defines);
+        var combinedCode = combineCode("", decls, defines, result.definingStatements(), result.mapDefinitions(),
+                result.globalVariableDefinitions(), result.additions());
 
         if (combinedCode.isBlank()) {
             return; // nothing changed
@@ -429,7 +439,7 @@ public class CompilerPlugin implements Plugin {
         TypeElement superClassElement = (TypeElement) declaredSuperClass.asElement();
 
         var methods = task.getElements().getAllMembers(superClassElement).stream()
-                .filter(m -> m instanceof MethodSymbol)
+                .filter(m -> m instanceof MethodSymbol && ((MethodSymbol) m).getEnclosingElement().equals(superClassElement))
                 .toList();
 
         var toImplement = classToMethodCountToImplement.getOrDefault((Type.ClassType) superClassType, 0);
@@ -456,11 +466,21 @@ public class CompilerPlugin implements Plugin {
 
         // now get the "body" value of all BPFInterface annotations of all interfaces of the super class
         var bpfInterfaceBodies = superClassElement.getInterfaces().stream()
-                .map(i -> i.getAnnotation(InternalBody.class))
+                .map(i -> {
+                    var ann = i.getAnnotation(InternalBody.class);
+                    if (ann == null && i instanceof Type.ClassType klass && klass.tsym != null) {
+                        ann = klass.tsym.getAnnotation(InternalBody.class);
+                    }
+                    return ann;
+                })
                 .filter(Objects::nonNull).map(InternalBody::value).filter(b -> !b.isEmpty()).toList();
 
         // add the code of the interfaces to the code
-        code = bpfInterfaceBodies.stream().collect(Collectors.joining("\n\n", "", code));
+        var interfaceCode = bpfInterfaceBodies.stream().collect(Collectors.joining("\n\n"));
+
+        if (!interfaceCode.isBlank()) {
+            code = interfaceCode + "\n\n" + code;
+        }
 
         var newCode = combineCode(code, decls, defines);
 
@@ -536,13 +556,36 @@ public class CompilerPlugin implements Plugin {
     }
 
     String combineCode(String code, List<FunctionDeclarationStatement> decls, Set<Define> defines) {
+        return combineCode(code, decls, defines, List.of(), List.of(), List.of(), new TypeProcessor.InterfaceAdditions(List.of(), List.of(), List.of()));
+    }
+
+    String combineCode(String code, List<FunctionDeclarationStatement> decls, Set<Define> defines,
+                       List<Statement> typeDecls, List<TypeProcessor.MapDefinition> mapDefinitions,
+                       List<TypeProcessor.GlobalVariableDefinition> globals, TypeProcessor.InterfaceAdditions additions) {
         var requiredDefines = defines.stream().filter(d -> !code.contains(d.toPrettyString()))
                 .sorted(Comparator.comparing(Define::name)).toList();
-        return Stream.concat(Stream.concat(Stream.of(code),
-                                requiredDefines.stream().map(Define::toPrettyString)),
-                        Stream.concat(decls.stream().filter(this::canEmitDeclaratorFor).map(d -> d.declarator().toStatement().toPrettyString()),
-                                decls.stream().map(CAST::toPrettyString)))
-                .filter(s -> !s.isEmpty()).collect(Collectors.joining("\n\n"));
+
+        List<String> result = new ArrayList<>(additions.before());
+        result.add(code);
+        result.addAll(prettyPrint(requiredDefines));
+        result.addAll(prettyPrint(typeDecls));
+        result.addAll(prettyPrint(mapDefinitions.stream().map(TypeProcessor.MapDefinition::structDefinition).toList()));
+        result.addAll(prettyPrint(globals.stream().map(TypeProcessor.GlobalVariableDefinition::globalVariable).toList()));
+        result.addAll(decls.stream().filter(this::canEmitDeclaratorFor).map(d -> d.declarator().toStatement().toPrettyString()).toList());
+        result.addAll(prettyPrint(decls));
+        result.addAll(additions.after());
+        return moveIncludesToTheFront(result.stream().filter(s -> !s.isEmpty()).collect(Collectors.joining("\n\n")));
+    }
+
+    public static String moveIncludesToTheFront(String code) {
+        Predicate<String> isInclude = s -> s.startsWith("#include ");
+        var includes = code.lines().filter(isInclude).toList();
+        var rest = code.lines().filter(isInclude.negate()).collect(Collectors.joining("\n")).strip();
+        return String.join("\n", includes) + "\n\n" + rest;
+    }
+
+    private List<String> prettyPrint(List<? extends CAST> statements) {
+        return statements.stream().map(CAST::toPrettyString).toList();
     }
 
     ProcessingEnvironment createProcessingEnvironment() {

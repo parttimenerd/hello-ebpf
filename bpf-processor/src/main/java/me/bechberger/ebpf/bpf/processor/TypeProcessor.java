@@ -190,7 +190,9 @@ public class TypeProcessor {
     /** Returns all types specified in the {@link me.bechberger.ebpf.annotations.bpf.BPF} annotation */
     private List<TypeElement> getBPFSpecifiedTypeElements(TypeElement typeElement) {
         var annotation = getAnnotationMirror(typeElement, "me.bechberger.ebpf.annotations.bpf.BPF");
-        assert annotation.isPresent();
+        if (annotation.isEmpty()) {
+            return List.of();
+        }
         var specifiedClasses = AnnotationUtils.getAnnotationValue(annotation.get(), "includeTypes", List.of());
         return specifiedClasses.stream().map(c -> {
             String klass = c.toString().substring(0, c.toString().length() - ".class".length());
@@ -204,6 +206,9 @@ public class TypeProcessor {
     }
 
     boolean shouldGenerateCCode(TypeElement innerElement) {
+        if (innerElement.getEnclosingElement().getKind() == ElementKind.INTERFACE && outerTypeElement.getKind() != ElementKind.INTERFACE) {
+            return false;
+        }
         return !getAnnotationMirror(innerElement, TYPE_ANNOTATION).map(a -> getAnnotationValue(a, "noCCodeGeneration", false)).orElse(false);
     }
 
@@ -284,7 +289,7 @@ public class TypeProcessor {
                 additions);
     }
 
-    static record GlobalVariableDefinition(Statement globalVariable, String name, String typeField, String initializer) {}
+    public record GlobalVariableDefinition(Statement globalVariable, String name, String typeField, String initializer) {}
 
     private List<GlobalVariableDefinition> createGlobalVariableDefinitions(TypeElement outerTypeElement, Function<BPFTypeLike<?>, SpecFieldName> typeToSpecField) {
         return outerTypeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e)
@@ -593,7 +598,7 @@ public class TypeProcessor {
 
             return fields.size() == constructorFields.size() &&
                     IntStream.range(0, fields.size())
-                            .allMatch(i -> constructorFields.get(i).asType().equals(fields.get(i).asType()));
+                            .allMatch(i -> this.processingEnv.getTypeUtils().isSameType(constructorFields.get(i).asType(), fields.get(i).asType()));
         });
 
         if (!hasDefaultConstructor && !hasConstructorWithFieldsInOrder) {
@@ -1017,7 +1022,7 @@ public class TypeProcessor {
      * @param javaFieldInitializer code that initializes a map field in the constructor of the BPFProgram implementation
      * @param structDefinition the C struct definition of the map
      */
-    record MapDefinition(String javaFieldName, String javaFieldInitializer, Statement structDefinition) {
+    public record MapDefinition(String javaFieldName, String javaFieldInitializer, Statement structDefinition) {
     }
 
     List<MapDefinition> processDefinedMaps(TypeElement outerElement, Function<SpecFieldName, BPFTypeLike<?>> fieldToType,
