@@ -239,6 +239,13 @@ class Translator {
                 yield initializer != null && condition != null && update != null && body != null ?
                         new CAST.Statement.ForStatement(initializer, condition, update, body) : null;
             }
+            case BreakTree breakTree -> {
+                if (breakTree.getLabel() != null) {
+                    logError(statement, "Unsupported label in break statement: " + statement);
+                    yield null;
+                }
+                yield new BreakStatement();
+            }
             default -> {
                 logError(statement, "Unsupported statement kind " + statement.getKind() + ": " + statement);
                 yield null;
