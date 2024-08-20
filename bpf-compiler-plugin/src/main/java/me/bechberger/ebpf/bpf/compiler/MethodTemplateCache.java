@@ -144,6 +144,10 @@ public class MethodTemplateCache {
                 if (recordAnn == null || !record.isRecord()) {
                     // check whether it's still support
                     var similarMembers = record.getEnclosedElements().stream().filter(s -> s.getSimpleName().equals(symbol.getSimpleName())).toList();
+                    if (similarMembers.isEmpty() && symbol.baseSymbol().getEnclosingElement() instanceof ClassSymbol baseRecord && !baseRecord.isRecord()) {
+                        // check whether it's a method in a record that is not annotated with @Type
+                        similarMembers = baseRecord.getEnclosedElements().stream().filter(s -> s.getSimpleName().equals(symbol.getSimpleName())).toList();
+                    }
                     var backingVariable = similarMembers.stream().filter(s -> s instanceof Symbol.VarSymbol).findFirst();
                     if (symbol.isStatic() && similarMembers.size() == 2 && backingVariable.isPresent()) {
                         // We assume this to be a jextract generated method for a constant, e.g.
