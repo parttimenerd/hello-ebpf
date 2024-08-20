@@ -130,6 +130,8 @@ you can use them as a starting point for your own eBPF programs.
 |             | [PacketLogger](bpf-samples/src/main/java/me/bechberger/ebpf/samples/PacketLogger.java)                                     | TC and XDP based packet logger, capturing incoming and outgoing packets    |
 | nfil.dev    | [CGroupBlockHTTPEgress](bpf-samples/src/main/java/me/bechberger/ebpf/samples/CGroupBlockHTTPEgress.java)                   | Block all outgoing HTTP packets using cgroups                              |
 |             | [demo.ForbiddenFile](bpf-samples/src/main/java/me/bechberger/ebpf/samples/demo/ForbiddenFile.java)                         | Block access to a specific file via openat2                                |
+|             | [Firewall](bpf-samples/src/main/java/me/bechberger/ebpf/samples/Firewall.java)                                             | A simple firewall that blocks all incoming packets                         |
+|             | [FirewallSpring](bpf-samples/src/main/java/me/bechberger/ebpf/samples/FirewallSpring.java)                                 | A spring boot based web front-end for the Firewall                         |
 
 Running the Examples
 --------------------

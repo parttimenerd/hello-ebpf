@@ -2,6 +2,7 @@ package me.bechberger.ebpf.samples;
 
 import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.Type;
+import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
@@ -12,25 +13,25 @@ import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
 import me.bechberger.ebpf.type.Enum;
 import me.bechberger.ebpf.type.Ptr;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import static me.bechberger.ebpf.bpf.BPFJ.bpf_trace_printk;
 import static me.bechberger.ebpf.runtime.XdpDefinitions.*;
 
-/**
- * Simple firewall blocking incoming IPv4 traffic
- */
 @BPF(license = "GPL")
 public abstract class Firewall extends BPFProgram implements XDPHook, BasePacketParser {
+
+    private static final Logger logger = LoggerFactory.getLogger(Firewall.class);
 
     @Type
     record IPAndPort(int ip, int port) {
     }
 
     @Type
-    record FirewallRule(int ip,
-                       /* the low bytes of ip should be 0 */
-                       int ignoreLowBytes,
-                       /* -1 for ignored */
-                       int port) {
+    record FirewallRule(@Unsigned int ip,
+                        int ignoreLowBytes,
+                        int port) {
     }
 
     @Type
@@ -62,6 +63,9 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
         int ip = info.val().ip;
         // first null the bytes that should be ignored
         int matchingAddressBytes = zeroLowBytes(ip, ignoreLowBytes);
+        if (matchingAddressBytes == 100) { // don't ask
+            bpf_trace_printk("Checking rule for %d:%d\n", matchingAddressBytes, info.val().port);
+        }
         var rule = new FirewallRule(matchingAddressBytes, ignoreLowBytes, info.val().port);
         var action = firewallRules.bpf_get(rule);
         if (action != null) {
@@ -91,16 +95,14 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
     @BPFFunction
     @AlwaysInline
     FirewallAction getAction(Ptr<PacketInfo> packetInfo) {
-        // first create IPAndPort object
         IPAndPort ipAndPort = new IPAndPort(
                 packetInfo.val().source.ipv4(), packetInfo.val().sourcePort);
-        // then check resolved rules
         Ptr<FirewallAction> action = resolvedRules.bpf_get(ipAndPort);
         if (action != null) {
             return action.val();
         }
-        // then check firewall rules
         var newAction = computeAction(Ptr.of(ipAndPort));
+        bpf_trace_printk("Unresolved action for %d:%d %d\n", ipAndPort.ip(), ipAndPort.port(), newAction.value());
         resolvedRules.put(ipAndPort, newAction);
         return newAction;
     }
@@ -152,19 +154,13 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
         };
     }
 
-    private record FirewallRuleAndAction(FirewallRule rule, FirewallAction action) {
+    record FirewallRuleAndAction(FirewallRule rule, FirewallAction action) {
     }
 
-    /**
-     * Rules can have two different formats:
-     * 1. {@code <ipv4>/<mask, used top bits, factor of 8>:<port or HTTP,HTTPS,ANY> <drop, pass>},
-     * 2. {@code <url>:<port or HTTP,HTTPS,ANY> <drop, pass>}.
-     * @return FirewallRule
-     */
-    private static FirewallRuleAndAction parseRule(String rule) {
+    static FirewallRuleAndAction parseRule(String rule) {
         FirewallRule firewallRule;
         var rulePart = rule.split(" ")[0];
-        if (rule.contains("/")) { // we have the first type
+        if (rule.contains("/")) {
             String[] parts = rulePart.split(":");
             String[] ipParts = parts[0].split("/");
             int ip = NetworkUtil.ipAddressToInt(ipParts[0]);
@@ -183,7 +179,7 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
             case "pass" -> FirewallAction.ALLOW;
             default -> throw new IllegalArgumentException("Unknown action: " + actionPart);
         };
-        System.out.println("Rule: " + firewallRule + " action: " + action);
+        logger.info("Rule: {} action: {}", firewallRule, action);
         return new FirewallRuleAndAction(firewallRule, action);
     }
 
@@ -194,11 +190,9 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
                 program.firewallRules.put(ruleAndAction.rule, ruleAndAction.action);
             }
             program.xdpAttach();
-            // use spring boot for small server
             program.blockedConnections.setCallback((info) -> {
-                System.out.println("Blocked packet from " +
-                        NetworkUtil.intToIpAddress(info.ip)
-                                .getHostAddress() + " port " + info.port);
+                logger.info("Blocked packet from {} port {}",
+                        NetworkUtil.intToIpAddress(info.ip).getHostAddress(), info.port);
             });
             while (true) {
                 program.consumeAndThrow();

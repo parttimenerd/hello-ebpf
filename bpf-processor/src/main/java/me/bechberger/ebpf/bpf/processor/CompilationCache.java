@@ -18,6 +18,7 @@ public class CompilationCache {
     private static final String CACHE_FOLDER_NAME = ".bpf.compile.cache";
     private static final int MAX_DAYS_TO_KEEP_CACHE = 7;
     private static final int MAX_CACHE_SIZE_IN_BYTES = 10_000_000;
+    private static boolean cleaned = false;
 
     private final Path cacheFolder;
 
@@ -30,7 +31,10 @@ public class CompilationCache {
                 throw new RuntimeException(e);
             }
         }
-        cleanOldFiles();
+        if (!cleaned) {
+            cleaned = true;
+            cleanOldFiles();
+        }
     }
 
     public byte @Nullable [] getCached(String cProgram) {

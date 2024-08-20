@@ -304,4 +304,13 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
     public void bpf_delete(K key) {
         delete(key);
     }
+
+    /**
+     * Clear the map
+     */
+    public void clear() {
+        for (K key : keySet()) {
+            delete(key);
+        }
+    }
 }
