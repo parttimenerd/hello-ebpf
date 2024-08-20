@@ -117,14 +117,15 @@ public class TraceLog {
 
     /**
      * Read from the kernel debug trace pipe and print on stdout.
-     * @param format optional function to format the output
-     *
+     * <p>
      * Example
-     * {@snippet
-     *   printLoop(f -> f.format("pid {1}, msg = {5}"));
+     * {@snippet :
+     *   printLoop(f -> f.format("pid {1}, msg = {5}"), false);
      * }
+     * @param format optional function to format the output
+     * @param removeBPFTracePrintk remove the string {@code bpf_trace_printk: } from the messages
      */
-    public void printLoop(@Nullable Function<TraceFields, @Nullable String> format) {
+    public void printLoop(@Nullable Function<TraceFields, @Nullable String> format, boolean removeBPFTracePrintk) {
         while (true) {
             String line = null;
             if (format != null) {
@@ -135,11 +136,27 @@ public class TraceLog {
             } else {
                 line = traceFile.readLine();
             }
+            if (line != null && removeBPFTracePrintk) {
+                line = line.replace("bpf_trace_printk: ", "");
+            }
             if (line != null && !line.isEmpty()) {
                 System.out.println(line);
                 System.out.flush();
             }
         }
+    }
+
+    /**
+     * Read from the kernel debug trace pipe and print on stdout.
+     * <p>
+     * Example
+     * {@snippet :
+     *   printLoop(f -> f.format("pid {1}, msg = {5}"));
+     * }
+     * @param format optional function to format the output
+     */
+    public void printLoop(@Nullable Function<TraceFields, @Nullable String> format) {
+        printLoop(format, false);
     }
 
     /**
@@ -159,6 +176,18 @@ public class TraceLog {
      */
     public void printLoop() {
         printLoop((String) null);
+    }
+
+    /**
+     * Read from the kernel debug trace pipe and print on stdout.
+     * @param removeBPFTracePrintk remove the string {@code bpf_trace_printk: } from the messages
+     */
+    public void printLoop(boolean removeBPFTracePrintk) {
+        if (removeBPFTracePrintk) {
+            printLoop((Function<TraceFields, String>) null, true);
+            return;
+        }
+        printLoop((Function<TraceFields, String>) null);
     }
 
     public List<String> readAllAvailableLines() {

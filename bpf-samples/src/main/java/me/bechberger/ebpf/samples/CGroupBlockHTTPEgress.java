@@ -38,7 +38,7 @@ public abstract class CGroupBlockHTTPEgress extends BPFProgram implements CGroup
     public static void main(String[] args) {
         try (CGroupBlockHTTPEgress program = BPFProgram.load(CGroupBlockHTTPEgress.class)) {
             program.cgroupAttachEgress();
-            program.tracePrintLoop();
+            program.tracePrintLoopCleaned();
         }
     }
 

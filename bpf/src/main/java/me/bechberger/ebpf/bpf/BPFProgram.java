@@ -66,6 +66,8 @@ public abstract class BPFProgram implements AutoCloseable {
 
     static {
         LibraryLoader.load();
+        // set rlimit to allow for more maps
+        LibC.setRlimitMemlockToInfinity();
     }
 
     /**
@@ -674,6 +676,15 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public void tracePrintLoop() {
         TraceLog.getInstance().printLoop();
+    }
+
+    /**
+     * Print the kernel debug trace pipe, cleaning the output
+     * <p>
+     * @see TraceLog#printLoop(boolean)
+     */
+    public void tracePrintLoopCleaned() {
+        TraceLog.getInstance().printLoop(true);
     }
 
     /**
