@@ -1,5 +1,7 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
@@ -149,7 +151,38 @@ public class BPFJ {
      * @see BPFHelpers#bpf_probe_read_kernel(Ptr, int, Ptr)
      */
     @BuiltinBPFFunction("bpf_probe_read_kernel(&$arg1, sizeof($arg1), $arg2)")
+    @NotUsableInJava
     public static <T> long bpf_probe_read_kernel(T dest, Ptr<T> src) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("bpf_probe_read_kernel_str($arg1, $arg2, $arg3)")
+    public static long bpf_probe_read_kernel_str(String val, int size, String filename) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("bpf_probe_read_kernel_str($arg1, $arg2, $arg3)")
+    public static long bpf_probe_read_kernel_str(String val, int size, Ptr<Character> filename) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Read the null-terminated source string from the user space
+     * and write it to the destination
+     * @see BPFHelpers#bpf_probe_read_user_str(Ptr, int, Ptr)
+     */
+    @BuiltinBPFFunction
+    public static <T> long bpf_probe_read_user_str(String dest, int size, String src) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Read the null-terminated source string from the user space
+     * and write it to the destination
+     * @see BPFHelpers#bpf_probe_read_user_str(Ptr, int, Ptr)
+     */
+    @BuiltinBPFFunction("bpf_probe_read_user_str($arg1, sizeof($arg1), $arg2)")
+    public static <T> long bpf_probe_read_user_str(String dest, String src) {
         throw new MethodIsBPFRelatedFunction();
     }
 }
