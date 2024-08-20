@@ -418,7 +418,7 @@ class Translator {
                     }
                 }
                 var expr = translate(memberSelectTree.getExpression());
-                if (member.matches("anon(\\d+)")) {
+                if (member.matches("anon(\\d+)(\\$\\d+)*")) {
                     // anonymous struct member
                     yield expr;
                 }
