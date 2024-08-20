@@ -15,7 +15,7 @@ import me.bechberger.ebpf.type.Ptr;
                 "linux/lsm_hooks.h",
                 "linux/security.h"}
 )
-public interface LSMHooks {
+public interface LSMHook {
 
     int EACCES = -13;
 

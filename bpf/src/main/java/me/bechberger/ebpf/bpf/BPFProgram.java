@@ -5,6 +5,7 @@ import me.bechberger.ebpf.bpf.map.*;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer.BPFRingBufferError;
 import me.bechberger.ebpf.bpf.processor.Processor;
 import me.bechberger.ebpf.bpf.raw.*;
+import me.bechberger.ebpf.shared.LibC;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.shared.PanamaUtil;
 import me.bechberger.ebpf.shared.PanamaUtil.HandlerWithErrno;
@@ -28,6 +29,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
+import static java.lang.foreign.ValueLayout.JAVA_INT;
 import static me.bechberger.ebpf.NameUtil.toConstantCase;
 import static me.bechberger.ebpf.bpf.raw.Lib.*;
 
@@ -135,6 +137,7 @@ public abstract class BPFProgram implements AutoCloseable {
     public record BPFLink(MemorySegment segment) {}
 
     private final Set<BPFLink> attachedPrograms = new HashSet<>();
+    private final Set<Integer> openedFDs = new HashSet<>();
 
     private final Set<BPFMap> attachedMaps = new HashSet<>();
 
@@ -258,6 +261,31 @@ public abstract class BPFProgram implements AutoCloseable {
                     ", but the following methods have invalid sections: " + erroneous);
         }
         return names;
+    }
+
+    public void attachLSMHooks() {
+        for (var method : getClass().getSuperclass().getDeclaredMethods()) {
+            var annotation = findParentAnnotation(getClass().getSuperclass(), method, BPFFunction.class);
+            if (annotation != null && annotation.section().startsWith("lsm/")) {
+                attachLSMHook(getProgramByName(getBPFFunctionName(method)));
+            }
+        }
+    }
+
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_LSM =
+            new HandlerWithErrno<>("bpf_program__attach_lsm",
+                    FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER));
+
+    public void attachLSMHook(ProgramHandle prog) {
+        var ret = BPF_PROGRAM__ATTACH_LSM.call(prog.prog());
+        if (ret.result() == MemorySegment.NULL) {
+            throw new BPFAttachError(prog.name, ret.err());
+        }
+        var link = new BPFLink(ret.result());
+        if (link.segment.address() == 0) {
+            throw new BPFAttachError(prog.name, ret.err());
+        }
+        attachedPrograms.add(link);
     }
 
     private <T extends Annotation> @Nullable T findParentAnnotation(Class<?> programClass, Method method, Class<T> annotationClass) {
@@ -390,15 +418,26 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public static class BPFAttachError extends BPFError {
 
+        private final int error;
+
         public BPFAttachError(String name, int errorCode) {
-            super("Failed to attach name", errorCode);
+            super("Failed to attach " + name, errorCode);
+            this.error = errorCode;
+        }
+
+        public BPFAttachError(String name, String message) {
+            super("Failed to attach " + name + ":" + message);
+            this.error = 0;
+        }
+
+        public int getErrorCode() {
+            return error;
         }
     }
 
     private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH =
             new HandlerWithErrno<>("bpf_program__attach",
                     FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER));
-
 
     /**
      * Attach the program by the automatically detected program type, attach type, and extra paremeters, where
@@ -475,7 +514,7 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     public void tcAttach(ProgramHandle prog, int ifindex, boolean ingress) {
-        var tcIfIndex = new AttachedTCIfIndex(prog, ifindex, ingress, 1);
+        var tcIfIndex = new AttachedTCIfIndex(prog, ifindex, ingress, 0);
         try (var arena = Arena.ofConfined()) {
             MemorySegment hook = allocateTCHookObject(arena, tcIfIndex);
             // run tc qdisc del dev $DEVICE clsact on the command line
@@ -496,6 +535,61 @@ public abstract class BPFProgram implements AutoCloseable {
             }
             attachedTCIfIndices.add(tcIfIndex);
         }
+    }
+
+    /**
+     * Find the cgroup path by name
+     * @param cgroupName the name of the cgroup
+     * @return the path to the cgroup, or null if the cgroup could not be found
+     */
+    public static @Nullable Path findCGroupPath(String cgroupName) {
+        try {
+            return Files.list(Path.of("/sys/fs/cgroup")).filter(p -> p.getFileName().toString().equals(cgroupName)).findFirst().orElse(null);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_CGROUP =
+            new HandlerWithErrno<>("bpf_program__attach_cgroup",
+                    FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER, JAVA_INT));
+
+    private void cgroupAttachInternal(ProgramHandle handle, String cgroupName) {
+        var cgroupPath = findCGroupPath(cgroupName);
+        if (cgroupPath == null) {
+            throw new BPFAttachError(handle.name, "Cgroup not found: " + cgroupName);
+        }
+        PanamaUtil.ResultAndErr<Integer> fileFD = LibC.open(cgroupPath, O_RDONLY());
+        if (fileFD.err() > 0) {
+            throw new BPFAttachError(handle.name, fileFD.err());
+        }
+        openedFDs.add(fileFD.result());
+
+        var resultAndErr = BPF_PROGRAM__ATTACH_CGROUP.call(handle.prog, fileFD.result());
+        if (resultAndErr.err() > 0) {
+            throw new BPFAttachError(handle.name, resultAndErr.err());
+        }
+        if (resultAndErr.result() == MemorySegment.NULL) {
+            throw new BPFAttachError(handle.name, resultAndErr.err());
+        }
+        attachedPrograms.add(new BPFLink(resultAndErr.result()));
+    }
+
+    public void cgroupAttach(ProgramHandle handle, String cgroupName) {
+        // tries it four times before giving up
+        for (int i = 0; i < 3; i++) {
+            try {
+                cgroupAttachInternal(handle, cgroupName);
+                return;
+            } catch (BPFAttachError e) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException interruptedException) {
+                    throw new BPFAttachError(handle.name, "Cgroup not found: " + cgroupName);
+                }
+            }
+        }
+        cgroupAttachInternal(handle, cgroupName);
     }
 
     private MemorySegment allocateTCHookObject(Arena arena, AttachedTCIfIndex tcIfIndex) {
@@ -569,6 +663,7 @@ public abstract class BPFProgram implements AutoCloseable {
             map.close();
         }
         Lib.bpf_object__close(this.ebpf_object);
+        openedFDs.forEach(LibC::close);
     }
 
     /**
