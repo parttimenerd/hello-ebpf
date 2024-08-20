@@ -33,7 +33,7 @@ public class CompilationCache {
         cleanOldFiles();
     }
 
-    public  byte @Nullable [] getCached(String cProgram) {
+    public byte @Nullable [] getCached(String cProgram) {
         Path file = fileName(cProgram);
         if (!file.toFile().exists()) {
             return null;

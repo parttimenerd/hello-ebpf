@@ -114,7 +114,7 @@ public class NetworkUtil {
     /**
      * Get the first IPv4 address of the given host name.
      */
-    public static @Unsigned Integer getFirstIPAddress(String s) {
+    public static @Unsigned int getFirstIPAddress(String s) {
         try {
             return ipAddressToInt(InetAddress.getByName(s));
         } catch (UnknownHostException e) {
