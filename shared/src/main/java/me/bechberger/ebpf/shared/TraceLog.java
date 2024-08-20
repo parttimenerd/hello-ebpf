@@ -135,7 +135,7 @@ public class TraceLog {
             } else {
                 line = traceFile.readLine();
             }
-            if (line != null) {
+            if (line != null && !line.isEmpty()) {
                 System.out.println(line);
                 System.out.flush();
             }
