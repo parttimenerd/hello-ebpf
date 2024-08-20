@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class Ptr<T> {
     /** Dereference this pointer */
-    @BuiltinBPFFunction("*($this)")
+    @BuiltinBPFFunction("(*($this))")
     @NotUsableInJava
     public T val() {
         throw new MethodIsBPFRelatedFunction();
@@ -29,7 +29,7 @@ public class Ptr<T> {
      *  Has to be a proper l-value (?) that has a place in memory,
      *  e.g. {@code Ptr.of(3)} is not allowed.
      */
-    @BuiltinBPFFunction("&$arg1")
+    @BuiltinBPFFunction("&($arg1)")
     @NotUsableInJava
     public static <T> Ptr<T> of(@Nullable T value) {
         throw new MethodIsBPFRelatedFunction();
@@ -234,6 +234,25 @@ public class Ptr<T> {
     @BuiltinBPFFunction("$this >= $arg1")
     @NotUsableInJava
     public boolean greaterOrEqual(Ptr<?> other) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("((void*)$arg1)")
+    @NotUsableInJava
+    public static Ptr<?> asVoidPointer(Object value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("($T1*)($arg1)")
+    @NotUsableInJava
+    public static <T> Ptr<T> asPtr(long value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /** Interpret as string */
+    @BuiltinBPFFunction("(u8*)($this)")
+    @NotUsableInJava
+    public String asString() {
         throw new MethodIsBPFRelatedFunction();
     }
 }
