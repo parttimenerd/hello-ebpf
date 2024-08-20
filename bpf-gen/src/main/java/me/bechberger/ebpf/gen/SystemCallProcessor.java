@@ -361,9 +361,9 @@ public class SystemCallProcessor {
 
         String accessStr = """
                 Access the pointer/String argument of the system call arguments via
-                {@link BPFHelpers#bpf_probe_read_kernel_str(Ptr, int, Ptr)},
-                {@link BPFHelpers#bpf_probe_read_kernel(Ptr, int, Ptr)}, as well as
-                the similar methods in BPFJ.
+                {@link BPFHelpers#bpf_probe_read_user_str(Ptr, int, Ptr)},
+                {@link BPFHelpers#bpf_probe_read_user(Ptr, int, Ptr)}, as well as
+                similar methods in BPFJ.
                 Passing the arguments directly to other {@link BPFHelpers} should mostly work.""";
 
         String docFmt;
@@ -402,7 +402,7 @@ public class SystemCallProcessor {
 
         builder.returns(TypeName.VOID);
         builder.varargs(false);
-        var headerTemplate = "int %s($name%s%s)".formatted(macro, isEntry ? "" : "_exit",
+        var headerTemplate = "int %s($name%s)".formatted(macro,
                 headerTemplateArgs.isEmpty() ? "" : ", " + String.join(", ", headerTemplateArgs));
         builder.addAnnotation(AnnotationSpec.builder(ClassName.get("", BPFFunction.class.getSimpleName())).addMember(
                 "headerTemplate", "$S", headerTemplate).addMember("lastStatement", "$S", "return 0;").addMember(

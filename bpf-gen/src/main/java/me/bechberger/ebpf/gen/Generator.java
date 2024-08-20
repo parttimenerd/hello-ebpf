@@ -1876,7 +1876,11 @@ public class Generator {
     }
 
     private IntType processIntType(int id, JSONObjectWithType rawType) {
-        var name = rawType.getName();
+        var name = switch (rawType.getName()) {
+            case "char" -> "u8";
+            case "unsigned char" -> "s8";
+            default -> rawType.getName();
+        };
         var size = rawType.getInteger("nr_bits");
         var encoding = rawType.getString("encoding");
         var knownInt = KnownTypes.getKnownInt(name, size, encoding).orElseThrow(() -> new IllegalArgumentException(
