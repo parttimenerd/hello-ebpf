@@ -1,4 +1,4 @@
-package me.bechberger.ebpf.samples.presentation;
+package me.bechberger.ebpf.samples.demo;
 
 import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.Size;

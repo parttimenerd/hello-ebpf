@@ -1,4 +1,4 @@
-package me.bechberger.ebpf.samples.presentation;
+package me.bechberger.ebpf.samples.demo;
 
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
@@ -7,8 +7,6 @@ import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.runtime.OpenDefinitions.open_how;
 import me.bechberger.ebpf.runtime.interfaces.SystemCallHooks;
 import me.bechberger.ebpf.type.Ptr;
-
-import static me.bechberger.ebpf.bpf.BPFJ.bpf_trace_printk;
 
 /**
  * Global variable sample that counts the number of openat2 calls

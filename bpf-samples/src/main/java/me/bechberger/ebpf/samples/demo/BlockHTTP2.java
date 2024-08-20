@@ -10,12 +10,10 @@ import static me.bechberger.ebpf.runtime.XdpDefinitions.*;
 
 
 /**
- * TC and XDP based packet logger, capturing incoming and outgoing packets
- * <p>
- * Based on the examples from the <a href="https://github.com/xdp-project/bpf-examples">xdp-project</a>.
+ * Block incoming packets from or to the HTTP port
  */
 @BPF(license = "GPL")
-public abstract class BlockHTTP extends BPFProgram implements XDPHook, BasePacketParser {
+public abstract class BlockHTTP2 extends BPFProgram implements XDPHook, BasePacketParser {
 
     @Override
     public xdp_action xdpHandlePacket(Ptr<xdp_md> packet) {
@@ -30,7 +28,7 @@ public abstract class BlockHTTP extends BPFProgram implements XDPHook, BasePacke
     }
 
     public static void main(String[] args) throws InterruptedException {
-        try (BlockHTTP program = BPFProgram.load(BlockHTTP.class)) {
+        try (BlockHTTP2 program = BPFProgram.load(BlockHTTP2.class)) {
             program.xdpAttach();
             program.tracePrintLoop();
         }

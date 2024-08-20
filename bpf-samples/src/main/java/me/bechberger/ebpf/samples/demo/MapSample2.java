@@ -1,4 +1,4 @@
-package me.bechberger.ebpf.samples.presentation;
+package me.bechberger.ebpf.samples.demo;
 
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.Type;
@@ -7,9 +7,7 @@ import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.bpf.BPFJ;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
-import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
 import me.bechberger.ebpf.runtime.OpenDefinitions.open_how;
-import me.bechberger.ebpf.runtime.helpers.BPFHelpers;
 import me.bechberger.ebpf.runtime.interfaces.SystemCallHooks;
 import me.bechberger.ebpf.type.Ptr;
 

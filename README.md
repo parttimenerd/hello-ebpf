@@ -128,6 +128,8 @@ you can use them as a starting point for your own eBPF programs.
 | sematext    | [XDPPacketFilter2](bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPPacketFilter2.java)                             | The previous example but with the eBPF program as C code                   |
 |             | [TCDropEveryThirdOutgoingPacket](bpf-samples/src/main/java/me/bechberger/ebpf/samples/TCDropEveryThirdOutgoingPacket.java) | Implement a Traffic Control to block every third outgoing packet at random |
 |             | [PacketLogger](bpf-samples/src/main/java/me/bechberger/ebpf/samples/PacketLogger.java)                                     | TC and XDP based packet logger, capturing incoming and outgoing packets    |
+| nfil.dev    | [CGroupBlockHTTPEgress](bpf-samples/src/main/java/me/bechberger/ebpf/samples/CGroupBlockHTTPEgress.java)                   | Block all outgoing HTTP packets using cgroups                              |
+|             | [demo.ForbiddenFile](bpf-samples/src/main/java/me/bechberger/ebpf/samples/demo/ForbiddenFile.java)                         | Block access to a specific file via openat2                                |
 
 Running the Examples
 --------------------

@@ -40,7 +40,6 @@ public abstract class RingSample extends BPFProgram implements SystemCallHooks {
     @SuppressWarnings("unchecked")
     public void enterOpenat2(int dfd, String filename, Ptr<open_how> how) {
         @Size(TASK_COMM_LEN) String comm = "";
-        @Size(FILE_NAME_LEN) String filenameCopy = "";
 
         Ptr<Event> evt;
 
@@ -55,11 +54,10 @@ public abstract class RingSample extends BPFProgram implements SystemCallHooks {
         evt.val().pid = (int)bpf_get_current_pid_tgid();
 
         // Read the filename
-        BPFJ.bpf_probe_read_kernel_str(evt.val().filename, filenameCopy);
+        BPFJ.bpf_probe_read_user_str(evt.val().filename, filename);
 
         bpf_get_current_comm(Ptr.of(comm), TASK_COMM_LEN);
 
-        BPFJ.bpf_trace_printk("do_sys_openat2 called by:%s file:%s pid:%d", comm, filenameCopy, evt.val().pid);
         rb.submit(evt);
     }
 

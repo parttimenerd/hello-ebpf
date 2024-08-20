@@ -1,5 +1,7 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.Unsigned;
+
 import java.net.*;
 import java.util.Collections;
 import java.util.List;
@@ -106,6 +108,17 @@ public class NetworkUtil {
             return new String(connection.getInputStream().readAllBytes());
         } catch (Exception e) {
             return "Error: " + e.getMessage();
+        }
+    }
+
+    /**
+     * Get the first IPv4 address of the given host name.
+     */
+    public static @Unsigned Integer getFirstIPAddress(String s) {
+        try {
+            return ipAddressToInt(InetAddress.getByName(s));
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -1,4 +1,4 @@
-package me.bechberger.ebpf.samples.presentation;
+package me.bechberger.ebpf.samples.demo;
 
 import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.Size;
@@ -6,12 +6,7 @@ import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.bpf.BPFJ;
 import me.bechberger.ebpf.bpf.BPFProgram;
-import me.bechberger.ebpf.bpf.LSMHooks;
-import me.bechberger.ebpf.runtime.OpenDefinitions.open_how;
-import me.bechberger.ebpf.runtime.TaskDefinitions;
-import me.bechberger.ebpf.runtime.helpers.BPFHelpers;
-import me.bechberger.ebpf.runtime.interfaces.SystemCallHooks;
-import me.bechberger.ebpf.runtime.misc;
+import me.bechberger.ebpf.bpf.LSMHook;
 import me.bechberger.ebpf.runtime.runtime;
 import me.bechberger.ebpf.type.Ptr;
 
@@ -19,10 +14,10 @@ import static me.bechberger.ebpf.bpf.BPFJ.sizeof;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.*;
 
 /**
- * Prohibits access to a file named "/tmp/forbidden" using LSM hooks
+ * Prohibits access to a file named "/tmp/forbidden" using LSM hooks, currently doesn't work
  */
 @BPF(license = "GPL")
-public abstract class ForbiddenFile2 extends BPFProgram implements LSMHooks {
+public abstract class ForbiddenFile2 extends BPFProgram implements LSMHook {
 
     @BPFFunction
     @AlwaysInline
