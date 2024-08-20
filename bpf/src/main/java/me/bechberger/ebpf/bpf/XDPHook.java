@@ -12,6 +12,11 @@ import java.util.List;
 
 /**
  * Interface for the XDP hook to check incoming packets
+ * <p>
+ * Be aware that network fields might have a different byte order than
+ * your host machine, so use {@link XDPHook#bpf_ntohl(int)} to convert from network
+ * to host byte order and {@link XDPHook#bpf_htonl(int)} to convert from host to network byte order
+ * in the eBPF program (other methods for other integer data types are available).
  */
 public interface XDPHook {
 
@@ -84,18 +89,6 @@ public interface XDPHook {
     }
 
     /**
-     * Converts a short from network byte order to host byte order
-     * <p>
-     * @param value the short to convert
-     * @return the converted short
-     */
-    @BuiltinBPFFunction
-    @NotUsableInJava
-    static short bpf_ntons(short value) {
-        throw new MethodIsBPFRelatedFunction();
-    }
-
-    /**
      * Converts an int from network byte order to host byte order
      * <p>
      * @param value the int to convert
@@ -103,7 +96,7 @@ public interface XDPHook {
      */
     @BuiltinBPFFunction
     @NotUsableInJava
-    static long bpf_ntonl(int value) {
+    static int bpf_ntohl(int value) {
         throw new MethodIsBPFRelatedFunction();
     }
 
@@ -131,4 +124,12 @@ public interface XDPHook {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    /**
+     * Converts a short from network byte order to host byte order
+     */
+    @BuiltinBPFFunction
+    @NotUsableInJava
+    static short bpf_ntohs(short value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
 }
