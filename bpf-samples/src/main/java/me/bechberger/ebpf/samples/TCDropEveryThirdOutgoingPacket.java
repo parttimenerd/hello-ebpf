@@ -36,13 +36,13 @@ public abstract class TCDropEveryThirdOutgoingPacket extends BPFProgram implemen
     }
 
     @Override
-    public sk_action tcHandleEgress(Ptr<__sk_buff> packet) {
+    public __sk_action tcHandleEgress(Ptr<__sk_buff> packet) {
         if (shouldDrop()) {
             dropCount.set(dropCount.get() + 1);
-            return sk_action.SK_DROP;
+            return __sk_action.__SK_DROP;
         } else {
             passCount.set(passCount.get() + 1);
-            return sk_action.SK_PASS;
+            return __sk_action.__SK_PASS;
         }
     }
 
