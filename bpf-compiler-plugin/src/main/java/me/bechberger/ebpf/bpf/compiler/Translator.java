@@ -459,6 +459,9 @@ class Translator {
                         if (type.toString().equals("java.lang.Object")) {
                             yield expr;
                         }
+                        if (typeCastTree instanceof JCTypeCast cast && cast.pos == cast.expr.pos) {
+                            yield expr; // a cast introduced by the compiler
+                        }
                         if (type.toString().equals(Ptr.class.getName())) {
                             logError(expression, "Unsupported type cast to " + type + " use 'Ptr::cast' instead: " + typeCastTree);
                             yield null;
