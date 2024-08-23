@@ -121,4 +121,13 @@ public class NetworkUtil {
             throw new RuntimeException(e);
         }
     }
+
+    public static byte[] readFromURL(String url, int port) {
+        try {
+            URLConnection connection = URL.of(URI.create("https://" + url + ":" + port), null).openConnection();
+            return connection.getInputStream().readAllBytes();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

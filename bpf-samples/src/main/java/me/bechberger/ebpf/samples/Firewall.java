@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import static me.bechberger.ebpf.bpf.BPFJ.bpf_trace_printk;
 import static me.bechberger.ebpf.runtime.XdpDefinitions.*;
+import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_ktime_get_ns;
 
 @BPF(license = "GPL")
 public abstract class Firewall extends BPFProgram implements XDPHook, BasePacketParser {
@@ -26,6 +27,10 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
 
     @Type
     record IPAndPort(int ip, int port) {
+    }
+
+    @Type
+    record LogEntry(IPAndPort connection, long timeInMs) {
     }
 
     @Type
@@ -46,7 +51,7 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
     BPFLRUHashMap<IPAndPort, Long> connectionCount;
 
     @BPFMapDefinition(maxEntries = 1000 * 128)
-    BPFRingBuffer<IPAndPort> blockedConnections;
+    BPFRingBuffer<LogEntry> blockedConnections;
 
     @BPFMapDefinition(maxEntries = 1000)
     BPFLRUHashMap<IPAndPort, FirewallAction> resolvedRules;
@@ -122,11 +127,13 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
 
     @BPFFunction
     void recordBlockedConnection(PacketInfo info) {
-        Ptr<IPAndPort> ptr = blockedConnections.reserve();
+        Ptr<LogEntry> ptr = blockedConnections.reserve();
         if (ptr == null) {
             return;
         }
-        ptr.set(new IPAndPort(info.source.ipv4(), info.sourcePort));
+        ptr.set(
+                new LogEntry(new IPAndPort(info.source.ipv4(), info.sourcePort),
+                        bpf_ktime_get_ns() / 1000000));
         blockedConnections.submit(ptr);
     }
 
@@ -192,7 +199,7 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
             program.xdpAttach();
             program.blockedConnections.setCallback((info) -> {
                 logger.info("Blocked packet from {} port {}",
-                        NetworkUtil.intToIpAddress(info.ip).getHostAddress(), info.port);
+                        NetworkUtil.intToIpAddress(info.connection.ip).getHostAddress(), info.connection.port);
             });
             while (true) {
                 program.consumeAndThrow();
