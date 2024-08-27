@@ -208,6 +208,13 @@ public abstract class BPFProgram implements AutoCloseable {
         }
     }
 
+    private static final HandlerWithErrno<Integer> BPF_OBJECT__LOAD =
+            new HandlerWithErrno<>("bpf_object__load",
+                    FunctionDescriptor.of(JAVA_INT, PanamaUtil.POINTER));
+
+    private static final HandlerWithErrno<MemorySegment> BPF_OBJECT__OPEN_FILE =
+            new HandlerWithErrno<>("bpf_object__open_file",
+                    FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
     /**
      * Load the eBPF program from the byte code
      *
@@ -218,14 +225,17 @@ public abstract class BPFProgram implements AutoCloseable {
         Path objFile = getTmpObjectFile();
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment fileName = arena.allocateFrom(objFile.toString());
-            MemorySegment ebpf_object = Lib.bpf_object__open_file(fileName, MemorySegment.NULL);
-            if (ebpf_object == MemorySegment.NULL) {
-                throw new BPFLoadError("Failed to load eBPF object");
+
+            var ebpf_object = BPF_OBJECT__OPEN_FILE.call(fileName, MemorySegment.NULL);
+            if (ebpf_object.result() == MemorySegment.NULL) {
+                throw new BPFLoadError("Failed to open eBPF file: " + Util.errnoString(ebpf_object.err()));
             }
-            if (Lib.bpf_object__load(ebpf_object) != 0) {
-                throw new BPFLoadError("Failed to load eBPF object");
+
+            var ret = BPF_OBJECT__LOAD.call(ebpf_object.result());
+            if (ret.hasError() && ret.result() != 0) {
+                throw new BPFLoadError("Failed to load eBPF object: " + Util.errnoString(ret.err()));
             }
-            return ebpf_object;
+            return ebpf_object.result();
         }
     }
 
