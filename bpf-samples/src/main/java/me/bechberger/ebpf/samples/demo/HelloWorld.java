@@ -12,7 +12,7 @@ import static me.bechberger.ebpf.bpf.BPFJ.bpf_trace_printk;
  * Log "Hello, World!" when openat2 is called
  */
 @BPF(license = "GPL")
-public abstract class HelloWorld2 extends BPFProgram implements SystemCallHooks {
+public abstract class HelloWorld extends BPFProgram implements SystemCallHooks {
 
     @Override
     public void enterOpenat2(int dfd, String filename, Ptr<open_how> how) {
@@ -20,7 +20,7 @@ public abstract class HelloWorld2 extends BPFProgram implements SystemCallHooks 
     }
 
     public static void main(String[] args) {
-        try (HelloWorld2 program = BPFProgram.load(HelloWorld2.class)) {
+        try (HelloWorld program = BPFProgram.load(HelloWorld.class)) {
             program.autoAttachPrograms();
             program.tracePrintLoop();
         }

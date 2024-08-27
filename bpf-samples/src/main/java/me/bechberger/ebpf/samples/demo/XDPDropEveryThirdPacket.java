@@ -15,7 +15,7 @@ import me.bechberger.ebpf.type.Ptr;
  * Use XDP to block every third incoming packet
  */
 @BPF(license = "GPL")
-public abstract class XDPDropEveryThirdPacket2 extends BPFProgram implements XDPHook {
+public abstract class XDPDropEveryThirdPacket extends BPFProgram implements XDPHook {
 
     final GlobalVariable<@Unsigned Integer> count = new GlobalVariable<>(0);
 
@@ -31,7 +31,7 @@ public abstract class XDPDropEveryThirdPacket2 extends BPFProgram implements XDP
     }
 
     public static void main(String[] args) throws InterruptedException {
-        try (XDPDropEveryThirdPacket2 program = BPFProgram.load(XDPDropEveryThirdPacket2.class)) {
+        try (XDPDropEveryThirdPacket program = BPFProgram.load(XDPDropEveryThirdPacket.class)) {
             program.xdpAttach(NetworkUtil.getNetworkInterfaceIndex());
             while (true) {
                 System.out.println("Packet count " + program.count.get());

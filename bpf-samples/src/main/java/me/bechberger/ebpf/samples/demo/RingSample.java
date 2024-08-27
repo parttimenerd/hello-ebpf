@@ -14,7 +14,7 @@ import me.bechberger.ebpf.type.Ptr;
  * Log the filenames of openat2 calls in a ring buffer
  */
 @BPF(license = "GPL")
-public abstract class RingSample2 extends BPFProgram implements SystemCallHooks {
+public abstract class RingSample extends BPFProgram implements SystemCallHooks {
 
     @BPFMapDefinition(maxEntries = 100 * 1024)
     BPFRingBuffer<@Size(100) String> readFiles;
@@ -30,7 +30,7 @@ public abstract class RingSample2 extends BPFProgram implements SystemCallHooks 
     }
 
     public static void main(String[] args) throws InterruptedException {
-        try (RingSample2 program = BPFProgram.load(RingSample2.class)) {
+        try (RingSample program = BPFProgram.load(RingSample.class)) {
             program.readFiles.setCallback(System.out::println);
             program.autoAttachPrograms();
             while (true) {

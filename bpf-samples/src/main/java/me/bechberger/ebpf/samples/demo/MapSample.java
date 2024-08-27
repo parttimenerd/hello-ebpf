@@ -17,7 +17,7 @@ import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_get_current_comm
  * Count the number of files opened per process
  */
 @BPF(license = "GPL")
-public abstract class MapSample2 extends BPFProgram implements SystemCallHooks {
+public abstract class MapSample extends BPFProgram implements SystemCallHooks {
 
     static final int STRING_SIZE = 100;
 
@@ -48,7 +48,7 @@ public abstract class MapSample2 extends BPFProgram implements SystemCallHooks {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        try (MapSample2 program = BPFProgram.load(MapSample2.class)) {
+        try (MapSample program = BPFProgram.load(MapSample.class)) {
             program.autoAttachPrograms();
             while (true) {
                 program.readFilePerProcess.forEach((key, value) -> {

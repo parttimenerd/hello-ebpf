@@ -40,9 +40,9 @@ public abstract class ForbiddenFile2 extends BPFProgram implements LSMHook {
         runtime.qstr d_name = dentry.val().d_name;
         @Size(100) String name = "";
         bpf_probe_read_str(Ptr.asVoidPointer(name), 100, Ptr.asVoidPointer(d_name.name));
-        BPFJ.bpf_trace_printk("Accessing file: %s\n", name);
+        BPFJ.bpf_trace_printk("Accessing file: %s", name);
         if (isFileForbidden(name)) {
-            BPFJ.bpf_trace_printk("Blocked access to forbidden file: %s\n", name);
+            BPFJ.bpf_trace_printk("Blocked access to forbidden file: %s", name);
             return -EACCES;  // Deny access to the file
         }
         return 0;  // Allow access
