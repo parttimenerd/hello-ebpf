@@ -12,7 +12,6 @@ import me.bechberger.ebpf.bpf.map.BPFLRUHashMap;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
 import me.bechberger.ebpf.type.Enum;
 import me.bechberger.ebpf.type.Ptr;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,17 +25,18 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
     private static final Logger logger = LoggerFactory.getLogger(Firewall.class);
 
     @Type
-    record IPAndPort(int ip, int port) {
+    record IPAndPort(int ip, int sourcePort, int destPort) {
     }
 
-    @Type
-    record LogEntry(IPAndPort connection, long timeInMs) {
-    }
+@Type
+record LogEntry(IPAndPort connection, long timeInMs) {
+}
 
     @Type
     record FirewallRule(@Unsigned int ip,
                         int ignoreLowBytes,
-                        int port) {
+                        int sourcePort,
+                        int destPort) {
     }
 
     @Type
@@ -66,17 +66,29 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
     @AlwaysInline
     FirewallAction computeSpecificAction(Ptr<IPAndPort> info, int ignoreLowBytes) {
         int ip = info.val().ip;
+        var sourcePort = info.val().sourcePort;
+        var destPort = info.val().destPort;
         // first null the bytes that should be ignored
         int matchingAddressBytes = zeroLowBytes(ip, ignoreLowBytes);
-        if (matchingAddressBytes == 100) { // don't ask
-            bpf_trace_printk("Checking rule for %d:%d\n", matchingAddressBytes, info.val().port);
+        if (matchingAddressBytes == 0) { // don't ask
+            bpf_trace_printk("Checking rule for %d:%d\n", matchingAddressBytes, sourcePort);
         }
-        var rule = new FirewallRule(matchingAddressBytes, ignoreLowBytes, info.val().port);
+        var rule = new FirewallRule(matchingAddressBytes, ignoreLowBytes, sourcePort, destPort);
         var action = firewallRules.bpf_get(rule);
         if (action != null) {
             return action.val();
         }
-        rule = new FirewallRule(matchingAddressBytes, ignoreLowBytes, -1);
+        rule = new FirewallRule(matchingAddressBytes, ignoreLowBytes, sourcePort, -1);
+        action = firewallRules.bpf_get(rule);
+        if (action != null) {
+            return action.val();
+        }
+        rule = new FirewallRule(matchingAddressBytes, ignoreLowBytes, -1, destPort);
+        action = firewallRules.bpf_get(rule);
+        if (action != null) {
+            return action.val();
+        }
+        rule = new FirewallRule(matchingAddressBytes, ignoreLowBytes, -1, -1);
         action = firewallRules.bpf_get(rule);
         if (action != null) {
             return action.val();
@@ -101,13 +113,13 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
     @AlwaysInline
     FirewallAction getAction(Ptr<PacketInfo> packetInfo) {
         IPAndPort ipAndPort = new IPAndPort(
-                packetInfo.val().source.ipv4(), packetInfo.val().sourcePort);
+                packetInfo.val().source.ipv4(), packetInfo.val().sourcePort, packetInfo.val().destinationPort);
         Ptr<FirewallAction> action = resolvedRules.bpf_get(ipAndPort);
         if (action != null) {
             return action.val();
         }
         var newAction = computeAction(Ptr.of(ipAndPort));
-        bpf_trace_printk("Unresolved action for %d:%d %d\n", ipAndPort.ip(), ipAndPort.port(), newAction.value());
+        bpf_trace_printk("Unresolved action for %d:%d %d\n", ipAndPort.ip(), ipAndPort.sourcePort, newAction.value());
         resolvedRules.put(ipAndPort, newAction);
         return newAction;
     }
@@ -115,7 +127,7 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
     @BPFFunction
     @AlwaysInline
     void countConnection(PacketInfo info) {
-        IPAndPort ipAndPort = new IPAndPort(info.source.ipv4(), info.sourcePort);
+        IPAndPort ipAndPort = new IPAndPort(info.source.ipv4(), info.sourcePort, info.destinationPort);
         Ptr<Long> count = connectionCount.bpf_get(ipAndPort);
         if (count == null) {
             long one = 1;
@@ -132,7 +144,7 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
             return;
         }
         ptr.set(
-                new LogEntry(new IPAndPort(info.source.ipv4(), info.sourcePort),
+                new LogEntry(new IPAndPort(info.source.ipv4(), info.sourcePort, info.destinationPort),
                         bpf_ktime_get_ns() / 1000000));
         blockedConnections.submit(ptr);
     }
@@ -168,17 +180,25 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
         FirewallRule firewallRule;
         var rulePart = rule.split(" ")[0];
         if (rule.contains("/")) {
+            if (!rulePart.matches(".*/(0|8|16|32):.*(:.*)?")) {
+                throw new IllegalArgumentException("Invalid rule: " + rule + ", should match .*/(0|8|16|32):.*(:.*)?");
+            }
             String[] parts = rulePart.split(":");
             String[] ipParts = parts[0].split("/");
             int ip = NetworkUtil.ipAddressToInt(ipParts[0]);
             int ignoreLowBytes = 32 - Integer.parseInt(ipParts[1]) / 8;
-            int port = parsePort(parts[1]);
-            firewallRule = new FirewallRule(zeroLowBytes(ip, ignoreLowBytes), ignoreLowBytes, port);
+            int sourcePort = parsePort(parts[1]);
+            int targetPort = parts.length == 3 ? parsePort(parts[2]) : -1;
+            firewallRule = new FirewallRule(zeroLowBytes(ip, ignoreLowBytes), ignoreLowBytes, sourcePort, targetPort);
         } else {
+            if (!rulePart.matches(".+:.*(:.*)?")) {
+                throw new IllegalArgumentException("Invalid rule: " + rule + ", should match .+:.*(:.*)?");
+            }
             String[] parts = rulePart.split(":");
             int ip = NetworkUtil.getFirstIPAddress(parts[0]);
-            int port = parsePort(parts[1]);
-            firewallRule = new FirewallRule(ip, 0, port);
+            int sourcePort = parsePort(parts[1]);
+            int targetPort = parts.length == 3 ? parsePort(parts[2]) : -1;
+            firewallRule = new FirewallRule(ip, 0, sourcePort, targetPort);
         }
         var actionPart = rule.split(" ")[1];
         FirewallAction action = switch (actionPart) {
@@ -198,8 +218,9 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
             }
             program.xdpAttach();
             program.blockedConnections.setCallback((info) -> {
-                logger.info("Blocked packet from {} port {}",
-                        NetworkUtil.intToIpAddress(info.connection.ip).getHostAddress(), info.connection.port);
+                logger.info("Blocked packet from {} port {} to port {}",
+                        NetworkUtil.intToIpAddress(info.connection.ip).getHostAddress(),
+                        info.connection.sourcePort, info.connection.destPort);
             });
             while (true) {
                 program.consumeAndThrow();

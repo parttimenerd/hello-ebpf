@@ -177,14 +177,14 @@ class FirewallController {
                                 <h3>Send Custom JSON to /rawDrop</h3>
                                 <p>Like <code>{"ip": 0, "ignoreLowBytes": 4, "port": 443}</code></p>
                                 <div class="input-group">
-                                    <input type="text" id="jsonInput" value='{"ip": 0, "ignoreLowBytes": 4, "port": 443}'>
+                                    <input type="text" id="jsonInput" value='{"ip": 0, "ignoreLowBytes": 4, "sourcePort": 443, "destPort": -1}'>
                                     <button onclick="sendJson()">Send JSON</button>
                                 </div>
                             </div>
                 
                             <div>
                                 <h3>Add a Rule to /add</h3>
-                                <p>Like <code>google.com:HTTP drop</code></p>
+                                <p>Like <code>google.com:HTTPS drop</code></p>
                                 <div class="input-group">
                                     <input type="text" id="ruleInput">
                                     <button onclick="addRule()">Add Rule</button>

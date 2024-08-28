@@ -1,5 +1,6 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -25,7 +26,7 @@ public interface XDPHook {
     short ETH_P_8021Q = (short)0x8100;
     short ETH_P_8021AD = (short)0x88A8;
     short ETH_P_IP = (short)0x0800;
-    short ETH_P_IPV6 = (short)0x86DD;
+    int ETH_P_IPV6 = 0x86DD;
     short ETH_P_ARP = (short)0x0806;
 
     /**
