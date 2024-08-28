@@ -308,9 +308,13 @@ class FirewallController {
                                                 ipSpan.style.color = 'black';
                                                 ipSpan.textContent = formattedIp;
                 
-                                                const portSpan = document.createElement('span');
-                                                portSpan.style.color = 'black';
-                                                portSpan.textContent = log.connection.port;
+                                                const sourcePortSpan = document.createElement('span');
+                                                sourcePortSpan.style.color = 'black';
+                                                sourcePortSpan.textContent = log.connection.sourcePort;
+                                                
+                                                const destPortSpan = document.createElement('span');
+                                                destPortSpan.style.color = 'black';
+                                                destPortSpan.textContent = log.connection.destPort;
                 
                                                 const textSpan = document.createElement('span');
                                                 textSpan.style.color = 'grey';
@@ -318,13 +322,19 @@ class FirewallController {
                 
                                                 const textSpan2 = document.createElement('span');
                                                 textSpan2.style.color = 'grey';
-                                                textSpan2.textContent = ` to port `;
+                                                textSpan2.textContent = ` from port `;
+                                               
+                                                const textSpan3 = document.createElement('span');
+                                                textSpan3.style.color = 'grey';
+                                                textSpan3.textContent = ` to port `;
                 
                                                 logEntry.appendChild(timeSpan);
                                                 logEntry.appendChild(textSpan);
                                                 logEntry.appendChild(ipSpan);
                                                 logEntry.appendChild(textSpan2);
-                                                logEntry.appendChild(portSpan);
+                                                logEntry.appendChild(sourcePortSpan);
+                                                logEntry.appendChild(textSpan3);
+                                                logEntry.appendChild(destPortSpan);
                                                 logArea.prepend(logEntry);
                                             }
                                         });
