@@ -28,9 +28,9 @@ public abstract class Firewall extends BPFProgram implements XDPHook, BasePacket
     record IPAndPort(int ip, int sourcePort, int destPort) {
     }
 
-@Type
-record LogEntry(IPAndPort connection, long timeInMs) {
-}
+    @Type
+    record LogEntry(IPAndPort connection, long timeInMs) {
+    }
 
     @Type
     record FirewallRule(@Unsigned int ip,
