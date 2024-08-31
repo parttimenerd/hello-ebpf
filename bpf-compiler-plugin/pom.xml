@@ -3,11 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.1-scx-SNAPSHOT</version>
     <parent>
         <groupId>me.bechberger</groupId>
         <artifactId>hello-ebpf</artifactId>
-        <version>0.1.1-SNAPSHOT</version>
+        <version>0.1.1-scx-SNAPSHOT</version>
     </parent>
     <artifactId>bpf-compiler-plugin</artifactId>
     <description>A Java compiler plugin that lets you write C code in Java</description>
@@ -79,7 +79,7 @@
         <dependency>
             <groupId>me.bechberger</groupId>
             <artifactId>bpf-processor</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>0.1.1-scx-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

@@ -85,14 +85,20 @@ public class KnownTypes {
      * @return the known int type, if it exists
      */
     static Optional<KnownInt> getKnownInt(String cName, int bits, String encoding) {
+        if (cName.equals("char") || cName.equals("unsigned char"))  {
+            return getKnownInt("u8", bits, encoding);
+        }
+        if (cName.equals("signed char")) {
+            return getKnownInt("u8", bits, encoding);
+        }
         if (cNameToKnownInt.containsKey(cName)) {
             var knownInt = cNameToKnownInt.get(cName);
-            if (knownInt.bits() == bits && knownInt.encoding().equals(encoding)) {
+            //if (knownInt.bits() == bits && knownInt.encoding().equals(encoding)) { // TODO: fix
                 return Optional.of(knownInt);
-            } else {
+            //} else {
                 // log differing properties
-                logger.warning("Known int type " + cName + " has differing properties: " + knownInt.bits() + " bits " + "and " + knownInt.encoding() + " encoding, not " + bits + " bits and " + encoding + " " + "encoding");
-            }
+            //    logger.warning("Known int type " + cName + " has differing properties: " + knownInt.bits() + " bits " + "and " + knownInt.encoding() + " encoding, not " + bits + " bits and " + encoding + " " + "encoding");
+            //}
         }
         return Optional.empty();
     }
