@@ -1,7 +1,11 @@
 Hello eBPF
 ==========
 
-<!--[![Early Access](https://github.com/parttimenerd/hello-ebpf/actions/workflows/early-access.yml/badge.svg)](https://github.com/parttimenerd/hello-ebpf/actions/workflows/early-access.yml)-->
+
+__This is a modified version used to get schedulers in Java running. Most of the other examples don't work
+and you have to run this on CachyOS with a recent patched kernel and everything installed that
+scx requires. This is only merged into the main branch after sched-ext became an official part of Linux.
+So I warned you...__
 
 There are [user land libraries](https://ebpf.io/what-is-ebpf/#development-toolchains) for [eBPF](https://ebpf.io) that allow you to
 write eBPF applications in C++, Rust, Go, Python and even

@@ -7,7 +7,7 @@
     <artifactId>bpf-runtime</artifactId>
     <groupId>me.bechberger</groupId>
     <name>Definitions for bpf types</name>
-    <version>0.1.10-SNAPSHOT</version>
+    <version>0.1.10-scx-SNAPSHOT</version>
     <url>https://github.com/parttimenerd/hello-ebpf</url>
     <licenses>
         <license>
@@ -97,7 +97,7 @@
                     </execution>
                 </executions>
             </plugin>
-	    <!--<plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.6</version>
@@ -116,7 +116,7 @@
                         <arg>loopback</arg>
                     </gpgArguments>
                 </configuration>
-	</plugin>-->
+            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
@@ -148,12 +148,12 @@
         <dependency>
             <groupId>me.bechberger</groupId>
             <artifactId>ebpf-annotations</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>0.1.1-scx-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>me.bechberger</groupId>
             <artifactId>bpf-processor</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
+            <version>0.1.1-scx-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

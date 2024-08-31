@@ -7,8 +7,7 @@ import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.bpf.BPFJ;
 import me.bechberger.ebpf.bpf.BPFProgram;
-import me.bechberger.ebpf.bpf.GlobalVariable;
-import me.bechberger.ebpf.runtime.OpenDefinitions.open_how;
+import static me.bechberger.ebpf.runtime.PtDefinitions.*;
 import me.bechberger.ebpf.runtime.helpers.BPFHelpers;
 import me.bechberger.ebpf.runtime.interfaces.SystemCallHooks;
 import me.bechberger.ebpf.type.Ptr;
@@ -23,8 +22,8 @@ import static me.bechberger.ebpf.bpf.BPFJ.sizeof;
 public abstract class HelloWorld extends BPFProgram implements SystemCallHooks {
 
     @Override
-    public void enterOpenat2(int dfd, String filename, Ptr<open_how> how) {
-        bpf_trace_printk("Hello, World!");
+    public void enterOpenat2(Ptr<pt_regs> regs) {
+        bpf_trace_printk("Hello World!");
     }
 
     public static void main(String[] args) {

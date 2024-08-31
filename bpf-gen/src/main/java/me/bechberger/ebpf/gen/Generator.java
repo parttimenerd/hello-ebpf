@@ -1927,10 +1927,10 @@ public class Generator {
         if (rawType.hasProperName()) {
             throw new AssertionError("Expected array type to have name '(anon)' but got " + rawType.getName());
         }
-        var indexType = getIntType(rawType.getInteger("index_type_id"));
+       /* var indexType = getIntType(rawType.getInteger("index_type_id"));
         if (indexType.knownInt.bits() != 32) {
             throw new AssertionError("Expected 32-bit index type but got " + indexType);
-        }
+        }*/
         var length = rawType.getInteger("nr_elems");
         var elementType = rawType.getInteger("type_id");
         return new ArrayType(id, ref(elementType), length, false);

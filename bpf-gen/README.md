@@ -36,8 +36,8 @@ Build
 In parent folder
 
 ```shell
-mvn -pl '!bpf' package
-```
+`mvn -pl '!bpf' package
+````
 
 Run
 ---
