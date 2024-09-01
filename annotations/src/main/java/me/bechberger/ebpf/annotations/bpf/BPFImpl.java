@@ -10,4 +10,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface BPFImpl {
+
+    String before();
+
+    String after();
 }

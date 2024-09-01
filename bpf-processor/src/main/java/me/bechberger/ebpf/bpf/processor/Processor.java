@@ -82,7 +82,7 @@ public class Processor extends AbstractProcessor {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        var combinedCode = combineEBPFProgram(typeElement, typeProcessorResult);
+        var combinedCode = combineEBPFProgram(typeElement, typeProcessorResult, false);
         if (combinedCode == null) {
             return;
         }
@@ -96,7 +96,8 @@ public class Processor extends AbstractProcessor {
         ImplName implName = typeToImplName(typeElement);
 
         TypeSpec typeSpec = createType(implName.className, typeElement.asType(), bytes,
-                typeProcessorResult.fields(), combinedCode, typeProcessorResult.globalVariableDefinitions());
+                typeProcessorResult.fields(), combinedCode, typeProcessorResult.globalVariableDefinitions(),
+                typeProcessorResult.additions());
         try {
             var file = processingEnv.getFiler().createSourceFile(implName.fullyQualifiedClassName, typeElement);
             // delete file if it exists
@@ -196,13 +197,16 @@ public class Processor extends AbstractProcessor {
      * @return the generated class
      */
     private TypeSpec createType(String name, TypeMirror baseType, byte[] byteCode, List<FieldSpec> bpfTypeFields,
-                                CombinedCode code, List<GlobalVariableDefinition> globalVariableDefinitions) {
+                                CombinedCode code, List<GlobalVariableDefinition> globalVariableDefinitions,
+                                TypeProcessor.InterfaceAdditions additions) {
         var suppressWarnings = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "{\"unchecked\", \"rawtypes\"}").build();
 
         var spec =
                 TypeSpec.classBuilder(name)
                         .addAnnotation(suppressWarnings).superclass(baseType)
-                        .addAnnotation(AnnotationSpec.builder(BPFImpl.class).build())
+                        .addAnnotation(AnnotationSpec.builder(BPFImpl.class)
+                                .addMember("before", "\"\"\"\n" + String.join("\n", additions.before()).replace("\\", "\\\\") + "\n\"\"\"")
+                                .addMember("after", "\"\"\"\n" + String.join("\n", additions.after()).replace("\\", "\\\\") + "\n\"\"\"").build())
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                         .addField(FieldSpec.builder(String.class, "BYTE_CODE", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                                 .addJavadoc("Base64 encoded and gzipped eBPF byte-code of the program\n{@snippet : \n" + sanitizeCodeForJavadoc(code.ebpfProgram) + "\n}")
@@ -292,14 +296,14 @@ public class Processor extends AbstractProcessor {
                         TypeProcessorResult tp, List<String> autoAttachablePrograms) {
     }
 
-    private @Nullable CombinedCode combineEBPFProgram(TypeElement typeElement, TypeProcessorResult tpResult) {
+    private @Nullable CombinedCode combineEBPFProgram(TypeElement typeElement, TypeProcessorResult tpResult, boolean addAdditions) {
         Optional<? extends Element> elem =
                 typeElement.getEnclosedElements().stream().filter(e -> e.getKind().isField() && e.getSimpleName().toString().equals("EBPF_PROGRAM")).findFirst();
         // check that the class has a static field EBPF_PROGRAM of type String or Path
         if (elem.isEmpty()) {
            // this.processingEnv.getMessager().printError("Class " + typeElement.getSimpleName() + " is annotated with "
             //        + "BPF but does not contain a String field EBPF_PROGRAM which contains the field", typeElement);
-            return combineEBPFProgram(typeElement, null, "", tpResult);
+            return combineEBPFProgram(typeElement, null, "", tpResult, addAdditions);
         }
         var element = (VariableElement) elem.get();
         // check that element is of correct type
@@ -333,7 +337,7 @@ public class Processor extends AbstractProcessor {
             }
         }
         this.processingEnv.getMessager().printNote("EBPF Program: " + ebpfProgram, typeElement);
-        return combineEBPFProgram(typeElement, element, ebpfProgram, tpResult);
+        return combineEBPFProgram(typeElement, element, ebpfProgram, tpResult, addAdditions);
     }
 
     private List<String> findAutoAttachablePrograms(String ebpfProgram) {
@@ -371,7 +375,7 @@ public class Processor extends AbstractProcessor {
     private static final Set<String> SUPPORTED_BPF_PROG_MACROS = Set.of("BPF_PROG");
 
     /** Combines the code */
-    private @Nullable Processor.CombinedCode combineEBPFProgram(TypeElement outer, VariableElement field, String ebpfProgram, TypeProcessorResult tpResult) {
+    private @Nullable Processor.CombinedCode combineEBPFProgram(TypeElement outer, VariableElement field, String ebpfProgram, TypeProcessorResult tpResult, boolean addAdditions) {
         var unstrippedLines = ebpfProgram.lines().toList();
         var lastInclude = IntStream.range(0, unstrippedLines.size()).filter(i -> unstrippedLines.get(i).contains("#include")).max().orElse(-1);
         List<String> lines;
@@ -397,8 +401,10 @@ public class Processor extends AbstractProcessor {
         Consumer<String> addLine = l -> resultLines.addAll(l.lines().toList());
 
         // add the before lines
-        addEmptyLineIfNeeded.accept(tpResult.additions().before());
-        tpResult.additions().before().forEach(addLine);
+        if (addAdditions) {
+            addEmptyLineIfNeeded.accept(tpResult.additions().before());
+            tpResult.additions().before().forEach(addLine);
+        }
 
         var filteredDefines = tpResult.defines().stream().filter(d -> {
             var tester = "#define " + d.name() + " ";
@@ -455,8 +461,10 @@ public class Processor extends AbstractProcessor {
         resultLines.addAll(afterIncludes);
 
         // add the after lines
-        addEmptyLineIfNeeded.accept(tpResult.additions().after());
-        tpResult.additions().after().forEach(addLine);
+        if (addAdditions) {
+            addEmptyLineIfNeeded.accept(tpResult.additions().after());
+            tpResult.additions().after().forEach(addLine);
+        }
 
         if (license == null && tpResult.licenseDefinition() != null) {
             addEmptyLineIfNeeded.accept(List.of(""));

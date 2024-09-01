@@ -87,6 +87,7 @@ public abstract class BPFQueueAndStack<V> extends BPFMap {
      *
      * @return the value, or null if the stack/queue is empty
      */
+    @BPFFunctionAlternative("pop")
     public @Nullable V pop() {
         try (var arena = Arena.ofConfined()) {
             var valueSegment = valueType.allocate(arena);

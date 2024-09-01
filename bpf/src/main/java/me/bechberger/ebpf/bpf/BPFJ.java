@@ -67,6 +67,18 @@ public class BPFJ {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    @BuiltinBPFFunction("__sync_fetch_and_or($arg1, $arg2)")
+    @NotUsableInJava
+    public static <T extends Number> T sync_fetch_and_or(Ptr<T> var, T value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    @BuiltinBPFFunction("__sync_fetch_and_and($arg1, $arg2)")
+    @NotUsableInJava
+    public static <T extends Number> T sync_fetch_and_and(Ptr<T> var, T value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
     /**
      * Size of the type in bytes
      * <p>
