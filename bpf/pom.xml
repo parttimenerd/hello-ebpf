@@ -128,7 +128,7 @@
     <dependency>
       <groupId>me.bechberger</groupId>
       <artifactId>rawbpf</artifactId>
-      <version>0.1.6-scx</version>
+      <version>0.1.7-scx-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>me.bechberger</groupId>

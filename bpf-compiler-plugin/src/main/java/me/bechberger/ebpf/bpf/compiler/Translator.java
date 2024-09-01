@@ -114,6 +114,12 @@ class Translator {
         return MethodHeaderTemplate.parse(annotation.headerTemplate()).call(decl, alwaysInline != null ? "__always_inline " : "");
     }
 
+    public boolean addDefinition() {
+        var annotation =
+                compilerPlugin.getAnnotationOfMethodOrSuper((MethodSymbol) compilerPlugin.trees.getElement(methodPath.path()), BPFFunction.class);
+        return annotation == null || annotation.addDefinition();
+    }
+
     CAST.Statement.FunctionDeclarationStatement translate() {
         return translate(false);
     }
@@ -245,6 +251,13 @@ class Translator {
                     yield null;
                 }
                 yield new BreakStatement();
+            }
+            case ContinueTree continueTree -> {
+                if (continueTree.getLabel() != null) {
+                    logError(statement, "Unsupported label in continue statement: " + statement);
+                    yield null;
+                }
+                yield new ContinueStatement();
             }
             default -> {
                 logError(statement, "Unsupported statement kind " + statement.getKind() + ": " + statement);

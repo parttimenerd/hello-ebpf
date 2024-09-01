@@ -341,17 +341,17 @@ public class CompilerPlugin implements Plugin {
         newBody.addFirst(Statement.verbatim(code));
         return new FuncDeclStatementResult(
                 new FunctionDeclarationStatement(decl.declarator(), new CompoundStatement(newBody),
-                        decl.annotations()), Set.of());
+                        decl.annotations()), Set.of(), translator.addDefinition());
     }
 
-    record FuncDeclStatementResult(FunctionDeclarationStatement decl, Set<Define> requiredDefines) {
+    record FuncDeclStatementResult(FunctionDeclarationStatement decl, Set<Define> requiredDefines, boolean addDefine) {
     }
 
     private @Nullable FuncDeclStatementResult processBPFFunctionWithCode(TypedTreePath<MethodTree> methodPath) {
         var translator = new Translator(this, methodPath);
         return callIfNonNull(translator.translate(), decl -> {
             var requiredDefines = translator.getRequiredDefines();
-            return new FuncDeclStatementResult(decl, requiredDefines);
+            return new FuncDeclStatementResult(decl, requiredDefines, translator.addDefinition());
         });
     }
 
@@ -381,7 +381,7 @@ public class CompilerPlugin implements Plugin {
                 .toList();
 
         var defines = declsWithDefines.stream().flatMap(r -> r.requiredDefines().stream()).collect(Collectors.toSet());
-        var decls = declsWithDefines.stream().map(FuncDeclStatementResult::decl).toList();
+        var decls = declsWithDefines.stream().map(d -> new FuncDecl(d.decl, d.addDefine)).toList();
 
         var result = new TypeProcessor(this.createProcessingEnvironment()).processBPFTypeRecords(bpfInterfaceTypeElement);
         if (result == null) {
@@ -453,7 +453,7 @@ public class CompilerPlugin implements Plugin {
                 .toList();
 
         var defines = declsWithDefines.stream().flatMap(r -> r.requiredDefines().stream()).collect(Collectors.toSet());
-        var decls = declsWithDefines.stream().map(FuncDeclStatementResult::decl).toList();
+        var decls = declsWithDefines.stream().map(d -> new FuncDecl(d.decl, d.addDefine)).toList();
 
         if (decls.size() < toImplement) {
             logError(programPath, bpfProgram, "Not all methods have been processed");
@@ -482,7 +482,15 @@ public class CompilerPlugin implements Plugin {
             code = interfaceCode + "\n\n" + code;
         }
 
-        var newCode = combineCode(code, decls, defines);
+        var implAnn = bpfProgramTypeElement.getAnnotation(BPFImpl.class);
+        if (implAnn == null) {
+            logError(programPath, bpfProgram, "BPF program implementation must have a BPFImpl annotation");
+            return;
+        }
+
+        code = implAnn.before() + "\n\n" + code;
+
+        var newCode = combineCode(code, decls, defines) + "\n\n" + implAnn.after();
 
         // write the C code in a file close to the source file
         var cFile =
@@ -551,15 +559,18 @@ public class CompilerPlugin implements Plugin {
                 .orElseThrow(() -> new IllegalStateException(name + " field not found in " + klass.getSimpleName()));
     }
 
-    boolean canEmitDeclaratorFor(FunctionDeclarationStatement decl) {
-        return !decl.declarator().toPrettyString().matches(".* [A-Z0-9_]+\\([a-z0-9A-Z_]+,.*\\).*");
+    record FuncDecl(FunctionDeclarationStatement decl, boolean addDefine) {
     }
 
-    String combineCode(String code, List<FunctionDeclarationStatement> decls, Set<Define> defines) {
+    boolean canEmitDeclaratorFor(FuncDecl decl) {
+        return decl.addDefine && !decl.decl.declarator().toPrettyString().matches(".* [A-Z0-9_]+\\([a-z0-9A-Z_]+,.*\\).*");
+    }
+
+    String combineCode(String code, List<FuncDecl> decls, Set<Define> defines) {
         return combineCode(code, decls, defines, List.of(), List.of(), List.of(), new TypeProcessor.InterfaceAdditions(List.of(), List.of(), List.of()));
     }
 
-    String combineCode(String code, List<FunctionDeclarationStatement> decls, Set<Define> defines,
+    String combineCode(String code, List<FuncDecl> decls, Set<Define> defines,
                        List<Statement> typeDecls, List<TypeProcessor.MapDefinition> mapDefinitions,
                        List<TypeProcessor.GlobalVariableDefinition> globals, TypeProcessor.InterfaceAdditions additions) {
         var requiredDefines = defines.stream().filter(d -> !code.contains(d.toPrettyString()))
@@ -571,8 +582,8 @@ public class CompilerPlugin implements Plugin {
         result.addAll(prettyPrint(typeDecls));
         result.addAll(prettyPrint(mapDefinitions.stream().map(TypeProcessor.MapDefinition::structDefinition).toList()));
         result.addAll(prettyPrint(globals.stream().map(TypeProcessor.GlobalVariableDefinition::globalVariable).toList()));
-        result.addAll(decls.stream().filter(this::canEmitDeclaratorFor).map(d -> d.declarator().toStatement().toPrettyString()).toList());
-        result.addAll(prettyPrint(decls));
+        result.addAll(decls.stream().filter(this::canEmitDeclaratorFor).map(d -> d.decl.declarator().toStatement().toPrettyString()).toList());
+        result.addAll(prettyPrint(decls.stream().map(FuncDecl::decl).toList()));
         result.addAll(additions.after());
         return moveIncludesToTheFront(result.stream().filter(s -> !s.isEmpty()).collect(Collectors.joining("\n\n")));
     }
