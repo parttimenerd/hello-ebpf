@@ -17,6 +17,10 @@ import me.bechberger.ebpf.type.Ptr;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.foreign.MemorySegment;
+
+import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_link__destroy;
+import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_map__attach_struct_ops;
 
 @BPFInterface(
         before = """
@@ -104,19 +108,27 @@ import java.io.IOException;
                 		__VA_ARGS__,							\\
                 	};
                 	
+                #define BPF_STRUCT_OPS_SLEEPABLE(name, args...)					\\
+                SEC("struct_ops.s/"#name)							\\
+                BPF_PROG(name, ##args)
+             
+                	
                 """,
         after = """
-                SCX_OPS_DEFINE(userland_ops,
-                	       .select_cpu		= (void *)userland_select_cpu,
-                	       .enqueue			= (void *)userland_enqueue,
-                	       .dispatch		= (void *)userland_dispatch,
-                	       .update_idle		= (void *)userland_update_idle,
-                	       .init_task		= (void *)userland_init_task,
-                	       .init			= (void *)userland_init,
-                	       .exit			= (void *)userland_exit,
-                	       .flags			= SCX_OPS_ENQ_LAST |
-                					  SCX_OPS_KEEP_BUILTIN_IDLE,
-                	       .name			= "userland");
+                SCX_OPS_DEFINE(sched_ops,
+                	       .select_cpu		= (void *)sched_select_cpu,
+                	       .enqueue			= (void *)sched_enqueue,
+                	       .dispatch		= (void *)sched_dispatch,
+                	       .update_idle		= (void *)sched_update_idle,
+                	       .init_task		= (void *)sched_init_task,
+                	       .init			= (void *)sched_init,
+                	       .exit			= (void *)sched_exit,
+                	       .running	        = (void *)simple_running,
+                	       .enable          = (void *)simple_enable,
+                	       .stopping        = (void *)simple_stopping,
+                	       .stopping        = (void *)simple_stopping,
+                	       .flags			= SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE,
+                	       .name			= "hello");
                 """
 )
 public interface Scheduler {
@@ -136,62 +148,85 @@ public interface Scheduler {
     }
 
     @BPFFunction(
-            headerTemplate = "s32 BPF_STRUCT_OPS(userland_select_cpu, struct task_struct *p, s32 prev_cpu, u64 wake_flags)",
+            headerTemplate = "s32 BPF_STRUCT_OPS(sched_select_cpu, struct task_struct *p, s32 prev_cpu, u64 wake_flags)",
             addDefinition = false
     )
-    int userland_select_cpu(Ptr<TaskDefinitions.task_struct> p, int prev_cpu, long wake_flags);
+    int selectCPU(Ptr<TaskDefinitions.task_struct> p, int prev_cpu, long wake_flags);
 
     @BPFFunction(
-            headerTemplate = "int BPF_STRUCT_OPS(userland_enqueue, struct task_struct *p, u64 enq_flags)",
+            headerTemplate = "int BPF_STRUCT_OPS(sched_enqueue, struct task_struct *p, u64 enq_flags)",
         addDefinition = false
     )
-    void userland_enqueue(Ptr<TaskDefinitions.task_struct> p, long enq_flags);
+    void enqueue(Ptr<TaskDefinitions.task_struct> p, long enq_flags);
 
     @BPFFunction(
-            headerTemplate = "int BPF_STRUCT_OPS(userland_dispatch, s32 cpu, struct task_struct *prev)",
+            headerTemplate = "int BPF_STRUCT_OPS(sched_dispatch, s32 cpu, struct task_struct *prev)",
             addDefinition = false
     )
-    void userland_dispatch(int cpu, Ptr<TaskDefinitions.task_struct> prev);
+    void dispatch(int cpu, Ptr<TaskDefinitions.task_struct> prev);
 
     @BPFFunction(
-            headerTemplate = "int BPF_STRUCT_OPS(userland_update_idle, s32 cpu, bool idle)",
+            headerTemplate = "int BPF_STRUCT_OPS(sched_update_idle, s32 cpu, bool idle)",
             addDefinition = false
     )
-    void userland_update_idle(int cpu, boolean idle);
+    void updateIdle(int cpu, boolean idle);
 
     @BPFFunction(
-            headerTemplate = "s32 BPF_STRUCT_OPS(userland_init_task, struct task_struct *p, struct scx_init_task_args *args)",
+            headerTemplate = "s32 BPF_STRUCT_OPS(sched_init_task, struct task_struct *p, struct scx_init_task_args *args)",
             addDefinition = false
     )
-    int userland_init_task(Ptr<TaskDefinitions.task_struct> p, Ptr<ScxDefinitions.scx_init_task_args> args);
+    int initTask(Ptr<TaskDefinitions.task_struct> p, Ptr<ScxDefinitions.scx_init_task_args> args);
 
     @BPFFunction(
-            headerTemplate = "s32 BPF_STRUCT_OPS(userland_init)",
+            headerTemplate = "s32 BPF_STRUCT_OPS_SLEEPABLE(sched_init)",
             addDefinition = false
     )
-    int userland_init();
+    int init();
 
     @BPFFunction(
-            headerTemplate = "int BPF_STRUCT_OPS(userland_exit, struct scx_exit_info *ei)",
+            headerTemplate = "int BPF_STRUCT_OPS(sched_exit, struct scx_exit_info *ei)",
             addDefinition = false
     )
-    void userland_exit(Ptr<ScxDefinitions.scx_exit_info> ei);
+    void exit(Ptr<ScxDefinitions.scx_exit_info> ei);
+
+    @BPFFunction(
+            headerTemplate = "int BPF_STRUCT_OPS(simple_running, struct task_struct *p)",
+            addDefinition = false
+    )
+    void running(Ptr<TaskDefinitions.task_struct> p);
+
+    @BPFFunction(
+            headerTemplate = "int BPF_STRUCT_OPS(simple_enable, struct task_struct *p)",
+            addDefinition = false
+    )
+    void enable(Ptr<TaskDefinitions.task_struct> p);
+
+    @BPFFunction(
+            headerTemplate = "int BPF_STRUCT_OPS(simple_stopping, struct task_struct *p, bool runnable)",
+            addDefinition = false
+    )
+    void stopping(Ptr<TaskDefinitions.task_struct> p, boolean runnable);
 
     final int SCHED_EXT_UAPI_ID = 7;
 
+    default void runWithScheduler(Runnable inner) {
 
-    /**
-     * Get the maximum PID that can be assigned to a process.
-     *
-     * @return the maximum PID
-     */
-    static int getPidMax() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("/proc/sys/kernel/pid_max"))) {
-            String line = reader.readLine();
-            return line != null ? Integer.parseInt(line.trim()) : -1;
-        } catch (IOException | NumberFormatException e) {
-            System.err.println("Error reading /proc/sys/kernel/pid_max: " + e.getMessage());
-            return -1;
+        BPFProgram bpfProgram = (BPFProgram)this;
+
+        var opsDescriptor = bpfProgram.getMapDescriptorByName("sched_ops");
+        if (opsDescriptor == null) {
+            System.err.println("sched_ops not found");
+            return;
         }
+
+        MemorySegment link = bpf_map__attach_struct_ops(opsDescriptor.map());
+        if (link == null) {
+            System.err.println("Failed to attach struct ops");
+            return;
+        }
+
+        inner.run();
+
+        bpf_link__destroy(link);
     }
 }

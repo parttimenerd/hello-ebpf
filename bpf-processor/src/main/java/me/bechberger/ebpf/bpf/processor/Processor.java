@@ -393,7 +393,7 @@ public class Processor extends AbstractProcessor {
         });
 
         Consumer<List<?>> addEmptyLineIfNeeded = (list) -> {
-            if (!list.isEmpty() && !resultLines.getLast().isBlank()) {
+            if (!list.isEmpty() && !resultLines.isEmpty() && !resultLines.getLast().isBlank()) {
                 resultLines.add("");
             }
         };
