@@ -14,9 +14,6 @@ import me.bechberger.ebpf.runtime.ScxDefinitions;
 import me.bechberger.ebpf.runtime.TaskDefinitions;
 import me.bechberger.ebpf.type.Ptr;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.foreign.MemorySegment;
 
 import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_link__destroy;

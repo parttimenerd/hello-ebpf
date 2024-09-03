@@ -40,7 +40,6 @@ import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.bpf.map.BPFLRUHashMap;
-import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
 import me.bechberger.ebpf.type.Ptr;
 import picocli.CommandLine;
 
@@ -54,8 +53,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
-import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_link__destroy;
-import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_map__attach_struct_ops;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
