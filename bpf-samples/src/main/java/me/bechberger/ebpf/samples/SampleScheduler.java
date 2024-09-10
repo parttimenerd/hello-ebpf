@@ -250,12 +250,12 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
             statsRows.get(2).add(stats.global);
         });
 
-        Function<Long, String> format = (Long l) -> String.format("%-9d", l);
+        Function<Long, String> format = (Long l) -> String.format("%9d", l);
         Function<List<Long>, String> formatRow = (List<Long> row) -> String.join(" ", row.stream().map(format).toList());
         // header: | cpu id | ...
-        System.out.println("      " + String.join(" ", formatRow.apply(statsRows.get(0))));
+        System.out.println("       " + String.join(" ", formatRow.apply(statsRows.get(0))));
         // header: | local  | ...
-        System.out.println("local " + String.join(" ", formatRow.apply(statsRows.get(1))));
+        System.out.println("local  " + String.join(" ", formatRow.apply(statsRows.get(1))));
         // header: | global | ...
         System.out.println("global " + String.join(" ", formatRow.apply(statsRows.get(2))));
     }
@@ -268,8 +268,8 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
         }
     }
 
-    void printVTimeStats() {
-        var top5 = enqueuesPerProcess.entrySet().stream()
+    void printEnqueueStats() {
+        var top = enqueuesPerProcess.entrySet().stream()
                 .sorted(Comparator.comparingLong(e -> -e.getValue()))
                 .limit(10)
                 .toList();
@@ -278,7 +278,7 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
         System.out.println("---------------------------------------------");
 
         // Print each process in the top 5
-        for (var e : top5) {
+        for (var e : top) {
             var pid = e.getKey();
             var count = e.getValue();
             var name = getProcessName(pid); // Assuming getProcessName(pid) retrieves the process name by PID
@@ -289,16 +289,18 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
 
     void printStats() {
         printDispatchStats();
-        printVTimeStats();
+        printEnqueueStats();
     }
 
     void statsLoop() {
        try {
             while (true) {
+                Thread.sleep(5000);
                 System.out.println("Stats:");
-                Thread.sleep(1000);
                 printStats();
                 printStats();
+                enqueuesPerProcess.clear();
+                statsPerCPU.clear();
             }
        } catch (InterruptedException e) {
        }
