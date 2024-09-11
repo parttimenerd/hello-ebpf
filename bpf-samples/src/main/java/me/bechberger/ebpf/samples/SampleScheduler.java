@@ -133,6 +133,7 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
         incrementStats(false);
+        recordEnqueue(p);
         if (fifo_sched.get()) {
             scx_bpf_dispatch(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), enq_flags);
         } else {
@@ -145,8 +146,6 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
              */
             if (isSmaller(vtime, vtime_now.get() - SCX_SLICE_DFL.value())) {
                 vtime = vtime_now.get() - SCX_SLICE_DFL.value();
-            } else {
-                recordEnqueue(p);
             }
             scx_bpf_dispatch_vtime(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), vtime, enq_flags);
         }
@@ -226,15 +225,8 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
     public void exit(Ptr<scx_exit_info> ei) {
     }
 
-    @Option(names = "--verbose")
-    boolean verbose = false;
-
     @Option(names = "--fifo")
     boolean fifoOpt = false;
-
-    AtomicBoolean shouldStop = new AtomicBoolean(false);
-
-    MemorySegment opsLink;
 
     void printDispatchStats() {
         List<List<Long>> statsRows = new ArrayList<>();
@@ -293,6 +285,7 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
     }
 
     void statsLoop() {
+       System.out.println("Start");
        try {
             while (true) {
                 Thread.sleep(5000);
