@@ -6,10 +6,7 @@
 
 package me.bechberger.ebpf.bpf;
 
-import me.bechberger.ebpf.annotations.bpf.BPFFunction;
-import me.bechberger.ebpf.annotations.bpf.BPFInterface;
-import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
-import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.runtime.ScxDefinitions;
 import me.bechberger.ebpf.runtime.TaskDefinitions;
 import me.bechberger.ebpf.type.Ptr;
@@ -130,6 +127,7 @@ import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_map__attach_struct_ops;
                 	       .name			= "hello");
                 """
 )
+@Requires(sched_ext = true)
 public interface Scheduler {
 
     /** No such process error code */

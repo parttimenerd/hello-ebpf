@@ -1,10 +1,12 @@
 package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
+import me.bechberger.ebpf.annotations.bpf.Requires;
 import me.bechberger.ebpf.bpf.map.*;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer.BPFRingBufferError;
 import me.bechberger.ebpf.bpf.processor.Processor;
 import me.bechberger.ebpf.bpf.raw.*;
+import me.bechberger.ebpf.shared.KernelFeatures;
 import me.bechberger.ebpf.shared.LibC;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.shared.PanamaUtil;
@@ -118,6 +120,7 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public static <T extends BPFProgram, S extends T> S load(Class<T> clazz) {
         try {
+            KernelFeatures.checkRequirements("Loading BPF program", clazz);
             var program = BPFProgram.<T, S>getImplClass(clazz).getConstructor().newInstance();
             program.initGlobals();
             return program;
