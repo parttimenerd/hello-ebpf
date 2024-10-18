@@ -126,7 +126,6 @@ import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_map__attach_struct_ops;
                 	       .running	        = (void *)simple_running,
                 	       .enable          = (void *)simple_enable,
                 	       .stopping        = (void *)simple_stopping,
-                	       .stopping        = (void *)simple_stopping,
                 	       .flags			= SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE,
                 	       .name			= "hello");
                 """
@@ -151,7 +150,9 @@ public interface Scheduler {
             headerTemplate = "s32 BPF_STRUCT_OPS(sched_select_cpu, struct task_struct *p, s32 prev_cpu, u64 wake_flags)",
             addDefinition = false
     )
-    int selectCPU(Ptr<TaskDefinitions.task_struct> p, int prev_cpu, long wake_flags);
+    default int selectCPU(Ptr<TaskDefinitions.task_struct> p, int prev_cpu, long wake_flags) {
+        return 0;
+    }
 
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(sched_enqueue, struct task_struct *p, u64 enq_flags)",
@@ -163,70 +164,91 @@ public interface Scheduler {
             headerTemplate = "int BPF_STRUCT_OPS(sched_dispatch, s32 cpu, struct task_struct *prev)",
             addDefinition = false
     )
-    void dispatch(int cpu, Ptr<TaskDefinitions.task_struct> prev);
+    default void dispatch(int cpu, Ptr<TaskDefinitions.task_struct> prev) {
+        return;
+    }
 
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(sched_update_idle, s32 cpu, bool idle)",
             addDefinition = false
     )
-    void updateIdle(int cpu, boolean idle);
+    default void updateIdle(int cpu, boolean idle) {
+        return;
+    }
 
     @BPFFunction(
             headerTemplate = "s32 BPF_STRUCT_OPS(sched_init_task, struct task_struct *p, struct scx_init_task_args *args)",
             addDefinition = false
     )
-    int initTask(Ptr<TaskDefinitions.task_struct> p, Ptr<ScxDefinitions.scx_init_task_args> args);
+    default int initTask(Ptr<TaskDefinitions.task_struct> p, Ptr<ScxDefinitions.scx_init_task_args> args) {
+        return 0;
+    }
 
     @BPFFunction(
             headerTemplate = "s32 BPF_STRUCT_OPS_SLEEPABLE(sched_init)",
             addDefinition = false
     )
-    int init();
+    default int init() {
+        return 0;
+    }
 
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(sched_exit, struct scx_exit_info *ei)",
             addDefinition = false
     )
-    void exit(Ptr<ScxDefinitions.scx_exit_info> ei);
+    default void exit(Ptr<ScxDefinitions.scx_exit_info> ei) {
+        return;
+    }
 
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(simple_running, struct task_struct *p)",
             addDefinition = false
     )
-    void running(Ptr<TaskDefinitions.task_struct> p);
+    default void running(Ptr<TaskDefinitions.task_struct> p) {
+        return;
+    }
 
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(simple_enable, struct task_struct *p)",
             addDefinition = false
     )
-    void enable(Ptr<TaskDefinitions.task_struct> p);
+    default void enable(Ptr<TaskDefinitions.task_struct> p) {
+        return;
+    }
 
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(simple_stopping, struct task_struct *p, bool runnable)",
             addDefinition = false
     )
-    void stopping(Ptr<TaskDefinitions.task_struct> p, boolean runnable);
+    default void stopping(Ptr<TaskDefinitions.task_struct> p, boolean runnable) {
+        return;
+    }
 
     final int SCHED_EXT_UAPI_ID = 7;
 
-    default void runWithScheduler(Runnable inner) {
+    default void attachScheduler() {
 
         BPFProgram bpfProgram = (BPFProgram)this;
-
-        var opsDescriptor = bpfProgram.getMapDescriptorByName("sched_ops");
-        if (opsDescriptor == null) {
-            System.err.println("sched_ops not found");
-            return;
+        try {
+            bpfProgram.attachStructOps("sched_ops");
+        } catch (BPFProgram.BPFAttachError err) {
+            throw new BPFError("Could not attach scheduler, " +
+                    "maybe stop the current sched-ext scheduler via 'systemctl stop scx'", err);
         }
-
-        MemorySegment link = bpf_map__attach_struct_ops(opsDescriptor.map());
-        if (link == null) {
-            System.err.println("Failed to attach struct ops");
-            return;
+        if (!isSchedulerAttachedProperly()) {
+            throw new BPFError("Scheduler not attached properly, maybe some methods are incorrectly implemented");
         }
+    }
 
-        inner.run();
-
-        bpf_link__destroy(link);
+    /**
+     * Check via /sys/kernel/sched_ext/root/ops whether the scheduler is attached properly.
+     */
+    default boolean isSchedulerAttachedProperly() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("/sys/kernel/sched_ext/root/ops"))) {
+            String line = reader.readLine();
+            return line.equals("hello");
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

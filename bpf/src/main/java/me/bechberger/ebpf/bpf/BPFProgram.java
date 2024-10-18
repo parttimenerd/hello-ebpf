@@ -143,6 +143,8 @@ public abstract class BPFProgram implements AutoCloseable {
 
     private final Set<BPFMap> attachedMaps = new HashSet<>();
 
+    private final Set<MemorySegment> attachedStructOps = new HashSet<>();
+
     record AttachedXDPIfIndex(int ifindex, int flags) {}
 
     private final Set<AttachedXDPIfIndex> attachedXDPIfIndexes = new HashSet<>();
@@ -662,6 +664,9 @@ public abstract class BPFProgram implements AutoCloseable {
             return;
         }
         closed = true;
+        for (var structOps : attachedStructOps) {
+            Lib.bpf_link__destroy(structOps);
+        }
         for (var prog : new HashSet<>(attachedPrograms)) {
             detachProgram(prog);
         }
@@ -788,6 +793,23 @@ public abstract class BPFProgram implements AutoCloseable {
         var fd = getMapDescriptorByName(name);
         MapTypeId type = BPFMap.getInfo(fd).type();
         return recordMap(new BPFHashMap<>(fd, type == MapTypeId.LRU_HASH, keyType, valueType));
+    }
+
+    private static final HandlerWithErrno<MemorySegment> BPF_MAP__ATTACH_STRUCT_OPS =
+            new HandlerWithErrno<>("bpf_map__attach_struct_ops",
+                    FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER));
+
+    public void attachStructOps(String name) {
+        var opsDescriptor = getMapDescriptorByName(name);
+        if (opsDescriptor == null) {
+            throw new BPFMapNotFoundError("Could not find struct ops " + name);
+        }
+
+        var res = BPF_MAP__ATTACH_STRUCT_OPS.call(opsDescriptor.map());
+        if (res.result() == MemorySegment.NULL && res.hasError()) {
+            throw new BPFAttachError("Failed to attach struct ops " + name, res.err());
+        }
+        attachedStructOps.add(res.result());
     }
 
     /**

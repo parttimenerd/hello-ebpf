@@ -6,7 +6,7 @@
 
     <groupId>me.bechberger</groupId>
     <artifactId>hello-ebpf</artifactId>
-    <version>0.1.1-scx-SNAPSHOT</version>
+    <version>0.1.1-scx-enabled-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>hello-ebpf</name>

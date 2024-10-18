@@ -2400,9 +2400,9 @@ public class Generator {
             return """
                     /** Auto-generated */
                     package %s;
-                                            
+                    
                     %s
-                                            
+                    
                     %s
                     """.formatted(packageName, String.join("\n", createImportLines(moreImportedClasses)),
                     computeType().toString().trim());

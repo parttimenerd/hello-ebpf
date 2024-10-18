@@ -23,10 +23,7 @@ import me.bechberger.cast.CAST.Statement;
 import me.bechberger.cast.CAST.Statement.CompoundStatement;
 import me.bechberger.cast.CAST.Statement.Define;
 import me.bechberger.cast.CAST.Statement.FunctionDeclarationStatement;
-import me.bechberger.ebpf.annotations.bpf.BPFFunction;
-import me.bechberger.ebpf.annotations.bpf.BPFImpl;
-import me.bechberger.ebpf.annotations.bpf.BPFInterface;
-import me.bechberger.ebpf.annotations.bpf.InternalBody;
+import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.bpf.processor.Processor;
 import me.bechberger.ebpf.bpf.processor.TypeProcessor;
 import me.bechberger.ebpf.type.TypeUtils;
@@ -47,7 +44,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -373,15 +369,16 @@ public class CompilerPlugin implements Plugin {
 
         var declsWithDefines = task.getElements().getAllMembers(bpfInterfaceTypeElement).stream()
                 .filter(m -> m instanceof MethodSymbol)
-                .map(m -> task.getTypes().asMemberOf((DeclaredType) bpfInterfaceTypeElement.asType(), (MethodSymbol) m))
-                .filter(m -> m instanceof MethodType)
-                .map(m -> (MethodType) m)
-                .map(methodElementToCode::get)
-                .filter(Objects::nonNull)
+                .map(m -> Map.entry(m.toString(), task.getTypes().asMemberOf((DeclaredType) bpfInterfaceTypeElement.asType(), (MethodSymbol) m)))
+                .filter(e -> e.getValue() instanceof MethodType)
+                .map(e -> Map.entry(e.getKey(), (MethodType) e.getValue()))
+                .filter(e -> methodElementToCode.containsKey(e.getValue()))
+                .map(e -> Map.entry(e.getKey(), methodElementToCode.get(e.getValue())))
                 .toList();
 
-        var defines = declsWithDefines.stream().flatMap(r -> r.requiredDefines().stream()).collect(Collectors.toSet());
-        var decls = declsWithDefines.stream().map(d -> new FuncDecl(d.decl, d.addDefine)).toList();
+        var defines = declsWithDefines.stream().flatMap(e -> e.getValue().requiredDefines().stream()).collect(Collectors.toSet());
+        var functionHeaders = declsWithDefines.stream().map(Map.Entry::getValue).filter(d -> d.addDefine).map(d -> d.decl.declarator()).toList();
+        var functionImplementations = declsWithDefines.stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().decl.toPrettyString()));
 
         var result = new TypeProcessor(this.createProcessingEnvironment()).processBPFTypeRecords(bpfInterfaceTypeElement);
         if (result == null) {
@@ -392,10 +389,10 @@ public class CompilerPlugin implements Plugin {
         // get BPFInterface annotation
         var bpfInterfaceAnnotation = bpfInterfaceTypeElement.getAnnotation(BPFInterface.class);
 
-        var combinedCode = combineCode("", decls, defines, result.definingStatements(), result.mapDefinitions(),
+        var combinedCode = combineCode("", functionHeaders, List.of(), defines, result.definingStatements(), result.mapDefinitions(),
                 result.globalVariableDefinitions(), result.additions());
 
-        if (combinedCode.isBlank()) {
+        if (combinedCode.isBlank() && functionImplementations.isEmpty()) {
             return; // nothing changed
         }
 
@@ -410,12 +407,28 @@ public class CompilerPlugin implements Plugin {
             // we have to jump through some hoops to add the annotation
             attributesField = meta.getClass().getDeclaredField("attributes");
             attributesField.setAccessible(true);
-            attributesField.set(meta, ((com.sun.tools.javac.util.List<Attribute>)attributesField.get(meta))
-                    .append(new Attribute.Compound((Type.ClassType)typeUtils.getTypeMirror(InternalBody.class),
-                            com.sun.tools.javac.util.List.of(
-                                    new Pair<>(beforeSymbol,
-                                            new Attribute.Constant((Type.ClassType)typeUtils.getTypeMirror(String.class),
-                                                    combinedCode))))));
+            var attributes = (com.sun.tools.javac.util.List<Attribute>)attributesField.get(meta);
+            attributes = attributes.append(new Attribute.Compound((Type.ClassType)typeUtils.getTypeMirror(InternalBody.class),
+                    com.sun.tools.javac.util.List.of(
+                            new Pair<>(beforeSymbol,
+                                    new Attribute.Constant((Type.ClassType)typeUtils.getTypeMirror(String.class),
+                                            combinedCode)))));
+            for (var entry : functionImplementations.entrySet()) {
+                var methodSymbol = (MethodSymbol) bpfInterfaceTypeElement.getEnclosedElements().stream()
+                        .filter(e -> e instanceof MethodSymbol m && m.toString().equals(entry.getKey()))
+                        .findFirst().orElseThrow();
+                var methodMeta = methodSymbol.getMetadata();
+                var methodAttributesField = methodMeta.getClass().getDeclaredField("attributes");
+                methodAttributesField.setAccessible(true);
+                var methodAttributes = (com.sun.tools.javac.util.List<Attribute>)methodAttributesField.get(methodMeta);
+                methodAttributes = methodAttributes.append(new Attribute.Compound((Type.ClassType)typeUtils.getTypeMirror(InternalMethodDefinition.class),
+                        com.sun.tools.javac.util.List.of(
+                                new Pair<>(beforeSymbol,
+                                        new Attribute.Constant((Type.ClassType)typeUtils.getTypeMirror(String.class),
+                                                entry.getValue())))));
+                methodAttributesField.set(methodMeta, methodAttributes);
+            }
+            attributesField.set(meta, attributes);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -477,6 +490,29 @@ public class CompilerPlugin implements Plugin {
 
         // add the code of the interfaces to the code
         var interfaceCode = bpfInterfaceBodies.stream().collect(Collectors.joining("\n\n"));
+
+        // now add every method for which we have a InternalMethodDefinition annotation in an interface
+        // but have no implementation in the class itself
+
+        // first: collect all methods of interfaces with InternalMethodDefinition
+
+        Map<MethodSymbol, String> defaultCodeForMethod = getInterfaceMethodsWithDefaultCode((Symbol.ClassSymbol) superClassElement);
+
+        // second: take all methods that are not implemented and add the default code
+
+        var methodStrings = methods.stream().map(Object::toString).collect(Collectors.toSet());
+
+        var defaultCode = defaultCodeForMethod.entrySet().stream()
+                .filter(e -> !methodStrings.contains(e.getKey().toString()))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.joining("\n\n"));
+
+        if (!defaultCode.isBlank()) {
+            if (!code.isBlank()) {
+                interfaceCode = interfaceCode + "\n\n";
+            }
+            interfaceCode = interfaceCode + defaultCode;
+        }
 
         if (!interfaceCode.isBlank()) {
             code = interfaceCode + "\n\n" + code;
@@ -546,6 +582,22 @@ public class CompilerPlugin implements Plugin {
         }
     }
 
+    private Map<MethodSymbol, String> getInterfaceMethodsWithDefaultCode(Symbol.ClassSymbol superClassElement) {
+        return getInterfaceMethods(superClassElement).stream().map(m -> {
+            var ann = m.getAnnotation(InternalMethodDefinition.class);
+            if (ann == null) {
+                return null;
+            }
+            return Map.entry(m, ann.value());
+        }).filter(Objects::nonNull).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    private List<MethodSymbol> getInterfaceMethods(Symbol.ClassSymbol element) {
+        return element.getInterfaces().stream().flatMap(i -> {
+            return Stream.concat(i.asElement().getEnclosedElements().stream().filter(m -> m instanceof MethodSymbol).map(m -> (MethodSymbol)m), getInterfaceMethods((Symbol.ClassSymbol) i.asElement()).stream());
+        }).toList();
+    }
+
     private Processor.CompileResult compile(String code, Path file) {
         return Processor.compileAndEncode(createProcessingEnvironment(), code, file);
     }
@@ -567,10 +619,10 @@ public class CompilerPlugin implements Plugin {
     }
 
     String combineCode(String code, List<FuncDecl> decls, Set<Define> defines) {
-        return combineCode(code, decls, defines, List.of(), List.of(), List.of(), new TypeProcessor.InterfaceAdditions(List.of(), List.of(), List.of()));
+        return combineCode(code, List.of(), decls, defines, List.of(), List.of(), List.of(), new TypeProcessor.InterfaceAdditions(List.of(), List.of(), List.of()));
     }
 
-    String combineCode(String code, List<FuncDecl> decls, Set<Define> defines,
+    String combineCode(String code, List<CAST.Declarator.FunctionHeader> functionHeaders, List<FuncDecl> decls, Set<Define> defines,
                        List<Statement> typeDecls, List<TypeProcessor.MapDefinition> mapDefinitions,
                        List<TypeProcessor.GlobalVariableDefinition> globals, TypeProcessor.InterfaceAdditions additions) {
         var requiredDefines = defines.stream().filter(d -> !code.contains(d.toPrettyString()))
@@ -583,6 +635,7 @@ public class CompilerPlugin implements Plugin {
         result.addAll(prettyPrint(mapDefinitions.stream().map(TypeProcessor.MapDefinition::structDefinition).toList()));
         result.addAll(prettyPrint(globals.stream().map(TypeProcessor.GlobalVariableDefinition::globalVariable).toList()));
         result.addAll(decls.stream().filter(this::canEmitDeclaratorFor).map(d -> d.decl.declarator().toStatement().toPrettyString()).toList());
+        result.addAll(prettyPrint(functionHeaders));
         result.addAll(prettyPrint(decls.stream().map(FuncDecl::decl).toList()));
         result.addAll(additions.after());
         return moveIncludesToTheFront(result.stream().filter(s -> !s.isEmpty()).collect(Collectors.joining("\n\n")));

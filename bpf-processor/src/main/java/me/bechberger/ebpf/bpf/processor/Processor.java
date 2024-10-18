@@ -547,11 +547,12 @@ public class Processor extends AbstractProcessor {
         try {
             var tempFile = Files.createTempFile("ebpf", ".o");
             tempFile.toFile().deleteOnExit();
-            var process = new ProcessBuilder(newestClang, "-O2", "-g", "-target", "bpf", "-c", "-o",
+            List<String> command = List.of(newestClang, "-O2", "-g", "-target", "bpf", "-c", "-o",
                     tempFile.toString(), "-I", vmlinuxHeader.getParent().toString(),
                     "-D__TARGET_ARCH_" + getArch(), "-Wno-parentheses-equality", "-Wno-unused-value", "-Wreturn-type",
                     "-Wno-incompatible-pointer-types-discards-qualifiers",
-                    "-x", "c", "-", "--sysroot=/", "-I" + findIncludePath()).redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE).start();
+                    "-x", "c", "-", "--sysroot=/", "-I" + findIncludePath());
+            var process = new ProcessBuilder(command).redirectInput(ProcessBuilder.Redirect.PIPE).redirectError(ProcessBuilder.Redirect.PIPE).start();
             process.getOutputStream().write(code.ebpfProgram.getBytes());
             process.getOutputStream().close();
             ByteArrayOutputStream error = new ByteArrayOutputStream();
@@ -563,7 +564,8 @@ public class Processor extends AbstractProcessor {
                     System.err.printf("%3d: %s\n", i + 1, lines[i]);
                 }
                 String errorString = error.toString();
-                this.processingEnv.getMessager().printError("Could not compile eBPF program", code.codeField);
+                this.processingEnv.getMessager().printError("Could not compile eBPF program via " +
+                        String.join(" ", command), code.codeField);
                 printErrorMessages(code, errorString, ebpfFile);
                 return new byte[0];
                 //throw new RuntimeException("Could not compile eBPF program");
@@ -630,9 +632,8 @@ public class Processor extends AbstractProcessor {
             var process = new ProcessBuilder("bpftool", "btf", "dump", "file", "/sys/kernel/btf/vmlinux", "format",
                     "c").redirectOutput(tempFile.toFile()).redirectError(errorFile.toFile()).start();
             if (process.waitFor() != 0) {
-                this.processingEnv.getMessager().printError("Could not obtain vmlinux.h header file via 'bpftool btf "
-                        + "dump file /sys/kernel/btf/vmlinux format c'\n" + Files.readString(errorFile), null);
-                return null;
+                throw new UnsupportedOperationException("Could not obtain vmlinux.h header file via 'bpftool btf "
+                        + "dump file /sys/kernel/btf/vmlinux format c'" + Files.readString(errorFile));
             }
             return tempFile;
         } catch (IOException | InterruptedException e) {
