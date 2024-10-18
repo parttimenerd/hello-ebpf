@@ -14,7 +14,7 @@ public class KernelFeatures {
 
     static class BPFNotSupported extends RuntimeException {
         public BPFNotSupported(String message, List<String> missingFeatures) {
-            super(message + ": the following features are not available " + String.join(", ", missingFeatures));
+            super(message + ": the following features are not available: " + String.join(", ", missingFeatures));
         }
     }
 

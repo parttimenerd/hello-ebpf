@@ -253,6 +253,11 @@ public class CompilerPlugin implements Plugin {
                 trees.getElement(path.path(element)));
     }
 
+    void logWarning(TypedTreePath<?> path, Tree element, String message) {
+        createProcessingEnvironment().getMessager().printMessage(Diagnostic.Kind.WARNING, message,
+                trees.getElement(path.path(element)));
+    }
+
     /**
      * Process a BPFFunction and store its code in a field named {@code BPF_FUNCTION_CODE_$NAME}
      * <p>
@@ -467,7 +472,7 @@ public class CompilerPlugin implements Plugin {
 
         var missingKernelFeatures = KernelFeatures.getMissingFeatures(getRequiredKernelFeatures(superClassElement));
         if (!missingKernelFeatures.isEmpty()) {
-            logError(programPath, bpfProgram, "Can't compile, missing kernel features in the current kernel: "
+            logWarning(programPath, bpfProgram, "Can't compile, missing kernel features in the current kernel: "
                     + String.join(", ", missingKernelFeatures));
             return;
         }
