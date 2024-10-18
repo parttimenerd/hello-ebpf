@@ -24,8 +24,10 @@ import me.bechberger.cast.CAST.Statement.CompoundStatement;
 import me.bechberger.cast.CAST.Statement.Define;
 import me.bechberger.cast.CAST.Statement.FunctionDeclarationStatement;
 import me.bechberger.ebpf.annotations.bpf.*;
+import me.bechberger.ebpf.bpf.processor.AnnotationUtils;
 import me.bechberger.ebpf.bpf.processor.Processor;
 import me.bechberger.ebpf.bpf.processor.TypeProcessor;
+import me.bechberger.ebpf.shared.KernelFeatures;
 import me.bechberger.ebpf.type.TypeUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -434,6 +436,18 @@ public class CompilerPlugin implements Plugin {
         }
     }
 
+    private Set<String> getRequiredKernelFeatures(TypeElement klass) {
+        Set<String> requirements = new HashSet<>();
+        var ann = klass.getAnnotation(Requires.class);
+        if (ann != null) {
+            requirements.addAll(KernelFeatures.getRequiredKernelFeatures(ann));
+        }
+        for (var iface : klass.getInterfaces()) {
+            requirements.addAll(getRequiredKernelFeatures((TypeElement) ((Type.ClassType)iface).asElement()));
+        }
+        return requirements;
+    }
+
     private void processBPFProgramImpl(TypedTreePath<ClassTree> programPath) {
         var bpfProgram = programPath.leaf();
         var bpfProgramTypeElement = (TypeElement) trees.getElement(programPath.path);
@@ -450,6 +464,13 @@ public class CompilerPlugin implements Plugin {
             throw new AssertionError("Superclass must be a declared type for " + bpfProgram.getSimpleName());
         }
         TypeElement superClassElement = (TypeElement) declaredSuperClass.asElement();
+
+        var missingKernelFeatures = KernelFeatures.getMissingFeatures(getRequiredKernelFeatures(superClassElement));
+        if (!missingKernelFeatures.isEmpty()) {
+            logError(programPath, bpfProgram, "Can't compile, missing kernel features in the current kernel: "
+                    + String.join(", ", missingKernelFeatures));
+            return;
+        }
 
         var methods = task.getElements().getAllMembers(superClassElement).stream()
                 .filter(m -> m instanceof MethodSymbol && ((MethodSymbol) m).getEnclosingElement().equals(superClassElement))
