@@ -34,28 +34,22 @@ import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
-import me.bechberger.ebpf.bpf.BPFJ;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.bpf.map.BPFLRUHashMap;
-import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
 import me.bechberger.ebpf.type.Ptr;
 import picocli.CommandLine;
 
-import java.lang.foreign.MemorySegment;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
-import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_link__destroy;
-import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_map__attach_struct_ops;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
@@ -95,7 +89,6 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
     @BPFFunction
     void incrementStats(boolean local) {
         int processor = bpf_get_smp_processor_id();
-        BPFJ.bpf_trace_printk("incrementStats: processor=%d, local=%d\n", processor, local ? 1 : 0);
         Ptr<Stats> statsPtr = statsPerCPU.bpf_get(processor);
         if (statsPtr == null) {
             var nee = new Stats();
@@ -216,28 +209,11 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
         return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
     }
 
-    @Override
-    public void updateIdle(int cpu, boolean idle) {
-    }
-
-    @Override
-    public int initTask(Ptr<task_struct> p, Ptr<scx_init_task_args> args) {
-        return 0;
-    }
-
-    @Override
-    public void exit(Ptr<scx_exit_info> ei) {
-    }
-
     @Option(names = "--verbose")
     boolean verbose = false;
 
     @Option(names = "--fifo")
     boolean fifoOpt = false;
-
-    AtomicBoolean shouldStop = new AtomicBoolean(false);
-
-    MemorySegment opsLink;
 
     void printDispatchStats() {
         List<List<Long>> statsRows = new ArrayList<>();
@@ -301,7 +277,6 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
                 System.out.println("Stats:");
                 Thread.sleep(1000);
                 printStats();
-                printStats();
             }
        } catch (InterruptedException e) {
        }
@@ -310,7 +285,15 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
     @Override
     public void run() {
         fifo_sched.set(fifoOpt);
-        runWithScheduler(this::statsLoop);
+        attachScheduler();
+        if (verbose) {
+            statsLoop();
+        } else {
+            try {
+                Thread.currentThread().join();
+            } catch (InterruptedException e) {
+            }
+        }
     }
 
     public static void main(String[] args) {

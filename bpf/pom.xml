@@ -9,7 +9,7 @@
 
   <name>bpf</name>
   <url>https://github.com/parttimenerd/hello-ebpf</url>
-  <version>0.1.1-scx-SNAPSHOT</version>
+  <version>0.1.1-scx-enabled-SNAPSHOT</version>
 
   <licenses>
     <license>
@@ -123,12 +123,12 @@
     <dependency>
         <groupId>me.bechberger</groupId>
         <artifactId>bpf-runtime</artifactId>
-        <version>0.1.10-scx-SNAPSHOT</version>
+        <version>0.1.10-scx-enabled-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>me.bechberger</groupId>
       <artifactId>rawbpf</artifactId>
-      <version>0.1.7-scx-SNAPSHOT</version>
+      <version>0.1.7-scx-enabled-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>me.bechberger</groupId>
@@ -146,7 +146,7 @@
   <parent>
     <groupId>me.bechberger</groupId>
     <artifactId>hello-ebpf</artifactId>
-    <version>0.1.1-scx-SNAPSHOT</version>
+    <version>0.1.1-scx-enabled-SNAPSHOT</version>
   </parent>
 
   <repositories>
