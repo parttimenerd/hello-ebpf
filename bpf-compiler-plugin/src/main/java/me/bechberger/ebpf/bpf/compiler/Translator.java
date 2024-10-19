@@ -645,7 +645,9 @@ class Translator {
                     }
                 }
             }
-            case JCIdent ident -> symbol = (MethodSymbol) ident.sym;
+            case JCIdent ident -> {
+                symbol = (MethodSymbol) ident.sym;
+            }
             default -> {
                 logError(calledMethod, "Unsupported method invocation: " + methodInvocationTree);
                 return null;

@@ -1879,7 +1879,7 @@ public class Generator {
         var name = switch (rawType.getName()) {
             case "char" -> "u8";
             case "unsigned char" -> "u8";
-	     case "signed char" -> "s8";
+            case "signed char" -> "s8";
             default -> rawType.getName();
         };
         var size = rawType.getInteger("nr_bits");

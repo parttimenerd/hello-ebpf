@@ -114,11 +114,15 @@ public class CompilerPlugin implements Plugin {
                                                           public List<TypedTreePath<MethodTree>> visitMethodInvocation(MethodInvocationTree node, Object p) {
                                                               var calledMethod = node.getMethodSelect();
                                                               var methodTree = (JCMethodInvocation) node;
-                                                              MethodSymbol symbol = switch (methodTree.meth) {
-                                                                  case JCFieldAccess access -> (MethodSymbol) access.sym;
-                                                                  case JCIdent ident -> (MethodSymbol) ident.sym;
+                                                              var sym = switch (methodTree.meth) {
+                                                                  case JCFieldAccess access -> access.sym;
+                                                                  case JCIdent ident -> ident.sym;
                                                                   default -> null;
                                                               };
+                                                              if (!(sym instanceof MethodSymbol)) {
+                                                                 return List.of();
+                                                              }
+                                                              var symbol = (MethodSymbol) sym;
                                                               if (symbol != null && symbol.getAnnotation(BPFFunction.class) != null) {
                                                                   // problem: method might be compiled, therefore no
                                                                   // tree available
@@ -786,7 +790,7 @@ public class CompilerPlugin implements Plugin {
         result.addAll(prettyPrint(mapDefinitions.stream().map(TypeProcessor.MapDefinition::structDefinition).toList()));
         result.addAll(prettyPrint(globals.stream().map(TypeProcessor.GlobalVariableDefinition::globalVariable).toList()));
         result.addAll(decls.stream().filter(this::canEmitDeclaratorFor).map(d -> d.decl.declarator().toStatement().toPrettyString()).toList());
-        result.addAll(prettyPrint(functionHeaders));
+        result.addAll(prettyPrint(functionHeaders.stream().map(CAST::toStatement).toList()));
         result.addAll(prettyPrint(decls.stream().map(FuncDecl::decl).toList()));
         result.addAll(additions.after());
         return moveIncludesToTheFront(result.stream().filter(s -> !s.isEmpty()).collect(Collectors.joining("\n\n")));

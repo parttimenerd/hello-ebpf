@@ -9,4 +9,4 @@ cd "$(dirname "$0")"/.. || exit
 
 mvn package -U && MAVEN_OPTS="-Xss1000m" time java -jar bpf-gen/target/bpf-gen.jar bpf-runtime/src/main/java/ bpf-gen/data/helper-defs.json
 
-(cd bpf-runtime; mvn package -U)
+(cd bpf-runtime; MAVEN_OPTS="-Xss1000m" mvn package -U)
