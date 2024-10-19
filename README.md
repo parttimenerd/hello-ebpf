@@ -1,12 +1,6 @@
 Hello eBPF
 ==========
 
-
-__This is a modified version used to get schedulers in Java running. Most of the other examples don't work
-and you have to run this on CachyOS with a recent patched kernel and everything installed that
-scx requires. This is only merged into the main branch after sched-ext became an official part of Linux.
-So I warned you...__
-
 There are [user land libraries](https://ebpf.io/what-is-ebpf/#development-toolchains) for [eBPF](https://ebpf.io) that allow you to
 write eBPF applications in C++, Rust, Go, Python and even
 Lua. But there are none for Java, which is a pity.
@@ -95,6 +89,10 @@ limactl shell hello-ebpf
 sudo -s PATH=$PATH
 ```
 
+The scheduler examples require a patched 6.11 kernel with the scheduler extensions, you can get it from 
+[here](https://launchpad.net/~arighi/+archive/ubuntu/sched-ext-unstable).
+You might also be able to run [CachyOS](https://cachyos.org/) and install a patched kernel from there.
+
 Blog Posts
 ----------
 Posts covering the development of this project:
@@ -182,7 +180,7 @@ The library is available as a maven package:
 <dependency>
     <groupId>me.bechberger</groupId>
     <artifactId>bpf</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.1-scx-enabled-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -209,8 +207,6 @@ A look ahead into the future, so you know what to expect:
 
 - Implement more features related to libbpf and eBPF
   - cgroups support
-  - sched-ext support (coming soon)
-- Make eBPF programs more composable
 - More documentation
 
 These plans might change, but I'll try to keep this up to date.
