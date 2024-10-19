@@ -1,7 +1,7 @@
 package me.bechberger.ebpf.bpf;
 
-import me.bechberger.ebpf.annotations.bpf.BPFFunction;
-import me.bechberger.ebpf.annotations.bpf.Requires;
+import me.bechberger.ebpf.annotations.bpf.*;
+import me.bechberger.ebpf.annotations.bpf.Properties;
 import me.bechberger.ebpf.bpf.map.*;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer.BPFRingBufferError;
 import me.bechberger.ebpf.bpf.processor.Processor;
@@ -827,6 +827,51 @@ public abstract class BPFProgram implements AutoCloseable {
                 ((BPFRingBuffer<?>)map).consumeAndThrow();
             }
         }
+    }
+
+    private @Nullable String getDefaultPropertyValue(String name) {
+        ArrayDeque<Class<?>> queue = new ArrayDeque<>(List.of(getClass()));
+        while (!queue.isEmpty()) {
+            var clazz = queue.poll();
+            var annotation = clazz.getAnnotation(PropertyDefinitions.class);
+            if (annotation != null) {
+                for (var prop : annotation.value()) {
+                    if (prop.name().equals(name)) {
+                        return prop.defaultValue();
+                    }
+                }
+            }
+            var prop = clazz.getAnnotation(PropertyDefinition.class);
+            if (prop != null && prop.name().equals(name)) {
+                return prop.defaultValue();
+            }
+            queue.addAll(Arrays.asList(clazz.getInterfaces()));
+        }
+        return null;
+    }
+
+    public @Nullable String getPropertyValue(String name) {
+        ArrayDeque<Class<?>> queue = new ArrayDeque<>(List.of(getClass()));
+        while (!queue.isEmpty()) {
+            var clazz = queue.poll();
+            var annotation = clazz.getAnnotation(Properties.class);
+            if (annotation != null) {
+                for (var prop : annotation.value()) {
+                    if (prop.name().equals(name)) {
+                        return prop.value();
+                    }
+                }
+            }
+            var prop = clazz.getAnnotation(Property.class);
+            if (prop != null && prop.name().equals(name)) {
+                return prop.value();
+            }
+            queue.addAll(Arrays.asList(clazz.getInterfaces()));
+            if (clazz.getSuperclass() != null) {
+                queue.add(clazz.getSuperclass());
+            }
+        }
+        return getDefaultPropertyValue(name);
     }
 
     public static class BTF {

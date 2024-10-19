@@ -19,6 +19,11 @@ import java.lang.foreign.MemorySegment;
 import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_link__destroy;
 import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_map__attach_struct_ops;
 
+/**
+ * A sched-ext based scheduler
+ * <p>
+ * You can specify the scheduler name {@code Property(name = "sched_name", value = "...")}
+ */
 @BPFInterface(
         before = """
                 void scx_bpf_error_bstr(char *fmt, unsigned long long *data, u32 data_len) __ksym;
@@ -124,10 +129,11 @@ import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_map__attach_struct_ops;
                 	       .enable          = (void *)simple_enable,
                 	       .stopping        = (void *)simple_stopping,
                 	       .flags			= SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE,
-                	       .name			= "hello");
+                	       .name			= "__property_sched_name");
                 """
 )
 @Requires(sched_ext = true)
+@PropertyDefinition(name = "sched_name", defaultValue = "hello", regexp = "[a-zA-Z0-9_]+")
 public interface Scheduler {
 
     /** No such process error code */
@@ -234,8 +240,13 @@ public interface Scheduler {
                     "maybe stop the current sched-ext scheduler via 'systemctl stop scx'", err);
         }
         if (!isSchedulerAttachedProperly()) {
+
             throw new BPFError("Scheduler not attached properly, maybe some methods are incorrectly implemented");
         }
+    }
+
+    default String getSchedulerName() {
+        return ((BPFProgram)this).getPropertyValue("sched_name");
     }
 
     /**
@@ -244,7 +255,7 @@ public interface Scheduler {
     default boolean isSchedulerAttachedProperly() {
         try (BufferedReader reader = new BufferedReader(new FileReader("/sys/kernel/sched_ext/root/ops"))) {
             String line = reader.readLine();
-            return line.equals("hello");
+            return line.equals(getSchedulerName());
         } catch (IOException e) {
             return false;
         }

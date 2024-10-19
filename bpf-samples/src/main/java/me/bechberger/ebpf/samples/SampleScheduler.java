@@ -34,6 +34,7 @@ import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
+import me.bechberger.ebpf.annotations.bpf.Property;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.Scheduler;
@@ -58,6 +59,7 @@ import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_get_smp_processo
 import static picocli.CommandLine.Option;
 
 @BPF(license = "GPL")
+@Property(name = "sched_name", value = "sample_scheduler")
 public abstract class SampleScheduler extends BPFProgram implements Scheduler, Runnable {
 
 

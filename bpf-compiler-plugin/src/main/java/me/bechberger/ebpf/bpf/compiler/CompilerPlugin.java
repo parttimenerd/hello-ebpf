@@ -24,10 +24,12 @@ import me.bechberger.cast.CAST.Statement.CompoundStatement;
 import me.bechberger.cast.CAST.Statement.Define;
 import me.bechberger.cast.CAST.Statement.FunctionDeclarationStatement;
 import me.bechberger.ebpf.annotations.bpf.*;
+import me.bechberger.ebpf.annotations.bpf.Properties;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils;
 import me.bechberger.ebpf.bpf.processor.Processor;
 import me.bechberger.ebpf.bpf.processor.TypeProcessor;
 import me.bechberger.ebpf.shared.KernelFeatures;
+import me.bechberger.ebpf.shared.Util;
 import me.bechberger.ebpf.type.TypeUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,10 +44,13 @@ import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -453,6 +458,123 @@ public class CompilerPlugin implements Plugin {
         return requirements;
     }
 
+    @SuppressWarnings("unchecked")
+    private <T extends Annotation, S extends Annotation> List<T> getAnnotationValues(TypeElement klass,
+                                                               Class<T> annotationClass,
+                                                               @Nullable Class<S> multiAnnotationClass,
+                                                               boolean breadthFirst) {
+        List<T> annotations = new ArrayList<>();
+        ArrayDeque<TypeElement> toVisit = new ArrayDeque<>(List.of(klass));
+
+        Method multiAnnMethod = null;
+        if (multiAnnotationClass != null) {
+            try {
+                multiAnnMethod = multiAnnotationClass.getMethod("value");
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        final Method multiAnnMethodFinal = multiAnnMethod;
+
+        Consumer<TypeElement> add = iface -> {
+            if (iface == null) {
+                return;
+            }
+            var ann = iface.getAnnotation(annotationClass);
+            if (ann != null) {
+                annotations.add(ann);
+            }
+            if (multiAnnotationClass != null) {
+                try {
+                    var multiAnn = iface.getAnnotation(multiAnnotationClass);
+                    if (multiAnn != null) {
+                        var values = (T[]) multiAnnMethodFinal.invoke(multiAnn);
+                        annotations.addAll(Arrays.asList(values));
+                    }
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+        add.accept(klass);
+        while (!toVisit.isEmpty()) {
+            var current = toVisit.poll();
+            List<TypeElement> otherClasses = current.getInterfaces().stream().map(i -> (TypeElement) ((Type.ClassType)i).asElement())
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+            if (current.getSuperclass() != null) {
+                var s = (TypeElement) ((Type) current.getSuperclass()).asElement();
+                if (s != null) {
+                    otherClasses.add(s);
+                }
+            }
+            if (breadthFirst) {
+                otherClasses.forEach(add);
+                toVisit.addAll(otherClasses);
+            } else {
+                add.accept(current);
+                toVisit.addAll(otherClasses);
+            }
+        }
+        return annotations;
+    }
+
+    /** Collect the {@link PropertyDefinition} instances and */
+    private Map<String, PropertyDefinition> getPropertyDefinitions(TypedTreePath<ClassTree> path, TypeElement klass) {
+        var anns = getAnnotationValues(klass, PropertyDefinition.class, PropertyDefinitions.class, true);
+        // log error if there are multiple definitions for the same property
+        var definitions = new HashMap<String, PropertyDefinition>();
+        for (var ann : anns) {
+            if (definitions.containsKey(ann.name())) {
+                logError(path, path.leaf(), "Multiple definitions for property " + ann.name());
+            }
+            definitions.put(ann.name(), ann);
+        }
+        return definitions;
+    }
+
+    private Map<String, String> getPropertyValues(TypedTreePath<ClassTree> path, TypeElement klass) {
+        var anns = getAnnotationValues(klass, Property.class, Properties.class, true);
+        var values = new HashMap<String, String>();
+        for (var ann : anns) {
+            if (values.containsKey(ann.name())) {
+                logError(path, path.leaf(), "Multiple values for property " + ann.name());
+            }
+            values.put(ann.name(), ann.value());
+        }
+        return values;
+    }
+
+    /**
+     * Get all specified properties (error if property is not defined)
+     * and all other defined properties with default values
+     */
+    private Map<String, String> getAllPropertyValues(TypedTreePath<ClassTree> path, TypeElement klass) {
+        var definitions = getPropertyDefinitions(path, klass);
+        var values = getPropertyValues(path, klass);
+        if (values.isEmpty()) {
+            return definitions.values().stream()
+                    .collect(Collectors.toMap(PropertyDefinition::name, PropertyDefinition::defaultValue));
+        }
+        if (definitions.isEmpty()) {
+            logError(path, path.leaf(), "No property definitions found, but " + values.size() + " properties specified");
+        }
+        for (var name : values.keySet()) {
+            if (!definitions.containsKey(name)) {
+                // find closest definition
+                var closest = Util.getClosestString(name, definitions.keySet());
+                logError(path, path.leaf(), "Property " + name + " is not defined, maybe you meant " + closest);
+                continue;
+            }
+            var regexp = definitions.get(name).regexp();
+            if (!values.get(name).matches(regexp)) {
+                logError(path, path.leaf(), "Value of property " + name + " does not match regular expression " + regexp + ": " + values.get(name));
+            }
+        }
+        return values;
+    }
+
     private void processBPFProgramImpl(TypedTreePath<ClassTree> programPath) {
         var bpfProgram = programPath.leaf();
         var bpfProgramTypeElement = (TypeElement) trees.getElement(programPath.path);
@@ -552,7 +674,9 @@ public class CompilerPlugin implements Plugin {
 
         code = implAnn.before() + "\n\n" + code;
 
-        var newCode = combineCode(code, decls, defines) + "\n\n" + implAnn.after();
+        var properties = getAllPropertyValues(programPath, superClassElement);
+
+        var newCode = replaceProperties(combineCode(code, decls, defines) + "\n\n" + implAnn.after(), properties);
 
         // write the C code in a file close to the source file
         var cFile =
@@ -645,7 +769,8 @@ public class CompilerPlugin implements Plugin {
     }
 
     String combineCode(String code, List<FuncDecl> decls, Set<Define> defines) {
-        return combineCode(code, List.of(), decls, defines, List.of(), List.of(), List.of(), new TypeProcessor.InterfaceAdditions(List.of(), List.of(), List.of()));
+        return combineCode(code, List.of(), decls, defines, List.of(), List.of(), List.of(),
+                new TypeProcessor.InterfaceAdditions(List.of(), List.of(), List.of()));
     }
 
     String combineCode(String code, List<CAST.Declarator.FunctionHeader> functionHeaders, List<FuncDecl> decls, Set<Define> defines,
@@ -665,6 +790,13 @@ public class CompilerPlugin implements Plugin {
         result.addAll(prettyPrint(decls.stream().map(FuncDecl::decl).toList()));
         result.addAll(additions.after());
         return moveIncludesToTheFront(result.stream().filter(s -> !s.isEmpty()).collect(Collectors.joining("\n\n")));
+    }
+
+    private static String replaceProperties(String code, Map<String, String> properties) {
+        for (var entry : properties.entrySet()) {
+            code = code.replace("__property_" + entry.getKey(), entry.getValue());
+        }
+        return code;
     }
 
     public static String moveIncludesToTheFront(String code) {

@@ -3,6 +3,7 @@
 package me.bechberger.ebpf.samples;
 
 import me.bechberger.ebpf.annotations.bpf.BPF;
+import me.bechberger.ebpf.annotations.bpf.Property;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.type.Ptr;
@@ -12,6 +13,7 @@ import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SL
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 @BPF(license = "GPL")
+@Property(name = "sched_name", value = "minimal_scheduler")
 public abstract class MinimalScheduler extends BPFProgram implements Scheduler {
 
     private static final int SHARED_DSQ_ID = 0;
