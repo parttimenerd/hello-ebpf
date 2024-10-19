@@ -515,8 +515,8 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     public void xdpAttach(ProgramHandle prog, int ifindex) {
-        int flags = NetworkUtil.XDP_FLAGS_UPDATE_IF_NOEXIST | NetworkUtil.XDP_FLAGS_DRV_MODE;
         int fd = Lib.bpf_program__fd(prog.prog());
+        int flags = NetworkUtil.XDP_FLAGS_UPDATE_IF_NOEXIST;
         int err = Lib.bpf_xdp_attach(ifindex, fd, flags, MemorySegment.NULL);
         if (err > 0) {
             throw new BPFAttachError(prog.name, err);

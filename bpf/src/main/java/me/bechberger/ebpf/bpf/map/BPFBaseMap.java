@@ -191,7 +191,7 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
                 int res = Lib.bpf_map_get_next_key(fd.fd(), prev == null ? MemorySegment.NULL : prev.mem, nextKeyMem);
                 if (res != 0) {
                     ended = true;
-                    if (res == -PanamaUtil.ERRNO_ENOENT || res == -9) {
+                    if (res == -PanamaUtil.ERRNO_ENOENT || res == -9 || res == -22) {
                         return null;
                     }
                     throw new BPFHashMapError("Failed to get next key", res);
