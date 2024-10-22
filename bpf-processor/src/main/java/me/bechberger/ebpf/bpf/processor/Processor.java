@@ -547,7 +547,7 @@ public class Processor extends AbstractProcessor {
         try {
             var tempFile = Files.createTempFile("ebpf", ".o");
             tempFile.toFile().deleteOnExit();
-            List<String> command = List.of(newestClang, "-O2", "-g", "-target", "bpf", "-c", "-o",
+            List<String> command = List.of(newestClang, "-O2", "-g", "-std=gnu2y",  "-target", "bpf", "-c", "-o",
                     tempFile.toString(), "-I", vmlinuxHeader.getParent().toString(),
                     "-D__TARGET_ARCH_" + getArch(), "-Wno-parentheses-equality", "-Wno-unused-value", "-Wreturn-type",
                     "-Wno-incompatible-pointer-types-discards-qualifiers",
@@ -625,17 +625,41 @@ public class Processor extends AbstractProcessor {
             }
             // else run bpftool btf dump file /sys/kernel/btf/vmlinux format c
             // save output to a temp file and return the path to the temp file
-            var tempDirectory = Files.createTempDirectory("vmlinux");
-            tempDirectory.toFile().deleteOnExit();
-            var tempFile = tempDirectory.resolve("vmlinux.h");
-            var errorFile = tempDirectory.resolve("error.txt");
+            var cacheFolder = cache.getCacheFolder();
+            var vmLinuxFile = cacheFolder.resolve("vmlinux.h");
+            if (Files.exists(vmLinuxFile)) {
+                return vmLinuxFile;
+            }
+            var errorFile = cacheFolder.resolve("vmlinux_error.txt");
             var process = new ProcessBuilder("bpftool", "btf", "dump", "file", "/sys/kernel/btf/vmlinux", "format",
-                    "c").redirectOutput(tempFile.toFile()).redirectError(errorFile.toFile()).start();
+                    "c").redirectOutput(vmLinuxFile.toFile()).redirectError(errorFile.toFile()).start();
             if (process.waitFor() != 0) {
                 throw new UnsupportedOperationException("Could not obtain vmlinux.h header file via 'bpftool btf "
                         + "dump file /sys/kernel/btf/vmlinux format c'" + Files.readString(errorFile));
+            } else {
+                Files.delete(errorFile);
             }
-            return tempFile;
+            // comment lines
+            //  typedef _Bool bool;
+            //  enum {
+            //	false = 0,
+            //	true = 1,
+            //  };
+            String content = Files.readString(vmLinuxFile);
+            content = content.replace("typedef _Bool bool;", "// typedef _Bool bool")
+                    .replaceAll("""
+                                enum \\{
+                                \\s+false = 0,
+                                \\s+true = 1,
+                                };
+                                """, """
+                                // enum {
+                                //	false = 0,
+                                //	true = 1,
+                                // };
+                                """);
+            Files.writeString(vmLinuxFile, content);
+            return vmLinuxFile;
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }

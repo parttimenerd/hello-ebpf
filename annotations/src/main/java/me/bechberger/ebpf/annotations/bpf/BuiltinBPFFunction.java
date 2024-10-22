@@ -40,7 +40,7 @@ public @interface BuiltinBPFFunction {
      *     <li>{@code $strlen$this}: length of the {@code $this} interpreted as a string literal</li>
      *     <li>{@code $strlen$argN}: length of the {@code $argN} interpreted as a string literal</li>
      *     <li>{@code $str$argN}: Asserts that {@code $argN} is a string literal</li>
-     *     <li>{@code $pointery$argN}: if {@code $argN} is not a pointer (or an array or a string), then prefix it with {@code &} and assume that it is an lvalue</li>
+     *     <li>{@code $pointery$argN}: if {@code $argN} is not a pointer (or an array or a string), then prefix it with {@code &} and assign it inline to a variable if needed</li>
      * </ul>
      * <p>
      * Example: {@snippet :

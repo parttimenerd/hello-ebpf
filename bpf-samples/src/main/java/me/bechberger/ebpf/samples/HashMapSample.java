@@ -38,8 +38,7 @@ public abstract class HashMapSample extends BPFProgram implements SystemCallHook
         // increment the counter at map[comm]
         Ptr<@Unsigned Integer> counter = map.bpf_get(comm);
         if (counter == null) {
-            @Unsigned int one = 1;
-            map.put(comm, one);
+            map.put(comm, 1);
         } else {
             counter.set(counter.val() + 1);
         }

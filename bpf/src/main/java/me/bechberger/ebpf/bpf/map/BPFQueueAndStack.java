@@ -41,7 +41,7 @@ public abstract class BPFQueueAndStack<V> extends BPFMap {
      * Push a value onto the stack or the back of the queue
      * <p>Usage in ebpf:</p>
      * Update the value in the map with the given key
-     * @param value value if pointery, otherwise an lvalue (like a variable)
+     * @param value value
      * @return success?
      * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_update_elem(Ptr, Ptr, Ptr, long)
      */
@@ -73,7 +73,7 @@ public abstract class BPFQueueAndStack<V> extends BPFMap {
     /**
      * Get the value from the top of the stack or the front of the queue, in eBPF
      *
-     * @param value value if pointery, otherwise an lvalue (like a variable)
+     * @param value value
      * @return true if the value was peeked, false on error
      * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_peek_elem(Ptr, Ptr)
      */
@@ -102,7 +102,7 @@ public abstract class BPFQueueAndStack<V> extends BPFMap {
     /**
      * Pop the value from the top of the stack or the front of the queue, in eBPF
      *
-     * @param value value if pointery, otherwise an lvalue (like a variable)
+     * @param value value
      * @return true if the value was popped, false on error
      * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_pop_elem(Ptr, Ptr)
      */

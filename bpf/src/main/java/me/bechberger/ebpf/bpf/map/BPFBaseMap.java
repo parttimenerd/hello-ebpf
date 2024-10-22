@@ -86,8 +86,8 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
      * Put a value into the map, updates it if its already there
      * <p>Usage in ebpf:</p>
      * Update the value in the map with the given key
-     * @param key key key if pointery, otherwise an lvalue (like a variable)
-     * @param value value if pointery, otherwise an lvalue (like a variable)
+     * @param key key
+     * @param value value
      * @return success?
      * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_update_elem(Ptr, Ptr, Ptr, long)
      */
@@ -105,8 +105,8 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
      *
      * <p>Usage in ebpf:</p>
      * Update the value in the map with the given key
-     * @param key key key if pointery, otherwise an lvalue (like a variable)
-     * @param value value if pointery, otherwise an lvalue (like a variable)
+     * @param key key
+     * @param value value
      * @return success?
      * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_update_elem(Ptr, Ptr, Ptr, long)
      */
@@ -285,7 +285,7 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
      * Obtain a pointer to the element in the map with the given key,
      * or {@link Ptr#ofNull()} if the key is not present
      *
-     * @param key key if pointery, otherwise an lvalue (like a variable)
+     * @param key key
      * @return pointer to the value or {@link Ptr#ofNull()}
      *
      * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_lookup_elem(Ptr, Ptr)

@@ -10,6 +10,7 @@ import me.bechberger.ebpf.bpf.compiler.MethodTemplate.TemplatePart.*;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplateCache.TemplateRenderException;
 import me.bechberger.ebpf.type.Ptr;
 import me.bechberger.ebpf.type.TypeUtils;
+import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Nullable;
 
 import javax.lang.model.type.TypeKind;
@@ -22,6 +23,32 @@ import java.util.stream.IntStream;
  * Processed method call templates of {@link BuiltinBPFFunction} annotated methods
  */
 public record MethodTemplate(String methodName, String raw, List<TemplatePart> parts) {
+
+    public class NewVariableContext {
+
+        private record NewVariable(String name, String value) {
+        }
+
+        private List<NewVariable> newVariables = new ArrayList<>();
+
+        public String request(String value) {
+            var name = "___pointery__" + newVariables.size();
+            newVariables.add(new NewVariable(name, value));
+            return name;
+        }
+
+        @Override
+        public String toString() {
+            return newVariables.stream().map(nv -> String.format("auto %s = %s;", nv.name, nv.value)).collect(Collectors.joining(" "));
+        }
+
+        public VerbatimExpression wrap(VerbatimExpression expression) {
+            if (newVariables.isEmpty()) {
+                return expression;
+            }
+            return new VerbatimExpression(String.format("({%s %s;})", this, expression.toPrettyString()));
+        }
+    }
 
     public record CallArgs(@Nullable CAST.Expression thisExpression,
                            List<? extends Expression> arguments,
@@ -39,25 +66,29 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
      * A part of a template, modelled after the different placeholders in the template in {@link BuiltinBPFFunction}
      */
     sealed interface TemplatePart {
-        String render(CallProps props);
+        default String render(CallProps props) {
+            return render(props, null);
+        }
+
+        String render(CallProps props, @Nullable NewVariableContext context);
 
         record Verbatim(String verb) implements TemplatePart {
             @Override
-            public String render(CallProps props) {
+            public String render(CallProps props, @Nullable NewVariableContext context) {
                 return verb;
             }
         }
 
         record Name() implements TemplatePart {
             @Override
-            public String render(CallProps props) {
+            public String render(CallProps props, @Nullable NewVariableContext context) {
                 return props.methodName;
             }
         }
 
         record Arg(int n) implements TemplatePart {
             @Override
-            public String render(CallProps props) {
+            public String render(CallProps props, @Nullable NewVariableContext context) {
                 if (n >= props.args.arguments.size()) {
                     throw new TemplateRenderException("Argument " + (n + 1) + " not given for $arg" + (n + 1));
                 }
@@ -67,7 +98,7 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
 
         record SubArgs(int n) implements TemplatePart {
             @Override
-            public String render(CallProps props) {
+            public String render(CallProps props, @Nullable NewVariableContext context) {
                 return IntStream.range(n, props.args.arguments.size())
                         .mapToObj(i -> props.args.arguments.get(i).toPrettyString())
                         .collect(Collectors.joining(", "));
@@ -76,14 +107,14 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
 
         record Args() implements TemplatePart {
             @Override
-            public String render(CallProps props) {
-                return new SubArgs(0).render(props);
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                return new SubArgs(0).render(props, context);
             }
         }
 
         record This() implements TemplatePart {
             @Override
-            public String render(CallProps props) {
+            public String render(CallProps props, @Nullable NewVariableContext context) {
                 if (props.args.thisExpression == null) {
                     throw new TemplateRenderException("No this expression given for $this");
                 }
@@ -92,7 +123,7 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
         }
 
         sealed interface StrLen extends TemplatePart {
-            static String render(Expression arg) {
+            static String render(Expression arg, @Nullable NewVariableContext context) {
                 if (arg instanceof Constant.StringConstant constant) {
                     return Integer.toString(constant.value().length());
                 }
@@ -102,24 +133,24 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
 
         record StrLenArg(int n) implements StrLen {
             @Override
-            public String render(CallProps props) {
-                return StrLen.render(props.args.arguments.get(n));
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                return StrLen.render(props.args.arguments.get(n), context);
             }
         }
 
         record StrLenThis() implements StrLen {
             @Override
-            public String render(CallProps props) {
+            public String render(CallProps props, @Nullable NewVariableContext context) {
                 if (props.args.thisExpression == null) {
                     throw new TemplateRenderException("No this expression given for $strlen$this");
                 }
-                return StrLen.render(props.args.thisExpression);
+                return StrLen.render(props.args.thisExpression, context);
             }
         }
 
         record StrArg(int n) implements TemplatePart {
             @Override
-            public String render(CallProps props) {
+            public String render(CallProps props, @Nullable NewVariableContext context) {
                 if (n >= props.args.arguments.size()) {
                     throw new TemplateRenderException("Argument " + (n + 1) + " not given for $str" + (n + 1));
                 }
@@ -133,7 +164,7 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
 
         record TypeArgument(int n) implements TemplatePart {
             @Override
-            public String render(CallProps props) {
+            public String render(CallProps props, @Nullable NewVariableContext context) {
                 if (n >= props.args.typeArguments.size() || props.args.typeArguments.get(n) == null){
                     throw new TemplateRenderException("Template type argument " + (n + 1) + " not given");
                 }
@@ -143,7 +174,7 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
 
         record ClassTypeArgument(int n) implements TemplatePart {
             @Override
-            public String render(CallProps props) {
+            public String render(CallProps props, @Nullable NewVariableContext context) {
                 if (n >= props.args.classTypeArguments.size() || props.args.classTypeArguments.get(n) == null){
                     throw new TemplateRenderException("Template class type argument " + (n + 1) + " not given");
                 }
@@ -153,11 +184,15 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
 
         record PointeryArg(int n) implements TemplatePart {
             @Override
-            public String render(CallProps props) {
+            public String render(CallProps props, @Nullable NewVariableContext context) {
                 if (n >= props.args.arguments.size()) {
                     throw new TemplateRenderException("Argument " + (n + 1) + " not given for $pointery" + (n + 1));
                 }
-                return "&" + props.args.arguments.get(n).toPrettyString();
+                var inner = props.args.arguments.get(n).toPrettyString();
+                if (context == null || inner.matches("[(]*[a-zA-z_]+[)]*")) {
+                    return "&" + inner;
+                }
+                return "&" + context.request(inner);
             }
         }
     }
@@ -304,7 +339,9 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
     }
 
     public Expression call(CallArgs args) {
-        List<String> renderedParts = parts.stream().map(part -> part.render(new CallProps(methodName, args)))
+        NewVariableContext context = new NewVariableContext();
+        List<String> renderedParts = parts.stream()
+                .map(part -> part.render(new CallProps(methodName, args), context))
                 .toList();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < parts.size(); i++) {
@@ -321,6 +358,6 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                 sb.append(renderedParts.get(i));
             }
         }
-        return new VerbatimExpression(sb.toString());
+        return context.wrap(new VerbatimExpression(sb.toString()));
     }
 }

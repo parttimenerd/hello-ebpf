@@ -139,6 +139,70 @@ public interface Scheduler {
     /** No such process error code */
     final int ESRCH = 3;
 
+    final class PerProcessFlags {
+        /** I'm a virtual CPU */
+        public static final int PF_VCPU = 0x00000001;
+        /** I am an IDLE thread */
+        public static final int PF_IDLE = 0x00000002;
+        /** Getting shut down */
+        public static final int PF_EXITING = 0x00000004;
+        /** Coredumps should ignore this task */
+        public static final int PF_POSTCOREDUMP = 0x00000008;
+        /** Task is an IO worker */
+        public static final int PF_IO_WORKER = 0x00000010;
+        /** I'm a workqueue worker */
+        public static final int PF_WQ_WORKER = 0x00000020;
+        /** Forked but didn't exec */
+        public static final int PF_FORKNOEXEC = 0x00000040;
+        /** Process policy on mce errors */
+        public static final int PF_MCE_PROCESS = 0x00000080;
+        /** Used super-user privileges */
+        public static final int PF_SUPERPRIV = 0x00000100;
+        /** Dumped core */
+        public static final int PF_DUMPCORE = 0x00000200;
+        /** Killed by a signal */
+        public static final int PF_SIGNALED = 0x00000400;
+        /** Allocating memory to free memory. See memalloc\_noreclaim\_save() */
+        public static final int PF_MEMALLOC = 0x00000800;
+        /** set\_user() noticed that RLIMIT\_NPROC was exceeded */
+        public static final int PF_NPROC_EXCEEDED = 0x00001000;
+        /** If unset the fpu must be initialized before use */
+        public static final int PF_USED_MATH = 0x00002000;
+        /** Kernel thread cloned from userspace thread */
+        public static final int PF_USER_WORKER = 0x00004000;
+        /** This thread should not be frozen */
+        public static final int PF_NOFREEZE = 0x00008000;
+        public static final int PF__HOLE__00010000 = 0x00010000;
+        /** I am kswapd */
+        public static final int PF_KSWAPD = 0x00020000;
+        /** All allocations inherit GFP\_NOFS. See memalloc\_nfs\_save() */
+        public static final int PF_MEMALLOC_NOFS = 0x00040000;
+        /** All allocations inherit GFP\_NOIO. See memalloc\_noio\_save() */
+        public static final int PF_MEMALLOC_NOIO = 0x00080000;
+        /** Throttle writes only against the bdi I write to, I am cleaning dirty pages from some other bdi. */
+        public static final int PF_LOCAL_THROTTLE = 0x00100000;
+        /** I am a kernel thread */
+        public static final int PF_KTHREAD = 0x00200000;
+        /** Randomize virtual address space */
+        public static final int PF_RANDOMIZE = 0x00400000;
+        /** All allocation requests will clear \_\_GFP\_DIRECT\_RECLAIM */
+        public static final int PF_MEMALLOC_NORECLAIM = 0x00800000;
+        /** All allocation requests will inherit \_\_GFP\_NOWARN */
+        public static final int PF_MEMALLOC_NOWARN = 0x01000000;
+        public static final int PF__HOLE__02000000 = 0x02000000;
+        /** Userland is not allowed to meddle with cpus\_mask */
+        public static final int PF_NO_SETAFFINITY = 0x04000000;
+        /** Early kill for mce process policy */
+        public static final int PF_MCE_EARLY = 0x08000000;
+        /** Allocations constrained to zones which allow long term pinning. See memalloc\_pin\_save() */
+        public static final int PF_MEMALLOC_PIN = 0x10000000;
+        /** plug has ts that needs updating */
+        public static final int PF_BLOCK_TS = 0x20000000;
+        public static final int PF__HOLE__40000000 = 0x40000000;
+        /** This thread called freeze\_processes() and should not be frozen */
+        public static final int PF_SUSPEND_TASK = 0x80000000;
+    }
+
     /*
      * scx_bpf_error() wraps the scx_bpf_error_bstr() kfunc with variadic arguments
      * instead of an array of u64. Invoking this macro will cause the scheduler to

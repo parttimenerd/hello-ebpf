@@ -132,4 +132,8 @@ public class CompilationCache {
             throw new RuntimeException(e);
         }
     }
+
+    public Path getCacheFolder() {
+        return cacheFolder;
+    }
 }

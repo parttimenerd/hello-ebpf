@@ -55,4 +55,5 @@ public class Util {
     public static String getClosestString(String target, Collection<String> options) {
         return options.stream().min(Comparator.comparing(a -> computeEditDistance(target, a))).orElse(target);
     }
+
 }
