@@ -180,7 +180,7 @@ The library is available as a maven package:
 <dependency>
     <groupId>me.bechberger</groupId>
     <artifactId>bpf</artifactId>
-    <version>0.1.1-scx-enabled-SNAPSHOT</version>
+    <version>0.1.1-scx-SNAPSHOT</version>
 </dependency>
 ```
 
