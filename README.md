@@ -200,6 +200,31 @@ You might have to add the https://s01.oss.sonatype.org/content/repositories/rele
 </repositories>
 ```
 
+<details>
+<summary>You have to copy the .mvn/jvm.config file and add the annotation processor to your project.</summary>
+To properly use hello-ebpf as a library, you have to allow the maven compiler to access all the required internal
+APIs. You can do this by copying the `.mvn/jvm.config` file from this repository to your project.
+
+Furthermore, you have to add the annotation processor to your project:
+
+```xml
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <version>3.8.0</version>
+  <configuration>
+    <annotationProcessors>
+      <annotationProcessor>me.bechberger.ebpf.bpf.processor.Processor</annotationProcessor>
+    </annotationProcessors>
+    <compilerArgs>
+      <arg>-Xplugin:BPFCompilerPlugin</arg>
+    </compilerArgs>
+  </configuration>
+</plugin>
+```
+
+</details>
+
 Plans
 -----
 
