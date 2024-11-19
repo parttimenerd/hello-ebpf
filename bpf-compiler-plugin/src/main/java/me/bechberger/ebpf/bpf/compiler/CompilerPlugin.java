@@ -316,6 +316,7 @@ public class CompilerPlugin implements Plugin {
 
     enum FunctionKind {
         FUNCTION,
+        /** A string field named code and an optional return which is ignored */
         RAW,
         ERROR
     }
@@ -323,21 +324,16 @@ public class CompilerPlugin implements Plugin {
     private FunctionKind getFunctionKind(TypedTreePath<MethodTree> methodPath) {
         var function = methodPath.leaf();
         var statements = function.getBody().getStatements();
-        if (statements.size() != 2) {
-            return FunctionKind.FUNCTION;
-        }
-        if (!(statements.get(1) instanceof ThrowTree)) {
+        if (statements.size() > 2 || statements.isEmpty()) { // surely this is just a function
             return FunctionKind.FUNCTION;
         }
         if (statements.getFirst() instanceof JCVariableDecl declStatement) {
             if (declStatement.init instanceof JCLiteral literal && isSameType(methodPath, declStatement.getType(),
-                    String.class)) {
+                    String.class) && declStatement.getName().toString().toLowerCase().equals("code")) {
                 return FunctionKind.RAW;
             }
         }
-        logError(methodPath, function, "Raw method body must consist of a single string variable assignment and a " +
-                "throw");
-        return FunctionKind.ERROR;
+        return FunctionKind.FUNCTION;
     }
 
     private @Nullable FuncDeclStatementResult processBPFFunctionWithAssignment(TypedTreePath<MethodTree> function) {

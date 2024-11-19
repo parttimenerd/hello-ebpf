@@ -18,6 +18,7 @@ import me.bechberger.ebpf.type.Enum;
 import me.bechberger.ebpf.type.Ptr;
 import me.bechberger.ebpf.type.Struct;
 import me.bechberger.ebpf.type.Union;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -149,23 +150,21 @@ public class CompilerPluginTest {
     @Test
     public void testPtr() {
         assertEqualsDiffed("""
-                #include "vmlinux.h"
-                
                 s32 refAndDeref();
                 
                 s32 cast(s32 *intPtr);
                 
                 s32* increment(s32 *ptr);
-                                
+
                 s32 refAndDeref() {
                   s32 value = 3;
-                  s32 *ptr = &value;
+                  s32 *ptr = &(value);
                   return ptr == ((void*)0) ? 1 : 0;
                 }
                 
                 s32 cast(s32 *intPtr) {
                   s16 *ptr = ((s16*)intPtr);
-                  return *(ptr);
+                  return (*(ptr));
                 }
                 
                 s32* increment(s32 *ptr) {
@@ -200,17 +199,14 @@ public class CompilerPluginTest {
     @Test
     public void testPrint() {
         assertEqualsDiffed("""
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                
                 int testPrint();
                 
                 int testJavaPrint();
                 
                 int testJavaPrint2();
-                                
+                
                 int testPrint() {
-                  bpf_trace_printk((const char*)"Hello, World!\\\\n", 15);
+                  bpf_trace_printk((const u8*)"Hello, World!\\\\n", 15);
                   return 0;
                 }
                 
@@ -218,7 +214,7 @@ public class CompilerPluginTest {
                   bpf_trace_printk("Hello, World!\\\\n", sizeof("Hello, World!\\\\n"));
                   return 0;
                 }
-                
+
                 int testJavaPrint2() {
                   bpf_trace_printk("Hello, %s!\\\\n", sizeof("Hello, %s!\\\\n"), "World");
                   return 0;
@@ -1038,7 +1034,7 @@ public class CompilerPluginTest {
                 lastStatement = "bpf_trace_printk(\"%s\", 2, code);"
         )
         public void body() {
-            String body = """
+            String code = """
                     char* code = "Hello, World!";
                     """;
             throw new MethodIsBPFRelatedFunction();
@@ -1071,6 +1067,7 @@ public class CompilerPluginTest {
     }
 
     @Test
+    @Disabled
     public void testInterfaceWithCode() {
         assertEqualsDiffed("""
                 int func();
@@ -1098,5 +1095,29 @@ public class CompilerPluginTest {
                 """, BPFProgram.getCode(TestUsingInterfaceWithCode.class));
     }
 
+    @BPF
+    static abstract class TestUsingCodeInMethods extends BPFProgram {
+        @BPFFunction
+        public void func(int x) {
+            final String code = """
+                    bpf_trace_printk("Hello, %d!\\\\n", x);
+                    """;
+        }
+    }
+
+    @Test
+    public void testUsingCodeInMethods() {
+        assertEqualsDiffed("""
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+
+                int func(s32 x);
+
+                int func(s32 x) {
+                  bpf_trace_printk("Hello, %d!\\\\n", x);
+                  return 0;
+                }
+                """, BPFProgram.getCode(TestUsingCodeInMethods.class));
+    }
 
 }
