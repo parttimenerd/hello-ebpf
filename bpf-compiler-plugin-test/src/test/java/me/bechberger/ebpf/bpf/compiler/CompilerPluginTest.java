@@ -1120,4 +1120,34 @@ public class CompilerPluginTest {
                 """, BPFProgram.getCode(TestUsingCodeInMethods.class));
     }
 
+    @BPFInterface(after = "//after")
+    public interface TestInterfaceWithAfter {
+
+        @BPFFunction
+        default void func() {
+            BPFJ.bpf_trace_printk("Hello, World!\\n");
+        }
+
+    }
+
+    @BPFInterface
+    public interface TestInterfaceWithAfter2 extends TestInterfaceWithAfter {
+
+    }
+
+    @BPF
+    public static abstract class TestUsingInterfaceWithAfter extends BPFProgram implements TestInterfaceWithAfter2 {
+    }
+
+    @Test
+    public void testUsingInterfaceWithAfter() {
+        assertEqualsDiffed("""
+                int func() {
+                  bpf_trace_printk("Hello, World!\\\\n", sizeof("Hello, World!\\\\n"));
+                  return 0;
+                }
+
+                //after
+                """, BPFProgram.getCode(TestUsingInterfaceWithAfter.class));
+    }
 }

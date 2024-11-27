@@ -381,6 +381,7 @@ public class CompilerPlugin implements Plugin {
 
         var declsWithDefines = task.getElements().getAllMembers(bpfInterfaceTypeElement).stream()
                 .filter(m -> m instanceof MethodSymbol)
+                .filter(m -> ((MethodSymbol) m).getEnclosingElement().asType().equals(bpfInterfaceTypeElement.asType()))
                 .map(m -> Map.entry(m.toString(), task.getTypes().asMemberOf((DeclaredType) bpfInterfaceTypeElement.asType(), (MethodSymbol) m)))
                 .filter(e -> e.getValue() instanceof MethodType)
                 .map(e -> Map.entry(e.getKey(), (MethodType) e.getValue()))
@@ -402,7 +403,7 @@ public class CompilerPlugin implements Plugin {
         var bpfInterfaceAnnotation = bpfInterfaceTypeElement.getAnnotation(BPFInterface.class);
 
         var combinedCode = combineCode("", functionHeaders, List.of(), defines, result.definingStatements(), result.mapDefinitions(),
-                result.globalVariableDefinitions(), result.additions());
+                result.globalVariableDefinitions(), new TypeProcessor.InterfaceAdditions(List.of(), List.of(), List.of()));
 
         if (combinedCode.isBlank() && functionImplementations.isEmpty()) {
             return; // nothing changed
@@ -428,7 +429,10 @@ public class CompilerPlugin implements Plugin {
             for (var entry : functionImplementations.entrySet()) {
                 var methodSymbol = (MethodSymbol) bpfInterfaceTypeElement.getEnclosedElements().stream()
                         .filter(e -> e instanceof MethodSymbol m && m.toString().equals(entry.getKey()))
-                        .findFirst().orElseThrow();
+                        .findFirst().orElse(null);
+                if (methodSymbol == null) {
+                    continue;
+                }
                 var methodMeta = methodSymbol.getMetadata();
                 var methodAttributesField = methodMeta.getClass().getDeclaredField("attributes");
                 methodAttributesField.setAccessible(true);
