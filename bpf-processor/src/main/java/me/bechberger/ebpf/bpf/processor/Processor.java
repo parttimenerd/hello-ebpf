@@ -614,6 +614,29 @@ public class Processor extends AbstractProcessor {
         return obtainedPathToVMLinuxHeader.orElse(null);
     }
 
+    private String getBPFToolPath() {
+        Path bpftoolPath = Path.of(".bpftool.path");
+        if (Files.exists(bpftoolPath)) {
+            try {
+                return Files.readString(bpftoolPath).trim();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            var process = new ProcessBuilder("bpftool", "version").start();
+            if (process.waitFor() != 0) {
+                System.err.println("Could not find usable bpftool:\n" + new String(process.getErrorStream().readAllBytes()));
+                System.err.println("You can optionally download the latest binary from https://github.com/libbpf/bpftool/releases");
+                System.err.println("and put the location in a .bpftool.path file in the project root");
+                throw new UnsupportedOperationException("Could not find bpftool");
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return "bpftool";
+    }
+
     private Path obtainPathToVMLinuxHeader() {
         // obtain the path to the vmlinux.h header file
         // if it is not found, print an error
@@ -631,7 +654,7 @@ public class Processor extends AbstractProcessor {
                 return vmLinuxFile;
             }
             var errorFile = cacheFolder.resolve("vmlinux_error.txt");
-            var process = new ProcessBuilder("bpftool", "btf", "dump", "file", "/sys/kernel/btf/vmlinux", "format",
+            var process = new ProcessBuilder(getBPFToolPath(), "btf", "dump", "file", "/sys/kernel/btf/vmlinux", "format",
                     "c").redirectOutput(vmLinuxFile.toFile()).redirectError(errorFile.toFile()).start();
             if (process.waitFor() != 0) {
                 throw new UnsupportedOperationException("Could not obtain vmlinux.h header file via 'bpftool btf "
