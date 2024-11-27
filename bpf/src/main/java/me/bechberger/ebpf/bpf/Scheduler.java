@@ -114,7 +114,7 @@ import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_map__attach_struct_ops;
                 SEC("struct_ops.s/"#name)							\\
                 BPF_PROG(name, ##args)
              
-                	
+                #define BPF_FOR_EACH_ITER (&___it)
                 """,
         after = """
                 SCX_OPS_DEFINE(sched_ops,
