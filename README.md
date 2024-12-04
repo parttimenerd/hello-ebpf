@@ -112,6 +112,10 @@ Posts covering the development of this project:
 - Jul 02, 2024: [Hello eBPF: BPF Type Format and 13 Thousand Generated Java Classes (11)](https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/)
 - Jul 30, 2024: [Hello eBPF: Write your eBPF application in Pure Java (12)](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/)
 - Aug 13, 2024: [Hello eBPF: A Packet Logger in Pure Java using TC and XDP Hooks (13)](https://mostlynerdless.de/blog/2024/08/13/hello-ebpf-a-packet-logger-in-pure-java-using-tc-and-xdp-hooks-13/)
+- Aug 27, 2024: [Hello eBPF: Building a Lightning Fast Firewall with Java & eBPF (14)](https://mostlynerdless.de/blog/2024/08/27/hello-ebpf-building-a-lightning-fast-firewall-with-java-ebpf-14/)
+- Sep 10, 2024: [Hello eBPF: Collection of Resources for eBPF (14.5)](https://mostlynerdless.de/blog/2024/09/10/hello-ebpf-collection-of-resources-for-ebpf-14-5/)
+- Sep 10, 2024: [Hello eBPF: Writing a Linux scheduler in Java with eBPF (15)](https://mostlynerdless.de/blog/2024/09/10/hello-ebpf-writing-a-linux-scheduler-in-java-with-ebpf-15/)
+- Dec 03, 2024: [Hello eBPF: Control task scheduling with a custom scheduler written in Java (16)](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/)
 
 Examples
 --------
@@ -134,6 +138,7 @@ you can use them as a starting point for your own eBPF programs.
 |             | [demo.ForbiddenFile](bpf-samples/src/main/java/me/bechberger/ebpf/samples/demo/ForbiddenFile.java)                         | Block access to a specific file via openat2                                |
 |             | [Firewall](bpf-samples/src/main/java/me/bechberger/ebpf/samples/Firewall.java)                                             | A simple firewall that blocks all incoming packets                         |
 |             | [FirewallSpring](bpf-samples/src/main/java/me/bechberger/ebpf/samples/FirewallSpring.java)                                 | A spring boot based web front-end for the Firewall                         |
+|             | [MinimalScheduler](bpf-samples/src/main/java/me/bechberger/ebpf/samples/MinimalScheduler.java)                             | A minimal Linux scheduler                                                  | 
 
 Running the Examples
 --------------------
@@ -233,6 +238,7 @@ A look ahead into the future, so you know what to expect:
 - Implement more features related to libbpf and eBPF
   - cgroups support
 - More documentation
+- Support for macros
 
 These plans might change, but I'll try to keep this up to date.
 I'm open to suggestions, contributions, and ideas.
