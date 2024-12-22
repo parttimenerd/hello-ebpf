@@ -708,6 +708,7 @@ public class Processor extends AbstractProcessor {
     }
 
     private boolean dontCompile() {
-        return "true".equals(System.getenv("EBPF_DONT_COMPILE"));
+        var env = System.getenv("EBPF_DONT_COMPILE");
+        return "true".equals(env) || "1".equals(env);
     }
 }

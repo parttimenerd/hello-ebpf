@@ -41,6 +41,8 @@ public @interface BuiltinBPFFunction {
      *     <li>{@code $strlen$argN}: length of the {@code $argN} interpreted as a string literal</li>
      *     <li>{@code $str$argN}: Asserts that {@code $argN} is a string literal</li>
      *     <li>{@code $pointery$argN}: if {@code $argN} is not a pointer (or an array or a string), then prefix it with {@code &} and assign it inline to a variable if needed</li>
+     *     <li>{@code $M...}: the above for the m-th lambda</li>
+     *     <li>{@code $Mcode}: the code of the m-th lambda</li>
      * </ul>
      * <p>
      * Example: {@snippet :

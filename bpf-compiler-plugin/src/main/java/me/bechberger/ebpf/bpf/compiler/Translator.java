@@ -613,8 +613,12 @@ class Translator {
 
                 yield left != null && right != null ? new OperatorExpression(operator, left, right) : null;
             }
+            case LambdaExpressionTree lambda -> {
+                System.out.println(lambda);
+                yield null;
+            }
             default -> {
-                logError(expression, "Unsupported expression kind " + expression.getKind() + ": " + expression);
+                logError(expression, "Unsupported expression kind in translator " + expression.getKind() + ": " + expression);
                 yield null;
             }
         };
