@@ -1023,6 +1023,10 @@ public interface CAST {
             return toPrettyString(indent, increment);
         }
 
+        default String toPrettyStringWithoutBraces() {
+            return toPrettyString();
+        }
+
         record ExpressionStatement(Expression expression) implements Statement {
 
             @Override
@@ -1074,6 +1078,12 @@ public interface CAST {
             @Override
             public String toPrettyStringWithoutBraces(String indent, String increment) {
                 return statements.stream().map(s -> s.toPrettyString(indent, increment)).collect(Collectors.joining(
+                        "\n"));
+            }
+
+            @Override
+            public String toPrettyStringWithoutBraces() {
+                return statements.stream().map(CAST::toPrettyString).collect(Collectors.joining(
                         "\n"));
             }
 

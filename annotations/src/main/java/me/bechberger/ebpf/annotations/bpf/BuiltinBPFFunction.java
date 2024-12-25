@@ -25,7 +25,8 @@ public @interface BuiltinBPFFunction {
     /**
      * Call template to call the function in C, or just the function name to call with the arguments directly.
      * <p>
-     * The method body has to throw a {@link MethodIsBPFRelatedFunction} exception.
+     * The method body has to throw a {@link MethodIsBPFRelatedFunction} exception
+     * and arguments can be either values or directly passed lambdas
      * <p>
      * The signature is defined via a template with the following placeholders:
      * <ul>
@@ -41,8 +42,10 @@ public @interface BuiltinBPFFunction {
      *     <li>{@code $strlen$argN}: length of the {@code $argN} interpreted as a string literal</li>
      *     <li>{@code $str$argN}: Asserts that {@code $argN} is a string literal</li>
      *     <li>{@code $pointery$argN}: if {@code $argN} is not a pointer (or an array or a string), then prefix it with {@code &} and assign it inline to a variable if needed</li>
-     *     <li>{@code $M...}: the above for the m-th lambda</li>
-     *     <li>{@code $Mcode}: the code of the m-th lambda</li>
+     *     <li>{@code $lambdaM:code}: the code of the m-th lambda</li>
+     *     <li>{@code $lambdaM:paramN}: variable declaration for param n of the m-th lambda</li>
+     *     <li>{@code $lambdaM:paramN:type}: type of the parameter N of the m-th lambda</li>
+     *     <li>{@code $lambdaM:paramN:name}: name of the parameter N of the m-th lambda</li>
      * </ul>
      * <p>
      * Example: {@snippet :
@@ -69,6 +72,12 @@ public @interface BuiltinBPFFunction {
      *    func("abc")
      *    // will be translated to
      *    func("abc", sizeof("abc"))
+     *
+     *    @BuiltinBPFFunction("$lambda1:param1:type $lambda1:param1:name1 = $arg2; $lambda1:code")
+     *    void func(Consumer<Integer> consumer, int b);
+     *    func(a -> BPFJ.bpf_trace_printk(a), 1)
+     *    // will be translated to
+     *    int a1 = 1; BPFJ.bpf_trace_printk(a1);
      * }
      */
     String value() default "$name($args)";

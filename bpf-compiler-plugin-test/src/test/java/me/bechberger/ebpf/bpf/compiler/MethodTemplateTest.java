@@ -2,6 +2,16 @@ package me.bechberger.ebpf.bpf.compiler;
 
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Declarator;
+import me.bechberger.cast.CAST.Declarator.FunctionParameter;
+import me.bechberger.cast.CAST.Declarator.IdentifierDeclarator;
+import me.bechberger.cast.CAST.PrimaryExpression.Constant;
+import me.bechberger.cast.CAST.PrimaryExpression.Constant.IntegerConstant;
+import me.bechberger.cast.CAST.PrimaryExpression.Variable;
+import me.bechberger.cast.CAST.Statement.CompoundStatement;
+import me.bechberger.cast.CAST.Statement.VerbatimStatement;
+import me.bechberger.ebpf.bpf.compiler.MethodTemplate.Argument;
+import me.bechberger.ebpf.bpf.compiler.MethodTemplate.Argument.Lambda;
+import me.bechberger.ebpf.bpf.compiler.MethodTemplate.Argument.Value;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplate.CallArgs;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplateCache.TemplateRenderException;
 import org.jetbrains.annotations.Nullable;
@@ -59,17 +69,33 @@ class MethodTemplateTest {
                 List.of()));
     }
 
+    @Test
+    public void testLambda() {
+        assertRendered("$arg2 $lambda1:param1 $lambda1:param1:type $lambda1:param1:name1 $lambda1:code",
+                        "1 T a T a1 x = a;",
+                new Lambda(List.of(new FunctionParameter(new Variable("a"),
+                        new IdentifierDeclarator(new Variable("T")))),
+                        new CompoundStatement(List.of(new VerbatimStatement("x = a;")))),
+                new Value(CAST.Expression.constant(1)));
+    }
+
     static void assertRendered(String template, String expected, List<Integer> arguments) {
         assertEquals(expected, MethodTemplate.parse("func", template)
-                .call(new CallArgs(null, arguments.stream().map(CAST.Expression::constant).toList(), List.of()))
+                .call(new CallArgs(null, arguments.stream().map(CAST.Expression::constant).map(Value::new).toList(), List.of()))
+                .toPrettyString());
+    }
+
+    static void assertRendered(String template, String expected, Argument... arguments) {
+        assertEquals(expected, MethodTemplate.parse("func", template)
+                .call(new CallArgs(null, List.of(arguments), List.of()))
                 .toPrettyString());
     }
 
     static void assertRendered(String template, String expected, @Nullable String thisString, List<String> arguments) {
-        assertEquals(expected, MethodTemplate.parse("func", template)
-                .call(new CallArgs(thisString == null ? null : constant(thisString),
-                        arguments.stream().map(CAST.Expression::constant).toList(), List.of()))
-                .toPrettyString());
+    assertEquals(expected, MethodTemplate.parse("func", template)
+            .call(new CallArgs(thisString == null ? null : constant(thisString),
+                    arguments.stream().map(CAST.Expression::constant).map(Value::new).toList(), List.of()))
+            .toPrettyString());
     }
 
     static void assertRenderedWithTA(String template, String expected, List<String> typeArguments) {

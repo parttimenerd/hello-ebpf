@@ -2,15 +2,17 @@ package me.bechberger.ebpf.bpf.compiler;
 
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import me.bechberger.cast.CAST;
+import me.bechberger.cast.CAST.Declarator.FunctionParameter;
 import me.bechberger.cast.CAST.Expression;
+import me.bechberger.cast.CAST.PrimaryExpression;
 import me.bechberger.cast.CAST.PrimaryExpression.Constant;
 import me.bechberger.cast.CAST.PrimaryExpression.VerbatimExpression;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
+import me.bechberger.ebpf.bpf.compiler.MethodTemplate.Argument.Lambda;
+import me.bechberger.ebpf.bpf.compiler.MethodTemplate.Argument.Value;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplate.TemplatePart.*;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplateCache.TemplateRenderException;
 import me.bechberger.ebpf.type.Ptr;
-import me.bechberger.ebpf.type.TypeUtils;
-import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Nullable;
 
 import javax.lang.model.type.TypeKind;
@@ -50,11 +52,30 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
         }
     }
 
+    public sealed interface Argument {
+        record Lambda(List<FunctionParameter> parameters, CAST.Statement.CompoundStatement code) implements Argument {
+            @Override
+            public String toPrettyString() {
+                return String.format("(%s) { %s }", parameters.stream().map(FunctionParameter::toPrettyString).collect(Collectors.joining(", ")),
+                        code.toPrettyString());
+            }
+        }
+        record Value(Expression expression) implements Argument {
+            @Override
+            public String toPrettyString() {
+                return expression.toPrettyString();
+            }
+        }
+
+        String toPrettyString();
+    }
+
     public record CallArgs(@Nullable CAST.Expression thisExpression,
-                           List<? extends Expression> arguments,
+                           List<? extends Argument> arguments,
                            List<CAST.Declarator> typeArguments,
                            List<CAST.Declarator> classTypeArguments) {
-        public CallArgs(@Nullable CAST.Expression thisExpression, List<? extends Expression> arguments, List<CAST.Declarator> typeArguments) {
+        public CallArgs(@Nullable CAST.Expression thisExpression,
+                        List<? extends Argument> arguments, List<CAST.Declarator> typeArguments) {
             this(thisExpression, arguments, typeArguments, List.of());
         }
     }
@@ -123,6 +144,12 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
         }
 
         sealed interface StrLen extends TemplatePart {
+            static String render(Argument arg, @Nullable NewVariableContext context) {
+                if (arg instanceof Value value && value.expression instanceof Constant.StringConstant constant) {
+                    return Integer.toString(constant.value().length());
+                }
+                throw new TemplateRenderException("Argument " + arg + " is not a literal string");
+            }
             static String render(Expression arg, @Nullable NewVariableContext context) {
                 if (arg instanceof Constant.StringConstant constant) {
                     return Integer.toString(constant.value().length());
@@ -155,7 +182,7 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                     throw new TemplateRenderException("Argument " + (n + 1) + " not given for $str" + (n + 1));
                 }
                 var arg = props.args.arguments.get(n);
-                if (arg instanceof Constant.StringConstant constant) {
+                if (arg instanceof Value value && value.expression instanceof Constant.StringConstant constant) {
                     return constant.value();
                 }
                 throw new TemplateRenderException("Argument " + arg + " is not a literal string");
@@ -188,11 +215,66 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                 if (n >= props.args.arguments.size()) {
                     throw new TemplateRenderException("Argument " + (n + 1) + " not given for $pointery" + (n + 1));
                 }
-                var inner = props.args.arguments.get(n).toPrettyString();
+                var arg = props.args.arguments.get(n);
+                if (!(arg instanceof Value value)) {
+                    throw new TemplateRenderException("Argument " + arg + " is not a primary expression");
+                }
+                var inner = value.expression.toPrettyString();
                 if (context == null || inner.matches("[(]*[a-zA-z_]+[)]*")) {
                     return "&" + inner;
                 }
                 return "&" + context.request(inner);
+            }
+        }
+
+        private static Lambda getLambdaParam(CallProps props, int n, String text) {
+            if (n >= props.args.arguments.size()) {
+                throw new TemplateRenderException("Argument " + (n + 1) + " not given for " + text);
+            }
+            if (!(props.args.arguments.get(n) instanceof Lambda lambda)) {
+                throw new TemplateRenderException("Argument " + (n + 1) + " is not a lambda for " + text);
+            }
+            return lambda;
+        }
+
+        private static FunctionParameter getLambdaParam(CallProps props, int n, int m, String text) {
+            var lambda = getLambdaParam(props, n, text);
+            if (m >= lambda.parameters.size()) {
+                throw new TemplateRenderException("Not enough parameters in lambda " + (n + 1) + " for " + text);
+            }
+            return lambda.parameters.get(m);
+        }
+
+        record LambdaParam(int n, int m) implements TemplatePart {
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                String text = String.format("$lambda%d:param%d", n + 1, m + 1);
+                return TemplatePart.getLambdaParam(props, n, m, text).toPrettyString();
+            }
+        }
+
+        record LambdaParamName(int n, int m) implements TemplatePart {
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                String text = String.format("$lambda%d:param%d:name", n + 1, m + 1);
+                return TemplatePart.getLambdaParam(props, n, m, text).name().toPrettyString();
+            }
+        }
+
+        record LambdaParamType(int n, int m) implements TemplatePart {
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                String text = String.format("$lambda%d:param%d:type", n + 1, m + 1);
+                return TemplatePart.getLambdaParam(props, n, m, text).declarator().toPrettyString();
+            }
+        }
+
+        record LambdaCode(int n) implements TemplatePart {
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                String text = String.format("$lambda%d:code", n + 1);
+                var code = TemplatePart.getLambdaParam(props, n, text).code();
+                return code.toPrettyStringWithoutBraces();
             }
         }
     }
@@ -235,6 +317,66 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                 hadPointeryBefore = true;
                 i++;
                 part = parts[i];
+            } else if (part.startsWith("lambda")) {
+                // we're in $Lambda...
+                /*
+                 *     <li>{@code $lambdaM:code}: the code of the m-th lambda</li>
+                 *     <li>{@code $lambdaM:paramN}: variable declaration for param n of the m-th lambda</li>
+                 *     <li>{@code $lambdaM:paramN:type}: type of the parameter N of the m-th lambda</li>
+                 *     <li>{@code $lambdaM:paramN:name}: name of the parameter N of the m-th lambda</li>
+                 */
+                int end = 6;
+                while (end < part.length() && Character.isDigit(part.charAt(end))) {
+                    end++;
+                }
+                int lambdaNum;
+                try {
+                    lambdaNum = Integer.parseInt(part.substring(6, end));
+                } catch (NumberFormatException e) {
+                    throw new TemplateRenderException("Invalid lambda number: $" + part);
+                }
+                String rest = part.substring(end);
+                if (!rest.startsWith(":")) {
+                    throw new TemplateRenderException("Invalid lambda part: $" + part + ", missing ':' after lambda number");
+                }
+                rest = rest.substring(1);
+                if (rest.startsWith("code")) {
+                    templateParts.add(new LambdaCode(lambdaNum - 1));
+                    part = rest.substring(4);
+                } else if (rest.startsWith("param")) {
+                    int paramNum;
+                    end = 5;
+                    while (end < rest.length() && Character.isDigit(rest.charAt(end))) {
+                        end++;
+                    }
+                    try {
+                        paramNum = Integer.parseInt(rest.substring(5, end));
+                    } catch (NumberFormatException e) {
+                        throw new TemplateRenderException("Invalid lambda parameter number: $" + part);
+                    }
+                    String rest2 = rest.substring(end);
+                    if (!rest2.startsWith(":")) {
+                        templateParts.add(new LambdaParam(lambdaNum - 1, paramNum - 1));
+                        part = rest2;
+                    } else {
+                        rest2 = rest2.substring(1);
+                        if (rest2.startsWith("type")) {
+                            templateParts.add(new LambdaParamType(lambdaNum - 1, paramNum - 1));
+                            part = rest2.substring(4);
+                        } else if (rest2.startsWith("name")) {
+                            templateParts.add(new LambdaParamName(lambdaNum - 1, paramNum - 1));
+                            part = rest2.substring(4);
+                        } else {
+                            throw new TemplateRenderException("Unknown lambda part: $" + part);
+                        }
+                    }
+                } else {
+                    throw new TemplateRenderException("Unknown lambda part: $" + part);
+                }
+                if (!part.isEmpty()) {
+                    templateParts.add(new Verbatim(part));
+                }
+                continue;
             }
 
             if (part.startsWith("name")) {
@@ -346,7 +488,7 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < parts.size(); i++) {
             var rendered = renderedParts.get(i);
-            // handle $argsN case where the resulting expression is empt
+            // handle $argsN case where the resulting expression is empty
             // and $argsN is prefixed by a comma
             if (i < parts.size() - 1 &&
                     renderedParts.get(i + 1).isEmpty() &&

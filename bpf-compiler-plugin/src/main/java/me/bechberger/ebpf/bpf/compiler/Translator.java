@@ -19,6 +19,9 @@ import me.bechberger.ebpf.annotations.CustomType;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.EnumMember;
 import me.bechberger.ebpf.bpf.compiler.CompilerPlugin.TypedTreePath;
+import me.bechberger.ebpf.bpf.compiler.MethodTemplate.Argument;
+import me.bechberger.ebpf.bpf.compiler.MethodTemplate.Argument.Lambda;
+import me.bechberger.ebpf.bpf.compiler.MethodTemplate.Argument.Value;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplate.CallArgs;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplateCache.TemplateRenderException;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils;
@@ -93,25 +96,31 @@ class Translator {
         if (returnType != null && returnType.toPrettyString().equals("void")) {
             returnType = Declarator.identifier("int");
         }
-        var params = new ArrayList<FunctionParameter>();
-        for (int i = 0; i < method.getParameters().size(); i++) {
-            var param = methodElement.getParameters().get(i);
-            var paramTree = method.getParameters().get(i);
-            var type = translateType(compilerPlugin.trees.getElement(methodPath.path(paramTree)),
-                    param.type);
-            if (type == null) {
-                logError(paramTree, "Unsupported parameter type: " + param.type);
-                hadError = true;
-            }
-            params.add(new FunctionParameter(variable(param.name.toString()), type));
-        }
-        if (hadError) {
+        var params = translateFunctionParameters(method.getParameters());
+        if (params == null) {
             return null;
         }
         var decl = new FunctionDeclarator(variable(name), returnType, params);
         assert annotation != null;
         var alwaysInline = compilerPlugin.getAnnotationOfMethodOrSuper(methodElement, AlwaysInline.class);
         return MethodHeaderTemplate.parse(annotation.headerTemplate()).call(decl, alwaysInline != null ? "__always_inline " : "");
+    }
+
+    @Nullable
+    List<FunctionParameter> translateFunctionParameters(List<? extends VariableTree> parameters) {
+        var translated = new ArrayList<FunctionParameter>();
+        var hadError = false;
+        for (var parameter : parameters) {
+            var typeMirror = compilerPlugin.trees.getElement(methodPath.path(parameter)).asType();
+            var type = translateType(compilerPlugin.trees.getElement(methodPath.path(parameter)), typeMirror);
+            if (type == null) {
+                logError(parameter, "Unsupported parameter type: " + typeMirror);
+                hadError = true;
+            }
+            var name = parameter.getName().toString();
+            translated.add(new FunctionParameter(variable(name), type));
+        }
+        return hadError ? null : translated;
     }
 
     public boolean addDefinition() {
@@ -519,10 +528,10 @@ class Translator {
                 if (typeKind == DataTypeKind.NONE && customTypeAnnotation != null) {
                     var template = customTypeAnnotation.constructorTemplate();
                     var methodTemplate = MethodTemplate.parse(customTypeAnnotation.name(), template);
-                    List<Expression> arguments = new ArrayList<>();
+                    List<Argument> arguments = new ArrayList<>();
                     boolean hasError = false;
                     for (int i = 0; i < newClassTree.getArguments().size(); i++) {
-                        var translated = translate(newClassTree.getArguments().get(i));
+                        var translated = translateArgument(newClassTree.getArguments().get(i));
                         if (translated == null) {
                             hasError = true;
                         }
@@ -614,7 +623,7 @@ class Translator {
                 yield left != null && right != null ? new OperatorExpression(operator, left, right) : null;
             }
             case LambdaExpressionTree lambda -> {
-                System.out.println(lambda);
+                logError(expression, "Lambdas are only supported in calls to built-in functions: " + expression);
                 yield null;
             }
             default -> {
@@ -657,7 +666,7 @@ class Translator {
                 return null;
             }
         }
-        List<Expression> arguments = new ArrayList<>();
+        List<Argument> arguments = new ArrayList<>();
         boolean hasError = false;
         for (int i = 0; i < methodTree.getArguments().size(); i++) {
             var argument = methodTree.getArguments().get(i);
@@ -665,21 +674,21 @@ class Translator {
                 // handle varargs by expanding the last argument
                 if (argument instanceof JCNewArray newArray) {
                     for (var elem : newArray.elems) {
-                        var translated = translate(elem);
+                        var translated = translateArgumentWithoutLambda(elem);
                         if (translated == null) {
                             hasError = true;
                         }
                         arguments.add(translated);
                     }
                 } else {
-                    var translated = translate(argument);
+                    var translated = translateArgument(argument);
                     if (translated == null) {
                         hasError = true;
                     }
                     arguments.add(translated);
                 }
             } else {
-                var translated = translate(argument);
+                var translated = translateArgument(argument);
                 if (translated == null) {
                     hasError = true;
                 }
@@ -719,6 +728,45 @@ class Translator {
             return null;
         }
     }
+
+    @Nullable
+    Argument translateArgumentWithoutLambda(ExpressionTree argument) {
+        var arg = translate(argument);
+        if (arg == null) {
+            return null;
+        }
+        return new Argument.Value(arg);
+    }
+
+    @Nullable
+    Argument translateArgument(ExpressionTree argument) {
+        if (argument instanceof LambdaExpressionTree lambda) {
+            var params = translateFunctionParameters(lambda.getParameters());
+            if (params == null) {
+                return null;
+            }
+            CompoundStatement body = switch (lambda.getBody()) {
+                case BlockTree block -> translate(block);
+                case ExpressionTree exprTree -> {
+                    var expr = translate(exprTree);
+                    if (expr == null) {
+                        yield null;
+                    }
+                    yield new CompoundStatement(List.of(new ExpressionStatement(expr)));
+                }
+                default -> {
+                    logError(lambda, "Unsupported lambda body: " + lambda.getBody());
+                    yield null;
+                }
+            };
+            if (body == null) {
+                return null;
+            }
+            return new Lambda(params, body);
+        }
+        return translateArgumentWithoutLambda(argument);
+    }
+    // translate(((JCLambda) argument).body)
 
     @Nullable
     CAST.Expression translate(LiteralTree literalTree) {
