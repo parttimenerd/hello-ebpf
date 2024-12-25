@@ -73,7 +73,7 @@ public @interface BuiltinBPFFunction {
      *    // will be translated to
      *    func("abc", sizeof("abc"))
      *
-     *    @BuiltinBPFFunction("$lambda1:param1:type $lambda1:param1:name1 = $arg2; $lambda1:code")
+     *    @BuiltinBPFFunction("$lambda1:param1:type $lambda1:param1:name = $arg2; $lambda1:code")
      *    void func(Consumer<Integer> consumer, int b);
      *    func(a -> BPFJ.bpf_trace_printk(a), 1)
      *    // will be translated to

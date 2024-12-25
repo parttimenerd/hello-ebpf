@@ -540,7 +540,11 @@ class Translator {
                     if (hasError) {
                         yield null;
                     }
-                    yield methodTemplate.call(new CallArgs(null, arguments, List.of()));
+                    var res = methodTemplate.call(new CallArgs(null, arguments, List.of()));
+                    if (!(res instanceof Expression expr)) {
+                        throw new IllegalStateException("Unexpected type " + res.getClass());
+                    }
+                    yield  expr;
                 }
 
                 if (typeKind == DataTypeKind.ENUM || typeKind == DataTypeKind.NONE) {
@@ -721,8 +725,12 @@ class Translator {
             return null;
         }
         try {
-            return compilerPlugin.methodTemplateCache.render(methodPath, methodInvocationTree, symbol,
+            var res = compilerPlugin.methodTemplateCache.render(methodPath, methodInvocationTree, symbol,
                     new CallArgs(thisExpression, arguments, declarators, typeDeclarators));
+            return new VerbatimExpression(
+                                res.code().endsWith(";") ?
+                                        res.code().substring(0, res.code().length() - 1) :
+                                        res.code());
         } catch (TemplateRenderException e) {
             logError(calledMethod, e.getMessage());
             return null;

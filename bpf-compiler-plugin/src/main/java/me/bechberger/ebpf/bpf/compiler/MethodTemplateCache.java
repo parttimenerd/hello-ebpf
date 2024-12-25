@@ -96,7 +96,7 @@ public class MethodTemplateCache {
     /**
      * Throws a template exception if the template can't be parsed or rendering failed
      */
-    public Expression render(TypedTreePath<?> path, Tree invocation, MethodSymbol methodSymbol, CallArgs args) {
+    public CAST.PrimaryExpression.VerbatimExpression render(TypedTreePath<?> path, Tree invocation, MethodSymbol methodSymbol, CallArgs args) {
         var template = getMethodTemplate(path, invocation, methodSymbol);
         if (template == null) {
             throw new TemplateRenderException("No template found for method " + methodSymbol.getSimpleName());

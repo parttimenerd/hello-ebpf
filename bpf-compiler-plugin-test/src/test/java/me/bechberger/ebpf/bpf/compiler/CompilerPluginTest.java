@@ -1155,13 +1155,13 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class TestBasicFunctionMacro extends BPFProgram {
 
-        @BuiltinBPFFunction("$lambda1:param1:type $lambda1:param1:name1 = $arg2; $lambda1:code")
+        @BuiltinBPFFunction("$lambda1:param1:type $lambda1:param1:name = $arg2; $lambda1:code")
         public static void testMacro(Consumer<Integer> consumer, int arg) {
             throw new MethodIsBPFRelatedFunction();
         }
 
         @BPFFunction
-        public void code() {
+        public void _code() {
             testMacro((a) -> {
                 BPFJ.bpf_trace_printk("Hello, %d!\\n", a);
             }, 2);
@@ -1171,13 +1171,10 @@ public class CompilerPluginTest {
     @Test
     public void testBasicFunctionMacro() {
         assertEqualsDiffed("""
-                int testMacro(int x = 2);
+                int _code();
 
-                int code();
-
-                int code() {
-                  int a = 2;
-                    bpf_trace_printk("Hello, %d!\\\\n", a);
+                int _code() {
+                  s32 a = 2; bpf_trace_printk("Hello, %d!\\\\n", sizeof("Hello, %d!\\\\n"), a);
                   return 0;
                 }
                 """, BPFProgram.getCode(TestBasicFunctionMacro.class));

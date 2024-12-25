@@ -50,6 +50,13 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
             }
             return new VerbatimExpression(String.format("({%s %s;})", this, expression.toPrettyString()));
         }
+
+        public CAST.Statement.VerbatimStatement wrap(CAST.Statement.VerbatimStatement statement) {
+            if (newVariables.isEmpty()) {
+                return statement;
+            }
+            return new CAST.Statement.VerbatimStatement(String.format("{%s %s;}", this, statement.toPrettyString()));
+        }
     }
 
     public sealed interface Argument {
@@ -480,7 +487,7 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
         return new MethodTemplate(methodName, template, templateParts);
     }
 
-    public Expression call(CallArgs args) {
+    public VerbatimExpression call(CallArgs args) {
         NewVariableContext context = new NewVariableContext();
         List<String> renderedParts = parts.stream()
                 .map(part -> part.render(new CallProps(methodName, args), context))
