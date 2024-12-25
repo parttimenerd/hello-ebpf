@@ -61,5 +61,13 @@ public @interface Type {
      */
     boolean typedefed() default false;
 
+    /**
+     * Use the given C type instead of the generated one, might contain placeholders
+     * <p>
+     * Placeholders:
+     * <ul>
+     *     <li>{@code $T1, ...}: Template parameters of the type</li>
+     * </ul>
+     */
     String cType() default "";
 }

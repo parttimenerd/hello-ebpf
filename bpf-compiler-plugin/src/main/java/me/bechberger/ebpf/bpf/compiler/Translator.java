@@ -21,7 +21,6 @@ import me.bechberger.ebpf.annotations.EnumMember;
 import me.bechberger.ebpf.bpf.compiler.CompilerPlugin.TypedTreePath;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplate.Argument;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplate.Argument.Lambda;
-import me.bechberger.ebpf.bpf.compiler.MethodTemplate.Argument.Value;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplate.CallArgs;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplateCache.TemplateRenderException;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils;
@@ -38,7 +37,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -819,7 +817,7 @@ class Translator {
                 return new IdentifierDeclarator(name);
             }
         }
-        var t = typeProcessor.processBPFTypeRecordMemberType(element, anns, type);
+        var t = typeProcessor.processBPFTypeRecordMemberTypeWithBox(element, anns, type);
         return t.map(m -> m.toBPFType(j -> new VerbatimBPFOnlyType(j.name(), PrefixKind.NORMAL)).toCustomType().toCUse()).orElse(null);
     }
 
@@ -840,7 +838,7 @@ class Translator {
             }
         }
 
-        var t = typeProcessor.processBPFTypeRecordMemberType(element, anns, type);
+        var t = typeProcessor.processBPFTypeRecordMemberTypeWithBox(element, anns, type);
         return t.map(m -> m.toBPFType(j -> new VerbatimBPFOnlyType(j.name(), PrefixKind.NORMAL)).toCustomType().toCUse()).orElse(null);
     }
 

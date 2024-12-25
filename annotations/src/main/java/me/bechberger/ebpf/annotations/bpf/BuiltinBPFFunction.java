@@ -17,7 +17,7 @@ import java.lang.annotation.*;
  *    bpf_trace_printk("Hello, %s!", "world");
  * }
  */
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface BuiltinBPFFunction {
@@ -42,7 +42,7 @@ public @interface BuiltinBPFFunction {
      *     <li>{@code $strlen$argN}: length of the {@code $argN} interpreted as a string literal</li>
      *     <li>{@code $str$argN}: Asserts that {@code $argN} is a string literal</li>
      *     <li>{@code $pointery$argN}: if {@code $argN} is not a pointer (or an array or a string), then prefix it with {@code &} and assign it inline to a variable if needed</li>
-     *     <li>{@code $lambdaM:code}: the code of the m-th lambda</li>
+     *     <li>{@code $lambdaM:code}: the code of the m-th lambda, use {@code Box} for using variables inside and outside</li>
      *     <li>{@code $lambdaM:paramN}: variable declaration for param n of the m-th lambda</li>
      *     <li>{@code $lambdaM:paramN:type}: type of the parameter N of the m-th lambda</li>
      *     <li>{@code $lambdaM:paramN:name}: name of the parameter N of the m-th lambda</li>

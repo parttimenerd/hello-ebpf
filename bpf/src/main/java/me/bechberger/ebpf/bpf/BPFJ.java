@@ -1,7 +1,5 @@
 package me.bechberger.ebpf.bpf;
 
-import me.bechberger.ebpf.annotations.Size;
-import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
@@ -195,6 +193,38 @@ public class BPFJ {
      */
     @BuiltinBPFFunction("bpf_probe_read_user_str($arg1, sizeof($arg1), $arg2)")
     public static <T> long bpf_probe_read_user_str(String dest, String src) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Create a {@code continue} in lambda blocks
+     */
+    @BuiltinBPFFunction("continue")
+    public static void _continue() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Create a {@code break} in lambda blocks
+     */
+    @BuiltinBPFFunction("break")
+    public static void _break() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Create a {@code return} in lambda blocks
+     */
+    @BuiltinBPFFunction("return $arg1")
+    public static Object _return(Object value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Create a {@code return} in lambda blocks
+     */
+    @BuiltinBPFFunction("return")
+    public static void _return() {
         throw new MethodIsBPFRelatedFunction();
     }
 }

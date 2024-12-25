@@ -4,7 +4,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Declarator.FunctionParameter;
 import me.bechberger.cast.CAST.Expression;
-import me.bechberger.cast.CAST.PrimaryExpression;
 import me.bechberger.cast.CAST.PrimaryExpression.Constant;
 import me.bechberger.cast.CAST.PrimaryExpression.VerbatimExpression;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -504,7 +503,17 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                 var stripped = rendered.strip();
                 sb.append(stripped, 0, stripped.length() - 1);
             } else {
-                sb.append(renderedParts.get(i));
+                if (rendered.contains("\n") && i > 0) {
+                    var previous = renderedParts.get(i - 1);
+                    if (previous.matches(".*\\n[ \t]+$")) {
+                        var indent = previous.substring(previous.lastIndexOf("\n") + 1);
+                        sb.append(rendered.lines().collect(Collectors.joining("\n" + indent)));
+                    } else {
+                        sb.append(rendered);
+                    }
+                } else {
+                    sb.append(rendered);
+                }
             }
         }
         return context.wrap(new VerbatimExpression(sb.toString()));

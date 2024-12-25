@@ -7,6 +7,7 @@
 package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.bpf.*;
+import me.bechberger.ebpf.runtime.BpfDefinitions;
 import me.bechberger.ebpf.runtime.ScxDefinitions;
 import me.bechberger.ebpf.runtime.TaskDefinitions;
 import me.bechberger.ebpf.type.Ptr;
@@ -14,10 +15,7 @@ import me.bechberger.ebpf.type.Ptr;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.foreign.MemorySegment;
-
-import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_link__destroy;
-import static me.bechberger.ebpf.bpf.raw.Lib_2.bpf_map__attach_struct_ops;
+import java.util.function.Consumer;
 
 /**
  * A sched-ext based scheduler
@@ -311,6 +309,29 @@ public interface Scheduler {
 
     default String getSchedulerName() {
         return ((BPFProgram)this).getPropertyValue("sched_name");
+    }
+
+    /**
+     * Iterate over all tasks in the DSQ, using the {@code bpf_for_each} macro.
+     * <p>
+     * This inserts the body of the lambda into the macro,
+     * so {@code return} works differently,
+     * for {@code break;} use {@link BPFJ#_break()} and for {@code continue;} use {@link BPFJ#_continue()}.
+     * Use {@link me.bechberger.ebpf.type.Box} for using non-final variables from outside the lambda.
+     * @param dsq_id queue id
+     * @param cur current task in the loop
+     * @param body lambda to execute for each task
+     */
+    @BuiltinBPFFunction("""
+            bpf_for_each(scx_dsq, $arg2, $arg1, 0) {
+                $lambda3:param1:type $lambda3:param1:name = BPF_FOR_EACH_ITER;
+                $lambda3:code
+            }
+            """)
+    default void bpf_for_each_dsq(int dsq_id,
+                                  Ptr<TaskDefinitions.task_struct> cur,
+                                  Consumer<Ptr<BpfDefinitions.bpf_iter_scx_dsq>> body) {
+        throw new MethodIsBPFRelatedFunction();
     }
 
     /**

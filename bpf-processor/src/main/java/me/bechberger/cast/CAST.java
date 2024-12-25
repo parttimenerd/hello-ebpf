@@ -51,6 +51,39 @@ public interface CAST {
         return "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n") + "\"";
     }
 
+    private static String replaceReturnOutsideStrings(String input, String replacement) {
+        if (!input.contains("return")) {
+            return input;
+        }
+        StringBuilder output = new StringBuilder();
+        boolean inSingleQuotes = false;
+        boolean inDoubleQuotes = false;
+
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+
+            if (c == '\'' && !inDoubleQuotes) {
+                inSingleQuotes = !inSingleQuotes;
+            } else if (c == '\"' && !inSingleQuotes) {
+                inDoubleQuotes = !inDoubleQuotes;
+            }
+
+            if (!inSingleQuotes && !inDoubleQuotes && input.startsWith("return", i)) {
+                int semicolonIndex = input.indexOf(';', i);
+                if (semicolonIndex != -1 && input.substring(i, semicolonIndex + 1).matches("return[^;]*;")) {
+                    // Replace match with your desired replacement
+                    output.append(replacement);
+                    i = semicolonIndex; // Skip the processed portion
+                    continue;
+                }
+            }
+
+            output.append(c);
+        }
+
+        return output.toString();
+    }
+
     sealed interface Expression extends CAST permits Declarator, InitDeclarator, Initializer, OperatorExpression,
             PrimaryExpression {
 
@@ -60,6 +93,11 @@ public interface CAST {
         @Override
         default Statement toStatement() {
             return Statement.expression(this);
+        }
+
+        /** Replace all statements that start with {@code return } with the passed statement */
+        default Expression replaceReturnStatement(Statement newLastStatement) {
+            return this;
         }
 
         static PrimaryExpression.Constant<?> constant(Object value) {
@@ -254,6 +292,11 @@ public interface CAST {
             public List<? extends Expression> children() {
                 return List.of(expression);
             }
+
+            @Override
+            public Expression replaceReturnStatement(Statement newLastStatement) {
+                return new ParenthesizedExpression(expression.replaceReturnStatement(newLastStatement));
+            }
         }
 
         record VerbatimExpression(String code) implements PrimaryExpression {
@@ -264,7 +307,12 @@ public interface CAST {
 
             @Override
             public String toPrettyString(String indent, String increment) {
-                return indent + code;
+                return code.lines().map(l -> indent + l).collect(Collectors.joining("\n"));
+            }
+
+            @Override
+            public Expression replaceReturnStatement(Statement newLastStatement) {
+                return new VerbatimExpression(replaceReturnOutsideStrings(code, newLastStatement.toPrettyString()));
             }
         }
 
@@ -512,6 +560,14 @@ public interface CAST {
             }
         }
 
+        @Override
+        public Expression replaceReturnStatement(Statement newLastStatement) {
+            return new OperatorExpression(operator,
+                    children().stream()
+                            .map(e -> e.replaceReturnStatement(newLastStatement))
+                            .toArray(Expression[]::new));
+        }
+
         public static OperatorExpression binary(String op, Expression left, Expression right) {
             return new OperatorExpression(Operator.binary(op), left, right);
         }
@@ -565,6 +621,11 @@ public interface CAST {
         @Override
         public String toPrettyString(String indent, String increment) {
             return indent + (name == null ? "" : "." + name.toPrettyString() + " = ") + expression.toPrettyString();
+        }
+
+        @Override
+        public Expression replaceReturnStatement(Statement newLastStatement) {
+            return new InitDeclarator(name, expression.replaceReturnStatement(newLastStatement));
         }
     }
 
@@ -1038,6 +1099,11 @@ public interface CAST {
             public String toPrettyString(String indent, String increment) {
                 return expression.toPrettyString(indent, increment) + ";";
             }
+
+            @Override
+            public ExpressionStatement replaceReturnStatement(Statement newLastStatement) {
+                return new ExpressionStatement(expression.replaceReturnStatement(newLastStatement));
+            }
         }
 
         record VariableDefinition(Declarator type, PrimaryExpression.Variable name,
@@ -1420,6 +1486,13 @@ public interface CAST {
             @Override
             public String toPrettyString(String indent, String increment) {
                 return code.lines().map(l -> indent + l).collect(Collectors.joining("\n"));
+            }
+
+            @Override
+            public Statement replaceReturnStatement(Statement newLastStatement) {
+                String returnString = newLastStatement.toPrettyString();
+                // replace "return [^;];" with the new return statement
+                return new VerbatimStatement(replaceReturnOutsideStrings(code, returnString));
             }
         }
 

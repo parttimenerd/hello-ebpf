@@ -11,7 +11,6 @@ import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFInterface;
 import me.bechberger.ebpf.annotations.Type;
-import me.bechberger.ebpf.annotations.bpf.InternalBody;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils.AnnotationValues;
 import me.bechberger.ebpf.bpf.processor.AnnotationUtils.AnnotationValues.AnnotationKind;
 import me.bechberger.ebpf.bpf.processor.BPFTypeLike.*;
@@ -24,6 +23,7 @@ import me.bechberger.ebpf.type.BPFType.*;
 import me.bechberger.ebpf.type.BPFType.BPFStructType.SourceClassKind;
 import me.bechberger.ebpf.type.Enum;
 import me.bechberger.ebpf.type.Typedef;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -311,6 +311,10 @@ public class TypeProcessor {
         // get the type from the type parameter
         var type = ((DeclaredType) field.asType()).getTypeArguments().getFirst();
         var bpfTypeMirror = processBPFTypeRecordMemberType(field, getAnnotationValuesForRecordMember(type), type);
+        if (type instanceof ClassType classType && typeUtils.hasClassIgnoringTypeParameters(classType.asElement(), Box.class.getName())) {
+            this.processingEnv.getMessager().printError("Global variable field " + field.getSimpleName() + " must not be a Box and you don't need this wrapper here", field);
+            return null;
+        }
         if (bpfTypeMirror.isEmpty()) {
             return null;
         }
@@ -776,6 +780,40 @@ public class TypeProcessor {
 
     public Optional<BPFTypeMirror> processBPFTypeRecordMemberType(Element element, AnnotationValues annotations,
                                                                   TypeMirror type) {
+        return processBPFTypeRecordMemberType(element, annotations, type, true);
+    }
+
+    /**
+     * Process the type of a record member, allowing the {@link Box} type (and unwrapping it)
+     * @param element the element of the record member
+     * @param annotations the annotations of the record member
+     * @param type the type of the record member
+     * @return the BPFTypeMirror for the record member
+     */
+    public Optional<BPFTypeMirror> processBPFTypeRecordMemberTypeWithBox(Element element, AnnotationValues annotations,
+                                                                  TypeMirror type) {
+        return processBPFTypeRecordMemberType(element, annotations, type, true);
+    }
+
+    private Optional<BPFTypeMirror> processBPFTypeRecordMemberType(Element element, AnnotationValues annotations,
+                                                                  TypeMirror type, boolean allowBox) {
+        if (type.getKind() == TypeKind.DECLARED && typeUtils.hasClassIgnoringTypeParameters(element, Box.class.getName())) {
+            if (!allowBox) {
+                this.processingEnv.getMessager().printError("Box is not allowed here", element);
+                return Optional.empty();
+            }
+            if (!(element.asType() instanceof ClassType classType)) {
+                this.processingEnv.getMessager().printError("Box type has to be a class", element);
+                return Optional.empty();
+            }
+            var genericTypes = classType.getTypeArguments();
+            if (genericTypes.size() != 1) {
+                this.processingEnv.getMessager().printError("Box type must have exactly one type argument", element);
+                return Optional.empty();
+            }
+            var genericType = genericTypes.getFirst();
+            return processBPFTypeRecordMemberType(genericType.asElement(), getAnnotationValuesForRecordMember(genericType), genericType);
+        }
         if (type.getKind() == TypeKind.ARRAY) {
             return processArrayType(element,
                     annotations,
@@ -922,9 +960,15 @@ public class TypeProcessor {
                 return Optional.empty();
             }
             String cType = annotation.cType();
-            if (!annotation.cType().isEmpty()) { // C type is defined
-                return Optional.of(t -> new VerbatimBPFOnlyType<>(cType, PrefixKind.NORMAL));
-            }
+            return getVerbatimBPFTypeName(cType, kind, typeElement);
+        }
+        SpecFieldName fieldName = definedTypes.getOrCreateFieldName(typeElement);
+        var typeName = definedTypes.bpfNameToName(definedTypes.specFieldNameToName(fieldName));
+        return Optional.of(t -> t.apply(typeName));
+    }
+
+    private @NotNull Optional<BPFTypeMirror> getVerbatimBPFTypeName(String cType, DataTypeKind kind, TypeElement typeElement) {
+        if (cType.isEmpty()) {
             var name = getTypeRecordBpfName(typeElement).name();
             var parts = name.split("\\$");
             var properName = parts[parts.length - 1];
@@ -936,9 +980,7 @@ public class TypeProcessor {
                 default -> throw new IllegalStateException("Unexpected value: " + kind);
             }));
         }
-        SpecFieldName fieldName = definedTypes.getOrCreateFieldName(typeElement);
-        var typeName = definedTypes.bpfNameToName(definedTypes.specFieldNameToName(fieldName));
-        return Optional.of(t -> t.apply(typeName));
+        return Optional.of(t -> new VerbatimBPFOnlyType<>(cType, PrefixKind.NORMAL));
     }
 
     private boolean checkAnnotatedType(Element element, AnnotationValues annotations) {

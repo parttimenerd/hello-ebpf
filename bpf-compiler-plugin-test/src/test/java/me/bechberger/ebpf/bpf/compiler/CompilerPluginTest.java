@@ -12,12 +12,10 @@ import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.runtime.helpers.BPFHelpers;
 import me.bechberger.ebpf.shared.util.DiffUtil;
+import me.bechberger.ebpf.type.*;
 import me.bechberger.ebpf.type.BPFType.BPFIntType.Int128;
 import me.bechberger.ebpf.type.BPFType.BPFIntType.UnsignedInt128;
 import me.bechberger.ebpf.type.Enum;
-import me.bechberger.ebpf.type.Ptr;
-import me.bechberger.ebpf.type.Struct;
-import me.bechberger.ebpf.type.Union;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +23,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static me.bechberger.ebpf.bpf.BPFJ.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
@@ -1178,5 +1177,75 @@ public class CompilerPluginTest {
                   return 0;
                 }
                 """, BPFProgram.getCode(TestBasicFunctionMacro.class));
+    }
+
+    @BPF
+    public static abstract class TestLoopFunctionMacro extends BPFProgram {
+        @BuiltinBPFFunction("""
+                for (int i = 0; i < 0; i++) {
+                    $lambda1:code
+                }
+                """)
+        public static void testMacro(Consumer<Integer> consumer) {
+            throw new MethodIsBPFRelatedFunction();
+        }
+
+        @BPFFunction
+        public int _code() {
+            testMacro((i) -> {
+                if (i == 1) {
+                    _continue();
+                }
+                if (i == 2) {
+                    _return(3);
+                }
+                if (i == 3) {
+                    _break();
+                }
+            });
+            return 1;
+        }
+    }
+
+    @Test
+    public void testLoopFunctionMacro() {
+        assertEqualsDiffed("""
+                s32 _code();
+
+                s32 _code() {
+                  for (int i = 0; i < 0; i++) {
+                      if ((i == 1)) {
+                        continue;
+                      }
+                      if ((i == 2)) {
+                        return 3;
+                      }
+                      if ((i == 3)) {
+                        break;
+                      }
+                  };
+                  return 1;
+                }
+                """, BPFProgram.getCode(TestLoopFunctionMacro.class));
+    }
+
+    @BPF
+    public static abstract class TestBox extends BPFProgram {
+        @BPFFunction
+        public void testBox() {
+            Box<Integer> box = Box.of(1);
+        }
+    }
+
+    @Test
+    public void testBox() {
+        assertEqualsDiffed("""
+                int testBox();
+
+                int testBox() {
+                  s32 box = 1;
+                  return 0;
+                }
+                """, BPFProgram.getCode(TestBox.class));
     }
 }
