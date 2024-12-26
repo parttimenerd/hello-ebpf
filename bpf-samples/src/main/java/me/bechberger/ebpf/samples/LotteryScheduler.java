@@ -51,13 +51,7 @@ public abstract class LotteryScheduler extends BPFProgram implements Scheduler {
     /**
      * Dispatch tasks
      * <p/>
-     *
-     * iterate over all tasks in the shared DSQ to sum
-     * the priorities of all tasks
-     * pick random number between 0 and sum
-     * iterate over all tasks in the shared DSQ and
-     * subtract the priority of each task from the random number
-     * if the random number is less than or equal to 0, dispatch the task
+     * Pick a random task from the shared DSQ and try to dispatch it
      */
     @Override
     public void dispatch(int cpu, Ptr<TaskDefinitions.task_struct> prev) {
