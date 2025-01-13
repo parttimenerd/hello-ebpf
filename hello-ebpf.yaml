@@ -1,12 +1,12 @@
 # This example requires Lima v0.8.0 or later
 # based on https://github.com/lizrice/learning-ebpf/blob/main/learning-ebpf.yaml
 images:
-  - location: "https://cloud-images.ubuntu.com/releases/23.10/release-20240307/ubuntu-23.10-server-cloudimg-amd64.img"
+# Try to use release-yyyyMMdd image if available. Note that release-yyyyMMdd will be removed after several months.
+  - location: "https://cloud-images.ubuntu.com/releases/24.10/release-20241212/ubuntu-24.10-server-cloudimg-amd64.img"
     arch: "x86_64"
-    digest: "sha256:415123eb3b3ba1841e39a25d0dd82da43f968c7625b9cdf6312235b9b8ec17e9"
-  - location: "https://cloud-images.ubuntu.com/releases/23.10/release-20240307/ubuntu-23.10-server-cloudimg-arm64.img"
+    digest: "sha256:457f02ad36ef64f8f2cbfcc4855a0d401294d9b4727ae239e21c4104cca0bae2"
+  - location: "https://cloud-images.ubuntu.com/releases/24.10/release-20241212/ubuntu-24.10-server-cloudimg-arm64.img"
     arch: "aarch64"
-    digest: "sha256:373e8866d33909b283b14c86c18f8a48844c8f9fe6aed3ca280288846fc4fb74"
 
 cpus: 4
 memory: "10GiB"
