@@ -256,6 +256,10 @@ public class TypeProcessor {
                 field -> getBPFTypeForJavaName(definedTypes.bpfNameToName(definedTypes.specFieldNameToName(field))),
                 type -> definedTypes.getSpecFieldName(type.getBPFName()).get());
 
+        var globals = createGlobalVariableDefinitions(outerTypeElement, typeToSpecField);
+
+        var defines = createDefineStatements(outerTypeElement);
+
         List<FieldSpec> fields = new ArrayList<>();
         List<CAST.Statement> definingStatements = new ArrayList<>();
 
@@ -283,9 +287,9 @@ public class TypeProcessor {
         if (additions == null) {
             return null;
         }
-        return new TypeProcessorResult(fields, createDefineStatements(outerTypeElement), definingStatements,
+        return new TypeProcessorResult(fields, defines, definingStatements,
                 getLicenseDefinitionStatement(outerTypeElement), mapDefinitions,
-                createGlobalVariableDefinitions(outerTypeElement, typeToSpecField),
+                globals,
                 additions);
     }
 

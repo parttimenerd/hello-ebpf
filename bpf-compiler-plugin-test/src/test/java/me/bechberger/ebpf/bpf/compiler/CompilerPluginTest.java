@@ -10,6 +10,7 @@ import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.bpf.BPFJ;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
+import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.runtime.helpers.BPFHelpers;
 import me.bechberger.ebpf.shared.util.DiffUtil;
 import me.bechberger.ebpf.type.*;
@@ -1247,5 +1248,55 @@ public class CompilerPluginTest {
                   return 0;
                 }
                 """, BPFProgram.getCode(TestBox.class));
+    }
+
+    @BPFInterface
+    public interface TestInterfaceWithStruct {
+        @Type
+        public record Event(@Unsigned int pid, @Size(256) String filename) {
+        }
+    }
+
+    @BPF
+    public static abstract class TestUsingInterfaceWithStruct extends BPFProgram implements TestInterfaceWithStruct {
+
+        @BPFMapDefinition(maxEntries = 100)
+        BPFHashMap<Integer, Event> events;
+    }
+
+    @Test
+    public void testInterfaceWithStruct() {
+        assertEqualsDiffed("""
+                struct Event {
+                  u32 pid;
+                  u8 filename[256];
+                };
+
+
+                struct {
+                    __uint (type, BPF_MAP_TYPE_HASH);
+                    __uint (key_size, sizeof(s32));
+                    __uint (value_size, sizeof(struct Event));
+                    __uint (max_entries, 100);
+                } events SEC(".maps");
+                """, BPFProgram.getCode(TestUsingInterfaceWithStruct.class));
+    }
+
+    @BPF
+    public static abstract class TestUsingInterfaceWithStruct2 extends BPFProgram implements TestInterfaceWithStruct {
+        final GlobalVariable<Event> event = new GlobalVariable<>(new Event(1, "file"));
+    }
+
+    @Test
+    public void testUsingInterfaceWithStruct2() {
+        assertEqualsDiffed("""
+                struct Event {
+                  u32 pid;
+                  u8 filename[256];
+                };
+
+
+                struct Event event SEC(".data");
+                """, BPFProgram.getCode(TestUsingInterfaceWithStruct2.class));
     }
 }
