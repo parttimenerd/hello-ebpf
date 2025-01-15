@@ -6,6 +6,7 @@
 
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.runtime.BpfDefinitions;
 import me.bechberger.ebpf.runtime.ScxDefinitions;
@@ -21,6 +22,8 @@ import java.util.function.Consumer;
  * A sched-ext based scheduler
  * <p>
  * You can specify the scheduler name {@code Property(name = "sched_name", value = "...")}
+ * <p>
+ * Based on the Linux sources
  */
 @BPFInterface(
         before = """
@@ -125,7 +128,10 @@ import java.util.function.Consumer;
                 	       .exit			= (void *)sched_exit,
                 	       .running	        = (void *)simple_running,
                 	       .enable          = (void *)simple_enable,
+                	       .disable         = (void *)simple_disable,
                 	       .stopping        = (void *)simple_stopping,
+                	       .dequeue         = (void *)simple_dequeue,
+                	       .tick            = (void *)sched_tick,
                 	       .flags			= SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE,
                 	       .name			= "__property_sched_name");
                 """
@@ -201,7 +207,7 @@ public interface Scheduler {
         public static final int PF_SUSPEND_TASK = 0x80000000;
     }
 
-    /*
+    /**
      * scx_bpf_error() wraps the scx_bpf_error_bstr() kfunc with variadic arguments
      * instead of an array of u64. Invoking this macro will cause the scheduler to
      * exit in an erroneous state, with diagnostic information being passed to the
@@ -212,6 +218,17 @@ public interface Scheduler {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    /**
+     * Selects the target CPU for a task being woken up.
+     *
+     * @param p          Pointer to the task being woken up.
+     * @param prev_cpu   CPU the task was on before sleeping.
+     * @param wake_flags Flags indicating wake-up conditions (e.g., SCX_WAKE_*).
+     * @return           Target CPU for dispatching the task.
+     *
+     * This decision isn't final; tasks may be reassigned CPUs during dispatch.
+     * If an idle CPU is returned, it will attempt to dispatch tasks.
+     */
     @BPFFunction(
             headerTemplate = "s32 BPF_STRUCT_OPS(sched_select_cpu, struct task_struct *p, s32 prev_cpu, u64 wake_flags)",
             addDefinition = false
@@ -220,12 +237,31 @@ public interface Scheduler {
         return 0;
     }
 
+    /**
+     * Enqueues a task in the BPF scheduler.
+     *
+     * @param p          Pointer to the task being enqueued.
+     * @param enq_flags  Flags related to enqueue operations (e.g., SCX_ENQ_*).
+     *
+     * Tasks may be inserted directly into a Dispatch Queue (DSQ).
+     * If not inserted directly, the scheduler owns the task and is responsible
+     * for dispatching it.
+     */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(sched_enqueue, struct task_struct *p, u64 enq_flags)",
-        addDefinition = false
+            addDefinition = false
     )
     void enqueue(Ptr<TaskDefinitions.task_struct> p, long enq_flags);
 
+    /**
+     * Dispatches tasks from the BPF scheduler.
+     *
+     * @param cpu   CPU to dispatch tasks for.
+     * @param prev  Pointer to the previous task being switched out.
+     *
+     * Called when a CPU's dispatch queue is empty. This method may dispatch
+     * tasks from the scheduler or move them from user queues to the local queue.
+     */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(sched_dispatch, s32 cpu, struct task_struct *prev)",
             addDefinition = false
@@ -234,6 +270,14 @@ public interface Scheduler {
         return;
     }
 
+    /**
+     * Updates the idle state of a CPU.
+     *
+     * @param cpu   The CPU being updated.
+     * @param idle  Whether the CPU is entering or exiting idle state.
+     *
+     * Implementing this disables built-in idle CPU tracking by default.
+     */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(sched_update_idle, s32 cpu, bool idle)",
             addDefinition = false
@@ -242,6 +286,15 @@ public interface Scheduler {
         return;
     }
 
+    /**
+     * Initializes a task for scheduling by the BPF scheduler.
+     *
+     * @param p    Pointer to the task being initialized.
+     * @param args Initialization arguments for the task.
+     * @return     0 on success, negative errno on failure.
+     *
+     * Called either when a BPF scheduler is loaded or a new task is forked.
+     */
     @BPFFunction(
             headerTemplate = "s32 BPF_STRUCT_OPS(sched_init_task, struct task_struct *p, struct scx_init_task_args *args)",
             addDefinition = false
@@ -250,6 +303,13 @@ public interface Scheduler {
         return 0;
     }
 
+    /**
+     * Initializes the BPF scheduler.
+     *
+     * @return 0 on success.
+     *
+     * This is called during scheduler initialization.
+     */
     @BPFFunction(
             headerTemplate = "s32 BPF_STRUCT_OPS_SLEEPABLE(sched_init)",
             addDefinition = false
@@ -258,6 +318,13 @@ public interface Scheduler {
         return 0;
     }
 
+    /**
+     * Handles cleanup when a task exits.
+     *
+     * @param ei Pointer to the task exit information.
+     *
+     * Called when a task is exiting or when the BPF scheduler is unloaded.
+     */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(sched_exit, struct scx_exit_info *ei)",
             addDefinition = false
@@ -266,6 +333,11 @@ public interface Scheduler {
         return;
     }
 
+    /**
+     * Notifies that a task is starting to run on its CPU.
+     *
+     * @param p Pointer to the task starting to run.
+     */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(simple_running, struct task_struct *p)",
             addDefinition = false
@@ -274,6 +346,14 @@ public interface Scheduler {
         return;
     }
 
+    /**
+     * Enables scheduling for a task.
+     *
+     * @param p Pointer to the task to enable scheduling for.
+     *
+     * Enable {@param p} for BPF scheduling. {@link #enable(Ptr)} is called on @p any time it
+     * enters SCX, and is always paired with a matching {@link #disable(Ptr)}.
+     */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(simple_enable, struct task_struct *p)",
             addDefinition = false
@@ -281,7 +361,29 @@ public interface Scheduler {
     default void enable(Ptr<TaskDefinitions.task_struct> p) {
         return;
     }
+    
+    /**
+     * Disable BPF scheduling for a task.
+     * @param p task to disable BPF scheduling for
+     *
+     * {@code p} is exiting, leaving SCX or the BPF scheduler is being unloaded.
+     * Disable BPF scheduling for {@code p}. A {@link #disable(Ptr)} call is always matched
+     * with a prior {@link #enable(Ptr)} call.
+     */
+    @BPFFunction(
+            headerTemplate = "int BPF_STRUCT_OPS(simple_disable, struct task_struct *p)",
+            addDefinition = false
+    )
+    default void disable(Ptr<TaskDefinitions.task_struct> p) {
+        return;
+    }
 
+    /**
+     * Notifies that a task is stopping execution.
+     *
+     * @param p        Pointer to the task stopping execution.
+     * @param runnable Indicates whether the task is still runnable.
+     */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(simple_stopping, struct task_struct *p, bool runnable)",
             addDefinition = false
@@ -289,6 +391,38 @@ public interface Scheduler {
     default void stopping(Ptr<TaskDefinitions.task_struct> p, boolean runnable) {
         return;
     }
+
+    /**
+     * Remove a task from the BPF scheduler
+     * @param p task being dequeued
+     * @param deq_flags {@code SCX_DEQ_*}
+     *
+     * Remove {@code p} from the BPF scheduler. This is usually called to isolate
+     * the task while updating its scheduling properties (e.g. priority).
+     *
+     * The ext core keeps track of whether the BPF side owns a given task or
+     * not and can gracefully ignore spurious dispatches from BPF side,
+     * which makes it safe to not implement this method. However, depending
+     * on the scheduling logic, this can lead to confusing behaviors - e.g.
+     * scheduling position not being updated across a priority change.
+     */
+    @BPFFunction(
+            headerTemplate = "void BPF_STRUCT_OPS(simple_dequeue, struct task_struct *p, u64 deq_flags)",
+            addDefinition = false
+    )
+    default void dequeue(Ptr<TaskDefinitions.task_struct> p, @Unsigned long deq_flags) {
+        return;
+    }
+
+    /**
+     * Periodic tick
+     * @param p task running currently
+     *
+     * This operation is called every 1/HZ seconds on CPUs which are
+     * executing an SCX task. Setting {@code p->scx.slice} to 0 will trigger an
+     * immediate dispatch cycle on the CPU.
+     */
+    void tick(Ptr<TaskDefinitions.task_struct> p);
 
     final int SCHED_EXT_UAPI_ID = 7;
 
