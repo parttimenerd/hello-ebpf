@@ -1279,7 +1279,7 @@ public class Generator {
 
             @Override
             public boolean shouldAddCast() {
-                return true;
+                return false;
             }
 
             @Override
@@ -1559,7 +1559,7 @@ public class Generator {
                     }
                     return "$arg" + (i + 1);
                 }).toList();
-                var anyConversion = params.stream().anyMatch(a -> a.contains("(") || a.contains(")"));
+                var anyConversion = params.stream().anyMatch(a -> a.contains("(") || a.contains(")")) || (!returnsVoid() && returnType.shouldAddCast());
                 String call = anyConversion ? name + "(" + String.join(", ", params) + ")" : name;
                 String ret = returnsVoid() || !returnType.shouldAddCast() ? call :
                         "((" + returnType.toCType().toPrettyString() + ")" + call + ")";
