@@ -131,7 +131,7 @@ import java.util.function.Consumer;
                 	       .disable         = (void *)simple_disable,
                 	       .stopping        = (void *)simple_stopping,
                 	       .dequeue         = (void *)simple_dequeue,
-                	       .tick            = (void *)sched_tick,
+                	       .tick            = (void *)simple_tick,
                 	       .flags			= SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE,
                 	       .name			= "__property_sched_name");
                 """
@@ -407,7 +407,7 @@ public interface Scheduler {
      * scheduling position not being updated across a priority change.
      */
     @BPFFunction(
-            headerTemplate = "void BPF_STRUCT_OPS(simple_dequeue, struct task_struct *p, u64 deq_flags)",
+            headerTemplate = "int BPF_STRUCT_OPS(simple_dequeue, struct task_struct *p, u64 deq_flags)",
             addDefinition = false
     )
     default void dequeue(Ptr<TaskDefinitions.task_struct> p, @Unsigned long deq_flags) {
@@ -422,7 +422,12 @@ public interface Scheduler {
      * executing an SCX task. Setting {@code p->scx.slice} to 0 will trigger an
      * immediate dispatch cycle on the CPU.
      */
-    void tick(Ptr<TaskDefinitions.task_struct> p);
+    @BPFFunction(
+            headerTemplate = "int BPF_STRUCT_OPS(simple_tick, struct task_struct *p)",
+            addDefinition = false)
+    default void tick(Ptr<TaskDefinitions.task_struct> p) {
+        return;
+    }
 
     final int SCHED_EXT_UAPI_ID = 7;
 

@@ -89,7 +89,8 @@ limactl shell hello-ebpf
 sudo -s PATH=$PATH
 ```
 
-The scheduler examples require a patched 6.11 kernel with the scheduler extensions, you can get it from 
+The scheduler examples require a 6.12+ kernel (install on ubuntu via the [mainline](https://github.com/bkw777/mainline) tool)
+or a patched 6.11 kernel with the scheduler extensions, you can get it from
 [here](https://launchpad.net/~arighi/+archive/ubuntu/sched-ext-unstable).
 You might also be able to run [CachyOS](https://cachyos.org/) and install a patched kernel from there.
 
