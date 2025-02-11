@@ -719,17 +719,20 @@ public class CompilerPlugin implements Plugin {
             }
         }
         } else {
-            var outFolders = ((JavacFileManager) ((JavacTaskImpl) CompilerPlugin.this.task).getContext().get(JavaFileManager.class)).getLocation(StandardLocation.CLASS_OUTPUT);
-            if (!outFolders.iterator().hasNext()) {
+            var resourceName = bpfProgramTypeElement.getQualifiedName() + ".o";
+            var fileManager = ((JavacTaskImpl) CompilerPlugin.this.task).getContext().get(JavaFileManager.class);
+            Path outPath;
+            try {
+                 outPath = Path.of(fileManager.getFileForOutput(StandardLocation.CLASS_OUTPUT, "", resourceName, null).toUri().getPath());
+            } catch (IOException e) {
                 logError(programPath, bpfProgram, "No output folder found");
                 return;
             }
-            var resourceName = bpfProgramTypeElement.getQualifiedName() + ".o";
-            var outFolder = outFolders.iterator().next();
+
             try {
-                Files.write(outFolder.toPath().resolve(resourceName), compiledCode.gzip());
+                Files.write(outPath, compiledCode.gzip());
             } catch (IOException e) {
-                logError(programPath, bpfProgram, "Could not write byte code to " + outFolder);
+                logError(programPath, bpfProgram, "Could not write byte code to " + outPath);
             }
             for (var member : bpfProgram.getMembers()) {
                 if (member instanceof JCMethodDecl methodDecl) {
