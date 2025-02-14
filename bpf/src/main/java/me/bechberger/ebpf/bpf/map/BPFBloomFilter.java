@@ -28,17 +28,14 @@ import java.util.Objects;
         } $field SEC(".maps");
         """,
         javaTemplate = """
-        new $class<>($fd, $b1, $maxEntries)
+        new $class<>($fd, $b1)
         """)
 public class BPFBloomFilter<V> extends BPFMap {
 
     private final BPFType<V> valueType;
 
-    public BPFBloomFilter(FileDescriptor fd, MapTypeId mapType, BPFType<V> valueType) {
-        super(mapType, fd);
-        if (mapType != MapTypeId.BLOOM_FILTER) {
-            throw new BPFError("Map type must be BLOOM_FILTER, but got " + mapType);
-        }
+    public BPFBloomFilter(FileDescriptor fd, BPFType<V> valueType) {
+        super(MapTypeId.BLOOM_FILTER, fd);
         this.valueType = valueType;
     }
 
@@ -49,7 +46,7 @@ public class BPFBloomFilter<V> extends BPFMap {
      * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_update_elem(Ptr, Ptr, Ptr, long)
      */
     @BuiltinBPFFunction("!bpf_map_push_elem(&$this, $pointery$arg1, BPF_ANY)")
-    public boolean push(V value) {
+    public boolean put(V value) {
         try (var arena = Arena.ofConfined()) {
             var valueSegment = valueType.allocate(arena, Objects.requireNonNull(value));
             var ret = Lib.bpf_map_update_elem(fd.fd(), MemorySegment.NULL, valueSegment, Lib_2.BPF_ANY());
