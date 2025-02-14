@@ -12,7 +12,7 @@ public enum MapTypeId {
     PERCPU_CGROUP_STORAGE(21), QUEUE(22), STACK(23), SK_STORAGE(24), DEVMAP_HASH(25), STRUCT_OPS(26),
     /** Ring buffer map type, see {@link BPFRingBuffer} */
     RINGBUF(27),
-    INODE_STORAGE(28), TASK_STORAGE(29);
+    INODE_STORAGE(28), TASK_STORAGE(29), BLOOM_FILTER(30);
     private final int id;
 
     MapTypeId(int id) {
