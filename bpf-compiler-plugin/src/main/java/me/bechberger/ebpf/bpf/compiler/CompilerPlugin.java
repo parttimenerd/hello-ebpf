@@ -567,26 +567,32 @@ public class CompilerPlugin implements Plugin {
     private Map<String, String> getAllPropertyValues(TypedTreePath<ClassTree> path, TypeElement klass) {
         var definitions = getPropertyDefinitions(path, klass);
         var values = getPropertyValues(path, klass);
-        if (values.isEmpty()) {
-            return definitions.values().stream()
-                    .collect(Collectors.toMap(PropertyDefinition::name, PropertyDefinition::defaultValue));
+
+        var properties = new HashMap<String, String>();
+        for (var definition : definitions.values()) {
+            var name = definition.name();
+            var value = definition.defaultValue();
+            if (values.containsKey(name)) {
+                var regexp = definitions.get(name).regexp();
+                if (!values.get(name).matches(regexp)) {
+                    logError(path, path.leaf(), "Value of property " + name + " does not match regular expression " + regexp + ": " + values.get(name));
+                }
+
+                value = values.get(name);
+                values.remove(name);
+            }
+            properties.put(name, value);
         }
-        if (definitions.isEmpty()) {
-            logError(path, path.leaf(), "No property definitions found, but " + values.size() + " properties specified");
+
+        if (!values.isEmpty()) {
+            logError(path, path.leaf(), values.size() + " properties without definition found");
         }
         for (var name : values.keySet()) {
-            if (!definitions.containsKey(name)) {
-                // find closest definition
-                var closest = Util.getClosestString(name, definitions.keySet());
-                logError(path, path.leaf(), "Property " + name + " is not defined, maybe you meant " + closest);
-                continue;
-            }
-            var regexp = definitions.get(name).regexp();
-            if (!values.get(name).matches(regexp)) {
-                logError(path, path.leaf(), "Value of property " + name + " does not match regular expression " + regexp + ": " + values.get(name));
-            }
+            // find closest definition
+            var closest = Util.getClosestString(name, definitions.keySet());
+            logError(path, path.leaf(), "Property " + name + " is not defined, maybe you meant " + closest);
         }
-        return values;
+        return properties;
     }
 
     private void processBPFProgramImpl(TypedTreePath<ClassTree> programPath) {
