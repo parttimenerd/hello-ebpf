@@ -14,6 +14,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 @BPF(license = "GPL")
 @Property(name = "sched_name", value = "minimal_scheduler")
+@Property(name = "timeout_ms", value = "10000")
 public abstract class MinimalScheduler extends BPFProgram implements Scheduler {
 
     private static final int SHARED_DSQ_ID = 0;
