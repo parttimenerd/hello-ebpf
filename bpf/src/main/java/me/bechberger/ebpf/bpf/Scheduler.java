@@ -133,11 +133,13 @@ import java.util.function.Consumer;
                 	       .dequeue         = (void *)simple_dequeue,
                 	       .tick            = (void *)simple_tick,
                 	       .flags			= SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE,
+                	       .timeout_ms      = __property_timeout_ms,
                 	       .name			= "__property_sched_name");
                 """
 )
 @Requires(sched_ext = true)
 @PropertyDefinition(name = "sched_name", defaultValue = "hello", regexp = "[a-zA-Z0-9_]+")
+@PropertyDefinition(name = "timeout_ms", defaultValue = "30000", regexp = "[1-9]\\d*")
 public interface Scheduler {
 
     /** No such process error code */
