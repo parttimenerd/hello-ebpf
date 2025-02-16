@@ -845,7 +845,7 @@ public abstract class BPFProgram implements AutoCloseable {
             if (prop != null && prop.name().equals(name)) {
                 return prop.defaultValue();
             }
-            queue.addAll(Arrays.asList(clazz.getInterfaces()));
+            queue.addAll(Arrays.asList(clazz.getSuperclass().getInterfaces()));
         }
         return null;
     }
