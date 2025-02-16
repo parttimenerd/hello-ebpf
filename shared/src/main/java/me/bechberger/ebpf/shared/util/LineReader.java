@@ -69,7 +69,7 @@ public class LineReader {
      */
     public boolean ready() {
         try {
-            return reader.ready() && input.available() > 0;
+            return reader.ready();
         } catch (IOException e) {
             return false;
         }
