@@ -197,12 +197,12 @@ public class TraceLog {
     public List<String> readAllAvailableLines(Duration waitAtMost) {
         List<String> lines = new ArrayList<>();
         long start = System.nanoTime();
-        while (Duration.ofNanos(System.nanoTime() - start).compareTo(waitAtMost) < 0) {
+        do {
             while (traceFile.ready()) {
                 lines.add(traceFile.readLine());
                 start = System.nanoTime();
             }
-        }
+        } while (Duration.ofNanos(System.nanoTime() - start).compareTo(waitAtMost) < 0);
         return lines;
     }
 }
