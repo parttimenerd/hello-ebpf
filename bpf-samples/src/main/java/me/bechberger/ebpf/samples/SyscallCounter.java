@@ -19,7 +19,7 @@ public abstract class SyscallCounter extends BPFProgram {
     final GlobalVariable<Long> syscallCounter = new GlobalVariable<>(0L);
 
     @BPFFunction(
-            headerTemplate = "int BPF_PROG($name, struct pt_regs *regs, unsigned long number)",
+            headerTemplate = "int BPF_PROG($name, $params)",
             lastStatement = "return 0;",
             section = "raw_tracepoint/sys_enter",
             autoAttach = true
