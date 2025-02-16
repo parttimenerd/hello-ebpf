@@ -26,24 +26,24 @@ public class BloomFilterMapTest {
                  int kprobe__do_sys_openat2 (struct pt_regs *ctx)
             {
               int placed_value = 12;
-              int placed_value_in_filter = bpf_map_lookup_elem(&filter, &placed_value);
-              if (placed_value_in_filter == 0) {
+              bool placed_value_in_filter = !bpf_map_peek_elem(&filter, &placed_value);
+              if (placed_value_in_filter) {
                 bpf_printk("Placed OK");
               } else {
                 bpf_printk("Placed NOT OK");
               }
 
               int value = 11;
-              int maybe_in_filter = bpf_map_lookup_elem(&filter, &value);
-              if (maybe_in_filter != 0) {
+              bool maybe_in_filter = !bpf_map_peek_elem(&filter, &value);
+              if (!maybe_in_filter) {
                 bpf_printk("Before OK");
               } else {
                 bpf_printk("Before NOT OK");
               }
 
               bpf_map_push_elem(&filter, &value, BPF_ANY);
-              maybe_in_filter = bpf_map_lookup_elem(&filter, &value);
-              if (maybe_in_filter == 0) {
+              maybe_in_filter = !bpf_map_peek_elem(&filter, &value);
+              if (maybe_in_filter) {
                 bpf_printk("After OK");
               } else {
                 bpf_printk("After NOT OK");
@@ -54,7 +54,7 @@ public class BloomFilterMapTest {
     }
 
     @Test
-    public void testBasicArrayMap() throws InterruptedException {
+    public void testBasicBloomFilter() throws InterruptedException {
         try (var program = BPFProgram.load(BloomFilterMapTest.Program.class)) {
             var filter = program.filter;
             filter.put(12);
@@ -63,7 +63,7 @@ public class BloomFilterMapTest {
 
             while (true) {
                 var msg = program.readTraceFields().msg();
-                if (msg != null) {
+                if (msg != null && msg.contains("Placed")) {
                     assertEquals("Placed OK", msg);
                     break;
                 }
@@ -71,7 +71,7 @@ public class BloomFilterMapTest {
 
             while (true) {
                 var msg = program.readTraceFields().msg();
-                if (msg != null) {
+                if (msg != null && msg.contains("Before")) {
                     assertEquals("Before OK", msg);
                     break;
                 }
@@ -79,7 +79,7 @@ public class BloomFilterMapTest {
 
             while (true) {
                 var msg = program.readTraceFields().msg();
-                if (msg != null) {
+                if (msg != null && msg.contains("After")) {
                     assertEquals("After OK", msg);
                     break;
                 }
