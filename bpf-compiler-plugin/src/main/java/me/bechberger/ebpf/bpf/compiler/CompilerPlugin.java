@@ -686,7 +686,7 @@ public class CompilerPlugin implements Plugin {
             return;
         }
 
-        code = implAnn.before() + "\n\n" + code;
+        code = implAnn.before() + code;
 
         var properties = getAllPropertyValues(programPath, superClassElement);
 
