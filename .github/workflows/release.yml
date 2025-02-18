@@ -54,7 +54,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang libbpf-dev linux-tools-common linux-tools-$(uname -r) gcc-multilib
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang-19 libbpf-dev linux-tools-common linux-tools-$(uname -r) gcc-multilib
 
       - name: Build
         run: ./mvnw -ntp -B --file pom.xml verify
