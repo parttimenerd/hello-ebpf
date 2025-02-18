@@ -110,7 +110,7 @@ public record MethodHeaderTemplate(String raw, List<TemplatePart> parts) {
                 part = part.substring(6);
             } else if (part.startsWith("params")) {
                 templateParts.add(new TemplatePart.Params());
-                part = part.substring(5);
+                part = part.substring(6);
             } else {
                 // split at first char that is neither number nor char
                 int j = 0;
