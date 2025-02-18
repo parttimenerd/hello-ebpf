@@ -1,14 +1,21 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.bpf.BPF;
+import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.bpf.map.BPFArray;
+import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
+import me.bechberger.ebpf.runtime.PtDefinitions;
 import me.bechberger.ebpf.shared.TraceLog;
+import me.bechberger.ebpf.type.Enum;
+import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.Instant;
 
+import static me.bechberger.ebpf.bpf.BPFJ.bpf_trace_printk;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ArrayMapTest {
@@ -18,44 +25,50 @@ public class ArrayMapTest {
         @BPFMapDefinition(maxEntries = 256)
         BPFArray<Integer> array;
 
-        static final String EBPF_PROGRAM = """
-            #include <vmlinux.h>
-            #include <bpf/bpf_helpers.h>
-            #include <bpf/bpf_endian.h>
+        private static final int KEY = 11;
+        private static final int EXPECTED_VALUE = 11;
 
-            SEC ("kprobe/do_sys_openat2")
-                 int kprobe__do_sys_openat2 (struct pt_regs *ctx)
-            {
-              int key = 11;
-              int* val = bpf_map_lookup_elem(&array, &key);
-              if (val == NULL) {
-                bpf_printk("Value not found");
-              } else if (*val == 11) {
-                bpf_printk("Value is 11");
-              } else {
-                bpf_printk("Value is not 11, but %d", *val);
-              }
-              return 0;
+        @Type
+        protected enum Result implements Enum<Result> {
+            UNKNOWN,
+            NOT_FOUND,
+            CORRECT,
+            WRONG
+        }
+
+        final GlobalVariable<Result> result = new GlobalVariable<>(Result.UNKNOWN);
+
+        @BPFFunction(
+                section = "kprobe/do_sys_openat2"
+        )
+        int kprobe__do_sys_openat2(Ptr<PtDefinitions.pt_regs> ctx) {
+            int key = KEY;
+            Ptr<Integer> value = array.bpf_get(key);
+
+            if (value == null) {
+                result.set(Result.NOT_FOUND);
+            } else if (value.val() == EXPECTED_VALUE) {
+                result.set(Result.CORRECT);
+            } else {
+                result.set(Result.WRONG);
+                bpf_trace_printk("Value is not 11, but %d", value.val());
             }
-        """;
+            return 0;
+        }
     }
 
     @Test
-    public void testBasicArrayMap() throws InterruptedException {
+    public void testBasicArrayMap() {
         try (var program = BPFProgram.load(ArrayMapTest.Program.class)) {
             var array = program.array;
             assertEquals(256, array.size());
-            array.put(11, 11);
+            array.put(Program.KEY, Program.EXPECTED_VALUE);
             program.autoAttachProgram(program.getProgramByName("kprobe__do_sys_openat2"));
             TestUtil.triggerOpenAt();
-            while (true) {
-                var msg = program.readTraceFields().msg();
-                if (msg != null && msg.contains("Value is 11")) {
-                    break;
-                } else {
-                    System.out.println("Waiting for message " + msg);
-                }
+            while (program.result.get() == Program.Result.UNKNOWN) {
+                // Wait
             }
+            assertEquals(Program.Result.CORRECT, program.result.get());
         }
         TraceLog.getInstance().readAllAvailableLines(Duration.ofMillis(100));
     }
