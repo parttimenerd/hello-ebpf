@@ -1,23 +1,35 @@
 package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.Size;
-import me.bechberger.ebpf.annotations.bpf.BPF;
-import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.Type;
+import me.bechberger.ebpf.annotations.bpf.BPF;
+import me.bechberger.ebpf.annotations.bpf.BPFFunction;
+import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.bpf.map.BPFArray;
+import me.bechberger.ebpf.runtime.PtDefinitions;
+import me.bechberger.ebpf.shared.TraceLog;
+import me.bechberger.ebpf.type.Enum;
+import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+
+import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DataTypeTest {
 
+    private static final int KEY = 11;
+
     @BPF(license = "GPL")
     public static abstract class RecordArrayProgram extends BPFProgram {
         @Type
-        record InnerRecord(int a, byte b) {}
+        record InnerRecord(int a, byte b) {
+        }
 
-        record OuterRecord(@Size(2) InnerRecord[] records) {}
+        @Type
+        record OuterRecord(@Size(2) InnerRecord[] records) {
+        }
 
         @BPFMapDefinition(maxEntries = 256)
         BPFArray<OuterRecord> array;
@@ -25,33 +37,52 @@ public class DataTypeTest {
         @BPFMapDefinition(maxEntries = 256)
         BPFArray<@Size(2) InnerRecord[]> array2;
 
-        static final String EBPF_PROGRAM = """
-            #include <vmlinux.h>
-            #include <bpf/bpf_helpers.h>
-            #include <bpf/bpf_endian.h>
+        @Type
+        protected enum Result implements Enum<Result> {
+            UNKNOWN,
+            NOT_FOUND,
+            CORRECT,
+            INCORRECT
+        }
 
-            SEC ("kprobe/do_sys_openat2")
-                 int kprobe__do_sys_openat2 (struct pt_regs *ctx)
-            {
-              int key = 11;
-              struct OuterRecord* val = bpf_map_lookup_elem(&array, &key);
-              if (val == NULL) {
-                struct InnerRecord* val2 = bpf_map_lookup_elem(&array2, &key);
-                if (val2 == NULL) {
-                  bpf_printk("Value not found");
-                } else if (val2[0].a == 1 && val2[0].b == 11 && val2[1].a == 2 && val2[1].b == 12) {
-                  bpf_printk("Value is correct");
-                } else {
-                  bpf_printk("Value is incorrect");
-                }
-              } else if (val->records[0].a == 1 && val->records[0].b == 11 && val->records[1].a == 2 && val->records[1].b == 12) {
-                bpf_printk("Value is correct");
-              } else {
-                bpf_printk("Value is incorrect");
-              }
-              return 0;
+        final GlobalVariable<Result> result = new GlobalVariable<>(Result.UNKNOWN);
+
+        @BPFFunction(
+                section = "kprobe/do_sys_openat2"
+        )
+        int testDataTypes1(Ptr<PtDefinitions.pt_regs> ctx) {
+            int key = KEY;
+            Ptr<OuterRecord> value = array.bpf_get(key);
+            if (value == null) {
+                result.set(Result.NOT_FOUND);
+            } else {
+                testInnerRecords(value.val().records);
             }
-        """;
+            return 0;
+        }
+
+        @BPFFunction(
+                section = "kprobe/do_sys_openat2"
+        )
+        int testDataTypes2(Ptr<PtDefinitions.pt_regs> ctx) {
+            int key = KEY;
+            Ptr<@Size(2) InnerRecord[]> value = array2.bpf_get(key);
+            if (value == null) {
+                result.set(Result.NOT_FOUND);
+            } else {
+                testInnerRecords(value.val());
+            }
+            return 0;
+        }
+
+        @BPFFunction
+        void testInnerRecords(@Size(2) InnerRecord[] records) {
+            if (records[0].a == 1 && records[0].b == 11 && records[1].a == 2 && records[1].b == 12) {
+                result.set(Result.CORRECT);
+            } else {
+                result.set(Result.INCORRECT);
+            }
+        }
     }
 
     @Test
@@ -60,12 +91,16 @@ public class DataTypeTest {
         try (var program = BPFProgram.load(DataTypeTest.RecordArrayProgram.class)) {
             var array = program.array;
             assertEquals(256, array.size());
-            array.put(11, new RecordArrayProgram.OuterRecord(new RecordArrayProgram.InnerRecord[] {
+            array.put(KEY, new RecordArrayProgram.OuterRecord(new RecordArrayProgram.InnerRecord[]{
                     new RecordArrayProgram.InnerRecord(1, (byte) 11),
-                    new RecordArrayProgram.InnerRecord(2, (byte) 12) }));
-            program.autoAttachProgram(program.getProgramByName("kprobe__do_sys_openat2"));
+                    new RecordArrayProgram.InnerRecord(2, (byte) 12)}));
+            program.autoAttachProgram("testDataTypes1");
             TestUtil.triggerOpenAt();
-//            assertEquals("Value is correct", program.readTraceFields().msg()); // TODO
+
+            while (program.result.get() == RecordArrayProgram.Result.UNKNOWN) {
+            }
+            assertEquals(RecordArrayProgram.Result.CORRECT, program.result.get());
+            TraceLog.getInstance().readAllAvailableLines(Duration.ofMillis(100));
         }
     }
 
@@ -74,12 +109,16 @@ public class DataTypeTest {
     public void testArrayMapWithRecordArray2() {
         try (var program = BPFProgram.load(DataTypeTest.RecordArrayProgram.class)) {
             assertEquals(256, program.array2.size());
-            program.array2.put(0, new RecordArrayProgram.InnerRecord[] {
+            program.array2.put(KEY, new RecordArrayProgram.InnerRecord[]{
                     new RecordArrayProgram.InnerRecord(1, (byte) 11),
-                    new RecordArrayProgram.InnerRecord(2, (byte) 12) });
-            program.autoAttachProgram(program.getProgramByName("kprobe__do_sys_openat2"));
+                    new RecordArrayProgram.InnerRecord(2, (byte) 12)});
+            program.autoAttachProgram("testDataTypes2");
             TestUtil.triggerOpenAt();
-           // assertEquals("Value is correct", program.readTraceFields().msg()); // TODO
+
+            while (program.result.get() == RecordArrayProgram.Result.UNKNOWN) {
+            }
+            assertEquals(RecordArrayProgram.Result.CORRECT, program.result.get());
+            TraceLog.getInstance().readAllAvailableLines(Duration.ofMillis(100));
         }
     }
 }
