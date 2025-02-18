@@ -35,6 +35,7 @@ import java.util.zip.GZIPOutputStream;
 @SupportedSourceVersion(SourceVersion.RELEASE_22)
 public class Processor extends AbstractProcessor {
 
+    private static final int MINIMUM_CLANG_VERSION = 19;
     private static final String BPF = "me.bechberger.ebpf.annotations.bpf.BPF";
     private final CompilationCache cache = new CompilationCache(Paths.get("."));
 
@@ -481,9 +482,26 @@ public class Processor extends AbstractProcessor {
     }
 
     private static String findNewestClangVersion() {
-        for (int i = 12; i > 11; i--) {
+        var versionPattern = Pattern.compile("version (?<version>\\d+)");
+
+        var minimumVersion = MINIMUM_CLANG_VERSION - 1;
+        try {
+            var defaultClangProcess = new ProcessBuilder("clang", "--version").start();
+            if (defaultClangProcess.waitFor() == 0) {
+                var output = new String(defaultClangProcess.getInputStream().readAllBytes());
+                var versionMatcher = versionPattern.matcher(output);
+                versionMatcher.find();
+                var version = Integer.parseInt(versionMatcher.group("version"));
+                if (version > minimumVersion) {
+                    minimumVersion = version;
+                }
+            }
+        } catch (IOException | InterruptedException e) {
+            // ignore
+        }
+        for (int i = 20; i > minimumVersion; i--) {
             try {
-                var name = i == 12 ? "clang" : "clang-" + i;
+                var name = "clang-" + i;
                 var process = new ProcessBuilder(name, "--version").start();
                 if (process.waitFor() == 0) {
                     return name;
@@ -492,7 +510,10 @@ public class Processor extends AbstractProcessor {
                 // ignore
             }
         }
-        throw new RuntimeException("Could not find clang");
+        if (minimumVersion >= MINIMUM_CLANG_VERSION) {
+            return "clang";
+        }
+        throw new RuntimeException("Could not find clang >= 19");
     }
 
     private static final String newestClang = findNewestClangVersion();
