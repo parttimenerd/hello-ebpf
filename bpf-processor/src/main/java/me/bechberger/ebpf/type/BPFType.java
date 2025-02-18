@@ -1076,7 +1076,7 @@ public sealed interface BPFType<T> {
         @Override
         public MemoryParser<E[]> parser() {
             return segment -> (E[])IntStream.range(0, length).mapToObj(i ->
-                    memberType.parseMemory(segment.asSlice(i * memberType.size()))).toArray();
+                    memberType.parseMemory(segment.asSlice(i * memberType.sizePadded()))).toArray();
         }
 
         @Override
