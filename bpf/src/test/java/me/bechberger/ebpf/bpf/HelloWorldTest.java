@@ -1,8 +1,11 @@
 package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.bpf.BPF;
+import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.bpf.BPFProgram.BPFProgramNotFound;
+import me.bechberger.ebpf.runtime.PtDefinitions;
 import me.bechberger.ebpf.shared.TraceLog;
+import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -13,33 +16,27 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class HelloWorldTest {
 
-    @BPF
+    @BPF(license = "GPL")
     public static abstract class Prog extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                #include <bpf/bpf_tracing.h>
-                                
-                SEC ("kprobe/do_sys_openat2")
-                int kprobe__do_sys_openat2(struct pt_regs *ctx){
-                    bpf_printk("Hello, World from BPF and more!");
-                    return 0;
-                }
-                        
-                char _license[] SEC ("license") = "GPL";
-                """;
+        final GlobalVariable<Boolean> hello = new GlobalVariable<>(false);
+
+        @BPFFunction(
+                section = "fentry/do_sys_openat2",
+                autoAttach = true
+        )
+        int helloWorld(Ptr<PtDefinitions.pt_regs> ctx) {
+            hello.set(true);
+            return 0;
+        }
     }
 
     @Test
     @Timeout(5)
     public void testProgramLoad() {
         try (var program = BPFProgram.load(Prog.class)) {
-            program.autoAttachProgram(program.getProgramByName("kprobe__do_sys_openat2"));
-            while (true) {
-                if (program.readTraceFields().msg().equals("Hello, World from BPF and more!")) {
-                    break;
-                }
-            }
+            program.autoAttachPrograms();
+            TestUtil.triggerOpenAt();
+            assertTrue(program.hello.get());
         }
     }
 
@@ -50,22 +47,22 @@ public class HelloWorldTest {
         }
     }
 
-    // Test the program is properly closed after
-    // by running two programs after another (only the first prints), the second reads, or maybe one program is enough
-
     /**
      * Test the program is properly closed after
      */
     @Test
     public void testProgramClose() {
         try (var program = BPFProgram.load(Prog.class)) {
-            program.autoAttachProgram(program.getProgramByName("kprobe__do_sys_openat2"));
-        }
-        TestUtil.triggerOpenAt();
-        // run for 20ms
-        long start = System.currentTimeMillis();
-        while (System.currentTimeMillis() - start < 20) {
-            assertNull(TraceLog.getInstance().readLineIfPossible());
+            var attached = program.autoAttachProgram(program.getProgramByName("helloWorld"));
+            program.detachProgram(attached);
+            program.hello.set(false);
+            TestUtil.triggerOpenAt();
+
+            long start = System.currentTimeMillis();
+            // run for 20ms
+            while (System.currentTimeMillis() - start < 20) {
+                assertFalse(program.hello.get());
+            }
         }
     }
 }
