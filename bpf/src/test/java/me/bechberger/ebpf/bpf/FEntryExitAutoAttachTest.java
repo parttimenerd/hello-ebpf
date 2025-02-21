@@ -2,11 +2,10 @@ package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.bpf.BPF;
-import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
 import me.bechberger.ebpf.runtime.OpenDefinitions;
-import me.bechberger.ebpf.shared.TraceLog;
+import me.bechberger.ebpf.runtime.interfaces.SystemCallHooks;
 import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
 
@@ -28,28 +27,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class FEntryExitAutoAttachTest {
 
     @BPF(license = "GPL")
-    public static abstract class OpenAt extends BPFProgram {
+    public static abstract class OpenAt extends BPFProgram implements SystemCallHooks {
 
         final GlobalVariable<Integer> targetPid = new GlobalVariable<>(0);
-
-        private static final String SYS_PREFIX = "/sys/";
 
         @BPFMapDefinition(maxEntries = 1024)
         BPFRingBuffer<@Size(64) String> pathBuffer;
 
-        @BPFFunction(
-                section = "fentry/do_sys_openat2",
-                headerTemplate = "int BPF_PROG($name, $params)",
-                autoAttach = true
-        )
-        int doOpenat2(long dfd, String name, Ptr<OpenDefinitions.open_how> how) {
+        @Override
+        public void enterOpenat2(int dfd, String filename, Ptr<OpenDefinitions.open_how> how) {
             String path = pathBuffer.reserve().asString();
-            if (path == null) {
-                return 0;
+            if (path != null) {
+                bpf_probe_read_user_str(path, 64, filename);
+                pathBuffer.submit(Ptr.of(path).<String>cast());
             }
-            bpf_probe_read_user_str(path, 64, name);
-            pathBuffer.submit(Ptr.of(path).<String>cast());
-            return 0;
         }
 
         static final String EBPF_PROGRAM = """
@@ -94,7 +85,7 @@ public class FEntryExitAutoAttachTest {
     @Test
     public void testAutoAttachAll() {
         try (var program = BPFProgram.load(OpenAt.class)) {
-            assertEquals(Stream.of("doOpenat2", "do_openat2_exit", "kprobe__do_sys_openat2").sorted().toList(), program.getAllAutoAttachablePrograms().stream().sorted().toList());
+            assertEquals(Stream.of("do_openat2_exit", "kprobe__do_sys_openat2").sorted().toList(), program.getAutoAttachablePrograms().stream().sorted().toList());
         }
     }
 }
