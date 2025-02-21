@@ -117,7 +117,6 @@ public class DataTypeTest {
             while (program.result.get() == RecordArrayProgram.Result.UNKNOWN) {
             }
             assertEquals(RecordArrayProgram.Result.CORRECT, program.result.get());
-            TraceLog.getInstance().readAllAvailableLines(Duration.ofMillis(100));
         }
     }
 }
