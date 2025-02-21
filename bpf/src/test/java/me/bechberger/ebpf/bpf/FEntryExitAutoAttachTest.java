@@ -89,8 +89,6 @@ public class FEntryExitAutoAttachTest {
             }
             assertTrue(files.contains(testFile.toString()));
         }
-
-        TraceLog.getInstance().readAllAvailableLines();
     }
 
     @Test
