@@ -26,6 +26,22 @@ public class BPFJ {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    /**
+     * Wrapper for the BPF_SNPRINTF macro
+     * <p>
+     * Example: {@snippet :
+     *     @Size(16) String out = "";
+     *     BPFJ.bpf_snprintf(out, "Hello, %s!", "World");
+     *}
+     * @param fmt format string
+     * @param args arguments to the format string
+     */
+    @BuiltinBPFFunction("BPF_SNPRINTF($arg1, sizeof($arg1), $arg2, $args3_)")
+    @NotUsableInJava
+    public static void bpf_snprintf(String out, String fmt, Object... args) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
     // add a helper for the atomic increment functions
     // __sync_add_and_fetch(&var, increment)
 
