@@ -252,6 +252,11 @@ class Translator {
                 yield initializer != null && condition != null && update != null && body != null ?
                         new CAST.Statement.ForStatement(initializer, condition, update, body) : null;
             }
+            case WhileLoopTree whileLoopTree -> {
+                var condition = callIfNonNull(whileLoopTree.getCondition(), this::translate);
+                var body = translate(whileLoopTree.getStatement());
+                yield new CAST.Statement.WhileStatement(condition, body);
+            }
             case BreakTree breakTree -> {
                 if (breakTree.getLabel() != null) {
                     logError(statement, "Unsupported label in break statement: " + statement);
