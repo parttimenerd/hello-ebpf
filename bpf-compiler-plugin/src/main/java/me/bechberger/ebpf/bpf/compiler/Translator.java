@@ -274,9 +274,9 @@ class Translator {
     }
 
     @Nullable
-    CAST.Statement.ReturnStatement translate(ReturnTree returnTree) {
-        if (returnTree.getExpression() == null) {
-            return new ReturnStatement(null);
+    CAST.Statement.Statement translate(ReturnTree returnTree) {
+        if (returnTree.getExpression() == null) { // Since void functions aren't allowed, returns without an argument don't make sense
+            return new VerbatimStatement("return 0;");
         }
         return callIfNonNull(translate(returnTree.getExpression()), ReturnStatement::new);
     }
