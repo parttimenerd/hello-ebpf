@@ -42,6 +42,7 @@ public @interface BPF {
             "vmlinux.h",
             "bpf/bpf_helpers.h",
             "bpf/bpf_endian.h",
-            "bpf/bpf_tracing.h"
+            "bpf/bpf_tracing.h",
+            "bpf/bpf_core_read.h"
     };
 }

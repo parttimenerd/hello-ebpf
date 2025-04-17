@@ -531,6 +531,29 @@ public abstract class BPFProgram implements AutoCloseable {
         }
     }
 
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_TRACEPOINT =
+            new HandlerWithErrno<>("bpf_program__attach_tracepoint",
+                    FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
+
+    public BPFLink tracepointAttach(String programName, String tracepoint) {
+        return tracepointAttach(getProgramByName(programName), tracepoint);
+    }
+
+    public BPFLink tracepointAttach(ProgramHandle prog, String tracepoint) {
+        try (var arena = Arena.ofConfined()) {
+            var ret = BPF_PROGRAM__ATTACH_TRACEPOINT.call(prog.prog(), arena.allocateFrom(tracepoint));
+            if (ret.result() == MemorySegment.NULL) {
+                throw new BPFAttachError(prog.name, ret.err());
+            }
+            var link = new BPFLink(ret.result());
+            if (link.segment.address() == 0) {
+                throw new BPFAttachError(prog.name, ret.err());
+            }
+            attachedPrograms.add(link);
+            return link;
+        }
+    }
+
     public void xdpAttach(ProgramHandle prog, List<Integer> ifindex) {
         for (var index : ifindex) {
             xdpAttach(prog, index);
