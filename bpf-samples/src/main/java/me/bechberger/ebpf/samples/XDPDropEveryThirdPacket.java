@@ -32,7 +32,7 @@ public abstract class XDPDropEveryThirdPacket extends BPFProgram implements XDPH
 
     public static void main(String[] args) throws InterruptedException {
         try (XDPDropEveryThirdPacket program = BPFProgram.load(XDPDropEveryThirdPacket.class)) {
-            program.xdpAttach(NetworkUtil.getNetworkInterfaceIndex());
+            program.xdpAttach();
             while (true) {
                 System.out.println("Packet count " + program.count.get());
                 Thread.sleep(1000);

@@ -27,8 +27,8 @@ public abstract class MinimalScheduler extends BPFProgram implements Scheduler {
 
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
-        scx_bpf_dispatch(p, SHARED_DSQ_ID,  ((@Unsigned int) 5_000_000) /
-                scx_bpf_dsq_nr_queued(SHARED_DSQ_ID), enq_flags);
+        scx_bpf_dispatch(p, SHARED_DSQ_ID,  5_000_000 /
+                (@Unsigned int) scx_bpf_dsq_nr_queued(SHARED_DSQ_ID), enq_flags);
     }
 
     @Override

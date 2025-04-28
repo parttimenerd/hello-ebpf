@@ -50,6 +50,11 @@ public abstract class ForbiddenFile extends BPFProgram implements SystemCallHook
         }
     }
 
+    @Override
+    public void exitOpenat2(int dfd, String filename, Ptr<open_how> how, long ret) {
+        BPFJ.bpf_trace_printk("openat2(%s) = %d\n", filename, ret);
+    }
+
     public static void main(String[] args) throws InterruptedException {
         try (ForbiddenFile program = BPFProgram.load(ForbiddenFile.class)) {
             program.autoAttachPrograms();

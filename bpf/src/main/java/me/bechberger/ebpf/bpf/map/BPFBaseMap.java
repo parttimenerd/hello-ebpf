@@ -300,7 +300,7 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
      *
      * @param key
      */
-    @BuiltinBPFFunction("bpf_map_delete_elem(&$this, $arg1)")
+    @BuiltinBPFFunction("bpf_map_delete_elem(&$this, $pointery$arg1)")
     public void bpf_delete(K key) {
         delete(key);
     }
