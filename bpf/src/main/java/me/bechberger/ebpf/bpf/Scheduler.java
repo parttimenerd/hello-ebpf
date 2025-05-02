@@ -486,4 +486,14 @@ public interface Scheduler {
             return false;
         }
     }
+
+    default void waitWhileSchedulerIsAttachedProperly() {
+        while (isSchedulerAttachedProperly()) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                return;
+            }
+        }
+    }
 }

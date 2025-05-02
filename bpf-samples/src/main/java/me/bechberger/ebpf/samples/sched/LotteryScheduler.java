@@ -1,18 +1,14 @@
-package me.bechberger.ebpf.samples;
+package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.Scheduler;
-import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.runtime.BpfDefinitions;
 import me.bechberger.ebpf.runtime.TaskDefinitions;
 import me.bechberger.ebpf.type.Box;
 import me.bechberger.ebpf.type.Ptr;
-
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask_test_cpu;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
@@ -21,8 +17,9 @@ import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_enq_flags.SCX_ENQ_PREEMPT;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_get_prandom_u32;
 
+/** A lottery scheduler without priorities */
 @BPF(license = "GPL")
-@Property(name = "sched_name", value = "lottery_stopping_scheduler")
+@Property(name = "sched_name", value = "lottery_scheduler")
 public abstract class LotteryScheduler extends BPFProgram implements Scheduler {
 
     private static final int SHARED_DSQ_ID = 0;
