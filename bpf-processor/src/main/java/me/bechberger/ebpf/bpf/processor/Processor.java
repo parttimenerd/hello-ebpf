@@ -516,7 +516,6 @@ public class Processor extends AbstractProcessor {
         throw new RuntimeException("Could not find clang >= 19");
     }
 
-    private static final String newestClang = findNewestClangVersion();
     private static Path includePath;
 
     /** Find the library include path */
@@ -568,7 +567,7 @@ public class Processor extends AbstractProcessor {
         try {
             var tempFile = Files.createTempFile("ebpf", ".o");
             tempFile.toFile().deleteOnExit();
-            List<String> command = List.of(newestClang, "-O2", "-g", "-std=gnu2y",  "-target", "bpf", "-c", "-o",
+            List<String> command = List.of(findNewestClangVersion(), "-O2", "-g", "-std=gnu2y",  "-target", "bpf", "-c", "-o",
                     tempFile.toString(), "-I", vmlinuxHeader.getParent().toString(),
                     "-D__TARGET_ARCH_" + getArch(), "-Wno-parentheses-equality", "-Wno-unused-value", "-Wreturn-type",
                     "-Wno-incompatible-pointer-types-discards-qualifiers",
