@@ -51,7 +51,7 @@ public abstract class ForbiddenFile extends BPFProgram implements SystemCallHook
     }
 
     @Override
-    public void exitOpenat2(int dfd, String filename, Ptr<open_how> how, long ret) {
+    public void exitOpenat2(int dfd, String filename, Ptr<open_how> how, int ret) {
         BPFJ.bpf_trace_printk("openat2(%s) = %d\n", filename, ret);
     }
 

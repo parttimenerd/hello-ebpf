@@ -28,12 +28,12 @@ public abstract class FCFSScheduler extends BPFProgram implements Scheduler {
 
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
-        scx_bpf_dispatch(p, SHARED_DSQ_ID,  -1, enq_flags);
+        scx_bpf_dsq_insert(p, SHARED_DSQ_ID,  -1, enq_flags);
     }
 
     @Override
     public void dispatch(int cpu, Ptr<task_struct> prev) {
-        scx_bpf_consume(SHARED_DSQ_ID);
+        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
     }
 
     public static void main(String[] args) throws Exception {

@@ -49,7 +49,7 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
-        version: ["6.6"]
+        version: ["6.14"]
     env:
       HBT_KERNEL_VERSION: "${{ matrix.version }}"
     steps:

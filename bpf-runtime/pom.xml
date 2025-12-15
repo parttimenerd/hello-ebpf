@@ -7,7 +7,7 @@
     <artifactId>bpf-runtime</artifactId>
     <groupId>me.bechberger</groupId>
     <name>Definitions for bpf types</name>
-    <version>0.1.10-scx-enabled-SNAPSHOT</version>
+    <version>0.1.11</version>
     <url>https://github.com/parttimenerd/hello-ebpf</url>
     <licenses>
         <license>
@@ -51,12 +51,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
+                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
                         <goals>
-                            <goal>jar-no-fork</goal>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -97,49 +97,16 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <gpgArguments>
-                        <arg>- -pinentry-mode</arg>
-                        <arg>loopback</arg>
-                    </gpgArguments>
-                </configuration>
-            </plugin>-->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>release</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.7.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>ossrh</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                    <waitUntil>uploaded</waitUntil>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -167,16 +134,4 @@
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/releases/
-            </url>
-        </repository>
-    </distributionManagement>
 </project>

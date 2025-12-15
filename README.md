@@ -89,10 +89,8 @@ limactl shell hello-ebpf
 sudo -s PATH=$PATH
 ```
 
-The scheduler examples require a 6.12+ kernel (install on ubuntu via the [mainline](https://github.com/bkw777/mainline) tool)
-or a patched 6.11 kernel with the scheduler extensions, you can get it from
-[here](https://launchpad.net/~arighi/+archive/ubuntu/sched-ext-unstable).
-You might also be able to run [CachyOS](https://cachyos.org/) and install a patched kernel from there.
+The scheduler examples require a 6.14+ kernel (Ubuntu 25.04 has it, install on older Ubuntus via the 
+[mainline](https://github.com/bkw777/mainline) tool).
 
 Blog Posts
 ----------
@@ -139,7 +137,7 @@ you can use them as a starting point for your own eBPF programs.
 |             | [demo.ForbiddenFile](bpf-samples/src/main/java/me/bechberger/ebpf/samples/demo/ForbiddenFile.java)                         | Block access to a specific file via openat2                                |
 |             | [Firewall](bpf-samples/src/main/java/me/bechberger/ebpf/samples/Firewall.java)                                             | A simple firewall that blocks all incoming packets                         |
 |             | [FirewallSpring](bpf-samples/src/main/java/me/bechberger/ebpf/samples/FirewallSpring.java)                                 | A spring boot based web front-end for the Firewall                         |
-|             | [MinimalScheduler](bpf-samples/src/main/java/me/bechberger/ebpf/samples/MinimalScheduler.java)                             | A minimal Linux scheduler                                                  | 
+|             | [MinimalScheduler](bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/MinimalScheduler.java)                       | A minimal Linux scheduler                                                  | 
 
 Running the Examples
 --------------------
@@ -205,6 +203,21 @@ You might have to add the https://s01.oss.sonatype.org/content/repositories/rele
     </repository>
 </repositories>
 ```
+
+Also available (but possibly less up to date):
+
+```xml
+<dependency>
+    <groupId>me.bechberger</groupId>
+    <artifactId>bpf</artifactId>
+    <version>0.1.3</version>
+</dependency>
+```
+
+__Important__: I you use sched-ext, you might need to replace `scx_bpf_dispatch` with `scx_bpf_dsq_insert`,
+`scx_bpf_dispatch_from_dsq` with `scx_bpf_dsq_move`, 
+`scx_bpf_consume` with `scx_bpf_dsq_move_to_local`,
+and `scx_bpf_dispatch_vtime` `scx_bpf_dsq_insert_vtime` with in your eBPF programs.
 
 <details>
 <summary>You have to copy the .mvn/jvm.config file and add the annotation processor to your project.</summary>

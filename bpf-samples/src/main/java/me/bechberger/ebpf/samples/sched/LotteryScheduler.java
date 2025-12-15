@@ -12,7 +12,6 @@ import me.bechberger.ebpf.type.Ptr;
 
 import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask_test_cpu;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_dispatch_from_dsq;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL_ON;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_enq_flags.SCX_ENQ_PREEMPT;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_get_prandom_u32;
@@ -32,7 +31,7 @@ public abstract class LotteryScheduler extends BPFProgram implements Scheduler {
     @Override
     public void enqueue(Ptr<TaskDefinitions.task_struct> p, long enq_flags) {
         var sliceLength = ((@Unsigned int) 5_000_000) / scx_bpf_dsq_nr_queued(SHARED_DSQ_ID);
-        scx_bpf_dispatch(p, SHARED_DSQ_ID, sliceLength, enq_flags);
+        scx_bpf_dsq_insert(p, SHARED_DSQ_ID, sliceLength, enq_flags);
     }
 
     @BPFFunction
@@ -42,7 +41,7 @@ public abstract class LotteryScheduler extends BPFProgram implements Scheduler {
         if (!bpf_cpumask_test_cpu(cpu, p.val().cpus_ptr)) {
             return false;
         }
-        return scx_bpf_dispatch_from_dsq(iter, p, SCX_DSQ_LOCAL_ON.value() | cpu, SCX_ENQ_PREEMPT.value());
+        return scx_bpf_dsq_move(iter, p, SCX_DSQ_LOCAL_ON.value() | cpu, SCX_ENQ_PREEMPT.value());
     }
 
     /**

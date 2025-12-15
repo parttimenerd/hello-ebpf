@@ -1505,7 +1505,12 @@ public class Generator {
             @Override
             public MethodSpec toMethodSpec(Generator gen, String name, @Nullable String javaDoc) {
                 var builtinFunctionAnnBuilder = AnnotationSpec.builder(cts(BuiltinBPFFunction.class));
-                var funcConversion = toBPFFunctionConversionString(name);
+                var funcConversion = "";
+                try {
+                    funcConversion = toBPFFunctionConversionString(name); // TODO: just bandaid
+                } catch (Exception e) {
+                    // ignore
+                }
                 if (funcConversion != null) {
                     builtinFunctionAnnBuilder.addMember("value", "$S", funcConversion);
                 }
@@ -1513,7 +1518,7 @@ public class Generator {
                 var builder =
                         MethodSpec.methodBuilder(name).addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                                 .addAnnotation(cts(NotUsableInJava.class))
-                                .addAnnotation(builtinFunctionAnn).returns(returnType.toTypeName(gen)).varargs(variadic);
+                                .addAnnotation(builtinFunctionAnn).returns(returnType == null ? /* TODO: just bandaid */ TypeName.VOID : returnType.toTypeName(gen)).varargs(variadic);
                 for (int i = 0; i < parameters.size(); i++) {
                     var param = parameters.get(i);
                     if (param.type.resolve() instanceof VoidType) { // this can never be

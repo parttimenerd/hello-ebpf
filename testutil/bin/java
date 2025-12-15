@@ -20,7 +20,7 @@ set -e
 HBT_JAVA_BINARY=${HBT_JAVA_BINARY:-java}
 
 # The kernel version to use
-HBT_KERNEL_VERSION=${HBT_KERNEL_VERSION:-6.6}
+HBT_KERNEL_VERSION=${HBT_KERNEL_VERSION:-6.14}
 
 testutil_dir=$(dirname "$0")/..
 $testutil_dir/run-in-container.sh $HBT_KERNEL_VERSION $HBT_JAVA_BINARY $@

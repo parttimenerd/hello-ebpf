@@ -58,7 +58,7 @@ public abstract class VTimeScheduler extends BPFProgram
         int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu,
                 wake_flags, Ptr.of(is_idle));
         if (is_idle) {
-            scx_bpf_dispatch(p, SCX_DSQ_LOCAL.value(),
+            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL.value(),
                     SCX_SLICE_DFL.value(),0);
         }
         return cpu;
@@ -82,14 +82,14 @@ public abstract class VTimeScheduler extends BPFProgram
          * Dispatch the task to dsq_vtime-ordered priority
          * queue, which prioritizes tasks with smaller vtime
          */
-        scx_bpf_dispatch_vtime(p, SHARED_DSQ_ID,
+        scx_bpf_dsq_insert_vtime(p, SHARED_DSQ_ID,
                 SCX_SLICE_DFL.value(), vtime,
                 enq_flags);
     }
 
     @Override
     public void dispatch(int cpu, Ptr<task_struct> prev) {
-        scx_bpf_consume(SHARED_DSQ_ID);
+        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
     }
 
     @Override

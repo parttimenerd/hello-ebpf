@@ -27,7 +27,7 @@ public class SchedulerTimeoutTest {
         public void enqueue(Ptr<TaskDefinitions.task_struct> p, long enq_flags) {
             if (bpf_strncmp(Ptr.of(p.val().comm).asString(), 16, NO_SCHEDULE_NAME) != 0) {
                 @Unsigned int queueCount = scx_bpf_dsq_nr_queued(scx_dsq_id_flags.SCX_DSQ_GLOBAL.value());
-                scx_bpf_dispatch(p, scx_dsq_id_flags.SCX_DSQ_GLOBAL.value(), 5_000_000 / queueCount, enq_flags);
+                scx_bpf_dsq_insert(p, scx_dsq_id_flags.SCX_DSQ_GLOBAL.value(), 5_000_000 / queueCount, enq_flags);
             }
         }
     }

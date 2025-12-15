@@ -123,7 +123,7 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
         int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
         if (is_idle) {
             incrementStats(true);
-            scx_bpf_dispatch(p, SCX_DSQ_LOCAL.value(), SCX_SLICE_DFL.value(),0);
+            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL.value(), SCX_SLICE_DFL.value(),0);
         }
         return cpu;
     }
@@ -132,7 +132,7 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
         incrementStats(false);
         if (fifo_sched.get()) {
-            scx_bpf_dispatch(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), enq_flags);
+            scx_bpf_dsq_insert(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), enq_flags);
         } else {
 
             @Unsigned long vtime = p.val().scx.dsq_vtime;
@@ -146,7 +146,7 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
             } else {
                 recordEnqueue(p);
             }
-            scx_bpf_dispatch_vtime(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), vtime, enq_flags);
+            scx_bpf_dsq_insert_vtime(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), vtime, enq_flags);
         }
     }
 
@@ -164,7 +164,7 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
 
     @Override
     public void dispatch(int cpu, Ptr<task_struct> prev) {
-        scx_bpf_consume(SHARED_DSQ_ID);
+        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
     }
 
     @Override
