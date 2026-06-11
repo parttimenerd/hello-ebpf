@@ -103,7 +103,12 @@ class Translator {
         assert annotation != null;
         var alwaysInline = compilerPlugin.getAnnotationOfMethodOrSuper(methodElement, AlwaysInline.class);
         var bpfInline = compilerPlugin.getAnnotationOfMethodOrSuper(methodElement, BPFInline.class);
-        return MethodHeaderTemplate.parse(annotation.headerTemplate()).call(decl, (alwaysInline != null || bpfInline != null) ? "__always_inline " : "");
+        // Helper functions (no SEC entry point) default to __always_inline unless opted out.
+        // Entry-point functions (section != "") do not inline by default.
+        boolean isEntryPoint = !annotation.section().isBlank();
+        boolean shouldInline = (alwaysInline != null || bpfInline != null)
+                || (!isEntryPoint && annotation.inline());
+        return MethodHeaderTemplate.parse(annotation.headerTemplate()).call(decl, shouldInline ? "__always_inline " : "");
     }
 
     @Nullable
