@@ -447,7 +447,11 @@ public class CompilerPlugin implements Plugin {
                         decl.annotations()), Set.of(), translator.addDefinition());
     }
 
-    record FuncDeclStatementResult(FunctionDeclarationStatement decl, Set<Define> requiredDefines, boolean addDefine) {
+    record FuncDeclStatementResult(FunctionDeclarationStatement decl, Set<Define> requiredDefines, boolean addDefine,
+                                   List<FunctionDeclarationStatement> syntheticFunctions) {
+        FuncDeclStatementResult(FunctionDeclarationStatement decl, Set<Define> requiredDefines, boolean addDefine) {
+            this(decl, requiredDefines, addDefine, List.of());
+        }
     }
 
     private @Nullable FuncDeclStatementResult processBPFFunctionWithCode(TypedTreePath<MethodTree> methodPath) {
@@ -457,7 +461,8 @@ public class CompilerPlugin implements Plugin {
         var translator = new Translator(this, methodPath);
         return callIfNonNull(translator.translate(), decl -> {
             var requiredDefines = translator.getRequiredDefines();
-            return new FuncDeclStatementResult(decl, requiredDefines, translator.addDefinition());
+            return new FuncDeclStatementResult(decl, requiredDefines, translator.addDefinition(),
+                    List.copyOf(translator.getSyntheticFunctions()));
         });
     }
 
@@ -490,6 +495,12 @@ public class CompilerPlugin implements Plugin {
         var defines = declsWithDefines.stream().flatMap(e -> e.getValue().requiredDefines().stream()).collect(Collectors.toSet());
         var functionHeaders = declsWithDefines.stream().map(Map.Entry::getValue).filter(d -> d.addDefine).map(d -> d.decl.declarator()).toList();
         var functionImplementations = declsWithDefines.stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().decl.toPrettyString()));
+        // Synthetic lambdas lifted via $funcN belong with the interface body so they're
+        // visible to consumers that paste the interface body into their own C code.
+        var syntheticFnsCode = declsWithDefines.stream()
+                .flatMap(e -> e.getValue().syntheticFunctions().stream())
+                .map(CAST::toPrettyString)
+                .collect(Collectors.joining("\n\n"));
 
         var result = new TypeProcessor(this.createProcessingEnvironment()).processBPFTypeRecords(bpfInterfaceTypeElement);
         if (result == null) {
@@ -502,6 +513,9 @@ public class CompilerPlugin implements Plugin {
 
         var combinedCode = combineCode("", functionHeaders, List.of(), defines, result.definingStatements(), result.mapDefinitions(),
                 result.globalVariableDefinitions(), new TypeProcessor.InterfaceAdditions(List.of(), List.of(), List.of()));
+        if (!syntheticFnsCode.isBlank()) {
+            combinedCode = combinedCode.isBlank() ? syntheticFnsCode : combinedCode + "\n\n" + syntheticFnsCode;
+        }
 
         if (combinedCode.isBlank() && functionImplementations.isEmpty()) {
             return; // nothing changed
@@ -723,6 +737,13 @@ public class CompilerPlugin implements Plugin {
 
         var defines = declsWithDefines.stream().flatMap(r -> r.requiredDefines().stream()).collect(Collectors.toSet());
         var decls = declsWithDefines.stream().map(d -> new FuncDecl(d.decl, d.addDefine)).toList();
+        // Synthetic top-level functions (e.g. lambdas lifted for bpf_loop / bpf_for_each_map_elem).
+        // These come BEFORE the main function decls in declarator-emission order so that the
+        // helper that takes their address has a forward declaration in scope.
+        var syntheticDecls = declsWithDefines.stream()
+                .flatMap(d -> d.syntheticFunctions().stream())
+                .map(s -> new FuncDecl(s, true))
+                .toList();
 
         if (decls.size() < toImplement) {
             logError(programPath, bpfProgram, "Not all methods have been processed");
@@ -784,7 +805,7 @@ public class CompilerPlugin implements Plugin {
 
         var properties = getAllPropertyValues(programPath, superClassElement);
 
-        var newCode = replaceProperties(combineCode(code, decls, defines) + "\n\n" + implAnn.after(), properties);
+        var newCode = replaceProperties(combineCode(code, syntheticDecls, decls, defines) + "\n\n" + implAnn.after(), properties);
 
         // write the C code in a file close to the source file (controlled by dumpC plugin arg)
         var cFile =
@@ -886,7 +907,19 @@ public class CompilerPlugin implements Plugin {
     }
 
     String combineCode(String code, List<FuncDecl> decls, Set<Define> defines) {
-        return combineCode(code, List.of(), decls, defines, List.of(), List.of(), List.of(),
+        return combineCode(code, List.of(), decls, defines);
+    }
+
+    /**
+     * Variant that accepts {@code syntheticDecls} — top-level functions lifted from
+     * {@code $funcN} lambda placeholders (see {@code Translator#promoteLambda}). These
+     * are emitted alongside the main declarations and (forward-declared) before all
+     * other functions so callers like {@code bpf_loop(__bpf_lambda_..., ...)} resolve.
+     */
+    String combineCode(String code, List<FuncDecl> syntheticDecls, List<FuncDecl> decls, Set<Define> defines) {
+        var allDecls = new ArrayList<>(syntheticDecls);
+        allDecls.addAll(decls);
+        return combineCode(code, List.of(), allDecls, defines, List.of(), List.of(), List.of(),
                 new TypeProcessor.InterfaceAdditions(List.of(), List.of(), List.of()));
     }
 

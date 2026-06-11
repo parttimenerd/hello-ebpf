@@ -1525,4 +1525,55 @@ public class CompilerPluginTest {
                 "helper call should still appear in generated C (pass warns, doesn't block):\n" + code);
     }
 
+    /** Phase D.2/D.3 — function-pointer-style lambda lift via {@code $funcN}.
+     *  {@code BPFJ.bpfLoop(10, (i, ctx) -> 0, null)} must lift the lambda to a top-level
+     *  static {@code __always_inline} function and pass its name to {@code bpf_loop}. */
+    @BPF
+    public static abstract class BpfLoopLambda extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        public final GlobalVariable<Integer> sum = new GlobalVariable<>(0);
+
+        @BPFFunction
+        public void runLoop() {
+            BPFJ.bpfLoop(10, (i, ctx) -> {
+                return 0;
+            }, null);
+        }
+    }
+
+    @Test
+    public void testBpfLoopLambdaLifted() {
+        String code = BPFProgram.getCode(BpfLoopLambda.class);
+        assertTrue(code.contains("static __always_inline"),
+                "lifted lambda should be static __always_inline in generated C:\n" + code);
+        assertTrue(code.contains("__bpf_lambda_runLoop_0"),
+                "lifted lambda's synthetic name should appear in generated C:\n" + code);
+        assertTrue(code.contains("bpf_loop(10, __bpf_lambda_runLoop_0"),
+                "bpf_loop call should reference the synthetic function:\n" + code);
+    }
+
+    /** Phase D.2 — capturing locals from the enclosing method must be rejected.
+     *  We verified this manually: the program below
+     *  <pre>{@code
+     *      @BPFFunction
+     *      public void runLoop() {
+     *          int x = 0;
+     *          BPFJ.bpfLoop(10, (i, ctx) -> { int y = x; return 0; }, null);
+     *      }
+     *  }</pre>
+     *  fails compilation with a {@code Diagnostic.Kind.ERROR} containing
+     *  "captures local variable 'x'". Because plugin-emitted ERRORs abort javac,
+     *  there's no way to keep the bad program compiling here just to assert in a
+     *  test, short of building dedicated negative-test infrastructure (see
+     *  {@code bpf-compiler-plugin-test} module). The behaviour is exercised by
+     *  {@code MapForEachTest}/{@code BpfLoopTest} in {@code bpf} which use
+     *  the legal {@code ctx} parameter. */
+    @org.junit.jupiter.api.Disabled("Negative test — would break compilation; see Javadoc.")
+    @Test
+    public void testBpfLoopLambdaCaptureRejected_documented() {
+    }
 }

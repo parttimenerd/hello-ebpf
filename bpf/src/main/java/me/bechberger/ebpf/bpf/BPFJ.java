@@ -6,6 +6,8 @@ import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.runtime.helpers.BPFHelpers;
 import me.bechberger.ebpf.type.Ptr;
 
+import java.util.function.BiFunction;
+
 /**
  * Helper functions for the BPF code, to make its usage more convenient with Java
  */
@@ -343,6 +345,33 @@ public class BPFJ {
     @BuiltinBPFFunction("{}")
     @NotUsableInJava
     public static char[] charBuf(int n) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Run {@code body} {@code count} times via {@code bpf_loop}, passing {@code ctx}
+     * to every iteration.
+     * <p>
+     * Lowers to {@code bpf_loop(count, &__bpf_lambda_..., ctx, 0)} where the lambda
+     * is lifted to a top-level static {@code __always_inline} C function with the
+     * shape {@code int (*)(u32 index, void *ctx)}. The lambda body must NOT capture
+     * locals from the enclosing method — pass state through {@code ctx} instead.
+     * <p>
+     * Return values from the lambda follow {@code bpf_loop} semantics: {@code 0} to
+     * continue, {@code 1} to break, anything else is an error.
+     * <p>
+     * Example:
+     * <pre>{@code
+     *   BPFJ.bpfLoop(10, (i, ctx) -> {
+     *       BPFJ.bpf_trace_printk("iter %d", i);
+     *       return 0;
+     *   }, null);
+     * }</pre>
+     * Requires kernel ≥5.17.
+     */
+    @BuiltinBPFFunction("bpf_loop($arg1, $func2, $arg3, 0)")
+    @NotUsableInJava
+    public static <C> void bpfLoop(int count, BiFunction<Integer, C, Integer> body, C ctx) {
         throw new MethodIsBPFRelatedFunction();
     }
 }

@@ -1,6 +1,8 @@
 package me.bechberger.ebpf.bpf.compiler;
 
 import com.sun.source.tree.*;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
@@ -58,10 +60,21 @@ class Translator {
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
     private final Set<Define> requiredDefines = new HashSet<>();
+    /** Top-level synthetic C functions emitted for {@code $funcN} lambda lifts.
+     *  Collected during translation; emitted alongside the main method declaration. */
+    private final List<FunctionDeclarationStatement> syntheticFunctions = new ArrayList<>();
+    /** Per-method counter for synthetic-function naming. */
+    private int syntheticLambdaCounter = 0;
 
     Translator(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath) {
         this.compilerPlugin = compilerPlugin;
         this.methodPath = methodPath;
+    }
+
+    /** Synthetic top-level C functions generated to back {@code $funcN} lambda
+     *  arguments (function-pointer-style helpers like {@code bpf_loop}). */
+    public List<FunctionDeclarationStatement> getSyntheticFunctions() {
+        return syntheticFunctions;
     }
 
     /** Emit a {@code #line N "File.java"} directive for the given AST node so that
@@ -844,7 +857,8 @@ class Translator {
         }
         try {
             var res = compilerPlugin.methodTemplateCache.render(methodPath, methodInvocationTree, symbol,
-                    new CallArgs(thisExpression, arguments, declarators, typeDeclarators));
+                    new CallArgs(thisExpression, arguments, declarators, typeDeclarators,
+                            this::promoteLambda));
             return new VerbatimExpression(
                                 res.code().endsWith(";") ?
                                         res.code().substring(0, res.code().length() - 1) :
@@ -867,7 +881,7 @@ class Translator {
     @Nullable
     Argument translateArgument(ExpressionTree argument) {
         if (argument instanceof LambdaExpressionTree lambda) {
-            var params = translateFunctionParameters(lambda.getParameters());
+            var params = translateLambdaParameters(lambda.getParameters());
             if (params == null) {
                 return null;
             }
@@ -888,9 +902,41 @@ class Translator {
             if (body == null) {
                 return null;
             }
-            return new Lambda(params, body);
+            return new Lambda(params, body, lambda);
         }
         return translateArgumentWithoutLambda(argument);
+    }
+
+    /**
+     * Translate lambda parameters with one MVP relaxation over the regular path:
+     * a parameter typed {@code Object} is mapped to {@code void *}. This supports the
+     * function-pointer-style lambdas (e.g. {@code BPFJ.bpfLoop}) where the user-side
+     * Java signature treats {@code ctx} as opaque (typically {@code Object}) but the
+     * libbpf-side C signature requires {@code void *}.
+     * <p>
+     * For inline-expansion lambdas this relaxation is harmless: a {@code void *}
+     * parameter declaration in the inlined body is equivalent to what the user wrote.
+     */
+    @Nullable
+    private List<FunctionParameter> translateLambdaParameters(List<? extends VariableTree> parameters) {
+        var translated = new ArrayList<FunctionParameter>();
+        var hadError = false;
+        for (var parameter : parameters) {
+            var typeMirror = compilerPlugin.trees.getElement(methodPath.path(parameter)).asType();
+            CAST.Declarator type;
+            if (typeMirror != null && "java.lang.Object".equals(typeMirror.toString())) {
+                type = Declarator.pointer(Declarator.identifier("void"));
+            } else {
+                type = translateType(compilerPlugin.trees.getElement(methodPath.path(parameter)), typeMirror);
+            }
+            if (type == null) {
+                logError(parameter, "Unsupported parameter type: " + typeMirror);
+                hadError = true;
+            }
+            var name = parameter.getName().toString();
+            translated.add(new FunctionParameter(variable(name), type));
+        }
+        return hadError ? null : translated;
     }
     // translate(((JCLambda) argument).body)
 
@@ -1055,5 +1101,199 @@ class Translator {
                     new InitializerList(elements.stream().map(e -> new InitDeclarator(null, e)).toList()),
                     List.of(elements.size()));
         }
+    }
+
+    /**
+     * Lift a lambda argument to a top-level static {@code __always_inline} C function.
+     * <p>
+     * Called by {@link MethodTemplate.LambdaPromoter} when the builtin's template uses
+     * {@code $funcN} (function-pointer-style helper such as {@code bpf_loop} or
+     * {@code bpf_for_each_map_elem}). Performs capture analysis (rejecting captures of
+     * locals defined outside the lambda); generates a function with shape:
+     * <pre>{@code
+     *   static __always_inline int __bpf_lambda_<method>_<n>(<p0> p0, <p1> p1, void *ctx) {
+     *       <translated lambda body>
+     *       return 0;
+     *   }
+     * }</pre>
+     * Adds the function to {@link #syntheticFunctions} for emission alongside the
+     * enclosing BPF method.
+     *
+     * @return the synthetic function name, or {@code null} if capture analysis or body
+     *         translation failed (a {@code Diagnostic.Kind.ERROR} has been emitted).
+     */
+    @Nullable
+    String promoteLambda(int argIndex, MethodTemplate.Argument.Lambda lambda,
+                         MethodTemplate.FuncShape shape) {
+        if (!(lambda.source() instanceof LambdaExpressionTree lambdaTree)) {
+            // Internal: every Lambda built by translateArgument carries its source tree.
+            // If this is null we have no way to do capture analysis safely.
+            logError(methodPath.leaf(), "Internal: lambda promotion requires source tree (argument "
+                    + (argIndex + 1) + ")");
+            return null;
+        }
+        if (!checkLambdaCaptures(lambdaTree)) {
+            return null;
+        }
+        var enclosingMethodName = methodPath.leaf().getName().toString();
+        var name = "__bpf_lambda_" + enclosingMethodName + "_" + (syntheticLambdaCounter++);
+
+        // Resolve the ctx param name (user may have called one of their lambda params
+        // "ctx" — rename ours to avoid the collision). Used by both shapes.
+        boolean clash = lambda.parameters().stream()
+                .anyMatch(p -> p.name() != null && "ctx".equals(p.name().name()));
+        var ctxName = clash ? "__ctx" : "ctx";
+
+        // Translate the lambda body into a list of statements. For an expression-form
+        // lambda `(...) -> expr`, the single ExpressionStatement is turned into a
+        // ReturnStatement so the lifted C function returns the value (this is opposite
+        // to inline `$lambdaN:code` callers, which expand the expression in-place).
+        List<Statement> bodyStatements = new ArrayList<>(lambda.code().statements());
+        if (lambdaTree.getBodyKind() == LambdaExpressionTree.BodyKind.EXPRESSION) {
+            if (bodyStatements.size() == 1 && bodyStatements.get(0) instanceof ExpressionStatement es) {
+                bodyStatements = new ArrayList<>(List.of(new ReturnStatement(es.expression())));
+            }
+        }
+
+        List<FunctionParameter> params;
+        VerbatimFunctionDeclarator verbatimHeader = null;
+        if (shape == MethodTemplate.FuncShape.MAPELEM) {
+            // libbpf bpf_for_each_map_elem expects:
+            //   long (*cb)(struct bpf_map *map, const void *key, void *value, void *ctx)
+            // The user writes `(k, v) -> ...` so we generate
+            //   (struct bpf_map *__map, const void *__key, void *__value, void *ctx)
+            // and prepend
+            //   <KType> k = *(<KType> *)__key;
+            //   <VType> v = *(<VType> *)__value;
+            // so the user's body sees plain `k`/`v` of the right types.
+            if (lambda.parameters().size() != 2) {
+                logError(methodPath.leaf(), "Map.forEach lambda must have exactly two parameters (key, value), got "
+                        + lambda.parameters().size());
+                return null;
+            }
+            var keyParam = lambda.parameters().get(0);
+            var valueParam = lambda.parameters().get(1);
+            var keyName = keyParam.name() != null ? keyParam.name().name() : "k";
+            var valueName = valueParam.name() != null ? valueParam.name().name() : "v";
+            var keyTypeStr = keyParam.declarator().toPrettyString();
+            var valueTypeStr = valueParam.declarator().toPrettyString();
+            var prologue = List.<Statement>of(
+                    new VerbatimStatement(keyTypeStr + " " + keyName + " = *((" + keyTypeStr + " *)__key);"),
+                    new VerbatimStatement(valueTypeStr + " " + valueName + " = *((" + valueTypeStr + " *)__value);")
+            );
+            var newBody = new ArrayList<Statement>(prologue);
+            newBody.addAll(bodyStatements);
+            bodyStatements = newBody;
+            verbatimHeader = new VerbatimFunctionDeclarator(
+                    "static __always_inline int " + name +
+                            "(struct bpf_map *__map, const void *__key, void *__value, void *" + ctxName + ")");
+            params = null;
+        } else {
+            // PLAIN shape: emit lambda parameters verbatim. The user's lambda already
+            // includes the ctx parameter (e.g. `(i, ctx) -> ...` for bpf_loop), so we
+            // do NOT append another `void *ctx`. We do, however, force the LAST
+            // parameter's declared type to be `void *` regardless of what the user
+            // wrote (it'll typically already be `void *` because BiFunction's second
+            // type variable resolves to Object/void * — but be defensive).
+            var pl = new ArrayList<>(lambda.parameters());
+            if (!pl.isEmpty()) {
+                var last = pl.getLast();
+                if (last.name() != null) {
+                    pl.set(pl.size() - 1, new FunctionParameter(last.name(),
+                            Declarator.pointer(Declarator.identifier("void"))));
+                }
+            }
+            params = pl;
+        }
+
+        boolean endsWithReturn = !bodyStatements.isEmpty()
+                && (bodyStatements.getLast() instanceof ReturnStatement
+                    || (bodyStatements.getLast() instanceof VerbatimStatement vs
+                        && vs.code().trim().startsWith("return")));
+        if (!endsWithReturn) {
+            bodyStatements.add(new VerbatimStatement("return 0;"));
+        }
+        VerbatimFunctionDeclarator inlinedHeader;
+        if (verbatimHeader != null) {
+            inlinedHeader = verbatimHeader;
+        } else {
+            var declarator = new FunctionDeclarator(variable(name),
+                    Declarator.identifier("int"), params);
+            // Wrap with `static __always_inline` so the verifier inlines the call site
+            // (libbpf otherwise rejects indirect calls under most program types).
+            inlinedHeader = new VerbatimFunctionDeclarator("static __always_inline " +
+                    declarator.toPrettyString());
+        }
+        var inlinedFn = new FunctionDeclarationStatement(inlinedHeader,
+                new CompoundStatement(bodyStatements));
+        syntheticFunctions.add(inlinedFn);
+        return name;
+    }
+
+    /**
+     * Reject captures of locals defined outside the lambda. The user must use the
+     * {@code ctx} parameter to thread state into a function-pointer-style callback.
+     * Allowed: lambda params, locals defined inside the lambda body, fields (incl.
+     * static), method references via {@code this}, type names.
+     *
+     * @return {@code true} if all references are legal, {@code false} if a capture
+     *         was reported (caller should not promote).
+     */
+    private boolean checkLambdaCaptures(LambdaExpressionTree lambdaTree) {
+        // Collect element references to locals/parameters that resolve to symbols
+        // declared OUTSIDE the lambda subtree. We use Trees.getElement() per identifier
+        // and inspect the enclosing element of the symbol.
+        var trees = compilerPlugin.trees;
+        var lambdaPath = methodPath.path(lambdaTree);
+        // Set of parameter elements declared by THIS lambda; references to these are fine.
+        Set<Element> lambdaParamElements = new HashSet<>();
+        for (var p : lambdaTree.getParameters()) {
+            var elPath = methodPath.path(p);
+            var el = elPath == null ? null : trees.getElement(elPath);
+            if (el != null) lambdaParamElements.add(el);
+        }
+        boolean[] hadIllegal = {false};
+        // Collect elements declared inside the lambda body (locals declared in the lambda body)
+        Set<Element> bodyDeclared = new HashSet<>();
+        if (lambdaTree.getBody() instanceof Tree bodyTree) {
+            new TreeScanner<Void, Void>() {
+                @Override
+                public Void visitVariable(VariableTree node, Void ignored) {
+                    var elPath = TreePath.getPath(lambdaPath, node);
+                    if (elPath != null) {
+                        var el = trees.getElement(elPath);
+                        if (el != null) bodyDeclared.add(el);
+                    }
+                    return super.visitVariable(node, ignored);
+                }
+            }.scan(bodyTree, null);
+        }
+
+        new TreeScanner<Void, Void>() {
+            @Override
+            public Void visitIdentifier(IdentifierTree node, Void ignored) {
+                var idPath = TreePath.getPath(lambdaPath, node);
+                if (idPath == null) return super.visitIdentifier(node, ignored);
+                var el = trees.getElement(idPath);
+                if (el == null) return super.visitIdentifier(node, ignored);
+                var kind = el.getKind();
+                // We only care about locals/parameters; fields, methods, types are fine.
+                if (kind != ElementKind.LOCAL_VARIABLE && kind != ElementKind.PARAMETER) {
+                    return super.visitIdentifier(node, ignored);
+                }
+                if (lambdaParamElements.contains(el) || bodyDeclared.contains(el)) {
+                    return super.visitIdentifier(node, ignored);
+                }
+                // Capture detected.
+                logError(node, "Lambda passed to a function-pointer-style BPF helper "
+                        + "captures local variable '" + node.getName()
+                        + "' from the enclosing method. The kernel verifier requires the lambda "
+                        + "to compile to a standalone C function, so captures of locals are not "
+                        + "supported. Pass state via the `ctx` parameter instead.");
+                hadIllegal[0] = true;
+                return super.visitIdentifier(node, ignored);
+            }
+        }.scan(lambdaTree.getBody(), null);
+        return !hadIllegal[0];
     }
 }

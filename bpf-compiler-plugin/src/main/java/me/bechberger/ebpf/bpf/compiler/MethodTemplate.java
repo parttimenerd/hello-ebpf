@@ -59,7 +59,11 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
     }
 
     public sealed interface Argument {
-        record Lambda(List<FunctionParameter> parameters, CAST.Statement.CompoundStatement code) implements Argument {
+        record Lambda(List<FunctionParameter> parameters, CAST.Statement.CompoundStatement code,
+                      @Nullable Object source) implements Argument {
+            public Lambda(List<FunctionParameter> parameters, CAST.Statement.CompoundStatement code) {
+                this(parameters, code, null);
+            }
             @Override
             public String toPrettyString() {
                 return String.format("(%s) { %s }", parameters.stream().map(FunctionParameter::toPrettyString).collect(Collectors.joining(", ")),
@@ -76,13 +80,54 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
         String toPrettyString();
     }
 
+    /**
+     * Callback the renderer invokes for {@code $funcN} placeholders to lift a lambda
+     * argument into a top-level synthetic C function and obtain the function's name.
+     * Returning {@code null} signals an error already reported by the callback (e.g.
+     * illegal capture); the renderer will throw a {@link TemplateRenderException}.
+     */
+    /**
+     * Shape of the lifted C function generated for a {@code $funcN} placeholder.
+     * <ul>
+     *   <li>{@link #PLAIN} — append the lambda parameters verbatim plus a trailing
+     *       {@code void *ctx}. Suitable for {@code bpf_loop} and similar
+     *       {@code (index, ctx)} callbacks.</li>
+     *   <li>{@link #MAPELEM} — emit the libbpf {@code bpf_for_each_map_elem}
+     *       callback ABI: {@code (struct bpf_map *map, K *key, V *value, void *ctx)},
+     *       and dereference key/value at the start of the lifted body so the user
+     *       lambda body sees plain {@code k}/{@code v} variables of type {@code K}
+     *       and {@code V}.</li>
+     * </ul>
+     */
+    public enum FuncShape {
+        PLAIN, MAPELEM
+    }
+
+    /**
+     * Callback the renderer invokes for {@code $funcN} placeholders to lift a lambda
+     * argument into a top-level synthetic C function and obtain the function's name.
+     * Returning {@code null} signals an error already reported by the callback (e.g.
+     * illegal capture); the renderer will throw a {@link TemplateRenderException}.
+     */
+    @FunctionalInterface
+    public interface LambdaPromoter {
+        @Nullable String promote(int argIndex, Lambda lambda, FuncShape shape);
+    }
+
     public record CallArgs(@Nullable CAST.Expression thisExpression,
                            List<? extends Argument> arguments,
                            List<CAST.Declarator> typeArguments,
-                           List<CAST.Declarator> classTypeArguments) {
+                           List<CAST.Declarator> classTypeArguments,
+                           @Nullable LambdaPromoter lambdaPromoter) {
         public CallArgs(@Nullable CAST.Expression thisExpression,
                         List<? extends Argument> arguments, List<CAST.Declarator> typeArguments) {
-            this(thisExpression, arguments, typeArguments, List.of());
+            this(thisExpression, arguments, typeArguments, List.of(), null);
+        }
+        public CallArgs(@Nullable CAST.Expression thisExpression,
+                        List<? extends Argument> arguments,
+                        List<CAST.Declarator> typeArguments,
+                        List<CAST.Declarator> classTypeArguments) {
+            this(thisExpression, arguments, typeArguments, classTypeArguments, null);
         }
     }
 
@@ -283,6 +328,31 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                 return code.toPrettyStringWithoutBraces();
             }
         }
+
+        /**
+         * {@code $funcN} — promote the lambda at argument N to a top-level static
+         * synthetic C function (via {@link LambdaPromoter}) and emit the bare
+         * function-name identifier. Used for kfuncs that take real C function
+         * pointers (e.g. {@code bpf_loop}, {@code bpf_for_each_map_elem}).
+         */
+        record FuncRef(int n, FuncShape shape) implements TemplatePart {
+            public FuncRef(int n) { this(n, FuncShape.PLAIN); }
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                String text = String.format("$func%d", n + 1);
+                var lambda = TemplatePart.getLambdaParam(props, n, text);
+                if (props.args.lambdaPromoter == null) {
+                    throw new TemplateRenderException("$func" + (n + 1) + " requires a LambdaPromoter to be set "
+                            + "on CallArgs (only the Translator can lift lambdas to top-level functions)");
+                }
+                var name = props.args.lambdaPromoter.promote(n, lambda, shape);
+                if (name == null) {
+                    throw new TemplateRenderException("Failed to lift lambda at argument " + (n + 1)
+                            + " to a top-level function (see preceding diagnostics)");
+                }
+                return name;
+            }
+        }
     }
 
     static MethodTemplate parse(String methodName, String template) {
@@ -323,6 +393,32 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                 hadPointeryBefore = true;
                 i++;
                 part = parts[i];
+            } else if (part.startsWith("func") && !part.startsWith("func_")
+                    && part.length() > 4 && Character.isDigit(part.charAt(4))) {
+                // $funcN[:mapelem] — lift the lambda at argument N to a synthetic
+                // top-level C function and emit the function name.
+                int end = 4;
+                while (end < part.length() && Character.isDigit(part.charAt(end))) {
+                    end++;
+                }
+                int funcNum;
+                try {
+                    funcNum = Integer.parseInt(part.substring(4, end));
+                } catch (NumberFormatException e) {
+                    throw new TemplateRenderException("Invalid func number: $" + part);
+                }
+                FuncShape shape = FuncShape.PLAIN;
+                String rest = part.substring(end);
+                if (rest.startsWith(":mapelem")) {
+                    shape = FuncShape.MAPELEM;
+                    rest = rest.substring(":mapelem".length());
+                }
+                templateParts.add(new FuncRef(funcNum - 1, shape));
+                part = rest;
+                if (!part.isEmpty()) {
+                    templateParts.add(new Verbatim(part));
+                }
+                continue;
             } else if (part.startsWith("lambda")) {
                 // we're in $Lambda...
                 /*
