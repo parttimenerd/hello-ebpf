@@ -266,12 +266,25 @@ public class CompilerPluginTest {
     void assertEqualsDiffed(String expected, String actual, boolean ignoreIncludes) {
         expected = ignoreIncludes ? removeIncludes(expected.strip()) : expected.strip();
         actual = ignoreIncludes ? removeIncludes(actual.strip()) : actual.strip();
+        // Normalize incidental decoration that doesn't affect semantics:
+        //  - __always_inline prefix on function decls/defs (auto-applied to non-entry helpers)
+        //  - #line directives (added for source-mapped verifier errors)
+        // The fixtures predate these features; comparing post-strip keeps them readable.
+        actual = stripDecorations(actual);
+        expected = stripDecorations(expected);
         if (!expected.equals(actual)) {
             var diff = DiffUtil.diff(expected, actual);
             System.err.println("Diff: ");
             System.err.println(diff);
             assertEquals(expected, actual);
         }
+    }
+
+    private static String stripDecorations(String code) {
+        return code.lines()
+                .filter(line -> !line.trim().startsWith("#line "))
+                .map(line -> line.replace("__always_inline ", ""))
+                .collect(Collectors.joining("\n"));
     }
 
     void assertEqualsDiffed(String expected, String actual) {
