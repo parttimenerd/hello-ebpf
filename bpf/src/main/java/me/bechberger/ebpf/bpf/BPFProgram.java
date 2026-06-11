@@ -146,6 +146,14 @@ public abstract class BPFProgram implements AutoCloseable {
             return program;
         } catch (BPFError e) {
             throw e;
+        } catch (InvocationTargetException e) {
+            // Constructor.newInstance() wraps user-thrown exceptions; unwrap so
+            // BPFLoadError / BPFVerifierException propagate to the caller as-is.
+            Throwable cause = e.getCause();
+            if (cause instanceof BPFError be) {
+                throw be;
+            }
+            throw new RuntimeException(cause != null ? cause : e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -247,6 +255,7 @@ public abstract class BPFProgram implements AutoCloseable {
      * @throws BPFLoadError if the whole program could not be loaded
      */
     private MemorySegment loadProgram() {
+        VerifierLogCapture.install();
         Path objFile = getTmpObjectFile();
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment fileName = arena.allocateFrom(objFile.toString());
@@ -256,9 +265,17 @@ public abstract class BPFProgram implements AutoCloseable {
                 throw new BPFLoadError("Failed to open eBPF file: " + Util.errnoString(ebpf_object.err()));
             }
 
+            // discard any prior libbpf chatter so the captured log only contains
+            // messages emitted during this bpf_object__load call
+            VerifierLogCapture.drainAndReset();
             var ret = BPF_OBJECT__LOAD.call(ebpf_object.result());
             if (ret.hasError() && ret.result() != 0) {
-                throw new BPFLoadError("Failed to load eBPF object: " + Util.errnoString(ret.err()));
+                String shortMsg = "Failed to load eBPF object: " + Util.errnoString(ret.err());
+                String log = VerifierLogCapture.drainAndReset();
+                if (log.isEmpty()) {
+                    throw new BPFLoadError(shortMsg);
+                }
+                throw new BPFVerifierException(shortMsg, log);
             }
             return ebpf_object.result();
         }
