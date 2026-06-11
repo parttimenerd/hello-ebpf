@@ -44,6 +44,7 @@ import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static me.bechberger.cast.CAST.Expression.*;
@@ -80,6 +81,44 @@ class Translator {
         var bslash = sourceFile.lastIndexOf('\\');
         if (bslash >= 0) sourceFile = sourceFile.substring(bslash + 1);
         return new VerbatimStatement("#line " + line + " \"" + sourceFile + "\"");
+    }
+
+    /**
+     * Evaluate an expression to its compile-time constant value, if possible.
+     * Handles boolean/int literals and {@code static final} field references.
+     */
+    private Optional<Object> evaluateToConstant(ExpressionTree expr) {
+        // javac wraps if-conditions in JCParens; unwrap before evaluating
+        if (expr instanceof ParenthesizedTree paren) {
+            return evaluateToConstant(paren.getExpression());
+        }
+        if (expr instanceof LiteralTree lit && lit.getValue() != null) {
+            Object v = lit.getValue();
+            // javac may represent boolean literals as Integer(0)/Integer(1) with kind BOOLEAN_LITERAL,
+            // or as Boolean directly depending on internal AST stage.
+            if (lit.getKind() == Tree.Kind.BOOLEAN_LITERAL) {
+                if (v instanceof Boolean b) return Optional.of(b);
+                if (v instanceof Number n) return Optional.of(n.intValue() != 0);
+                return Optional.of(Boolean.parseBoolean(v.toString()));
+            }
+            if (v instanceof Boolean b) return Optional.of(b);
+            return Optional.of(v);
+        }
+        // static final field reference (simple name in same class)
+        if (expr instanceof IdentifierTree ident) {
+            var element = compilerPlugin.trees.getElement(methodPath.path(ident));
+            if (element instanceof VariableElement ve && ve.getConstantValue() != null) {
+                return Optional.of(ve.getConstantValue());
+            }
+        }
+        // static final field reference (qualified: ClassName.FIELD)
+        if (expr instanceof MemberSelectTree mst) {
+            var element = compilerPlugin.trees.getElement(methodPath.path(mst));
+            if (element instanceof VariableElement ve && ve.getConstantValue() != null) {
+                return Optional.of(ve.getConstantValue());
+            }
+        }
+        return Optional.empty();
     }
 
     public Set<Define> getRequiredDefines() {
@@ -195,12 +234,25 @@ class Translator {
 
     @Nullable
     CAST.Statement.CompoundStatement translate(BlockTree block) {
+        return translate(block, true);
+    }
+
+    CAST.Statement.CompoundStatement translate(BlockTree block, boolean emitLineDirectives) {
         var statements = block.getStatements();
         var translated = new ArrayList<Statement>();
         var hadError = false;
         for (var statement : statements) {
-            var line = lineDirective(statement);
-            if (line != null) translated.add(line);
+            // Skip line directive + statement entirely if constant folding will eliminate this branch
+            if (statement instanceof IfTree ifTree) {
+                var foldVal = evaluateToConstant(ifTree.getCondition());
+                if (foldVal.isPresent() && foldVal.get() instanceof Boolean b && !b && ifTree.getElseStatement() == null) {
+                    continue;
+                }
+            }
+            if (emitLineDirectives) {
+                var line = lineDirective(statement);
+                if (line != null) translated.add(line);
+            }
             var translatedStatement = translate(statement);
             if (translatedStatement != null) {
                 translated.add(translatedStatement);
@@ -268,6 +320,16 @@ class Translator {
                 yield type != null ? new CAST.Statement.VariableDefinition(type, variable(name), initializer) : null;
             }
             case IfTree ifTree -> {
+                // Constant folding: if (true) → then-block, if (false) → else-block (or nothing)
+                var constVal = evaluateToConstant(ifTree.getCondition());
+                if (constVal.isPresent() && constVal.get() instanceof Boolean boolVal) {
+                    if (boolVal) {
+                        yield translate(ifTree.getThenStatement());
+                    } else {
+                        yield ifTree.getElseStatement() != null
+                                ? translate(ifTree.getElseStatement()) : new VerbatimStatement("");
+                    }
+                }
                 var condition = translate(ifTree.getCondition());
                 var thenStatement = translate(ifTree.getThenStatement());
                 var elseStatement = callIfNonNull(ifTree.getElseStatement(), this::translate);
@@ -810,7 +872,7 @@ class Translator {
                 return null;
             }
             CompoundStatement body = switch (lambda.getBody()) {
-                case BlockTree block -> translate(block);
+                case BlockTree block -> translate(block, false);
                 case ExpressionTree exprTree -> {
                     var expr = translate(exprTree);
                     if (expr == null) {

@@ -28,6 +28,8 @@ import java.util.stream.Collectors;
 
 import static me.bechberger.ebpf.bpf.BPFJ.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 
 public class CompilerPluginTest {
@@ -1393,6 +1395,95 @@ public class CompilerPluginTest {
                   return 0;
                 }
                 """, code);
+    }
+
+    // --- C.3: Constant folding tests ---
+
+    @BPF
+    public static abstract class ConstantFoldFalse extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @BuiltinBPFFunction("illegal_helper()")
+        @NotUsableInJava
+        public void illegalHelper() {
+            throw new MethodIsBPFRelatedFunction();
+        }
+
+        @BPFFunction
+        public int test(int x) {
+            if (false) {
+                illegalHelper();
+            }
+            return x;
+        }
+    }
+
+    @Test
+    public void testConstantFoldFalse() {
+        String code = BPFProgram.getCode(ConstantFoldFalse.class);
+        // The dead branch should be eliminated; illegal_helper must not appear
+        assertFalse(code.contains("illegal_helper"),
+                "constant-false branch should be eliminated, illegal_helper must not appear in output:\n" + code);
+        assertTrue(code.contains("return x;"),
+                "test() body should still contain return x; got:\n" + code);
+    }
+
+    @BPF
+    public static abstract class ConstantFoldTrue extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @BPFFunction
+        public int test(int x) {
+            if (true) {
+                return x + 1;
+            } else {
+                return x - 1;
+            }
+        }
+    }
+
+    @Test
+    public void testConstantFoldTrue() {
+        String code = BPFProgram.getCode(ConstantFoldTrue.class);
+        // True branch kept, else branch eliminated
+        assertTrue(code.contains("return x + 1;"),
+                "true-branch body should be preserved; got:\n" + code);
+        assertFalse(code.contains("return x - 1;"),
+                "else branch should be eliminated; got:\n" + code);
+    }
+
+    @BPF
+    public static abstract class ConstantFoldStaticField extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        static final boolean FEATURE_ENABLED = false;
+
+        @BuiltinBPFFunction("unused_helper()")
+        @NotUsableInJava
+        public void unusedHelper() {
+            throw new MethodIsBPFRelatedFunction();
+        }
+
+        @BPFFunction
+        public int test(int x) {
+            if (FEATURE_ENABLED) {
+                unusedHelper();
+                return x + 99;
+            }
+            return x;
+        }
+    }
+
+    @Test
+    public void testConstantFoldStaticField() {
+        String code = BPFProgram.getCode(ConstantFoldStaticField.class);
+        // Static-final-false condition: dead branch eliminated
+        assertFalse(code.contains("unused_helper"),
+                "constant-false static field branch should be eliminated, unused_helper must not appear:\n" + code);
+        assertFalse(code.contains("return x + 99;"),
+                "dead-branch return must not appear:\n" + code);
+        assertTrue(code.contains("return x;"),
+                "fallthrough return must remain:\n" + code);
     }
 
 }
