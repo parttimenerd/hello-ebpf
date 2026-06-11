@@ -398,6 +398,7 @@ hello-ebpf.iml
 *.zst
 *.c
 kprobe*
+!kprobe*.java
 vmlinux*
 **/jextract-*
 .bpf.compile.cache

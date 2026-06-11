@@ -72,7 +72,7 @@ class Translator {
     @Nullable
     FunctionHeader toDeclarator() {
         var annotation =
-                compilerPlugin.getAnnotationOfMethodOrSuper((MethodSymbol) compilerPlugin.trees.getElement(methodPath.path()), BPFFunction.class);
+                compilerPlugin.getEffectiveBPFFunction((MethodSymbol) compilerPlugin.trees.getElement(methodPath.path()));
         var method = methodPath.leaf();
         var methodElement = (MethodSymbol) compilerPlugin.trees.getElement(methodPath.path(method));
         var name = method.getName().toString();
@@ -130,7 +130,7 @@ class Translator {
 
     public boolean addDefinition() {
         var annotation =
-                compilerPlugin.getAnnotationOfMethodOrSuper((MethodSymbol) compilerPlugin.trees.getElement(methodPath.path()), BPFFunction.class);
+                compilerPlugin.getEffectiveBPFFunction((MethodSymbol) compilerPlugin.trees.getElement(methodPath.path()));
         return annotation == null || annotation.addDefinition();
     }
 
@@ -146,7 +146,7 @@ class Translator {
     private CAST.Statement.FunctionDeclarationStatement translate(boolean ignoreBody) {
         var method = methodPath.leaf();
         var bpfAnn =
-                compilerPlugin.getAnnotationOfMethodOrSuper((MethodSymbol) compilerPlugin.trees.getElement(methodPath.path()), BPFFunction.class);
+                compilerPlugin.getEffectiveBPFFunction((MethodSymbol) compilerPlugin.trees.getElement(methodPath.path()));
         if (bpfAnn == null) {
             logError(method, "Method is not annotated with @BPFFunction");
             return null;

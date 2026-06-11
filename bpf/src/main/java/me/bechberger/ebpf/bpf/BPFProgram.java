@@ -274,12 +274,42 @@ public abstract class BPFProgram implements AutoCloseable {
                 }
                 names.add(annotation.name().isEmpty() ? method.getName() : annotation.name());
             }
+            // Also handle shorthand attach annotations
+            var shorthandName = getShorthandAttachName(programClass, method);
+            if (shorthandName != null && !names.contains(shorthandName)) {
+                names.add(shorthandName);
+            }
         }
         if (!erroneous.isEmpty()) {
             throw new BPFError("Auto-attachable sections are: " + BPFFunction.autoAttachableSections +
                     ", but the following methods have invalid sections: " + erroneous);
         }
         return names;
+    }
+
+    /**
+     * Returns the C function name for a method annotated with a shorthand attach annotation
+     * ({@code @Kprobe}, {@code @Fentry}, etc.), or {@code null} if none is present.
+     */
+    private @Nullable String getShorthandAttachName(Class<?> programClass, Method method) {
+        for (var annClass : List.of(
+                me.bechberger.ebpf.annotations.bpf.Kprobe.class,
+                me.bechberger.ebpf.annotations.bpf.Kretprobe.class,
+                me.bechberger.ebpf.annotations.bpf.Fentry.class,
+                me.bechberger.ebpf.annotations.bpf.Fexit.class,
+                me.bechberger.ebpf.annotations.bpf.RawTracepoint.class,
+                me.bechberger.ebpf.annotations.bpf.Ksyscall.class)) {
+            var ann = findParentAnnotation(programClass, method, annClass);
+            if (ann != null) {
+                return method.getName();
+            }
+        }
+        // @Tracepoint with two elements
+        var tp = findParentAnnotation(programClass, method, me.bechberger.ebpf.annotations.bpf.Tracepoint.class);
+        if (tp != null) {
+            return method.getName();
+        }
+        return null;
     }
 
     public void attachLSMHooks() {

@@ -46,6 +46,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -247,7 +248,7 @@ public class CompilerPlugin implements Plugin {
     }
 
     private boolean shouldProcessMethod(CompilerPlugin.TypedTreePath<MethodTree> path) {
-        var ann = getAnnotationOfMethodOrSuper((MethodSymbol) trees.getElement(path.path()), BPFFunction.class);
+        var ann = getEffectiveBPFFunction((MethodSymbol) trees.getElement(path.path()));
         return ann != null &&
                 !path.leaf().getModifiers().getFlags().contains(Modifier.ABSTRACT) &&
                 path.leaf().getBody() != null &&
@@ -265,6 +266,76 @@ public class CompilerPlugin implements Plugin {
             return null;
         }
         return parentMethod.getAnnotation(annotation);
+    }
+
+    /**
+     * Returns the effective {@link BPFFunction} for a method, synthesizing one from
+     * shorthand attach annotations ({@link Kprobe}, {@link Kretprobe}, {@link Fentry},
+     * {@link Fexit}, {@link RawTracepoint}, {@link Tracepoint}, {@link Ksyscall}) when
+     * {@link BPFFunction} itself is absent.
+     */
+    @Nullable
+    BPFFunction getEffectiveBPFFunction(MethodSymbol method) {
+        var direct = getAnnotationOfMethodOrSuper(method, BPFFunction.class);
+        if (direct != null) return direct;
+        return synthesizeBPFFunction(method);
+    }
+
+    /** Synthesises a {@link BPFFunction} proxy from a shorthand attach annotation, or null. */
+    @Nullable
+    private BPFFunction synthesizeBPFFunction(MethodSymbol method) {
+        String section = null;
+        String headerTemplate = "$name";
+        String lastStatement = "";
+
+        var kprobe = getAnnotationOfMethodOrSuper(method, Kprobe.class);
+        if (kprobe != null) { section = "kprobe/" + kprobe.value(); }
+
+        var kretprobe = getAnnotationOfMethodOrSuper(method, Kretprobe.class);
+        if (kretprobe != null) { section = "kretprobe/" + kretprobe.value(); }
+
+        var fentry = getAnnotationOfMethodOrSuper(method, Fentry.class);
+        if (fentry != null) { section = "fentry/" + fentry.value(); }
+
+        var fexit = getAnnotationOfMethodOrSuper(method, Fexit.class);
+        if (fexit != null) { section = "fexit/" + fexit.value(); }
+
+        var rawTp = getAnnotationOfMethodOrSuper(method, RawTracepoint.class);
+        if (rawTp != null) {
+            section = "raw_tracepoint/" + rawTp.value();
+            headerTemplate = "int BPF_PROG($name, $params)";
+            lastStatement = "return 0;";
+        }
+
+        var tp = getAnnotationOfMethodOrSuper(method, Tracepoint.class);
+        if (tp != null) {
+            section = "tp/" + tp.category() + "/" + tp.name();
+            headerTemplate = "int $name($params)";
+        }
+
+        var ksyscall = getAnnotationOfMethodOrSuper(method, Ksyscall.class);
+        if (ksyscall != null) { section = "ksyscall/" + ksyscall.value(); }
+
+        if (section == null) return null;
+
+        final String finalSection = section;
+        final String finalHeaderTemplate = headerTemplate;
+        final String finalLastStatement = lastStatement;
+        return (BPFFunction) Proxy.newProxyInstance(
+                BPFFunction.class.getClassLoader(),
+                new Class[]{BPFFunction.class},
+                (proxy, m, args) -> switch (m.getName()) {
+                    case "callTemplate" -> "$name";
+                    case "headerTemplate" -> finalHeaderTemplate;
+                    case "lastStatement" -> finalLastStatement;
+                    case "section" -> finalSection;
+                    case "autoAttach" -> true;
+                    case "name" -> "";
+                    case "addDefinition" -> true;
+                    case "inline" -> false; // entry points are not inlined
+                    case "annotationType" -> BPFFunction.class;
+                    default -> m.getDefaultValue();
+                });
     }
 
     void logError(TypedTreePath<?> path, Tree element, String message) {
