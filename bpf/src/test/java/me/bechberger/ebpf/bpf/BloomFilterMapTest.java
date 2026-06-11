@@ -11,6 +11,7 @@ import me.bechberger.ebpf.shared.TraceLog;
 import me.bechberger.ebpf.type.Enum;
 import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -42,12 +43,18 @@ public class BloomFilterMapTest {
         @BPFMapDefinition(maxEntries = 256)
         BPFBloomFilter<Integer> filter;
 
+        final GlobalVariable<Boolean> done = new GlobalVariable<>(false);
 
         @BPFFunction(
                 section = "kprobe/do_sys_openat2",
                 autoAttach = true
         )
         int testFilter(Ptr<PtDefinitions.pt_regs> ctx) {
+            if (done.get()) {
+                return 0;
+            }
+            done.set(true);
+
             int placedValue = PLACED;
             Ptr<Result> result = results.reserve();
             if (result != null) {
@@ -85,10 +92,10 @@ public class BloomFilterMapTest {
     }
 
     @Test
+    @Timeout(10)
     public void testBasicBloomFilter() {
         try (var program = BPFProgram.load(BloomFilterMapTest.Program.class)) {
-            // Populate the filter BEFORE attaching, so any openat2 syscall triggered
-            // during attach (or between attach and triggerOpenAt) sees 12 already present.
+            // Populate the filter BEFORE attaching so the probe sees 12 already present.
             var filter = program.filter;
             filter.put(PLACED);
             program.autoAttachPrograms();
