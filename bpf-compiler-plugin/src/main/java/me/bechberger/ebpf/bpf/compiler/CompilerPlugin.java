@@ -356,8 +356,10 @@ public class CompilerPlugin implements Plugin {
     }
 
     void logWarning(TypedTreePath<?> path, Tree element, String message) {
-        createProcessingEnvironment().getMessager().printMessage(Diagnostic.Kind.WARNING, message,
-                trees.getElement(path.path(element)));
+        var elPath = path.path(element);
+        var el = elPath == null ? null : trees.getElement(elPath);
+        if (el == null) el = trees.getElement(path.path()); // fall back to enclosing method
+        createProcessingEnvironment().getMessager().printMessage(Diagnostic.Kind.WARNING, message, el);
     }
 
     /**
@@ -451,6 +453,7 @@ public class CompilerPlugin implements Plugin {
     private @Nullable FuncDeclStatementResult processBPFFunctionWithCode(TypedTreePath<MethodTree> methodPath) {
         new NullabilityAnalyzer(this, methodPath).analyze();
         new BoundsCheckPass(this, methodPath).analyze();
+        new HelperContextPass(this, methodPath).analyze();
         var translator = new Translator(this, methodPath);
         return callIfNonNull(translator.translate(), decl -> {
             var requiredDefines = translator.getRequiredDefines();

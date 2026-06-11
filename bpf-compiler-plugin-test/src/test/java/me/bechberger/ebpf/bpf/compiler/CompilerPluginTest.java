@@ -13,6 +13,8 @@ import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.bpf.map.BPFProgArray;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
+import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
+import me.bechberger.ebpf.bpf.XDPHook;
 import me.bechberger.ebpf.runtime.helpers.BPFHelpers;
 import me.bechberger.ebpf.shared.util.DiffUtil;
 import me.bechberger.ebpf.type.*;
@@ -1497,6 +1499,30 @@ public class CompilerPluginTest {
                 "dead-branch return must not appear:\n" + code);
         assertTrue(code.contains("return x;"),
                 "fallthrough return must remain:\n" + code);
+    }
+
+    /** XDP program that calls a kernel helper illegal in XDP context.
+     *  Compilation should succeed (warning, not error) but the helper-context
+     *  pass should emit a javac warning visible in the build log.
+     *  Existence test only — no in-process diagnostic capture. */
+    @BPF
+    public static abstract class HelperContextXDPViolation extends BPFProgram implements XDPHook {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @Override
+        public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
+            // bpf_get_current_task is illegal in XDP — verifier rejects at load time.
+            long task = BPFHelpers.bpf_get_current_task();
+            return xdp_action.XDP_PASS;
+        }
+    }
+
+    @Test
+    public void testHelperContextXDPViolationStillCompiles() {
+        // The pass emits a warning, not an error, so generated C should still contain the call.
+        String code = BPFProgram.getCode(HelperContextXDPViolation.class);
+        assertTrue(code.contains("bpf_get_current_task"),
+                "helper call should still appear in generated C (pass warns, doesn't block):\n" + code);
     }
 
 }

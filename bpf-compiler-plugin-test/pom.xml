@@ -55,6 +55,7 @@
           <compilerArgs>
             <arg>-Xplugin:BPFCompilerPlugin</arg>
           </compilerArgs>
+          <showWarnings>true</showWarnings>
         </configuration>
       </plugin>
       <plugin>
