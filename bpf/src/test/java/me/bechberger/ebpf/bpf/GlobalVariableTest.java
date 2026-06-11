@@ -84,5 +84,14 @@ public class GlobalVariableTest {
             assertEquals(99, v.get());
         }
     }
+
+    @Test
+    public void testWithBuilders() {
+        var r = new InnerRecord(1, (byte) 2);
+        assertEquals(new InnerRecord(99, (byte) 2),
+                me.bechberger.ebpf.bpf.GlobalVariableTest$ProgramImpl.InnerRecordWiths.withA(r, 99));
+        assertEquals(new InnerRecord(1, (byte) 7),
+                me.bechberger.ebpf.bpf.GlobalVariableTest$ProgramImpl.InnerRecordWiths.withB(r, (byte) 7));
+    }
 }
 

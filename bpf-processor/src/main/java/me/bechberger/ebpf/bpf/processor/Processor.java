@@ -5,6 +5,7 @@ import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Statement.Define;
 import me.bechberger.cast.CAST.Statement.Include;
 import me.bechberger.ebpf.annotations.bpf.BPFImpl;
+import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.bpf.processor.TypeProcessor.GlobalVariableDefinition;
 import me.bechberger.ebpf.bpf.processor.TypeProcessor.TypeProcessorResult;
 import org.jetbrains.annotations.Nullable;
@@ -98,7 +99,7 @@ public class Processor extends AbstractProcessor {
 
         TypeSpec typeSpec = createType(implName.className, typeElement.asType(), bytes,
                 typeProcessorResult.fields(), combinedCode, typeProcessorResult.globalVariableDefinitions(),
-                typeProcessorResult.additions());
+                typeProcessorResult.additions(), typeElement);
         try {
             var file = processingEnv.getFiler().createSourceFile(implName.fullyQualifiedClassName, typeElement);
             // delete file if it exists
@@ -199,7 +200,7 @@ public class Processor extends AbstractProcessor {
      */
     private TypeSpec createType(String name, TypeMirror baseType, byte[] byteCode, List<FieldSpec> bpfTypeFields,
                                 CombinedCode code, List<GlobalVariableDefinition> globalVariableDefinitions,
-                                TypeProcessor.InterfaceAdditions additions) {
+                                TypeProcessor.InterfaceAdditions additions, TypeElement outerTypeElement) {
         var suppressWarnings = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "{\"unchecked\", \"rawtypes\"}").build();
 
         var spec =
@@ -248,6 +249,7 @@ public class Processor extends AbstractProcessor {
             spec.addMethod(addGlobalVariableDefinitions(MethodSpec.methodBuilder("initGlobals")
                     .addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(TypeName.VOID), globalVariableDefinitions).build());
         }
+        generateWithBuilders(outerTypeElement, spec);
         return spec.build();
     }
 
@@ -282,6 +284,71 @@ public class Processor extends AbstractProcessor {
 
     private String createGlobalVariableInitInfoExpression(GlobalVariableDefinition g) {
         return "new me.bechberger.ebpf.bpf.GlobalVariable.GlobalVariableInitInfo<>(this." + g.name() + ", \"" + g.name() + "\", " + g.typeField() + ")";
+    }
+
+    /**
+     * For each {@code @Type}-annotated record inner class in {@code outerTypeElement}, generates a
+     * static nested {@code <RecordName>Withs} class inside the {@code ProgramImpl} that provides
+     * per-component {@code withFoo(record, foo)} static methods.
+     *
+     * <p>Example — given:
+     * <pre>{@code
+     * @Type record Point(int x, int y) {}
+     * }</pre>
+     * The generated class looks like:
+     * <pre>{@code
+     * public static final class PointWiths {
+     *     public static OuterClass.Point withX(OuterClass.Point record, int x) {
+     *         return new OuterClass.Point(x, record.y());
+     *     }
+     *     public static OuterClass.Point withY(OuterClass.Point record, int y) {
+     *         return new OuterClass.Point(record.x(), y);
+     *     }
+     * }
+     * }</pre>
+     */
+    private void generateWithBuilders(TypeElement outerTypeElement, TypeSpec.Builder spec) {
+        for (var enclosed : outerTypeElement.getEnclosedElements()) {
+            if (enclosed.getKind() != ElementKind.RECORD) continue;
+            var recordElement = (TypeElement) enclosed;
+            if (recordElement.getAnnotation(Type.class) == null) continue;
+
+            var fields = recordElement.getEnclosedElements().stream()
+                    .filter(e -> e.getKind() == ElementKind.FIELD)
+                    .map(e -> (VariableElement) e)
+                    .toList();
+            if (fields.isEmpty()) continue;
+
+            var recordTypeName = ClassName.get(outerTypeElement.getQualifiedName().toString(),
+                    recordElement.getSimpleName().toString());
+
+            var withsClass = TypeSpec.classBuilder(recordElement.getSimpleName() + "Withs")
+                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
+
+            for (var field : fields) {
+                var fieldName = field.getSimpleName().toString();
+                var fieldTypeName = TypeName.get(field.asType());
+                var capitalizedName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+
+                // Build the constructor argument list: for the changed field use the parameter, for others use record.<field>()
+                var ctorArgs = fields.stream()
+                        .map(f -> {
+                            var fn = f.getSimpleName().toString();
+                            return fn.equals(fieldName) ? fieldName : "record." + fn + "()";
+                        })
+                        .collect(Collectors.joining(", "));
+
+                var withMethod = MethodSpec.methodBuilder("with" + capitalizedName)
+                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                        .returns(recordTypeName)
+                        .addParameter(recordTypeName, "record")
+                        .addParameter(fieldTypeName, fieldName)
+                        .addStatement("return new $T($L)", recordTypeName, ctorArgs)
+                        .build();
+                withsClass.addMethod(withMethod);
+            }
+            spec.addType(withsClass.build());
+        }
     }
 
     private String sanitizeCodeForJavadoc(String code) {
