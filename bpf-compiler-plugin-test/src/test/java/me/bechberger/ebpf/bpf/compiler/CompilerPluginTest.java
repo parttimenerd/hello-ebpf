@@ -11,6 +11,8 @@ import me.bechberger.ebpf.bpf.BPFJ;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
+import me.bechberger.ebpf.bpf.map.BPFProgArray;
+import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
 import me.bechberger.ebpf.runtime.helpers.BPFHelpers;
 import me.bechberger.ebpf.shared.util.DiffUtil;
 import me.bechberger.ebpf.type.*;
@@ -1350,5 +1352,47 @@ public class CompilerPluginTest {
     // Note: "should reject" (unsafe deref without null check) cannot be an inner class of this
     // file because a compile error from the BPF plugin would prevent the whole file from compiling.
     // Rejection is verified manually or by a separate test-compilation project.
+
+    // ──────────────────────────────────────────────────────────
+    // Phase 4.1 — Tail call lowering via BPFProgArray
+    // ──────────────────────────────────────────────────────────
+
+    /** Minimal tail-call program: one prog-array map, one tailCall call site. */
+    @BPF
+    public static abstract class TailCallSample extends BPFProgram {
+
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                """;
+
+        @BPFMapDefinition(maxEntries = 4)
+        BPFProgArray progs;
+
+        @BPFFunction
+        public int dispatch(Ptr<xdp_md> ctx, int key) {
+            progs.tailCall(ctx, key);
+            return 0;
+        }
+    }
+
+    @Test
+    public void testTailCallLowering() {
+        String code = BPFProgram.getCode(TailCallSample.class);
+        assertEqualsDiffed("""
+                struct {
+                    __uint (type, BPF_MAP_TYPE_PROG_ARRAY);
+                    __uint (key_size, sizeof(u32));
+                    __uint (value_size, sizeof(u32));
+                    __uint (max_entries, 4);
+                } progs SEC(".maps");
+
+                s32 dispatch(struct xdp_md *ctx, s32 key);
+
+                s32 dispatch(struct xdp_md *ctx, s32 key) {
+                  bpf_tail_call(ctx, &progs, key);
+                  return 0;
+                }
+                """, code);
+    }
 
 }

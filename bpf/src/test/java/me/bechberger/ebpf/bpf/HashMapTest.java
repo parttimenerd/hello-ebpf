@@ -145,6 +145,49 @@ public class HashMapTest {
         }
     }
 
+    @Test
+    public void testHighLevelMapIdioms() {
+        try (Program program = BPFProgram.load(Program.class)) {
+            program.autoAttachProgram(program.getProgramByName("kprobe__do_sys_openat2"));
+            var map = getHashMap(program);
+
+            // getOrDefault: key absent → returns default
+            assertEquals(42, map.getOrDefault("z", 42), "getOrDefault should return default for absent key");
+
+            // getOrDefault: key present → returns stored value
+            map.put("x", 7);
+            assertEquals(7, map.getOrDefault("x", 42), "getOrDefault should return stored value");
+
+            // computeIfAbsent: absent → stores and returns new value
+            Integer v = map.computeIfAbsent("y", k -> 99);
+            assertEquals(99, v, "computeIfAbsent should return computed value");
+            assertEquals(99, map.get("y"), "computeIfAbsent should store the computed value");
+
+            // computeIfAbsent: present → does not overwrite
+            Integer v2 = map.computeIfAbsent("y", k -> 200);
+            assertEquals(99, v2, "computeIfAbsent should not overwrite existing entry");
+
+            // compute: update existing
+            Integer v3 = map.compute("x", (k, old) -> old == null ? 1 : old + 10);
+            assertEquals(17, v3, "compute should update existing value");
+            assertEquals(17, map.get("x"), "compute should persist updated value");
+
+            // compute: insert new (absent key)
+            Integer v4 = map.compute("w", (k, old) -> old == null ? 5 : old + 1);
+            assertEquals(5, v4, "compute should insert when key absent");
+
+            // compute: null return → delete
+            map.compute("w", (k, old) -> null);
+            assertFalse(map.containsKey("w"), "compute returning null should delete entry");
+
+            // increment: Integer map — increment starts at 0 and adds 3
+            map.increment("cnt");
+            assertEquals(1, map.get("cnt"), "increment() should initialize to 1 for absent key");
+            map.increment("cnt", 3L);
+            assertEquals(4, map.get("cnt"), "increment(key, 3) should add 3");
+        }
+    }
+
     @BPF
     public static abstract class LRUProgram extends BPFProgram {
         static final String EBPF_PROGRAM = """

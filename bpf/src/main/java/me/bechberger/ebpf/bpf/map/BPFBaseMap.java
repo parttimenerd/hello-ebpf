@@ -21,6 +21,8 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * A base map based on <a href="https://docs.kernel.org/bpf/map_hash.html">BPF hash map</a>
@@ -314,5 +316,73 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
         for (K key : keySet()) {
             delete(key);
         }
+    }
+
+    /**
+     * Returns the value for the key, or {@code defaultValue} if not present.
+     */
+    public V getOrDefault(K key, V defaultValue) {
+        V value = get(key);
+        return value != null ? value : defaultValue;
+    }
+
+    /**
+     * If the key is not present, computes and stores a value using {@code mappingFunction}, then returns it.
+     * If the key is already present, returns the existing value.
+     */
+    public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
+        V value = get(key);
+        if (value != null) {
+            return value;
+        }
+        V newValue = mappingFunction.apply(key);
+        if (newValue != null) {
+            put(key, newValue);
+        }
+        return newValue;
+    }
+
+    /**
+     * Applies {@code remappingFunction} to the current value (or {@code null} if absent) and stores the result.
+     * If the function returns {@code null}, the entry is deleted.
+     * Returns the new value (or {@code null} if deleted).
+     */
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+        V oldValue = get(key);
+        V newValue = remappingFunction.apply(key, oldValue);
+        if (newValue == null) {
+            if (oldValue != null) {
+                delete(key);
+            }
+        } else {
+            put(key, newValue);
+        }
+        return newValue;
+    }
+
+    /**
+     * Increments the numeric value stored at {@code key} by {@code delta}, treating a missing entry as 0.
+     * V must be a {@link Number} subtype ({@code Long}, {@code Integer}, etc.).
+     *
+     * @throws ClassCastException if V is not a numeric BPF type
+     */
+    @SuppressWarnings("unchecked")
+    public void increment(K key, long delta) {
+        V current = get(key);
+        long newVal = (current == null ? 0L : ((Number) current).longValue()) + delta;
+        String vClass = valueType.javaClass().klass();
+        V newValue = switch (vClass) {
+            case "java.lang.Long", "long" -> (V) Long.valueOf(newVal);
+            case "java.lang.Integer", "int" -> (V) Integer.valueOf((int) newVal);
+            case "java.lang.Short", "short" -> (V) Short.valueOf((short) newVal);
+            case "java.lang.Byte", "byte" -> (V) Byte.valueOf((byte) newVal);
+            default -> throw new ClassCastException("increment requires a numeric value type, got " + vClass);
+        };
+        put(key, newValue);
+    }
+
+    /** Increments the value at {@code key} by 1. */
+    public void increment(K key) {
+        increment(key, 1L);
     }
 }

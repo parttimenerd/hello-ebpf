@@ -87,9 +87,11 @@ public class BloomFilterMapTest {
     @Test
     public void testBasicBloomFilter() {
         try (var program = BPFProgram.load(BloomFilterMapTest.Program.class)) {
-            program.autoAttachPrograms();
+            // Populate the filter BEFORE attaching, so any openat2 syscall triggered
+            // during attach (or between attach and triggerOpenAt) sees 12 already present.
             var filter = program.filter;
             filter.put(PLACED);
+            program.autoAttachPrograms();
             TestUtil.triggerOpenAt();
 
             List<Program.Result> results = new ArrayList<>();

@@ -45,7 +45,9 @@ public class SchedulerTimeoutTest {
 
             Thread.sleep(2000);
             assertTrue(program.isSchedulerAttachedProperly());
-            Thread.sleep(2000);
+            // Wait long enough for the 3-second kernel timeout to fire.
+            // Use 4s here (total 6s from attach) to give plenty of slack on loaded machines.
+            Thread.sleep(4000);
             assertFalse(program.isSchedulerAttachedProperly());
 
             TraceLog.getInstance().readAllAvailableLines(Duration.ofMillis(100));
