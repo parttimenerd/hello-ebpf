@@ -63,6 +63,25 @@ class Translator {
         this.methodPath = methodPath;
     }
 
+    /** Emit a {@code #line N "File.java"} directive for the given AST node so that
+     *  clang embeds Java source locations in the BPF object's BTF/DWARF line info.
+     *  The kernel verifier then reports Java file:line in its error output. */
+    private @Nullable VerbatimStatement lineDirective(Tree tree) {
+        var cu = methodPath.root();
+        var sp = compilerPlugin.trees.getSourcePositions();
+        long pos = sp.getStartPosition(cu, tree);
+        if (pos == javax.tools.Diagnostic.NOPOS) return null;
+        long line = cu.getLineMap().getLineNumber(pos);
+        if (line <= 0) return null;
+        var sourceFile = cu.getSourceFile().getName();
+        // Normalise to just the filename (no path) so #line directives are portable.
+        var slash = sourceFile.lastIndexOf('/');
+        if (slash >= 0) sourceFile = sourceFile.substring(slash + 1);
+        var bslash = sourceFile.lastIndexOf('\\');
+        if (bslash >= 0) sourceFile = sourceFile.substring(bslash + 1);
+        return new VerbatimStatement("#line " + line + " \"" + sourceFile + "\"");
+    }
+
     public Set<Define> getRequiredDefines() {
         return requiredDefines;
     }
@@ -180,6 +199,8 @@ class Translator {
         var translated = new ArrayList<Statement>();
         var hadError = false;
         for (var statement : statements) {
+            var line = lineDirective(statement);
+            if (line != null) translated.add(line);
             var translatedStatement = translate(statement);
             if (translatedStatement != null) {
                 translated.add(translatedStatement);

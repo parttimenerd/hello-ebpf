@@ -1,0 +1,42 @@
+site_name: hello-ebpf
+site_url: https://parttimenerd.github.io/hello-ebpf/
+repo_url: https://github.com/parttimenerd/hello-ebpf
+repo_name: parttimenerd/hello-ebpf
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - content.code.annotate
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+nav:
+  - Home: index.md
+  - Cheat Sheet: cheatsheet.md
+  - Guides:
+    - Maps: maps.md
+    - XDP: xdp.md
+    - TC: tc.md
+    - Tracepoints: tracepoints.md
+    - Kprobes: kprobes.md
+    - LSM & Cgroup: lsm.md
+    - sched_ext: sched_ext.md
+    - Global Variables & Types: global-variables.md
+    - BPFJ Helpers: helpers.md
+  - Reference:
+    - Feature Matrix: feature-matrix.md
+    - Diagnostics: diagnostics.md
+    - Changelog: changelog.md
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
