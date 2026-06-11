@@ -4,6 +4,9 @@ import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.bpf.GlobalVariableTest.Program.InnerRecord;
+// GlobalVariableTest$ProgramImpl is the annotation-processor-generated implementation class;
+// it exposes InnerRecordWiths (a with-builder for the @Type record InnerRecord).
+import me.bechberger.ebpf.bpf.GlobalVariableTest$ProgramImpl;
 import me.bechberger.ebpf.bpf.map.BPFArray;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -89,9 +92,9 @@ public class GlobalVariableTest {
     public void testWithBuilders() {
         var r = new InnerRecord(1, (byte) 2);
         assertEquals(new InnerRecord(99, (byte) 2),
-                me.bechberger.ebpf.bpf.GlobalVariableTest$ProgramImpl.InnerRecordWiths.withA(r, 99));
+                GlobalVariableTest$ProgramImpl.InnerRecordWiths.withA(r, 99));
         assertEquals(new InnerRecord(1, (byte) 7),
-                me.bechberger.ebpf.bpf.GlobalVariableTest$ProgramImpl.InnerRecordWiths.withB(r, (byte) 7));
+                GlobalVariableTest$ProgramImpl.InnerRecordWiths.withB(r, (byte) 7));
     }
 }
 
