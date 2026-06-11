@@ -10,6 +10,7 @@ import com.sun.tools.javac.tree.JCTree.*;
 import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Declarator.*;
 import me.bechberger.cast.CAST.Initializer.InitializerList;
+import me.bechberger.cast.CAST.Operator;
 import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
 import me.bechberger.cast.CAST.PrimaryExpression.Constant.IntegerConstant;
 import me.bechberger.cast.CAST.PrimaryExpression.VerbatimExpression;
@@ -38,6 +39,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -659,11 +661,15 @@ class Translator {
     Expression translate(MethodInvocationTree methodInvocationTree) {
         var calledMethod = methodInvocationTree.getMethodSelect();
         var methodTree = (JCMethodInvocation) methodInvocationTree;
-        MethodSymbol symbol;
+        MethodSymbol symbol = null;
         Expression thisExpression = null;
         JCExpression thisJavacExpression = null;
         switch (methodTree.meth) {
             case JCFieldAccess access -> {
+                if (!(access.sym instanceof MethodSymbol)) {
+                    logError(calledMethod, "Unsupported method invocation (not a method symbol): " + methodInvocationTree);
+                    return null;
+                }
                 symbol = (MethodSymbol) access.sym;
                 if (symbol.isStatic()) {
                     break;
@@ -678,12 +684,19 @@ class Translator {
                 }
             }
             case JCIdent ident -> {
+                if (!(ident.sym instanceof MethodSymbol)) {
+                    logError(calledMethod, "Unsupported method invocation (not a method symbol): " + methodInvocationTree);
+                    return null;
+                }
                 symbol = (MethodSymbol) ident.sym;
             }
             default -> {
                 logError(calledMethod, "Unsupported method invocation: " + methodInvocationTree);
                 return null;
             }
+        }
+        if (symbol == null) {
+            return null;
         }
         List<Argument> arguments = new ArrayList<>();
         boolean hasError = false;
@@ -710,6 +723,13 @@ class Translator {
                 var translated = translateArgument(argument);
                 if (translated == null) {
                     hasError = true;
+                } else {
+                    // Auto-Ptr: if the declared parameter is Ptr<X> but the caller passes X, wrap with &
+                    if (i < symbol.getParameters().size()) {
+                        var declared = symbol.getParameters().get(i).asType();
+                        var actual = ((JCExpression) argument).type;
+                        translated = maybeAutoRef(translated, declared, actual);
+                    }
                 }
                 arguments.add(translated);
             }
@@ -790,6 +810,34 @@ class Translator {
         return translateArgumentWithoutLambda(argument);
     }
     // translate(((JCLambda) argument).body)
+
+    /**
+     * If the declared parameter type is {@code Ptr<X>} and the actual argument type is {@code X},
+     * wrap the translated expression with {@code &} (address-of) so the caller doesn't have to
+     * write {@code Ptr.of(x)} everywhere.
+     *
+     * <p>The reverse (unwrapping {@code *} when the context expects {@code X} but the expr is
+     * {@code Ptr<X>}) is intentionally not done here because call sites typically capture the
+     * result in a typed variable anyway, and the deref placement is context-dependent.
+     */
+    private Argument maybeAutoRef(Argument arg, Type declared, Type actual) {
+        if (declared instanceof ClassType declClass
+                && declClass.asElement().getQualifiedName().contentEquals(Ptr.class.getName())
+                && actual != null) {
+            // declared is Ptr<X>; check actual is not already Ptr<?>
+            if (actual instanceof ClassType actualClass
+                    && actualClass.asElement().getQualifiedName().contentEquals(Ptr.class.getName())) {
+                return arg; // already a Ptr, pass through
+            }
+            if (actual.getKind() == TypeKind.ARRAY || actual.getKind() == TypeKind.VOID) {
+                return arg; // arrays and void don't need auto-ref
+            }
+            if (arg instanceof Argument.Value val) {
+                return new Argument.Value(new OperatorExpression(Operator.ADDRESS_OF, val.expression()));
+            }
+        }
+        return arg;
+    }
 
     @Nullable
     CAST.Expression translate(LiteralTree literalTree) {
