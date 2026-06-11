@@ -17,6 +17,7 @@ import me.bechberger.cast.CAST.Statement.*;
 import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.CustomType;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
+import me.bechberger.ebpf.annotations.bpf.BPFInline;
 import me.bechberger.ebpf.annotations.EnumMember;
 import me.bechberger.ebpf.bpf.compiler.CompilerPlugin.TypedTreePath;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplate.Argument;
@@ -101,7 +102,8 @@ class Translator {
         var decl = new FunctionDeclarator(variable(name), returnType, params);
         assert annotation != null;
         var alwaysInline = compilerPlugin.getAnnotationOfMethodOrSuper(methodElement, AlwaysInline.class);
-        return MethodHeaderTemplate.parse(annotation.headerTemplate()).call(decl, alwaysInline != null ? "__always_inline " : "");
+        var bpfInline = compilerPlugin.getAnnotationOfMethodOrSuper(methodElement, BPFInline.class);
+        return MethodHeaderTemplate.parse(annotation.headerTemplate()).call(decl, (alwaysInline != null || bpfInline != null) ? "__always_inline " : "");
     }
 
     @Nullable

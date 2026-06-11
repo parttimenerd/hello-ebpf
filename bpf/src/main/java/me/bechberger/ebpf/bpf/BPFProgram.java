@@ -27,7 +27,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -873,6 +875,70 @@ public abstract class BPFProgram implements AutoCloseable {
                 ((BPFRingBuffer<?>)map).consumeAndThrow();
             }
         }
+    }
+
+    /**
+     * Runs a drain-and-sleep loop until SIGINT (Ctrl-C) or the given wall-clock
+     * {@code timeout} elapses, whichever comes first.
+     *
+     * <p>On each iteration all ring buffers are drained via
+     * {@link #consumeAndThrow()}, then the thread sleeps for {@code pollInterval}
+     * before the next drain.  When the loop exits (for either reason) the ring
+     * buffers are drained one final time so no trailing events are lost.
+     *
+     * <p>Typical usage in a {@code main} method:
+     * <pre>{@code
+     *   try (var prog = BPFProgram.load(MyProgram.class)) {
+     *       prog.autoAttachPrograms();
+     *       prog.runUntilInterrupted(Duration.ofMinutes(5));
+     *   }
+     * }</pre>
+     *
+     * @param timeout      maximum wall-clock time to run; {@link Duration#ZERO} or
+     *                     negative means run until interrupted only
+     * @param pollInterval how long to sleep between ring-buffer drains; defaults
+     *                     to 100 ms if null
+     */
+    public void runUntilInterrupted(Duration timeout, Duration pollInterval) {
+        if (pollInterval == null) pollInterval = Duration.ofMillis(100);
+        final long deadlineNanos = (timeout == null || timeout.isNegative() || timeout.isZero())
+                ? Long.MAX_VALUE
+                : System.nanoTime() + timeout.toNanos();
+
+        AtomicBoolean interrupted = new AtomicBoolean(false);
+        Thread shutdownHook = new Thread(() -> interrupted.set(true));
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
+        try {
+            final long sleepMs = pollInterval.toMillis();
+            while (!interrupted.get() && System.nanoTime() < deadlineNanos) {
+                consumeAndThrow();
+                try {
+                    Thread.sleep(sleepMs);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        } finally {
+            try { Runtime.getRuntime().removeShutdownHook(shutdownHook); } catch (IllegalStateException ignored) {}
+            consumeAndThrow();
+        }
+    }
+
+    /**
+     * Runs until SIGINT (Ctrl-C).
+     * @see #runUntilInterrupted(Duration, Duration)
+     */
+    public void runUntilInterrupted() {
+        runUntilInterrupted(Duration.ZERO, null);
+    }
+
+    /**
+     * Runs until SIGINT (Ctrl-C) or {@code timeout} elapses.
+     * @see #runUntilInterrupted(Duration, Duration)
+     */
+    public void runUntilInterrupted(Duration timeout) {
+        runUntilInterrupted(timeout, null);
     }
 
     private @Nullable String getDefaultPropertyValue(String name) {
