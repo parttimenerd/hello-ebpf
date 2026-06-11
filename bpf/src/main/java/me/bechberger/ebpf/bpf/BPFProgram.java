@@ -127,8 +127,15 @@ public abstract class BPFProgram implements AutoCloseable {
     public static <T extends BPFProgram, S extends T> S load(Class<T> clazz) {
         try {
             KernelFeatures.checkRequirements("Loading BPF program", clazz);
+            long t0 = System.currentTimeMillis();
             var program = BPFProgram.<T, S>getImplClass(clazz).getConstructor().newInstance();
             program.initGlobals();
+            var evt = new BPFEvents.ProgramLoad();
+            if (evt.isEnabled()) {
+                evt.programClass = clazz.getName();
+                evt.durationMs = System.currentTimeMillis() - t0;
+                evt.commit();
+            }
             return program;
         } catch (BPFError e) {
             throw e;
@@ -509,6 +516,12 @@ public abstract class BPFProgram implements AutoCloseable {
             throw new BPFAttachError(prog.name, ret.err());
         }
         attachedPrograms.add(link);
+        var evt = new BPFEvents.ProgramAttach();
+        if (evt.isEnabled()) {
+            evt.programName = prog.name;
+            evt.section = prog.name;
+            evt.commit();
+        }
         return link;
     }
 
@@ -738,6 +751,11 @@ public abstract class BPFProgram implements AutoCloseable {
         }
         Lib.bpf_link__destroy(link.segment);
         attachedPrograms.remove(link);
+        var evt = new BPFEvents.ProgramDetach();
+        if (evt.isEnabled()) {
+            evt.programName = "link@" + Long.toHexString(link.segment.address());
+            evt.commit();
+        }
     }
 
     /**

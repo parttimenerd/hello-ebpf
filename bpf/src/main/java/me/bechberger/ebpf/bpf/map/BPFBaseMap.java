@@ -7,6 +7,7 @@ import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.bpf.BPFError;
+import me.bechberger.ebpf.bpf.BPFEvents;
 import me.bechberger.ebpf.bpf.raw.Lib;
 import me.bechberger.ebpf.runtime.runtime;
 import me.bechberger.ebpf.runtime.runtime.key;
@@ -100,6 +101,12 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
             var keySegment = keyType.allocate(arena, Objects.requireNonNull(key));
             var valueSegment = valueType.allocate(arena, Objects.requireNonNull(value));
             var ret = Lib.bpf_map_update_elem(fd.fd(), keySegment, valueSegment, mode.mode);
+            var evt = new BPFEvents.MapPut();
+            if (evt.isEnabled()) {
+                evt.mapName = fd.name();
+                evt.key = String.valueOf(key);
+                evt.commit();
+            }
             return ret == 0;
         }
     }
@@ -129,7 +136,15 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
             var keySegment = keyType.allocate(arena, Objects.requireNonNull(key));
             var valueSegment = valueType.allocate(arena);
             var ret = Lib.bpf_map_lookup_elem(fd.fd(), keySegment, valueSegment);
-            if (ret != 0) {
+            boolean found = ret == 0;
+            var evt = new BPFEvents.MapGet();
+            if (evt.isEnabled()) {
+                evt.mapName = fd.name();
+                evt.key = String.valueOf(key);
+                evt.found = found;
+                evt.commit();
+            }
+            if (!found) {
                 return null;
             }
             return valueType.parseMemory(valueSegment);
