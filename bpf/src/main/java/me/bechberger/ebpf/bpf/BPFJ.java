@@ -253,4 +253,96 @@ public class BPFJ {
     public static void _return() {
         throw new MethodIsBPFRelatedFunction();
     }
+
+    // -------------------------------------------------------------------------
+    // Common context helpers
+    // -------------------------------------------------------------------------
+
+    /**
+     * Returns the PID (user-space process ID) of the current task.
+     * <p>Lowers to the lower 32 bits of {@code bpf_get_current_pid_tgid()}.
+     */
+    @BuiltinBPFFunction("((u32)(bpf_get_current_pid_tgid()))")
+    @NotUsableInJava
+    public static int currentPid() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Returns the TGID (user-space thread group ID, i.e. {@code getpid()} in C)
+     * of the current task.
+     * <p>Lowers to the upper 32 bits of {@code bpf_get_current_pid_tgid()}.
+     */
+    @BuiltinBPFFunction("((u32)(bpf_get_current_pid_tgid() >> 32))")
+    @NotUsableInJava
+    public static int currentTgid() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Returns the current CPU identifier (0-based).
+     * <p>Lowers to {@code bpf_get_smp_processor_id()}.
+     */
+    @BuiltinBPFFunction("bpf_get_smp_processor_id()")
+    @NotUsableInJava
+    public static int currentCpuId() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Returns the current time in nanoseconds since boot.
+     * <p>Lowers to {@code bpf_ktime_get_ns()}.
+     */
+    @BuiltinBPFFunction("bpf_ktime_get_ns()")
+    @NotUsableInJava
+    public static long currentNs() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Copies the current task's command name (up to 15 characters + NUL) into
+     * the supplied {@code buf} and returns the number of bytes written.
+     * <p>
+     * Typical usage:
+     * <pre>{@code
+     *   @Size(16) char[] comm = BPFJ.charBuf(16);
+     *   BPFJ.getCurrentComm(comm);
+     * }</pre>
+     * <p>Lowers to {@code bpf_get_current_comm($arg1, sizeof($arg1))}.
+     */
+    @BuiltinBPFFunction("bpf_get_current_comm($arg1, sizeof($arg1))")
+    @NotUsableInJava
+    public static long getCurrentComm(char[] buf) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Same as {@link #getCurrentComm(char[])} but accepts a {@code String}
+     * annotated with {@link me.bechberger.ebpf.annotations.Size}.
+     */
+    @BuiltinBPFFunction("bpf_get_current_comm($arg1, sizeof($arg1))")
+    @NotUsableInJava
+    public static long getCurrentComm(String buf) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Allocates a zero-initialised character buffer of compile-time size {@code n}.
+     * <p>
+     * This is the blessed pattern for declaring a char buffer to pass to
+     * {@code bpf_get_current_comm} and friends instead of the rejected
+     * {@code @Size(N) String comm = new String()}.
+     * <p>
+     * Usage:
+     * <pre>{@code
+     *   @Size(16) char[] comm = BPFJ.charBuf(16);
+     * }</pre>
+     * <p>Lowers to {@code char $arr[N] = {}}, where {@code N} is the literal
+     * passed as {@code n}.
+     */
+    @BuiltinBPFFunction("({})")
+    @NotUsableInJava
+    public static char[] charBuf(int n) {
+        throw new MethodIsBPFRelatedFunction();
+    }
 }
