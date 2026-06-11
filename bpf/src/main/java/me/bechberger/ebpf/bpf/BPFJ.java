@@ -340,7 +340,7 @@ public class BPFJ {
      * <p>Lowers to {@code char $arr[N] = {}}, where {@code N} is the literal
      * passed as {@code n}.
      */
-    @BuiltinBPFFunction("({})")
+    @BuiltinBPFFunction("{}")
     @NotUsableInJava
     public static char[] charBuf(int n) {
         throw new MethodIsBPFRelatedFunction();
