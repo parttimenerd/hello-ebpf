@@ -160,4 +160,64 @@ public class GlobalVariable<T> {
     public T get() {
         return globals.get(name, type);
     }
+
+    /**
+     * Atomically adds {@code delta} to this variable and returns the new value.
+     * <p>In BPF programs this lowers to {@code __sync_fetch_and_add}, which emits
+     * a {@code BPF_ATOMIC} instruction understood by the kernel verifier.
+     * <p>On the Java side the operation is a non-atomic read-modify-write; use
+     * only when no concurrent BPF program is modifying the variable.
+     */
+    @BuiltinBPFFunction("__sync_fetch_and_add(&$this, $arg1) + $arg1")
+    @SuppressWarnings("unchecked")
+    public T addAndGet(T delta) {
+        T current = get();
+        T newVal = addValues(current, delta);
+        set(newVal);
+        return newVal;
+    }
+
+    /**
+     * Atomically increments this variable by 1 and returns the new value.
+     * <p>See {@link #addAndGet} for atomicity guarantees.
+     */
+    @BuiltinBPFFunction("__sync_fetch_and_add(&$this, 1) + 1")
+    public T incrementAndGet() {
+        return addAndGet(oneValue());
+    }
+
+    /**
+     * Atomically sets this variable to {@code update} if the current value equals
+     * {@code expected}, and returns {@code true} if the swap occurred.
+     * <p>In BPF programs this lowers to {@code __sync_val_compare_and_swap}.
+     * <p>On the Java side the operation is a non-atomic read-compare-write.
+     */
+    @BuiltinBPFFunction("__sync_val_compare_and_swap(&$this, $arg1, $arg2) == $arg1")
+    public boolean compareAndSet(T expected, T update) {
+        T current = get();
+        if (current.equals(expected)) {
+            set(update);
+            return true;
+        }
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    private T addValues(T a, T b) {
+        if (a instanceof Long la && b instanceof Long lb) return (T) Long.valueOf(la + lb);
+        if (a instanceof Integer ia && b instanceof Integer ib) return (T) Integer.valueOf(ia + ib);
+        if (a instanceof Short sa && b instanceof Short sb) return (T) Short.valueOf((short) (sa + sb));
+        if (a instanceof Byte ba && b instanceof Byte bb) return (T) Byte.valueOf((byte) (ba + bb));
+        throw new UnsupportedOperationException("addAndGet requires a numeric type, got " + a.getClass());
+    }
+
+    @SuppressWarnings("unchecked")
+    private T oneValue() {
+        T current = get();
+        if (current instanceof Long) return (T) Long.valueOf(1L);
+        if (current instanceof Integer) return (T) Integer.valueOf(1);
+        if (current instanceof Short) return (T) Short.valueOf((short) 1);
+        if (current instanceof Byte) return (T) Byte.valueOf((byte) 1);
+        throw new UnsupportedOperationException("incrementAndGet requires a numeric type, got " + current.getClass());
+    }
 }

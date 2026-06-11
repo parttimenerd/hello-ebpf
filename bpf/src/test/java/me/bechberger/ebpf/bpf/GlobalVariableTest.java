@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Timeout;
 
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class GlobalVariableTest {
 
@@ -57,4 +58,31 @@ public class GlobalVariableTest {
             assertEquals(Set.of(3, 43), program.values.values());
         }
     }
+
+    @Test
+    @Timeout(10)
+    public void testAtomicOpsJavaSide() {
+        try (var program = BPFProgram.load(GlobalVariableTest.Program.class)) {
+            program.autoAttachProgram(program.getProgramByName("kprobe__do_sys_openat2"));
+            var v = program.intVariable;
+
+            // incrementAndGet
+            v.set(10);
+            assertEquals(11, v.incrementAndGet());
+            assertEquals(11, v.get());
+
+            // addAndGet
+            assertEquals(16, v.addAndGet(5));
+            assertEquals(16, v.get());
+
+            // compareAndSet: success
+            assertTrue(v.compareAndSet(16, 99));
+            assertEquals(99, v.get());
+
+            // compareAndSet: failure (wrong expected)
+            assertFalse(v.compareAndSet(0, 200));
+            assertEquals(99, v.get());
+        }
+    }
 }
+
