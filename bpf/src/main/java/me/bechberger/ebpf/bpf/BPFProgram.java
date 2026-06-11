@@ -941,6 +941,80 @@ public abstract class BPFProgram implements AutoCloseable {
         runUntilInterrupted(timeout, null);
     }
 
+    /**
+     * Information about a single BPF program entry point loaded into the kernel.
+     *
+     * @param name      program name (from SEC or function name)
+     * @param fd        kernel file descriptor of the program
+     * @param id        kernel-assigned program id (stable as long as the program is loaded)
+     * @param mapIds    ids of all maps referenced by this program
+     * @param runTimeNs total nanoseconds spent executing this program across all CPUs
+     * @param runCount  total number of times this program has been invoked
+     */
+    public record LoadedProgramInfo(
+            String name,
+            int fd,
+            int id,
+            List<Integer> mapIds,
+            long runTimeNs,
+            long runCount
+    ) {}
+
+    /**
+     * Returns info about every BPF program entry point in this object as reported
+     * by the kernel via {@code bpf_prog_get_info_by_fd}.
+     *
+     * <p>The returned list is ordered by the order the programs appear in the BPF
+     * object (i.e. the order they were declared).
+     */
+    public List<LoadedProgramInfo> loaded() {
+        List<LoadedProgramInfo> result = new ArrayList<>();
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment prog = MemorySegment.NULL;
+            while (true) {
+                prog = Lib_2.bpf_object__next_program(ebpf_object, prog);
+                if (prog == null || MemorySegment.NULL.equals(prog)) break;
+
+                int fd = Lib_2.bpf_program__fd(prog);
+                if (fd < 0) continue;
+
+                // Name from libbpf (doesn't need a kernel call)
+                String name = PanamaUtil.toString(Lib_2.bpf_program__name(prog));
+
+                // Query kernel for full info
+                var info = bpf_prog_info.allocate(arena);
+                var infoLen = PanamaUtil.allocateIntRef(arena, (int) info.byteSize());
+                int ret = Lib_2.bpf_prog_get_info_by_fd(fd, info, infoLen);
+                if (ret < 0) continue;
+
+                int id = bpf_prog_info.id(info);
+                long runTimeNs = bpf_prog_info.run_time_ns(info);
+                long runCount = bpf_prog_info.run_cnt(info);
+
+                // Collect map IDs: nr_map_ids tells us how many there are, but to retrieve
+                // them we need to pass a buffer.  Do a second call with a map_ids buffer.
+                int nrMapIds = bpf_prog_info.nr_map_ids(info);
+                List<Integer> mapIds = new ArrayList<>(nrMapIds);
+                if (nrMapIds > 0) {
+                    MemorySegment info2 = bpf_prog_info.allocate(arena);
+                    MemorySegment mapIdsBuf = arena.allocate((long) nrMapIds * 4);
+                    bpf_prog_info.nr_map_ids(info2, nrMapIds);
+                    bpf_prog_info.map_ids(info2, mapIdsBuf.address());
+                    MemorySegment infoLen2 = PanamaUtil.allocateIntRef(arena, (int) info2.byteSize());
+                    if (Lib_2.bpf_prog_get_info_by_fd(fd, info2, infoLen2) >= 0) {
+                        int actual = bpf_prog_info.nr_map_ids(info2);
+                        for (int i = 0; i < actual; i++) {
+                            mapIds.add(mapIdsBuf.get(JAVA_INT, (long) i * 4));
+                        }
+                    }
+                }
+
+                result.add(new LoadedProgramInfo(name != null ? name : "", fd, id, mapIds, runTimeNs, runCount));
+            }
+        }
+        return result;
+    }
+
     private @Nullable String getDefaultPropertyValue(String name) {
         ArrayDeque<Class<?>> queue = new ArrayDeque<>(List.of(getClass()));
         while (!queue.isEmpty()) {
