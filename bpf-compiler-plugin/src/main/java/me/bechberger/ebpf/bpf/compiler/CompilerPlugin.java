@@ -76,6 +76,12 @@ public class CompilerPlugin implements Plugin {
     private final Map<MethodType, FuncDeclStatementResult> methodElementToCode = new HashMap<>();
     private final Map<Type.ClassType, Integer> classToMethodCountToImplement = new HashMap<>();
 
+    /**
+     * dumpC option from {@code -Xplugin:"BPFCompilerPlugin dumpC=true|false|<path>"}.
+     * Default "true" (write .c file next to source). Set to "false" to suppress.
+     */
+    private String dumpCArg = "true";
+
     @Override
     public String getName() {
         return "BPFCompilerPlugin";
@@ -204,6 +210,12 @@ public class CompilerPlugin implements Plugin {
         this.names = Names.instance(context);
         this.methodTemplateCache = new MethodTemplateCache(this);
         this.types = Types.instance(context);
+        // Parse plugin args: dumpC=true|false|<path>
+        for (String arg : args) {
+            if (arg.startsWith("dumpC=")) {
+                this.dumpCArg = arg.substring("dumpC=".length());
+            }
+        }
         var types = task.getTypes();
         List<CompilerPlugin.TypedTreePath<MethodTree>> funcs = new ArrayList<>();
         task.addTaskListener(new TaskListener() {
@@ -770,13 +782,19 @@ public class CompilerPlugin implements Plugin {
 
         var newCode = replaceProperties(combineCode(code, decls, defines) + "\n\n" + implAnn.after(), properties);
 
-        // write the C code in a file close to the source file
+        // write the C code in a file close to the source file (controlled by dumpC plugin arg)
         var cFile =
                 Path.of(programPath.root().getSourceFile().toUri().getPath()).getParent().resolve(bpfProgram.getSimpleName() + ".c");
-        try {
-            Files.writeString(cFile, newCode);
-        } catch (IOException e) {
-            logError(programPath, bpfProgram, "Could not write C code to " + cFile);
+        if (!"false".equalsIgnoreCase(dumpCArg)) {
+            Path dumpTarget = "true".equalsIgnoreCase(dumpCArg)
+                    ? cFile
+                    : Path.of(dumpCArg).resolve(bpfProgram.getSimpleName() + ".c");
+            try {
+                if (!dumpTarget.equals(cFile)) Files.createDirectories(dumpTarget.getParent());
+                Files.writeString(dumpTarget, newCode);
+            } catch (IOException e) {
+                logError(programPath, bpfProgram, "Could not write C code to " + dumpTarget);
+            }
         }
 
         var compiledCode = compile(newCode, cFile);
