@@ -866,7 +866,7 @@ public class TypeProcessingTest {
     }
 
     @BPFInterface(before = "int x = 0;", after = "int y = 0;")
-    @Includes({"string.h", "unistd.h"})
+    @Includes({"string.h", "errno.h"})
     interface Lib {
 
     }
@@ -875,7 +875,7 @@ public class TypeProcessingTest {
     @Includes("string.h")
     static abstract class TestLibsProgram extends BPFProgram implements Lib {
         public static final String EBPF_PROGRAM = """
-                #include "vmlinux.h";
+                #include "vmlinux.h"
                 int z = 1;
                 """;
     }
@@ -884,14 +884,14 @@ public class TypeProcessingTest {
     public void testIncludesAndInterface() {
         var code = BPFProgram.getCode(TestLibsProgram.class);
         assertEquals("""
-                #include "vmlinux.h";
+                #include "vmlinux.h"
                 #include <string.h>
-                #include <unistd.h>
-                
+                #include <errno.h>
+
                 int x = 0;
-                
+
                 int z = 1;
-                
+
                 int y = 0;
                 """.strip(), code.strip());
     }

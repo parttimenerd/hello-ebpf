@@ -1372,18 +1372,18 @@ public class Generator {
             }
         }
 
-        record FuncType(int id, String name, FuncProtoType impl, @Nullable String javaDoc) implements NamedType {
+        record FuncType(int id, String name, FuncProtoType impl, @Nullable String javaDoc, boolean deprecated) implements NamedType {
 
             public FuncType(String name, FuncProtoType impl, @Nullable String javaDoc) {
-                this(-1, name, impl, null);
+                this(-1, name, impl, null, false);
             }
 
             public FuncType(int id, String name, FuncProtoType impl) {
-                this(id, name, impl, null);
+                this(id, name, impl, null, false);
             }
 
             public FuncType(String name, FuncProtoType impl) {
-                this(-1, name, impl, null);
+                this(-1, name, impl, null, false);
             }
 
             @Override
@@ -1398,7 +1398,11 @@ public class Generator {
 
             @Override
             public MethodSpec toMethodSpec(Generator gen) {
-                return impl.toMethodSpec(gen, name, javaDoc);
+                var spec = impl.toMethodSpec(gen, name, javaDoc);
+                if (deprecated && spec != null) {
+                    spec = spec.toBuilder().addAnnotation(Deprecated.class).build();
+                }
+                return spec;
             }
 
             @Override
@@ -1412,7 +1416,11 @@ public class Generator {
             }
 
             public FuncType setJavaDoc(String javaDoc) {
-                return new FuncType(id, name, impl, javaDoc);
+                return new FuncType(id, name, impl, javaDoc, deprecated);
+            }
+
+            public FuncType asDeprecated() {
+                return new FuncType(id, name, impl, javaDoc, true);
             }
 
             @Override
@@ -1809,6 +1817,7 @@ public class Generator {
     private final ArrayList<@Nullable Type> types = new ArrayList<>(List.of((Type) new VoidType()));
     private final Map<String, NamedType> namedTypes = new HashMap<>();
     private final List<Type> additionalTypes = new ArrayList<>();
+    private boolean aliasesApplied = false;
 
     void put(Type type) {
         if (type.id() == -1) {
@@ -2536,8 +2545,75 @@ public class Generator {
         };
     }
 
+    /**
+     * Loads aliases from {@code bpf-gen/src/main/resources/aliases.json} on the classpath and adds
+     * deprecated forwarding {@link Type.FuncType} entries for any old names whose new counterpart is
+     * already present in {@code types}. Call before {@link #generateBPFRuntimeJavaFiles()}.
+     */
+    private void applyAliases() {
+        if (aliasesApplied) return;
+        aliasesApplied = true;
+        var resource = Generator.class.getResourceAsStream("/aliases.json");
+        if (resource == null) return;
+        try {
+            var json = com.alibaba.fastjson.JSON.parseObject(new String(resource.readAllBytes()));
+            var aliasArray = json.getJSONArray("aliases");
+            if (aliasArray == null) return;
+            var existingFuncs = new HashMap<String, Type.FuncType>();
+            for (var t : types) {
+                if (t instanceof Type.FuncType ft) {
+                    existingFuncs.put(ft.name(), ft);
+                }
+            }
+            for (int i = 0; i < aliasArray.size(); i++) {
+                var alias = aliasArray.getJSONObject(i);
+                var oldName = alias.getString("oldName");
+                var newName = alias.getString("newName");
+                var since = alias.getString("since");
+                var note = alias.getString("note");
+                if (existingFuncs.containsKey(newName) && !existingFuncs.containsKey(oldName)) {
+                    var newFunc = existingFuncs.get(newName);
+                    var javaDoc = "@deprecated Renamed to {@link #" + newName + "()} in kernel "
+                            + (since != null ? since : "unknown") + ". " + (note != null ? note : "");
+                    var deprecatedFunc = new Type.FuncType(newFunc.id(), oldName, newFunc.impl(), javaDoc, true);
+                    additionalTypes.add(deprecatedFunc);
+                }
+            }
+        } catch (Exception e) {
+            logger.warning("Failed to load aliases.json: " + e.getMessage());
+        }
+    }
+
     public TypeJavaFiles generateBPFRuntimeJavaFiles() {
+        applyAliases();
         return generateJavaFiles(createBPFRuntimeConfig());
+    }
+
+    /**
+     * Returns a sorted, deduplicated list of "ClassName.methodName" strings for every BPF kernel
+     * helper method in the generated bpf-runtime Java files. Used by the snapshot test to detect
+     * renames/removals.
+     *
+     * <p>Includes only methods whose names start with {@code bpf_} or {@code scx_} — the standard
+     * kernel BPF helper and sched_ext function naming conventions. This avoids noise from
+     * annotation types and inner-class methods that are also emitted as public static MethodSpecs
+     * but are not BPF helpers.
+     */
+    public List<String> publicBPFHelperSignatures() {
+        applyAliases();
+        var config = createBPFRuntimeConfig();
+        var groups = groupTypes(config.baseClassName, config);
+        var resultSet = new java.util.TreeSet<String>();
+        for (var group : groups) {
+            var typeSpec = group.computeType();
+            for (var method : typeSpec.methodSpecs) {
+                var n = method.name;
+                if (n.startsWith("bpf_") || n.startsWith("scx_")) {
+                    resultSet.add(group.className() + "." + n);
+                }
+            }
+        }
+        return new ArrayList<>(resultSet);
     }
 
     public void addAdditionalType(Type type) {

@@ -518,11 +518,30 @@ public class Processor extends AbstractProcessor {
 
     private static Path includePath;
 
+    /**
+     * Map Java's `os.arch` to the multiarch directory name used under
+     * `/usr/include/<arch>-linux-gnu`. Java reports `amd64` on x86_64
+     * Linux, but the multiarch dir is `x86_64-linux-gnu` — without this
+     * normalization, `findIncludePath()` falls through to
+     * `/usr/include/linux`, which doesn't have `asm/unistd.h`.
+     */
+    static String multiarchName(String osArch) {
+        return switch (osArch) {
+            case "amd64", "x86_64" -> "x86_64";
+            case "aarch64", "arm64" -> "aarch64";
+            case "arm" -> "arm";
+            case "ppc64le" -> "powerpc64le";
+            case "s390x" -> "s390x";
+            case "riscv64" -> "riscv64";
+            default -> osArch;
+        };
+    }
+
     /** Find the library include path */
-    private static Path findIncludePath() {
+    static Path findIncludePath() {
         if (includePath == null) {
             // like /usr/include/aarch64-linux-gnu
-            includePath = Path.of("/usr/include").resolve(System.getProperty("os.arch") + "-linux-gnu");
+            includePath = Path.of("/usr/include").resolve(multiarchName(System.getProperty("os.arch")) + "-linux-gnu");
             if (!Files.exists(includePath)) {
                 includePath = Path.of("/usr/include/linux");
                 if (!Files.exists(includePath)) {

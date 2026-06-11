@@ -78,6 +78,11 @@ Either a Linux machine with the following:
   - e.g. `apt install libbpf-dev linux-tools-common linux-tools-$(uname -r)` on Ubuntu
 - root privileges (for executing the eBPF programs)
 
+To verify your setup is complete, run `./scripts/doctor.sh` from the
+repo root — it walks every prerequisite and prints the apt line to
+install anything missing. (On macOS it short-circuits with a pointer
+to `SYNC_WORKFLOW.md` for the split-host workflow.)
+
 - On Mac OS, you can use the [Lima VM](https://lima-vm.io/) (or use the `hello-ebpf.yaml` file as a guide to install the prerequisites):
 
 ```sh

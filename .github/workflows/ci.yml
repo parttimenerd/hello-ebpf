@@ -42,6 +42,10 @@ jobs:
           path: bpf/target/bpf.jar
 
   vm-test:
+    # Disabled: virtme-ng on GitHub Actions runners doesn't work reliably
+    # (KVM not available, nested-virt limitations). Track resolution at:
+    # https://github.com/parttimenerd/hello-ebpf/issues — search "CI vm-test".
+    # To run locally: ./scripts/ts.sh --no-tty 'bash scripts/run-tests-vng.sh'
     if: false
     name: Run tests on pre-built kernel
     runs-on: ubuntu-24.04

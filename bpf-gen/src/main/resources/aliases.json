@@ -1,0 +1,23 @@
+{
+  "_comment": "Hand-maintained map of old BPF helper/scx function names to new names. When the snapshot test detects a removal, add an entry here so the generator emits a @Deprecated forwarding method. Remove entries only when you're willing to break callers.",
+  "aliases": [
+    {
+      "oldName": "scx_bpf_dispatch",
+      "newName": "scx_bpf_dsq_insert",
+      "since": "6.12",
+      "note": "Renamed in sched_ext API cleanup (kernel 6.12)"
+    },
+    {
+      "oldName": "scx_bpf_dispatch_from_dsq",
+      "newName": "scx_bpf_dsq_move",
+      "since": "6.12",
+      "note": "Renamed in sched_ext API cleanup (kernel 6.12)"
+    },
+    {
+      "oldName": "scx_bpf_dispatch_vtime",
+      "newName": "scx_bpf_dsq_insert_vtime",
+      "since": "6.12",
+      "note": "Renamed in sched_ext API cleanup (kernel 6.12)"
+    }
+  ]
+}

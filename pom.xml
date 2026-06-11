@@ -138,5 +138,6 @@
         <module>bpf</module>
         <module>bpf-gen</module>
         <module>bpf-samples</module>
+        <module>bpf-archetype</module>
     </modules>
 </project>
