@@ -50,6 +50,37 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-invoker-plugin</artifactId>
+        <version>3.6.0</version>
+        <configuration>
+          <goals>
+            <goal>package</goal>
+          </goals>
+          <skipInvocation>${skipTests}</skipInvocation>
+          <!-- each src/it/* dir is generated via archetype:generate then built -->
+          <projectsDirectory>${project.basedir}/src/it</projectsDirectory>
+          <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+          <addTestClassPath>false</addTestClassPath>
+          <archetype>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>${project.artifactId}</artifactId>
+            <version>${project.version}</version>
+          </archetype>
+        </configuration>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
   <parent>

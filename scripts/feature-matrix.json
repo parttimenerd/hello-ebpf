@@ -1,0 +1,22 @@
+[
+  {"name": "BPF ring buffer (BPF_MAP_TYPE_RINGBUF)",      "since": "5.8"},
+  {"name": "BPF CO-RE / BTF relocation",                 "since": "5.2"},
+  {"name": "BPF LSM (bpf_lsm_*)",                        "since": "5.7"},
+  {"name": "bpf_loop() helper",                          "since": "5.17"},
+  {"name": "bpf_for_each_map_elem() helper",             "since": "5.13"},
+  {"name": "Fentry / Fexit (trampolines)",               "since": "5.5"},
+  {"name": "BPF timers (bpf_timer_*)",                   "since": "5.15"},
+  {"name": "BPF bloom filter (BPF_MAP_TYPE_BLOOM_FILTER)","since": "5.16"},
+  {"name": "Global variables in BPF programs",            "since": "5.2"},
+  {"name": "BPF per-CPU array / hash",                   "since": "4.6"},
+  {"name": "sched_ext / scx (CONFIG_SCHED_CLASS_EXT)",   "since": "6.12"},
+  {"name": "scx_bpf_dsq_insert() (new API)",             "since": "6.14"},
+  {"name": "BPF arena (BPF_MAP_TYPE_ARENA)",             "since": "6.9"},
+  {"name": "cgroup BPF programs",                        "since": "4.10"},
+  {"name": "XDP (BPF_PROG_TYPE_XDP)",                    "since": "4.8"},
+  {"name": "TC BPF (cls_bpf)",                           "since": "4.1"},
+  {"name": "Raw tracepoints",                            "since": "4.17"},
+  {"name": "struct_ops programs",                        "since": "5.6"},
+  {"name": "bpf_get_current_task_btf()",                 "since": "5.11"},
+  {"name": "kptr (BPF kernel pointers)",                  "since": "5.19"}
+]

@@ -64,14 +64,13 @@ jobs:
         run: mkdocs gh-deploy --force
 
   vm-test:
-    # Disabled: GitHub Actions runners lack KVM, so virtme-ng cannot launch a
-    # real kernel. Re-enable by pointing this job at a self-hosted runner with
-    # KVM available, or when Actions adds nested-KVM support.
+    # Runs on a self-hosted runner with KVM and a real kernel available.
+    # GitHub Actions hosted runners lack KVM so virtme-ng cannot launch a
+    # real kernel on them. To run locally: ./scripts/ts.sh --no-tty 'bash scripts/run-tests-vng.sh'
     # Tracked at: https://github.com/parttimenerd/hello-ebpf/issues/31
-    # To run locally: ./scripts/ts.sh --no-tty 'bash scripts/run-tests-vng.sh'
-    if: false  # TODO: remove when self-hosted runner with KVM is available
+    if: github.repository_owner == 'parttimenerd'
     name: Run tests on pre-built kernel
-    runs-on: ubuntu-24.04
+    runs-on: [self-hosted, linux, thinkstation]
     needs: build
     timeout-minutes: 10
     strategy:

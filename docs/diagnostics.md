@@ -1,171 +1,283 @@
-# Compiler Plugin Diagnostics
+# Diagnostics — Compiler Plugin Errors
 
-This page documents every error the hello-ebpf compiler plugin can emit, with a minimum reproducer and fix for each.
+This page documents every error the hello-ebpf javac compiler plugin can emit, what causes
+each one, and how to fix it.
 
-When submitting a new diagnostic in a PR, add a corresponding entry here in the same commit.
+All errors are emitted at compile time (during `javac` / `mvn compile`). They refer to
+specific lines in your `@BPFFunction` methods.
 
 ---
 
 ## Unsupported return type
 
-**Error**: `Unsupported return type: X as BPF does not support returning structs from functions`
-or `Unsupported return type: X`
+**Error prefix:** `Unsupported return type`
 
-**Cause**: A `@BPFFunction` returns a type that cannot be represented in BPF. BPF functions may only return `int`, `long`, `void`, enum types, or `Ptr<T>`. Returning a struct by value is not supported.
+**Cause:** A `@BPFFunction` method declares a return type that the compiler plugin cannot
+translate to a C type. Only primitive types (`int`, `long`, `void`) and `Ptr<T>` of a
+supported type are allowed as return types of BPF functions.
 
-**Reproducer**:
+**Minimum reproducer:**
 ```java
 @BPFFunction
-record Pair(int a, int b) myHelper() {  // error: returning struct
-    return new Pair(1, 2);
+public String unsupported() {   // String without @Size is not supported
+    return "hello";
 }
 ```
 
-**Fix**: Return a `Ptr<Pair>` (pointer to a stack-allocated value), or write the result into a map/ring-buffer slot.
+**Fix:** Use a supported return type. Return `Ptr<Byte>` for string-like returns, or use
+a `@Type` record wrapped in `Ptr<T>`.
 
 ---
 
 ## Unsupported parameter type
 
-**Error**: `Unsupported parameter type: X`
+**Error prefix:** `Unsupported parameter type`
 
-**Cause**: A `@BPFFunction` parameter has a type the plugin cannot lower to C. All parameters must be primitives (`int`, `long`, `boolean`, etc.), `Ptr<T>`, `@Type` record, `String` (as `char*`), or `char[]`.
+**Cause:** A `@BPFFunction` method has a parameter whose type cannot be translated.
+Supported parameter types are: primitives, `Ptr<T>` where T is a known struct/primitive, and
+`@Type` record types.
 
-**Fix**: Wrap complex types in `Ptr<T>` or flatten them into primitives.
+**Minimum reproducer:**
+```java
+@BPFFunction
+public int process(Object obj) {   // Object is not a BPF type
+    return 0;
+}
+```
+
+**Fix:** Replace `Object` with a concrete `@Type` record type or a `Ptr<T>`.
 
 ---
 
 ## Unsupported binary operator
 
-**Error**: `Unsupported binary operator DIVIDE: x / y`
+**Error prefix:** `Unsupported binary operator`
 
-**Cause**: BPF does not support certain operators (typically floating-point division, modulo on floats, or other ops the verifier rejects). The specific operator is named in the error.
+**Cause:** A binary expression inside a `@BPFFunction` uses an operator that has no
+direct C equivalent or that the translator has not yet implemented.
 
-**Fix**: Replace with integer arithmetic, or decompose into supported operations.
+**Minimum reproducer:**
+```java
+@BPFFunction
+public int process(int a, int b) {
+    // >>> is unsigned right shift — use >> and cast to @Unsigned instead
+    return a >>> b;
+}
+```
+
+**Fix:** Rewrite using supported operators. For unsigned right shift, use `@Unsigned int`
+parameters and plain `>>`.
 
 ---
 
 ## Unsupported unary operator
 
-**Error**: `Unsupported unary operator UNARY_PLUS: +x`
+**Error prefix:** `Unsupported unary operator`
 
-**Cause**: The unary operator has no BPF equivalent.
+**Cause:** A unary expression uses an operator that cannot be translated (e.g., prefix/postfix
+`++`/`--` on a dereferenced pointer field).
 
-**Fix**: Remove the operator (for `+x`, just use `x`).
+**Fix:** Rewrite as an explicit assignment:
+```java
+// Instead of:
+p.val().counter++;
+// Use:
+Ptr.of(p.val().counter).set(p.val().counter + 1);
+```
 
 ---
 
 ## Unsupported type cast
 
-**Error**: `Unsupported type cast to X, use 'Ptr::cast' instead`
-or `Unsupported type cast to X, use 'Ptr.<Type>cast(...)' instead`
+**Error prefix:** `Unsupported type cast`
 
-**Cause**: Java-style casts on pointer types are not supported. Use `Ptr.cast()` instead.
+**Cause:** A Java cast expression `(T) expr` was used inside a `@BPFFunction`. Java casts
+between pointer types are not directly translatable. Use `Ptr.cast()` instead.
 
-**Reproducer**:
+**Minimum reproducer:**
 ```java
-Ptr<Long> p = ...;
-Ptr<Integer> q = (Ptr<Integer>) p;  // error
+@BPFFunction
+public int process(Ptr<xdp_md> ctx) {
+    Ptr<ethhdr> eth = (Ptr<ethhdr>) ctx;  // ERROR — use Ptr.cast()
+    return XDP_PASS;
+}
 ```
 
-**Fix**:
+**Fix:**
 ```java
-Ptr<Integer> q = Ptr.cast(p);
-// or
-Ptr<Integer> q = p.<Integer>cast();
-```
-
----
-
-## Unsupported constructor call
-
-**Error**: `Unsupported constructor call: new X(...)`
-
-**Cause**: Only `@Type` record constructors and `BPFJ.charBuf(N)` are supported inside `@BPFFunction` bodies. `new String()` is a common mistake.
-
-**Reproducer**:
-```java
-@Size(16) String comm = new String();  // error
-```
-
-**Fix**:
-```java
-@Size(16) char[] comm = BPFJ.charBuf(16);  // correct
-// or
-@Size(16) String comm = "";  // also accepted
+Ptr<ethhdr> eth = Ptr.cast(Ptr.of(ctx.val().data));
 ```
 
 ---
 
-## Unsupported method invocation (not a method symbol)
+## Unsupported constructor call — only @Type records and BPFJ.charBuf()
 
-**Error**: `Unsupported method invocation (not a method symbol): x.y()`
+**Error prefix:** `Unsupported constructor call`
 
-**Cause**: The expression being called is not a concrete method — it may be a field reference, a class literal, or a synthetic expression the plugin can't resolve.
+**Cause:** A `new X()` expression inside a `@BPFFunction` used a class that is neither a
+`@Type` record nor the result of `BPFJ.charBuf()`.
 
-**Fix**: Ensure the call target is a concrete method annotated with `@BPFFunction` or `@BuiltinBPFFunction`.
+**Minimum reproducer:**
+```java
+@BPFFunction
+public int process() {
+    ArrayList<Integer> list = new ArrayList<>();  // ERROR
+    return 0;
+}
+```
 
----
-
-## Unsupported method invocation
-
-**Error**: `Unsupported method invocation: foo.bar()`
-
-**Cause**: The called method has no BPF lowering. It's either a plain Java method (not `@BPFFunction`), an instance method on a non-BPF type, or a method the plugin doesn't know how to translate.
-
-**Fix**:
-- For user-defined helpers: annotate with `@BPFFunction`.
-- For Java SDK methods: there is no BPF equivalent; restructure the logic using BPF-safe constructs.
-- For libbpf helpers: check `BPFHelpers` and `BPFJ` for a provided wrapper.
+**Fix:** Only allocate `@Type` records (stack-allocated structs) or use `BPFJ.charBuf(N)`
+for character buffers. BPF programs cannot use the Java heap.
 
 ---
 
-## Lambdas only supported in built-in function calls
+## Unsupported method invocation — not a method symbol
 
-**Error**: `Lambdas are only supported in calls to built-in functions: ...`
+**Error prefix:** `Unsupported method invocation (not a method symbol)`
 
-**Cause**: A lambda expression appears in a position the plugin doesn't yet support — only lambdas passed directly to `@BuiltinBPFFunction` methods (like `bpf_for_each_map_elem`) are allowed.
+**Cause:** The compiler plugin encountered a method call expression where the method could
+not be resolved to a concrete symbol. This can happen with lambda-captured methods or calls
+through interfaces that are not BPF-aware.
 
-**Fix**: Extract the lambda body into a `@BPFFunction` method, or wait for full lambda support (Phase D of the roadmap).
+**Fix:** Ensure the method is either:
+- Another `@BPFFunction` on the same `@BPF` class, or
+- A known BPF helper in `BPFJ`, or
+- A map operation (`bpf_get`, `bpf_put`, etc.)
+
+---
+
+## Unsupported method invocation — no BPF lowering
+
+**Error prefix:** `Unsupported method invocation (no BPF lowering)`
+
+**Cause:** The method exists and is resolvable, but the compiler plugin has no rule to
+translate it to C. This covers most standard Java library methods.
+
+**Minimum reproducer:**
+```java
+@BPFFunction
+public int process(int x) {
+    return Math.abs(x);   // Math.abs has no BPF lowering
+}
+```
+
+**Fix:** Rewrite using primitive operations or a BPFJ helper:
+```java
+return x < 0 ? -x : x;
+```
+
+---
+
+## Lambdas only supported in calls to built-in functions
+
+**Error prefix:** `Lambdas only supported in calls to built-in functions`
+
+**Cause:** A lambda expression was used somewhere other than an argument to a BPFJ built-in
+(like `BPFJ.bpf_loop`). General lambda usage is not supported inside `@BPFFunction` methods
+because BPF programs do not have a heap or closures.
+
+**Minimum reproducer:**
+```java
+@BPFFunction
+public int process() {
+    Runnable r = () -> {};   // ERROR
+    return 0;
+}
+```
+
+**Fix:** Extract the lambda body into a dedicated `@BPFFunction` method.
 
 ---
 
 ## Unsupported literal value
 
-**Error**: `Unsupported literal value NaN`
+**Error prefix:** `Unsupported literal value`
 
-**Cause**: NaN, Infinity, and non-representable float literals cannot be used in BPF.
+**Cause:** A literal of an unsupported type was used (e.g., a `double` or `float` literal
+inside a `@BPFFunction`). BPF programs do not support floating-point arithmetic on most
+hooks.
 
-**Fix**: Use integer arithmetic, or represent the special value as a sentinel integer constant.
+**Fix:** Use integer arithmetic. If you need fixed-point math, scale by a power of 10 or 2.
 
 ---
 
-## Array sizes must be integer constants
+## Array sizes have to be integer constants
 
-**Error**: `Array sizes have to be integer constants, not X`
+**Error prefix:** `Array sizes have to be integer constants`
 
-**Cause**: The array dimension is a runtime expression, not a compile-time constant. BPF requires all array sizes to be known at compile time.
+**Cause:** An array declaration inside a `@BPFFunction` used a non-constant size expression.
+BPF programs require all stack array sizes to be compile-time constants for the verifier.
 
-**Reproducer**:
+**Minimum reproducer:**
 ```java
-int n = 16;
-char[] buf = new char[n];  // error: n is not a compile-time constant
+@BPFFunction
+public int process(int n) {
+    var buf = BPFJ.charBuf(n);   // ERROR — n is not a constant
+    return 0;
+}
 ```
 
-**Fix**:
+**Fix:** Use a constant:
 ```java
-@Size(16) char[] buf = BPFJ.charBuf(16);  // use @Size annotation
-// or
-static final int N = 16;
-char[] buf = new char[N];  // N is a static final constant
+static final int BUF_SIZE = 256;
+
+@BPFFunction
+public int process(int n) {
+    var buf = BPFJ.charBuf(BUF_SIZE);   // OK
+    return 0;
+}
 ```
 
 ---
 
 ## Method is not annotated with @BPFFunction
 
-**Error**: `Method is not annotated with @BPFFunction`
+**Error prefix:** `Method is not annotated with @BPFFunction`
 
-**Cause**: A method in a `@BPF` class is being invoked from BPF code, but the method itself doesn't have `@BPFFunction`. The plugin won't translate it.
+**Cause:** A `@BPFFunction` method called another method on the same class that is not also
+annotated with `@BPFFunction`. Only methods that have been compiled to BPF can be called
+from BPF.
 
-**Fix**: Add `@BPFFunction` to the method. If it's a helper that should always be inlined, add `@BPFFunction` alone (it defaults to `__always_inline`). To opt out of inlining: `@BPFFunction(inline = false)`.
+**Minimum reproducer:**
+```java
+private int helper(int x) {   // Missing @BPFFunction
+    return x + 1;
+}
+
+@BPFFunction
+public int process(int x) {
+    return helper(x);   // ERROR
+}
+```
+
+**Fix:** Add `@BPFFunction` to `helper`:
+```java
+@BPFFunction
+private int helper(int x) {
+    return x + 1;
+}
+```
+
+---
+
+## General troubleshooting
+
+1. **Enable dumpC** to see the generated C code:
+   ```xml
+   <!-- In pom.xml compiler plugin config -->
+   <compilerArg>-AdumpC=true</compilerArg>
+   ```
+   Or pass `-AdumpC=true` to javac directly.
+
+2. **Check clang errors** — the compiler plugin prints clang's stderr when compilation fails.
+   These are often more informative than the plugin's own errors.
+
+3. **Verify BTF** is available if using fentry/fexit:
+   ```bash
+   ls -la /sys/kernel/btf/vmlinux
+   ```
+
+4. **Check the verifier log** at runtime if the program loads but behaves incorrectly:
+   ```java
+   BPFProgram.load(MyProg.class, BPFProgram.LoadOptions.withVerifierLog());
+   ```

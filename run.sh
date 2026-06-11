@@ -129,6 +129,84 @@ if [ "$1" = "trace" ]; then
 fi
 
 # ---------------------------------------------------------------------------
+# probe-kernel subcommand
+# ---------------------------------------------------------------------------
+if [ "$1" = "probe-kernel" ]; then
+    OK="[YES]"
+    NO="[NO] "
+    NA="[N/A]"
+
+    echo "hello-ebpf kernel probe"
+    echo "======================="
+
+    if [ "$(uname)" = "Darwin" ]; then
+        echo ""
+        echo "  [WARN]  This is a darwin machine. Kernel probing is only meaningful on Linux."
+        echo "          Run './run.sh probe-kernel' on the build host (thinkstation)."
+        exit 0
+    fi
+
+    # Kernel version
+    KVER=$(uname -r)
+    KMAJOR=$(echo "$KVER" | cut -d. -f1)
+    KMINOR=$(echo "$KVER" | cut -d. -f2)
+    echo ""
+    echo "Kernel: $KVER"
+
+    # Helper: version >= requirement
+    _kge() {
+        local req_major="$1" req_minor="$2"
+        [ "$KMAJOR" -gt "$req_major" ] || ( [ "$KMAJOR" -eq "$req_major" ] && [ "$KMINOR" -ge "$req_minor" ] )
+    }
+
+    # BTF
+    echo ""
+    echo "BTF:"
+    if [ -r /sys/kernel/btf/vmlinux ]; then
+        BTF_SIZE=$(stat -c%s /sys/kernel/btf/vmlinux 2>/dev/null || echo "?")
+        printf "  %s  /sys/kernel/btf/vmlinux  (%s bytes)\n" "$OK" "$BTF_SIZE"
+    else
+        printf "  %s  /sys/kernel/btf/vmlinux not found — CO-RE and bpf-gen will not work\n" "$NO"
+    fi
+
+    # scx / sched_ext ABI
+    echo ""
+    echo "sched_ext (scx):"
+    if [ -d /sys/kernel/sched_ext ]; then
+        SCX_ABI=$(cat /sys/kernel/sched_ext/version 2>/dev/null || echo "unknown")
+        printf "  %s  sched_ext present  (ABI version: %s)\n" "$OK" "$SCX_ABI"
+    elif _kge 6 12; then
+        printf "  %s  kernel >= 6.12 but /sys/kernel/sched_ext not found — CONFIG_SCHED_CLASS_EXT may be missing\n" "$NO"
+    else
+        printf "  %s  kernel %s < 6.12 — sched_ext not available\n" "$NO" "$KVER"
+    fi
+
+    # Feature matrix
+    echo ""
+    echo "Feature availability (this kernel: $KVER):"
+    MATRIX="$SCRIPT_DIR/scripts/feature-matrix.json"
+    if command -v python3 >/dev/null 2>&1 && [ -f "$MATRIX" ]; then
+        python3 - "$MATRIX" "$KMAJOR" "$KMINOR" <<'PYEOF'
+import json, sys
+matrix_path, major_s, minor_s = sys.argv[1], sys.argv[2], sys.argv[3]
+major, minor = int(major_s), int(minor_s)
+with open(matrix_path) as f:
+    features = json.load(f)
+for feat in features:
+    req_major, req_minor = map(int, feat["since"].split("."))
+    available = (major > req_major) or (major == req_major and minor >= req_minor)
+    tag = "[YES]" if available else "[NO] "
+    print(f"  {tag}  {feat['name']:40s}  (kernel >= {feat['since']})")
+PYEOF
+    else
+        printf "  %s  scripts/feature-matrix.json not found or python3 unavailable\n" "$NA"
+    fi
+
+    echo ""
+    exit 0
+fi
+
+# ---------------------------------------------------------------------------
 # Navigate to samples module
 # ---------------------------------------------------------------------------
 cd "$SCRIPT_DIR/bpf-samples" || exit
@@ -138,6 +216,7 @@ if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     echo "Usage: $0 <sample>"
     echo "       $0 doctor           -- check prerequisites"
     echo "       $0 trace [filter]   -- tail bpf_trace_printk output"
+    echo "       $0 probe-kernel     -- check kernel feature availability"
     echo "Available samples:"
     (cd src/main/java/me/bechberger/ebpf/samples && (
       find . -name "*.java" | while read file; do
