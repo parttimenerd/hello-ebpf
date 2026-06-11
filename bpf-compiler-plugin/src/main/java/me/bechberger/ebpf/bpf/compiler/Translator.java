@@ -558,7 +558,12 @@ class Translator {
                 }
 
                 if (typeKind == DataTypeKind.ENUM || typeKind == DataTypeKind.NONE) {
-
+                    // Allow new String() as a zero-initializer alias for BPFJ.charBuf(N).
+                    // The @Size annotation on the enclosing variable declaration carries the size;
+                    // the compiler plugin picks it up when translating the VariableTree.
+                    if (typeElement.toString().equals("java.lang.String") && newClassTree.getArguments().isEmpty()) {
+                        yield new VerbatimExpression("{}");
+                    }
                     logError(expression, "Unsupported constructor call: " + newClassTree);
                     yield null;
                 }
