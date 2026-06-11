@@ -10,6 +10,10 @@ import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -79,6 +83,23 @@ public class HelloWorldTest {
             assertEquals("helloWorld", info.name());
             assertTrue(info.fd() >= 0, "fd must be non-negative");
             assertTrue(info.id() > 0, "kernel program id must be positive");
+        }
+    }
+
+    @Test
+    @Timeout(5)
+    public void testStatusServer() throws Exception {
+        try (var program = BPFProgram.load(Prog.class)) {
+            program.startStatusServer(19875);
+            var client = HttpClient.newHttpClient();
+            var response = client.send(
+                    HttpRequest.newBuilder(URI.create("http://localhost:19875/status")).GET().build(),
+                    HttpResponse.BodyHandlers.ofString());
+            assertEquals(200, response.statusCode());
+            var body = response.body();
+            assertTrue(body.contains("\"programs\""), "response must contain programs key");
+            assertTrue(body.contains("helloWorld"), "response must list the helloWorld program");
+            program.stopStatusServer();
         }
     }
 }

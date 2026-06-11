@@ -18,9 +18,12 @@ import me.bechberger.ebpf.type.BPFType.BPFUnionType;
 import me.bechberger.ebpf.type.Union;
 import org.jetbrains.annotations.Nullable;
 
+import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.foreign.Arena;
+import java.net.InetSocketAddress;
 import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.MemorySegment;
 import java.lang.reflect.InvocationTargetException;
@@ -29,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -762,6 +766,7 @@ public abstract class BPFProgram implements AutoCloseable {
         }
         Lib.bpf_object__close(this.ebpf_object);
         openedFDs.forEach(LibC::close);
+        stopStatusServer();
     }
 
     /**
@@ -1043,6 +1048,155 @@ public abstract class BPFProgram implements AutoCloseable {
             }
         }
         return result;
+    }
+
+    private @Nullable HttpServer statusServer;
+
+    /**
+     * Starts an embedded HTTP status server on the given port.
+     *
+     * <p>Endpoints:
+     * <ul>
+     *   <li>{@code GET /status} — JSON object with program info and map contents</li>
+     *   <li>{@code GET /}       — Simple HTML page rendering the same data</li>
+     * </ul>
+     *
+     * <p>Call {@link #stopStatusServer()} or close the program to stop it.
+     *
+     * @param port TCP port to listen on
+     * @throws IOException if the server could not be started
+     */
+    public void startStatusServer(int port) throws IOException {
+        if (statusServer != null) {
+            statusServer.stop(0);
+        }
+        statusServer = HttpServer.create(new InetSocketAddress(port), 0);
+        statusServer.setExecutor(Executors.newSingleThreadExecutor(r -> {
+            var t = new Thread(r, "bpf-status-server");
+            t.setDaemon(true);
+            return t;
+        }));
+        statusServer.createContext("/status", exchange -> {
+            var json = buildStatusJson();
+            var bytes = json.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", "application/json; charset=utf-8");
+            exchange.sendResponseHeaders(200, bytes.length);
+            try (OutputStream out = exchange.getResponseBody()) {
+                out.write(bytes);
+            }
+        });
+        statusServer.createContext("/", exchange -> {
+            var html = buildStatusHtml();
+            var bytes = html.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
+            exchange.sendResponseHeaders(200, bytes.length);
+            try (OutputStream out = exchange.getResponseBody()) {
+                out.write(bytes);
+            }
+        });
+        statusServer.start();
+    }
+
+    /** Stops the status server started by {@link #startStatusServer(int)}. */
+    public void stopStatusServer() {
+        if (statusServer != null) {
+            statusServer.stop(0);
+            statusServer = null;
+        }
+    }
+
+    private String buildStatusJson() {
+        var sb = new StringBuilder();
+        sb.append("{");
+
+        // Programs
+        sb.append("\"programs\":[");
+        var programs = loaded();
+        for (int i = 0; i < programs.size(); i++) {
+            if (i > 0) sb.append(",");
+            var p = programs.get(i);
+            sb.append("{");
+            sb.append("\"name\":").append(jsonString(p.name())).append(",");
+            sb.append("\"id\":").append(p.id()).append(",");
+            sb.append("\"fd\":").append(p.fd()).append(",");
+            sb.append("\"runTimeNs\":").append(p.runTimeNs()).append(",");
+            sb.append("\"runCount\":").append(p.runCount()).append(",");
+            sb.append("\"mapIds\":[");
+            var mapIds = p.mapIds();
+            for (int j = 0; j < mapIds.size(); j++) {
+                if (j > 0) sb.append(",");
+                sb.append(mapIds.get(j));
+            }
+            sb.append("]");
+            sb.append("}");
+        }
+        sb.append("],");
+
+        // Maps
+        sb.append("\"maps\":[");
+        var mapsArr = new ArrayList<>(attachedMaps);
+        for (int i = 0; i < mapsArr.size(); i++) {
+            if (i > 0) sb.append(",");
+            var map = mapsArr.get(i);
+            var info = map.getInfo();
+            sb.append("{");
+            sb.append("\"name\":").append(jsonString(map.getFd().name())).append(",");
+            sb.append("\"type\":").append(jsonString(info.type().name())).append(",");
+            sb.append("\"maxEntries\":").append(info.maxEntries()).append(",");
+            sb.append("\"entries\":");
+            if (map instanceof BPFBaseMap<?, ?> baseMap) {
+                sb.append("[");
+                var entries = new ArrayList<>(baseMap.entrySet());
+                for (int j = 0; j < entries.size(); j++) {
+                    if (j > 0) sb.append(",");
+                    var entry = entries.get(j);
+                    sb.append("{\"key\":").append(jsonString(String.valueOf(entry.getKey())));
+                    sb.append(",\"value\":").append(jsonString(String.valueOf(entry.getValue())));
+                    sb.append("}");
+                }
+                sb.append("]");
+            } else {
+                sb.append("null");
+            }
+            sb.append("}");
+        }
+        sb.append("]");
+
+        sb.append("}");
+        return sb.toString();
+    }
+
+    private String buildStatusHtml() {
+        var json = buildStatusJson();
+        return "<!DOCTYPE html><html><head><title>BPF Status</title>"
+                + "<style>body{font-family:monospace;padding:1em}"
+                + "table{border-collapse:collapse;margin-bottom:1em}"
+                + "td,th{border:1px solid #ccc;padding:4px 8px;text-align:left}"
+                + "th{background:#eee}</style></head><body>"
+                + "<h1>BPF Program Status</h1>"
+                + "<pre id='json'>" + htmlEscape(json) + "</pre>"
+                + "<script>var d=JSON.parse(document.getElementById('json').textContent);"
+                + "document.body.innerHTML='<h1>BPF Program Status</h1>';"
+                + "document.body.innerHTML+='<h2>Programs</h2><table><tr><th>Name</th><th>ID</th>"
+                + "<th>Run Count</th><th>Run Time (ms)</th></tr>';"
+                + "d.programs.forEach(p=>document.body.innerHTML+='<tr><td>'+p.name+'</td><td>'"
+                + "+p.id+'</td><td>'+p.runCount+'</td><td>'+(p.runTimeNs/1e6).toFixed(2)+'</td></tr>');"
+                + "document.body.innerHTML+='</table><h2>Maps</h2>';"
+                + "d.maps.forEach(m=>{document.body.innerHTML+='<h3>'+m.name+' ('+m.type+')'+'</h3>';"
+                + "if(m.entries){document.body.innerHTML+='<table><tr><th>Key</th><th>Value</th></tr>';"
+                + "m.entries.forEach(e=>document.body.innerHTML+='<tr><td>'+e.key+'</td><td>'+e.value+'</td></tr>');"
+                + "document.body.innerHTML+='</table>';}});"
+                + "</script></body></html>";
+    }
+
+    private static String jsonString(String s) {
+        if (s == null) return "null";
+        return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"")
+                .replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + "\"";
+    }
+
+    private static String htmlEscape(String s) {
+        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 
     private @Nullable String getDefaultPropertyValue(String name) {
