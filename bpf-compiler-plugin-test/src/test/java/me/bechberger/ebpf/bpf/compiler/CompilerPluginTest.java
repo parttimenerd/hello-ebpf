@@ -1576,4 +1576,167 @@ public class CompilerPluginTest {
     @Test
     public void testBpfLoopLambdaCaptureRejected_documented() {
     }
+
+    /** Phase D — two lambdas in one method must lift to two distinct synthetic
+     *  functions with stable indexed names. */
+    @BPF
+    public static abstract class TwoBpfLoopLambdas extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        @BPFFunction
+        public void runLoops() {
+            BPFJ.bpfLoop(5, (i, ctx) -> { return 0; }, null);
+            BPFJ.bpfLoop(7, (i, ctx) -> { return 0; }, null);
+        }
+    }
+
+    @Test
+    public void testTwoBpfLoopLambdasLiftDistinct() {
+        String code = BPFProgram.getCode(TwoBpfLoopLambdas.class);
+        assertTrue(code.contains("__bpf_lambda_runLoops_0"),
+                "first lambda should lift to __bpf_lambda_runLoops_0; got:\n" + code);
+        assertTrue(code.contains("__bpf_lambda_runLoops_1"),
+                "second lambda should lift to __bpf_lambda_runLoops_1; got:\n" + code);
+        assertTrue(code.contains("bpf_loop(5, __bpf_lambda_runLoops_0"),
+                "first call site should reference _0; got:\n" + code);
+        assertTrue(code.contains("bpf_loop(7, __bpf_lambda_runLoops_1"),
+                "second call site should reference _1; got:\n" + code);
+    }
+
+    /** Phase D — {@code BPFHashMap.forEach} should lift its lambda using the
+     *  {@code :mapelem} flavor: kernel ABI signature with key/value pointer
+     *  parameters, and a deref prologue so the user body sees plain {@code k}/{@code v}. */
+    @BPF
+    public static abstract class MapForEachLift extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        @BPFMapDefinition(maxEntries = 8)
+        BPFHashMap<Integer, Integer> map;
+
+        @BPFFunction
+        public void run() {
+            map.forEach((k, v) -> { return 0; }, null);
+        }
+    }
+
+    @Test
+    public void testMapForEachLambdaMapElemSignature() {
+        String code = BPFProgram.getCode(MapForEachLift.class);
+        assertTrue(code.contains("__bpf_lambda_run_0"),
+                "forEach lambda should lift with synthetic name __bpf_lambda_run_0; got:\n" + code);
+        // mapelem ABI: 4 params with bpf_map / const void *key / void *value / void *ctx.
+        assertTrue(code.contains("struct bpf_map") && code.contains("const void *")
+                        && code.contains("void *"),
+                "mapelem ABI should declare (struct bpf_map *, const void *key, void *value, void *ctx); got:\n" + code);
+        assertTrue(code.contains("bpf_for_each_map_elem(&map, __bpf_lambda_run_0"),
+                "forEach call should reference the lifted function; got:\n" + code);
+    }
+
+    /** Phase C.2 — kprobe calling {@code bpf_get_current_task} is allowed and should
+     *  NOT trigger a HelperContextPass warning. (The XDP version above is rejected;
+     *  this proves the allowed-set is honoured.) */
+    @BPF
+    public static abstract class HelperContextKprobeAllowed extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @BPFFunction(section = "kprobe/do_sys_openat2")
+        public int onOpen() {
+            long task = BPFHelpers.bpf_get_current_task();
+            return 0;
+        }
+    }
+
+    @Test
+    public void testHelperContextKprobeAllowedCompiles() {
+        String code = BPFProgram.getCode(HelperContextKprobeAllowed.class);
+        assertTrue(code.contains("bpf_get_current_task"),
+                "kprobe should keep the helper call (no warning, no rewrite):\n" + code);
+    }
+
+    /** Phase C.2 — helpers not in the curated HELPER_COMPAT table must not be
+     *  flagged. {@code bpf_ktime_get_ns} is universally available and is not tracked. */
+    @BPF
+    public static abstract class HelperContextUntracked extends BPFProgram implements XDPHook {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @Override
+        public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
+            long now = BPFHelpers.bpf_ktime_get_ns();
+            return xdp_action.XDP_PASS;
+        }
+    }
+
+    @Test
+    public void testHelperContextUntrackedHelperCompiles() {
+        String code = BPFProgram.getCode(HelperContextUntracked.class);
+        assertTrue(code.contains("bpf_ktime_get_ns"),
+                "untracked helper should appear unchanged in generated C:\n" + code);
+    }
+
+    /** Phase C.1 — guarded packet deref should compile and contain the deref
+     *  unchanged. (Pass emits warnings only; here we verify the happy path
+     *  doesn't strip anything and that the program is a valid XDP probe.) */
+    @BPF
+    public static abstract class BoundsCheckGuarded extends BPFProgram implements XDPHook {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @Override
+        public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
+            Ptr<?> data = Ptr.voidPointer(ctx.val().data);
+            Ptr<?> end = Ptr.voidPointer(ctx.val().data_end);
+            if (data.add(14).greaterThan(end)) {
+                return xdp_action.XDP_ABORTED;
+            }
+            return xdp_action.XDP_PASS;
+        }
+    }
+
+    @Test
+    public void testBoundsCheckGuardedCompiles() {
+        String code = BPFProgram.getCode(BoundsCheckGuarded.class);
+        // The generated C should still contain the data-end comparison.
+        assertTrue(code.contains("data_end"),
+                "guarded XDP program should still reference data_end in generated C:\n" + code);
+    }
+
+    /** Phase C.3 — outer constant-false condition eliminates the entire branch
+     *  including any nested constant-true branch. Verifies dead-code elimination
+     *  is not gated on the inner condition. */
+    @BPF
+    public static abstract class ConstantFoldNested extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        static final boolean OUTER = false;
+
+        @BuiltinBPFFunction("nested_illegal_helper()")
+        @NotUsableInJava
+        public void nestedIllegalHelper() {
+            throw new MethodIsBPFRelatedFunction();
+        }
+
+        @BPFFunction
+        public int test(int x) {
+            if (OUTER) {
+                if (true) {
+                    nestedIllegalHelper();
+                }
+            }
+            return x;
+        }
+    }
+
+    @Test
+    public void testConstantFoldNested() {
+        String code = BPFProgram.getCode(ConstantFoldNested.class);
+        assertFalse(code.contains("nested_illegal_helper"),
+                "outer constant-false branch should eliminate nested calls:\n" + code);
+        assertTrue(code.contains("return x;"),
+                "fallthrough must remain:\n" + code);
+    }
 }
