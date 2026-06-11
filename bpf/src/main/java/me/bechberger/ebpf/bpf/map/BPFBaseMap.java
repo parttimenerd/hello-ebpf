@@ -1,5 +1,6 @@
 package me.bechberger.ebpf.bpf.map;
 
+import me.bechberger.ebpf.annotations.BPFNullable;
 import me.bechberger.ebpf.annotations.EnumMember;
 import me.bechberger.ebpf.annotations.bpf.BPFFunctionAlternative;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -292,6 +293,7 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
      */
     @BuiltinBPFFunction("bpf_map_lookup_elem(&$this, $pointery$arg1)")
     @NotUsableInJava
+    @BPFNullable
     public Ptr<V> bpf_get(K key) {
         throw new MethodIsBPFRelatedFunction();
     }

@@ -1299,4 +1299,56 @@ public class CompilerPluginTest {
                 struct Event event SEC(".data");
                 """, BPFProgram.getCode(TestUsingInterfaceWithStruct2.class));
     }
+
+    // ──────────────────────────────────────────────────────────
+    // Nullability tests (Phase 2)
+    // ──────────────────────────────────────────────────────────
+
+    /** Null-safe map lookup: result is guarded by an if != null check before use. */
+    @BPF
+    public static abstract class NullSafeMapLookup extends BPFProgram {
+
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                """;
+
+        @BPFMapDefinition(maxEntries = 64)
+        BPFHashMap<Integer, Integer> counts;
+
+        @BPFFunction
+        public void increment(int key) {
+            Ptr<Integer> val = counts.bpf_get(key);
+            if (val != null) {
+                val.set(val.val() + 1);
+            }
+        }
+    }
+
+    @Test
+    public void testNullSafeMapLookupAccepted() {
+        // The program should compile without error and produce the correct C code.
+        assertEqualsDiffed("""
+                struct {
+                    __uint (type, BPF_MAP_TYPE_HASH);
+                    __uint (key_size, sizeof(s32));
+                    __uint (value_size, sizeof(s32));
+                    __uint (max_entries, 64);
+                } counts SEC(".maps");
+
+                int increment(s32 key);
+
+                int increment(s32 key) {
+                  s32 *val = bpf_map_lookup_elem(&counts, &key);
+                  if ((val != NULL)) {
+                    *(val) = (*(val)) + 1;
+                  }
+                  return 0;
+                }
+                """, BPFProgram.getCode(NullSafeMapLookup.class));
+    }
+
+    // Note: "should reject" (unsafe deref without null check) cannot be an inner class of this
+    // file because a compile error from the BPF plugin would prevent the whole file from compiling.
+    // Rejection is verified manually or by a separate test-compilation project.
+
 }

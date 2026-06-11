@@ -366,6 +366,7 @@ public class CompilerPlugin implements Plugin {
     }
 
     private @Nullable FuncDeclStatementResult processBPFFunctionWithCode(TypedTreePath<MethodTree> methodPath) {
+        new NullabilityAnalyzer(this, methodPath).analyze();
         var translator = new Translator(this, methodPath);
         return callIfNonNull(translator.translate(), decl -> {
             var requiredDefines = translator.getRequiredDefines();
