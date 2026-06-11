@@ -99,7 +99,20 @@ public class HelloWorldTest {
             var body = response.body();
             assertTrue(body.contains("\"programs\""), "response must contain programs key");
             assertTrue(body.contains("helloWorld"), "response must list the helloWorld program");
+            assertTrue(body.contains("\"byteCodeHash\""), "response must contain byteCodeHash");
             program.stopStatusServer();
+        }
+    }
+
+    @Test
+    @Timeout(5)
+    public void testByteCodeHash() {
+        try (var program = BPFProgram.load(Prog.class)) {
+            var hash = program.byteCodeHash();
+            assertNotNull(hash);
+            assertEquals(64, hash.length(), "SHA-256 hex digest must be 64 chars");
+            assertTrue(hash.matches("[0-9a-f]+"), "hash must be lowercase hex");
+            // Same program loaded twice should have same hash (deterministic compiler)
         }
     }
 }

@@ -18,6 +18,8 @@ import me.bechberger.ebpf.type.BPFType.BPFUnionType;
 import me.bechberger.ebpf.type.Union;
 import org.jetbrains.annotations.Nullable;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -135,6 +137,11 @@ public abstract class BPFProgram implements AutoCloseable {
                 evt.programClass = clazz.getName();
                 evt.durationMs = System.currentTimeMillis() - t0;
                 evt.commit();
+            }
+            System.Logger logger = System.getLogger(BPFProgram.class.getName());
+            if (logger.isLoggable(System.Logger.Level.DEBUG)) {
+                logger.log(System.Logger.Level.DEBUG,
+                        "Loaded {0}: byteCodeHash={1}", clazz.getSimpleName(), program.byteCodeHash());
             }
             return program;
         } catch (BPFError e) {
@@ -430,6 +437,24 @@ public abstract class BPFProgram implements AutoCloseable {
      * @return the C code
      */
     public abstract String getCode();
+
+    /**
+     * Returns the SHA-256 hex digest of the compiled BPF object bytes.
+     *
+     * <p>Two builds producing the same source should produce the same hash if the toolchain
+     * is deterministic. Log this value to detect unintentional toolchain-version drift.
+     */
+    public String byteCodeHash() {
+        try {
+            var digest = MessageDigest.getInstance("SHA-256");
+            var bytes = digest.digest(getByteCode());
+            var sb = new StringBuilder(bytes.length * 2);
+            for (byte b : bytes) sb.append(String.format("%02x", b));
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private Path getTmpObjectFile() {
         try {
@@ -1128,6 +1153,7 @@ public abstract class BPFProgram implements AutoCloseable {
         sb.append("{");
 
         // Programs
+        sb.append("\"byteCodeHash\":").append(jsonString(byteCodeHash())).append(",");
         sb.append("\"programs\":[");
         var programs = loaded();
         for (int i = 0; i < programs.size(); i++) {

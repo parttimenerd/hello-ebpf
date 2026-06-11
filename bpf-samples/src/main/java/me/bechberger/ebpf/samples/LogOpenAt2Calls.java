@@ -22,7 +22,7 @@ public abstract class LogOpenAt2Calls extends BPFProgram implements SystemCallHo
     public void enterOpenat2(int dfd, String filename, Ptr<open_how> how) {
         open_how copy = new open_how();
         BPFJ.bpf_probe_read_kernel(copy, how);
-        @Size(16) String comm = "";
+        @Size(16) String comm = new String();
         bpf_get_current_comm(Ptr.of(comm), 16);
         bpf_trace_printk("Accessed file %s: flags=%d, mode=%d", filename, copy.flags, copy.mode);
         bpf_trace_printk(" (comm=%s)", comm);
