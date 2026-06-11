@@ -111,6 +111,24 @@ if [ "$1" = "doctor" ]; then
 fi
 
 # ---------------------------------------------------------------------------
+# trace subcommand
+# ---------------------------------------------------------------------------
+if [ "$1" = "trace" ]; then
+    TRACE_PIPE="/sys/kernel/debug/tracing/trace_pipe"
+    if [ ! -r "$TRACE_PIPE" ]; then
+        echo "Cannot read $TRACE_PIPE — try running as root."
+        exit 1
+    fi
+    FILTER="${2:-}"
+    echo "Tailing $TRACE_PIPE (Ctrl-C to stop)${FILTER:+, filtering for: $FILTER}"
+    if [ -n "$FILTER" ]; then
+        exec cat "$TRACE_PIPE" | grep --line-buffered "$FILTER"
+    else
+        exec cat "$TRACE_PIPE"
+    fi
+fi
+
+# ---------------------------------------------------------------------------
 # Navigate to samples module
 # ---------------------------------------------------------------------------
 cd "$SCRIPT_DIR/bpf-samples" || exit
@@ -118,7 +136,8 @@ cd "$SCRIPT_DIR/bpf-samples" || exit
 # if empty arguments or help flag, print help
 if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     echo "Usage: $0 <sample>"
-    echo "       $0 doctor       -- check prerequisites"
+    echo "       $0 doctor           -- check prerequisites"
+    echo "       $0 trace [filter]   -- tail bpf_trace_printk output"
     echo "Available samples:"
     (cd src/main/java/me/bechberger/ebpf/samples && (
       find . -name "*.java" | while read file; do
