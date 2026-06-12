@@ -111,7 +111,8 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
      */
     @FunctionalInterface
     public interface LambdaPromoter {
-        @Nullable String promote(int argIndex, Lambda lambda, FuncShape shape);
+        @Nullable String promote(int argIndex, Lambda lambda, FuncShape shape,
+                                 List<CAST.Declarator> typeArguments);
     }
 
     public record CallArgs(@Nullable CAST.Expression thisExpression,
@@ -345,7 +346,7 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                     throw new TemplateRenderException("$func" + (n + 1) + " requires a LambdaPromoter to be set "
                             + "on CallArgs (only the Translator can lift lambdas to top-level functions)");
                 }
-                var name = props.args.lambdaPromoter.promote(n, lambda, shape);
+                var name = props.args.lambdaPromoter.promote(n, lambda, shape, props.args.typeArguments);
                 if (name == null) {
                     throw new TemplateRenderException("Failed to lift lambda at argument " + (n + 1)
                             + " to a top-level function (see preceding diagnostics)");

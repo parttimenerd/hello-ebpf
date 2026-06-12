@@ -935,7 +935,23 @@ class Translator {
         var translated = new ArrayList<FunctionParameter>();
         var hadError = false;
         for (var parameter : parameters) {
-            var typeMirror = compilerPlugin.trees.getElement(methodPath.path(parameter)).asType();
+            // Two type sources can disagree for inferred lambda parameters:
+            //   - element.asType()    → from the parameter Symbol; erasure erases generic
+            //                           type variables (C in `<C> bpfLoop(..., C ctx)`) to
+            //                           Object.
+            //   - trees.getTypeMirror → walks the AST node and reflects post-inference
+            //                           types, so for `BPFJ.<Ptr<State>>bpfLoop(5, (i, st) -> ...)`
+            //                           it returns Ptr<State> for `st`.
+            // Prefer the AST-side type when the symbol-side is `Object` — that's the
+            // erasure-vs-inference disagreement that costs typed-ctx lambdas.
+            var astType = compilerPlugin.trees.getTypeMirror(methodPath.path(parameter));
+            var symType = compilerPlugin.trees.getElement(methodPath.path(parameter)).asType();
+            var typeMirror = (astType != null
+                    && symType != null
+                    && "java.lang.Object".equals(symType.toString())
+                    && !"java.lang.Object".equals(astType.toString()))
+                    ? astType
+                    : symType;
             CAST.Declarator type;
             if (typeMirror != null && "java.lang.Object".equals(typeMirror.toString())) {
                 type = Declarator.pointer(Declarator.identifier("void"));
@@ -1137,7 +1153,8 @@ class Translator {
      */
     @Nullable
     String promoteLambda(int argIndex, MethodTemplate.Argument.Lambda lambda,
-                         MethodTemplate.FuncShape shape) {
+                         MethodTemplate.FuncShape shape,
+                         List<CAST.Declarator> typeArguments) {
         if (!(lambda.source() instanceof LambdaExpressionTree lambdaTree)) {
             // Internal: every Lambda built by translateArgument carries its source tree.
             // If this is null we have no way to do capture analysis safely.
@@ -1203,17 +1220,50 @@ class Translator {
             params = null;
         } else {
             // PLAIN shape: emit lambda parameters verbatim. The user's lambda already
-            // includes the ctx parameter (e.g. `(i, ctx) -> ...` for bpf_loop), so we
-            // do NOT append another `void *ctx`. We do, however, force the LAST
-            // parameter's declared type to be `void *` regardless of what the user
-            // wrote (it'll typically already be `void *` because BiFunction's second
-            // type variable resolves to Object/void * — but be defensive).
+            // includes the ctx parameter (e.g. `(i, ctx) -> ...` for bpf_loop). The
+            // libbpf ABI demands the LAST parameter be `void *`, but inferred lambda
+            // parameter types come back as `Object` (erasure of the generic ctx type
+            // parameter), so without help we'd end up with `void *st` and the body's
+            // `st.val()` accesses won't compile.
+            //
+            // Workaround: if the call provided an explicit type argument
+            // (e.g. `BPFJ.<Ptr<State>>bpfLoop(...)`), use that to type the ctx and
+            // prepend a cast prologue:
+            //   <UserType> st = (<UserType>)__libbpf_ctx;
+            // so the user's body sees the typed value directly. Without an explicit
+            // type argument we keep the legacy behaviour (last param → `void *` named
+            // as the user wrote it).
             var pl = new ArrayList<>(lambda.parameters());
             if (!pl.isEmpty()) {
                 var last = pl.getLast();
                 if (last.name() != null) {
-                    pl.set(pl.size() - 1, new FunctionParameter(last.name(),
-                            Declarator.pointer(Declarator.identifier("void"))));
+                    String currentType = last.declarator().toPrettyString().trim();
+                    boolean lastIsVoidPtr = "void *".equals(currentType) || "void*".equals(currentType);
+                    boolean haveCtxTypeArg = typeArguments != null && !typeArguments.isEmpty()
+                            && typeArguments.getLast() != null;
+                    // libbpf's callback ABI is `void *ctx` — emit that as the C parameter, then
+                    // recover the user's typed name with a cast prologue at function entry.
+                    // We have a real type if either (a) translateLambdaParameters resolved one
+                    // via the AST (currentType != "void *"), or (b) the call provided an
+                    // explicit type argument like `BPFJ.<Ptr<State>>bpfLoop(...)`.
+                    String userType = !lastIsVoidPtr ? currentType
+                            : haveCtxTypeArg ? typeArguments.getLast().toPrettyString()
+                            : null;
+                    if (userType != null) {
+                        String userName = last.name().name();
+                        var prologue = new VerbatimStatement(
+                                userType + " " + userName + " = (" + userType + ")__libbpf_ctx;");
+                        var newBody = new ArrayList<Statement>();
+                        newBody.add(prologue);
+                        newBody.addAll(bodyStatements);
+                        bodyStatements = newBody;
+                        pl.set(pl.size() - 1, new FunctionParameter(
+                                CAST.Expression.variable("__libbpf_ctx"),
+                                Declarator.pointer(Declarator.identifier("void"))));
+                    }
+                    // No type witness available: leave the parameter as `void *<userName>` —
+                    // the user wrote `(i, c) -> ...` with no use of `c`, so the body doesn't
+                    // need a typed view. (The legacy behaviour.)
                 }
             }
             params = pl;

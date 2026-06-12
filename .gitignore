@@ -406,6 +406,7 @@ vmlinux*
 # Local-only planning notes (not committed; see SYNC_WORKFLOW.md)
 IMPLEMENTATION_PLAN.md
 TODO.md
+TESTING_PLAN.md
 SYNC_WORKFLOW.md
 .plans/
 
