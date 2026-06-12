@@ -176,9 +176,7 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
 
             record MemAndKey<K>(MemorySegment mem, K key) {}
 
-            // ofAuto() is GC-managed: segments are freed when the iterator becomes
-            // unreachable even if the caller breaks early without draining it.
-            final Arena arena = Arena.ofAuto();
+            final Arena arena = Arena.ofConfined();
             @Nullable MemAndKey<K> next = obtainNext(null);
             MemorySegment nextKeyMem;
 
@@ -256,25 +254,29 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
 
 
     /**
-     * Get all values in the map
-     * @return set of values
+     * Get all values in the map.
+     * Entries deleted between key enumeration and value lookup are silently skipped.
+     * @return set of values (never contains null)
      */
     public Set<V> values() {
         Set<V> values = new HashSet<>();
         for (K key : keySet()) {
-            values.add(get(key));
+            V v = get(key);
+            if (v != null) values.add(v);
         }
         return values;
     }
 
     /**
-     * Get all entries in the map
-     * @return set of entries
+     * Get all entries in the map.
+     * Entries deleted between key enumeration and value lookup are silently skipped.
+     * @return set of entries (never contains entries with null values)
      */
     public Set<Map.Entry<K, V>> entrySet() {
         Set<Map.Entry<K, V>> entries = new HashSet<>();
         for (K key : keySet()) {
-            entries.add(new AbstractMap.SimpleEntry<>(key, get(key)));
+            V v = get(key);
+            if (v != null) entries.add(new AbstractMap.SimpleEntry<>(key, v));
         }
         return entries;
     }
@@ -286,10 +288,20 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
     /** Obtains the number of entries by iterating over all keys */
     public int slowSize() {
         try (var arena = Arena.ofConfined()) {
-            var keySegment = keyType.allocate(arena);
+            var cursorSegment = keyType.allocate(arena);
+            var nextSegment = keyType.allocate(arena);
             int size = 0;
-            while (Lib.bpf_map_get_next_key(fd.fd(), keySegment, keySegment) == 0) {
+            // Pass NULL cursor to get the first key, then advance.
+            // Separate cursor/next segments so the kernel reads prev_key
+            // before writing next_key (required for correctness on ARM).
+            int res = Lib.bpf_map_get_next_key(fd.fd(), MemorySegment.NULL, nextSegment);
+            while (res == 0) {
                 size++;
+                // swap: nextSegment becomes the new cursor
+                var tmp = cursorSegment;
+                cursorSegment = nextSegment;
+                nextSegment = tmp;
+                res = Lib.bpf_map_get_next_key(fd.fd(), cursorSegment, nextSegment);
             }
             return size;
         }

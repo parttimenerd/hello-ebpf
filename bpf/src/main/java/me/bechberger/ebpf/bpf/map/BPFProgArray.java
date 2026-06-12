@@ -67,6 +67,9 @@ public class BPFProgArray extends BPFMap {
      * @throws BPFError if the map update fails
      */
     public void register(int slot, BPFProgram.ProgramHandle handle) {
+        if (slot < 0 || slot >= maxEntries) {
+            throw new BPFError("Program slot " + slot + " out of bounds [0, " + maxEntries + ")", -1);
+        }
         int progFd = Lib.bpf_program__fd(handle.prog());
         register(slot, progFd);
     }

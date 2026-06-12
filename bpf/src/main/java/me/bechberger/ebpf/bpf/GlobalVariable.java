@@ -88,7 +88,11 @@ public class GlobalVariable<T> {
                 for (var entry : values.entrySet()) {
                     var globalVariable = entry.getKey();
                     var value = entry.getValue();
-                    (((GlobalVariable) globalVariable)).type.setMemory(buffer.asSlice(offsetsPerVariable.get(globalVariable.name)), value);
+                    Integer offset = offsetsPerVariable.get(globalVariable.name);
+                    if (offset == null) {
+                        throw new BPFError("GlobalVariable '" + globalVariable.name + "' not found in .data section", -1);
+                    }
+                    (((GlobalVariable) globalVariable)).type.setMemory(buffer.asSlice(offset), value);
                 }
                 // Write the buffer back to .data
                 ret = Lib_1.bpf_map_update_elem(dataMap.getFd().fd(), zeroRef, buffer, 0);
@@ -122,7 +126,11 @@ public class GlobalVariable<T> {
                     throw new BPFError("Failed to read .data", ret);
                 }
                 // Read the value from the buffer
-                return type.parseMemory(buffer.asSlice(offsetsPerVariable.get(name)));
+                Integer offset = offsetsPerVariable.get(name);
+                if (offset == null) {
+                    throw new BPFError("GlobalVariable '" + name + "' not found in .data section", -1);
+                }
+                return type.parseMemory(buffer.asSlice(offset));
             }
         }
     }
@@ -150,6 +158,7 @@ public class GlobalVariable<T> {
      */
     @BuiltinBPFFunction("$this = $arg1")
     public void set(T value) {
+        if (globals == null) throw new IllegalStateException("GlobalVariable '" + name + "' used before BPFProgram.load()");
         globals.set(name, this, value);
     }
 
@@ -158,6 +167,7 @@ public class GlobalVariable<T> {
      */
     @BuiltinBPFFunction("$this")
     public T get() {
+        if (globals == null) throw new IllegalStateException("GlobalVariable '" + name + "' used before BPFProgram.load()");
         return globals.get(name, type);
     }
 

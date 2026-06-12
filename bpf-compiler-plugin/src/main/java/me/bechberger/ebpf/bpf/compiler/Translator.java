@@ -380,6 +380,18 @@ class Translator {
                 }
                 yield new ContinueStatement();
             }
+            case EnhancedForLoopTree enhancedFor -> {
+                logError(statement, "Enhanced-for loops are not supported in BPF programs. " +
+                        "Use a standard for-loop with explicit indexing, or call map.bpf_get(key) directly. " +
+                        "Iterating a Java Iterable (e.g. for (x : collection)) has no BPF equivalent. " +
+                        "Statement: " + statement);
+                yield null;
+            }
+            case SwitchTree switchTree -> {
+                logError(statement, "Switch statements are not supported in BPF programs; " +
+                        "rewrite using if-else chains. Statement: " + statement);
+                yield null;
+            }
             default -> {
                 logError(statement, "Unsupported statement kind " + statement.getKind() + ": " + statement);
                 yield null;
@@ -456,7 +468,10 @@ class Translator {
             }
             case BinaryTree binaryTree -> {
                 if (compilerPlugin.isSameType(methodPath, binaryTree, String.class)) {
-                    logError(expression, "Unsupported string operation: " + expression);
+                    logError(expression, "String concatenation is not supported in BPF programs. " +
+                            "Use BPFJ.charBuf() with bpf_probe_read_kernel_str() for string data, " +
+                            "or bpf_trace_printk/bpf_snprintf for formatted output. " +
+                            "Expression: " + expression);
                 }
                 var left = translate(binaryTree.getLeftOperand());
                 var right = translate(binaryTree.getRightOperand());
@@ -499,8 +514,8 @@ class Translator {
                     case BITWISE_COMPLEMENT -> Operator.BITWISE_NOT;
                     case POSTFIX_INCREMENT -> Operator.POSTFIX_INCREMENT;
                     case POSTFIX_DECREMENT -> Operator.POSTFIX_DECREMENT;
-                    case PREFIX_INCREMENT -> Operator.SUFFIX_INCREMENT;
-                    case PREFIX_DECREMENT -> Operator.SUFFIX_DECREMENT;
+                    case PREFIX_INCREMENT -> Operator.PREFIX_INCREMENT;
+                    case PREFIX_DECREMENT -> Operator.PREFIX_DECREMENT;
                     default -> null;
                 };
 
@@ -769,6 +784,11 @@ class Translator {
             }
             case LambdaExpressionTree lambda -> {
                 logError(expression, "Lambdas are only supported in calls to built-in functions: " + expression);
+                yield null;
+            }
+            case SwitchExpressionTree switchExpr -> {
+                logError(expression, "Switch expressions are not supported in BPF programs; " +
+                        "rewrite using the ternary operator or if-else chains. Expression: " + expression);
                 yield null;
             }
             default -> {

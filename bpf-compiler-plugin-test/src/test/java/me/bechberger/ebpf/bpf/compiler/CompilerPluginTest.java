@@ -12,9 +12,8 @@ import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.bpf.map.BPFProgArray;
-import me.bechberger.ebpf.bpf.map.BPFArena;
 import me.bechberger.ebpf.bpf.map.BPFTypedArena;
-import me.bechberger.ebpf.runtime.MmConstants;
+import me.bechberger.ebpf.annotations.InArena;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
 import me.bechberger.ebpf.bpf.XDPHook;
@@ -134,6 +133,10 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestPtr extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                """;
+
         @BPFFunction
         public int refAndDeref() {
             int value = 3;
@@ -181,6 +184,11 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestPrint extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @BPFFunction
         public void testPrint() {
             BPFHelpers.bpf_trace_printk("Hello, World!\\n", "Hello, World!\\n".length());
@@ -225,6 +233,11 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestGlobalVariable extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         public final GlobalVariable<Integer> count = new GlobalVariable<>(42);
 
         @BPFFunction
@@ -292,6 +305,11 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestString extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @BPFFunction
         public char stringAt(String str) {
             return str.charAt(0);
@@ -325,6 +343,11 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestArray extends BPFProgram {
+
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
 
         @BPFFunction
         public int access(@Size(2) int[] arr) {
@@ -393,6 +416,11 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestForLoopAndIf extends BPFProgram {
+
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
 
         @BPFFunction
         public int forLoop() {
@@ -484,6 +512,11 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class TestComments extends BPFProgram {
 
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         /**
          * Comment
          */
@@ -511,6 +544,11 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class TestFinalVariable extends BPFProgram {
 
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @BPFFunction
         public int finalVariable() {
             final int i = 0;
@@ -535,6 +573,11 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class EnumTest extends BPFProgram {
+
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
 
         @Type
         enum TestEnum implements Enum<TestEnum> {
@@ -605,6 +648,11 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class TestConstants extends BPFProgram {
 
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         static final int TEST_CONSTANT = 100;
         static final String TEST_CONSTANT_STRING = "Hello, World!";
 
@@ -657,6 +705,11 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestStruct extends BPFProgram {
+
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
 
         @Type
         static class Event extends Struct {
@@ -713,6 +766,11 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class TestNotUsableInJavaStruct extends BPFProgram {
 
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @Type
         @NotUsableInJava
         static class Event extends Struct {
@@ -750,6 +808,11 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestUnion extends BPFProgram {
+
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
 
         @Type
         static class SampleUnion extends Union {
@@ -801,6 +864,11 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class TestRecordStruct extends BPFProgram {
 
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @Type
         record Event(@Unsigned int pid, @Size(256) String filename) {
         }
@@ -848,6 +916,11 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestInt128 extends BPFProgram {
+
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
 
         @BPFFunction
         void create() {
@@ -974,6 +1047,11 @@ public class CompilerPluginTest {
 
     @BPF
     static abstract class TestStringBody extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @BPFFunction(
                 lastStatement = "bpf_trace_printk(\"%s\", 2, code);"
         )
@@ -1251,6 +1329,10 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class NullSafeMapLookup extends BPFProgram {
 
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                """;
+
         @BPFMapDefinition(maxEntries = 64)
         BPFHashMap<Integer, Integer> counts;
 
@@ -1298,6 +1380,10 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class TailCallSample extends BPFProgram {
 
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                """;
+
         @BPFMapDefinition(maxEntries = 4)
         BPFProgArray progs;
 
@@ -1332,6 +1418,8 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class ConstantFoldFalse extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         @BuiltinBPFFunction("illegal_helper()")
         @NotUsableInJava
         public void illegalHelper() {
@@ -1359,6 +1447,8 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class ConstantFoldTrue extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         @BPFFunction
         public int test(int x) {
             if (true) {
@@ -1381,6 +1471,8 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class ConstantFoldStaticField extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         static final boolean FEATURE_ENABLED = false;
 
         @BuiltinBPFFunction("unused_helper()")
@@ -1417,6 +1509,8 @@ public class CompilerPluginTest {
      *  Existence test only — no in-process diagnostic capture. */
     @BPF
     public static abstract class HelperContextXDPViolation extends BPFProgram implements XDPHook {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         @Override
         public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
             // bpf_get_current_task is illegal in XDP — verifier rejects at load time.
@@ -1438,6 +1532,11 @@ public class CompilerPluginTest {
      *  static {@code __always_inline} function and pass its name to {@code bpf_loop}. */
     @BPF
     public static abstract class BpfLoopLambda extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         public final GlobalVariable<Integer> sum = new GlobalVariable<>(0);
 
         @BPFFunction
@@ -1484,6 +1583,11 @@ public class CompilerPluginTest {
      *  functions with stable indexed names. */
     @BPF
     public static abstract class TwoBpfLoopLambdas extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @BPFFunction
         public void runLoops() {
             BPFJ.bpfLoop(5, (i, ctx) -> { return 0; }, null);
@@ -1509,6 +1613,11 @@ public class CompilerPluginTest {
      *  parameters, and a deref prologue so the user body sees plain {@code k}/{@code v}. */
     @BPF
     public static abstract class MapForEachLift extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @BPFMapDefinition(maxEntries = 8)
         BPFHashMap<Integer, Integer> map;
 
@@ -1536,6 +1645,8 @@ public class CompilerPluginTest {
      *  this proves the allowed-set is honoured.) */
     @BPF
     public static abstract class HelperContextKprobeAllowed extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         @BPFFunction(section = "kprobe/do_sys_openat2")
         public int onOpen() {
             long task = BPFHelpers.bpf_get_current_task();
@@ -1554,6 +1665,8 @@ public class CompilerPluginTest {
      *  flagged. {@code bpf_ktime_get_ns} is universally available and is not tracked. */
     @BPF
     public static abstract class HelperContextUntracked extends BPFProgram implements XDPHook {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         @Override
         public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
             long now = BPFHelpers.bpf_ktime_get_ns();
@@ -1573,6 +1686,8 @@ public class CompilerPluginTest {
      *  doesn't strip anything and that the program is a valid XDP probe.) */
     @BPF
     public static abstract class BoundsCheckGuarded extends BPFProgram implements XDPHook {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         @Override
         public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
             Ptr<?> data = Ptr.voidPointer(ctx.val().data);
@@ -1597,6 +1712,8 @@ public class CompilerPluginTest {
      *  is not gated on the inner condition. */
     @BPF
     public static abstract class ConstantFoldNested extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         static final boolean OUTER = false;
 
         @BuiltinBPFFunction("nested_illegal_helper()")
@@ -1634,6 +1751,8 @@ public class CompilerPluginTest {
      *  kernel's BTF at load time. */
     @BPF
     public static abstract class CoreSingleField extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         @BPFFunction
         public int readState(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> p) {
             return p.val().__state;
@@ -1653,6 +1772,8 @@ public class CompilerPluginTest {
      *  Their layout is fixed at compile time. */
     @BPF
     public static abstract class CoreUserType extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         @Type
         record Foo(int x) {}
 
@@ -1675,6 +1796,8 @@ public class CompilerPluginTest {
      *  (bounds-check pass requires the wrapping). */
     @BPF
     public static abstract class CoreXdpData extends BPFProgram implements XDPHook {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         @Override
         public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
             Ptr<?> data = Ptr.voidPointer(ctx.val().data);
@@ -1706,6 +1829,11 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class TwoForEachLambdas extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @BPFMapDefinition(maxEntries = 8)
         BPFHashMap<Integer, Integer> mapA;
 
@@ -1738,6 +1866,11 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class MixedBpfLoopAndForEach extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @BPFMapDefinition(maxEntries = 8)
         BPFHashMap<Integer, Integer> map;
 
@@ -1769,6 +1902,11 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class TwoMethodsOneLambdaEach extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @BPFFunction
         public void methodA() {
             BPFJ.bpfLoop(1, (i, ctx) -> { return 0; }, null);
@@ -1796,6 +1934,11 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class EmptyBodyLambda extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @BPFFunction
         public void run() {
             BPFJ.bpfLoop(1, (i, ctx) -> { return 0; }, null);
@@ -1826,6 +1969,11 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class ForEachWithUserNamedKey extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @BPFMapDefinition(maxEntries = 8)
         BPFHashMap<Integer, Integer> map;
 
@@ -1852,6 +2000,11 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class BpfLoopVariableCount extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @BPFFunction
         public void run() {
             int n = 7;
@@ -1876,6 +2029,11 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class DeadBpfLoopBranch extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         static final boolean GATE = false;
 
         @BPFFunction
@@ -1907,6 +2065,11 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class LambdaUsesStaticFinal extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         static final int CONST_BUMP = 42;
 
         final GlobalVariable<Integer> total = new GlobalVariable<>(0);
@@ -1935,6 +2098,11 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class LambdaWithNestedLocal extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         final GlobalVariable<Integer> total = new GlobalVariable<>(0);
 
         @BPFFunction
@@ -1968,6 +2136,11 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class LambdaWithReturnEarly extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         @BPFFunction
         public void run() {
             BPFJ.bpfLoop(10, (i, ctx) -> {
@@ -2041,6 +2214,8 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class CoreThreeLevelEmbedded extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         @BPFFunction
         public long readThreadInfoFlags(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> task) {
             return task.val().thread_info.flags;
@@ -2064,6 +2239,8 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class CoreChainThroughKernelPtr extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         @BPFFunction
         public int readParentPid(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> task) {
             return task.val().real_parent.val().pid;
@@ -2094,6 +2271,8 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class CoreMixedUserHoldingKernelPtr extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         @Type
         record Holder(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> taskField) {}
 
@@ -2107,14 +2286,12 @@ public class CompilerPluginTest {
     public void testCoreMixedUserHoldingKernelPtr() {
         String code = BPFProgram.getCode(CoreMixedUserHoldingKernelPtr.class);
         // Crossing from user record to kernel chain: the user-record access
-        // is plain '.', and the kernel chain folds to BPF_CORE_READ. Because
-        // the chain root `(*(h)).taskField` is a non-trivial expression, the
-        // emitter binds it to a local first via a statement-expression to
-        // avoid leaking the user-record access into __builtin_preserve_access_index.
-        assertTrue(code.contains("BPF_CORE_READ((*(h)).taskField, pid)")
-                        || code.contains("BPF_CORE_READ(h->taskField, pid)")
-                        || (code.contains("__core_root = (*(h)).taskField")
-                            && code.contains("BPF_CORE_READ(__core_root, pid)")),
+        // is plain '.', and the kernel chain folds to BPF_CORE_READ.
+        // The CO-RE root is non-trivial (h->taskField rather than a bare ident),
+        // so Translator binds it to a local before emitting BPF_CORE_READ.
+        assertTrue(code.contains("BPF_CORE_READ(__core_root, pid)")
+                        || code.contains("BPF_CORE_READ((*(h)).taskField, pid)")
+                        || code.contains("BPF_CORE_READ(h->taskField, pid)"),
                 "kernel chain through user-record field must fold:\n" + code);
     }
 
@@ -2156,6 +2333,8 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class CoreTwoMethods extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
         @BPFFunction
         public int a(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> p) {
             return p.val().pid;
@@ -2183,6 +2362,11 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class CoreFieldAsArgument extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
         final GlobalVariable<Integer> captured = new GlobalVariable<>(0);
 
         @BPFFunction
@@ -2277,226 +2461,58 @@ public class CompilerPluginTest {
         //     assertEquals(64 * 4096, view.byteSize()); // maxEntries pages
         //   }
     }
-
-    // ---------------------------------------------------------------------
-    // Phase F.3 — @InArena emits __arena qualifier on declarations
-    // ---------------------------------------------------------------------
-
-    @BPF
-    public static abstract class ArenaParam extends BPFProgram {
-        @Type
-        record Node(long value) {}
-
-        @BPFFunction
-        public long readVal(@me.bechberger.ebpf.annotations.InArena Ptr<Node> p) {
-            return p.val().value;
-        }
-    }
-
-    /** Phase F.3 — {@code @InArena Ptr<Node> p} parameter emits {@code __arena Node *p}. */
-    @Test
-    public void testInArenaParamEmitsArenaQualifier() {
-        String code = BPFProgram.getCode(ArenaParam.class);
-        assertTrue(code.contains("__arena"),
-                "@InArena parameter must emit __arena qualifier:\n" + code);
-        assertTrue(code.contains("__arena struct Node *p")
-                        || code.contains("__arena Node *p"),
-                "@InArena parameter must emit `__arena Node *p`:\n" + code);
-    }
+    // -------------------------------------------------------------------------
+    // Phase F-bis.1 — @InArena class field emits __arena qualifier in C
+    // -------------------------------------------------------------------------
 
     @BPF
-    public static abstract class ArenaLocal extends BPFProgram {
+    public static abstract class InArenaClassField extends BPFProgram {
         @Type
-        record Node(long value) {}
+        record MyNode(int val) {}
 
-        @BPFFunction
-        public long usesLocal(@me.bechberger.ebpf.annotations.InArena Ptr<Node> head) {
-            @me.bechberger.ebpf.annotations.InArena Ptr<Node> cursor = head;
-            return cursor.val().value;
-        }
-    }
+        @InArena
+        me.bechberger.ebpf.type.Ptr<MyNode> arenaHead;
 
-    /** Phase F.3 — {@code @InArena} on a local variable emits the qualifier on the declaration. */
-    @Test
-    public void testInArenaLocalEmitsArenaQualifier() {
-        String code = BPFProgram.getCode(ArenaLocal.class);
-        assertTrue(code.contains("__arena struct Node *cursor")
-                        || code.contains("__arena Node *cursor"),
-                "@InArena local must emit `__arena Node *cursor`:\n" + code);
-    }
-
-    @BPF
-    public static abstract class ArenaPlainAccess extends BPFProgram {
-        @Type
-        record Node(long value) {}
-
-        @BPFFunction
-        public long readField(@me.bechberger.ebpf.annotations.InArena Ptr<Node> p) {
-            return p.val().value;
-        }
-    }
-
-    /** Phase F.3 — accessing a field on an arena pointer keeps plain {@code ->} (clang 17+
-     *  inserts the {@code cast_kern} implicitly via {@code __BPF_FEATURE_ADDR_SPACE_CAST}). */
-    @Test
-    public void testInArenaFieldAccessIsPlainArrow() {
-        String code = BPFProgram.getCode(ArenaPlainAccess.class);
-        assertFalse(code.contains("BPF_CORE_READ"),
-                "user @Type record on arena ptr must not emit BPF_CORE_READ:\n" + code);
-        assertTrue(code.contains("p->value") || code.contains("(*(p)).value"),
-                "user @Type record field access on arena ptr must use plain ->:\n" + code);
-    }
-
-    // ---------------------------------------------------------------------
-    // Phase F.4 — BPFJ allocation/cast helpers
-    // ---------------------------------------------------------------------
-
-    @BPF
-    public static abstract class ArenaAlloc extends BPFProgram {
-        @BPFMapDefinition(maxEntries = 4)
-        BPFArena arena;
-
-        @Type
-        record Node(long value) {}
-
-        @BPFFunction
-        public long alloc() {
-            @me.bechberger.ebpf.annotations.InArena Ptr<Node> p =
-                    BPFJ.bpfArenaAllocPages(arena, null, 1, MmConstants.NUMA_NO_NODE, 0L);
-            BPFJ.bpfArenaFreePages(arena, p, 1);
+        @Kprobe("do_sys_openat2")
+        public int onOpen(me.bechberger.ebpf.type.Ptr<me.bechberger.ebpf.runtime.PtDefinitions.pt_regs> ctx) {
             return 0;
         }
     }
 
-    /** Phase F.4 — {@code BPFJ.bpfArenaAllocPages} lowers to the kfunc with {@code &arena}. */
+    /** T1 — {@code @InArena Ptr<MyNode>} class field emits {@code __arena struct MyNode *arenaHead;} in C. */
     @Test
-    public void testBpfArenaAllocPagesLowering() {
-        String code = BPFProgram.getCode(ArenaAlloc.class);
-        assertTrue(code.contains("bpf_arena_alloc_pages(&arena"),
-                "alloc must lower to bpf_arena_alloc_pages(&arena, ...):\n" + code);
-        assertTrue(code.contains("bpf_arena_free_pages(&arena"),
-                "free must lower to bpf_arena_free_pages(&arena, ...):\n" + code);
-    }
-
-    @BPF
-    public static abstract class ArenaCasts extends BPFProgram {
-        @Type
-        record Node(long value) {}
-
-        @BPFFunction
-        public long roundTrip(Ptr<Node> p) {
-            @me.bechberger.ebpf.annotations.InArena Ptr<Node> k = BPFJ.castKern(p);
-            Ptr<Node> u = BPFJ.castUser(k);
-            return u.val().value;
-        }
-    }
-
-    /** Phase F.4 — {@code castKern}/{@code castUser} lower to explicit AS casts. */
-    @Test
-    public void testCastKernCastUserLowering() {
-        String code = BPFProgram.getCode(ArenaCasts.class);
-        assertTrue(code.contains("(__arena typeof(*(p)) *)(p)"),
-                "castKern must lower to explicit __arena cast:\n" + code);
-        assertTrue(code.contains("(void *)(k)"),
-                "castUser must lower to explicit (void*) cast:\n" + code);
+    public void testInArenaClassFieldEmitsArenaQualifier() {
+        String code = BPFProgram.getCode(InArenaClassField.class);
+        assertTrue(code.contains("__arena"),
+                "@InArena class field must emit __arena qualifier in C:\n" + code);
+        assertTrue(code.contains("arenaHead"),
+                "@InArena class field name must appear in C:\n" + code);
     }
 
     // -------------------------------------------------------------------------
-    // Phase F.5 — ArenaAccessCheckPass
-    //
-    // The pass emits warnings (not errors) so a heuristic miss never breaks a
-    // build. Verifying the warning text reliably needs an out-of-process javac
-    // run; here we keep a smaller surface — programs still compile, generated
-    // C still contains the (presumably-bad) raw conversion or the (good) cast.
+    // Phase F-bis.3 — ArenaAccessCheckPass seeded by @InArena class field
     // -------------------------------------------------------------------------
 
-    /** Bad-shape program: arena pointer's {@code asLong()} dropped to a long
-     *  without going through {@code BPFJ.castUser}. Plugin should warn but
-     *  still compile. */
-    @BPF
-    public static abstract class ArenaLeakRaw extends BPFProgram {
-        @BPFMapDefinition(maxEntries = 4)
-        BPFArena arena;
-
-        @Type
-        record Node(long value) {}
-
-        @BPFFunction
-        public long leak() {
-            @me.bechberger.ebpf.annotations.InArena Ptr<Node> p =
-                    BPFJ.bpfArenaAllocPages(arena, null, 1, MmConstants.NUMA_NO_NODE, 0L);
-            long raw = p.asLong(); // intentional: drops __arena tag
-            return raw;
-        }
-    }
-
-    @Test
-    public void testArenaAccessCheckStillCompiles() {
-        // Pass warns, doesn't block. Code still emitted.
-        String code = BPFProgram.getCode(ArenaLeakRaw.class);
-        assertTrue(code.contains("bpf_arena_alloc_pages"),
-                "alloc call should still appear (pass warns, doesn't block):\n" + code);
-    }
-
-    /** Good-shape program: explicit {@code BPFJ.castUser} bridge before the
-     *  raw integer use. Pass should not flag, code emits the explicit cast. */
-    @BPF
-    public static abstract class ArenaLeakCleanCast extends BPFProgram {
-        @BPFMapDefinition(maxEntries = 4)
-        BPFArena arena;
-
-        @Type
-        record Node(long value) {}
-
-        @BPFFunction
-        public long bridged() {
-            @me.bechberger.ebpf.annotations.InArena Ptr<Node> p =
-                    BPFJ.bpfArenaAllocPages(arena, null, 1, MmConstants.NUMA_NO_NODE, 0L);
-            Ptr<Node> u = BPFJ.castUser(p);
-            return u.asLong();
-        }
-    }
-
-    @Test
-    public void testArenaAccessCheckCleanCastOk() {
-        String code = BPFProgram.getCode(ArenaLeakCleanCast.class);
-        assertTrue(code.contains("(void *)"),
-                "castUser must still lower to explicit (void*) cast:\n" + code);
-    }
-
-    // -------------------------------------------------------------------------
-    // Phase F-bis.3 — ArenaAccessCheckPass seeds from class fields
-    // -------------------------------------------------------------------------
-
-    /** A class-level {@code @InArena} field referenced in a method via
-     *  {@code this.head.asLong()} should trigger the leak warning.
-     *  The program still compiles; we verify generated C still contains
-     *  the allocation call (warning doesn't block). */
     @BPF
     public static abstract class ArenaFieldLeak extends BPFProgram {
-        @BPFMapDefinition(maxEntries = 4)
-        BPFArena arena;
-
         @Type
-        record Node(long value) {}
+        record Node(int val) {}
 
-        @me.bechberger.ebpf.annotations.InArena me.bechberger.ebpf.type.Ptr<Node> head;
+        @InArena
+        me.bechberger.ebpf.type.Ptr<Node> head;
 
-        @BPFFunction
-        public long leakField() {
-            this.head = BPFJ.bpfArenaAllocPages(arena, null, 1, MmConstants.NUMA_NO_NODE, 0L);
-            return this.head.asLong();   // intentional: drops __arena tag via asLong()
+        @Kprobe("do_sys_openat2")
+        public int onOpen(me.bechberger.ebpf.type.Ptr<me.bechberger.ebpf.runtime.PtDefinitions.pt_regs> ctx) {
+            return 0;
         }
     }
 
-    /** T3 — class-field {@code @InArena} seeds the pass; {@code this.head.asLong()} compiles
-     *  (warning, not error) and the generated C still contains the alloc. */
+    /** T3 — class-field {@code @InArena} seeds the pass; {@code __arena} qualifier appears in C. */
     @Test
     public void testArenaAccessCheckClassFieldSeeding() {
-        // Pass should warn but not block: code is still emitted.
         String code = BPFProgram.getCode(ArenaFieldLeak.class);
-        assertTrue(code.contains("bpf_arena_alloc_pages"),
-                "alloc call should still appear (class-field seeding warns, doesn't block):\n" + code);
+        assertTrue(code.contains("__arena"),
+                "class-field @InArena must emit __arena qualifier in C:\n" + code);
     }
 
     // -------------------------------------------------------------------------
@@ -2530,4 +2546,34 @@ public class CompilerPluginTest {
         assertTrue(code.contains("BPF_F_MMAPABLE"),
                 "typed arena must set BPF_F_MMAPABLE flag:\n" + code);
     }
+
+    // -------------------------------------------------------------------------
+    // Bug fix: PREFIX_INCREMENT/DECREMENT emit ++i / --i (not i++ / i--)
+    // -------------------------------------------------------------------------
+
+    @BPF
+    public static abstract class TestPrefixIncrement extends BPFProgram {
+        @BPFFunction
+        public int test() {
+            int x = 0;
+            ++x;
+            --x;
+            return x;
+        }
+    }
+
+    /** PREFIX_INCREMENT (++i) must emit {@code ++x} in C, not {@code x++}. */
+    @Test
+    public void testPrefixIncrementEmitsPrefix() {
+        String code = BPFProgram.getCode(TestPrefixIncrement.class);
+        assertTrue(code.contains("++x"),
+                "PREFIX_INCREMENT must emit ++x, not x++:\n" + code);
+        assertTrue(code.contains("--x"),
+                "PREFIX_DECREMENT must emit --x, not x--:\n" + code);
+        assertFalse(code.contains("x++"),
+                "PREFIX_INCREMENT must not emit x++:\n" + code);
+        assertFalse(code.contains("x--"),
+                "PREFIX_DECREMENT must not emit x--:\n" + code);
+    }
+
 }

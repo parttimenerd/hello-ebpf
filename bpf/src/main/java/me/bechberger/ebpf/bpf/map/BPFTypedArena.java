@@ -86,6 +86,7 @@ public class BPFTypedArena<T> extends BPFMap {
 
     public BPFTypedArena(FileDescriptor fd, BPFType<T> valueType, int maxItems) {
         super(MapTypeId.ARENA, fd);
+        if (maxItems <= 0) throw new IllegalArgumentException("BPFTypedArena requires maxItems > 0, got " + maxItems);
         this.valueType = valueType;
         this.maxItems = maxItems;
         this.itemStride = valueType.sizePadded();
@@ -106,7 +107,9 @@ public class BPFTypedArena<T> extends BPFMap {
      *   arena.atomicGetAndAdd(0, off, 1L);
      * }</pre>
      *
-     * @throws IllegalArgumentException if no field named {@code fieldName} exists in {@code T}
+     * <p>For non-struct arena types (e.g. {@code BPFTypedArena<Long>}) returns {@code 0L}.
+     *
+     * @throws IllegalArgumentException if no field named {@code fieldName} exists in a struct type
      */
     public long fieldOffset(String fieldName) {
         if (valueType instanceof BPFType.BPFStructType<?> st) {
@@ -115,10 +118,13 @@ public class BPFTypedArena<T> extends BPFMap {
                     return member.offset();
                 }
             }
+            throw new IllegalArgumentException(
+                    "No field '" + fieldName + "' in struct " + valueType.getClass().getSimpleName()
+                            + ". Available fields: " + st.members().stream()
+                            .map(m -> m.name()).collect(java.util.stream.Collectors.joining(", ")));
         }
-        throw new IllegalArgumentException(
-                "No field '" + fieldName + "' in " + valueType.getClass().getSimpleName()
-                        + " (type must be a @Type-annotated record)");
+        // Primitive arena types have a single value at offset 0.
+        return 0L;
     }
 
     /** Total bytes available (ceiled to a page boundary). */
@@ -168,6 +174,7 @@ public class BPFTypedArena<T> extends BPFMap {
      * <p>{@code fieldOffset} must be a multiple of 8.
      */
     public long atomicGetAndAdd(int i, long fieldOffset, long delta) {
+        checkBounds(i);
         return (long) LONG_VH.getAndAdd(userView(), slotOffset(i) + fieldOffset, delta);
     }
 
@@ -179,6 +186,7 @@ public class BPFTypedArena<T> extends BPFMap {
      * <p>{@code fieldOffset} must be a multiple of 8.
      */
     public boolean atomicCompareAndSet(int i, long fieldOffset, long expected, long update) {
+        checkBounds(i);
         return (boolean) LONG_VH.compareAndSet(userView(), slotOffset(i) + fieldOffset, expected, update);
     }
 
@@ -189,6 +197,7 @@ public class BPFTypedArena<T> extends BPFMap {
      * <p>{@code fieldOffset} must be a multiple of 8.
      */
     public long atomicGetLong(int i, long fieldOffset) {
+        checkBounds(i);
         return (long) LONG_VH.getVolatile(userView(), slotOffset(i) + fieldOffset);
     }
 
@@ -197,6 +206,7 @@ public class BPFTypedArena<T> extends BPFMap {
      * {@code fieldOffset} within slot {@code i} with volatile semantics.
      */
     public void atomicSetLong(int i, long fieldOffset, long value) {
+        checkBounds(i);
         LONG_VH.setVolatile(userView(), slotOffset(i) + fieldOffset, value);
     }
 

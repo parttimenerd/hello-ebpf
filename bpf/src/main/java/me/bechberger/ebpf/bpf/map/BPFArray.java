@@ -48,6 +48,15 @@ public class BPFArray<V> extends BPFBaseMap<@Unsigned Integer, V> {
                 " is out of bounds of array with size " + size);
     }
 
+    @Override
+    public boolean put(Integer i, V value) {
+        if (i < 0 || i >= size) {
+            throw new ArrayIndexOutOfBoundsException("Index " + i +
+                    " is out of bounds of array with size " + size);
+        }
+        return super.put(i, value);
+    }
+
     public void set(int i, V value) {
         put(i, value);
     }
