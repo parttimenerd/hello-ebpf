@@ -1190,15 +1190,17 @@ class Translator {
         if (shape == MethodTemplate.FuncShape.MAPELEM) {
             // libbpf bpf_for_each_map_elem expects:
             //   long (*cb)(struct bpf_map *map, const void *key, void *value, void *ctx)
-            // The user writes `(k, v) -> ...` so we generate
-            //   (struct bpf_map *__map, const void *__key, void *__value, void *ctx)
-            // and prepend
+            // The user writes `(k, v) -> ...` (2-arg) or `(k, v, c) -> ...` (3-arg
+            // typed-ctx) so we generate
+            //   (struct bpf_map *__map, const void *__key, void *__value, void *ctx_or_libbpf_ctx)
+            // and prepend type-recovery prologues:
             //   <KType> k = *(<KType> *)__key;
             //   <VType> v = *(<VType> *)__value;
-            // so the user's body sees plain `k`/`v` of the right types.
-            if (lambda.parameters().size() != 2) {
-                logError(methodPath.leaf(), "Map.forEach lambda must have exactly two parameters (key, value), got "
-                        + lambda.parameters().size());
+            //   [<CtxType> c = (<CtxType>)__libbpf_ctx;]   // 3-arg variant only
+            // so the user's body sees `k`/`v`/`c` of the right types.
+            if (lambda.parameters().size() != 2 && lambda.parameters().size() != 3) {
+                logError(methodPath.leaf(), "Map.forEach lambda must have two parameters (key, value) or three "
+                        + "(key, value, ctx), got " + lambda.parameters().size());
                 return null;
             }
             var keyParam = lambda.parameters().get(0);
@@ -1207,16 +1209,48 @@ class Translator {
             var valueName = valueParam.name() != null ? valueParam.name().name() : "v";
             var keyTypeStr = keyParam.declarator().toPrettyString();
             var valueTypeStr = valueParam.declarator().toPrettyString();
-            var prologue = List.<Statement>of(
-                    new VerbatimStatement(keyTypeStr + " " + keyName + " = *((" + keyTypeStr + " *)__key);"),
-                    new VerbatimStatement(valueTypeStr + " " + valueName + " = *((" + valueTypeStr + " *)__value);")
-            );
+            var prologue = new ArrayList<Statement>();
+            prologue.add(new VerbatimStatement(keyTypeStr + " " + keyName + " = *((" + keyTypeStr + " *)__key);"));
+            prologue.add(new VerbatimStatement(valueTypeStr + " " + valueName + " = *((" + valueTypeStr + " *)__value);"));
+
+            String ctxParamName = ctxName;
+            if (lambda.parameters().size() == 3) {
+                // 3-arg typed-ctx variant: <C> forEach(TriFunction<K,V,C,Integer>, C ctx).
+                // Same recovery pattern as PLAIN: emit the libbpf-ABI `void *__libbpf_ctx`
+                // as the C parameter, then prepend a cast prologue so the user's body sees
+                // `c` typed correctly. Type witness comes from the AST-side parameter type
+                // (translateLambdaParameters already preferred AST over symbol-erasure for
+                // generic params), with the explicit type argument as a fallback.
+                var ctxParam = lambda.parameters().get(2);
+                if (ctxParam.name() == null) {
+                    logError(methodPath.leaf(), "Map.forEach 3-arg lambda needs a named ctx parameter");
+                    return null;
+                }
+                String currentType = ctxParam.declarator().toPrettyString().trim();
+                boolean lastIsVoidPtr = "void *".equals(currentType) || "void*".equals(currentType);
+                boolean haveCtxTypeArg = typeArguments != null && !typeArguments.isEmpty()
+                        && typeArguments.getLast() != null;
+                String userType = !lastIsVoidPtr ? currentType
+                        : haveCtxTypeArg ? typeArguments.getLast().toPrettyString()
+                        : null;
+                String userName = ctxParam.name().name();
+                if (userType != null) {
+                    prologue.add(new VerbatimStatement(
+                            userType + " " + userName + " = (" + userType + ")__libbpf_ctx;"));
+                    ctxParamName = "__libbpf_ctx";
+                } else {
+                    // No type witness — fall back to naming the libbpf ctx parameter as the
+                    // user wrote it (`void *c`); body won't be able to deref it usefully but
+                    // this matches the legacy 2-arg silent-`void *` behaviour.
+                    ctxParamName = userName;
+                }
+            }
             var newBody = new ArrayList<Statement>(prologue);
             newBody.addAll(bodyStatements);
             bodyStatements = newBody;
             verbatimHeader = new VerbatimFunctionDeclarator(
                     "static __always_inline int " + name +
-                            "(struct bpf_map *__map, const void *__key, void *__value, void *" + ctxName + ")");
+                            "(struct bpf_map *__map, const void *__key, void *__value, void *" + ctxParamName + ")");
             params = null;
         } else {
             // PLAIN shape: emit lambda parameters verbatim. The user's lambda already

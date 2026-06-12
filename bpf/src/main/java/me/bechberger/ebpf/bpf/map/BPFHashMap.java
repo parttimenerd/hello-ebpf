@@ -4,6 +4,7 @@ import me.bechberger.ebpf.annotations.bpf.BPFMapClass;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
+import me.bechberger.ebpf.bpf.TriFunction;
 import me.bechberger.ebpf.type.BPFType;
 
 import java.util.function.BiFunction;
@@ -66,6 +67,32 @@ public class BPFHashMap<K, V> extends BPFBaseMap<K, V> {
     @BuiltinBPFFunction("bpf_for_each_map_elem(&$this, $func1:mapelem, $arg2, 0)")
     @NotUsableInJava
     public void forEach(BiFunction<K, V, Integer> body, Object ctx) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Typed-ctx variant of {@link #forEach(BiFunction, Object)}.
+     * <p>
+     * The lambda receives {@code (key, value, ctx)} where the type of {@code ctx}
+     * follows the explicit type witness on the call site:
+     * <pre>{@code
+     *   map.<Ptr<State>>forEach((k, v, st) -> {
+     *       st.val().count++;
+     *       return 0;
+     *   }, Ptr.of(state));
+     * }</pre>
+     * Lowers to {@code bpf_for_each_map_elem(&map, &__bpf_lambda_..., ctx, 0)}.
+     * The lifted C function casts the libbpf {@code void *ctx} back to the user
+     * type at function entry, so the body can use {@code st} directly without
+     * touching {@code (Type *)} casts. Without an explicit type witness the
+     * legacy 2-arg overload is the better fit.
+     * <p>
+     * Same capture rules as the 2-arg overload: the body must NOT capture locals
+     * from the enclosing method — pass state through {@code ctx}.
+     */
+    @BuiltinBPFFunction("bpf_for_each_map_elem(&$this, $func1:mapelem, $arg2, 0)")
+    @NotUsableInJava
+    public <C> void forEach(TriFunction<K, V, C, Integer> body, C ctx) {
         throw new MethodIsBPFRelatedFunction();
     }
 }
