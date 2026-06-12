@@ -96,6 +96,31 @@ public class BPFTypedArena<T> extends BPFMap {
         return maxItems;
     }
 
+    /**
+     * Returns the byte offset of {@code fieldName} within a single {@code T} slot,
+     * using the same layout that {@link BPFType} uses for {@code parseMemory}/{@code setMemory}.
+     *
+     * <p>Use this to drive the atomic helpers without hard-coding magic byte offsets:
+     * <pre>{@code
+     *   long off = arena.fieldOffset("value");  // e.g. 8 for Item(int id, long value)
+     *   arena.atomicGetAndAdd(0, off, 1L);
+     * }</pre>
+     *
+     * @throws IllegalArgumentException if no field named {@code fieldName} exists in {@code T}
+     */
+    public long fieldOffset(String fieldName) {
+        if (valueType instanceof BPFType.BPFStructType<?> st) {
+            for (var member : st.members()) {
+                if (member.name().equals(fieldName)) {
+                    return member.offset();
+                }
+            }
+        }
+        throw new IllegalArgumentException(
+                "No field '" + fieldName + "' in " + valueType.getClass().getSimpleName()
+                        + " (type must be a @Type-annotated record)");
+    }
+
     /** Total bytes available (ceiled to a page boundary). */
     public long sizeBytes() {
         return ceilToPage(itemStride * maxItems);

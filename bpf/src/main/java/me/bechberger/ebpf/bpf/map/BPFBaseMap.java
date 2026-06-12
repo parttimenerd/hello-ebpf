@@ -176,7 +176,9 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
 
             record MemAndKey<K>(MemorySegment mem, K key) {}
 
-            final Arena arena = Arena.ofConfined();
+            // ofAuto() is GC-managed: segments are freed when the iterator becomes
+            // unreachable even if the caller breaks early without draining it.
+            final Arena arena = Arena.ofAuto();
             @Nullable MemAndKey<K> next = obtainNext(null);
             MemorySegment nextKeyMem;
 
