@@ -67,4 +67,32 @@ public class LibC {
     public static ResultAndErr<Void> setRlimitMemlockToInfinity() {
         return setrlimit(RLIMIT_MEMLOCK, -1, -1);
     }
+
+    // ---- mmap / munmap ------------------------------------------------------
+    public static final int PROT_READ = 0x1;
+    public static final int PROT_WRITE = 0x2;
+    public static final int MAP_SHARED = 0x01;
+    public static final int MAP_FIXED = 0x10;
+
+    private static final HandlerWithErrno<MemorySegment> MMAP_HANDLE = new HandlerWithErrno<>("mmap",
+            FunctionDescriptor.of(POINTER, POINTER, JAVA_LONG, JAVA_INT, JAVA_INT, JAVA_INT, JAVA_LONG));
+
+    private static final HandlerWithErrno<Integer> MUNMAP_HANDLE = new HandlerWithErrno<>("munmap",
+            FunctionDescriptor.of(JAVA_INT, POINTER, JAVA_LONG));
+
+    /**
+     * mmap a file descriptor into the process's address space.
+     * Returns the result address as a {@code MemorySegment} of unspecified
+     * size (caller is expected to {@code .reinterpret(size, ...)}). On error
+     * the segment is {@code MAP_FAILED} (address = -1) and the errno field
+     * of the {@code ResultAndErr} explains why.
+     */
+    public static ResultAndErr<MemorySegment> mmap(MemorySegment addr, long length, int prot, int flags, int fd, long offset) {
+        return MMAP_HANDLE.call(addr, length, prot, flags, fd, offset);
+    }
+
+    /** munmap a previously mapped region. */
+    public static ResultAndErr<Integer> munmap(MemorySegment addr, long length) {
+        return MUNMAP_HANDLE.call(addr, length);
+    }
 }

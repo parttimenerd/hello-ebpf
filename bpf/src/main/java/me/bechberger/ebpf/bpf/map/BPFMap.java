@@ -47,7 +47,8 @@ public class BPFMap {
     /**
      * Information on a specific map
      */
-    public record MapInfo(FileDescriptor fd, MapTypeId type, int keySize, int valueSize, int maxEntries, int mapFlags) {
+    public record MapInfo(FileDescriptor fd, MapTypeId type, int keySize, int valueSize, int maxEntries, int mapFlags,
+                          long mapExtra) {
     }
 
     private static MemorySegment obtainRawInfo(Arena arena, FileDescriptor fd) {
@@ -72,7 +73,7 @@ public class BPFMap {
             var info = obtainRawInfo(arena, fd);
             return new MapInfo(fd, MapTypeId.fromId(bpf_map_info.type(info)), bpf_map_info.key_size(info),
                     bpf_map_info.value_size(info), bpf_map_info.max_entries(info),
-                    bpf_map_info.map_flags(info));
+                    bpf_map_info.map_flags(info), bpf_map_info.map_extra(info));
         }
     }
 
