@@ -33,7 +33,13 @@ public class MapForEachTypedCtxTest {
         @BPFMapDefinition(maxEntries = 16)
         BPFHashMap<Integer, Integer> map;
 
-        final GlobalVariable<State> state = new GlobalVariable<>(new State());
+        // Results live in globals so user-space can read them. The intermediate
+        // `State` that flows through bpf_for_each_map_elem's ctx must be a *stack*
+        // pointer (the kernel's verifier rejects map_value pointers as ctx), so
+        // we allocate it locally inside the kprobe and copy results back into
+        // globals at the end.
+        final GlobalVariable<Integer> count = new GlobalVariable<>(0);
+        final GlobalVariable<Integer> sum = new GlobalVariable<>(0);
         final GlobalVariable<Boolean> done = new GlobalVariable<>(false);
 
         @Kprobe("do_sys_openat2")
@@ -45,14 +51,18 @@ public class MapForEachTypedCtxTest {
             map.put(1, 10);
             map.put(2, 20);
             map.put(3, 30);
-            Ptr<State> stPtr = Ptr.of(state.get());
-            // Typed-ctx: lambda body receives `st` already cast to Ptr<State>,
+            State st = new State();
+            st.count = 0;
+            st.sum = 0;
+            // Typed-ctx: lambda body receives `s` already cast to Ptr<State>,
             // so we can write to fields without extra casts.
-            map.<Ptr<State>>forEach((k, v, st) -> {
-                st.val().count = st.val().count + 1;
-                st.val().sum = st.val().sum + v;
+            map.<Ptr<State>>forEach((k, v, s) -> {
+                s.val().count = s.val().count + 1;
+                s.val().sum = s.val().sum + v;
                 return 0;
-            }, stPtr);
+            }, Ptr.of(st));
+            count.set(st.count);
+            sum.set(st.sum);
             return 0;
         }
     }
@@ -68,8 +78,8 @@ public class MapForEachTypedCtxTest {
                 try { Thread.sleep(10); } catch (InterruptedException ignored) {}
             }
             assertTrue(program.done.get(), "kprobe never fired");
-            assertEquals(3, program.state.get().count, "forEach should visit all 3 entries");
-            assertEquals(60, program.state.get().sum, "forEach should sum 10+20+30=60");
+            assertEquals(3, program.count.get().intValue(), "forEach should visit all 3 entries");
+            assertEquals(60, program.sum.get().intValue(), "forEach should sum 10+20+30=60");
         }
     }
 }
