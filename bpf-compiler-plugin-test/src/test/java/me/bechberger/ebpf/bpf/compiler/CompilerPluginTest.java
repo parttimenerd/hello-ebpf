@@ -13,6 +13,7 @@ import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.bpf.map.BPFProgArray;
 import me.bechberger.ebpf.bpf.map.BPFArena;
+import me.bechberger.ebpf.bpf.map.BPFTypedArena;
 import me.bechberger.ebpf.runtime.MmConstants;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
@@ -2398,5 +2399,135 @@ public class CompilerPluginTest {
                 "castKern must lower to explicit __arena cast:\n" + code);
         assertTrue(code.contains("(void *)(k)"),
                 "castUser must lower to explicit (void*) cast:\n" + code);
+    }
+
+    // -------------------------------------------------------------------------
+    // Phase F.5 — ArenaAccessCheckPass
+    //
+    // The pass emits warnings (not errors) so a heuristic miss never breaks a
+    // build. Verifying the warning text reliably needs an out-of-process javac
+    // run; here we keep a smaller surface — programs still compile, generated
+    // C still contains the (presumably-bad) raw conversion or the (good) cast.
+    // -------------------------------------------------------------------------
+
+    /** Bad-shape program: arena pointer's {@code asLong()} dropped to a long
+     *  without going through {@code BPFJ.castUser}. Plugin should warn but
+     *  still compile. */
+    @BPF
+    public static abstract class ArenaLeakRaw extends BPFProgram {
+        @BPFMapDefinition(maxEntries = 4)
+        BPFArena arena;
+
+        @Type
+        record Node(long value) {}
+
+        @BPFFunction
+        public long leak() {
+            @me.bechberger.ebpf.annotations.InArena Ptr<Node> p =
+                    BPFJ.bpfArenaAllocPages(arena, null, 1, MmConstants.NUMA_NO_NODE, 0L);
+            long raw = p.asLong(); // intentional: drops __arena tag
+            return raw;
+        }
+    }
+
+    @Test
+    public void testArenaAccessCheckStillCompiles() {
+        // Pass warns, doesn't block. Code still emitted.
+        String code = BPFProgram.getCode(ArenaLeakRaw.class);
+        assertTrue(code.contains("bpf_arena_alloc_pages"),
+                "alloc call should still appear (pass warns, doesn't block):\n" + code);
+    }
+
+    /** Good-shape program: explicit {@code BPFJ.castUser} bridge before the
+     *  raw integer use. Pass should not flag, code emits the explicit cast. */
+    @BPF
+    public static abstract class ArenaLeakCleanCast extends BPFProgram {
+        @BPFMapDefinition(maxEntries = 4)
+        BPFArena arena;
+
+        @Type
+        record Node(long value) {}
+
+        @BPFFunction
+        public long bridged() {
+            @me.bechberger.ebpf.annotations.InArena Ptr<Node> p =
+                    BPFJ.bpfArenaAllocPages(arena, null, 1, MmConstants.NUMA_NO_NODE, 0L);
+            Ptr<Node> u = BPFJ.castUser(p);
+            return u.asLong();
+        }
+    }
+
+    @Test
+    public void testArenaAccessCheckCleanCastOk() {
+        String code = BPFProgram.getCode(ArenaLeakCleanCast.class);
+        assertTrue(code.contains("(void *)"),
+                "castUser must still lower to explicit (void*) cast:\n" + code);
+    }
+
+    // -------------------------------------------------------------------------
+    // Phase F-bis.3 — ArenaAccessCheckPass seeds from class fields
+    // -------------------------------------------------------------------------
+
+    /** A class-level {@code @InArena} field referenced in a method via
+     *  {@code this.head.asLong()} should trigger the leak warning.
+     *  The program still compiles; we verify generated C still contains
+     *  the allocation call (warning doesn't block). */
+    @BPF
+    public static abstract class ArenaFieldLeak extends BPFProgram {
+        @BPFMapDefinition(maxEntries = 4)
+        BPFArena arena;
+
+        @Type
+        record Node(long value) {}
+
+        @me.bechberger.ebpf.annotations.InArena me.bechberger.ebpf.type.Ptr<Node> head;
+
+        @BPFFunction
+        public long leakField() {
+            this.head = BPFJ.bpfArenaAllocPages(arena, null, 1, MmConstants.NUMA_NO_NODE, 0L);
+            return this.head.asLong();   // intentional: drops __arena tag via asLong()
+        }
+    }
+
+    /** T3 — class-field {@code @InArena} seeds the pass; {@code this.head.asLong()} compiles
+     *  (warning, not error) and the generated C still contains the alloc. */
+    @Test
+    public void testArenaAccessCheckClassFieldSeeding() {
+        // Pass should warn but not block: code is still emitted.
+        String code = BPFProgram.getCode(ArenaFieldLeak.class);
+        assertTrue(code.contains("bpf_arena_alloc_pages"),
+                "alloc call should still appear (class-field seeding warns, doesn't block):\n" + code);
+    }
+
+    // -------------------------------------------------------------------------
+    // Phase F-bis.4 — BPFTypedArena<T> compiles and produces valid C map definition
+    // -------------------------------------------------------------------------
+
+    @BPF
+    public static abstract class TypedArenaProgram extends BPFProgram {
+        @Type
+        record Item(int id, long value) {}
+
+        @BPFMapDefinition(maxEntries = 8)
+        BPFTypedArena<Item> arena;
+
+        @Kprobe("do_sys_openat2")
+        public int onOpen(me.bechberger.ebpf.type.Ptr<me.bechberger.ebpf.runtime.PtDefinitions.pt_regs> ctx) {
+            return 0;
+        }
+    }
+
+    /** F-bis.4 — {@code BPFTypedArena<Item>} map definition compiles and the
+     *  generated C contains {@code BPF_MAP_TYPE_ARENA} with a page-ceiled
+     *  {@code max_entries} expression using {@code sizeof(struct Item)}. */
+    @Test
+    public void testTypedArenaMapDefinitionInGeneratedC() {
+        String code = BPFProgram.getCode(TypedArenaProgram.class);
+        assertTrue(code.contains("BPF_MAP_TYPE_ARENA"),
+                "typed arena must emit BPF_MAP_TYPE_ARENA:\n" + code);
+        assertTrue(code.contains("sizeof"),
+                "typed arena max_entries must reference sizeof to scale pages:\n" + code);
+        assertTrue(code.contains("BPF_F_MMAPABLE"),
+                "typed arena must set BPF_F_MMAPABLE flag:\n" + code);
     }
 }

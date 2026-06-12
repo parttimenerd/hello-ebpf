@@ -405,6 +405,10 @@ class Translator {
                 if (element == null) {
                     yield defaultReturn;
                 }
+                // 'this' and 'super' are not class members; treat them as verbatim C identifiers
+                if (identifierTree.getName().contentEquals("this") || identifierTree.getName().contentEquals("super")) {
+                    yield defaultReturn;
+                }
                 if (!(element.getEnclosingElement() instanceof ClassSymbol classElement)) {
                     yield defaultReturn;
                 }
@@ -510,10 +514,17 @@ class Translator {
             case MethodInvocationTree methodInvocationTree -> translate(methodInvocationTree);
             case MemberSelectTree memberSelectTree -> {
                 var member = memberSelectTree.getIdentifier().toString();
-                if (memberSelectTree.getExpression() instanceof JCIdent ident) {
-                    var t = compilerPlugin.trees.getElement(methodPath.path(ident)).asType();
+                // 'this.field' — BPF class fields are C globals; treat as bare field name
+                if (memberSelectTree.getExpression() instanceof JCIdent ident
+                        && ident.getName().contentEquals("this")) {
+                    yield variable(member);
+                }
+                if (memberSelectTree.getExpression() instanceof JCIdent identExpr
+                        && !identExpr.getName().contentEquals("this")
+                        && !identExpr.getName().contentEquals("super")) {
+                    var t = compilerPlugin.trees.getElement(methodPath.path(identExpr)).asType();
                     if (t != null) {
-                        var element = compilerPlugin.trees.getElement(methodPath.path(ident));
+                        var element = compilerPlugin.trees.getElement(methodPath.path(identExpr));
                         if (element instanceof TypeElement) {
                             var kind = typeKind(element);
                             if (kind != DataTypeKind.ENUM) {

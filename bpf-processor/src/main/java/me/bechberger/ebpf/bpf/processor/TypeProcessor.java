@@ -283,6 +283,8 @@ public class TypeProcessor {
                 actualType.toCDeclarationStatement().ifPresent(definingStatements::add);
             }
         }
+        // Emit C global-variable declarations for @InArena class fields.
+        processInArenaFields(outerTypeElement, definingStatements);
         var additions = getInterfaceAdditions(outerTypeElement.asType());
         if (additions == null) {
             return null;
@@ -293,6 +295,59 @@ public class TypeProcessor {
                 additions);
     }
 
+    private static final String IN_ARENA_ANNOTATION = "me.bechberger.ebpf.annotations.InArena";
+    private static final String PTR_CLASS = "me.bechberger.ebpf.type.Ptr";
+
+    /**
+     * Scans {@code outerTypeElement}'s fields for {@code @InArena Ptr<T>} declarations
+     * and appends a {@code __arena T *fieldName;} C global-variable statement for each.
+     *
+     * <p>These globals must appear after the struct/type declarations (which the caller
+     * has already added) so clang can resolve the pointed-to type.
+     */
+    private void processInArenaFields(TypeElement outerTypeElement, List<CAST.Statement> definingStatements) {
+        for (var enclosed : outerTypeElement.getEnclosedElements()) {
+            if (enclosed.getKind() != ElementKind.FIELD) continue;
+            var field = (VariableElement) enclosed;
+            // Check @InArena annotation (SOURCE retention — visible to processors)
+            if (!hasAnnotation(field, IN_ARENA_ANNOTATION)) continue;
+            var fieldType = field.asType();
+            if (!(fieldType instanceof DeclaredType declaredType)) continue;
+            // Must be Ptr<T>
+            var erasure = processingEnv.getTypeUtils().erasure(fieldType);
+            if (!erasure.toString().equals(PTR_CLASS)) continue;
+            var typeArgs = declaredType.getTypeArguments();
+            if (typeArgs.isEmpty()) continue;
+            var pointedTo = typeArgs.get(0);
+            // Resolve the pointed-to type's BPF/C name
+            String cTypeName = resolveCNameForArenaPointee(pointedTo);
+            if (cTypeName == null) {
+                processingEnv.getMessager().printWarning(
+                        "@InArena field '" + field.getSimpleName() + "': could not resolve C type for "
+                                + pointedTo + "; skipping global declaration", field);
+                continue;
+            }
+            var fieldName = field.getSimpleName().toString();
+            definingStatements.add(CAST.Statement.verbatim("__arena " + cTypeName + " *" + fieldName + ";"));
+        }
+    }
+
+    /**
+     * Given the {@code TypeMirror} of the pointee type in an {@code @InArena Ptr<T>}
+     * field, returns the C type name (the BPF struct name), or {@code null} if unknown.
+     */
+    private @Nullable String resolveCNameForArenaPointee(TypeMirror pointedTo) {
+        if (!(pointedTo instanceof DeclaredType declaredPointee)) return null;
+        var element = (TypeElement) declaredPointee.asElement();
+        var javaName = new JavaName(element);
+        var found = alreadyDefinedTypes.get(javaName);
+        if (found != null) {
+            return found.getBPFNameWithStructPrefixIfNeeded();
+        }
+        // Fall back to simple name (covers @Type records whose name equals simpleClass name)
+        return element.getSimpleName().toString();
+    }
+
     public record GlobalVariableDefinition(Statement globalVariable, String name, String typeField, String initializer) {}
 
     private List<GlobalVariableDefinition> createGlobalVariableDefinitions(TypeElement outerTypeElement, Function<BPFTypeLike<?>, SpecFieldName> typeToSpecField) {
@@ -300,6 +355,7 @@ public class TypeProcessor {
                 .filter(e -> typeUtils.hasClassIgnoringTypeParameters(e, "me.bechberger.ebpf.bpf.GlobalVariable"))
                 .map(e -> processGlobalVariable(e, typeToSpecField)).filter(Objects::nonNull).toList();
     }
+
 
     private @Nullable GlobalVariableDefinition processGlobalVariable(VariableElement field, Function<BPFTypeLike<?>, SpecFieldName> typeToSpecField) {
         // check that the field is final

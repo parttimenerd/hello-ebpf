@@ -458,6 +458,7 @@ public class CompilerPlugin implements Plugin {
         new NullabilityAnalyzer(this, methodPath).analyze();
         new BoundsCheckPass(this, methodPath).analyze();
         new HelperContextPass(this, methodPath).analyze();
+        new ArenaAccessCheckPass(this, methodPath).analyze();
         var translator = new Translator(this, methodPath);
         return callIfNonNull(translator.translate(), decl -> {
             var requiredDefines = translator.getRequiredDefines();
