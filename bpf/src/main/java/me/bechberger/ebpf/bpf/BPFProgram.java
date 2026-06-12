@@ -656,7 +656,7 @@ public abstract class BPFProgram implements AutoCloseable {
         int fd = Lib.bpf_program__fd(prog.prog());
         int flags = NetworkUtil.XDP_FLAGS_UPDATE_IF_NOEXIST;
         int err = Lib.bpf_xdp_attach(ifindex, fd, flags, MemorySegment.NULL);
-        if (err > 0) {
+        if (err != 0) {
             throw new BPFAttachError(prog.name, err);
         }
         attachedXDPIfIndexes.add(new AttachedXDPIfIndex(ifindex, flags));
@@ -681,11 +681,11 @@ public abstract class BPFProgram implements AutoCloseable {
             hook = allocateTCHookObject(arena, tcIfIndex);
             MemorySegment opts = allocateTCOptsObject(arena, tcIfIndex);
             int err = Lib.bpf_tc_hook_create(hook);
-            if (err > 0) {
+            if (err != 0) {
                 throw new BPFAttachError(prog.name, err);
             }
             err = Lib.bpf_tc_attach(hook, opts);
-            if (err > 0) {
+            if (err != 0) {
                 throw new BPFAttachError(prog.name, err);
             }
             attachedTCIfIndices.add(tcIfIndex);
@@ -779,7 +779,7 @@ public abstract class BPFProgram implements AutoCloseable {
             /*bpf_tc_opts.prog_fd(opts, 0);
             bpf_tc_opts.prog_id(opts, 0);*/
             int err = Lib.bpf_tc_detach(hook, opts);
-            if (err > 0) {
+            if (err != 0) {
                 throw new BPFError("Detaching " + tcIfIndex.handle.name, err);
             }
         }
