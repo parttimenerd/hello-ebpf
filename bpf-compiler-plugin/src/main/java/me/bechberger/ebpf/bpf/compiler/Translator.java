@@ -1496,8 +1496,22 @@ class Translator {
         var rootExpr = translate(rootTree);
         if (rootExpr == null) return null;
 
-        var sb = new StringBuilder("BPF_CORE_READ(");
-        sb.append(rootExpr.toPrettyString());
+        var sb = new StringBuilder();
+        // BPF_CORE_READ wraps the source expression in
+        // __builtin_preserve_access_index, which records a CO-RE relocation
+        // for *every* field access inside it. If the root is a non-trivial
+        // expression like `userStruct.kernelPtr`, the user-side
+        // `userStruct.kernelPtr` access generates a bogus relocation against
+        // the user struct (whose BTF doesn't exist in vmlinux). To prevent
+        // that, bind the root to a local first using a statement-expression,
+        // then call BPF_CORE_READ with the bare local.
+        boolean rootIsTrivial = rootTree instanceof IdentifierTree;
+        if (!rootIsTrivial) {
+            sb.append("({ typeof(").append(rootExpr.toPrettyString()).append(") __core_root = ")
+                    .append(rootExpr.toPrettyString()).append("; BPF_CORE_READ(__core_root");
+        } else {
+            sb.append("BPF_CORE_READ(").append(rootExpr.toPrettyString());
+        }
         for (List<String> seg : segments) {
             sb.append(", ");
             for (int i = 0; i < seg.size(); i++) {
@@ -1505,7 +1519,11 @@ class Translator {
                 sb.append(seg.get(i));
             }
         }
-        sb.append(")");
+        if (!rootIsTrivial) {
+            sb.append("); })");
+        } else {
+            sb.append(")");
+        }
         return CAST.Expression.verbatim(sb.toString());
     }
 

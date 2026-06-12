@@ -383,6 +383,13 @@ public class BPFJ {
      * gate access to fields that came or went between kernel versions —
      * the verifier dead-code-eliminates the false branch when the field is
      * known absent.
+     * <p>
+     * <b>The field name must be a valid C identifier of {@code T} at
+     * compile time</b> — i.e. {@code T} must have that field in the BTF
+     * the program is compiled against. This is a CO-RE macro, not a free
+     * runtime string lookup: clang refuses to compile if the field doesn't
+     * resolve. Use it to gate access to fields that exist in *your* compile
+     * kernel but may be absent on older targets.
      * <pre>{@code
      *   if (BPFJ.<task_struct>coreFieldExists("__state")) {
      *       // path that reads the new field name (≥5.14)
