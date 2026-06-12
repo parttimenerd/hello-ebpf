@@ -1416,8 +1416,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class ConstantFoldFalse extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @BuiltinBPFFunction("illegal_helper()")
         @NotUsableInJava
         public void illegalHelper() {
@@ -1445,8 +1443,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class ConstantFoldTrue extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @BPFFunction
         public int test(int x) {
             if (true) {
@@ -1469,8 +1465,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class ConstantFoldStaticField extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         static final boolean FEATURE_ENABLED = false;
 
         @BuiltinBPFFunction("unused_helper()")
@@ -1507,8 +1501,6 @@ public class CompilerPluginTest {
      *  Existence test only — no in-process diagnostic capture. */
     @BPF
     public static abstract class HelperContextXDPViolation extends BPFProgram implements XDPHook {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @Override
         public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
             // bpf_get_current_task is illegal in XDP — verifier rejects at load time.
@@ -1643,8 +1635,6 @@ public class CompilerPluginTest {
      *  this proves the allowed-set is honoured.) */
     @BPF
     public static abstract class HelperContextKprobeAllowed extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @BPFFunction(section = "kprobe/do_sys_openat2")
         public int onOpen() {
             long task = BPFHelpers.bpf_get_current_task();
@@ -1663,8 +1653,6 @@ public class CompilerPluginTest {
      *  flagged. {@code bpf_ktime_get_ns} is universally available and is not tracked. */
     @BPF
     public static abstract class HelperContextUntracked extends BPFProgram implements XDPHook {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @Override
         public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
             long now = BPFHelpers.bpf_ktime_get_ns();
@@ -1684,8 +1672,6 @@ public class CompilerPluginTest {
      *  doesn't strip anything and that the program is a valid XDP probe.) */
     @BPF
     public static abstract class BoundsCheckGuarded extends BPFProgram implements XDPHook {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @Override
         public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
             Ptr<?> data = Ptr.voidPointer(ctx.val().data);
@@ -1710,8 +1696,6 @@ public class CompilerPluginTest {
      *  is not gated on the inner condition. */
     @BPF
     public static abstract class ConstantFoldNested extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         static final boolean OUTER = false;
 
         @BuiltinBPFFunction("nested_illegal_helper()")
@@ -1749,8 +1733,6 @@ public class CompilerPluginTest {
      *  kernel's BTF at load time. */
     @BPF
     public static abstract class CoreSingleField extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @BPFFunction
         public int readState(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> p) {
             return p.val().__state;
@@ -1770,8 +1752,6 @@ public class CompilerPluginTest {
      *  Their layout is fixed at compile time. */
     @BPF
     public static abstract class CoreUserType extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @Type
         record Foo(int x) {}
 
@@ -1794,8 +1774,6 @@ public class CompilerPluginTest {
      *  (bounds-check pass requires the wrapping). */
     @BPF
     public static abstract class CoreXdpData extends BPFProgram implements XDPHook {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @Override
         public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
             Ptr<?> data = Ptr.voidPointer(ctx.val().data);
@@ -2212,8 +2190,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class CoreThreeLevelEmbedded extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @BPFFunction
         public long readThreadInfoFlags(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> task) {
             return task.val().thread_info.flags;
@@ -2237,8 +2213,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class CoreChainThroughKernelPtr extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @BPFFunction
         public int readParentPid(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> task) {
             return task.val().real_parent.val().pid;
@@ -2269,8 +2243,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class CoreMixedUserHoldingKernelPtr extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @Type
         record Holder(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> taskField) {}
 
@@ -2333,8 +2305,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class CoreTwoMethods extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @BPFFunction
         public int a(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> p) {
             return p.val().pid;
@@ -2468,8 +2438,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class ArenaParam extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @Type
         record Node(long value) {}
 
@@ -2492,8 +2460,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class ArenaLocal extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @Type
         record Node(long value) {}
 
@@ -2515,8 +2481,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class ArenaPlainAccess extends BPFProgram {
-        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
-
         @Type
         record Node(long value) {}
 
