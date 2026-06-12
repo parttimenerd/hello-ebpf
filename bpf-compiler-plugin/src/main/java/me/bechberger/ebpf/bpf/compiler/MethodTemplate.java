@@ -279,6 +279,39 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
             }
         }
 
+        /** {@code $typeof$argN} — emits {@code __typeof__(argN)}, useful for type-inference in GNU statement exprs. */
+        record TypeofArg(int n) implements TemplatePart {
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                if (n >= props.args.arguments.size()) {
+                    throw new TemplateRenderException("Argument " + (n + 1) + " not given for $typeof$arg" + (n + 1));
+                }
+                return "__typeof__(" + props.args.arguments.get(n).toPrettyString() + ")";
+            }
+        }
+
+        /** {@code $sizeof$argN} — emits {@code sizeof(argN)}. */
+        record SizeofArg(int n) implements TemplatePart {
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                if (n >= props.args.arguments.size()) {
+                    throw new TemplateRenderException("Argument " + (n + 1) + " not given for $sizeof$arg" + (n + 1));
+                }
+                return "sizeof(" + props.args.arguments.get(n).toPrettyString() + ")";
+            }
+        }
+
+        /** {@code $deref$argN} — emits {@code *(argN)} (pointer dereference). */
+        record DerefArg(int n) implements TemplatePart {
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                if (n >= props.args.arguments.size()) {
+                    throw new TemplateRenderException("Argument " + (n + 1) + " not given for $deref$arg" + (n + 1));
+                }
+                return "*(" + props.args.arguments.get(n).toPrettyString() + ")";
+            }
+        }
+
         private static Lambda getLambdaParam(CallProps props, int n, String text) {
             if (n >= props.args.arguments.size()) {
                 throw new TemplateRenderException("Argument " + (n + 1) + " not given for " + text);
@@ -378,6 +411,9 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
             boolean hadStrLenBefore = false;
             boolean hadStrBefore = false;
             boolean hadPointeryBefore = false;
+            boolean hadTypeofBefore = false;
+            boolean hadSizeofBefore = false;
+            boolean hadDerefBefore = false;
             if (part.startsWith("strlen")) {
                 if (part.equals("strlen")) {
                     hadStrLenBefore = true;
@@ -392,6 +428,18 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                 }
             } else if (part.equals("pointery")) {
                 hadPointeryBefore = true;
+                i++;
+                part = parts[i];
+            } else if (part.equals("typeof")) {
+                hadTypeofBefore = true;
+                i++;
+                part = parts[i];
+            } else if (part.equals("sizeof")) {
+                hadSizeofBefore = true;
+                i++;
+                part = parts[i];
+            } else if (part.equals("deref")) {
+                hadDerefBefore = true;
                 i++;
                 part = parts[i];
             } else if (part.startsWith("func") && !part.startsWith("func_")
@@ -543,6 +591,12 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                                 } else {
                                     templateParts.add(new PointeryArg(num));
                                 }
+                            } else if (hadTypeofBefore) {
+                                templateParts.add(new TypeofArg(num));
+                            } else if (hadSizeofBefore) {
+                                templateParts.add(new SizeofArg(num));
+                            } else if (hadDerefBefore) {
+                                templateParts.add(new DerefArg(num));
                             } else {
                                 templateParts.add(new Arg(num));
                             }
@@ -571,6 +625,15 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
             }
             if (hadStrBefore && !(templateParts.getLast() instanceof StrArg)) {
                 throw new TemplateRenderException("str can only be used with a $argN argument");
+            }
+            if (hadTypeofBefore && !(templateParts.getLast() instanceof TypeofArg)) {
+                throw new TemplateRenderException("typeof can only be used with a $argN argument");
+            }
+            if (hadSizeofBefore && !(templateParts.getLast() instanceof SizeofArg)) {
+                throw new TemplateRenderException("sizeof can only be used with a $argN argument");
+            }
+            if (hadDerefBefore && !(templateParts.getLast() instanceof DerefArg)) {
+                throw new TemplateRenderException("deref can only be used with a $argN argument");
             }
             if (!part.isEmpty()) {
                 templateParts.add(new Verbatim(part));

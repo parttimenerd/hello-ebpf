@@ -127,8 +127,35 @@ public class MethodTemplateCache {
         return AUTO_BOXING.containsKey(className) && AUTO_BOXING.get(className).containsKey(methodName);
     }
 
+    /**
+     * Look for {@link BuiltinBPFFunction} on the method itself or on the nearest superclass/interface
+     * method it overrides, walking up the class hierarchy.
+     */
+    private @Nullable BuiltinBPFFunction getBuiltinBPFFunctionAnnotation(MethodSymbol symbol) {
+        var direct = symbol.getAnnotation(BuiltinBPFFunction.class);
+        if (direct != null) return direct;
+        // Walk superclass chain to find an overridden method with @BuiltinBPFFunction
+        if (symbol.getEnclosingElement() instanceof ClassSymbol enclosing) {
+            com.sun.tools.javac.code.Type superType = enclosing.getSuperclass();
+            while (superType != null && superType.tsym instanceof ClassSymbol superClass) {
+                for (var member : superClass.getEnclosedElements()) {
+                    if (member instanceof MethodSymbol superMethod
+                            && superMethod.getSimpleName().equals(symbol.getSimpleName())
+                            && compilerPlugin.types.isSubSignature(
+                                    (com.sun.tools.javac.code.Type) symbol.asType(),
+                                    (com.sun.tools.javac.code.Type) superMethod.asType())) {
+                        var ann = superMethod.getAnnotation(BuiltinBPFFunction.class);
+                        if (ann != null) return ann;
+                    }
+                }
+                superType = superClass.getSuperclass();
+            }
+        }
+        return null;
+    }
+
     private MethodTemplate create(TypedTreePath<?> path, Tree invocation, MethodSymbol symbol) {
-        var ann = symbol.getAnnotation(BuiltinBPFFunction.class);
+        var ann = getBuiltinBPFFunctionAnnotation(symbol);
         var ann2 = compilerPlugin.getAnnotationOfMethodOrSuper(symbol, BPFFunction.class);
         if (ann == null && ann2 == null) {
             // does it have a BPFFunctionAlternative annotation?

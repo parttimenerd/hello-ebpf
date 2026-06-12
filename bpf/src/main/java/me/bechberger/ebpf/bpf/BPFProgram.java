@@ -334,7 +334,9 @@ public abstract class BPFProgram implements AutoCloseable {
                 me.bechberger.ebpf.annotations.bpf.Fentry.class,
                 me.bechberger.ebpf.annotations.bpf.Fexit.class,
                 me.bechberger.ebpf.annotations.bpf.RawTracepoint.class,
-                me.bechberger.ebpf.annotations.bpf.Ksyscall.class)) {
+                me.bechberger.ebpf.annotations.bpf.Ksyscall.class,
+                me.bechberger.ebpf.annotations.bpf.Uprobe.class,
+                me.bechberger.ebpf.annotations.bpf.Uretprobe.class)) {
             var ann = findParentAnnotation(programClass, method, annClass);
             if (ann != null) {
                 return method.getName();

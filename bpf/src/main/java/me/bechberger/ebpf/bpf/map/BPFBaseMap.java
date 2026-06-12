@@ -414,4 +414,30 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
     public void increment(K key) {
         increment(key, 1L);
     }
+
+    /**
+     * BPF-side: atomically add {@code delta} to the value at {@code key} if present.
+     *
+     * <p>Lowers to: look up key via {@code bpf_map_lookup_elem}, then
+     * {@code __sync_fetch_and_add} on the value pointer if non-null.
+     * If the key is absent nothing happens. Safe under concurrent BPF runs.
+     *
+     * <p>Requires a numeric value type (int, long, etc.).
+     */
+    @BuiltinBPFFunction("({ __typeof__($arg2) *___v = bpf_map_lookup_elem(&$this, $pointery$arg1); if (___v) __sync_fetch_and_add(___v, $arg2); })")
+    @NotUsableInJava
+    public void bpf_increment(K key, V delta) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * BPF-side: return the value at {@code key}, or {@code defaultValue} if not present.
+     *
+     * <p>Lowers to: {@code bpf_map_lookup_elem} and a ternary dereference.
+     */
+    @BuiltinBPFFunction("({ __typeof__($arg2) *___v = bpf_map_lookup_elem(&$this, $pointery$arg1); ___v ? *___v : $arg2; })")
+    @NotUsableInJava
+    public V bpf_getOrDefault(K key, V defaultValue) {
+        throw new MethodIsBPFRelatedFunction();
+    }
 }

@@ -797,7 +797,7 @@ class Translator {
                         "rewrite using the ternary operator or if-else chains. Expression: " + expression);
                 yield null;
             }
-            case InstanceofTree ignored -> {
+            case InstanceOfTree ignored -> {
                 logError(expression, "Java instanceof checks are not supported in BPF programs. " +
                         "Use explicit type casts or dispatch based on known types instead. " +
                         "Expression: " + expression);

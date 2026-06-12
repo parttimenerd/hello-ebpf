@@ -328,6 +328,22 @@ public class CompilerPlugin implements Plugin {
         var ksyscall = getAnnotationOfMethodOrSuper(method, Ksyscall.class);
         if (ksyscall != null) { section = "ksyscall/" + ksyscall.value(); }
 
+        var uprobe = getAnnotationOfMethodOrSuper(method, Uprobe.class);
+        if (uprobe != null) {
+            var ref = uprobe.symbol().isEmpty()
+                    ? uprobe.path() + ":" + uprobe.offset()
+                    : uprobe.path() + ":" + uprobe.symbol();
+            section = "uprobe/" + ref;
+        }
+
+        var uretprobe = getAnnotationOfMethodOrSuper(method, Uretprobe.class);
+        if (uretprobe != null) {
+            var ref = uretprobe.symbol().isEmpty()
+                    ? uretprobe.path() + ":" + uretprobe.offset()
+                    : uretprobe.path() + ":" + uretprobe.symbol();
+            section = "uretprobe/" + ref;
+        }
+
         if (section == null) return null;
 
         final String finalSection = section;
@@ -456,6 +472,7 @@ public class CompilerPlugin implements Plugin {
 
     private @Nullable FuncDeclStatementResult processBPFFunctionWithCode(TypedTreePath<MethodTree> methodPath) {
         new NullabilityAnalyzer(this, methodPath).analyze();
+        new RegionAnalyzer(this, methodPath).analyze();
         new BoundsCheckPass(this, methodPath).analyze();
         new HelperContextPass(this, methodPath).analyze();
         new ArenaAccessCheckPass(this, methodPath).analyze();

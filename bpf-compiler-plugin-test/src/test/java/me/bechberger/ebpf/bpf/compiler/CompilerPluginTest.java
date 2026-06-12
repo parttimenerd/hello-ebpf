@@ -2576,4 +2576,105 @@ public class CompilerPluginTest {
                 "PREFIX_DECREMENT must not emit x--:\n" + code);
     }
 
+    // -------------------------------------------------------------------------
+    // Phase 3 — RegionAnalyzer: memory-region inference
+    // -------------------------------------------------------------------------
+
+    /** A BPFFunction that dereferences a @BPFUserMemory parameter via map lookup should compile
+     *  (the safe path: using bpf_probe_read_user is not enforced yet, only warned).
+     *  This test just verifies that programs without @BPFUserMemory params compile unaffected. */
+    @BPF
+    public static abstract class RegionNonUserProgram extends BPFProgram {
+        @BPFMapDefinition(maxEntries = 64)
+        BPFHashMap<Integer, Integer> counts;
+
+        @BPFFunction
+        public void increment(int key) {
+            Ptr<Integer> val = counts.bpf_get(key);
+            if (val != null) {
+                val.set(val.val() + 1);
+            }
+        }
+    }
+
+    @Test
+    public void testRegionAnalyzerDoesNotBlockSafeMapLookup() {
+        // If RegionAnalyzer incorrectly tags MAP_VALUE as USER and errors, this would fail.
+        String code = BPFProgram.getCode(RegionNonUserProgram.class);
+        assertTrue(code.contains("bpf_map_lookup_elem"),
+                "map lookup should be present in generated C:\n" + code);
+    }
+
+    // -------------------------------------------------------------------------
+    // Phase 6 — @Uprobe / @Uretprobe section generation
+    // -------------------------------------------------------------------------
+
+    @BPF
+    public static abstract class UprobeProgram extends BPFProgram {
+        @Uprobe(path = "/usr/lib/libc.so.6", symbol = "malloc")
+        int traceMalloc(Ptr<me.bechberger.ebpf.runtime.PtDefinitions.pt_regs> ctx) {
+            return 0;
+        }
+    }
+
+    @BPF
+    public static abstract class UretprobeProgram extends BPFProgram {
+        @Uretprobe(path = "/usr/lib/libc.so.6", symbol = "malloc")
+        int traceMallocRet(Ptr<me.bechberger.ebpf.runtime.PtDefinitions.pt_regs> ctx) {
+            return 0;
+        }
+    }
+
+    @Test
+    public void testUprobeSection() {
+        String code = BPFProgram.getCode(UprobeProgram.class);
+        assertTrue(code.contains("SEC(\"uprobe//usr/lib/libc.so.6:malloc\")"),
+                "@Uprobe must generate uprobe section:\n" + code);
+    }
+
+    @Test
+    public void testUretprobeSection() {
+        String code = BPFProgram.getCode(UretprobeProgram.class);
+        assertTrue(code.contains("SEC(\"uretprobe//usr/lib/libc.so.6:malloc\")"),
+                "@Uretprobe must generate uretprobe section:\n" + code);
+    }
+
+    // -------------------------------------------------------------------------
+    // Phase 6.4 — BPF-side high-level map idioms: bpf_increment, bpf_getOrDefault
+    // -------------------------------------------------------------------------
+
+    @BPF
+    public static abstract class MapIdiomsProgram extends BPFProgram {
+        @BPFMapDefinition(maxEntries = 64)
+        BPFHashMap<Integer, Integer> counters;
+
+        @BPFFunction
+        public void onEvent(int key) {
+            counters.bpf_increment(key, 1);
+        }
+
+        @BPFFunction
+        public int getCount(int key) {
+            return counters.bpf_getOrDefault(key, 0);
+        }
+    }
+
+    @Test
+    public void testBpfIncrementLowering() {
+        String code = BPFProgram.getCode(MapIdiomsProgram.class);
+        assertTrue(code.contains("bpf_map_lookup_elem"),
+                "bpf_increment must use bpf_map_lookup_elem:\n" + code);
+        assertTrue(code.contains("__sync_fetch_and_add"),
+                "bpf_increment must use __sync_fetch_and_add:\n" + code);
+    }
+
+    @Test
+    public void testBpfGetOrDefaultLowering() {
+        String code = BPFProgram.getCode(MapIdiomsProgram.class);
+        assertTrue(code.contains("bpf_map_lookup_elem"),
+                "bpf_getOrDefault must use bpf_map_lookup_elem:\n" + code);
+        assertTrue(code.contains("___v ?"),
+                "bpf_getOrDefault must use ternary:\n" + code);
+    }
+
 }

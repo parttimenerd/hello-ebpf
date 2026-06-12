@@ -3,6 +3,7 @@ package me.bechberger.ebpf.bpf.map;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPFMapClass;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.type.BPFType.BPFIntType;
 
@@ -49,6 +50,7 @@ public class BPFArray<V> extends BPFBaseMap<@Unsigned Integer, V> {
     }
 
     @Override
+    @BuiltinBPFFunction("!bpf_map_update_elem(&$this, $pointery$arg1, $pointery$arg2, BPF_ANY)")
     public boolean put(Integer i, V value) {
         if (i < 0 || i >= size) {
             throw new ArrayIndexOutOfBoundsException("Index " + i +
