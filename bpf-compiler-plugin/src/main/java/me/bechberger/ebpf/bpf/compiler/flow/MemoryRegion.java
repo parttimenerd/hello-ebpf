@@ -3,7 +3,7 @@ package me.bechberger.ebpf.bpf.compiler.flow;
 /**
  * Memory region lattice for tracking pointer provenance in BPF programs.
  *
- * <p>Ordering (bottom → top): {@code UNKNOWN < USER, KERNEL, PACKET, MAP_VALUE, STACK}.
+ * <p>Ordering (bottom → top): {@code UNKNOWN < USER, KERNEL, PACKET, MAP_VALUE, STACK, ARENA}.
  * Mixing regions without an explicit cast is an error.
  *
  * <p>Sources:
@@ -13,6 +13,9 @@ package me.bechberger.ebpf.bpf.compiler.flow;
  *   <li>{@link #PACKET}: xdp_md.data, sk_buff.data — must be bounds-checked before access</li>
  *   <li>{@link #MAP_VALUE}: pointer returned from a BPF map lookup</li>
  *   <li>{@link #STACK}: local variables, struct copies on the BPF stack</li>
+ *   <li>{@link #ARENA}: BPF arena ({@code __arena}, clang AS1) pointers from
+ *       {@link me.bechberger.ebpf.annotations.InArena} fields/params or
+ *       {@code bpf_arena_alloc_pages}</li>
  *   <li>{@link #UNKNOWN}: unresolved / not yet inferred</li>
  * </ul>
  */
@@ -22,6 +25,7 @@ public enum MemoryRegion implements Lattice<MemoryRegion> {
     PACKET,
     MAP_VALUE,
     STACK,
+    ARENA,
     UNKNOWN;
 
     @Override

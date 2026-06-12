@@ -2284,9 +2284,14 @@ public class CompilerPluginTest {
     public void testCoreMixedUserHoldingKernelPtr() {
         String code = BPFProgram.getCode(CoreMixedUserHoldingKernelPtr.class);
         // Crossing from user record to kernel chain: the user-record access
-        // is plain '.', and the kernel chain folds to BPF_CORE_READ.
+        // is plain '.', and the kernel chain folds to BPF_CORE_READ. Because
+        // the chain root `(*(h)).taskField` is a non-trivial expression, the
+        // emitter binds it to a local first via a statement-expression to
+        // avoid leaking the user-record access into __builtin_preserve_access_index.
         assertTrue(code.contains("BPF_CORE_READ((*(h)).taskField, pid)")
-                        || code.contains("BPF_CORE_READ(h->taskField, pid)"),
+                        || code.contains("BPF_CORE_READ(h->taskField, pid)")
+                        || (code.contains("__core_root = (*(h)).taskField")
+                            && code.contains("BPF_CORE_READ(__core_root, pid)")),
                 "kernel chain through user-record field must fold:\n" + code);
     }
 
