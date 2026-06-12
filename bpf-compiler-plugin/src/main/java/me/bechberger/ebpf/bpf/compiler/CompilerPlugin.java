@@ -807,12 +807,15 @@ public class CompilerPlugin implements Plugin {
 
         var newCode = replaceProperties(combineCode(code, syntheticDecls, decls, defines) + "\n\n" + implAnn.after(), properties);
 
-        // Define __arena macro (clang AS1) when the program references it but no
-        // header has supplied the define. Kernel selftests provide this via
-        // bpf_arena_common.h; we inline the same definition so generated programs
-        // compile without an external dependency.
+        // Define __arena (clang AS1 qualifier) when the program references
+        // it but no header has supplied the define. Kernel selftests provide
+        // this via bpf_arena_common.h; we inline the same definition so
+        // generated programs compile without an external dependency.
+        StringBuilder arenaPrelude = new StringBuilder();
         if (newCode.contains("__arena") && !newCode.contains("#define __arena")) {
-            String arenaDefine = "#ifndef __arena\n#define __arena __attribute__((address_space(1)))\n#endif\n";
+            arenaPrelude.append("#ifndef __arena\n#define __arena __attribute__((address_space(1)))\n#endif\n");
+        }
+        if (arenaPrelude.length() > 0) {
             int insertAt = 0;
             String[] lines = newCode.split("\n", -1);
             int offset = 0;
@@ -825,7 +828,7 @@ public class CompilerPlugin implements Plugin {
                     break;
                 }
             }
-            newCode = newCode.substring(0, insertAt) + arenaDefine + newCode.substring(insertAt);
+            newCode = newCode.substring(0, insertAt) + arenaPrelude + newCode.substring(insertAt);
         }
 
         // write the C code in a file close to the source file (controlled by dumpC plugin arg)

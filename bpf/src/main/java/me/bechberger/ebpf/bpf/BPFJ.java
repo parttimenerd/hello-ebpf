@@ -3,6 +3,7 @@ package me.bechberger.ebpf.bpf;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
+import me.bechberger.ebpf.bpf.map.BPFArena;
 import me.bechberger.ebpf.runtime.helpers.BPFHelpers;
 import me.bechberger.ebpf.type.Ptr;
 
@@ -403,6 +404,58 @@ public class BPFJ {
     @BuiltinBPFFunction("bpf_core_field_exists((($T1*)0)->$str$arg1)")
     @NotUsableInJava
     public static <T> boolean coreFieldExists(String fieldName) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Allocate {@code pageCount} contiguous pages from {@code arena}.
+     * Lowers to the {@code bpf_arena_alloc_pages} kfunc. Returns an arena
+     * pointer (clang AS1) — the caller should annotate the receiving variable
+     * with {@code @InArena} so the Translator emits the {@code __arena}
+     * qualifier on the declaration.
+     * <p>
+     * Pass {@link me.bechberger.ebpf.runtime.MmConstants#NUMA_NO_NODE} for
+     * {@code nodeId} when no NUMA preference is needed. {@code addrHint} is
+     * usually {@code null}; pass a non-null pointer only to request a
+     * specific arena offset.
+     */
+    @BuiltinBPFFunction("bpf_arena_alloc_pages(&$arg1, $arg2, $arg3, $arg4, $arg5)")
+    @NotUsableInJava
+    public static <T> Ptr<T> bpfArenaAllocPages(BPFArena arena, Ptr<T> addrHint,
+                                                int pageCount, int nodeId, long flags) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Free {@code pageCount} pages starting at {@code ptr} back to {@code arena}.
+     * Lowers to the {@code bpf_arena_free_pages} kfunc.
+     */
+    @BuiltinBPFFunction("bpf_arena_free_pages(&$arg1, $arg2, $arg3)")
+    @NotUsableInJava
+    public static <T> void bpfArenaFreePages(BPFArena arena, Ptr<T> ptr, int pageCount) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Cast a user-space (AS0) pointer to a kernel-space (AS1, {@code __arena})
+     * pointer. With {@code __BPF_FEATURE_ADDR_SPACE_CAST} (clang 17+, kernel
+     * ≥6.17) this is normally implicit; expose it here for the rare cases
+     * where the compiler can't infer the cast (e.g. round-tripping through
+     * {@code u64}).
+     */
+    @BuiltinBPFFunction("((__arena typeof(*($arg1)) *)($arg1))")
+    @NotUsableInJava
+    public static <T> Ptr<T> castKern(Ptr<T> p) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Cast a kernel-space ({@code __arena}, AS1) pointer to a user-space
+     * (AS0) pointer. See {@link #castKern} for when this is needed.
+     */
+    @BuiltinBPFFunction("((void *)($arg1))")
+    @NotUsableInJava
+    public static <T> Ptr<T> castUser(Ptr<T> p) {
         throw new MethodIsBPFRelatedFunction();
     }
 }

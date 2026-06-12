@@ -991,8 +991,9 @@ class Translator {
                     && actualClass.asElement().getQualifiedName().contentEquals(Ptr.class.getName())) {
                 return arg; // already a Ptr, pass through
             }
-            if (actual.getKind() == TypeKind.ARRAY || actual.getKind() == TypeKind.VOID) {
-                return arg; // arrays and void don't need auto-ref
+            if (actual.getKind() == TypeKind.ARRAY || actual.getKind() == TypeKind.VOID
+                    || actual.getKind() == TypeKind.NULL) {
+                return arg; // arrays, void, and null don't need auto-ref
             }
             if (arg instanceof Argument.Value val) {
                 return new Argument.Value(new OperatorExpression(Operator.ADDRESS_OF, val.expression()));

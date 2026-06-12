@@ -12,6 +12,8 @@ import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.bpf.map.BPFProgArray;
+import me.bechberger.ebpf.bpf.map.BPFArena;
+import me.bechberger.ebpf.runtime.MmConstants;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
 import me.bechberger.ebpf.bpf.XDPHook;
@@ -2342,5 +2344,59 @@ public class CompilerPluginTest {
                 "user @Type record on arena ptr must not emit BPF_CORE_READ:\n" + code);
         assertTrue(code.contains("p->value") || code.contains("(*(p)).value"),
                 "user @Type record field access on arena ptr must use plain ->:\n" + code);
+    }
+
+    // ---------------------------------------------------------------------
+    // Phase F.4 — BPFJ allocation/cast helpers
+    // ---------------------------------------------------------------------
+
+    @BPF
+    public static abstract class ArenaAlloc extends BPFProgram {
+        @BPFMapDefinition(maxEntries = 4)
+        BPFArena arena;
+
+        @Type
+        record Node(long value) {}
+
+        @BPFFunction
+        public long alloc() {
+            @me.bechberger.ebpf.annotations.InArena Ptr<Node> p =
+                    BPFJ.bpfArenaAllocPages(arena, null, 1, MmConstants.NUMA_NO_NODE, 0L);
+            BPFJ.bpfArenaFreePages(arena, p, 1);
+            return 0;
+        }
+    }
+
+    /** Phase F.4 — {@code BPFJ.bpfArenaAllocPages} lowers to the kfunc with {@code &arena}. */
+    @Test
+    public void testBpfArenaAllocPagesLowering() {
+        String code = BPFProgram.getCode(ArenaAlloc.class);
+        assertTrue(code.contains("bpf_arena_alloc_pages(&arena"),
+                "alloc must lower to bpf_arena_alloc_pages(&arena, ...):\n" + code);
+        assertTrue(code.contains("bpf_arena_free_pages(&arena"),
+                "free must lower to bpf_arena_free_pages(&arena, ...):\n" + code);
+    }
+
+    @BPF
+    public static abstract class ArenaCasts extends BPFProgram {
+        @Type
+        record Node(long value) {}
+
+        @BPFFunction
+        public long roundTrip(Ptr<Node> p) {
+            @me.bechberger.ebpf.annotations.InArena Ptr<Node> k = BPFJ.castKern(p);
+            Ptr<Node> u = BPFJ.castUser(k);
+            return u.val().value;
+        }
+    }
+
+    /** Phase F.4 — {@code castKern}/{@code castUser} lower to explicit AS casts. */
+    @Test
+    public void testCastKernCastUserLowering() {
+        String code = BPFProgram.getCode(ArenaCasts.class);
+        assertTrue(code.contains("(__arena typeof(*(p)) *)(p)"),
+                "castKern must lower to explicit __arena cast:\n" + code);
+        assertTrue(code.contains("(void *)(k)"),
+                "castUser must lower to explicit (void*) cast:\n" + code);
     }
 }
