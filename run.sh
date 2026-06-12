@@ -54,6 +54,8 @@ if [ "$1" = "doctor" ]; then
 
     echo ""
     echo "OS / kernel:"
+    _check "Linux kernel >= 6.17 (hello-ebpf project floor)" \
+        sh -c 'ver=$(uname -r | cut -d. -f1-2); major=${ver%%.*}; minor=${ver##*.}; [ "$major" -gt 6 ] || ( [ "$major" -eq 6 ] && [ "$minor" -ge 17 ] )'
     _check "Linux kernel >= 5.8 (BPF ring buffer)" \
         sh -c 'ver=$(uname -r | cut -d. -f1-2); major=${ver%%.*}; minor=${ver##*.}; [ "$major" -gt 5 ] || ( [ "$major" -eq 5 ] && [ "$minor" -ge 8 ] )'
     _check "kernel >= 6.14 (sched_ext / scx_bpf_dsq_insert)" \
@@ -158,6 +160,13 @@ if [ "$1" = "probe-kernel" ]; then
         local req_major="$1" req_minor="$2"
         [ "$KMAJOR" -gt "$req_major" ] || ( [ "$KMAJOR" -eq "$req_major" ] && [ "$KMINOR" -ge "$req_minor" ] )
     }
+
+    # Project floor (6.17): hard requirement of BPFProgram.load()
+    if _kge 6 17; then
+        printf "  %s  hello-ebpf project floor (kernel >= 6.17)\n" "$OK"
+    else
+        printf "  %s  hello-ebpf project floor (kernel >= 6.17) — BPFProgram.load() will refuse on this kernel\n" "$NO"
+    fi
 
     # BTF
     echo ""

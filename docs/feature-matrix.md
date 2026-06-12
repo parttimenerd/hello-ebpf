@@ -3,6 +3,11 @@
 Minimum kernel versions for hello-ebpf features. Always check your target environment
 against this table before using a feature.
 
+> **Project floor: kernel 6.17.** `BPFProgram.load(...)` refuses to load on
+> older kernels. The per-feature kernel versions below are informational —
+> historically a feature was introduced at that version, but the project as
+> a whole is built and tested against 6.17.
+
 ## Hook types
 
 | Feature | Min kernel | Notes |

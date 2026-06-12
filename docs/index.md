@@ -31,7 +31,7 @@ Your Java class
 
 | Requirement | Minimum version |
 |-------------|----------------|
-| Linux kernel | 5.7 |
+| Linux kernel | 6.17 |
 | clang / llvm | 19 |
 | libbpf-dev | any recent |
 | JDK | 22 |

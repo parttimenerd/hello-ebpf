@@ -72,7 +72,7 @@ These might change in the future, but for now, you need the following:
 
 Either a Linux machine with the following:
 
-- Linux 64-bit (or a VM)
+- Linux kernel 6.17 or later (BPF arenas + `__BPF_FEATURE_ADDR_SPACE_CAST` floor)
 - Java 22 or later
 - libbpf and bpf-tool
   - e.g. `apt install libbpf-dev linux-tools-common linux-tools-$(uname -r)` on Ubuntu

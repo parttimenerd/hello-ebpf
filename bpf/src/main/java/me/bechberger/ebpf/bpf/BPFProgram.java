@@ -128,6 +128,7 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public static <T extends BPFProgram, S extends T> S load(Class<T> clazz) {
         try {
+            KernelFeatures.requireMinimumKernel();
             KernelFeatures.checkRequirements("Loading BPF program", clazz);
             long t0 = System.currentTimeMillis();
             var program = BPFProgram.<T, S>getImplClass(clazz).getConstructor().newInstance();
