@@ -332,6 +332,16 @@ public class Generator {
             return builder.build();
         }
 
+        /**
+         * Marker emitted on every kernel-BTF struct / union / typedef so the
+         * compiler plugin can switch field access to {@code BPF_CORE_READ}
+         * (CO-RE relocation against the target kernel's BTF). Never attach
+         * this to user-written {@code @Type} records.
+         */
+        static AnnotationSpec createKernelBtfAnnotation() {
+            return AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.KernelBTF.class)).build();
+        }
+
         sealed interface NamedType extends Type {
             String name();
 
@@ -757,7 +767,7 @@ public class Generator {
                 var typeName = type.toTypeName(gen);
                 assert typeName instanceof ClassName;
                 var builder = TypeSpec.classBuilder(((ClassName) typeName).simpleName()).addModifiers(Modifier.PUBLIC
-                        , Modifier.STATIC).addAnnotation(createAnnotations(typedefed, type.toCType(typedefed))).superclass(cts(superClass));
+                        , Modifier.STATIC).addAnnotation(createAnnotations(typedefed, type.toCType(typedefed))).addAnnotation(createKernelBtfAnnotation()).superclass(cts(superClass));
                 if (markAllCombinedTypesAsNotUsableInJava) {
                     builder.addAnnotation(cts(NotUsableInJava.class));
                 }
@@ -1235,7 +1245,7 @@ public class Generator {
                 if (t instanceof StructType || t instanceof UnionType || t instanceof EnumType) {
                     return t.toTypeSpec(gen, true);
                 }
-                return TypeSpec.classBuilder(name).addModifiers(Modifier.PUBLIC, Modifier.STATIC).addAnnotation(createAnnotations(typedefed, toCType(typedefed))).superclass(ParameterizedTypeName.get(cts(TypedefBase.class), t.toGenericTypeName(gen))).addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(Objects.requireNonNullElse(t.toGenericTypeName(gen), ClassName.get(Object.class)), "val").addStatement("super(val)").build()).build();
+                return TypeSpec.classBuilder(name).addModifiers(Modifier.PUBLIC, Modifier.STATIC).addAnnotation(createAnnotations(typedefed, toCType(typedefed))).addAnnotation(createKernelBtfAnnotation()).superclass(ParameterizedTypeName.get(cts(TypedefBase.class), t.toGenericTypeName(gen))).addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(Objects.requireNonNullElse(t.toGenericTypeName(gen), ClassName.get(Object.class)), "val").addStatement("super(val)").build()).build();
             }
 
             private TypeName findUnderlyingTypeName(Generator gen) {

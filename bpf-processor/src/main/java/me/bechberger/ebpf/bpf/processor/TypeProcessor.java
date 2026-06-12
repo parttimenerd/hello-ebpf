@@ -872,6 +872,55 @@ public class TypeProcessor {
             return Optional.empty();
         }
         var genericType = genericTypes.getFirst();
+        // Pointers to @KernelBTF types are opaque to user-space layout: the
+        // kernel struct's offsets are relocated by libbpf at load time via
+        // CO-RE, so descending into the kernel type's fields here is both
+        // unnecessary and dangerous (kernel structs often hold self-referential
+        // helpers like llist_node that trip the recursion guard). The C side
+        // still needs the proper kernel struct name (e.g. `struct task_struct`),
+        // which we render via VerbatimBPFOnlyType.
+        if (genericType instanceof DeclaredType dt) {
+            var elem = dt.asElement();
+            if (elem != null && elem.getAnnotation(me.bechberger.ebpf.annotations.KernelBTF.class) != null) {
+                var typeAnn = elem.getAnnotation(Type.class);
+                String cType = typeAnn != null && !typeAnn.cType().isEmpty()
+                        ? typeAnn.cType()
+                        : ("struct " + elem.getSimpleName());
+                String bareName = cType.startsWith("struct ")
+                        ? cType.substring("struct ".length())
+                        : cType.startsWith("union ")
+                                ? cType.substring("union ".length())
+                                : cType;
+                PrefixKind kind = cType.startsWith("struct ")
+                        ? PrefixKind.STRUCT
+                        : cType.startsWith("union ")
+                                ? PrefixKind.UNION
+                                : PrefixKind.NORMAL;
+                // Build an inner CustomBPFType that:
+                //   - emits the proper kernel struct name in C (cUse + bpfName),
+                //   - uses the actual kernel struct's Java name in generics, so
+                //     Ptr<task_struct> in user code matches the generated spec
+                //     (UBPFStructMember accessor compatibility),
+                //   - emits "null" as its Java spec value, so the wrapping
+                //     BPFPointerType.toJavaFieldSpecUse renders as
+                //     `new BPFPointerType<task_struct>(null)` — opaque user-space
+                //     pointer; CO-RE handles offsets at load time.
+                String javaUseInGenerics = elem instanceof TypeElement te
+                        ? te.getQualifiedName().toString()
+                        : elem.getSimpleName().toString();
+                final var inner = new VerbatimBPFOnlyType<>(bareName, kind).toCustomType();
+                final var innerWithSpec = new BPFType.CustomBPFType<>(
+                        javaUseInGenerics,
+                        javaUseInGenerics,
+                        javaUseInGenerics,
+                        inner.bpfName(),
+                        inner.cUse(),
+                        typeToSpec -> "null",
+                        () -> Optional.empty());
+                return Optional.of(nameToCustomType -> new TypeBackedBPFTypeLike<>(
+                        new BPFType.BPFPointerType<>(innerWithSpec)));
+            }
+        }
         var innerType = processBPFTypeRecordMemberType(element, getAnnotationValuesForRecordMember(genericType), genericType);
         if (innerType.isEmpty()) {
             return Optional.empty();

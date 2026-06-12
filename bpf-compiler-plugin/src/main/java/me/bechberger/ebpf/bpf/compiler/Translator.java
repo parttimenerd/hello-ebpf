@@ -552,6 +552,19 @@ class Translator {
                     // anonymous struct member
                     yield expr;
                 }
+                // CO-RE: if this MemberSelect is the outermost link of a
+                // kernel-BTF chain, lift the whole chain to a single
+                // BPF_CORE_READ(root, m1, m2, ...) call. The recursive
+                // translate(getExpression()) above already computed `expr`
+                // for the inner part — we discard it because the outermost
+                // lift rebuilds the chain from the AST. Inner kernel-BTF
+                // MemberSelects detect that their parent is also kernel-BTF
+                // and themselves bail out of the lift, falling through to
+                // a (discarded) MEMBER_ACCESS expression.
+                var coreLifted = tryLiftCoreRead(memberSelectTree);
+                if (coreLifted != null) {
+                    yield coreLifted;
+                }
                 yield expr != null ? new OperatorExpression(Operator.MEMBER_ACCESS, expr, variable(member)) : null;
             }
             case ParenthesizedTree parenthesizedTree ->
@@ -1295,5 +1308,174 @@ class Translator {
             }
         }.scan(lambdaTree.getBody(), null);
         return !hadIllegal[0];
+    }
+
+    // ───────────────────────── CO-RE (Phase E) ─────────────────────────
+
+    /**
+     * Returns true if {@code typeMirror} (or, after unwrapping a single
+     * {@code Ptr<T>} layer, its argument) refers to a class that bpf-gen
+     * marked with {@code @KernelBTF}. These are the kernel-BTF types whose
+     * field offsets must be relocated by libbpf at load time.
+     */
+    private boolean isKernelBtfType(@Nullable TypeMirror typeMirror) {
+        if (typeMirror == null) return false;
+        if (!(typeMirror instanceof Type t)) return false;
+        // Unwrap Ptr<T> → T
+        if (t instanceof ClassType ct
+                && ct.asElement().getQualifiedName().contentEquals(Ptr.class.getName())
+                && !ct.getTypeArguments().isEmpty()) {
+            t = (Type) ct.getTypeArguments().get(0);
+        }
+        var elem = t.asElement();
+        if (elem == null) return false;
+        return elem.getAnnotation(me.bechberger.ebpf.annotations.KernelBTF.class) != null;
+    }
+
+    /** Type of the given expression in this method's tree. */
+    private @Nullable TypeMirror typeOf(ExpressionTree expr) {
+        var path = methodPath.path(expr);
+        if (path == null) return null;
+        var trees = compilerPlugin.trees;
+        return trees.getTypeMirror(path);
+    }
+
+    /**
+     * Detect whether {@code outer}'s parent is itself a kernel-BTF
+     * MemberSelectTree. If so, the parent will perform the lift; this node
+     * must not.
+     */
+    private boolean parentIsKernelBtfMemberSelect(MemberSelectTree outer) {
+        var path = methodPath.path(outer);
+        if (path == null) return false;
+        var parent = path.getParentPath();
+        if (parent == null) return false;
+        var parentLeaf = parent.getLeaf();
+        if (!(parentLeaf instanceof MemberSelectTree pmst)) return false;
+        // Sanity: this node must actually be the parent's expression
+        // (not, e.g., the parent's identifier — identifiers aren't ExpressionTrees here anyway).
+        if (pmst.getExpression() != outer) return false;
+        return isKernelBtfType(typeOf(pmst.getExpression()));
+    }
+
+    /**
+     * If {@code top} is the outermost link of a kernel-BTF field-access chain,
+     * walk inward and emit {@code BPF_CORE_READ(rootExpr, m1, m2, ...)}.
+     * Returns null if the chain doesn't qualify (e.g., receiver isn't a
+     * kernel-BTF type, or this isn't the outermost link).
+     */
+    /**
+     * Detect whether {@code outer}'s parent is a {@code Ptr.val()} method
+     * invocation that is itself nested inside a kernel-BTF MemberSelect chain.
+     * In that case, an outer lift will fold the whole chain; this node must
+     * not lift on its own.
+     */
+    private boolean parentIsKernelBtfPtrValCall(MemberSelectTree outer) {
+        var path = methodPath.path(outer);
+        if (path == null) return false;
+        var parent = path.getParentPath();
+        if (parent == null) return false;
+        var parentLeaf = parent.getLeaf();
+        // The .val() shape: MethodInvocation whose select is MemberSelect(.val)
+        // and whose receiver is `outer`.
+        if (!(parentLeaf instanceof MethodInvocationTree mit)) return false;
+        if (!mit.getArguments().isEmpty()) return false;
+        if (!(mit.getMethodSelect() instanceof MemberSelectTree pmst)) return false;
+        if (pmst.getExpression() != outer) return false;
+        if (!"val".contentEquals(pmst.getIdentifier())) return false;
+        // Now check the grandparent: is the .val() result fed into another
+        // kernel-BTF MemberSelect?
+        var grand = parent.getParentPath();
+        if (grand == null) return false;
+        var grandLeaf = grand.getLeaf();
+        if (!(grandLeaf instanceof MemberSelectTree gmst)) return false;
+        if (gmst.getExpression() != mit) return false;
+        return isKernelBtfType(typeOf(gmst.getExpression()));
+    }
+
+    private @Nullable CAST.Expression tryLiftCoreRead(MemberSelectTree top) {
+        // Only the outermost kernel-BTF MemberSelect performs the lift.
+        if (parentIsKernelBtfMemberSelect(top) || parentIsKernelBtfPtrValCall(top)) return null;
+        if (!isKernelBtfType(typeOf(top.getExpression()))) return null;
+
+        // Walk inward, prepending member names. The chain may interleave
+        // MemberSelect(.field) and MethodInvocation(.val()) when intermediate
+        // fields are Ptr<KernelBTF> or embedded struct values.
+        //
+        // BPF_CORE_READ(src, a, b, c) walks pointers: each comma-separated
+        // accessor follows a pointer deref. Embedded-struct field accesses
+        // (no Ptr in between) must be joined with '.' inside a single
+        // accessor segment.
+        //
+        // We collect a list of segments, each built from one or more
+        // consecutive .field accesses without an intervening .val() pierce.
+        // A .val() pierce closes the current segment.
+        var segments = new ArrayList<List<String>>();
+        var currentSegment = new ArrayList<String>();
+        segments.add(0, currentSegment);
+        ExpressionTree cursor = top;
+        while (true) {
+            if (cursor instanceof MemberSelectTree mst
+                    && isKernelBtfType(typeOf(mst.getExpression()))) {
+                currentSegment.add(0, mst.getIdentifier().toString());
+                cursor = mst.getExpression();
+                continue;
+            }
+            // Pierce a `.val()` call iff its receiver is a Ptr<KernelBTF>
+            // chain we can keep walking. Each pierce closes the segment.
+            ExpressionTree pierced = stripPtrVal(cursor);
+            if (pierced != cursor && isKernelBtfType(typeOf(pierced))) {
+                cursor = pierced;
+                currentSegment = new ArrayList<>();
+                segments.add(0, currentSegment);
+                continue;
+            }
+            break;
+        }
+        // The leading segment may be empty if the very innermost step was a
+        // .val() (e.g., bare `task.val()` with no further field). Drop it —
+        // BPF_CORE_READ requires at least one trailing accessor segment.
+        while (!segments.isEmpty() && segments.get(0).isEmpty()) {
+            segments.remove(0);
+        }
+        if (segments.isEmpty()) return null;
+
+        // The chain root is whatever expression remains. BPF_CORE_READ wants
+        // a *pointer*, so when the root is foo.val(), strip val() to get foo.
+        ExpressionTree rootTree = stripPtrVal(cursor);
+        var rootExpr = translate(rootTree);
+        if (rootExpr == null) return null;
+
+        var sb = new StringBuilder("BPF_CORE_READ(");
+        sb.append(rootExpr.toPrettyString());
+        for (List<String> seg : segments) {
+            sb.append(", ");
+            for (int i = 0; i < seg.size(); i++) {
+                if (i > 0) sb.append('.');
+                sb.append(seg.get(i));
+            }
+        }
+        sb.append(")");
+        return CAST.Expression.verbatim(sb.toString());
+    }
+
+    /**
+     * If {@code expr} is a {@code Ptr.val()} method invocation, return the
+     * receiver of {@code val()}. Otherwise return {@code expr} unchanged.
+     * Used to recover the pointer from the canonical {@code p.val().field}
+     * form before passing it to {@code BPF_CORE_READ}.
+     */
+    private ExpressionTree stripPtrVal(ExpressionTree expr) {
+        if (!(expr instanceof MethodInvocationTree mit)) return expr;
+        if (!mit.getArguments().isEmpty()) return expr;
+        if (!(mit.getMethodSelect() instanceof MemberSelectTree mst)) return expr;
+        if (!"val".contentEquals(mst.getIdentifier())) return expr;
+        // Confirm the receiver type is Ptr<...>
+        var recvType = typeOf(mst.getExpression());
+        if (recvType instanceof ClassType ct
+                && ct.asElement().getQualifiedName().contentEquals(Ptr.class.getName())) {
+            return mst.getExpression();
+        }
+        return expr;
     }
 }

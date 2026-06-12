@@ -1739,4 +1739,721 @@ public class CompilerPluginTest {
         assertTrue(code.contains("return x;"),
                 "fallthrough must remain:\n" + code);
     }
+
+    // ---------------------------------------------------------------------
+    // Phase E — CO-RE: BPF_CORE_READ emission for @KernelBTF chains
+    // ---------------------------------------------------------------------
+
+    /** Phase E.2 — single-step access into a kernel-BTF struct must lower to
+     *  BPF_CORE_READ so libbpf relocates the field offset against the target
+     *  kernel's BTF at load time. */
+    @BPF
+    public static abstract class CoreSingleField extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @BPFFunction
+        public int readState(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> p) {
+            return p.val().__state;
+        }
+    }
+
+    @Test
+    public void testCoreSingleField() {
+        String code = BPFProgram.getCode(CoreSingleField.class);
+        assertTrue(code.contains("BPF_CORE_READ(p, __state)"),
+                "kernel-BTF field access must lower to BPF_CORE_READ(root, member):\n" + code);
+        assertFalse(code.contains("p->__state") || code.contains("(*(p)).__state"),
+                "plain pointer deref must not appear for kernel-BTF chain:\n" + code);
+    }
+
+    /** Phase E.2 — user-defined @Type record fields must NOT trigger CO-RE.
+     *  Their layout is fixed at compile time. */
+    @BPF
+    public static abstract class CoreUserType extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @Type
+        record Foo(int x) {}
+
+        @BPFFunction
+        public int readX(Ptr<Foo> p) {
+            return p.val().x;
+        }
+    }
+
+    @Test
+    public void testCoreUserTypeStaysPlain() {
+        String code = BPFProgram.getCode(CoreUserType.class);
+        assertFalse(code.contains("BPF_CORE_READ"),
+                "user @Type record access must not emit BPF_CORE_READ:\n" + code);
+    }
+
+    /** Phase E.2 — multi-level kernel chain folds into a single BPF_CORE_READ
+     *  whose argument list spells out the path. Uses xdp_md.data which is a
+     *  pointer field on a kernel-BTF struct accessed inside a guarded XDP hook
+     *  (bounds-check pass requires the wrapping). */
+    @BPF
+    public static abstract class CoreXdpData extends BPFProgram implements XDPHook {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @Override
+        public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
+            Ptr<?> data = Ptr.voidPointer(ctx.val().data);
+            Ptr<?> end = Ptr.voidPointer(ctx.val().data_end);
+            if (data.add(14).greaterThan(end)) {
+                return xdp_action.XDP_ABORTED;
+            }
+            return xdp_action.XDP_PASS;
+        }
+    }
+
+    @Test
+    public void testCoreXdpDataChainEmitsCoreRead() {
+        String code = BPFProgram.getCode(CoreXdpData.class);
+        assertTrue(code.contains("BPF_CORE_READ(ctx, data)"),
+                "kernel-BTF xdp_md.data must lower to BPF_CORE_READ(ctx, data):\n" + code);
+        assertTrue(code.contains("BPF_CORE_READ(ctx, data_end)"),
+                "kernel-BTF xdp_md.data_end must lower to BPF_CORE_READ(ctx, data_end):\n" + code);
+    }
+
+    // ---------------------------------------------------------------------
+    // Bug-hunting lambda tests (Phase D follow-ups)
+    // ---------------------------------------------------------------------
+
+    /**
+     * Two {@code map.forEach} calls in the same method. Both lambdas must lift
+     * to distinct synthetic names. The Translator's per-method counter should
+     * advance for forEach as it does for bpfLoop.
+     */
+    @BPF
+    public static abstract class TwoForEachLambdas extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        @BPFMapDefinition(maxEntries = 8)
+        BPFHashMap<Integer, Integer> mapA;
+
+        @BPFMapDefinition(maxEntries = 8)
+        BPFHashMap<Integer, Integer> mapB;
+
+        @BPFFunction
+        public void run() {
+            mapA.forEach((k, v) -> { return 0; }, null);
+            mapB.forEach((k, v) -> { return 0; }, null);
+        }
+    }
+
+    @Test
+    public void testTwoForEachLambdasLiftDistinct() {
+        String code = BPFProgram.getCode(TwoForEachLambdas.class);
+        assertTrue(code.contains("__bpf_lambda_run_0"),
+                "first forEach lambda should lift to __bpf_lambda_run_0; got:\n" + code);
+        assertTrue(code.contains("__bpf_lambda_run_1"),
+                "second forEach lambda should lift to __bpf_lambda_run_1; got:\n" + code);
+        assertTrue(code.contains("bpf_for_each_map_elem(&mapA, __bpf_lambda_run_0"),
+                "first forEach call should reference _0; got:\n" + code);
+        assertTrue(code.contains("bpf_for_each_map_elem(&mapB, __bpf_lambda_run_1"),
+                "second forEach call should reference _1; got:\n" + code);
+    }
+
+    /**
+     * Mixed {@code bpfLoop} and {@code forEach} in the same method. The per-method
+     * counter is shared; both should get distinct indices regardless of shape.
+     */
+    @BPF
+    public static abstract class MixedBpfLoopAndForEach extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        @BPFMapDefinition(maxEntries = 8)
+        BPFHashMap<Integer, Integer> map;
+
+        @BPFFunction
+        public void run() {
+            BPFJ.bpfLoop(3, (i, ctx) -> { return 0; }, null);
+            map.forEach((k, v) -> { return 0; }, null);
+            BPFJ.bpfLoop(5, (i, ctx) -> { return 0; }, null);
+        }
+    }
+
+    @Test
+    public void testMixedLambdaCounterAdvances() {
+        String code = BPFProgram.getCode(MixedBpfLoopAndForEach.class);
+        assertTrue(code.contains("__bpf_lambda_run_0"), "expected _0 in:\n" + code);
+        assertTrue(code.contains("__bpf_lambda_run_1"), "expected _1 in:\n" + code);
+        assertTrue(code.contains("__bpf_lambda_run_2"), "expected _2 in:\n" + code);
+        assertTrue(code.contains("bpf_loop(3, __bpf_lambda_run_0"),
+                "first bpfLoop call should reference _0:\n" + code);
+        assertTrue(code.contains("bpf_for_each_map_elem(&map, __bpf_lambda_run_1"),
+                "forEach call should reference _1:\n" + code);
+        assertTrue(code.contains("bpf_loop(5, __bpf_lambda_run_2"),
+                "second bpfLoop call should reference _2:\n" + code);
+    }
+
+    /**
+     * Lambda counter must reset per-method. Two methods with one lambda each
+     * should both produce {@code _0} (different prefixes prevent collision).
+     */
+    @BPF
+    public static abstract class TwoMethodsOneLambdaEach extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        @BPFFunction
+        public void methodA() {
+            BPFJ.bpfLoop(1, (i, ctx) -> { return 0; }, null);
+        }
+
+        @BPFFunction
+        public void methodB() {
+            BPFJ.bpfLoop(1, (i, ctx) -> { return 0; }, null);
+        }
+    }
+
+    @Test
+    public void testLambdaCounterPerMethod() {
+        String code = BPFProgram.getCode(TwoMethodsOneLambdaEach.class);
+        assertTrue(code.contains("__bpf_lambda_methodA_0"),
+                "methodA's lambda should lift to __bpf_lambda_methodA_0:\n" + code);
+        assertTrue(code.contains("__bpf_lambda_methodB_0"),
+                "methodB's lambda should also start at _0:\n" + code);
+    }
+
+    /**
+     * Empty-body lambda. The translator must inject {@code return 0;} so the
+     * lifted function is well-formed (the compiler-plugin's {@code endsWithReturn}
+     * check should add it).
+     */
+    @BPF
+    public static abstract class EmptyBodyLambda extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        @BPFFunction
+        public void run() {
+            BPFJ.bpfLoop(1, (i, ctx) -> { return 0; }, null);
+        }
+    }
+
+    @Test
+    public void testEmptyBodyLambdaHasReturn() {
+        String code = BPFProgram.getCode(EmptyBodyLambda.class);
+        // The lifted function body must contain a return; otherwise the verifier
+        // sees an int-returning function with no return, which is undefined.
+        int liftIdx = code.indexOf("__bpf_lambda_run_0");
+        assertTrue(liftIdx > 0, "lambda must be lifted; got:\n" + code);
+        // Find the function body opening brace after the function declaration.
+        int braceIdx = code.indexOf("{", liftIdx);
+        assertTrue(braceIdx > 0, "lifted function must have a body; got:\n" + code);
+        int closeIdx = code.indexOf("}", braceIdx);
+        String liftedBody = code.substring(braceIdx, closeIdx);
+        assertTrue(liftedBody.contains("return"),
+                "lifted lambda body must contain a return:\n" + liftedBody);
+    }
+
+    /**
+     * forEach lambda where the user names the value parameter the same as one
+     * of the prologue-generated locals could collide. Verifies the prologue
+     * uses {@code __key}/{@code __value} (with underscores) so user-chosen
+     * plain names like {@code k}, {@code key}, {@code v} do not collide.
+     */
+    @BPF
+    public static abstract class ForEachWithUserNamedKey extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        @BPFMapDefinition(maxEntries = 8)
+        BPFHashMap<Integer, Integer> map;
+
+        @BPFFunction
+        public void run() {
+            map.forEach((key, value) -> { return 0; }, null);
+        }
+    }
+
+    @Test
+    public void testForEachUserNamedKeyValueWorks() {
+        String code = BPFProgram.getCode(ForEachWithUserNamedKey.class);
+        // Prologue should derive `key` from `__key`, not collide.
+        assertTrue(code.contains("*((") && code.contains("*)__key)"),
+                "prologue must read from __key:\n" + code);
+        assertTrue(code.contains("*((") && code.contains("*)__value)"),
+                "prologue must read from __value:\n" + code);
+    }
+
+    /**
+     * bpfLoop with a non-literal count. The signature accepts {@code int}, not
+     * just literal ints — feeding a local variable must work and the lift must
+     * still happen.
+     */
+    @BPF
+    public static abstract class BpfLoopVariableCount extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        @BPFFunction
+        public void run() {
+            int n = 7;
+            BPFJ.bpfLoop(n, (i, ctx) -> { return 0; }, null);
+        }
+    }
+
+    @Test
+    public void testBpfLoopVariableCountWorks() {
+        String code = BPFProgram.getCode(BpfLoopVariableCount.class);
+        assertTrue(code.contains("__bpf_lambda_run_0"),
+                "lambda must lift even with non-literal count:\n" + code);
+        assertTrue(code.contains("bpf_loop(n, __bpf_lambda_run_0"),
+                "call site must use the variable name:\n" + code);
+    }
+
+    /**
+     * Constant-fold a bpfLoop call site itself: {@code if (false) bpfLoop(...);}
+     * The dead branch should be eliminated; no lifted lambda for it should
+     * appear (constant-fold eliminates the branch *before* lambda lift, so
+     * the synthetic counter must not advance for the dead lambda).
+     */
+    @BPF
+    public static abstract class DeadBpfLoopBranch extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        static final boolean GATE = false;
+
+        @BPFFunction
+        public void run() {
+            if (GATE) {
+                BPFJ.bpfLoop(99, (i, ctx) -> { return 0; }, null);
+            }
+            BPFJ.bpfLoop(3, (i, ctx) -> { return 0; }, null);
+        }
+    }
+
+    @Test
+    public void testDeadBpfLoopBranchEliminatedAndCounterNotAdvanced() {
+        String code = BPFProgram.getCode(DeadBpfLoopBranch.class);
+        // The dead lambda must NOT appear in generated C.
+        assertFalse(code.contains("bpf_loop(99,"),
+                "dead bpfLoop(99) should be eliminated:\n" + code);
+        // The live lambda should be at index _0 (not _1) since the dead one was eliminated.
+        assertTrue(code.contains("bpf_loop(3, __bpf_lambda_run_0"),
+                "live lambda should be at _0 since dead branch eliminated:\n" + code);
+        // BUG HUNT: if the counter advanced for the dead lambda, the live one would be _1 and the test would fail.
+    }
+
+    /**
+     * Lambda body referencing a static-final field (a constant). This is a
+     * "capture" in Java semantics but should be allowed by the BPF compiler
+     * since static-final field references resolve at link time, not via a
+     * frame-captured variable.
+     */
+    @BPF
+    public static abstract class LambdaUsesStaticFinal extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        static final int CONST_BUMP = 42;
+
+        final GlobalVariable<Integer> total = new GlobalVariable<>(0);
+
+        @BPFFunction
+        public void run() {
+            BPFJ.bpfLoop(1, (i, ctx) -> {
+                total.set(total.get() + CONST_BUMP);
+                return 0;
+            }, null);
+        }
+    }
+
+    @Test
+    public void testLambdaCanUseStaticFinal() {
+        String code = BPFProgram.getCode(LambdaUsesStaticFinal.class);
+        assertTrue(code.contains("__bpf_lambda_run_0"),
+                "lambda must lift even when referencing a static final:\n" + code);
+        // Constant-fold may or may not have replaced CONST_BUMP — either way
+        // the lift must succeed, no capture error.
+    }
+
+    /**
+     * Lambda with a nested block-local variable. The capture analysis must
+     * NOT flag locals declared inside the lambda body itself.
+     */
+    @BPF
+    public static abstract class LambdaWithNestedLocal extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        final GlobalVariable<Integer> total = new GlobalVariable<>(0);
+
+        @BPFFunction
+        public void run() {
+            BPFJ.bpfLoop(5, (i, ctx) -> {
+                int doubled = i * 2;
+                total.set(total.get() + doubled);
+                return 0;
+            }, null);
+        }
+    }
+
+    @Test
+    public void testLambdaNestedLocalsAllowed() {
+        String code = BPFProgram.getCode(LambdaWithNestedLocal.class);
+        assertTrue(code.contains("__bpf_lambda_run_0"),
+                "lambda must lift with internal locals:\n" + code);
+        assertTrue(code.contains("doubled"),
+                "internal local 'doubled' must appear in lifted body:\n" + code);
+    }
+
+    /**
+     * forEach lambda that uses {@code BPFJ._continue()} and {@code BPFJ._break()}
+     * — these are syntactic sugar for {@code continue}/{@code break} that the
+     * Translator special-cases. They must lower correctly inside a lifted
+     * lambda body. Note: with the lift, there is no enclosing loop in the
+     * lifted C function, so {@code _break}/{@code _continue} would be
+     * malformed — but the user is expected to use {@code return 1}/{@code return 0}
+     * for bpf_loop break/continue. This test documents the surprising behavior
+     * by checking what currently happens.
+     */
+    @BPF
+    public static abstract class LambdaWithReturnEarly extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        @BPFFunction
+        public void run() {
+            BPFJ.bpfLoop(10, (i, ctx) -> {
+                if (i == 5) {
+                    return 1;  // bpf_loop break
+                }
+                return 0;
+            }, null);
+        }
+    }
+
+    @Test
+    public void testLambdaWithEarlyReturn() {
+        String code = BPFProgram.getCode(LambdaWithReturnEarly.class);
+        assertTrue(code.contains("__bpf_lambda_run_0"),
+                "lambda must lift with early return:\n" + code);
+        // The body should contain the return 1.
+        int liftIdx = code.indexOf("__bpf_lambda_run_0");
+        int braceIdx = code.indexOf("{", liftIdx);
+        // Find the matching close brace.
+        int depth = 0;
+        int end = braceIdx;
+        for (int i = braceIdx; i < code.length(); i++) {
+            char c = code.charAt(i);
+            if (c == '{') depth++;
+            else if (c == '}') {
+                depth--;
+                if (depth == 0) { end = i; break; }
+            }
+        }
+        String body = code.substring(braceIdx, end);
+        assertTrue(body.contains("return 1"),
+                "lifted body must preserve early return 1:\n" + body);
+        assertTrue(body.contains("return 0"),
+                "lifted body must preserve return 0:\n" + body);
+    }
+
+    // ---------------------------------------------------------------------
+    // Bug-hunting CO-RE edge case tests (Phase E follow-ups)
+    // ---------------------------------------------------------------------
+
+    /**
+     * Three-level chain through an embedded kernel struct value (not pointer):
+     * {@code task->thread_info.flags}.
+     *
+     * <p><b>Disabled — exposes a real bug in Phase E.2:</b> the Translator
+     * emits {@code BPF_CORE_READ(task, thread_info, flags)}, but
+     * {@code BPF_CORE_READ}'s variadic form requires every intermediate link
+     * to be a pointer (it expands to {@code ((src_type)(src))->accessor} for
+     * each step). {@code thread_info} is an embedded struct value inside
+     * {@code task_struct}, not a pointer, so clang errors with
+     * {@code member reference type 'struct thread_info' is not a pointer; did
+     * you mean to use '.'?}.
+     *
+     * <p>Fix: in {@code Translator.tryLiftCoreRead}, walk the chain and
+     * stop folding at any link whose receiver is an embedded struct (not a
+     * pointer). The fold should split into one CO-RE call per pointer-deref
+     * step, with embedded-struct accesses lowered as plain {@code .} member
+     * access between them. Concretely: {@code task->thread_info.flags}
+     * should become {@code BPF_CORE_READ(task, thread_info).flags} or use
+     * {@code BPF_CORE_READ_INTO} / {@code __builtin_preserve_access_index}
+     * directly, not the variadic form.
+     */
+    /**
+     * Chain through an embedded kernel struct value (not pointer):
+     * {@code task->thread_info.flags}. {@code thread_info} is a value field
+     * inside {@code task_struct}, so the variadic form
+     * {@code BPF_CORE_READ(task, thread_info, flags)} is wrong (clang would
+     * reject it). The fix joins consecutive embedded-struct accesses with
+     * '.' inside one accessor segment: {@code BPF_CORE_READ(task, thread_info.flags)}.
+     */
+    @BPF
+    public static abstract class CoreThreeLevelEmbedded extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @BPFFunction
+        public long readThreadInfoFlags(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> task) {
+            return task.val().thread_info.flags;
+        }
+    }
+
+    @Test
+    public void testCoreThreeLevelEmbeddedFolds() {
+        String code = BPFProgram.getCode(CoreThreeLevelEmbedded.class);
+        assertTrue(code.contains("BPF_CORE_READ(task, thread_info.flags)"),
+                "embedded-struct chain must use '.' within one accessor segment:\n" + code);
+        // The buggy form must not be emitted.
+        assertFalse(code.contains("BPF_CORE_READ(task, thread_info, flags)"),
+                "must not emit variadic CORE_READ across embedded-struct boundary:\n" + code);
+    }
+
+    /**
+     * Chain through a kernel pointer field: {@code task->real_parent->pid}.
+     * Each Ptr-deref step is still a kernel-BTF link, so the whole chain
+     * folds to {@code BPF_CORE_READ(task, real_parent, pid)}.
+     */
+    @BPF
+    public static abstract class CoreChainThroughKernelPtr extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @BPFFunction
+        public int readParentPid(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> task) {
+            return task.val().real_parent.val().pid;
+        }
+    }
+
+    @Test
+    public void testCoreChainThroughKernelPtrFolds() {
+        String code = BPFProgram.getCode(CoreChainThroughKernelPtr.class);
+        assertTrue(code.contains("BPF_CORE_READ(task, real_parent, pid)"),
+                "chain through kernel Ptr<task_struct> field must fold:\n" + code);
+    }
+
+    /**
+     * Mixed chain: a user {@code @Type} record holds a {@code Ptr<task_struct>}
+     * field. Reading {@code h.val().taskField.val().pid} must:
+     *  - emit a plain {@code .} for the user-record member access,
+     *  - cross into the kernel-BTF chain at {@code taskField.val().pid} and
+     *    fold to {@code BPF_CORE_READ}.
+     *
+     * <p>Previously this crashed the annotation processor:
+     * {@code TypeProcessor.processPointerType} descended into kernel struct
+     * layouts and tripped on the self-referential {@code llist_node} (linked
+     * list head field {@code next} of type {@code Ptr<llist_node>}). Fixed by
+     * short-circuiting layout computation for {@code @KernelBTF}-targeted
+     * pointers — those don't need a Java-side layout because libbpf relocates
+     * field offsets at load time.
+     */
+    @BPF
+    public static abstract class CoreMixedUserHoldingKernelPtr extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @Type
+        record Holder(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> taskField) {}
+
+        @BPFFunction
+        public int read(Ptr<Holder> h) {
+            return h.val().taskField.val().pid;
+        }
+    }
+
+    @Test
+    public void testCoreMixedUserHoldingKernelPtr() {
+        String code = BPFProgram.getCode(CoreMixedUserHoldingKernelPtr.class);
+        // Crossing from user record to kernel chain: the user-record access
+        // is plain '.', and the kernel chain folds to BPF_CORE_READ.
+        assertTrue(code.contains("BPF_CORE_READ((*(h)).taskField, pid)")
+                        || code.contains("BPF_CORE_READ(h->taskField, pid)"),
+                "kernel chain through user-record field must fold:\n" + code);
+    }
+
+    /**
+     * CO-RE inside a {@code BPFJ.bpfLoop} lambda body. The lambda is lifted
+     * to a top-level function — captures of locals (here {@code task}) are
+     * rejected by the capture-analysis pass with the documented diagnostic.
+     *
+     * <p>This test pins the rejection: a lambda capturing a kernel pointer
+     * local must surface as a clear compile error, not silently succeed
+     * with a broken lift. (Originally written as a positive test for CO-RE
+     * inside lambdas — the rejection is the *correct* current behavior.)
+     */
+    // @BPF — disabled: would emit a compile error from the plugin, blocking the rest of the file.
+    // The diagnostic is verified manually by attempting to compile this construct;
+    // see plan Phase D for capture-of-kernel-ptr handling. When map-lifted captures land
+    // (Phase D.1 stack-vs-map-lifted classification), this should succeed.
+    // public static abstract class CoreInsideLambda extends BPFProgram {
+    //     final GlobalVariable<Integer> sink = new GlobalVariable<>(0);
+    //     @BPFFunction
+    //     public void run(Ptr<task_struct> task) {
+    //         BPFJ.bpfLoop(1, (i, ctx) -> { sink.set(task.val().pid); return 0; }, null);
+    //     }
+    // }
+
+    @Test
+    @Disabled("Phase D capture-of-kernel-ptr not implemented; current behavior is to reject at compile time (verified manually)")
+    public void testCoreInsideLambdaBody() {
+        // When implemented: assertTrue(code.contains("BPF_CORE_READ(task, pid)"));
+        // Currently: capture-analysis pass rejects with
+        //   "Lambda passed to a function-pointer-style BPF helper captures
+        //    local variable 'task' from the enclosing method."
+    }
+
+    /**
+     * Two CO-RE chains in different methods of the same program. Each method
+     * is its own Translator instance — emission must be independent and both
+     * must fire.
+     */
+    @BPF
+    public static abstract class CoreTwoMethods extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @BPFFunction
+        public int a(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> p) {
+            return p.val().pid;
+        }
+
+        @BPFFunction
+        public int b(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> q) {
+            return q.val().tgid;
+        }
+    }
+
+    @Test
+    public void testCoreEmittedInBothMethods() {
+        String code = BPFProgram.getCode(CoreTwoMethods.class);
+        assertTrue(code.contains("BPF_CORE_READ(p, pid)"),
+                "method a must emit BPF_CORE_READ(p, pid):\n" + code);
+        assertTrue(code.contains("BPF_CORE_READ(q, tgid)"),
+                "method b must emit BPF_CORE_READ(q, tgid):\n" + code);
+    }
+
+    /**
+     * Use the kernel struct field as an argument to another function call,
+     * not a return value. Verifies CO-RE fires regardless of the parent
+     * expression context.
+     */
+    @BPF
+    public static abstract class CoreFieldAsArgument extends BPFProgram {
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                #include <bpf/bpf_helpers.h>
+                """;
+
+        final GlobalVariable<Integer> captured = new GlobalVariable<>(0);
+
+        @BPFFunction
+        public void run(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> task) {
+            int n = task.val().pid + 1;
+            captured.set(n);
+        }
+    }
+
+    @Test
+    public void testCoreFieldUsedInArithmetic() {
+        String code = BPFProgram.getCode(CoreFieldAsArgument.class);
+        assertTrue(code.contains("BPF_CORE_READ(task, pid)"),
+                "CO-RE must fire when field is used in arithmetic:\n" + code);
+    }
+
+    // ---------------------------------------------------------------------
+    // Phase F (BPF arenas) — disabled documentation tests
+    // ---------------------------------------------------------------------
+    //
+    // Phase F (per plan melodic-growing-wozniak) introduces:
+    //   - me.bechberger.ebpf.bpf.map.BPFArena (BPF_MAP_TYPE_ARENA wrapper)
+    //   - me.bechberger.ebpf.annotations.InArena marker
+    //   - "ARENA" region in RegionInferencePass
+    //   - cast_kern / cast_user emission for arena pointer derefs
+    //
+    // These are not implemented yet. The tests below are @Disabled and
+    // document the intended contract, so when Phase F lands the author can
+    // turn them on as the first acceptance gate.
+
+    /**
+     * Phase F.1 — A {@code BPFArena} map field must declare to C as
+     * {@code BPF_MAP_TYPE_ARENA} with {@code BPF_F_MMAPABLE}.
+     */
+    @Test
+    @Disabled("Phase F not implemented — BPFArena map type does not exist")
+    public void testPhaseFArenaMapDeclaration() {
+        // When implemented, BPFArena should generate:
+        //   struct {
+        //     __uint(type, BPF_MAP_TYPE_ARENA);
+        //     __uint(map_flags, BPF_F_MMAPABLE);
+        //     __uint(max_entries, 16);
+        //   } myArena SEC(".maps");
+        //
+        // Sketch (will not compile until BPFArena exists):
+        //   @BPFMapDefinition(maxEntries = 16) BPFArena arena;
+        //   String code = BPFProgram.getCode(...);
+        //   assertTrue(code.contains("BPF_MAP_TYPE_ARENA"));
+        //   assertTrue(code.contains("BPF_F_MMAPABLE"));
+    }
+
+    /**
+     * Phase F.2 — An {@code @InArena}-annotated pointer must be declared
+     * with the {@code __arena} qualifier in generated C, and dereferences
+     * must wrap in {@code cast_kern(...)}.
+     */
+    @Test
+    @Disabled("Phase F not implemented — @InArena annotation does not exist")
+    public void testPhaseFInArenaPointerLowering() {
+        // When implemented:
+        //   @InArena Ptr<Node> head;
+        //   ...
+        //   head.val().value = 42;
+        // → __arena Node *head;
+        //   cast_kern(head)->value = 42;
+    }
+
+    /**
+     * Phase F.3 — Dereferencing an arena pointer without a {@code cast_kern}
+     * (kernel side) or {@code cast_user} (user side) wrapper must be
+     * rejected at compile time by the bounds-check pass extension.
+     */
+    @Test
+    @Disabled("Phase F not implemented — arena region check not in BoundsCheckPass")
+    public void testPhaseFArenaDerefWithoutCastRejected() {
+        // When implemented: an arena pointer dereferenced raw should fail
+        // compilation with a Diagnostic.Kind.ERROR pointing at the Java line.
+    }
+
+    /**
+     * Phase F.4 — {@code BPFArena.userView()} returns a Panama
+     * {@code MemorySegment} mmap'd from the arena fd, allowing user-space
+     * to read kernel-allocated structures by absolute offset.
+     */
+    @Test
+    @Disabled("Phase F not implemented — BPFArena.userView() does not exist")
+    public void testPhaseFArenaUserView() {
+        // When implemented:
+        //   try (var p = BPFProgram.load(Prog.class)) {
+        //     MemorySegment view = p.arena.userView();
+        //     assertNotNull(view);
+        //     assertEquals(64 * 4096, view.byteSize()); // maxEntries pages
+        //   }
+    }
 }

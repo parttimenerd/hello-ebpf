@@ -374,4 +374,28 @@ public class BPFJ {
     public static <C> void bpfLoop(int count, BiFunction<Integer, C, Integer> body, C ctx) {
         throw new MethodIsBPFRelatedFunction();
     }
+
+    /**
+     * CO-RE field-existence check. Returns {@code true} at runtime iff the
+     * named field is present in the target kernel's BTF.
+     * <p>
+     * Lowers to {@code bpf_core_field_exists(((T*)0)->fieldName)}. Use to
+     * gate access to fields that came or went between kernel versions —
+     * the verifier dead-code-eliminates the false branch when the field is
+     * known absent.
+     * <pre>{@code
+     *   if (BPFJ.<task_struct>coreFieldExists("__state")) {
+     *       // path that reads the new field name (≥5.14)
+     *   } else {
+     *       // path that reads the old field name (<5.14)
+     *   }
+     * }</pre>
+     * Requires kernel BTF support and {@code bpf_core_read.h} (already
+     * included by default in hello-ebpf).
+     */
+    @BuiltinBPFFunction("bpf_core_field_exists((($T1*)0)->$str$arg1)")
+    @NotUsableInJava
+    public static <T> boolean coreFieldExists(String fieldName) {
+        throw new MethodIsBPFRelatedFunction();
+    }
 }
