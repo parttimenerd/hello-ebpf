@@ -144,6 +144,18 @@ public class TypeProcessor {
                 }
                 return DataTypeKind.NONE;
             }
+            // check that it has no generic type parameters
+            if (!((TypeElement) element).getTypeParameters().isEmpty()) {
+                if (log) {
+                    var params = ((TypeElement) element).getTypeParameters().stream()
+                            .map(tp -> tp.getSimpleName().toString())
+                            .collect(Collectors.joining(", "));
+                    this.processingEnv.getMessager().printError(
+                            "@Type record " + element.getSimpleName() + " must not declare generic type parameters " +
+                            "(BPF/C cannot represent type variables). Found: <" + params + ">", element);
+                }
+                return DataTypeKind.NONE;
+            }
             if (implementsTypedef) {
                 return DataTypeKind.TYPEDEF;
             }

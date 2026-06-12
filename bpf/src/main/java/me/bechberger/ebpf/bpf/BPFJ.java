@@ -196,11 +196,13 @@ public class BPFJ {
     }
 
     @BuiltinBPFFunction("bpf_probe_read_kernel_str($arg1, $arg2, $arg3)")
+    @NotUsableInJava
     public static long bpf_probe_read_kernel_str(String val, int size, String filename) {
         throw new MethodIsBPFRelatedFunction();
     }
 
     @BuiltinBPFFunction("bpf_probe_read_kernel_str($arg1, $arg2, $arg3)")
+    @NotUsableInJava
     public static long bpf_probe_read_kernel_str(String val, int size, Ptr<Character> filename) {
         throw new MethodIsBPFRelatedFunction();
     }
@@ -211,6 +213,7 @@ public class BPFJ {
      * @see BPFHelpers#bpf_probe_read_user_str(Ptr, int, Ptr)
      */
     @BuiltinBPFFunction
+    @NotUsableInJava
     public static <T> long bpf_probe_read_user_str(String dest, int size, String src) {
         throw new MethodIsBPFRelatedFunction();
     }
@@ -221,6 +224,7 @@ public class BPFJ {
      * @see BPFHelpers#bpf_probe_read_user_str(Ptr, int, Ptr)
      */
     @BuiltinBPFFunction("bpf_probe_read_user_str($arg1, sizeof($arg1), $arg2)")
+    @NotUsableInJava
     public static <T> long bpf_probe_read_user_str(String dest, String src) {
         throw new MethodIsBPFRelatedFunction();
     }

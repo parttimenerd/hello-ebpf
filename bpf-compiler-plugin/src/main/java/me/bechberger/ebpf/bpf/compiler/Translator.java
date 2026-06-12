@@ -392,6 +392,12 @@ class Translator {
                         "rewrite using if-else chains. Statement: " + statement);
                 yield null;
             }
+            case TryTree ignored -> {
+                logError(statement, "Try-catch blocks are not supported in BPF programs. " +
+                        "BPF has no exception handling; use explicit return-code checks instead. " +
+                        "Statement: " + statement);
+                yield null;
+            }
             default -> {
                 logError(statement, "Unsupported statement kind " + statement.getKind() + ": " + statement);
                 yield null;
@@ -789,6 +795,12 @@ class Translator {
             case SwitchExpressionTree switchExpr -> {
                 logError(expression, "Switch expressions are not supported in BPF programs; " +
                         "rewrite using the ternary operator or if-else chains. Expression: " + expression);
+                yield null;
+            }
+            case InstanceofTree ignored -> {
+                logError(expression, "Java instanceof checks are not supported in BPF programs. " +
+                        "Use explicit type casts or dispatch based on known types instead. " +
+                        "Expression: " + expression);
                 yield null;
             }
             default -> {
