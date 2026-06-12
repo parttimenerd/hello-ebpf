@@ -131,10 +131,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestPtr extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                """;
-
         @BPFFunction
         public int refAndDeref() {
             int value = 3;
@@ -182,11 +178,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestPrint extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @BPFFunction
         public void testPrint() {
             BPFHelpers.bpf_trace_printk("Hello, World!\\n", "Hello, World!\\n".length());
@@ -231,11 +222,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestGlobalVariable extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         public final GlobalVariable<Integer> count = new GlobalVariable<>(42);
 
         @BPFFunction
@@ -303,11 +289,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestString extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @BPFFunction
         public char stringAt(String str) {
             return str.charAt(0);
@@ -341,11 +322,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestArray extends BPFProgram {
-
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
 
         @BPFFunction
         public int access(@Size(2) int[] arr) {
@@ -414,11 +390,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestForLoopAndIf extends BPFProgram {
-
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
 
         @BPFFunction
         public int forLoop() {
@@ -510,11 +481,6 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class TestComments extends BPFProgram {
 
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         /**
          * Comment
          */
@@ -542,11 +508,6 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class TestFinalVariable extends BPFProgram {
 
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @BPFFunction
         public int finalVariable() {
             final int i = 0;
@@ -571,11 +532,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class EnumTest extends BPFProgram {
-
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
 
         @Type
         enum TestEnum implements Enum<TestEnum> {
@@ -646,11 +602,6 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class TestConstants extends BPFProgram {
 
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         static final int TEST_CONSTANT = 100;
         static final String TEST_CONSTANT_STRING = "Hello, World!";
 
@@ -703,11 +654,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestStruct extends BPFProgram {
-
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
 
         @Type
         static class Event extends Struct {
@@ -764,11 +710,6 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class TestNotUsableInJavaStruct extends BPFProgram {
 
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @Type
         @NotUsableInJava
         static class Event extends Struct {
@@ -806,11 +747,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestUnion extends BPFProgram {
-
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
 
         @Type
         static class SampleUnion extends Union {
@@ -862,11 +798,6 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class TestRecordStruct extends BPFProgram {
 
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @Type
         record Event(@Unsigned int pid, @Size(256) String filename) {
         }
@@ -914,11 +845,6 @@ public class CompilerPluginTest {
 
     @BPF
     public static abstract class TestInt128 extends BPFProgram {
-
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
 
         @BPFFunction
         void create() {
@@ -1045,11 +971,6 @@ public class CompilerPluginTest {
 
     @BPF
     static abstract class TestStringBody extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @BPFFunction(
                 lastStatement = "bpf_trace_printk(\"%s\", 2, code);"
         )
@@ -1327,10 +1248,6 @@ public class CompilerPluginTest {
     @BPF
     public static abstract class NullSafeMapLookup extends BPFProgram {
 
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                """;
-
         @BPFMapDefinition(maxEntries = 64)
         BPFHashMap<Integer, Integer> counts;
 
@@ -1377,10 +1294,6 @@ public class CompilerPluginTest {
     /** Minimal tail-call program: one prog-array map, one tailCall call site. */
     @BPF
     public static abstract class TailCallSample extends BPFProgram {
-
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                """;
 
         @BPFMapDefinition(maxEntries = 4)
         BPFProgArray progs;
@@ -1522,11 +1435,6 @@ public class CompilerPluginTest {
      *  static {@code __always_inline} function and pass its name to {@code bpf_loop}. */
     @BPF
     public static abstract class BpfLoopLambda extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         public final GlobalVariable<Integer> sum = new GlobalVariable<>(0);
 
         @BPFFunction
@@ -1573,11 +1481,6 @@ public class CompilerPluginTest {
      *  functions with stable indexed names. */
     @BPF
     public static abstract class TwoBpfLoopLambdas extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @BPFFunction
         public void runLoops() {
             BPFJ.bpfLoop(5, (i, ctx) -> { return 0; }, null);
@@ -1603,11 +1506,6 @@ public class CompilerPluginTest {
      *  parameters, and a deref prologue so the user body sees plain {@code k}/{@code v}. */
     @BPF
     public static abstract class MapForEachLift extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @BPFMapDefinition(maxEntries = 8)
         BPFHashMap<Integer, Integer> map;
 
@@ -1805,11 +1703,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class TwoForEachLambdas extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @BPFMapDefinition(maxEntries = 8)
         BPFHashMap<Integer, Integer> mapA;
 
@@ -1842,11 +1735,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class MixedBpfLoopAndForEach extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @BPFMapDefinition(maxEntries = 8)
         BPFHashMap<Integer, Integer> map;
 
@@ -1878,11 +1766,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class TwoMethodsOneLambdaEach extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @BPFFunction
         public void methodA() {
             BPFJ.bpfLoop(1, (i, ctx) -> { return 0; }, null);
@@ -1910,11 +1793,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class EmptyBodyLambda extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @BPFFunction
         public void run() {
             BPFJ.bpfLoop(1, (i, ctx) -> { return 0; }, null);
@@ -1945,11 +1823,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class ForEachWithUserNamedKey extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @BPFMapDefinition(maxEntries = 8)
         BPFHashMap<Integer, Integer> map;
 
@@ -1976,11 +1849,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class BpfLoopVariableCount extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @BPFFunction
         public void run() {
             int n = 7;
@@ -2005,11 +1873,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class DeadBpfLoopBranch extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         static final boolean GATE = false;
 
         @BPFFunction
@@ -2041,11 +1904,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class LambdaUsesStaticFinal extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         static final int CONST_BUMP = 42;
 
         final GlobalVariable<Integer> total = new GlobalVariable<>(0);
@@ -2074,11 +1932,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class LambdaWithNestedLocal extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         final GlobalVariable<Integer> total = new GlobalVariable<>(0);
 
         @BPFFunction
@@ -2112,11 +1965,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class LambdaWithReturnEarly extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         @BPFFunction
         public void run() {
             BPFJ.bpfLoop(10, (i, ctx) -> {
@@ -2332,11 +2180,6 @@ public class CompilerPluginTest {
      */
     @BPF
     public static abstract class CoreFieldAsArgument extends BPFProgram {
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                """;
-
         final GlobalVariable<Integer> captured = new GlobalVariable<>(0);
 
         @BPFFunction
