@@ -124,7 +124,7 @@ public interface BasePacketParser {
     @BPFFunction
     @AlwaysInline
     default boolean parseIPv6Packet(Ptr<runtime.ipv6hdr> iph, Ptr<?> dataEnd, Ptr<PacketInfo> info) {
-        if (iph.add(1).greaterThan(dataEnd) || iph.val().version != 6) {
+        if (iph.add(1).greaterThan(dataEnd)) {
             return false; // invalid packet
         }
         var saddr = iph.val().addrs.saddr;

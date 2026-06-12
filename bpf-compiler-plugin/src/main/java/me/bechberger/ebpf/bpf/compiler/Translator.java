@@ -1545,10 +1545,32 @@ class Translator {
         return isKernelBtfType(typeOf(gmst.getExpression()));
     }
 
+    /**
+     * Returns true if {@code top} is the LHS variable of an {@link AssignmentTree}
+     * or {@link CompoundAssignmentTree}. In those cases {@code BPF_CORE_READ} must
+     * not be emitted (it returns an rvalue and cannot be assigned to).
+     * The normal MEMBER_ACCESS translation produces {@code (*(p)).field} which is
+     * a valid C lvalue.
+     */
+    private boolean isAssignmentTarget(MemberSelectTree top) {
+        var path = methodPath.path(top);
+        if (path == null) return false;
+        var parent = path.getParentPath();
+        if (parent == null) return false;
+        var parentLeaf = parent.getLeaf();
+        if (parentLeaf instanceof AssignmentTree at) return at.getVariable() == top;
+        if (parentLeaf instanceof CompoundAssignmentTree cat) return cat.getVariable() == top;
+        return false;
+    }
+
     private @Nullable CAST.Expression tryLiftCoreRead(MemberSelectTree top) {
         // Only the outermost kernel-BTF MemberSelect performs the lift.
         if (parentIsKernelBtfMemberSelect(top) || parentIsKernelBtfPtrValCall(top)) return null;
         if (!isKernelBtfType(typeOf(top.getExpression()))) return null;
+        // BPF_CORE_READ returns an rvalue; it cannot be the target of an assignment.
+        // Fall back to plain MEMBER_ACCESS so the assignment handler can produce a
+        // valid lvalue (e.g. (*(p)).scx.dsq_vtime = ...).
+        if (isAssignmentTarget(top)) return null;
 
         // Walk inward, prepending member names. The chain may interleave
         // MemberSelect(.field) and MethodInvocation(.val()) when intermediate
@@ -1591,6 +1613,18 @@ class Translator {
             segments.remove(0);
         }
         if (segments.isEmpty()) return null;
+
+        // BPF_CORE_READ requires a pointer (Ptr<T>) as the chain root, not a bare
+        // struct value. If cursor ended up as a non-pointer KernelBTF struct value
+        // (e.g. a local variable of type open_how or in6_addr), BPF_CORE_READ would
+        // fail at compile time with "member reference type is not a pointer".
+        // Fall back to plain member access in that case.
+        {
+            TypeMirror cursorType = typeOf(cursor);
+            boolean cursorIsPtr = (cursorType instanceof ClassType ct2)
+                    && ct2.asElement().getQualifiedName().contentEquals(Ptr.class.getName());
+            if (!cursorIsPtr) return null;
+        }
 
         // The chain root is whatever expression remains. BPF_CORE_READ wants
         // a *pointer*, so when the root is foo.val(), strip val() to get foo.
