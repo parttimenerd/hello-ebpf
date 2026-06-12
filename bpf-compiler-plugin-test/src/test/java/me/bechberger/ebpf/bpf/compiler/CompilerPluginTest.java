@@ -2461,4 +2461,79 @@ public class CompilerPluginTest {
         //     assertEquals(64 * 4096, view.byteSize()); // maxEntries pages
         //   }
     }
+
+    // ---------------------------------------------------------------------
+    // Phase F.3 — @InArena emits __arena qualifier on declarations
+    // ---------------------------------------------------------------------
+
+    @BPF
+    public static abstract class ArenaParam extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @Type
+        record Node(long value) {}
+
+        @BPFFunction
+        public long readVal(@me.bechberger.ebpf.annotations.InArena Ptr<Node> p) {
+            return p.val().value;
+        }
+    }
+
+    /** Phase F.3 — {@code @InArena Ptr<Node> p} parameter emits {@code __arena Node *p}. */
+    @Test
+    public void testInArenaParamEmitsArenaQualifier() {
+        String code = BPFProgram.getCode(ArenaParam.class);
+        assertTrue(code.contains("__arena"),
+                "@InArena parameter must emit __arena qualifier:\n" + code);
+        assertTrue(code.contains("__arena struct Node *p")
+                        || code.contains("__arena Node *p"),
+                "@InArena parameter must emit `__arena Node *p`:\n" + code);
+    }
+
+    @BPF
+    public static abstract class ArenaLocal extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @Type
+        record Node(long value) {}
+
+        @BPFFunction
+        public long usesLocal(@me.bechberger.ebpf.annotations.InArena Ptr<Node> head) {
+            @me.bechberger.ebpf.annotations.InArena Ptr<Node> cursor = head;
+            return cursor.val().value;
+        }
+    }
+
+    /** Phase F.3 — {@code @InArena} on a local variable emits the qualifier on the declaration. */
+    @Test
+    public void testInArenaLocalEmitsArenaQualifier() {
+        String code = BPFProgram.getCode(ArenaLocal.class);
+        assertTrue(code.contains("__arena struct Node *cursor")
+                        || code.contains("__arena Node *cursor"),
+                "@InArena local must emit `__arena Node *cursor`:\n" + code);
+    }
+
+    @BPF
+    public static abstract class ArenaPlainAccess extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @Type
+        record Node(long value) {}
+
+        @BPFFunction
+        public long readField(@me.bechberger.ebpf.annotations.InArena Ptr<Node> p) {
+            return p.val().value;
+        }
+    }
+
+    /** Phase F.3 — accessing a field on an arena pointer keeps plain {@code ->} (clang 17+
+     *  inserts the {@code cast_kern} implicitly via {@code __BPF_FEATURE_ADDR_SPACE_CAST}). */
+    @Test
+    public void testInArenaFieldAccessIsPlainArrow() {
+        String code = BPFProgram.getCode(ArenaPlainAccess.class);
+        assertFalse(code.contains("BPF_CORE_READ"),
+                "user @Type record on arena ptr must not emit BPF_CORE_READ:\n" + code);
+        assertTrue(code.contains("p->value") || code.contains("(*(p)).value"),
+                "user @Type record field access on arena ptr must use plain ->:\n" + code);
+    }
 }

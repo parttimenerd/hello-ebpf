@@ -19,6 +19,7 @@ import me.bechberger.cast.CAST.PrimaryExpression.VerbatimExpression;
 import me.bechberger.cast.CAST.Statement.*;
 import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.CustomType;
+import me.bechberger.ebpf.annotations.InArena;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFInline;
 import me.bechberger.ebpf.annotations.EnumMember;
@@ -153,7 +154,8 @@ class Translator {
             name = annotation.name();
         }
         var retKind = typeKind(methodElement.getReturnType().asElement());
-        var returnType = translateType(methodElement, methodElement.getReturnType());
+        var returnType = wrapArenaIfMarked(methodElement,
+                translateType(methodElement, methodElement.getReturnType()));
         if (retKind != DataTypeKind.ENUM && retKind != DataTypeKind.NONE && returnType != null) {
             logError(method, "Unsupported return type: " + method.getReturnType() + " as BPF does not support " +
                     "returning structs from functions");
@@ -189,8 +191,9 @@ class Translator {
         var translated = new ArrayList<FunctionParameter>();
         var hadError = false;
         for (var parameter : parameters) {
-            var typeMirror = compilerPlugin.trees.getElement(methodPath.path(parameter)).asType();
-            var type = translateType(compilerPlugin.trees.getElement(methodPath.path(parameter)), typeMirror);
+            var paramElement = compilerPlugin.trees.getElement(methodPath.path(parameter));
+            var typeMirror = paramElement.asType();
+            var type = wrapArenaIfMarked(paramElement, translateType(paramElement, typeMirror));
             if (type == null) {
                 logError(parameter, "Unsupported parameter type: " + typeMirror);
                 hadError = true;
@@ -321,8 +324,9 @@ class Translator {
                         }
                     }
                 }
-                var type = translateType(compilerPlugin.trees.getElement(methodPath.path(variableTree)),
-                        typeMirror, sizes);
+                var varElement = compilerPlugin.trees.getElement(methodPath.path(variableTree));
+                var type = wrapArenaIfMarked(varElement,
+                        translateType(varElement, typeMirror, sizes));
                 var name = variableTree.getName().toString();
                 // new VerbatimExpression("{}")
                 if (initializer instanceof OperatorExpression exp && exp.operator() == Operator.CAST) {
@@ -1415,6 +1419,26 @@ class Translator {
         if (elem == null) return false;
         return elem.getAnnotation(me.bechberger.ebpf.annotations.KernelBTF.class) != null;
     }
+
+    /**
+     * If {@code element} carries {@link InArena}, wrap {@code declarator} in
+     * {@code __arena} via a {@link CAST.Declarator.TaggedDeclarator}. The
+     * tagged declarator is what the user-side {@code Ptr<T>} pointer wraps,
+     * so the C emission becomes {@code __arena T *name}.
+     *
+     * <p>Returns the original declarator unchanged when the element is null,
+     * has no {@code @InArena}, or the declarator itself is null.
+     */
+    private @Nullable CAST.Declarator wrapArenaIfMarked(@Nullable Element element,
+                                                        @Nullable CAST.Declarator declarator) {
+        if (element == null || declarator == null) return declarator;
+        if (element.getAnnotation(InArena.class) == null) return declarator;
+        if (declarator instanceof CAST.Declarator.PointerDeclarator pd) {
+            return CAST.Declarator.pointer(CAST.Declarator.tagged("__arena", pd.declarator()));
+        }
+        return CAST.Declarator.tagged("__arena", declarator);
+    }
+
 
     /** Type of the given expression in this method's tree. */
     private @Nullable TypeMirror typeOf(ExpressionTree expr) {

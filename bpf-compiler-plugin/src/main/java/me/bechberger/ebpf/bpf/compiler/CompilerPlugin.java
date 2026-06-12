@@ -807,6 +807,27 @@ public class CompilerPlugin implements Plugin {
 
         var newCode = replaceProperties(combineCode(code, syntheticDecls, decls, defines) + "\n\n" + implAnn.after(), properties);
 
+        // Define __arena macro (clang AS1) when the program references it but no
+        // header has supplied the define. Kernel selftests provide this via
+        // bpf_arena_common.h; we inline the same definition so generated programs
+        // compile without an external dependency.
+        if (newCode.contains("__arena") && !newCode.contains("#define __arena")) {
+            String arenaDefine = "#ifndef __arena\n#define __arena __attribute__((address_space(1)))\n#endif\n";
+            int insertAt = 0;
+            String[] lines = newCode.split("\n", -1);
+            int offset = 0;
+            for (String line : lines) {
+                String trimmed = line.trim();
+                if (trimmed.startsWith("#include") || trimmed.isEmpty()) {
+                    offset += line.length() + 1;
+                    insertAt = offset;
+                } else {
+                    break;
+                }
+            }
+            newCode = newCode.substring(0, insertAt) + arenaDefine + newCode.substring(insertAt);
+        }
+
         // write the C code in a file close to the source file (controlled by dumpC plugin arg)
         var cFile =
                 Path.of(programPath.root().getSourceFile().toUri().getPath()).getParent().resolve(bpfProgram.getSimpleName() + ".c");

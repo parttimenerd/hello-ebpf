@@ -672,7 +672,12 @@ public interface CAST {
                         var combinedTag = tag == null ? tagged.tag : tag + " " + tagged.tag;
                         return pointery.toPrettyVariableDefinition(name, combinedTag, indent) + (pointery instanceof FunctionDeclarator ? "" : "*");
                     }
-                    return tagged.toPrettyString() + "*";
+                    // Tagged wraps a plain (non-Pointery) declarator — emit
+                    // "<tag> <inner> *<name>". Without this branch the name would
+                    // be dropped (`__arena struct Node*` with no variable name).
+                    var combinedTag = tag == null ? tagged.tag : tag + " " + tagged.tag;
+                    return indent + combinedTag + " " + tagged.declarator.toPrettyString()
+                            + " *" + (name == null ? "" : name.toPrettyString());
                 }
                 if (declarator instanceof FunctionDeclarator fun) {
                     return fun.toPrettyVariableDefinition(name, tag, indent);
