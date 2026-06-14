@@ -39,6 +39,9 @@ import java.util.Map;
  */
 public class RegionAnalyzer {
 
+    /** A single detected region-mixing violation. Exposed for unit testing. */
+    public record Detection(Tree at, String category, String message) {}
+
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
     private final AnalysisContext ctx;
@@ -60,7 +63,57 @@ public class RegionAnalyzer {
 
     public AnalysisContext context() { return ctx; }
 
-    // ── analysis driver ──────────────────────────────────────────────────
+    /**
+     * Pure detection: run region analysis on {@code method} and return every region-mixing error.
+     * Does not need a live {@link CompilerPlugin}. Suppression-agnostic. For unit testing.
+     *
+     * <p>Also populates the returned {@link AnalysisContext}'s {@code regionAt} map so callers
+     * can inspect inferred regions.
+     */
+    public static java.util.List<Detection> detect(MethodTree method) {
+        return detect(method, new AnalysisContext());
+    }
+
+    public static java.util.List<Detection> detect(MethodTree method, AnalysisContext ctx) {
+        var detections = new java.util.ArrayList<Detection>();
+        var analyzer = new RegionAnalyzer(null, null, ctx) {
+            @Override
+            void emitMixingError(Tree at, String varName, MemoryRegion prev, MemoryRegion rhs) {
+                String msg = "Cannot mix " + prev + " and " + rhs + " memory regions in '" + varName + "'.\n"
+                           + "Why: BPF segregates address spaces.\n"
+                           + "Fix: use BPFJ.castUser/castKernel/castArena to cross boundaries.\n"
+                           + "See: cookbook §Memory regions";
+                detections.add(new Detection(at, "region.mixing", msg));
+            }
+        };
+        analyzer.analyzeMethod(method);
+        return detections;
+    }
+
+    /** Visible for the detect() path which needs to call analyze without a TypedTreePath. */
+    private void analyzeMethod(MethodTree method) {
+        if (method.getBody() == null) return;
+        var tempCtx = ctx;
+        if (tempCtx.cfg == null) tempCtx.cfg = ControlFlowGraph.buildFromMethod(method);
+        Map<String, MemoryRegion> seed = new HashMap<>();
+        for (var p : method.getParameters()) {
+            seed.put(p.getName().toString(), regionFromAnnotations(p));
+        }
+        var lat = new MapLattice<String, MemoryRegion>(MemoryRegion.UNKNOWN);
+        var transfer = new RegionTransfer(lat, seed);
+        var result = MonotoneFramework.solve(tempCtx.cfg, transfer);
+        for (var b : tempCtx.cfg.blocks()) {
+            var env = result.inAt(b);
+            var mutEnv = lat.toMutable(env);
+            for (var n : b.nodes()) {
+                annotateNode(n, mutEnv);
+                env = transfer.transferNode(n, lat.fromMap(mutEnv));
+                mutEnv = lat.toMutable(env);
+            }
+        }
+    }
+
+
 
     public void analyze() {
         var method = methodPath.leaf();
@@ -310,6 +363,16 @@ public class RegionAnalyzer {
         return MemoryRegion.UNKNOWN;
     }
 
+    /**
+     * Overridable hook for region-mixing errors. Default calls {@link CompilerPlugin#logError};
+     * the pure-detection subclass in {@link #detect(MethodTree)} overrides this to collect
+     * {@link Detection} records instead.
+     */
+    void emitMixingError(Tree at, String varName, MemoryRegion prev, MemoryRegion rhs) {
+        if (compilerPlugin == null) return;
+        // (full message built in reportMixing)
+    }
+
     private void reportMixing(AssignmentTree a, String varName, MemoryRegion prev, MemoryRegion rhs) {
         if (ctx.isSuppressed(a, "region.mixing")) return;
         var priorSite = lastRegionSite.get(varName);
@@ -317,6 +380,8 @@ public class RegionAnalyzer {
         var priorLoc = priorSite == null
                 ? "an earlier assignment"
                 : (priorLine > 0 ? "line " + priorLine : "an earlier assignment");
+        emitMixingError(a, varName, prev, rhs);
+        if (compilerPlugin == null) return;
         compilerPlugin.logError(methodPath, a,
                 "Cannot mix " + prev + " and " + rhs + " memory regions in '" + varName + "'.\n"
                         + "Why: BPF segregates address spaces; '" + varName + "' was previously "
@@ -330,7 +395,7 @@ public class RegionAnalyzer {
 
     /** Resolve the source line for {@code tree} via {@link CompilerPlugin}'s shared positions, or 0. */
     private long lineOf(Tree tree) {
-        if (tree == null || compilerPlugin.trees == null) return 0;
+        if (tree == null || compilerPlugin == null || compilerPlugin.trees == null) return 0;
         var cu = methodPath.root();
         var sp = compilerPlugin.trees.getSourcePositions();
         long pos = sp.getStartPosition(cu, tree);
@@ -340,6 +405,7 @@ public class RegionAnalyzer {
 
     private void warnUserDeref(ExpressionTree expr, String context) {
         if (ctx.isSuppressed(expr, "region.user-deref")) return;
+        if (compilerPlugin == null) return;
         String varName = (expr instanceof IdentifierTree id) ? id.getName().toString() : "<expr>";
         compilerPlugin.logWarning(methodPath, expr,
                 "Direct dereference of user-memory pointer '" + varName + "' in '" + context + "'.\n"
@@ -351,6 +417,7 @@ public class RegionAnalyzer {
 
     private void errorUserWrite(ExpressionTree expr, String context) {
         if (ctx.isSuppressed(expr, "region.user-write")) return;
+        if (compilerPlugin == null) return;
         String varName = (expr instanceof IdentifierTree id) ? id.getName().toString() : "<expr>";
         compilerPlugin.logError(methodPath, expr,
                 "Direct write to user-memory pointer '" + varName + "' in '" + context + "'.\n"

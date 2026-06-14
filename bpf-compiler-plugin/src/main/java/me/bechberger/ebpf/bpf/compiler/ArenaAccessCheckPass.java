@@ -34,9 +34,106 @@ import java.util.Set;
  */
 public class ArenaAccessCheckPass {
 
+    /** A single detected arena-pointer misuse. Exposed for unit testing. */
+    public record Detection(Tree at, String category, String message) {}
+
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
     private final AnalysisContext ctx;
+
+    /**
+     * Pure detection: run the arena-access check on {@code method} and return every
+     * arena-pointer leak without needing a live {@link CompilerPlugin}. For unit testing.
+     */
+    public static java.util.List<Detection> detect(MethodTree method) {
+        var detections = new java.util.ArrayList<Detection>();
+        var pass = new ArenaAccessCheckPass(null, null, new AnalysisContext()) {
+            @Override
+            void emitArenaLeak(Tree at, String varName, String originDesc) {
+                String msg = "Arena pointer '" + varName + "'.asLong() drops the __arena address-space tag.\n"
+                           + "Why: " + originDesc + "; arena addresses carry a verifier tag that is lost on cast to long.\n"
+                           + "Fix: keep the value as Ptr<T>, or bridge via BPFJ.castUser(" + varName + ").\n"
+                           + "See: cookbook §Arena";
+                detections.add(new Detection(at, "arena.aslong-leak", msg));
+            }
+        };
+        pass.analyzeMethod(method);
+        return detections;
+    }
+
+    /** Visible for the detect() path. */
+    private void analyzeMethod(MethodTree method) {
+        var body = method.getBody();
+        if (body == null) return;
+        analyzeBody(body, method.getParameters());
+    }
+
+    /** Factor out the core scan logic so detect() can call it without a TypedTreePath. */
+    private void analyzeBody(BlockTree body,
+            java.util.List<? extends VariableTree> params) {
+        var arenaVars = new HashSet<String>();
+        var arenaSourceSite = new HashMap<String, Tree>();
+
+        for (var p : params) {
+            if (hasInArena(p)) {
+                arenaVars.add(p.getName().toString());
+                arenaSourceSite.put(p.getName().toString(), p);
+            }
+        }
+
+        new TreeScanner<Void, Void>() {
+            @Override
+            public Void visitVariable(VariableTree node, Void unused) {
+                var name = node.getName().toString();
+                if (hasInArena(node)) {
+                    arenaVars.add(name);
+                    arenaSourceSite.put(name, node);
+                } else if (node.getInitializer() != null
+                        && isArenaAllocCall(node.getInitializer())) {
+                    arenaVars.add(name);
+                    arenaSourceSite.put(name, node);
+                } else if (arenaVars.contains(name)) {
+                    arenaVars.remove(name);
+                    arenaSourceSite.remove(name);
+                }
+                return super.visitVariable(node, unused);
+            }
+        }.scan(body, null);
+
+        if (arenaVars.isEmpty()) return;
+
+        new TreeScanner<Void, Void>() {
+            @Override
+            public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
+                if (node.getMethodSelect() instanceof MemberSelectTree sel
+                        && sel.getIdentifier().toString().equals("asLong")) {
+                    var receiver = sel.getExpression();
+                    var src = arenaSourceName(receiver, arenaVars);
+                    if (src != null) {
+                        report(node, src, arenaSourceSite.get(src));
+                    }
+                }
+                return super.visitMethodInvocation(node, unused);
+            }
+        }.scan(body, null);
+    }
+
+    /**
+     * Overridable hook for arena-pointer leak warnings.
+     * Default calls {@link CompilerPlugin#logWarning}; the pure-detection subclass in
+     * {@link #detect(MethodTree)} overrides to collect {@link Detection} records.
+     */
+    void emitArenaLeak(Tree at, String varName, String originDesc) {
+        if (compilerPlugin == null) return;
+        compilerPlugin.logWarning(methodPath, at,
+                "Arena pointer '" + varName + "'.asLong() drops the __arena address-space tag.\n"
+              + "Why: " + originDesc + "; arena addresses are tracked by the verifier with a special "
+              + "tag, and converting to a long erases that tag — any later use is treated as a raw "
+              + "integer, preventing arena-aware checks from succeeding.\n"
+              + "Fix: keep the value as a Ptr<T> through the call chain, or bridge to user space "
+              + "explicitly via BPFJ.castUser(" + varName + ").\n"
+              + "See: cookbook §Arena");
+    }
 
     public ArenaAccessCheckPass(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath) {
         this(compilerPlugin, methodPath, new AnalysisContext());
@@ -55,7 +152,6 @@ public class ArenaAccessCheckPass {
         if (body == null) return;
 
         var arenaVars = new HashSet<String>();
-        // Defining site for each arena variable (for "allocated at line N" enrichment).
         var arenaSourceSite = new HashMap<String, Tree>();
 
         // Seed from @InArena-annotated parameters.
@@ -101,9 +197,7 @@ public class ArenaAccessCheckPass {
 
         if (arenaVars.isEmpty()) return;
 
-        // Walk again to find leaks. The realistic Java-legal leak path is
-        // `arenaPtr.asLong()` — javac rejects `(long) arenaPtr` and
-        // `long x = arenaPtr` outright, so we don't need to guard those.
+        // Walk again to find leaks.
         new TreeScanner<Void, Void>() {
             @Override
             public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
@@ -167,14 +261,7 @@ public class ArenaAccessCheckPass {
 
     private void report(Tree node, String varName, Tree definingSite) {
         var origin = describeOrigin(definingSite, varName);
-        compilerPlugin.logWarning(methodPath, node,
-                "Arena pointer '" + varName + "'.asLong() drops the __arena address-space tag.\n"
-              + "Why: " + origin + "; arena addresses are tracked by the verifier with a special "
-              + "tag, and converting to a long erases that tag — any later use is treated as a raw "
-              + "integer, preventing arena-aware checks from succeeding.\n"
-              + "Fix: keep the value as a Ptr<T> through the call chain, or bridge to user space "
-              + "explicitly via BPFJ.castUser(" + varName + ").\n"
-              + "See: cookbook §Arena");
+        emitArenaLeak(node, varName, origin);
     }
 
     /** Render "allocated at line N via bpfArenaAllocPages" or similar. */
@@ -194,7 +281,7 @@ public class ArenaAccessCheckPass {
     }
 
     private long lineOf(Tree tree) {
-        if (tree == null || compilerPlugin.trees == null) return 0;
+        if (tree == null || compilerPlugin == null || compilerPlugin.trees == null) return 0;
         var cu = methodPath.root();
         var sp = compilerPlugin.trees.getSourcePositions();
         long pos = sp.getStartPosition(cu, tree);

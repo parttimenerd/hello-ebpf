@@ -34,9 +34,42 @@ import java.util.Set;
  */
 public class BoundsCheckPass {
 
+    /** A single detected unguarded packet-pointer dereference. Exposed for unit testing. */
+    public record Detection(Tree at, String category, String message) {}
+
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
     private final AnalysisContext ctx;
+
+    /**
+     * Pure detection: run the bounds-check pass on {@code method} and return every unguarded
+     * dereference without needing a live {@link CompilerPlugin}. For unit testing.
+     */
+    public static java.util.List<Detection> detect(MethodTree method) {
+        var detections = new java.util.ArrayList<Detection>();
+        var pass = new BoundsCheckPass(null, null, new AnalysisContext()) {
+            @Override
+            void emitUnguardedDeref(Tree at, String name) {
+                String msg = "Packet pointer '" + name + "' dereferenced without any bounds check.\n"
+                           + "Why: the verifier requires every packet-pointer deref to be preceded by "
+                           + "a comparison against the packet's end pointer.\n"
+                           + "Fix: add a bounds check before the deref.\n"
+                           + "See: cookbook §Packet bounds";
+                detections.add(new Detection(at, "bounds.unguarded-packet-deref", msg));
+            }
+        };
+        var body = method.getBody();
+        if (body != null) {
+            var packetOrigin = pass.collectPacketOriginVars(body);
+            if (!packetOrigin.isEmpty()) {
+                var guarded = pass.collectGuardedVars(body, packetOrigin);
+                for (var pname : packetOrigin) {
+                    if (!guarded.contains(pname)) pass.reportUnguardedDereferences(body, pname);
+                }
+            }
+        }
+        return detections;
+    }
 
     public BoundsCheckPass(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath) {
         this(compilerPlugin, methodPath, new AnalysisContext());
@@ -167,6 +200,24 @@ public class BoundsCheckPass {
         return result;
     }
 
+    /**
+     * Overridable hook for unguarded packet-pointer dereference warnings.
+     * Default calls {@link CompilerPlugin#logWarning}; the pure-detection subclass in
+     * {@link #detect(MethodTree)} overrides to collect {@link Detection} records.
+     */
+    void emitUnguardedDeref(Tree at, String name) {
+        if (compilerPlugin == null) return;
+        compilerPlugin.logWarning(methodPath, at,
+                "Packet pointer '" + name + "' dereferenced without any bounds check.\n"
+              + "Why: the verifier requires every packet-pointer deref to be preceded by "
+              + "a comparison against the packet's end pointer; otherwise the program "
+              + "will not load.\n"
+              + "Fix: add a bounds check before the deref:\n"
+              + "  if (" + name + ".add(N).greaterThan(end)) return XDP_ABORTED;\n"
+              + "  /* now safe to read " + name + ".val() */\n"
+              + "See: cookbook §Packet bounds");
+    }
+
     private void reportUnguardedDereferences(BlockTree body, String name) {
         new TreeScanner<Void, Void>() {
             @Override
@@ -174,15 +225,7 @@ public class BoundsCheckPass {
                 if (node.getMethodSelect() instanceof MemberSelectTree mst) {
                     var method = mst.getIdentifier().toString();
                     if (method.equals("val") && rootMatches(mst.getExpression(), name)) {
-                        compilerPlugin.logWarning(methodPath, node,
-                                "Packet pointer '" + name + "' dereferenced without any bounds check.\n"
-                              + "Why: the verifier requires every packet-pointer deref to be preceded by "
-                              + "a comparison against the packet's end pointer; otherwise the program "
-                              + "will not load.\n"
-                              + "Fix: add a bounds check before the deref:\n"
-                              + "  if (" + name + ".add(N).greaterThan(end)) return XDP_ABORTED;\n"
-                              + "  /* now safe to read " + name + ".val() */\n"
-                              + "See: cookbook §Packet bounds");
+                        emitUnguardedDeref(node, name);
                     }
                 }
                 return super.visitMethodInvocation(node, p);

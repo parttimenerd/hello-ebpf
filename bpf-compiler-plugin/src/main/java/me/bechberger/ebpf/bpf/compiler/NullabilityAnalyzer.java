@@ -29,12 +29,36 @@ import java.util.Map;
  */
 public class NullabilityAnalyzer {
 
+    /** A single detected nullability violation. Exposed for unit testing. */
+    public record Detection(Tree at, String category, String message) {}
+
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
     private final AnalysisContext ctx;
 
     /** Nullability state per local variable name at the current program point. */
     private final Map<String, NullabilityValue> state = new HashMap<>();
+
+    /**
+     * Pure detection: run nullability analysis on {@code method} and return every violation
+     * without needing a live {@link CompilerPlugin}. Suppression-agnostic. For unit testing.
+     */
+    public static java.util.List<Detection> detect(MethodTree method) {
+        var detections = new java.util.ArrayList<Detection>();
+        var collector = new NullabilityAnalyzer(null, null, new AnalysisContext()) {
+            @Override
+            void reportNullable(Tree at, String varName) {
+                String msg = "Potentially null pointer '" + varName + "' used in member access.\n"
+                           + "Why: the BPF verifier rejects any dereference of a value that may be NULL.\n"
+                           + "Fix: guard with if (" + varName + " == null) return 0;\n"
+                           + "See: cookbook §Nullability";
+                detections.add(new Detection(at, "nullability.deref-of-nullable", msg));
+            }
+        };
+        var body = method.getBody();
+        if (body != null) collector.analyzeBlock(body, new HashMap<>());
+        return detections;
+    }
 
     public NullabilityAnalyzer(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath) {
         this(compilerPlugin, methodPath, new AnalysisContext());
@@ -302,20 +326,30 @@ public class NullabilityAnalyzer {
         return NullabilityValue.UNKNOWN;
     }
 
+    /**
+     * Overridable hook for reporting a MAYBE_NULL dereference. The default implementation
+     * calls {@link CompilerPlugin#logError}; the pure-detection subclass in
+     * {@link #detect(MethodTree)} overrides this to collect {@link Detection} records instead.
+     */
+    void reportNullable(Tree at, String varName) {
+        if (compilerPlugin == null) return;
+        compilerPlugin.logError(methodPath, at,
+                "Potentially null pointer '" + varName + "' used in member access.\n"
+              + "Why: the BPF verifier rejects any dereference of a value that may be NULL. "
+              + "Helpers like bpf_map_lookup_elem return NULL on miss; the verifier tracks "
+              + "this and refuses to load programs that skip the check.\n"
+              + "Fix: guard the use:\n"
+              + "  if (" + varName + " == null) return 0;\n"
+              + "  /* now safe to use " + varName + " */\n"
+              + "See: cookbook §Nullability");
+    }
+
     /** Emit an error if the expression resolves to a MAYBE_NULL variable. */
     private void checkNotNullable(ExpressionTree expr, Map<String, NullabilityValue> env, String context) {
         if (expr instanceof IdentifierTree id) {
             var val = env.getOrDefault(id.getName().toString(), NullabilityValue.UNKNOWN);
             if (val == NullabilityValue.MAYBE_NULL) {
-                compilerPlugin.logError(methodPath, expr,
-                        "Potentially null pointer '" + id.getName() + "' used in " + context + ".\n"
-                      + "Why: the BPF verifier rejects any dereference of a value that may be NULL. "
-                      + "Helpers like bpf_map_lookup_elem return NULL on miss; the verifier tracks "
-                      + "this and refuses to load programs that skip the check.\n"
-                      + "Fix: guard the use:\n"
-                      + "  if (" + id.getName() + " == null) return 0;\n"
-                      + "  /* now safe to use " + id.getName() + " */\n"
-                      + "See: cookbook §Nullability");
+                reportNullable(expr, id.getName().toString());
             }
         }
     }
