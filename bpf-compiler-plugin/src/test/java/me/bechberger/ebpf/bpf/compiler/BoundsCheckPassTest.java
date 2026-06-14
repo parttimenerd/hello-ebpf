@@ -39,12 +39,12 @@ class BoundsCheckPassTest {
 
     @Test
     void voidPointerDataIsRecognisedAsPacketOrigin() {
-        // `p = Ptr.voidPointer(ctx.data)` — wrapped in voidPointer call.
+        // `p = Ptr.voidPointer(ctx.data)` — wrapped in member-select voidPointer call.
         var d = detect("""
+                class Ptr { static Object voidPointer(Object x) { return x; } }
                 class T {
-                    static Object voidPointer(Object x) { return x; }
                     void f(Object ctx) {
-                        Object p = voidPointer(ctx.data);
+                        Object p = Ptr.voidPointer(ctx.data);
                         p.val();   // unguarded → warning
                     }
                 }

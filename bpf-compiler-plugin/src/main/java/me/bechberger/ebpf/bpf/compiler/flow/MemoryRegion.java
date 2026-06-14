@@ -63,14 +63,11 @@ public enum MemoryRegion implements Lattice<MemoryRegion> {
         // PACKET ∪ KERNEL_UNTRACKED → KERNEL_UNTRACKED (transitive: PACKET⊑KERNEL_TRACKED⊑KERNEL_UNTRACKED).
         if ((a == PACKET && b == KERNEL_UNTRACKED) || (a == KERNEL_UNTRACKED && b == PACKET)) return KERNEL_UNTRACKED;
         // STACK is a near-bottom for anything non-USER/non-ARENA:
-        // STACK ∪ MAP_VALUE → UNKNOWN (defer region decision to deref site);
-        // STACK ∪ USER/ARENA → CONFLICT; STACK ∪ X → X for other X.
+        // STACK ∪ X → X for non-USER/non-ARENA; STACK ∪ USER/ARENA → CONFLICT.
         if (a == STACK) {
-            if (b == MAP_VALUE) return UNKNOWN;
             return (b == USER || b == ARENA) ? CONFLICT : b;
         }
         if (b == STACK) {
-            if (a == MAP_VALUE) return UNKNOWN;
             return (a == USER || a == ARENA) ? CONFLICT : a;
         }
         // MAP_VALUE pairs with KERNEL_TRACKED safely (it's a verifier-tracked kernel pointer).
@@ -92,7 +89,7 @@ public enum MemoryRegion implements Lattice<MemoryRegion> {
         // Safe-degrade orderings:
         if (a == KERNEL_TRACKED && b == KERNEL_UNTRACKED) return true;
         if (a == PACKET && (b == KERNEL_TRACKED || b == KERNEL_UNTRACKED)) return true;
-        if (a == STACK && b != USER && b != ARENA && b != UNKNOWN && b != MAP_VALUE) return true;
+        if (a == STACK && b != USER && b != ARENA && b != UNKNOWN) return true;
         if (a == MAP_VALUE && (b == KERNEL_TRACKED || b == KERNEL_UNTRACKED)) return true;
         return false;
     }

@@ -40,6 +40,8 @@ public class ArenaAccessCheckPass {
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
     private final AnalysisContext ctx;
+    /** Non-null only when running in pure-detection mode via {@link #detect}. */
+    private final java.util.List<Detection> detectOut;
 
     /**
      * Pure detection: run the arena-access check on {@code method} and return every
@@ -47,21 +49,11 @@ public class ArenaAccessCheckPass {
      */
     public static java.util.List<Detection> detect(MethodTree method) {
         var detections = new java.util.ArrayList<Detection>();
-        var pass = new ArenaAccessCheckPass(null, null, new AnalysisContext()) {
-            @Override
-            void emitArenaLeak(Tree at, String varName, String originDesc) {
-                String msg = "Arena pointer '" + varName + "'.asLong() drops the __arena address-space tag.\n"
-                           + "Why: " + originDesc + "; arena addresses carry a verifier tag that is lost on cast to long.\n"
-                           + "Fix: keep the value as Ptr<T>, or bridge via BPFJ.castUser(" + varName + ").\n"
-                           + "See: cookbook §Arena";
-                detections.add(new Detection(at, "arena.aslong-leak", msg));
-            }
-        };
+        var pass = new ArenaAccessCheckPass(null, null, new AnalysisContext(), detections);
         pass.analyzeMethod(method);
         return detections;
     }
 
-    /** Visible for the detect() path. */
     private void analyzeMethod(MethodTree method) {
         var body = method.getBody();
         if (body == null) return;
@@ -124,6 +116,14 @@ public class ArenaAccessCheckPass {
      * {@link #detect(MethodTree)} overrides to collect {@link Detection} records.
      */
     void emitArenaLeak(Tree at, String varName, String originDesc) {
+        if (detectOut != null) {
+            String msg = "Arena pointer '" + varName + "'.asLong() drops the __arena address-space tag.\n"
+                       + "Why: " + originDesc + "; arena addresses carry a verifier tag that is lost on cast to long.\n"
+                       + "Fix: keep the value as Ptr<T>, or bridge via BPFJ.castUser(" + varName + ").\n"
+                       + "See: cookbook §Arena";
+            detectOut.add(new Detection(at, "arena.aslong-leak", msg));
+            return;
+        }
         if (compilerPlugin == null) return;
         compilerPlugin.logWarning(methodPath, at,
                 "Arena pointer '" + varName + "'.asLong() drops the __arena address-space tag.\n"
@@ -144,6 +144,15 @@ public class ArenaAccessCheckPass {
         this.compilerPlugin = compilerPlugin;
         this.methodPath = methodPath;
         this.ctx = ctx;
+        this.detectOut = null;
+    }
+
+    private ArenaAccessCheckPass(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath,
+                                 AnalysisContext ctx, java.util.List<Detection> detectOut) {
+        this.compilerPlugin = compilerPlugin;
+        this.methodPath = methodPath;
+        this.ctx = ctx;
+        this.detectOut = detectOut;
     }
 
     public void analyze() {

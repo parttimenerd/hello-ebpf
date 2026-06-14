@@ -35,6 +35,8 @@ public class NullabilityAnalyzer {
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
     private final AnalysisContext ctx;
+    /** Non-null only when running in pure-detection mode via {@link #detect}. */
+    private final java.util.List<Detection> detectOut;
 
     /** Nullability state per local variable name at the current program point. */
     private final Map<String, NullabilityValue> state = new HashMap<>();
@@ -45,19 +47,15 @@ public class NullabilityAnalyzer {
      */
     public static java.util.List<Detection> detect(MethodTree method) {
         var detections = new java.util.ArrayList<Detection>();
-        var collector = new NullabilityAnalyzer(null, null, new AnalysisContext()) {
-            @Override
-            void reportNullable(Tree at, String varName) {
-                String msg = "Potentially null pointer '" + varName + "' used in member access.\n"
-                           + "Why: the BPF verifier rejects any dereference of a value that may be NULL.\n"
-                           + "Fix: guard with if (" + varName + " == null) return 0;\n"
-                           + "See: cookbook §Nullability";
-                detections.add(new Detection(at, "nullability.deref-of-nullable", msg));
-            }
-        };
+        var collector = new NullabilityAnalyzer(null, null, new AnalysisContext(), detections);
         var body = method.getBody();
-        if (body != null) collector.analyzeBlock(body, new HashMap<>());
+        if (body != null) collector.runBlock(body, new HashMap<>());
         return detections;
+    }
+
+    /** Used only by {@link #detect}: runs analyzeBlock without a live CompilerPlugin. */
+    private void runBlock(BlockTree block, Map<String, NullabilityValue> env) {
+        analyzeBlock(block, env);
     }
 
     public NullabilityAnalyzer(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath) {
@@ -69,6 +67,15 @@ public class NullabilityAnalyzer {
         this.compilerPlugin = compilerPlugin;
         this.methodPath = methodPath;
         this.ctx = ctx;
+        this.detectOut = null;
+    }
+
+    private NullabilityAnalyzer(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath,
+                                AnalysisContext ctx, java.util.List<Detection> detectOut) {
+        this.compilerPlugin = compilerPlugin;
+        this.methodPath = methodPath;
+        this.ctx = ctx;
+        this.detectOut = detectOut;
     }
 
     /** Run the analysis. Errors are reported via {@link CompilerPlugin#logError}. */
@@ -332,6 +339,14 @@ public class NullabilityAnalyzer {
      * {@link #detect(MethodTree)} overrides this to collect {@link Detection} records instead.
      */
     void reportNullable(Tree at, String varName) {
+        if (detectOut != null) {
+            String msg = "Potentially null pointer '" + varName + "' used in member access.\n"
+                       + "Why: the BPF verifier rejects any dereference of a value that may be NULL.\n"
+                       + "Fix: guard with if (" + varName + " == null) return 0;\n"
+                       + "See: cookbook §Nullability";
+            detectOut.add(new Detection(at, "nullability.deref-of-nullable", msg));
+            return;
+        }
         if (compilerPlugin == null) return;
         compilerPlugin.logError(methodPath, at,
                 "Potentially null pointer '" + varName + "' used in member access.\n"

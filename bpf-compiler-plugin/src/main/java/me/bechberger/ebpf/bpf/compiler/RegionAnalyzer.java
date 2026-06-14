@@ -45,6 +45,8 @@ public class RegionAnalyzer {
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
     private final AnalysisContext ctx;
+    /** Non-null only when running in pure-detection mode via {@link #detect}. */
+    private final java.util.List<Detection> detectOut;
     /** Last AST site (declaration / assignment) where each variable was assigned a non-UNKNOWN
      *  region.  Populated during the second annotation pass and used by {@link #reportMixing}
      *  so the mixing error can name BOTH source sites.  Reset on each {@link #analyze()} run. */
@@ -59,6 +61,15 @@ public class RegionAnalyzer {
         this.compilerPlugin = compilerPlugin;
         this.methodPath = methodPath;
         this.ctx = ctx;
+        this.detectOut = null;
+    }
+
+    private RegionAnalyzer(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath,
+                           AnalysisContext ctx, java.util.List<Detection> detectOut) {
+        this.compilerPlugin = compilerPlugin;
+        this.methodPath = methodPath;
+        this.ctx = ctx;
+        this.detectOut = detectOut;
     }
 
     public AnalysisContext context() { return ctx; }
@@ -76,16 +87,7 @@ public class RegionAnalyzer {
 
     public static java.util.List<Detection> detect(MethodTree method, AnalysisContext ctx) {
         var detections = new java.util.ArrayList<Detection>();
-        var analyzer = new RegionAnalyzer(null, null, ctx) {
-            @Override
-            void emitMixingError(Tree at, String varName, MemoryRegion prev, MemoryRegion rhs) {
-                String msg = "Cannot mix " + prev + " and " + rhs + " memory regions in '" + varName + "'.\n"
-                           + "Why: BPF segregates address spaces.\n"
-                           + "Fix: use BPFJ.castUser/castKernel/castArena to cross boundaries.\n"
-                           + "See: cookbook §Memory regions";
-                detections.add(new Detection(at, "region.mixing", msg));
-            }
-        };
+        var analyzer = new RegionAnalyzer(null, null, ctx, detections);
         analyzer.analyzeMethod(method);
         return detections;
     }
@@ -369,6 +371,14 @@ public class RegionAnalyzer {
      * {@link Detection} records instead.
      */
     void emitMixingError(Tree at, String varName, MemoryRegion prev, MemoryRegion rhs) {
+        if (detectOut != null) {
+            String msg = "Cannot mix " + prev + " and " + rhs + " memory regions in '" + varName + "'.\n"
+                       + "Why: BPF segregates address spaces.\n"
+                       + "Fix: use BPFJ.castUser/castKernel/castArena to cross boundaries.\n"
+                       + "See: cookbook §Memory regions";
+            detectOut.add(new Detection(at, "region.mixing", msg));
+            return;
+        }
         if (compilerPlugin == null) return;
         // (full message built in reportMixing)
     }

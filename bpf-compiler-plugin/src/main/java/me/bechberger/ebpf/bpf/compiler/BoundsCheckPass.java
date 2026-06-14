@@ -40,6 +40,8 @@ public class BoundsCheckPass {
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
     private final AnalysisContext ctx;
+    /** Non-null only when running in pure-detection mode via {@link #detect}. */
+    private final java.util.List<Detection> detectOut;
 
     /**
      * Pure detection: run the bounds-check pass on {@code method} and return every unguarded
@@ -47,17 +49,7 @@ public class BoundsCheckPass {
      */
     public static java.util.List<Detection> detect(MethodTree method) {
         var detections = new java.util.ArrayList<Detection>();
-        var pass = new BoundsCheckPass(null, null, new AnalysisContext()) {
-            @Override
-            void emitUnguardedDeref(Tree at, String name) {
-                String msg = "Packet pointer '" + name + "' dereferenced without any bounds check.\n"
-                           + "Why: the verifier requires every packet-pointer deref to be preceded by "
-                           + "a comparison against the packet's end pointer.\n"
-                           + "Fix: add a bounds check before the deref.\n"
-                           + "See: cookbook §Packet bounds";
-                detections.add(new Detection(at, "bounds.unguarded-packet-deref", msg));
-            }
-        };
+        var pass = new BoundsCheckPass(null, null, new AnalysisContext(), detections);
         var body = method.getBody();
         if (body != null) {
             var packetOrigin = pass.collectPacketOriginVars(body);
@@ -80,6 +72,15 @@ public class BoundsCheckPass {
         this.compilerPlugin = compilerPlugin;
         this.methodPath = methodPath;
         this.ctx = ctx;
+        this.detectOut = null;
+    }
+
+    private BoundsCheckPass(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath,
+                            AnalysisContext ctx, java.util.List<Detection> detectOut) {
+        this.compilerPlugin = compilerPlugin;
+        this.methodPath = methodPath;
+        this.ctx = ctx;
+        this.detectOut = detectOut;
     }
 
     public void analyze() {
@@ -206,6 +207,15 @@ public class BoundsCheckPass {
      * {@link #detect(MethodTree)} overrides to collect {@link Detection} records.
      */
     void emitUnguardedDeref(Tree at, String name) {
+        if (detectOut != null) {
+            String msg = "Packet pointer '" + name + "' dereferenced without any bounds check.\n"
+                       + "Why: the verifier requires every packet-pointer deref to be preceded by "
+                       + "a comparison against the packet's end pointer.\n"
+                       + "Fix: add a bounds check before the deref.\n"
+                       + "See: cookbook §Packet bounds";
+            detectOut.add(new Detection(at, "bounds.unguarded-packet-deref", msg));
+            return;
+        }
         if (compilerPlugin == null) return;
         compilerPlugin.logWarning(methodPath, at,
                 "Packet pointer '" + name + "' dereferenced without any bounds check.\n"
