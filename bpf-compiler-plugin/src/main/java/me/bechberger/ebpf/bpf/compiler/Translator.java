@@ -60,6 +60,8 @@ import static me.bechberger.ebpf.bpf.compiler.NullHelpers.callIfNonNull;
 class Translator {
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
+    /** Shared dataflow facts (region, nullability, packet-guard, suppressions). Read-only here. */
+    private final me.bechberger.ebpf.bpf.compiler.flow.AnalysisContext ctx;
     private final Set<Define> requiredDefines = new HashSet<>();
     /** Top-level synthetic C functions emitted for {@code $funcN} lambda lifts.
      *  Collected during translation; emitted alongside the main method declaration. */
@@ -68,8 +70,14 @@ class Translator {
     private int syntheticLambdaCounter = 0;
 
     Translator(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath) {
+        this(compilerPlugin, methodPath, new me.bechberger.ebpf.bpf.compiler.flow.AnalysisContext());
+    }
+
+    Translator(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath,
+               me.bechberger.ebpf.bpf.compiler.flow.AnalysisContext ctx) {
         this.compilerPlugin = compilerPlugin;
         this.methodPath = methodPath;
+        this.ctx = ctx;
     }
 
     /** Synthetic top-level C functions generated to back {@code $funcN} lambda
@@ -381,21 +389,24 @@ class Translator {
                 yield new ContinueStatement();
             }
             case EnhancedForLoopTree enhancedFor -> {
-                logError(statement, "Enhanced-for loops are not supported in BPF programs. " +
-                        "Use a standard for-loop with explicit indexing, or call map.bpf_get(key) directly. " +
-                        "Iterating a Java Iterable (e.g. for (x : collection)) has no BPF equivalent. " +
-                        "Statement: " + statement);
+                logError(statement, "Enhanced for-loops (for(T x : coll)) are not supported in BPF.\n"
+                        + "Why: BPF has no iterator protocol; the verifier needs a bounded counter.\n"
+                        + "Fix: use 'for (int i = 0; i < N; i++)' with a constant N, or 'BPFJ.bpfLoop(N, i -> ...)' for runtime N.\n"
+                        + "See: cookbook §Loops");
                 yield null;
             }
             case SwitchTree switchTree -> {
-                logError(statement, "Switch statements are not supported in BPF programs; " +
-                        "rewrite using if-else chains. Statement: " + statement);
+                logError(statement, "Switch statements are not supported in BPF programs.\n"
+                        + "Why: clang lowers switches to jump tables, which the verifier rejects on most kernels.\n"
+                        + "Fix: use chained 'if (x == A) ... else if (x == B) ...'.\n"
+                        + "See: cookbook §Control flow");
                 yield null;
             }
             case TryTree ignored -> {
-                logError(statement, "Try-catch blocks are not supported in BPF programs. " +
-                        "BPF has no exception handling; use explicit return-code checks instead. " +
-                        "Statement: " + statement);
+                logError(statement, "Try-catch is not supported in BPF programs.\n"
+                        + "Why: BPF has no exception model; helpers signal failure via return values (often -errno or NULL).\n"
+                        + "Fix: check the helper's return value with an 'if'. Map lookups: 'var p = map.bpf_get(k); if (p == null) return ...;'.\n"
+                        + "See: cookbook §Error handling");
                 yield null;
             }
             default -> {
@@ -453,6 +464,16 @@ class Translator {
                 yield array != null && index != null ? new OperatorExpression(Operator.SUBSCRIPT, array, index) : null;
             }
             case AssignmentTree assignmentTree -> {
+                // Special case: String concatenation assignment.  'dst = a + b' compiles to
+                // BPF_SNPRINTF(dst, sizeof(dst), "%s%s", a, b) when dst is an @Size(N) String.
+                var rhsForConcat = StringConcatSupport.unparen(assignmentTree.getExpression());
+                if (rhsForConcat instanceof BinaryTree binRhs
+                        && binRhs.getKind() == Tree.Kind.PLUS
+                        && compilerPlugin.isSameType(methodPath, binRhs, String.class)) {
+                    var snprintf = tryTranslateStringConcat(assignmentTree.getVariable(), binRhs);
+                    if (snprintf != null) yield snprintf;
+                    yield null; // tryTranslateStringConcat already logged the error
+                }
                 var variable = translate(assignmentTree.getVariable());
                 var expr = assignmentTree.getExpression();
                 Expression value = translate(expr);
@@ -473,11 +494,16 @@ class Translator {
                 yield new OperatorExpression(Operator.ASSIGNMENT, variable, value);
             }
             case BinaryTree binaryTree -> {
-                if (compilerPlugin.isSameType(methodPath, binaryTree, String.class)) {
-                    logError(expression, "String concatenation is not supported in BPF programs. " +
-                            "Use BPFJ.charBuf() with bpf_probe_read_kernel_str() for string data, " +
-                            "or bpf_trace_printk/bpf_snprintf for formatted output. " +
-                            "Expression: " + expression);
+                if (compilerPlugin.isSameType(methodPath, binaryTree, String.class)
+                        && binaryTree.getKind() == Tree.Kind.PLUS) {
+                    logError(expression, "String concatenation in this position is not supported in BPF.\n"
+                            + "Why: BPF has no heap; concatenation requires a destination buffer "
+                            + "(an '@Size(N) String') to hold the result.\n"
+                            + "Fix: assign the concat to a sized destination first, e.g.\n"
+                            + "  '@Size(64) String dst = \"\"; dst = a + b;' — the plugin lowers this to "
+                            + "'BPF_SNPRINTF(dst, sizeof(dst), \"%s%s\", a, b)'.\n"
+                            + "  For format-string output use 'BPFJ.bpf_snprintf(dst, \"%s %d\", a, n)' directly.\n"
+                            + "See: cookbook §Strings");
                 }
                 var left = translate(binaryTree.getLeftOperand());
                 var right = translate(binaryTree.getRightOperand());
@@ -601,6 +627,18 @@ class Translator {
                 if (coreLifted != null) {
                     yield coreLifted;
                 }
+                // Stage 2: auto-emit bpf_probe_read_user/kernel for USER / KERNEL_UNTRACKED
+                // receivers — but only when the receiver is `Ptr<T>` (so we have a real pointee
+                // type to read) and we're not the LHS of an assignment.
+                {
+                    var region = ctx.regionOf(memberSelectTree.getExpression());
+                    if ((region == me.bechberger.ebpf.bpf.compiler.flow.MemoryRegion.USER
+                            || region == me.bechberger.ebpf.bpf.compiler.flow.MemoryRegion.KERNEL_UNTRACKED)
+                            && !isAssignmentTarget(memberSelectTree)) {
+                        var auto = maybeAutoProbeRead(memberSelectTree.getExpression(), member, region);
+                        if (auto != null) yield auto;
+                    }
+                }
                 yield expr != null ? new OperatorExpression(Operator.MEMBER_ACCESS, expr, variable(member)) : null;
             }
             case ParenthesizedTree parenthesizedTree ->
@@ -642,11 +680,19 @@ class Translator {
                             yield expr; // a cast introduced by the compiler
                         }
                         if (type.toString().equals(Ptr.class.getName())) {
-                            logError(expression, "Unsupported type cast to " + type + " use 'Ptr::cast' instead: " + typeCastTree);
+                            logError(expression, "Java casts on pointer types ((Ptr) p) are not supported.\n"
+                                    + "Why: pointer casts in BPF need address-space-tag preservation; a plain cast loses it.\n"
+                                    + "Fix: use 'Ptr.<T>cast(p)' for kernel pointers, 'BPFJ.castUser(p)' for user pointers, "
+                                    + "'BPFJ.castArena(p)' for arena pointers.\n"
+                                    + "See: cookbook §Pointer casts");
                             yield null;
                         }
                         if (type instanceof ClassType classType && classType.asElement().getQualifiedName().toString().equals(Ptr.class.getName())) {
-                            logError(expression, "Unsupported type cast to " + type + " use 'Ptr.<Type>cast(...)' instead: " + typeCastTree);
+                            logError(expression, "Java casts on pointer types ((Ptr<T>) p) are not supported.\n"
+                                    + "Why: pointer casts in BPF need address-space-tag preservation; a plain cast loses it.\n"
+                                    + "Fix: use 'Ptr.<T>cast(p)' for kernel pointers, 'BPFJ.castUser(p)' for user pointers, "
+                                    + "'BPFJ.castArena(p)' for arena pointers.\n"
+                                    + "See: cookbook §Pointer casts");
                             yield null;
                         }
                     }
@@ -789,18 +835,26 @@ class Translator {
                 yield left != null && right != null ? new OperatorExpression(operator, left, right) : null;
             }
             case LambdaExpressionTree lambda -> {
-                logError(expression, "Lambdas are only supported in calls to built-in functions: " + expression);
+                logError(expression, "Lambdas are only allowed as arguments to built-in BPF helpers ('bpfLoop', 'bpfForEach', timer callbacks).\n"
+                        + "Why: BPF cannot allocate closure objects; only known call-sites can inline a lambda body.\n"
+                        + "Fix: inline the lambda's body at the call site, or split it into a separate '@BPFFunction' method "
+                        + "and pass a method-reference (where supported).\n"
+                        + "See: cookbook §Lambdas");
                 yield null;
             }
+            case MemberReferenceTree mref -> translateMethodReference(mref);
             case SwitchExpressionTree switchExpr -> {
-                logError(expression, "Switch expressions are not supported in BPF programs; " +
-                        "rewrite using the ternary operator or if-else chains. Expression: " + expression);
+                logError(expression, "Switch expressions are not supported in BPF programs.\n"
+                        + "Why: clang lowers switches to jump tables, which the verifier rejects on most kernels.\n"
+                        + "Fix: rewrite using the ternary operator or chained 'if (x == A) ... else ...'.\n"
+                        + "See: cookbook §Control flow");
                 yield null;
             }
             case InstanceOfTree ignored -> {
-                logError(expression, "Java instanceof checks are not supported in BPF programs. " +
-                        "Use explicit type casts or dispatch based on known types instead. " +
-                        "Expression: " + expression);
+                logError(expression, "'instanceof' is not supported in BPF programs.\n"
+                        + "Why: BPF has no Java runtime, no class hierarchy, and no vtables.\n"
+                        + "Fix: use a tagged union — add a 'kind' field of an enum type and dispatch with chained 'if (x.kind == ...)'.\n"
+                        + "See: cookbook §Tagged unions");
                 yield null;
             }
             default -> {
@@ -815,6 +869,19 @@ class Translator {
      */
     @Nullable
     Expression translate(MethodInvocationTree methodInvocationTree) {
+        // Stage 2: auto-emit bpf_probe_read_user/kernel for `p.val()` when the receiver pointer
+        // lives in USER or KERNEL_UNTRACKED memory. Skip for KERNEL_TRACKED / MAP_VALUE / ARENA /
+        // STACK / PACKET — those allow direct deref and the existing template handles them.
+        if (isPtrVal(methodInvocationTree)
+                && methodInvocationTree.getMethodSelect() instanceof MemberSelectTree valSel) {
+            var receiver = valSel.getExpression();
+            var region = ctx.regionOf(receiver);
+            if (region == me.bechberger.ebpf.bpf.compiler.flow.MemoryRegion.USER
+                    || region == me.bechberger.ebpf.bpf.compiler.flow.MemoryRegion.KERNEL_UNTRACKED) {
+                var auto = maybeAutoProbeRead(receiver, null, region);
+                if (auto != null) return auto;
+            }
+        }
         var calledMethod = methodInvocationTree.getMethodSelect();
         var methodTree = (JCMethodInvocation) methodInvocationTree;
         MethodSymbol symbol = null;
@@ -918,7 +985,8 @@ class Translator {
         try {
             var res = compilerPlugin.methodTemplateCache.render(methodPath, methodInvocationTree, symbol,
                     new CallArgs(thisExpression, arguments, declarators, typeDeclarators,
-                            this::promoteLambda));
+                            this::promoteLambda,
+                            idx -> resolveAutoSize(methodInvocationTree, idx)));
             return new VerbatimExpression(
                                 res.code().endsWith(";") ?
                                         res.code().substring(0, res.code().length() - 1) :
@@ -1056,6 +1124,43 @@ class Translator {
             logError(literalTree, "Unsupported literal value " + literalTree.getValue());
             return null;
         }
+    }
+
+    /**
+     * Translate {@code dst = a + b + ...} (where every operand is a {@code String} expression)
+     * into a {@code BPF_SNPRINTF(dst, sizeof(dst), "%s%s...", a, b, ...)} call. Returns
+     * {@code null} (after logging an error) when the destination has no resolvable {@code @Size}
+     * or when an operand fails to translate.
+     */
+    @Nullable
+    CAST.Expression tryTranslateStringConcat(ExpressionTree lhs, BinaryTree concat) {
+        var lhsCast = translate(lhs);
+        if (lhsCast == null) return null;
+        var operands = StringConcatSupport.flatten(
+                concat,
+                b -> b.getKind() == Tree.Kind.PLUS
+                        && compilerPlugin.isSameType(methodPath, b, String.class));
+        // Translate each operand. They must each be a String expression.
+        var translatedArgs = new java.util.ArrayList<CAST.Expression>();
+        for (var op : operands) {
+            var t = translate(op);
+            if (t == null) return null;
+            translatedArgs.add(t);
+        }
+        // Build "%s%s...%s" format literal.
+        var fmt = new VerbatimExpression("\"" + StringConcatSupport.formatStringFor(operands.size()) + "\"");
+        var sizeofDst = new VerbatimExpression("sizeof(" + lhsCast.toPrettyString() + ")");
+        // BPF_SNPRINTF(dst, sizeof(dst), fmt, args...) — emit as a verbatim call expression so we
+        // don't have to thread a synthetic helper through the translator's call machinery.
+        var sb = new StringBuilder("BPF_SNPRINTF(");
+        sb.append(lhsCast.toPrettyString()).append(", ");
+        sb.append(sizeofDst.toPrettyString()).append(", ");
+        sb.append(fmt.toPrettyString());
+        for (var arg : translatedArgs) {
+            sb.append(", ").append(arg.toPrettyString());
+        }
+        sb.append(")");
+        return new VerbatimExpression(sb.toString());
     }
 
     @Nullable
@@ -1563,6 +1668,56 @@ class Translator {
         return false;
     }
 
+    // ── Stage 2: auto-emit bpf_probe_read_user/kernel at deref sites ───────
+    //
+    // Plan §2: when a deref site (`p.f` or `p.val()`) has receiver region
+    // USER or KERNEL_UNTRACKED, emit a GNU stmt-expr that probe-reads the
+    // whole pointee struct into a stack local then field-accesses on it.
+
+    /** True if {@code call} is a {@code Ptr.val()} invocation. */
+    private boolean isPtrVal(MethodInvocationTree call) {
+        if (!(call.getMethodSelect() instanceof MemberSelectTree ms)) return false;
+        if (!ms.getIdentifier().contentEquals("val")) return false;
+        if (!call.getArguments().isEmpty()) return false;
+        var t = typeOf(ms.getExpression());
+        return t instanceof ClassType ct
+                && ct.asElement().getQualifiedName().contentEquals(Ptr.class.getName());
+    }
+
+    /** Extract the {@code T} of a {@code Ptr<T>} expression. */
+    private @Nullable TypeMirror ptrTypeArgument(ExpressionTree pointerExpr) {
+        var t = typeOf(pointerExpr);
+        if (!(t instanceof ClassType ct)) return null;
+        if (!ct.asElement().getQualifiedName().contentEquals(Ptr.class.getName())) return null;
+        if (ct.getTypeArguments().isEmpty()) return null;
+        return ct.getTypeArguments().get(0);
+    }
+
+    /**
+     * Build a probe-read GNU stmt-expr for the pointee, optionally projecting one field.
+     * Returns null when region isn't USER/KERNEL_UNTRACKED or the type can't be translated.
+     */
+    private @Nullable CAST.Expression maybeAutoProbeRead(
+            ExpressionTree pointerExpr, @Nullable String field,
+            me.bechberger.ebpf.bpf.compiler.flow.MemoryRegion region) {
+        if (region != me.bechberger.ebpf.bpf.compiler.flow.MemoryRegion.USER
+                && region != me.bechberger.ebpf.bpf.compiler.flow.MemoryRegion.KERNEL_UNTRACKED) return null;
+        var pointee = ptrTypeArgument(pointerExpr);
+        if (pointee == null) return null;
+        var pointeeElem = (pointee instanceof Type pt) ? pt.asElement() : null;
+        var typeDecl = translateType(pointeeElem, pointee);
+        if (typeDecl == null) return null;
+        var src = translate(pointerExpr);
+        if (src == null) return null;
+        String helper = (region == me.bechberger.ebpf.bpf.compiler.flow.MemoryRegion.USER)
+                ? "bpf_probe_read_user" : "bpf_probe_read_kernel";
+        String tStr = typeDecl.toPrettyString();
+        String srcStr = src.toPrettyString();
+        String tail = (field != null) ? "__v." + field : "__v";
+        return new VerbatimExpression(
+                "({ " + tStr + " __v; " + helper + "(&__v, sizeof(__v), " + srcStr + "); " + tail + "; })");
+    }
+
     private @Nullable CAST.Expression tryLiftCoreRead(MemberSelectTree top) {
         // Only the outermost kernel-BTF MemberSelect performs the lift.
         if (parentIsKernelBtfMemberSelect(top) || parentIsKernelBtfPtrValCall(top)) return null;
@@ -1681,5 +1836,85 @@ class Translator {
             return mst.getExpression();
         }
         return expr;
+    }
+
+    /**
+     * Resolve the {@code @Size(N)} literal carried by the argument at index {@code argIndex} of a
+     * call. Used by the {@code $autosize$argN} placeholder to substitute a buffer's compile-time
+     * size into helpers that take {@code (buf, size)} pairs.
+     *
+     * <p>Lookup walks (in order):
+     * <ol>
+     *   <li>If the argument is a {@code Ptr.of(X)} or any other call wrapper, peel back to the
+     *       inner expression so we end up at the underlying buffer reference.</li>
+     *   <li>If the result is an {@code IdentifierTree} or {@code MemberSelectTree}, resolve its
+     *       element via {@link com.sun.source.util.Trees#getTree(javax.lang.model.element.Element)}
+     *       and read {@link SizeInference#inferSize(VariableTree)} on the declaration.</li>
+     * </ol>
+     * Returns {@code null} when no literal {@code @Size(N)} can be found — the renderer turns
+     * that into a 4-part error.
+     */
+    @org.jetbrains.annotations.Nullable Integer resolveAutoSize(MethodInvocationTree call, int argIndex) {
+        var args = call.getArguments();
+        if (argIndex < 0 || argIndex >= args.size()) return null;
+        ExpressionTree arg = unwrapForSize(args.get(argIndex));
+        var element = compilerPlugin.trees.getElement(methodPath.path(arg));
+        if (element == null) return null;
+        var decl = compilerPlugin.trees.getTree(element);
+        if (decl instanceof VariableTree vt) {
+            var size = SizeInference.inferSize(vt);
+            return size.isPresent() ? size.getAsInt() : null;
+        }
+        return null;
+    }
+
+    /**
+     * Peel back wrappers commonly used at call sites so {@link #resolveAutoSize} can reach the
+     * underlying buffer reference: {@code Ptr.of(X)} → {@code X}; parens → inner.
+     */
+    private static ExpressionTree unwrapForSize(ExpressionTree e) {
+        while (e instanceof ParenthesizedTree p) e = p.getExpression();
+        if (e instanceof MethodInvocationTree mit && mit.getArguments().size() == 1
+                && mit.getMethodSelect() instanceof MemberSelectTree mst
+                && "of".contentEquals(mst.getIdentifier())) {
+            // Ptr.of(X) — peel one level.
+            return unwrapForSize(mit.getArguments().get(0));
+        }
+        return e;
+    }
+
+    /**
+     * Lower a Java method reference ({@code this::cb}, {@code T::cb}) to the bare C identifier
+     * of an existing top-level {@code @BPFFunction}. The verifier-callable BPF helpers
+     * (notably {@code bpf_timer_set_callback}) take a function pointer; in C that's just the
+     * function's name.
+     *
+     * <p>Validation: the referenced method must already be a top-level {@code @BPFFunction} —
+     * we don't synthesize a function from a method reference because, unlike a lambda body, a
+     * method reference's target already exists as a callable BPF function. If the target lacks
+     * {@code @BPFFunction}, we emit a 4-part error pointing at the fix (annotate the method).
+     */
+    @Nullable
+    private CAST.Expression translateMethodReference(MemberReferenceTree mref) {
+        var element = compilerPlugin.trees.getElement(methodPath.path(mref));
+        if (!(element instanceof MethodSymbol target)) {
+            logError(mref, "Method reference '" + mref + "' did not resolve to a method.\n"
+                  + "Why: the compiler plugin needs the referenced method's declaration to verify "
+                  + "it is a @BPFFunction.\n"
+                  + "Fix: ensure the referenced method exists and is reachable from this scope.");
+            return null;
+        }
+        var ann = compilerPlugin.getEffectiveBPFFunction(target);
+        if (ann == null) {
+            logError(mref, "Method reference '" + mref + "' targets '" + target.getSimpleName()
+                  + "', which is not a @BPFFunction.\n"
+                  + "Why: BPF helpers like bpf_timer_set_callback take a function pointer; only "
+                  + "methods compiled to top-level BPF functions can be passed.\n"
+                  + "Fix: annotate '" + target.getSimpleName() + "' with @BPFFunction (or one of "
+                  + "the shorthand attach annotations like @Kprobe).\n"
+                  + "See: cookbook §Timers");
+            return null;
+        }
+        return new VerbatimExpression(target.getSimpleName().toString());
     }
 }

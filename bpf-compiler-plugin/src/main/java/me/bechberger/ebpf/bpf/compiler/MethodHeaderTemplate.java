@@ -125,7 +125,12 @@ public record MethodHeaderTemplate(String raw, List<TemplatePart> parts) {
                 while (k < part.length() && Character.isDigit(part.charAt(k))) {
                     k++;
                 }
-                int num = Integer.parseInt(part.substring(j, k));
+                int num;
+                try {
+                    num = Integer.parseInt(part.substring(j, k));
+                } catch (NumberFormatException e) {
+                    throw new TemplateRenderException("Missing or invalid number after $" + name + " in template");
+                }
                 switch (name) {
                     case "paramName" -> templateParts.add(new ParamName(num - 1));
                     case "paramType" -> templateParts.add(new ParamType(num - 1));

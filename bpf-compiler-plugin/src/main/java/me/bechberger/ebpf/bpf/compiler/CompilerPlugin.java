@@ -367,8 +367,10 @@ public class CompilerPlugin implements Plugin {
     }
 
     void logError(TypedTreePath<?> path, Tree element, String message) {
-        createProcessingEnvironment().getMessager().printMessage(Diagnostic.Kind.ERROR, message,
-                trees.getElement(path.path(element)));
+        var elPath = path.path(element);
+        var el = elPath == null ? null : trees.getElement(elPath);
+        if (el == null) el = trees.getElement(path.path()); // fall back to enclosing method
+        createProcessingEnvironment().getMessager().printMessage(Diagnostic.Kind.ERROR, message, el);
     }
 
     void logWarning(TypedTreePath<?> path, Tree element, String message) {
@@ -471,12 +473,25 @@ public class CompilerPlugin implements Plugin {
     }
 
     private @Nullable FuncDeclStatementResult processBPFFunctionWithCode(TypedTreePath<MethodTree> methodPath) {
-        new NullabilityAnalyzer(this, methodPath).analyze();
-        new RegionAnalyzer(this, methodPath).analyze();
-        new BoundsCheckPass(this, methodPath).analyze();
-        new HelperContextPass(this, methodPath).analyze();
-        new ArenaAccessCheckPass(this, methodPath).analyze();
-        var translator = new Translator(this, methodPath);
+        // Shared per-method analysis context — populated by each pass, consumed by Translator.
+        var ctx = new me.bechberger.ebpf.bpf.compiler.flow.AnalysisContext();
+        new SuppressionScan(ctx).scan(methodPath.leaf());
+        new JavaIsmsRejectPass(this, methodPath, ctx).analyze();
+        new MapIdiomLintPass(this, methodPath, ctx).analyze();
+        new UnboundedLoopPass(this, methodPath, ctx).analyze();
+        new ProbeReadSizeZeroPass(this, methodPath, ctx).analyze();
+        new MissingCoreReadPass(this, methodPath, ctx).analyze();
+        new ConstantPropagator(methodPath, ctx).analyze();
+        new RegionAnalyzer(this, methodPath, ctx).analyze();
+        new PtrCoercionInference(this, methodPath, ctx).analyze();
+        new CaptureAnalyzer(this, methodPath, ctx).analyze();
+        new NullabilityAnalyzer(this, methodPath, ctx).analyze();
+        new BoundsCheckPass(this, methodPath, ctx).analyze();
+        new MapValueIndexBoundsPass(this, methodPath, ctx).analyze();
+        new StackBudgetPass(this, methodPath, ctx).analyze();
+        new HelperContextPass(this, methodPath, ctx).analyze();
+        new ArenaAccessCheckPass(this, methodPath, ctx).analyze();
+        var translator = new Translator(this, methodPath, ctx);
         return callIfNonNull(translator.translate(), decl -> {
             var requiredDefines = translator.getRequiredDefines();
             return new FuncDeclStatementResult(decl, requiredDefines, translator.addDefinition(),

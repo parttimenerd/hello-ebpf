@@ -4,6 +4,8 @@ import com.sun.source.tree.*;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import me.bechberger.ebpf.annotations.BPFNullable;
 import me.bechberger.ebpf.bpf.compiler.CompilerPlugin.TypedTreePath;
+import me.bechberger.ebpf.bpf.compiler.flow.AnalysisContext;
+import me.bechberger.ebpf.bpf.compiler.flow.MemoryRegion;
 import me.bechberger.ebpf.bpf.compiler.flow.NullabilityValue;
 
 import java.util.HashMap;
@@ -29,13 +31,20 @@ public class NullabilityAnalyzer {
 
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
+    private final AnalysisContext ctx;
 
     /** Nullability state per local variable name at the current program point. */
     private final Map<String, NullabilityValue> state = new HashMap<>();
 
     public NullabilityAnalyzer(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath) {
+        this(compilerPlugin, methodPath, new AnalysisContext());
+    }
+
+    public NullabilityAnalyzer(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath,
+                               AnalysisContext ctx) {
         this.compilerPlugin = compilerPlugin;
         this.methodPath = methodPath;
+        this.ctx = ctx;
     }
 
     /** Run the analysis. Errors are reported via {@link CompilerPlugin#logError}. */
@@ -106,55 +115,51 @@ public class NullabilityAnalyzer {
             cond = paren.getExpression();
         }
 
-        // Detect the pattern `if (x != null)` or `if (x == null)`
-        String nullCheckedVar = null;
-        boolean checkedForNonNull = false; // true means then-branch is non-null, false means else-branch
+        // Collect all `x != null` / `x == null` bindings from a flat &&-chain.
+        // thenNonNull: variables narrowed to NON_NULL in the then-branch.
+        // elseNonNull: variables narrowed to NON_NULL in the else-branch.
+        var thenNonNull = new java.util.HashSet<String>();
+        var elseNonNull = new java.util.HashSet<String>();
+        collectNullChecks(cond, thenNonNull, elseNonNull);
 
-        if (cond instanceof BinaryTree bin) {
-            var kind = bin.getKind();
-            if (kind == Tree.Kind.NOT_EQUAL_TO || kind == Tree.Kind.EQUAL_TO) {
-                String varName = null;
-                boolean rightIsNull = false;
-                if (bin.getRightOperand() instanceof LiteralTree lit && lit.getValue() == null) {
-                    // x != null or x == null (right side is null)
-                    if (bin.getLeftOperand() instanceof IdentifierTree id) {
-                        varName = id.getName().toString();
-                        rightIsNull = true;
-                    }
-                } else if (bin.getLeftOperand() instanceof LiteralTree lit && lit.getValue() == null) {
-                    // null != x or null == x (left side is null)
-                    if (bin.getRightOperand() instanceof IdentifierTree id) {
-                        varName = id.getName().toString();
-                        rightIsNull = true;
-                    }
-                }
-                if (varName != null && rightIsNull) {
-                    nullCheckedVar = varName;
-                    checkedForNonNull = (kind == Tree.Kind.NOT_EQUAL_TO);
-                }
-            }
-        }
+        boolean hasNullCheck = !thenNonNull.isEmpty() || !elseNonNull.isEmpty();
 
-        if (nullCheckedVar != null) {
-            // then-branch env
+        if (hasNullCheck) {
             var thenEnv = new HashMap<>(env);
-            // else-branch env
             var elseEnv = new HashMap<>(env);
-            if (checkedForNonNull) {
-                thenEnv.put(nullCheckedVar, NullabilityValue.NON_NULL);
-            } else {
-                elseEnv.put(nullCheckedVar, NullabilityValue.NON_NULL);
-            }
+            for (var v : thenNonNull) thenEnv.put(v, NullabilityValue.NON_NULL);
+            for (var v : elseNonNull) elseEnv.put(v, NullabilityValue.NON_NULL);
             analyzeStatement(ifTree.getThenStatement(), thenEnv);
             if (ifTree.getElseStatement() != null) {
                 analyzeStatement(ifTree.getElseStatement(), elseEnv);
             }
-            // After the if: join both branches — use the more conservative value
+            // After the if: join both branches — but if a branch always exits (return / throw),
+            // it cannot fall through, so the post-if env should reflect only the surviving
+            // branch. This is what makes `if (p == null) return; p.field;` safe: the then-branch
+            // exits, so post-if env keeps the else-branch's NON_NULL narrowing.
+            boolean thenExits = alwaysExits(ifTree.getThenStatement());
+            boolean elseExits = ifTree.getElseStatement() != null
+                    && alwaysExits(ifTree.getElseStatement());
             var joined = new HashMap<>(env);
-            for (var key : thenEnv.keySet()) {
+            if (thenExits && elseExits) {
+                // Both branches exit — code after the if is unreachable. Conservative: keep env as-is.
+                env.putAll(joined);
+                return;
+            }
+            if (thenExits) {
+                env.putAll(elseEnv);
+                return;
+            }
+            if (elseExits) {
+                env.putAll(thenEnv);
+                return;
+            }
+            var allKeys = new java.util.HashSet<String>(thenEnv.keySet());
+            allKeys.addAll(elseEnv.keySet());
+            for (var key : allKeys) {
                 var thenVal = thenEnv.getOrDefault(key, NullabilityValue.UNKNOWN);
                 var elseVal = elseEnv.getOrDefault(key, NullabilityValue.UNKNOWN);
-                joined.put(key, thenVal.join(thenVal, elseVal));
+                joined.put(key, NullabilityValue.UNKNOWN.join(thenVal, elseVal));
             }
             env.putAll(joined);
         } else {
@@ -167,12 +172,80 @@ public class NullabilityAnalyzer {
     }
 
     /**
+     * Recursively collect null-check bindings from a condition tree.
+     *
+     * <p>Handles:
+     * <ul>
+     *   <li>{@code x != null} → thenNonNull(x)</li>
+     *   <li>{@code x == null} → elseNonNull(x)</li>
+     *   <li>{@code A && B} → union of both sides' then-bindings in thenNonNull</li>
+     *   <li>parenthesized forms</li>
+     * </ul>
+     *
+     * <p>Note: {@code ||} chains are intentionally not handled here — they would narrow only
+     * when both sides agree, which is the minority case and complex to express; leave as
+     * UNKNOWN so the analyzer is conservatively safe.
+     */
+    private static void collectNullChecks(ExpressionTree cond,
+                                          java.util.Set<String> thenNonNull,
+                                          java.util.Set<String> elseNonNull) {
+        while (cond instanceof ParenthesizedTree paren) cond = paren.getExpression();
+        if (cond instanceof BinaryTree bin) {
+            var kind = bin.getKind();
+            if (kind == Tree.Kind.CONDITIONAL_AND) {
+                // Both sides must hold in then-branch; only union then-narrowings.
+                collectNullChecks(bin.getLeftOperand(), thenNonNull, new java.util.HashSet<>());
+                collectNullChecks(bin.getRightOperand(), thenNonNull, new java.util.HashSet<>());
+                return;
+            }
+            if (kind == Tree.Kind.NOT_EQUAL_TO || kind == Tree.Kind.EQUAL_TO) {
+                String varName = null;
+                if (bin.getRightOperand() instanceof LiteralTree lit && lit.getValue() == null) {
+                    if (bin.getLeftOperand() instanceof IdentifierTree id) varName = id.getName().toString();
+                } else if (bin.getLeftOperand() instanceof LiteralTree lit && lit.getValue() == null) {
+                    if (bin.getRightOperand() instanceof IdentifierTree id) varName = id.getName().toString();
+                }
+                if (varName != null) {
+                    if (kind == Tree.Kind.NOT_EQUAL_TO) thenNonNull.add(varName);
+                    else elseNonNull.add(varName);
+                }
+            }
+        }
+    }
+
+    /**
+     * True if {@code stmt} unconditionally transfers control out of the enclosing block
+     * (return, throw, or a block whose last reachable statement does so). Used by
+     * {@link #analyzeIf} to skip joining an unreachable post-branch env.
+     *
+     * <p>Package-private for testing.
+     */
+    static boolean alwaysExits(StatementTree stmt) {
+        if (stmt == null) return false;
+        return switch (stmt) {
+            case ReturnTree r -> true;
+            case ThrowTree t -> true;
+            case BlockTree b -> {
+                // A block always exits if any statement in it always exits — the rest is dead.
+                for (var s : b.getStatements()) {
+                    if (alwaysExits(s)) yield true;
+                }
+                yield false;
+            }
+            case IfTree i -> i.getElseStatement() != null
+                    && alwaysExits(i.getThenStatement())
+                    && alwaysExits(i.getElseStatement());
+            default -> false;
+        };
+    }
+
+    /**
      * Analyze an expression for nullability.
      *
      * @return the nullability of the expression's result
      */
     private NullabilityValue analyzeExpression(ExpressionTree expr, Map<String, NullabilityValue> env) {
-        return switch (expr) {
+        NullabilityValue v = switch (expr) {
             case IdentifierTree id -> env.getOrDefault(id.getName().toString(), NullabilityValue.UNKNOWN);
             case MethodInvocationTree call -> analyzeMethodCall(call, env);
             case MemberSelectTree select -> {
@@ -203,6 +276,8 @@ public class NullabilityAnalyzer {
             }
             default -> NullabilityValue.UNKNOWN;
         };
+        ctx.nullAt.put(expr, v);
+        return v;
     }
 
     private NullabilityValue analyzeMethodCall(MethodInvocationTree call, Map<String, NullabilityValue> env) {
@@ -220,6 +295,10 @@ public class NullabilityAnalyzer {
         if (symbol != null && symbol.getAnnotation(BPFNullable.class) != null) {
             return NullabilityValue.MAYBE_NULL;
         }
+        // Auto-seed MAYBE_NULL for any expression whose region is MAP_VALUE — populated by RegionAnalyzer.
+        if (ctx.regionOf(call) == MemoryRegion.MAP_VALUE) {
+            return NullabilityValue.MAYBE_NULL;
+        }
         return NullabilityValue.UNKNOWN;
     }
 
@@ -229,8 +308,14 @@ public class NullabilityAnalyzer {
             var val = env.getOrDefault(id.getName().toString(), NullabilityValue.UNKNOWN);
             if (val == NullabilityValue.MAYBE_NULL) {
                 compilerPlugin.logError(methodPath, expr,
-                        "Potentially null pointer '" + id.getName() + "' used in " + context
-                                + " without a null check. Guard with: if (" + id.getName() + " != null) { ... }");
+                        "Potentially null pointer '" + id.getName() + "' used in " + context + ".\n"
+                      + "Why: the BPF verifier rejects any dereference of a value that may be NULL. "
+                      + "Helpers like bpf_map_lookup_elem return NULL on miss; the verifier tracks "
+                      + "this and refuses to load programs that skip the check.\n"
+                      + "Fix: guard the use:\n"
+                      + "  if (" + id.getName() + " == null) return 0;\n"
+                      + "  /* now safe to use " + id.getName() + " */\n"
+                      + "See: cookbook §Nullability");
             }
         }
     }

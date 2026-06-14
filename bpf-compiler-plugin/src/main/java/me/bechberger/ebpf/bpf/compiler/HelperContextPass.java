@@ -6,6 +6,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.ProgramType;
 import me.bechberger.ebpf.bpf.compiler.CompilerPlugin.TypedTreePath;
+import me.bechberger.ebpf.bpf.compiler.flow.AnalysisContext;
 
 import java.util.EnumSet;
 import java.util.Map;
@@ -34,6 +35,7 @@ public class HelperContextPass {
 
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
+    private final AnalysisContext ctx;
 
     /**
      * Curated kernel-helper → allowed-program-types table.
@@ -93,9 +95,37 @@ public class HelperContextPass {
             Map.entry("bpf_l4_csum_replace", EnumSet.of(ProgramType.TC))
     );
 
+    /**
+     * Closest-allowed helper alternative per (helper, program-type-where-rejected) pair.
+     * Plan §"Stage 10 cross-pass enrichment" — turns "Helper X is not allowed in P" into
+     * "Helper X is not allowed in P; use Y instead" when a sensible sibling exists.
+     */
+    private static final Map<String, Map<ProgramType, String>> ALTERNATIVES = Map.ofEntries(
+            Map.entry("bpf_skb_load_bytes", Map.of(
+                    ProgramType.XDP, "bpf_xdp_load_bytes")),
+            Map.entry("bpf_skb_store_bytes", Map.of(
+                    ProgramType.XDP, "bpf_xdp_store_bytes")),
+            Map.entry("bpf_xdp_load_bytes", Map.of(
+                    ProgramType.TC, "bpf_skb_load_bytes",
+                    ProgramType.CGROUP_SKB, "bpf_skb_load_bytes")),
+            Map.entry("bpf_xdp_store_bytes", Map.of(
+                    ProgramType.TC, "bpf_skb_store_bytes",
+                    ProgramType.CGROUP_SKB, "bpf_skb_store_bytes")),
+            Map.entry("bpf_xdp_adjust_head", Map.of(
+                    ProgramType.TC, "bpf_skb_change_head")),
+            Map.entry("bpf_xdp_adjust_tail", Map.of(
+                    ProgramType.TC, "bpf_skb_change_tail"))
+    );
+
     public HelperContextPass(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath) {
+        this(compilerPlugin, methodPath, new AnalysisContext());
+    }
+
+    public HelperContextPass(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath,
+                             AnalysisContext ctx) {
         this.compilerPlugin = compilerPlugin;
         this.methodPath = methodPath;
+        this.ctx = ctx;
     }
 
     public void analyze() {
@@ -111,6 +141,9 @@ public class HelperContextPass {
         var programType = ProgramType.fromSection(bpfFunc.section());
         if (programType == ProgramType.UNKNOWN) return;
 
+        // Mirror into the analysis context so other passes can query without re-deriving.
+        ctx.programType = mapProgramType(programType);
+
         new TreeScanner<Void, Void>() {
             @Override
             public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
@@ -120,10 +153,18 @@ public class HelperContextPass {
         }.scan(body, null);
     }
 
+    private static AnalysisContext.ProgramTypeValue mapProgramType(ProgramType pt) {
+        try {
+            return AnalysisContext.ProgramTypeValue.valueOf(pt.name());
+        } catch (IllegalArgumentException e) {
+            return AnalysisContext.ProgramTypeValue.OTHER;
+        }
+    }
+
     private void checkCall(MethodInvocationTree call, ProgramType programType) {
         var sym = methodSymbol(call);
         if (sym == null) return;
-        var template = sym.getAnnotation(BuiltinBPFFunction.class);
+        var template = compilerPlugin.getAnnotationOfMethodOrSuper(sym, BuiltinBPFFunction.class);
         if (template == null) return;
 
         var helper = extractHelperName(template.value());
@@ -138,10 +179,21 @@ public class HelperContextPass {
         if (allowed == null) return; // helper not tracked — skip
         if (allowed.contains(programType)) return;
 
+        var alt = ALTERNATIVES.getOrDefault(helper, Map.of()).get(programType);
+        var fixLine = alt != null
+                ? "Fix: use '" + alt + "' instead — it's the closest helper that works on "
+                        + programType + " context. Otherwise move this call into a section that "
+                        + "allows it (allowed in: " + allowed + ").\n"
+                : "Fix: either move this call into a program section that allows it (allowed in: "
+                        + allowed + "), or use a context-equivalent helper (see cookbook §Helpers).\n";
+
         compilerPlugin.logWarning(methodPath, call,
-                "Helper '" + helper + "' is not allowed in " + programType
-                        + " programs. Allowed in: " + allowed
-                        + ". The verifier will reject this call at load time.");
+                "Helper '" + helper + "' is not allowed in " + programType + " programs.\n"
+              + "Why: BPF helpers are gated by program type; the verifier checks the program's "
+              + "section against the helper's allowed-context list and rejects mismatches at "
+              + "load time.\n"
+              + fixLine
+              + "See: cookbook §Helpers");
     }
 
     /**
@@ -151,14 +203,20 @@ public class HelperContextPass {
      */
     static String extractHelperName(String template) {
         if (template == null || template.isEmpty()) return null;
-        int paren = template.indexOf('(');
+        var s = template.trim();
+        // Strip leading C-style casts like "(long) " or doubled "(int) (long) " before looking
+        // for the call paren. Loop because some templates stack casts (e.g. "(int) (long) bpf_x()").
+        while (s.startsWith("(")) {
+            int close = s.indexOf(')');
+            if (close < 0) return null;
+            s = s.substring(close + 1).trim();
+        }
+        int paren = s.indexOf('(');
         if (paren <= 0) return null;
-        var head = template.substring(0, paren).trim();
-        // Strip any leading cast like "(long)" or surrounding parens.
+        var head = s.substring(0, paren).trim();
+        // Drop any space-separated prefix (defensive).
         int lastSpace = head.lastIndexOf(' ');
         if (lastSpace >= 0) head = head.substring(lastSpace + 1);
-        int lastCloseParen = head.lastIndexOf(')');
-        if (lastCloseParen >= 0) head = head.substring(lastCloseParen + 1);
         return head.startsWith("bpf_") ? head : null;
     }
 

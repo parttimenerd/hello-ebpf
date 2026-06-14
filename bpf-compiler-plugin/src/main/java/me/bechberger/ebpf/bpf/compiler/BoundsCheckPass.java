@@ -3,6 +3,7 @@ package me.bechberger.ebpf.bpf.compiler;
 import com.sun.source.tree.*;
 import com.sun.source.util.TreeScanner;
 import me.bechberger.ebpf.bpf.compiler.CompilerPlugin.TypedTreePath;
+import me.bechberger.ebpf.bpf.compiler.flow.AnalysisContext;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,10 +36,17 @@ public class BoundsCheckPass {
 
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
+    private final AnalysisContext ctx;
 
     public BoundsCheckPass(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath) {
+        this(compilerPlugin, methodPath, new AnalysisContext());
+    }
+
+    public BoundsCheckPass(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath,
+                           AnalysisContext ctx) {
         this.compilerPlugin = compilerPlugin;
         this.methodPath = methodPath;
+        this.ctx = ctx;
     }
 
     public void analyze() {
@@ -51,6 +59,20 @@ public class BoundsCheckPass {
 
         var guarded = collectGuardedVars(body, packetOrigin);
 
+        // Record guarded packet derefs in the shared context so the Translator / future passes
+        // can decide whether direct -> access is safe.
+        new TreeScanner<Void, Void>() {
+            @Override
+            public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
+                if (node.getMethodSelect() instanceof MemberSelectTree mst
+                        && mst.getIdentifier().contentEquals("val")) {
+                    var root = rootIdentifier(mst.getExpression());
+                    if (root != null && guarded.contains(root)) ctx.packetGuarded.add(node);
+                }
+                return super.visitMethodInvocation(node, p);
+            }
+        }.scan(body, null);
+
         for (var name : packetOrigin) {
             if (guarded.contains(name)) continue;
             reportUnguardedDereferences(body, name);
@@ -59,25 +81,35 @@ public class BoundsCheckPass {
 
     private Set<String> collectPacketOriginVars(BlockTree body) {
         var result = new HashSet<String>();
-        new TreeScanner<Void, Void>() {
-            @Override
-            public Void visitVariable(VariableTree node, Void p) {
-                var init = node.getInitializer();
-                if (init != null && isPacketOriginExpression(init, result)) {
-                    result.add(node.getName().toString());
+        // Iterate to a fixpoint: each pass may discover transitive origins (e.g. `p = q.cast()`
+        // before `q = ctx.data`). Stop when no new names are added.
+        int prevSize;
+        do {
+            prevSize = result.size();
+            new TreeScanner<Void, Void>() {
+                @Override
+                public Void visitVariable(VariableTree node, Void p) {
+                    var init = node.getInitializer();
+                    if (init != null && !result.contains(node.getName().toString())
+                            && isPacketOriginExpression(init, result)) {
+                        result.add(node.getName().toString());
+                    }
+                    return super.visitVariable(node, p);
                 }
-                return super.visitVariable(node, p);
-            }
 
-            @Override
-            public Void visitAssignment(AssignmentTree node, Void p) {
-                if (node.getVariable() instanceof IdentifierTree id
-                        && isPacketOriginExpression(node.getExpression(), result)) {
-                    result.add(id.getName().toString());
+                @Override
+                public Void visitAssignment(AssignmentTree node, Void p) {
+                    if (node.getVariable() instanceof IdentifierTree id) {
+                        var name = id.getName().toString();
+                        if (!result.contains(name)
+                                && isPacketOriginExpression(node.getExpression(), result)) {
+                            result.add(name);
+                        }
+                    }
+                    return super.visitAssignment(node, p);
                 }
-                return super.visitAssignment(node, p);
-            }
-        }.scan(body, null);
+            }.scan(body, null);
+        } while (result.size() > prevSize);
         return result;
     }
 
@@ -143,8 +175,14 @@ public class BoundsCheckPass {
                     var method = mst.getIdentifier().toString();
                     if (method.equals("val") && rootMatches(mst.getExpression(), name)) {
                         compilerPlugin.logWarning(methodPath, node,
-                                "Packet pointer '" + name + "' dereferenced without any bounds check. "
-                                        + "Guard with: if (" + name + ".add(N).greaterThan(end)) return XDP_ABORTED;");
+                                "Packet pointer '" + name + "' dereferenced without any bounds check.\n"
+                              + "Why: the verifier requires every packet-pointer deref to be preceded by "
+                              + "a comparison against the packet's end pointer; otherwise the program "
+                              + "will not load.\n"
+                              + "Fix: add a bounds check before the deref:\n"
+                              + "  if (" + name + ".add(N).greaterThan(end)) return XDP_ABORTED;\n"
+                              + "  /* now safe to read " + name + ".val() */\n"
+                              + "See: cookbook §Packet bounds");
                     }
                 }
                 return super.visitMethodInvocation(node, p);
@@ -165,7 +203,7 @@ public class BoundsCheckPass {
         }.scan(body, null);
     }
 
-    private static boolean rootMatches(ExpressionTree expr, String name) {
+    static boolean rootMatches(ExpressionTree expr, String name) {
         var root = rootIdentifier(expr);
         return root != null && root.equals(name);
     }
@@ -174,7 +212,7 @@ public class BoundsCheckPass {
      * Walk the receiver chain of {@code .add(...)}, {@code .sub(...)}, {@code .cast()},
      * {@code .val()} calls and parens to find the leaf identifier, if any.
      */
-    private static String rootIdentifier(ExpressionTree expr) {
+    static String rootIdentifier(ExpressionTree expr) {
         ExpressionTree e = unwrap(expr);
         while (true) {
             if (e instanceof IdentifierTree id) return id.getName().toString();

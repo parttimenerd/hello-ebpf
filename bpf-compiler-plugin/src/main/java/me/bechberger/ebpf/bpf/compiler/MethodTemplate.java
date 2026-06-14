@@ -119,17 +119,38 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                            List<? extends Argument> arguments,
                            List<CAST.Declarator> typeArguments,
                            List<CAST.Declarator> classTypeArguments,
-                           @Nullable LambdaPromoter lambdaPromoter) {
+                           @Nullable LambdaPromoter lambdaPromoter,
+                           @Nullable SizeResolver sizeResolver) {
         public CallArgs(@Nullable CAST.Expression thisExpression,
                         List<? extends Argument> arguments, List<CAST.Declarator> typeArguments) {
-            this(thisExpression, arguments, typeArguments, List.of(), null);
+            this(thisExpression, arguments, typeArguments, List.of(), null, null);
         }
         public CallArgs(@Nullable CAST.Expression thisExpression,
                         List<? extends Argument> arguments,
                         List<CAST.Declarator> typeArguments,
                         List<CAST.Declarator> classTypeArguments) {
-            this(thisExpression, arguments, typeArguments, classTypeArguments, null);
+            this(thisExpression, arguments, typeArguments, classTypeArguments, null, null);
         }
+        public CallArgs(@Nullable CAST.Expression thisExpression,
+                        List<? extends Argument> arguments,
+                        List<CAST.Declarator> typeArguments,
+                        List<CAST.Declarator> classTypeArguments,
+                        @Nullable LambdaPromoter lambdaPromoter) {
+            this(thisExpression, arguments, typeArguments, classTypeArguments, lambdaPromoter, null);
+        }
+    }
+
+    /**
+     * Callback the renderer invokes for {@code $autosize$argN} placeholders. Given the (zero-based)
+     * argument index, return the {@code @Size(N)} value declared on that argument's type chain
+     * (e.g. on the local variable, the field, or the array type), or {@code null} if no
+     * {@code @Size} annotation is reachable. Returning {@code null} causes the renderer to throw a
+     * {@link MethodTemplateCache.TemplateRenderException} with a helpful "add @Size(N) or pass the
+     * size explicitly" message.
+     */
+    @FunctionalInterface
+    public interface SizeResolver {
+        @Nullable Integer resolveAt(int argIndex);
     }
 
     public record CallProps(String methodName, CallArgs args) {
@@ -301,6 +322,36 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
             }
         }
 
+        /**
+         * {@code $autosize$argN} — emits the integer literal {@code N} pulled from the
+         * argument's {@code @Size(N)} type annotation. Differs from {@code $sizeof$argN}: the
+         * latter delegates to the C {@code sizeof} operator (computed by the C compiler over the
+         * C type), while {@code $autosize$argN} resolves the value at Java compile time, so it
+         * works even when the C type loses the size (e.g. a {@code Ptr<?> buf} parameter that
+         * was a sized buffer at the Java call site).
+         */
+        record AutoSizeArg(int n) implements TemplatePart {
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                if (n >= props.args.arguments.size()) {
+                    throw new TemplateRenderException(
+                            "Argument " + (n + 1) + " not given for $autosize$arg" + (n + 1));
+                }
+                if (props.args.sizeResolver == null) {
+                    throw new TemplateRenderException(
+                            "$autosize$arg" + (n + 1) + " used but no size resolver wired up");
+                }
+                Integer size = props.args.sizeResolver.resolveAt(n);
+                if (size == null) {
+                    throw new TemplateRenderException(
+                            "Cannot auto-derive size for argument " + (n + 1) + " of "
+                                    + props.methodName
+                                    + ". Add @Size(N) to the buffer's type, or pass the size explicitly.");
+                }
+                return Integer.toString(size);
+            }
+        }
+
         /** {@code $deref$argN} — emits {@code *(argN)} (pointer dereference). */
         record DerefArg(int n) implements TemplatePart {
             @Override
@@ -413,6 +464,7 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
             boolean hadPointeryBefore = false;
             boolean hadTypeofBefore = false;
             boolean hadSizeofBefore = false;
+            boolean hadAutosizeBefore = false;
             boolean hadDerefBefore = false;
             if (part.startsWith("strlen")) {
                 if (part.equals("strlen")) {
@@ -437,6 +489,13 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
             } else if (part.equals("sizeof")) {
                 hadSizeofBefore = true;
                 i++;
+                part = parts[i];
+            } else if (part.equals("autosize")) {
+                hadAutosizeBefore = true;
+                i++;
+                if (i >= parts.length) {
+                    throw new TemplateRenderException("autosize must be followed by $argN");
+                }
                 part = parts[i];
             } else if (part.equals("deref")) {
                 hadDerefBefore = true;
@@ -595,6 +654,8 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                                 templateParts.add(new TypeofArg(num));
                             } else if (hadSizeofBefore) {
                                 templateParts.add(new SizeofArg(num));
+                            } else if (hadAutosizeBefore) {
+                                templateParts.add(new AutoSizeArg(num));
                             } else if (hadDerefBefore) {
                                 templateParts.add(new DerefArg(num));
                             } else {
@@ -631,6 +692,9 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
             }
             if (hadSizeofBefore && !(templateParts.getLast() instanceof SizeofArg)) {
                 throw new TemplateRenderException("sizeof can only be used with a $argN argument");
+            }
+            if (hadAutosizeBefore && !(templateParts.getLast() instanceof AutoSizeArg)) {
+                throw new TemplateRenderException("autosize can only be used with a $argN argument");
             }
             if (hadDerefBefore && !(templateParts.getLast() instanceof DerefArg)) {
                 throw new TemplateRenderException("deref can only be used with a $argN argument");

@@ -2677,4 +2677,164 @@ public class CompilerPluginTest {
                 "bpf_getOrDefault must use ternary:\n" + code);
     }
 
+    // ── Stage 2: auto-emit bpf_probe_read_user/kernel at deref sites ───────
+
+    /** Stage 2 §2.9 AutoProbeReadKernelTest — `@BPFKernelMemory Ptr<S> p; p.val().field`
+     *  must auto-emit `bpf_probe_read_kernel` for the whole struct, then field-access on
+     *  the local r-value. */
+    @BPF
+    public static abstract class AutoProbeReadKernelProg extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @Type record S(int field) {}
+
+        @BPFFunction
+        public int readField(@me.bechberger.ebpf.annotations.BPFKernelMemory Ptr<S> p) {
+            return p.val().field;
+        }
+    }
+
+    @Test
+    public void testAutoProbeReadKernelEmits() {
+        String code = BPFProgram.getCode(AutoProbeReadKernelProg.class);
+        assertTrue(code.contains("bpf_probe_read_kernel"),
+                "@BPFKernelMemory deref must auto-emit bpf_probe_read_kernel:\n" + code);
+        assertFalse(code.contains("bpf_probe_read_user"),
+                "kernel-region deref must not emit user probe-read:\n" + code);
+    }
+
+    /** Stage 2 §2.9 AutoProbeReadUserTest — same shape, `@BPFUserMemory` → `bpf_probe_read_user`. */
+    @BPF
+    public static abstract class AutoProbeReadUserProg extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @Type record S(int field) {}
+
+        @BPFFunction
+        public int readField(@me.bechberger.ebpf.annotations.BPFUserMemory Ptr<S> p) {
+            return p.val().field;
+        }
+    }
+
+    @Test
+    public void testAutoProbeReadUserEmits() {
+        String code = BPFProgram.getCode(AutoProbeReadUserProg.class);
+        assertTrue(code.contains("bpf_probe_read_user"),
+                "@BPFUserMemory deref must auto-emit bpf_probe_read_user:\n" + code);
+        assertFalse(code.contains("bpf_probe_read_kernel"),
+                "user-region deref must not emit kernel probe-read:\n" + code);
+    }
+
+    /** Stage 2 §2.9 NoDoubleProbeReadTest — after a manual probe-read into a STACK local,
+     *  the subsequent field access on the local must NOT auto-emit a second probe-read.
+     *  RegionAnalyzer reseeds the destination as STACK (allowsDirectDeref). */
+    @BPF
+    public static abstract class NoDoubleProbeReadProg extends BPFProgram {
+        static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
+
+        @Type record S(int flags) {}
+
+        @BPFFunction
+        public int readField(@me.bechberger.ebpf.annotations.BPFKernelMemory Ptr<S> how) {
+            S copy = new S(0);
+            BPFHelpers.bpf_probe_read_kernel(Ptr.of(copy), 4, how);
+            return copy.flags;
+        }
+    }
+
+    @Test
+    public void testNoDoubleProbeRead() {
+        String code = BPFProgram.getCode(NoDoubleProbeReadProg.class);
+        // Exactly one probe-read call: the manual one. The .flags access must not auto-emit.
+        long count = code.lines().filter(l -> l.contains("bpf_probe_read_kernel")).count();
+        assertEquals(1, count,
+                "expected exactly one bpf_probe_read_kernel (the manual one):\n" + code);
+    }
+
+    @BPF
+    public static abstract class AutoSizeProg extends BPFProgram {
+
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+
+                long readBuf(int *buf, int size);
+                """;
+
+        @BuiltinBPFFunction("readBuf($arg1, $autosize$arg1)")
+        @NotUsableInJava
+        public static long readBuf(int[] buf) {
+            throw new MethodIsBPFRelatedFunction();
+        }
+
+        @BPFFunction
+        public void run() {
+            @Size(8) int[] buf = new int[8];
+            readBuf(buf);
+        }
+    }
+
+    @Test
+    public void testAutoSizeArgRendersResolvedSize() {
+        String code = BPFProgram.getCode(AutoSizeProg.class);
+        // The $autosize$arg1 placeholder should pull "8" from the @Size(8) annotation
+        // on the local buffer's declaration.
+        assertTrue(code.contains("readBuf(buf, 8)"),
+                "expected 'readBuf(buf, 8)' in generated code:\n" + code);
+    }
+
+    /**
+     * Stage 16 — source-map writer side. The Translator wraps each user statement with a
+     * {@code #line N "Foo.java"} directive so clang propagates Java source coordinates into
+     * BTF/DWARF line-info; bpftool then surfaces them in {@code prog dump xlated linum}.
+     * This test simply asserts the directive is present and references the source file —
+     * the verifier-log-reannotation flow on the runtime side is covered by SourceMapReaderTest.
+     */
+    @Test
+    public void testLineDirectivesEmittedForUserStatements() {
+        String code = BPFProgram.getCode(AutoSizeProg.class);
+        assertTrue(code.contains("#line "),
+                "expected at least one '#line N' directive in generated C:\n" + code);
+        assertTrue(code.contains("CompilerPluginTest.java"),
+                "#line directives should cite the Java source filename:\n" + code);
+        // At minimum the body of run() has 2 user statements (var decl, readBuf call), each
+        // preceded by a #line directive.
+        long count = code.lines().filter(l -> l.trim().startsWith("#line ")).count();
+        assertTrue(count >= 2,
+                "expected at least 2 #line directives (one per user statement); got " + count
+                        + ":\n" + code);
+    }
+
+    /** Two map lookups guarded by a single {@code &&}-chained null-check. */
+    @BPF
+    public static abstract class AndChainNullGuard extends BPFProgram {
+
+        static final String EBPF_PROGRAM = """
+                #include "vmlinux.h"
+                """;
+
+        @BPFMapDefinition(maxEntries = 64)
+        BPFHashMap<Integer, Integer> counts;
+
+        @BPFFunction
+        public void increment(int key1, int key2) {
+            Ptr<Integer> a = counts.bpf_get(key1);
+            Ptr<Integer> b = counts.bpf_get(key2);
+            if (a != null && b != null) {
+                a.set(a.val() + 1);
+                b.set(b.val() + 1);
+            }
+        }
+    }
+
+    @Test
+    public void testAndChainNullGuardAccepted() {
+        // Both 'a' and 'b' are narrowed to NON_NULL inside the then-branch by the
+        // &&-chain handler; neither should trigger a nullability error.
+        String code = BPFProgram.getCode(AndChainNullGuard.class);
+        assertTrue(code.contains("*(a) = (*(a)) + 1"),
+                "expected deref of a inside guarded block:\n" + code);
+        assertTrue(code.contains("*(b) = (*(b)) + 1"),
+                "expected deref of b inside guarded block:\n" + code);
+    }
+
 }

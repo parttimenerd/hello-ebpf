@@ -4,8 +4,11 @@ import com.sun.source.tree.*;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import me.bechberger.ebpf.bpf.compiler.CompilerPlugin.TypedTreePath;
+import me.bechberger.ebpf.bpf.compiler.flow.AnalysisContext;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -33,10 +36,17 @@ public class ArenaAccessCheckPass {
 
     private final CompilerPlugin compilerPlugin;
     private final TypedTreePath<MethodTree> methodPath;
+    private final AnalysisContext ctx;
 
     public ArenaAccessCheckPass(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath) {
+        this(compilerPlugin, methodPath, new AnalysisContext());
+    }
+
+    public ArenaAccessCheckPass(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath,
+                                AnalysisContext ctx) {
         this.compilerPlugin = compilerPlugin;
         this.methodPath = methodPath;
+        this.ctx = ctx;
     }
 
     public void analyze() {
@@ -45,10 +55,15 @@ public class ArenaAccessCheckPass {
         if (body == null) return;
 
         var arenaVars = new HashSet<String>();
+        // Defining site for each arena variable (for "allocated at line N" enrichment).
+        var arenaSourceSite = new HashMap<String, Tree>();
 
         // Seed from @InArena-annotated parameters.
         for (var p : method.getParameters()) {
-            if (hasInArena(p)) arenaVars.add(p.getName().toString());
+            if (hasInArena(p)) {
+                arenaVars.add(p.getName().toString());
+                arenaSourceSite.put(p.getName().toString(), p);
+            }
         }
 
         // Seed from @InArena-annotated class fields of the enclosing class.
@@ -57,19 +72,28 @@ public class ArenaAccessCheckPass {
             for (var member : cls.getMembers()) {
                 if (member instanceof VariableTree vt && hasInArena(vt)) {
                     arenaVars.add(vt.getName().toString());
+                    arenaSourceSite.put(vt.getName().toString(), vt);
                 }
             }
         }
 
         // Walk the body to pick up @InArena locals and bpfArenaAllocPages results.
+        // A plain local with the same name as a tracked class field shadows the field within
+        // this method body — drop it from arenaVars so we don't false-flag a non-arena local.
         new TreeScanner<Void, Void>() {
             @Override
             public Void visitVariable(VariableTree node, Void unused) {
+                var name = node.getName().toString();
                 if (hasInArena(node)) {
-                    arenaVars.add(node.getName().toString());
+                    arenaVars.add(name);
+                    arenaSourceSite.put(name, node);
                 } else if (node.getInitializer() != null
                         && isArenaAllocCall(node.getInitializer())) {
-                    arenaVars.add(node.getName().toString());
+                    arenaVars.add(name);
+                    arenaSourceSite.put(name, node);
+                } else if (arenaVars.contains(name)) {
+                    arenaVars.remove(name);
+                    arenaSourceSite.remove(name);
                 }
                 return super.visitVariable(node, unused);
             }
@@ -88,7 +112,7 @@ public class ArenaAccessCheckPass {
                     var receiver = sel.getExpression();
                     var src = arenaSourceName(receiver, arenaVars);
                     if (src != null) {
-                        report(node, src);
+                        report(node, src, arenaSourceSite.get(src));
                     }
                 }
                 return super.visitMethodInvocation(node, unused);
@@ -141,11 +165,41 @@ public class ArenaAccessCheckPass {
         return null;
     }
 
-    private void report(Tree node, String varName) {
+    private void report(Tree node, String varName, Tree definingSite) {
+        var origin = describeOrigin(definingSite, varName);
         compilerPlugin.logWarning(methodPath, node,
-                "Arena pointer '" + varName + "'.asLong() drops the __arena "
-                        + "address-space tag. Keep the value as a Ptr<T>, or "
-                        + "bridge to user space with BPFJ.castUser(" + varName + ").");
+                "Arena pointer '" + varName + "'.asLong() drops the __arena address-space tag.\n"
+              + "Why: " + origin + "; arena addresses are tracked by the verifier with a special "
+              + "tag, and converting to a long erases that tag — any later use is treated as a raw "
+              + "integer, preventing arena-aware checks from succeeding.\n"
+              + "Fix: keep the value as a Ptr<T> through the call chain, or bridge to user space "
+              + "explicitly via BPFJ.castUser(" + varName + ").\n"
+              + "See: cookbook §Arena");
+    }
+
+    /** Render "allocated at line N via bpfArenaAllocPages" or similar. */
+    private String describeOrigin(Tree site, String varName) {
+        if (site == null) return "'" + varName + "' is an arena pointer";
+        long line = lineOf(site);
+        var locPart = line > 0 ? " at line " + line : "";
+        if (site instanceof VariableTree v) {
+            if (v.getInitializer() != null && isArenaAllocCall(v.getInitializer())) {
+                return "'" + varName + "' was allocated" + locPart + " via BPFJ.bpfArenaAllocPages(...)";
+            }
+            if (hasInArena(v)) {
+                return "'" + varName + "' is declared @InArena" + locPart;
+            }
+        }
+        return "'" + varName + "' is an arena pointer (declared" + locPart + ")";
+    }
+
+    private long lineOf(Tree tree) {
+        if (tree == null || compilerPlugin.trees == null) return 0;
+        var cu = methodPath.root();
+        var sp = compilerPlugin.trees.getSourcePositions();
+        long pos = sp.getStartPosition(cu, tree);
+        if (pos == javax.tools.Diagnostic.NOPOS) return 0;
+        return cu.getLineMap().getLineNumber(pos);
     }
 
     private static ExpressionTree unwrap(ExpressionTree expr) {
