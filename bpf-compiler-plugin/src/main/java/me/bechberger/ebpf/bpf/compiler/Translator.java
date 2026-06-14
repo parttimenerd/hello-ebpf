@@ -1184,6 +1184,14 @@ class Translator {
         }
         var typeElement = (TypeElement) compilerPlugin.task.getTypes().asElement(type);
         if (typeElement != null) {
+            // XDPContext and TCContext are transparent wrappers: lower to the underlying kernel struct pointer.
+            var qualName = typeElement.getQualifiedName().toString();
+            if (qualName.equals("me.bechberger.ebpf.bpf.XDPContext")) {
+                return CAST.Declarator.pointer(new StructIdentifierDeclarator(variable("xdp_md")));
+            }
+            if (qualName.equals("me.bechberger.ebpf.bpf.TCContext")) {
+                return CAST.Declarator.pointer(new StructIdentifierDeclarator(variable("__sk_buff")));
+            }
             var customTypeInfo = typeProcessor.getCustomTypeInfo(typeElement);
             if (customTypeInfo != null) {
                 var name = variable(customTypeInfo.bpfName().name());
@@ -1204,6 +1212,13 @@ class Translator {
         var anns = AnnotationUtils.getAnnotationValuesForRecordMember(type);
         var typeElementOrIdent = compilerPlugin.task.getTypes().asElement(type);
         if (typeElementOrIdent instanceof TypeElement typeElement) {
+            var qualName = typeElement.getQualifiedName().toString();
+            if (qualName.equals("me.bechberger.ebpf.bpf.XDPContext")) {
+                return CAST.Declarator.pointer(new StructIdentifierDeclarator(variable("xdp_md")));
+            }
+            if (qualName.equals("me.bechberger.ebpf.bpf.TCContext")) {
+                return CAST.Declarator.pointer(new StructIdentifierDeclarator(variable("__sk_buff")));
+            }
             var customTypeInfo = typeProcessor.getCustomTypeInfo(typeElement);
             if (customTypeInfo != null) {
                 var name = variable(customTypeInfo.bpfName().name());

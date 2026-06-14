@@ -9,84 +9,133 @@ import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
 import me.bechberger.ebpf.type.Ptr;
 
 /**
- * Ergonomic helper for XDP programs.
+ * Ergonomic context object for XDP programs.
  *
- * <p>All methods are {@code @BuiltinBPFFunction}-annotated — they lower to
- * bounds-checked C idioms that the kernel verifier accepts.  Call them from
- * inside a {@link XDPHook#xdpHandlePacket} body:
+ * <p>Use as the parameter type of {@link XDPHook#xdpHandlePacket(XDPContext)}:
  *
  * <pre>{@code
  * @Override
- * public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
- *     if (!XDPContext.boundsOk(ctx, 0, 1)) return xdp_action.XDP_ABORTED;
- *     int firstByte = XDPContext.byteAt(ctx, 0);
- *     int len       = XDPContext.length(ctx);
+ * public xdp_action xdpHandlePacket(XDPContext ctx) {
+ *     if (!ctx.boundsOk(0, 1)) return xdp_action.XDP_ABORTED;
+ *     int firstByte = ctx.byteAt(0);
+ *     int len       = ctx.length();
  *     ...
  * }
  * }</pre>
  *
- * <p>None of the methods here are callable from Java user-space; they exist
- * only for the BPF compiler plugin to lower to C.
+ * <p>The compiler plugin lowers {@code XDPContext} parameters to {@code struct xdp_md *} in the
+ * generated C, so all instance methods use {@code $this->data} / {@code $this->data_end} directly.
+ *
+ * <p>Instance methods are not callable from Java user-space.
  */
 public final class XDPContext {
 
-    private XDPContext() {}
+    private final Ptr<xdp_md> ctx;
+
+    public XDPContext(Ptr<xdp_md> ctx) {
+        this.ctx = ctx;
+    }
+
+    /** Returns the underlying {@code Ptr<xdp_md>} for use with legacy APIs. */
+    public Ptr<xdp_md> raw() {
+        return ctx;
+    }
 
     /**
      * Returns the packet length in bytes.
      *
-     * <p>Lowers to: {@code (int)((void *)(long)$arg1->data_end - (void *)(long)$arg1->data)}
+     * <p>Lowers to: {@code (int)((void *)(long)$this->data_end - (void *)(long)$this->data)}
      */
-    @BuiltinBPFFunction("((int)((void *)(long)$arg1->data_end - (void *)(long)$arg1->data))")
+    @BuiltinBPFFunction("((int)((void *)(long)$this->data_end - (void *)(long)$this->data))")
     @NotUsableInJava
-    public static int length(Ptr<xdp_md> ctx) {
+    public int length() {
         throw new MethodIsBPFRelatedFunction();
     }
 
     /**
-     * Returns {@code true} if the byte range {@code [offset, offset+size)} is within
-     * the packet bounds, {@code false} otherwise.
+     * Returns {@code true} if the byte range {@code [offset, offset+size)} is within packet bounds.
      *
-     * <p>Lowers to a bounds check the verifier understands:
-     * {@code ((void *)(long)ctx->data + offset + size <= (void *)(long)ctx->data_end)}
+     * <p>Lowers to:
+     * {@code ((void *)(long)$this->data + ($arg1) + ($arg2) <= (void *)(long)$this->data_end)}
      */
-    @BuiltinBPFFunction("((void *)(long)$arg1->data + ($arg2) + ($arg3) <= (void *)(long)$arg1->data_end)")
+    @BuiltinBPFFunction("((void *)(long)$this->data + ($arg1) + ($arg2) <= (void *)(long)$this->data_end)")
     @NotUsableInJava
-    public static boolean boundsOk(Ptr<xdp_md> ctx, int offset, int size) {
+    public boolean boundsOk(int offset, int size) {
         throw new MethodIsBPFRelatedFunction();
     }
 
     /**
      * Reads one byte at {@code offset} from the packet start.
      *
-     * <p>No bounds check is performed — callers must call {@link #boundsOk} first
-     * or arrange their own guard. Lowers to:
-     * {@code (*(__u8 *)((void *)(long)ctx->data + offset))}
+     * <p>No bounds check — call {@link #boundsOk} first.
+     * Lowers to: {@code (*(__u8 *)((void *)(long)$this->data + ($arg1)))}
      */
-    @BuiltinBPFFunction("(*((__u8 *)((void *)(long)$arg1->data + ($arg2))))")
+    @BuiltinBPFFunction("(*((__u8 *)((void *)(long)$this->data + ($arg1))))")
     @NotUsableInJava
-    public static @Unsigned int byteAt(Ptr<xdp_md> ctx, int offset) {
+    public @Unsigned int byteAt(int offset) {
         throw new MethodIsBPFRelatedFunction();
     }
 
     /**
      * Reads a big-endian 16-bit value at {@code offset} (network byte order → host).
      *
-     * <p>No bounds check — callers must guard first. Lowers to:
-     * {@code bpf_ntohs(*(__u16 *)((void *)(long)ctx->data + offset))}
+     * <p>No bounds check — call {@link #boundsOk} first.
+     * Lowers to: {@code bpf_ntohs(*(__u16 *)((void *)(long)$this->data + ($arg1)))}
      */
-    @BuiltinBPFFunction("bpf_ntohs(*((__u16 *)((void *)(long)$arg1->data + ($arg2))))")
+    @BuiltinBPFFunction("bpf_ntohs(*((__u16 *)((void *)(long)$this->data + ($arg1))))")
     @NotUsableInJava
-    public static @Unsigned int shortAtNetworkOrder(Ptr<xdp_md> ctx, int offset) {
+    public @Unsigned int shortAtNetworkOrder(int offset) {
         throw new MethodIsBPFRelatedFunction();
     }
 
     /**
      * Reads a big-endian 32-bit value at {@code offset} (network byte order → host).
      *
-     * <p>No bounds check — callers must guard first. Lowers to:
-     * {@code bpf_ntohl(*(__u32 *)((void *)(long)ctx->data + offset))}
+     * <p>No bounds check — call {@link #boundsOk} first.
+     * Lowers to: {@code bpf_ntohl(*(__u32 *)((void *)(long)$this->data + ($arg1)))}
      */
+    @BuiltinBPFFunction("bpf_ntohl(*((__u32 *)((void *)(long)$this->data + ($arg1))))")
+    @NotUsableInJava
+    public long intAtNetworkOrder(int offset) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    // --- Static helpers (kept for backwards compatibility) ---
+
+    /** @deprecated Use {@code ctx.length()} instead. */
+    @Deprecated
+    @BuiltinBPFFunction("((int)((void *)(long)$arg1->data_end - (void *)(long)$arg1->data))")
+    @NotUsableInJava
+    public static int length(Ptr<xdp_md> ctx) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /** @deprecated Use {@code ctx.boundsOk(offset, size)} instead. */
+    @Deprecated
+    @BuiltinBPFFunction("((void *)(long)$arg1->data + ($arg2) + ($arg3) <= (void *)(long)$arg1->data_end)")
+    @NotUsableInJava
+    public static boolean boundsOk(Ptr<xdp_md> ctx, int offset, int size) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /** @deprecated Use {@code ctx.byteAt(offset)} instead. */
+    @Deprecated
+    @BuiltinBPFFunction("(*((__u8 *)((void *)(long)$arg1->data + ($arg2))))")
+    @NotUsableInJava
+    public static @Unsigned int byteAt(Ptr<xdp_md> ctx, int offset) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /** @deprecated Use {@code ctx.shortAtNetworkOrder(offset)} instead. */
+    @Deprecated
+    @BuiltinBPFFunction("bpf_ntohs(*((__u16 *)((void *)(long)$arg1->data + ($arg2))))")
+    @NotUsableInJava
+    public static @Unsigned int shortAtNetworkOrder(Ptr<xdp_md> ctx, int offset) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /** @deprecated Use {@code ctx.intAtNetworkOrder(offset)} instead. */
+    @Deprecated
     @BuiltinBPFFunction("bpf_ntohl(*((__u32 *)((void *)(long)$arg1->data + ($arg2))))")
     @NotUsableInJava
     public static long intAtNetworkOrder(Ptr<xdp_md> ctx, int offset) {

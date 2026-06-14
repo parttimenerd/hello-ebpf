@@ -4,20 +4,17 @@ import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.bpf.BPFProgram;
-import me.bechberger.ebpf.bpf.NetworkUtil;
 import me.bechberger.ebpf.bpf.XDPContext;
 import me.bechberger.ebpf.bpf.XDPHook;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
-import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
 import me.bechberger.ebpf.type.Ptr;
 
 /**
  * Counts incoming packets by their length using {@link XDPContext} helpers.
  *
- * <p>Demonstrates the ergonomic {@code XDPContext.length()} / {@code XDPContext.boundsOk()} /
- * {@code XDPContext.byteAt()} helpers as an alternative to manual {@code Ptr.voidPointer}
- * and {@code .greaterThan(end)} idioms.
+ * <p>Demonstrates the ergonomic {@code ctx.length()} instance method on the
+ * high-level {@link XDPContext} hook context.
  */
 @BPF(license = "GPL")
 public abstract class PacketCountByLength extends BPFProgram implements XDPHook {
@@ -27,10 +24,9 @@ public abstract class PacketCountByLength extends BPFProgram implements XDPHook 
     BPFHashMap<Integer, @Unsigned Long> countByLength;
 
     @Override
-    public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
-        int len = XDPContext.length(ctx);
+    public xdp_action xdpHandlePacket(XDPContext ctx) {
+        int len = ctx.length();
 
-        // Count packets by length using an atomic increment.
         Ptr<@Unsigned Long> counter = countByLength.bpf_get(len);
         if (counter != null) {
             long one = 1;
