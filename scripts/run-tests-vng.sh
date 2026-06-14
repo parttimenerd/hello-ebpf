@@ -20,18 +20,72 @@ HOST_HOME=/home/i560383
 
 TESTS=(
     ArrayMapTest
+    AttachAnnotationTest
+    AutoPtrTest
     BloomFilterMapTest
+    BPFArenaSmokeTest
+    BpfAtomicOpsTest
+    BpfContextHelpersTest
+    BPFInlineTest
+    BpfLoopCallsBpfFunctionTest
+    BpfLoopEarlyBreakTest
+    BpfLoopLocalStructTest
+    BpfLoopMultiAccumulatorTest
+    BpfLoopNestedTest
+    BpfLoopNestedTypedCtxTest
+    BpfLoopPrimitiveCtxTest
+    BpfLoopStructCtxTest
+    BpfLoopTest
+    BpfMapBpfSideHelpersTest
+    BpfMapDeleteTest
+    BpfSnprintfAdvancedTest
+    BpfSnprintfTest
+    BpfStackTest
+    BpfTimerTest
+    BPFTypedArenaTest
+    ChainedBpfFunctionTest
+    CoReFieldExistsTest
+    CoReInExpressionTest
+    CoReInLambdaTest
+    CoReMethodCallRootTest
+    CoReMixedChainTest
+    CoReMultiLevelTest
+    CoReTest
     DataTypeTest
     FEntryExitAutoAttachTest
+    FexitAnnotationTest
+    GetCurrentCommTest
+    GlobalVariableStructTest
     GlobalVariableTest
+    HashMapBpfOperationsTest
     HashMapTest
     HelloWorldTest
-    MapGenerationTest
+    KretprobeAttachTest
+    KsyscallAttachTest
+    LRUHashMapBpfSideTest
+    MapForEachLruTest
+    MapForEachTest
+    MapForEachTypedCtxTest
+    PerCpuArrayMultiKeyTest
+    PerCpuArrayTest
+    PerCpuVarTest
+    PrefixIncrementTest
     QueueMapTest
+    RawTracepointAnnotationTest
+    RealVerifierClassificationTest
+    RingBufferMultiEventTest
+    RingBufferTypedEventTest
     SchedulerTimeoutTest
+    SetFieldTest
+    TailCallTest
+    TracepointAnnotationTest
     TracepointAttachTest
+    TracePrintkTest
     TypeLayoutTest
     TypeProcessingTest
+    VerifierLogCaptureSuccessTest
+    VerifierLogCaptureTest
+    VerifierLogCaptureUnitTest
 )
 
 # Allow caller to override the test list:
