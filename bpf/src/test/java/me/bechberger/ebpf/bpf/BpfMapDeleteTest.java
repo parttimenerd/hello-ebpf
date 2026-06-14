@@ -41,13 +41,13 @@ public class BpfMapDeleteTest {
     @Timeout(10)
     public void testBpfDeleteRemovesEntry() {
         try (var program = BPFProgram.load(Program.class)) {
-            program.autoAttachPrograms();
-
-            // Pre-seed two entries; only key 42 will be deleted by the kprobe
+            // Pre-seed before attaching so the kprobe sees the value on first fire.
             program.map.put(42, 100);
             program.map.put(99, 200);
 
             assertTrue(program.map.containsKey(42), "key 42 must exist before probe fires");
+
+            program.autoAttachPrograms();
 
             TestUtil.triggerOpenAt();
             long deadline = System.currentTimeMillis() + 5000;

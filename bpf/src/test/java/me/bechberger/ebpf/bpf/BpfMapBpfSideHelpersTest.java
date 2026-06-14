@@ -49,10 +49,10 @@ public class BpfMapBpfSideHelpersTest {
     @Timeout(10)
     public void testBpfIncrementFromKprobe() {
         try (var program = BPFProgram.load(IncrementProgram.class)) {
-            program.autoAttachPrograms();
-
-            // Pre-seed key 1 with 5 so we test increment on an existing entry.
+            // Pre-seed before attaching so the kprobe sees the value on first fire.
             program.counters.put(1, 5);
+
+            program.autoAttachPrograms();
 
             TestUtil.triggerOpenAt();
             long deadline = System.currentTimeMillis() + 5000;
@@ -101,10 +101,10 @@ public class BpfMapBpfSideHelpersTest {
     @Timeout(10)
     public void testBpfGetOrDefaultFromKprobe() {
         try (var program = BPFProgram.load(GetOrDefaultProgram.class)) {
-            program.autoAttachPrograms();
-
-            // Pre-seed key 7 → 42 before firing the probe
+            // Pre-seed before attaching so the kprobe sees the value on first fire.
             program.data.put(7, 42);
+
+            program.autoAttachPrograms();
 
             TestUtil.triggerOpenAt();
             long deadline = System.currentTimeMillis() + 5000;

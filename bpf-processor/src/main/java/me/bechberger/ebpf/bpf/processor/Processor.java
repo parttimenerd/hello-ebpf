@@ -62,9 +62,20 @@ public class Processor extends AbstractProcessor {
      *     <li>Can contain {@code @Type} annotated inner records</li>
      * </ul>
      */
+    /** Returns true if {@code typeElement} extends (directly or indirectly) the class with the given binary name. */
+    private boolean extendsClass(TypeElement typeElement, String binaryName) {
+        TypeMirror superMirror = typeElement.getSuperclass();
+        while (superMirror != null && superMirror.getKind() != javax.lang.model.type.TypeKind.NONE) {
+            var superEl = (TypeElement) processingEnv.getTypeUtils().asElement(superMirror);
+            if (superEl == null) break;
+            if (superEl.getQualifiedName().contentEquals(binaryName)) return true;
+            superMirror = superEl.getSuperclass();
+        }
+        return false;
+    }
+
     public void processBPFProgram(TypeElement typeElement) {
-        if (typeElement.getSuperclass() == null || !typeElement.getSuperclass().toString().equals("me.bechberger" +
-                ".ebpf" + ".bpf.BPFProgram")) {
+        if (!extendsClass(typeElement, "me.bechberger.ebpf.bpf.BPFProgram")) {
             this.processingEnv.getMessager().printError("Class " + typeElement.getSimpleName() + " is annotated with "
                     + "BPF but does not extend BPFProgram", typeElement);
             return;

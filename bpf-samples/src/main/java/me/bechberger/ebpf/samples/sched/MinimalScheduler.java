@@ -2,38 +2,28 @@
 
 package me.bechberger.ebpf.samples.sched;
 
-import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.Property;
 import me.bechberger.ebpf.bpf.BPFProgram;
-import me.bechberger.ebpf.bpf.Scheduler;
+import me.bechberger.ebpf.bpf.SchedulerBase;
 import me.bechberger.ebpf.type.Ptr;
 
-import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
-/** A simple FIFO scheduler that schedules tasks for a slice inversely scaled by the number of waiting tasks */
+/**
+ * A minimal FIFO scheduler using {@link SchedulerBase}.
+ *
+ * <p>Only {@link #enqueue} needs to be implemented — {@link SchedulerBase}
+ * provides {@link #init()}, {@link #dispatch}, and {@link #dsqInsert}.
+ */
 @BPF(license = "GPL")
 @Property(name = "sched_name", value = "minimal_scheduler")
 @Property(name = "timeout_ms", value = "10000")
-public abstract class MinimalScheduler extends BPFProgram implements Scheduler {
-
-    private static final int SHARED_DSQ_ID = 0;
-
-    @Override
-    public int init() {
-        return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
-    }
+public abstract class MinimalScheduler extends SchedulerBase {
 
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
-        scx_bpf_dsq_insert(p, SHARED_DSQ_ID,  5_000_000 /
-                (@Unsigned int) scx_bpf_dsq_nr_queued(SHARED_DSQ_ID), enq_flags);
-    }
-
-    @Override
-    public void dispatch(int cpu, Ptr<task_struct> prev) {
-        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        dsqInsert(p, enq_flags);
     }
 
     public static void main(String[] args) throws Exception {
