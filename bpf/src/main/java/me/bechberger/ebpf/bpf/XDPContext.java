@@ -42,6 +42,28 @@ public final class XDPContext {
     }
 
     /**
+     * Returns the raw {@code data} offset (uint32, as in {@code xdp_md.data}).
+     *
+     * <p>Lowers to: {@code ($this->data)}
+     */
+    @BuiltinBPFFunction("($this->data)")
+    @NotUsableInJava
+    public @Unsigned int data() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Returns the raw {@code data_end} offset (uint32, as in {@code xdp_md.data_end}).
+     *
+     * <p>Lowers to: {@code ($this->data_end)}
+     */
+    @BuiltinBPFFunction("($this->data_end)")
+    @NotUsableInJava
+    public @Unsigned int dataEnd() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
      * Returns the packet length in bytes.
      *
      * <p>Lowers to: {@code (int)((void *)(long)$this->data_end - (void *)(long)$this->data)}

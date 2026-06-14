@@ -91,8 +91,6 @@ public class TypeProcessor {
     }
 
     private List<TypeElement> getInnerBPFTypeElements(TypeElement typeElement) {
-        record Pair(Optional<? extends AnnotationMirror> a, Element e) {
-        }
         return typeElement.getEnclosedElements().stream().filter(this::isTypeAnnotatedRecord).map(e -> (TypeElement) e).toList();
     }
 
@@ -914,7 +912,6 @@ public class TypeProcessor {
             return processPointerType(element, annotations, type);
         }
 
-        System.out.println("Type " + typeElement.getSimpleName());
         if (isCustomTypeAnnotatedRecord(typeElement)) {
             return processCustomType(element, annotations, type);
         }
@@ -998,7 +995,6 @@ public class TypeProcessor {
     }
 
     private Optional<BPFTypeMirror> processArrayType(Element element, AnnotationValues annotations, ArrayType type) {
-        System.out.println("Array type " + type);
         if (annotations.size().isEmpty()) {
             this.processingEnv.getMessager().printError("Size annotation required for array types", element);
             if (type.getComponentType().getKind() == TypeKind.ARRAY) {

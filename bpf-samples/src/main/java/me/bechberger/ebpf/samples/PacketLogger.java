@@ -5,6 +5,7 @@ import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.bpf.*;
+import me.bechberger.ebpf.bpf.BasePacketParser;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
 import static me.bechberger.ebpf.runtime.SkDefinitions.*;
 import static me.bechberger.ebpf.runtime.XdpDefinitions.*;
