@@ -614,6 +614,7 @@ public class CompilerPlugin implements Plugin {
                                                                boolean breadthFirst) {
         List<T> annotations = new ArrayList<>();
         ArrayDeque<TypeElement> toVisit = new ArrayDeque<>(List.of(klass));
+        Set<TypeElement> visited = new HashSet<>();
 
         Method multiAnnMethod = null;
         if (multiAnnotationClass != null) {
@@ -647,23 +648,27 @@ public class CompilerPlugin implements Plugin {
             }
         };
         add.accept(klass);
+        visited.add(klass);
         while (!toVisit.isEmpty()) {
             var current = toVisit.poll();
             List<TypeElement> otherClasses = current.getInterfaces().stream().map(i -> (TypeElement) ((Type.ClassType)i).asElement())
                     .filter(Objects::nonNull)
+                    .filter(e -> !visited.contains(e))
                     .collect(Collectors.toList());
             if (current.getSuperclass() != null) {
                 var s = (TypeElement) ((Type) current.getSuperclass()).asElement();
-                if (s != null) {
+                if (s != null && !visited.contains(s)) {
                     otherClasses.add(s);
                 }
             }
             if (breadthFirst) {
                 otherClasses.forEach(add);
+                otherClasses.forEach(visited::add);
                 toVisit.addAll(otherClasses);
             } else {
                 add.accept(current);
-                toVisit.addAll(otherClasses);
+                visited.add(current);
+                toVisit.addAll(otherClasses.stream().filter(e -> !visited.contains(e)).toList());
             }
         }
         return annotations;
@@ -808,12 +813,20 @@ public class CompilerPlugin implements Plugin {
 
         Map<MethodSymbol, String> defaultCodeForMethod = getInterfaceMethodsWithDefaultCode((Symbol.ClassSymbol) superClassElement);
 
-        // second: take all methods that are not implemented and add the default code
+        // second: take all methods that are not implemented (or not available in this compilation)
+        // and add the default code
 
-        var methodStrings = methods.stream().map(Object::toString).collect(Collectors.toSet());
+        // Methods whose source IS available in this compilation run (their code is in methodElementToCode)
+        var implementedMethodStrings = methods.stream()
+                .filter(m -> {
+                    var t = task.getTypes().asMemberOf((DeclaredType) superClassElement.asType(), m);
+                    return t instanceof MethodType && methodElementToCode.containsKey((MethodType) t);
+                })
+                .map(Object::toString)
+                .collect(Collectors.toSet());
 
         var defaultCode = defaultCodeForMethod.entrySet().stream()
-                .filter(e -> !methodStrings.contains(e.getKey().toString()))
+                .filter(e -> !implementedMethodStrings.contains(e.getKey().toString()))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.joining("\n\n"));
 

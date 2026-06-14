@@ -38,8 +38,7 @@ public abstract class FCFSScheduler extends BPFProgram implements Scheduler {
 
     public static void main(String[] args) throws Exception {
         try (var program = BPFProgram.load(FCFSScheduler.class)) {
-            program.attachScheduler();
-            program.waitWhileSchedulerIsAttachedProperly();
+            program.runSchedulerLoop();
         }
     }
 }

@@ -113,7 +113,7 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
 
     @BPFFunction
     @AlwaysInline
-    boolean isSmaller(@Unsigned long a, @Unsigned long b) {
+    public boolean isSmaller(@Unsigned long a, @Unsigned long b) {
         return (long)(a - b) < 0;
     }
 

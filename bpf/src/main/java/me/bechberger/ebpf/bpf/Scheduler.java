@@ -6,6 +6,7 @@
 
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.runtime.BpfDefinitions;
@@ -17,6 +18,11 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.function.Consumer;
+
+import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
+import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 /**
  * A sched-ext based scheduler
@@ -73,6 +79,8 @@ import java.util.function.Consumer;
                 u32 scx_bpf_reenqueue_local(void) __ksym;
                 void scx_bpf_kick_cpu(s32 cpu, u64 flags) __ksym;
                 s32 scx_bpf_dsq_nr_queued(u64 dsq_id) __ksym;
+                bool scx_bpf_dsq_move_to_local(u64 dsq_id) __ksym;
+                void scx_bpf_dsq_insert_vtime(struct task_struct *p, u64 dsq_id, u64 slice, u64 vtime, u64 enq_flags) __ksym;
                 void scx_bpf_destroy_dsq(u64 dsq_id) __ksym;
                 int bpf_iter_scx_dsq_new(struct bpf_iter_scx_dsq *it, u64 dsq_id, u64 flags) __ksym __weak;
                 struct task_struct *bpf_iter_scx_dsq_next(struct bpf_iter_scx_dsq *it) __ksym __weak;
@@ -433,8 +441,84 @@ public interface Scheduler {
 
     final int SCHED_EXT_UAPI_ID = 7;
 
-    default void attachScheduler() {
+    // -----------------------------------------------------------------------
+    // Shared-DSQ convenience helpers (available to all Scheduler implementors)
+    // -----------------------------------------------------------------------
 
+    /**
+     * Inserts {@code p} into the shared DSQ (ID 0) with the default slice,
+     * scaled inversely by the current queue depth to avoid starvation.
+     */
+    @BPFFunction
+    default void dsqInsert(Ptr<task_struct> p, long enq_flags) {
+        @Unsigned int queued = scx_bpf_dsq_nr_queued(0L);
+        long slice = queued > 0 ? SCX_SLICE_DFL.value() / queued : SCX_SLICE_DFL.value();
+        scx_bpf_dsq_insert(p, 0L, slice, enq_flags);
+    }
+
+    /**
+     * Selects a CPU using the kernel default; pre-dispatches to
+     * {@code SCX_DSQ_LOCAL} when an idle CPU is found.
+     */
+    @BPFFunction
+    default int selectCpuDefault(Ptr<task_struct> p, int prev_cpu, long wake_flags) {
+        boolean is_idle = false;
+        int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
+        if (is_idle) {
+            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL.value(), SCX_SLICE_DFL.value(), 0);
+        }
+        return cpu;
+    }
+
+    /**
+     * Selects a CPU for a waking task; pre-dispatches to {@code dsqId} when an idle
+     * CPU is found (avoids a full enqueue/dispatch round-trip).
+     */
+    @BPFFunction
+    default int selectCpuIdleOrFallback(Ptr<task_struct> p, int prev_cpu, long wake_flags,
+                                        @Unsigned long dsqId) {
+        boolean is_idle = false;
+        int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
+        if (is_idle) {
+            scx_bpf_dsq_insert(p, dsqId, SCX_SLICE_DFL.value(), 0);
+        }
+        return cpu;
+    }
+
+    /** Unsigned-safe {@code a < b} comparison for virtual time values. */
+    @BPFFunction
+    @AlwaysInline
+    default boolean isSmaller(@Unsigned long a, @Unsigned long b) {
+        return (long) (a - b) < 0;
+    }
+
+    /**
+     * Inserts {@code p} into the shared DSQ (ID 0) using vtime-ordered priority.
+     * Clamps the task's accumulated vtime so idle tasks cannot budget more than one
+     * {@code SCX_SLICE_DFL} ahead of the global vtime.
+     */
+    @BPFFunction
+    default void vtimeEnqueue(Ptr<task_struct> p, long enq_flags, @Unsigned long vtimeNow) {
+        @Unsigned long vtime = p.val().scx.dsq_vtime;
+        if (isSmaller(vtime, vtimeNow - SCX_SLICE_DFL.value())) {
+            vtime = vtimeNow - SCX_SLICE_DFL.value();
+        }
+        scx_bpf_dsq_insert_vtime(p, 0L, SCX_SLICE_DFL.value(), vtime, enq_flags);
+    }
+
+    /**
+     * Charges execution time to {@code p}'s virtual time, scaled by the inverse
+     * of the task's weight. Call from {@link #stopping(Ptr, boolean)}.
+     */
+    @BPFFunction
+    default void vtimeCharge(Ptr<task_struct> p) {
+        p.val().scx.dsq_vtime +=
+                (SCX_SLICE_DFL.value() - p.val().scx.slice) * 100 / p.val().scx.weight;
+    }
+
+
+
+    default void attachScheduler() {
         BPFProgram bpfProgram = (BPFProgram)this;
         try {
             bpfProgram.attachStructOps("sched_ops");
@@ -495,5 +579,23 @@ public interface Scheduler {
                 return;
             }
         }
+    }
+
+    /**
+     * Convenience main-loop: attach the scheduler, block until it detaches
+     * (watchdog fire, kernel unload, or SIGINT / SIGTERM), then return.
+     *
+     * <p>Typical usage:
+     * <pre>{@code
+     * public static void main(String[] args) throws Exception {
+     *     try (var prog = BPFProgram.load(MyScheduler.class)) {
+     *         prog.runSchedulerLoop();
+     *     }
+     * }
+     * }</pre>
+     */
+    default void runSchedulerLoop() {
+        attachScheduler();
+        waitWhileSchedulerIsAttachedProperly();
     }
 }

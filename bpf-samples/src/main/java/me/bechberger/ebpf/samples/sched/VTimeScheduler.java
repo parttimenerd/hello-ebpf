@@ -41,7 +41,7 @@ public abstract class VTimeScheduler extends BPFProgram
 
     @BPFFunction
     @AlwaysInline
-    boolean isSmaller(@Unsigned long a, @Unsigned long b) {
+    public boolean isSmaller(@Unsigned long a, @Unsigned long b) {
         return (long)(a - b) < 0;
     }
 
@@ -138,8 +138,7 @@ public abstract class VTimeScheduler extends BPFProgram
     public static void main(String[] args) {
         try (var program =
                      BPFProgram.load(VTimeScheduler.class)) {
-            program.attachScheduler();
-            program.waitWhileSchedulerIsAttachedProperly();
+            program.runSchedulerLoop();
         }
     }
 

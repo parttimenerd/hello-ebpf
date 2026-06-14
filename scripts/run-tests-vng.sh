@@ -75,6 +75,7 @@ TESTS=(
     RealVerifierClassificationTest
     RingBufferMultiEventTest
     RingBufferTypedEventTest
+    SchedulerSmokeTest
     SchedulerTimeoutTest
     SetFieldTest
     TailCallTest
@@ -113,10 +114,18 @@ for cls in "${TESTS[@]}"; do
     log="$LOGDIR/$cls.log"
     echo "=== $cls ==="
 
+    # Determine which Maven module hosts the test class.
+    # Tests in bpf-samples reside under bpf-samples/src/test; all others use bpf.
+    if find "$REPO/bpf-samples/src/test" -name "${cls}.java" 2>/dev/null | grep -q .; then
+        MODULE="bpf-samples"
+    else
+        MODULE="bpf"
+    fi
+
     # Build the in-VM command: pin JDK and mvn, override HOME so ~/.m2 is the
-    # host's, scope the reactor to `bpf` only (avoids bpf-samples spring-boot
-    # transitive deps), require offline-only resolution from the host m2 cache.
-    inner="export HOME=$HOST_HOME JAVA_HOME=$JAVA_HOME PATH=$JAVA_HOME/bin:\$PATH && cd $REPO && $MVN -ntp -pl bpf test -Dtest=$cls -Dmaven.test.skip=false -DskipTests=false -Dmaven.repo.local=$HOST_HOME/.m2/repository"
+    # host's, scope the reactor to the module that owns this test, require
+    # offline-only resolution from the host m2 cache.
+    inner="export HOME=$HOST_HOME JAVA_HOME=$JAVA_HOME PATH=$JAVA_HOME/bin:\$PATH && cd $REPO && $MVN -ntp -pl $MODULE test -Dtest=$cls -Dmaven.test.skip=false -DskipTests=false -Dmaven.repo.local=$HOST_HOME/.m2/repository"
 
     vng --network user --run "$KERNEL" --user root --cwd "$REPO" -- "$inner" \
         > "$log" 2>&1 < /dev/null

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.type.Ptr;
@@ -88,4 +89,64 @@ public abstract class SchedulerBase extends BPFProgram implements Scheduler {
         }
         return cpu;
     }
+
+    /**
+     * Unsigned-safe {@code a < b} comparison for virtual time values.
+     */
+    @BPFFunction
+    @AlwaysInline
+    public boolean isSmaller(@Unsigned long a, @Unsigned long b) {
+        return (long) (a - b) < 0;
+    }
+
+    /**
+     * Inserts {@code p} into {@link #SHARED_DSQ_ID} using vtime-ordered priority.
+     *
+     * <p>Clamps the task's accumulated vtime so that idle tasks cannot build up
+     * more than one {@code SCX_SLICE_DFL} of budget ahead of the global vtime.
+     *
+     * @param vtimeNow current global virtual time
+     */
+    @BPFFunction
+    public void vtimeEnqueue(Ptr<task_struct> p, long enq_flags, @Unsigned long vtimeNow) {
+        @Unsigned long vtime = p.val().scx.dsq_vtime;
+        if (isSmaller(vtime, vtimeNow - SCX_SLICE_DFL.value())) {
+            vtime = vtimeNow - SCX_SLICE_DFL.value();
+        }
+        scx_bpf_dsq_insert_vtime(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), vtime, enq_flags);
+    }
+
+    /**
+     * Charges execution time to {@code p}'s virtual time, scaled by the inverse
+     * of the task's weight (so heavier tasks advance their vtime more slowly).
+     *
+     * <p>Call from {@link Scheduler#stopping(Ptr, boolean)}.
+     */
+    @BPFFunction
+    public void vtimeCharge(Ptr<task_struct> p) {
+        p.val().scx.dsq_vtime +=
+                (SCX_SLICE_DFL.value() - p.val().scx.slice) * 100 / p.val().scx.weight;
+    }
+
+    /**
+     * Selects a CPU for a waking task, optionally pre-dispatching to {@code dsqId}
+     * when an idle CPU is found (avoids a full enqueue/dispatch round-trip).
+     *
+     * <p>Unlike {@link #selectCpuDefault(Ptr, int, long)}, this variant accepts a
+     * caller-supplied {@code dsqId} so that multi-DSQ schedulers can use it too.
+     *
+     * @param dsqId DSQ to pre-dispatch into when an idle CPU is chosen
+     */
+    @BPFFunction
+    public int selectCpuIdleOrFallback(Ptr<task_struct> p, int prev_cpu, long wake_flags,
+                                       @Unsigned long dsqId) {
+        boolean is_idle = false;
+        int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
+        if (is_idle) {
+            scx_bpf_dsq_insert(p, dsqId, SCX_SLICE_DFL.value(), 0);
+        }
+        return cpu;
+    }
 }
+
+
