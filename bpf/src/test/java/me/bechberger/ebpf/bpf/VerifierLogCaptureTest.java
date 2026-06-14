@@ -37,6 +37,17 @@ public class VerifierLogCaptureTest {
                 """;
     }
 
+    /** install() is idempotent — calling it after libbpf is loaded must not throw. */
+    @Test
+    public void testInstallIsIdempotent() {
+        // Ensure libbpf is loaded by triggering a load attempt (even a failing one is fine).
+        try { BPFProgram.load(BadProgram.class); } catch (Exception ignored) {}
+        VerifierLogCapture.install();
+        VerifierLogCapture.install();
+        VerifierLogCapture.install();
+        // Implicit assertion: no throw, no crash.
+    }
+
     @Test
     public void testVerifierLogIsCaptured() {
         BPFVerifierException ex = assertThrows(BPFVerifierException.class,

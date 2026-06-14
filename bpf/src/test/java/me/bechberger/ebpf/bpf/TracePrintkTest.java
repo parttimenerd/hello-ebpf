@@ -3,12 +3,13 @@ package me.bechberger.ebpf.bpf;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.Kprobe;
 import me.bechberger.ebpf.runtime.PtDefinitions;
-import me.bechberger.ebpf.shared.TraceLog;
+import me.bechberger.ebpf.shared.Constants;
 import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-import java.time.Duration;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 import static me.bechberger.ebpf.bpf.BPFJ.bpf_trace_printk;
@@ -41,10 +42,7 @@ public class TracePrintkTest {
 
     @Test
     @Timeout(15)
-    public void testTracePrintkAppearsInTraceLog() throws InterruptedException {
-        // Drain any stale lines before the test so we don't hit old data.
-        TraceLog.getInstance().readAllAvailableLines(Duration.ofMillis(50));
-
+    public void testTracePrintkAppearsInTraceLog() throws InterruptedException, IOException {
         try (var program = BPFProgram.load(Program.class)) {
             program.autoAttachPrograms();
             TestUtil.triggerOpenAt();
@@ -55,9 +53,11 @@ public class TracePrintkTest {
             }
             assertTrue(program.done.get(), "kprobe never fired");
 
-            // Give the trace pipe time to flush; then collect lines.
-            Thread.sleep(100);
-            List<String> lines = TraceLog.getInstance().readAllAvailableLines(Duration.ofMillis(500));
+            // Give the kernel time to flush bpf_trace_printk output to the trace buffer.
+            Thread.sleep(200);
+
+            // Read from the static 'trace' snapshot file — reliable in virtme-ng unlike trace_pipe.
+            List<String> lines = Files.readAllLines(Constants.TRACEFS.resolve("trace"));
 
             boolean found = lines.stream().anyMatch(l -> l.contains(MARKER));
             assertTrue(found,

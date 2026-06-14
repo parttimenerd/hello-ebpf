@@ -23,15 +23,4 @@ public class VerifierLogCaptureUnitTest {
         assertNotNull(s, "drainAndReset must never return null");
         assertEquals("", s, "drainAndReset on a clean buffer must return empty");
     }
-
-    /** install() is idempotent — calling it many times must not throw or
-     *  crash. (Re-installing the libbpf print callback would corrupt the
-     *  global registration; the implementation guards on a static flag.) */
-    @Test
-    public void testInstallIsIdempotent() {
-        VerifierLogCapture.install();
-        VerifierLogCapture.install();
-        VerifierLogCapture.install();
-        // Implicit assertion: no throw, no crash.
-    }
 }
