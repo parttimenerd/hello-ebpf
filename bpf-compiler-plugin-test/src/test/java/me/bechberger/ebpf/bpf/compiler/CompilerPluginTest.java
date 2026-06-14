@@ -2837,4 +2837,46 @@ public class CompilerPluginTest {
                 "expected deref of b inside guarded block:\n" + code);
     }
 
+    // ──────────────────────────────────────────────────────────
+    // XDPContext helper templates
+    // ──────────────────────────────────────────────────────────
+
+    @BPF(license = "GPL")
+    public static abstract class XDPContextUsage extends BPFProgram implements XDPHook {
+
+        @Override
+        public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
+            int len = me.bechberger.ebpf.bpf.XDPContext.length(ctx);
+            if (!me.bechberger.ebpf.bpf.XDPContext.boundsOk(ctx, 0, 1)) {
+                return xdp_action.XDP_ABORTED;
+            }
+            @Unsigned int b = me.bechberger.ebpf.bpf.XDPContext.byteAt(ctx, 0);
+            return b > 0 ? xdp_action.XDP_PASS : xdp_action.XDP_DROP;
+        }
+    }
+
+    @Test
+    public void testXDPContextLengthTemplate() {
+        String code = BPFProgram.getCode(XDPContextUsage.class);
+        // length() → ((int)((void *)(long)ctx->data_end - (void *)(long)ctx->data))
+        assertTrue(code.contains("data_end") && code.contains("ctx->data"),
+                "XDPContext.length() must expand to data_end - data expression:\n" + code);
+    }
+
+    @Test
+    public void testXDPContextBoundsOkTemplate() {
+        String code = BPFProgram.getCode(XDPContextUsage.class);
+        // boundsOk(ctx, 0, 1) → ((void *)(long)ctx->data + ... <= (void *)(long)ctx->data_end)
+        assertTrue(code.contains("ctx->data_end"),
+                "XDPContext.boundsOk() must reference data_end:\n" + code);
+    }
+
+    @Test
+    public void testXDPContextByteAtTemplate() {
+        String code = BPFProgram.getCode(XDPContextUsage.class);
+        // byteAt(ctx, 0) → (*(__u8 *)((void *)(long)ctx->data + 0))
+        assertTrue(code.contains("__u8") && code.contains("ctx->data"),
+                "XDPContext.byteAt() must use __u8 cast and ctx->data:\n" + code);
+    }
+
 }
