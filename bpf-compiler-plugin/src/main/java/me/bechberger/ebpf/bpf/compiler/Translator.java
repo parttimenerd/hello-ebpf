@@ -151,6 +151,10 @@ class Translator {
         compilerPlugin.logError(methodPath, tree, message);
     }
 
+    void logWarning(Tree tree, String message) {
+        compilerPlugin.logWarning(methodPath, tree, message);
+    }
+
     @Nullable
     FunctionHeader toDeclarator() {
         var annotation =
@@ -362,6 +366,91 @@ class Translator {
                         thenStatement, elseStatement) : null;
             }
             case ForLoopTree forLoopTree -> {
+                // Detect @BoundedBy on the loop's init variable. If present, rewrite
+                //     for (T x = ...; cond; upd) body
+                // into
+                //     for (T x = ...; x < N; upd) { if (!(cond)) break; body }
+                // so the BPF verifier sees a compile-time-bounded iteration count.
+                //
+                // NOTE: javac drops RUNTIME/CLASS retention on local variable annotations,
+                // so getAnnotation() on the VariableElement returns null. Read the literal
+                // from the AST instead — same trick as SizeInference.readSize.
+                Integer boundedByValue = null;
+                String boundedVarName = null;
+                var initList = forLoopTree.getInitializer();
+                if (initList != null && initList.size() == 1
+                        && initList.get(0) instanceof VariableTree initVar) {
+                    for (var ann : initVar.getModifiers().getAnnotations()) {
+                        var annTypeName = ann.getAnnotationType().toString();
+                        var simple = annTypeName.contains(".")
+                                ? annTypeName.substring(annTypeName.lastIndexOf('.') + 1)
+                                : annTypeName;
+                        if (!simple.equals("BoundedBy")) continue;
+                        for (var arg : ann.getArguments()) {
+                            ExpressionTree expr = arg;
+                            if (arg instanceof AssignmentTree a) expr = a.getExpression();
+                            var constVal = evaluateToConstant(expr);
+                            if (constVal.isPresent() && constVal.get() instanceof Number n) {
+                                boundedByValue = n.intValue();
+                                boundedVarName = initVar.getName().toString();
+                            }
+                        }
+                    }
+                }
+
+                if (boundedByValue != null) {
+                    var initializer = callIfNonNull(forLoopTree.getInitializer(), this::translate);
+                    var originalCond = callIfNonNull(forLoopTree.getCondition(), this::translate);
+                    var update = callIfNonNull(forLoopTree.getUpdate(), this::translate);
+                    var body = translate(forLoopTree.getStatement());
+                    if (initializer == null || originalCond == null || update == null || body == null) {
+                        yield null;
+                    }
+                    // Synthetic condition:  loopVar < N
+                    CAST.Expression rewrittenCond = new OperatorExpression(
+                            Operator.LESS_THAN,
+                            variable(boundedVarName),
+                            new IntegerConstant(boundedByValue));
+                    // Guard prepended to the body:  if (!(originalCond)) break;
+                    // Wrap the original condition in parens so `!` doesn't bind to its first operand.
+                    Statement guard = new CAST.Statement.IfStatement(
+                            new OperatorExpression(Operator.LOGICAL_NOT,
+                                    new VerbatimExpression("(" + originalCond.toPrettyString() + ")")),
+                            new BreakStatement(),
+                            null);
+                    List<Statement> bodyStatements = new ArrayList<>();
+                    bodyStatements.add(guard);
+                    if (body instanceof CompoundStatement comp) {
+                        bodyStatements.addAll(comp.statements());
+                    } else {
+                        bodyStatements.add(body);
+                    }
+                    yield new CAST.Statement.ForStatement(
+                            initializer, rewrittenCond, update,
+                            new CompoundStatement(bodyStatements));
+                }
+
+                // Lint: warn when the loop has a non-constant bound and no @BoundedBy.
+                // Only flags the simple `lhs < rhs` / `lhs <= rhs` shape — anything more
+                // exotic is hard to classify and we'd rather stay quiet than spam.
+                var rawCond = forLoopTree.getCondition();
+                if (rawCond instanceof ParenthesizedTree p) {
+                    rawCond = p.getExpression();
+                }
+                if (rawCond instanceof BinaryTree bt
+                        && (bt.getKind() == Tree.Kind.LESS_THAN
+                            || bt.getKind() == Tree.Kind.LESS_THAN_EQUAL
+                            || bt.getKind() == Tree.Kind.GREATER_THAN
+                            || bt.getKind() == Tree.Kind.GREATER_THAN_EQUAL)) {
+                    if (evaluateToConstant(bt.getRightOperand()).isEmpty()
+                            && evaluateToConstant(bt.getLeftOperand()).isEmpty()) {
+                        logWarning(forLoopTree,
+                                "for-loop in @BPFFunction has a non-constant bound; the BPF verifier "
+                                + "may reject this with an E2BIG / loop-complexity error. "
+                                + "Add @BoundedBy(N) on the loop variable to declare a static upper bound.");
+                    }
+                }
+
                 var initializer = callIfNonNull(forLoopTree.getInitializer(), this::translate);
                 var condition = callIfNonNull(forLoopTree.getCondition(), this::translate);
                 var update = callIfNonNull(forLoopTree.getUpdate(), this::translate);

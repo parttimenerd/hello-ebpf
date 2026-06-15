@@ -388,7 +388,7 @@ public class CompilerPlugin implements Plugin {
     private boolean processBPFFunction(CompilerPlugin.TypedTreePath<MethodTree> path) {
         var function = path.leaf();
         assert shouldProcessMethod(path);
-        logger.printRawLines("Processing BPFFunction " + function);
+        logger.printRawLines("Processing BPFFunction " + function.getName());
         // we could have two cases:
         // 1. the method body only consists of String assignment followed by a throw;
         //    then we can just use the string
