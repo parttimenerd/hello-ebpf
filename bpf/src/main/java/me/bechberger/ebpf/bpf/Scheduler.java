@@ -140,7 +140,8 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
                 	       .stopping        = (void *)simple_stopping,
                 	       .dequeue         = (void *)simple_dequeue,
                 	       .tick            = (void *)simple_tick,
-                	       .flags			= SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE,
+                	       .runnable        = (void *)sched_runnable,
+                	       .flags			= SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE | (__property_extra_flags),
                 	       .timeout_ms      = __property_timeout_ms,
                 	       .name			= "__property_sched_name");
                 """
@@ -148,6 +149,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 @Requires(sched_ext = true)
 @PropertyDefinition(name = "sched_name", defaultValue = "hello", regexp = "[a-zA-Z0-9_]+")
 @PropertyDefinition(name = "timeout_ms", defaultValue = "30000", regexp = "[1-9]\\d*")
+@PropertyDefinition(name = "extra_flags", defaultValue = "0", regexp = "[A-Z0-9_| ()]+")
 public interface Scheduler {
 
     /** No such process error code */
@@ -340,6 +342,24 @@ public interface Scheduler {
             addDefinition = false
     )
     default void exit(Ptr<ScxDefinitions.scx_exit_info> ei) {
+        return;
+    }
+
+    /**
+     * A task is becoming runnable.
+     *
+     * @param p          task transitioning to runnable
+     * @param enq_flags  {@code SCX_ENQ_*} flags describing the wakeup reason
+     *
+     * Called when {@code p} enters runnable state, before any {@link #enqueue(Ptr, long)}.
+     * Useful for per-task bookkeeping (e.g. recording wakeup time for latency tracking)
+     * without taking on full enqueue responsibility.
+     */
+    @BPFFunction(
+            headerTemplate = "int BPF_STRUCT_OPS(sched_runnable, struct task_struct *p, u64 enq_flags)",
+            addDefinition = false
+    )
+    default void runnable(Ptr<TaskDefinitions.task_struct> p, @Unsigned long enq_flags) {
         return;
     }
 
