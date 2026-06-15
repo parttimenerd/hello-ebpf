@@ -339,6 +339,20 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
     }
 
     /**
+     * BPF-side: insert or update the value at {@code key} (equivalent to {@link #put(Object, Object)}).
+     *
+     * <p>Lowers to {@code bpf_map_update_elem(&map, &key, &value, BPF_ANY)}.
+     * Use this in BPF context where the {@code put()} name is ambiguous with Java-side overloads.
+     *
+     * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_update_elem(Ptr, Ptr, Ptr, long)
+     */
+    @BuiltinBPFFunction("bpf_map_update_elem(&$this, $pointery$arg1, $pointery$arg2, BPF_ANY)")
+    @NotUsableInJava
+    public void bpf_put(K key, V value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
      * Clear the map
      */
     public void clear() {

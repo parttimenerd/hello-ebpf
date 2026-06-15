@@ -814,7 +814,7 @@ public class TypeProcessor {
                 return null;
             }
             return new UBPFStructMemberPotentiallyInlineUnion(new BPFType.UBPFStructMember<>(element.getSimpleName().toString(),
-                    bt.toCustomType(), null, null, annotations.offset()), inlineUnionId);
+                    bt.toCustomType(), null, null, annotations.offset(), annotations.kptr()), inlineUnionId);
         });
     }
 

@@ -19,17 +19,26 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.function.Consumer;
 
+import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask_test_cpu;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL_ON;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_enq_flags.SCX_ENQ_PREEMPT;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 /**
- * A sched-ext based scheduler
- * <p>
- * You can specify the scheduler name {@code Property(name = "sched_name", value = "...")}
- * <p>
- * Based on the Linux sources
+ * A sched-ext based scheduler.
+ *
+ * <p>Specify the scheduler name with {@code @Property(name = "sched_name", value = "...")}.
+ *
+ * <p><b>cpumask import note:</b> Methods that deal with {@code cpumask} (e.g.
+ * {@link #scx_bpf_get_possible_cpumask()}, {@link #scx_bpf_pick_idle_cpu}) return
+ * {@code Ptr<cpumask>}.  The {@code cpumask} type lives in a deeply-nested package; add
+ * this import to any scheduler class that uses it:
+ * <pre>{@code import me.bechberger.ebpf.runtime.runtime.cpumask;}</pre>
+ *
+ * <p>Based on the Linux sched_ext sources.
  */
 @BPFInterface(
         before = """
@@ -134,13 +143,13 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
                 	       .init_task		= (void *)sched_init_task,
                 	       .init			= (void *)sched_init,
                 	       .exit			= (void *)sched_exit,
+                	       .runnable        = (void *)sched_runnable,
                 	       .running	        = (void *)simple_running,
                 	       .enable          = (void *)simple_enable,
                 	       .disable         = (void *)simple_disable,
                 	       .stopping        = (void *)simple_stopping,
                 	       .dequeue         = (void *)simple_dequeue,
                 	       .tick            = (void *)simple_tick,
-                	       .runnable        = (void *)sched_runnable,
                 	       .flags			= SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE | (__property_extra_flags),
                 	       .timeout_ms      = __property_timeout_ms,
                 	       .name			= "__property_sched_name");
@@ -461,83 +470,6 @@ public interface Scheduler {
 
     final int SCHED_EXT_UAPI_ID = 7;
 
-    // -----------------------------------------------------------------------
-    // Shared-DSQ convenience helpers (available to all Scheduler implementors)
-    // -----------------------------------------------------------------------
-
-    /**
-     * Inserts {@code p} into the shared DSQ (ID 0) with the default slice,
-     * scaled inversely by the current queue depth to avoid starvation.
-     */
-    @BPFFunction
-    default void dsqInsert(Ptr<task_struct> p, long enq_flags) {
-        @Unsigned int queued = scx_bpf_dsq_nr_queued(0L);
-        long slice = queued > 0 ? SCX_SLICE_DFL.value() / queued : SCX_SLICE_DFL.value();
-        scx_bpf_dsq_insert(p, 0L, slice, enq_flags);
-    }
-
-    /**
-     * Selects a CPU using the kernel default; pre-dispatches to
-     * {@code SCX_DSQ_LOCAL} when an idle CPU is found.
-     */
-    @BPFFunction
-    default int selectCpuDefault(Ptr<task_struct> p, int prev_cpu, long wake_flags) {
-        boolean is_idle = false;
-        int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
-        if (is_idle) {
-            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL.value(), SCX_SLICE_DFL.value(), 0);
-        }
-        return cpu;
-    }
-
-    /**
-     * Selects a CPU for a waking task; pre-dispatches to {@code dsqId} when an idle
-     * CPU is found (avoids a full enqueue/dispatch round-trip).
-     */
-    @BPFFunction
-    default int selectCpuIdleOrFallback(Ptr<task_struct> p, int prev_cpu, long wake_flags,
-                                        @Unsigned long dsqId) {
-        boolean is_idle = false;
-        int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
-        if (is_idle) {
-            scx_bpf_dsq_insert(p, dsqId, SCX_SLICE_DFL.value(), 0);
-        }
-        return cpu;
-    }
-
-    /** Unsigned-safe {@code a < b} comparison for virtual time values. */
-    @BPFFunction
-    @AlwaysInline
-    default boolean isSmaller(@Unsigned long a, @Unsigned long b) {
-        return (long) (a - b) < 0;
-    }
-
-    /**
-     * Inserts {@code p} into the shared DSQ (ID 0) using vtime-ordered priority.
-     * Clamps the task's accumulated vtime so idle tasks cannot budget more than one
-     * {@code SCX_SLICE_DFL} ahead of the global vtime.
-     */
-    @BPFFunction
-    default void vtimeEnqueue(Ptr<task_struct> p, long enq_flags, @Unsigned long vtimeNow) {
-        @Unsigned long vtime = p.val().scx.dsq_vtime;
-        if (isSmaller(vtime, vtimeNow - SCX_SLICE_DFL.value())) {
-            vtime = vtimeNow - SCX_SLICE_DFL.value();
-        }
-        scx_bpf_dsq_insert_vtime(p, 0L, SCX_SLICE_DFL.value(), vtime, enq_flags);
-    }
-
-    /**
-     * Charges execution time to {@code p}'s virtual time, scaled by the inverse
-     * of the task's weight. Call from {@link #stopping(Ptr, boolean)}.
-     */
-    @BPFFunction
-    default void vtimeCharge(Ptr<task_struct> p) {
-        p.val().scx.dsq_vtime +=
-                (SCX_SLICE_DFL.value() - p.val().scx.slice) * 100 / p.val().scx.weight;
-    }
-
-
-
     default void attachScheduler() {
         BPFProgram bpfProgram = (BPFProgram)this;
         try {
@@ -580,6 +512,51 @@ public interface Scheduler {
     }
 
     /**
+     * Moves task {@code p} from the DSQ iterator position to the local queue of {@code cpu},
+     * but only if {@code cpu} is in the task's allowed CPU mask.
+     *
+     * <p>This is the canonical dispatch helper for schedulers that use
+     * {@link #bpf_for_each_dsq} to scan a shared DSQ and dispatch each task to a
+     * specific CPU (rather than the caller's local queue).  It corresponds to the
+     * pattern used in {@code scx_pair} and other per-CPU-targeted schedulers.
+     *
+     * <p>Returns {@code true} if the task was moved (the caller should stop iterating);
+     * {@code false} if the CPU was not in the task's affinity mask.
+     *
+     * @param iter the DSQ iterator from the {@code bpf_for_each_dsq} lambda parameter
+     * @param p    the current task from the iterator
+     * @param cpu  target CPU to dispatch to
+     */
+    @BPFFunction
+    @AlwaysInline
+    default boolean tryDispatchToLocalCpu(Ptr<BpfDefinitions.bpf_iter_scx_dsq> iter,
+                                          Ptr<TaskDefinitions.task_struct> p, int cpu) {
+        if (!bpf_cpumask_test_cpu(cpu, p.val().cpus_ptr)) {
+            return false;
+        }
+        return scx_bpf_dsq_move(iter, p, SCX_DSQ_LOCAL_ON.value() | cpu, SCX_ENQ_PREEMPT.value());
+    }
+
+    /**
+     * Returns {@code true} if the task has scheduling constraints that prevent it
+     * from being placed on an arbitrary CPU: it is a kernel thread
+     * ({@code PF_KTHREAD}) or its CPU affinity mask is narrower than the full set
+     * of online CPUs.
+     *
+     * <p>Schedulers that scan a shared DSQ and target specific CPUs should check
+     * this first.  A task with constraints should be dispatched unconditionally
+     * (let the kernel handle placement) rather than skipped.
+     *
+     * @param p the task to inspect
+     */
+    @BPFFunction
+    @AlwaysInline
+    default boolean hasSchedulingConstraints(Ptr<TaskDefinitions.task_struct> p) {
+        return ((p.val().flags & PerProcessFlags.PF_KTHREAD) != 0)
+                || (p.val().nr_cpus_allowed != scx_bpf_nr_cpu_ids());
+    }
+
+    /**
      * Check via /sys/kernel/sched_ext/root/ops whether the scheduler is attached properly.
      */
     default boolean isSchedulerAttachedProperly() {
@@ -617,5 +594,135 @@ public interface Scheduler {
     default void runSchedulerLoop() {
         attachScheduler();
         waitWhileSchedulerIsAttachedProperly();
+    }
+
+    // -----------------------------------------------------------------------
+    // BPF-side convenience helpers (available to ALL Scheduler implementors via
+    // the @BPFInterface / @InternalMethodDefinition cross-module mechanism)
+    // -----------------------------------------------------------------------
+
+    /**
+     * Inserts {@code p} into DSQ 0 (the conventional shared FIFO DSQ) with the
+     * default slice, scaled inversely by the queue depth to avoid starvation.
+     *
+     * <p><b>Only safe for FIFO DSQs.</b>  Do not mix with
+     * {@code scx_bpf_dsq_insert_vtime} on the same DSQ.
+     */
+    @BPFFunction
+    default void dsqInsert(Ptr<task_struct> p, long enq_flags) {
+        @Unsigned int queued = scx_bpf_dsq_nr_queued(0L);
+        long slice = queued > 0 ? SCX_SLICE_DFL.value() / queued : SCX_SLICE_DFL.value();
+        scx_bpf_dsq_insert(p, 0L, slice, enq_flags);
+    }
+
+    /**
+     * Selects a CPU using the kernel default without any pre-insertion.
+     *
+     * <p>Use this when tasks will be inserted later in {@code enqueue()}, especially
+     * for vtime-ordered DSQs where FIFO pre-insertion would corrupt ordering.
+     */
+    @BPFFunction
+    default int selectCpuDfl(Ptr<task_struct> p, int prev_cpu, long wake_flags) {
+        boolean is_idle = false;
+        return scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
+    }
+
+    /**
+     * Selects a CPU using the kernel default; pre-dispatches to
+     * {@code SCX_DSQ_LOCAL} when an idle CPU is found.
+     *
+     * <p><b>Only safe for FIFO DSQs.</b>
+     */
+    @BPFFunction
+    default int selectCpuDefault(Ptr<task_struct> p, int prev_cpu, long wake_flags) {
+        boolean is_idle = false;
+        int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
+        if (is_idle) {
+            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL.value(), SCX_SLICE_DFL.value(), 0);
+        }
+        return cpu;
+    }
+
+    /**
+     * Selects a CPU for a waking task; pre-dispatches into {@code dsqId} when an idle
+     * CPU is found (avoids a full enqueue/dispatch round-trip).
+     *
+     * <p><b>Only safe for FIFO DSQs.</b>  Do not use if {@code dsqId} is also written
+     * with {@code scx_bpf_dsq_insert_vtime} — use {@link #selectCpuDfl} instead.
+     *
+     * @param dsqId FIFO DSQ to pre-dispatch into when an idle CPU is chosen
+     */
+    @BPFFunction
+    default int selectCpuFifoIdleOrFallback(Ptr<task_struct> p, int prev_cpu, long wake_flags,
+                                            @Unsigned long dsqId) {
+        boolean is_idle = false;
+        int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
+        if (is_idle) {
+            scx_bpf_dsq_insert(p, dsqId, SCX_SLICE_DFL.value(), 0);
+        }
+        return cpu;
+    }
+
+    /**
+     * @deprecated Renamed to {@link #selectCpuFifoIdleOrFallback} to clarify it is only
+     *             safe for FIFO DSQs.  Use {@link #selectCpuDfl} for vtime-ordered DSQs.
+     */
+    @Deprecated
+    @BPFFunction
+    default int selectCpuIdleOrFallback(Ptr<task_struct> p, int prev_cpu, long wake_flags,
+                                        @Unsigned long dsqId) {
+        return selectCpuFifoIdleOrFallback(p, prev_cpu, wake_flags, dsqId);
+    }
+
+    /**
+     * Unsigned-safe {@code a < b} comparison for virtual time values.
+     */
+    @BPFFunction
+    @AlwaysInline
+    default boolean isSmaller(@Unsigned long a, @Unsigned long b) {
+        return (long) (a - b) < 0;
+    }
+
+    /**
+     * Inserts {@code p} into DSQ 0 using vtime-ordered priority.
+     *
+     * <p>Clamps the task's accumulated vtime so that idle tasks cannot build up
+     * more than one {@code SCX_SLICE_DFL} of budget ahead of the global vtime.
+     *
+     * @param vtimeNow current global virtual time
+     */
+    @BPFFunction
+    default void vtimeEnqueue(Ptr<task_struct> p, long enq_flags, @Unsigned long vtimeNow) {
+        @Unsigned long vtime = p.val().scx.dsq_vtime;
+        if (isSmaller(vtime, vtimeNow - SCX_SLICE_DFL.value())) {
+            vtime = vtimeNow - SCX_SLICE_DFL.value();
+        }
+        scx_bpf_dsq_insert_vtime(p, 0L, SCX_SLICE_DFL.value(), vtime, enq_flags);
+    }
+
+    /**
+     * Charges execution time to {@code p}'s virtual time, scaled by the inverse
+     * of the task's weight (so heavier tasks advance their vtime more slowly).
+     *
+     * <p>Call from {@link #stopping(Ptr, boolean)}.
+     */
+    @BPFFunction
+    default void vtimeCharge(Ptr<task_struct> p) {
+        p.val().scx.dsq_vtime +=
+                (SCX_SLICE_DFL.value() - p.val().scx.slice) * 100 / p.val().scx.weight;
+    }
+
+    /**
+     * Signals a fatal scheduler error from Java user-space: detaches the scheduler and
+     * logs {@code message} to the kernel ring buffer (visible via {@code dmesg}).
+     *
+     * <p>This is the Java-side companion to the BPF-side {@link #scx_bpf_error(String, Object...)}
+     * macro.  It detaches the scheduler (causing an immediate watchdog-style exit) and
+     * prints the message through the {@code BPFProgram} error mechanism.
+     *
+     * @param message human-readable error description (visible in kernel log)
+     */
+    default void scxError(String message) {
+        throw new BPFError("sched_ext scheduler error: " + message);
     }
 }
