@@ -12,6 +12,7 @@ import me.bechberger.ebpf.bpf.BPFJ;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
+import me.bechberger.ebpf.bpf.map.BPFLpmTrie;
 import me.bechberger.ebpf.bpf.map.BPFProgArray;
 import me.bechberger.ebpf.bpf.map.BPFTypedArena;
 import me.bechberger.ebpf.annotations.InArena;
@@ -2927,6 +2928,72 @@ public class CompilerPluginTest {
         // The original runtime condition must become an inner guard `if (!(cpu < ncpus)) break;`
         assertTrue(code.contains("break"),
                 "@BoundedBy must inject a break guard for the original condition:\n" + code);
+    }
+
+    // ──────────────────────────────────────────────────────────
+    // BPFLpmTrie C template generation
+    // ──────────────────────────────────────────────────────────
+
+    @BPF(license = "GPL")
+    public static abstract class LpmTrieUsage extends BPFProgram {
+
+        @Type
+        static class IPv4Key extends Struct {
+            public @Unsigned int prefixlen;
+            public @Unsigned int addr;
+        }
+
+        @BPFMapDefinition(maxEntries = 1024)
+        BPFLpmTrie<IPv4Key, Long> aclMap;
+
+        @BPFFunction(section = "xdp")
+        int lookup(int addr) {
+            IPv4Key key = new IPv4Key();
+            key.prefixlen = 32;
+            key.addr = addr;
+            Ptr<Long> val = aclMap.bpf_get(key);
+            return val != null ? 1 : 0;
+        }
+    }
+
+    @Test
+    public void testLpmTrieCTemplate() {
+        String code = BPFProgram.getCode(LpmTrieUsage.class);
+        assertTrue(code.contains("BPF_MAP_TYPE_LPM_TRIE"),
+                "LPM trie map type must appear in generated C:\n" + code);
+        assertTrue(code.contains("BPF_F_NO_PREALLOC"),
+                "BPF_F_NO_PREALLOC must appear for LPM trie:\n" + code);
+        assertTrue(code.contains("aclMap"),
+                "Map field name 'aclMap' must appear in generated C:\n" + code);
+        assertTrue(code.contains("bpf_map_lookup_elem"),
+                "bpf_map_lookup_elem must be emitted for bpf_get:\n" + code);
+    }
+
+    // ──────────────────────────────────────────────────────────
+    // New BPFJ helpers: currentBootNs, bpf_probe_read_user, getNumaNodeId
+    // ──────────────────────────────────────────────────────────
+
+    @BPF(license = "GPL")
+    public static abstract class NewBPFJHelpers extends BPFProgram {
+
+        final GlobalVariable<Long> ts = new GlobalVariable<>(0L);
+        final GlobalVariable<Integer> numa = new GlobalVariable<>(0);
+
+        @BPFFunction(section = "kprobe/do_sys_openat2")
+        int probe() {
+            ts.set(BPFJ.currentBootNs());
+            numa.set(BPFJ.getNumaNodeId());
+            return 0;
+        }
+    }
+
+    @Test
+    public void testCurrentBootNsEmission() {
+        String code = BPFProgram.getCode(NewBPFJHelpers.class);
+        assertTrue(code.contains("bpf_ktime_get_boot_ns()"),
+                "currentBootNs() must lower to bpf_ktime_get_boot_ns():\n" + code);
+        assertTrue(code.contains("bpf_get_numa_node_id()"),
+                "getNumaNodeId() must lower to bpf_get_numa_node_id():\n" + code);
     }
 
 }

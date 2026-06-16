@@ -4,14 +4,18 @@ import me.bechberger.ebpf.annotations.bpf.BPFMapClass;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
+import me.bechberger.ebpf.bpf.BPFError;
 import me.bechberger.ebpf.bpf.raw.Lib;
 import me.bechberger.ebpf.bpf.raw.Lib_2;
+import me.bechberger.ebpf.shared.PanamaUtil;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.type.Ptr;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.foreign.Arena;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.foreign.MemorySegment;
+import java.util.*;
+import java.util.function.BiConsumer;
 
 /**
  * LRU per-CPU hash map ({@code BPF_MAP_TYPE_LRU_PERCPU_HASH}).
@@ -126,6 +130,63 @@ public class BPFLRUPerCpuHashMap<K, V> extends BPFMap {
     public boolean delete(K key) {
         try (var arena = Arena.ofConfined()) {
             return Lib.bpf_map_delete_elem(fd.fd(), keyType.allocate(arena, key)) == 0;
+        }
+    }
+
+    /**
+     * Iterates over all keys currently in the map.
+     */
+    public Iterator<K> keyIterator() {
+        return new Iterator<K>() {
+            record MemAndKey<K>(MemorySegment mem, K key) {}
+
+            final Arena arena = Arena.ofConfined();
+            @Nullable MemAndKey<K> next = obtainNext(null);
+            MemorySegment nextKeyMem;
+            boolean ended = false;
+
+            @Override
+            public boolean hasNext() {
+                return !ended && next != null;
+            }
+
+            @Override
+            public K next() {
+                var res = next;
+                if (ended) {
+                    if (res != null) return res.key;
+                    throw new NoSuchElementException();
+                }
+                next = obtainNext(next);
+                return res.key;
+            }
+
+            @Nullable MemAndKey<K> obtainNext(@Nullable MemAndKey<K> prev) {
+                if (ended) return null;
+                if (nextKeyMem == null) nextKeyMem = keyType.allocate(arena);
+                int res = Lib.bpf_map_get_next_key(fd.fd(),
+                        prev == null ? MemorySegment.NULL : prev.mem, nextKeyMem);
+                if (res != 0) {
+                    ended = true;
+                    if (res == -PanamaUtil.ERRNO_ENOENT || res == -9 || res == -22) return null;
+                    throw new BPFError("Failed to get next key: " + res);
+                }
+                var ret = new MemAndKey<>(nextKeyMem, keyType.parseMemory(nextKeyMem));
+                nextKeyMem = prev == null ? keyType.allocate(arena) : prev.mem;
+                return ret;
+            }
+        };
+    }
+
+    /**
+     * Iterates over all (key, per-CPU values) pairs in the map.
+     */
+    public void forEach(BiConsumer<K, List<V>> action) {
+        var it = keyIterator();
+        while (it.hasNext()) {
+            K key = it.next();
+            List<V> values = getAll(key);
+            if (!values.isEmpty()) action.accept(key, values);
         }
     }
 

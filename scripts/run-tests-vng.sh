@@ -67,6 +67,7 @@ TESTS=(
     KprobeAttachDynamicTest
     KsyscallAttachTest
     LRUHashMapBpfSideTest
+    LpmTrieTest
     MapForEachLruTest
     MapForEachTest
     MapForEachTypedCtxTest

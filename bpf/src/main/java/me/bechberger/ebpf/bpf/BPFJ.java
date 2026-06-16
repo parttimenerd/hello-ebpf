@@ -610,4 +610,45 @@ public class BPFJ {
     public static long overrideReturn(Ptr<?> ctx, long retval) {
         throw new MethodIsBPFRelatedFunction();
     }
+
+    /**
+     * Returns the monotonic nanosecond timestamp relative to boot time (includes suspend time).
+     *
+     * <p>Unlike {@link #currentNs()} (which uses {@code CLOCK_MONOTONIC} and excludes suspend),
+     * this uses {@code CLOCK_BOOTTIME} — useful for correlating with userspace {@code CLOCK_BOOTTIME}
+     * timestamps.
+     *
+     * <p>Lowers to {@code bpf_ktime_get_boot_ns()}.
+     */
+    @BuiltinBPFFunction("bpf_ktime_get_boot_ns()")
+    @NotUsableInJava
+    public static @Unsigned long currentBootNs() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Reads {@code sizeof(T)} bytes from user-space memory at {@code src} into {@code dst}.
+     *
+     * <p>Lowers to {@code bpf_probe_read_user(&$arg1, sizeof(*$arg1), $arg2)}.
+     *
+     * @param dst destination (BPF-accessible)
+     * @param src user-space pointer to read from
+     * @return 0 on success, negative errno on error
+     */
+    @BuiltinBPFFunction("bpf_probe_read_user(&$arg1, sizeof(*&$arg1), $arg2)")
+    @NotUsableInJava
+    public static <T> long bpf_probe_read_user(T dst, Ptr<T> src) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Returns the NUMA node ID of the current CPU.
+     *
+     * <p>Lowers to {@code bpf_get_numa_node_id()}.
+     */
+    @BuiltinBPFFunction("bpf_get_numa_node_id()")
+    @NotUsableInJava
+    public static int getNumaNodeId() {
+        throw new MethodIsBPFRelatedFunction();
+    }
 }
