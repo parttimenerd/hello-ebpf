@@ -35,7 +35,7 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang-19 libbpf-dev linux-tools-common linux-tools-$(uname -r) gcc-multilib
 
       - name: Install reactor prerequisites (annotations + bpf-processor)
-        run: ./mvnw -ntp -B install -DskipTests -pl annotations,shared,bpf-processor
+        run: ./mvnw -ntp -B install -DskipTests -N && ./mvnw -ntp -B install -DskipTests -pl annotations,shared,bpf-processor
 
       - name: Install bpf-runtime
         run: ./mvnw -ntp -B install -DskipTests -f bpf-runtime/pom.xml
