@@ -514,8 +514,11 @@ class Translator {
 
     @Nullable
     CAST.Statement.Statement translate(ReturnTree returnTree) {
-        if (returnTree.getExpression() == null) { // Since void functions aren't allowed, returns without an argument don't make sense
-            return new VerbatimStatement("return 0;");
+        if (returnTree.getExpression() == null) {
+            var bpfAnn = compilerPlugin.getEffectiveBPFFunction(
+                    (MethodSymbol) compilerPlugin.trees.getElement(methodPath.path()));
+            boolean cReturnsVoid = bpfAnn != null && bpfAnn.headerTemplate().trim().startsWith("void ");
+            return new VerbatimStatement(cReturnsVoid ? "return;" : "return 0;");
         }
         return callIfNonNull(translate(returnTree.getExpression()), ReturnStatement::new);
     }
