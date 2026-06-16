@@ -4,6 +4,7 @@ import me.bechberger.ebpf.annotations.EnumMember;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.BoundedBy;
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.*;
@@ -2879,6 +2880,35 @@ public class CompilerPluginTest {
         // ctx.byteAt(0) → (*(__u8 *)((void *)(long)ctx->data + 0))
         assertTrue(code.contains("__u8") && code.contains("ctx->data"),
                 "XDPContext.byteAt() must use __u8 cast and ctx->data:\n" + code);
+    }
+
+    // ──────────────────────────────────────────────────────────
+    // @BoundedBy for-loop rewrite
+    // ──────────────────────────────────────────────────────────
+
+    @BPF(license = "GPL")
+    public static abstract class BoundedByUsage extends BPFProgram {
+        final GlobalVariable<Integer> ncpus = new GlobalVariable<>(8);
+        final GlobalVariable<Integer> result = new GlobalVariable<>(0);
+
+        @BPFFunction(section = "kprobe/do_sys_openat2")
+        int probe() {
+            for (@BoundedBy(64) int cpu = 0; cpu < ncpus.get(); cpu++) {
+                result.set(result.get() + 1);
+            }
+            return 0;
+        }
+    }
+
+    @Test
+    public void testBoundedByRewritesLoopBound() {
+        String code = BPFProgram.getCode(BoundedByUsage.class);
+        // After rewrite, the synthetic bound `cpu < 64` must appear in the for header.
+        assertTrue(code.contains("cpu < 64"),
+                "@BoundedBy(64) must inject 'cpu < 64' as the for-loop bound:\n" + code);
+        // The original runtime condition must become an inner guard `if (!(cpu < ncpus)) break;`
+        assertTrue(code.contains("break"),
+                "@BoundedBy must inject a break guard for the original condition:\n" + code);
     }
 
 }

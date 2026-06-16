@@ -181,6 +181,9 @@ public final class UnboundedLoopPass {
             if (node.getCondition() == null) {
                 out.add(new Detection(node, "bounds.unbounded-loop", message("for (;;)")));
             } else if (!isLiteralBoundedCondition(node.getCondition())) {
+                // Suppress if the init variable is annotated with @BoundedBy — the
+                // Translator will rewrite the loop bound to a compile-time constant.
+                if (hasBoundedByAnnotation(node)) return super.visitForLoop(node, unused);
                 var fixit = extractBpfLoopFixIt(node);
                 if (fixit != null) {
                     out.add(new Detection(node, "bounds.unbounded-loop",
@@ -191,6 +194,18 @@ public final class UnboundedLoopPass {
                 }
             }
             return super.visitForLoop(node, unused);
+        }
+
+        private static boolean hasBoundedByAnnotation(ForLoopTree node) {
+            var inits = node.getInitializer();
+            if (inits == null || inits.size() != 1) return false;
+            if (!(inits.get(0) instanceof VariableTree vt)) return false;
+            for (var ann : vt.getModifiers().getAnnotations()) {
+                var name = ann.getAnnotationType().toString();
+                var simple = name.contains(".") ? name.substring(name.lastIndexOf('.') + 1) : name;
+                if (simple.equals("BoundedBy")) return true;
+            }
+            return false;
         }
 
         @Override
