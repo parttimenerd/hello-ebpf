@@ -22,6 +22,7 @@ TESTS=(
     ArrayMapTest
     AttachAnnotationTest
     AutoPtrTest
+    BasePacketParserTest
     BloomFilterMapTest
     BPFArenaSmokeTest
     BpfAtomicOpsTest
