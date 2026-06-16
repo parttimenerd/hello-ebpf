@@ -2850,10 +2850,12 @@ public class CompilerPluginTest {
         @Override
         public xdp_action xdpHandlePacket(me.bechberger.ebpf.bpf.XDPContext ctx) {
             int len = ctx.length();
-            if (!ctx.boundsOk(0, 1)) {
+            if (!ctx.boundsOk(0, 4)) {
                 return xdp_action.XDP_ABORTED;
             }
             @Unsigned int b = ctx.byteAt(0);
+            @Unsigned int s = ctx.shortAtNetworkOrder(0);
+            long w = ctx.intAtNetworkOrder(0);
             return b > 0 ? xdp_action.XDP_PASS : xdp_action.XDP_DROP;
         }
     }
@@ -2880,6 +2882,22 @@ public class CompilerPluginTest {
         // ctx.byteAt(0) → (*(__u8 *)((void *)(long)ctx->data + 0))
         assertTrue(code.contains("__u8") && code.contains("ctx->data"),
                 "XDPContext.byteAt() must use __u8 cast and ctx->data:\n" + code);
+    }
+
+    @Test
+    public void testXDPContextShortAtNetworkOrderTemplate() {
+        String code = BPFProgram.getCode(XDPContextUsage.class);
+        // ctx.shortAtNetworkOrder(0) → bpf_ntohs(*(__u16 *)((void *)(long)ctx->data + 0))
+        assertTrue(code.contains("bpf_ntohs") && code.contains("__u16"),
+                "XDPContext.shortAtNetworkOrder() must use bpf_ntohs and __u16:\n" + code);
+    }
+
+    @Test
+    public void testXDPContextIntAtNetworkOrderTemplate() {
+        String code = BPFProgram.getCode(XDPContextUsage.class);
+        // ctx.intAtNetworkOrder(0) → bpf_ntohl(*(__u32 *)((void *)(long)ctx->data + 0))
+        assertTrue(code.contains("bpf_ntohl") && code.contains("__u32"),
+                "XDPContext.intAtNetworkOrder() must use bpf_ntohl and __u32:\n" + code);
     }
 
     // ──────────────────────────────────────────────────────────
