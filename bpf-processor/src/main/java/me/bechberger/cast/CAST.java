@@ -253,7 +253,16 @@ public interface CAST {
             record CharConstant(Character value) implements Constant<Character> {
                 @Override
                 public String toPrettyString(String indent, String increment) {
-                    return indent + "'" + (value == '\'' ? "\\'" : value) + "'";
+                    String escaped = switch (value) {
+                        case '\'' -> "\\'";
+                        case '\\' -> "\\\\";
+                        case '\0' -> "\\0";
+                        case '\n' -> "\\n";
+                        case '\r' -> "\\r";
+                        case '\t' -> "\\t";
+                        default -> String.valueOf(value);
+                    };
+                    return indent + "'" + escaped + "'";
                 }
             }
 

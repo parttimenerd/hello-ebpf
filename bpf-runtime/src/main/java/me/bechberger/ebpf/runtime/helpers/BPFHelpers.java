@@ -2233,7 +2233,7 @@ public final class BPFHelpers {
    * <p><strong>-EPERM</strong> if caller does not have permission to obtain kernel address.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_kallsyms_lookup_name((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_kallsyms_lookup_name((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static long bpf_kallsyms_lookup_name(String name, int name_sz, int flags,
       Ptr<java.lang. @Unsigned Long> res) {
     throw new MethodIsBPFRelatedFunction();
@@ -3504,7 +3504,7 @@ public final class BPFHelpers {
    * <p><strong>-EOVERFLOW</strong> if an overflow happened: The same object will be tried again.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_seq_printf($arg1, (const u8*)$arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_seq_printf($arg1, (const u8 *)$arg2, $arg3, (const void *)$arg4, $arg5)")
   public static long bpf_seq_printf(Ptr<seq_file> m, String fmt, @Unsigned int fmt_size,
       Ptr<?> data, @Unsigned int data_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -4582,7 +4582,7 @@ public final class BPFHelpers {
    * <p>Or <strong>-EBUSY</strong> if the per-CPU memory copy buffer is busy.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_snprintf($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_snprintf($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static long bpf_snprintf(String str, @Unsigned int str_size, String fmt,
       Ptr<java.lang. @Unsigned Long> data, @Unsigned int data_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -4827,7 +4827,7 @@ public final class BPFHelpers {
    * less than, to match, or be greater than <strong>s2</strong>.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strncmp((const u8*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("bpf_strncmp((const u8 *)$arg1, $arg2, (const u8 *)$arg3)")
   public static long bpf_strncmp(String s1, @Unsigned int s1_sz, String s2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4850,7 +4850,7 @@ public final class BPFHelpers {
    * <p><strong>-ERANGE</strong> if resulting value was out of range.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strtol((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_strtol((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static long bpf_strtol(String buf, @Unsigned long buf_len, @Unsigned long flags,
       Ptr<java.lang.Long> res) {
     throw new MethodIsBPFRelatedFunction();
@@ -4873,7 +4873,7 @@ public final class BPFHelpers {
    * <p><strong>-ERANGE</strong> if resulting value was out of range.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strtoul((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_strtoul((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static long bpf_strtoul(String buf, @Unsigned long buf_len, @Unsigned long flags,
       Ptr<java.lang. @Unsigned Long> res) {
     throw new MethodIsBPFRelatedFunction();
@@ -4967,7 +4967,7 @@ public final class BPFHelpers {
    * <p><strong>-EINVAL</strong> if sysctl is being read.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_sysctl_set_new_value($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_sysctl_set_new_value($arg1, (const u8 *)$arg2, $arg3)")
   public static long bpf_sysctl_set_new_value(Ptr<bpf_sysctl> ctx, String buf,
       @Unsigned long buf_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -5351,7 +5351,7 @@ public final class BPFHelpers {
    * in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_trace_printk((const u8*)$arg1, $arg2, $arg3_)")
+  @BuiltinBPFFunction("bpf_trace_printk((const u8 *)$arg1, $arg2, $arg3_)")
   public static long bpf_trace_printk(String fmt, @Unsigned int fmt_size,
       java.lang.Object... args) {
     throw new MethodIsBPFRelatedFunction();
@@ -5365,7 +5365,7 @@ public final class BPFHelpers {
    * in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_trace_vprintk((const u8*)$arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_trace_vprintk((const u8 *)$arg1, $arg2, (const void *)$arg3, $arg4)")
   public static long bpf_trace_vprintk(String fmt, @Unsigned int fmt_size, Ptr<?> data,
       @Unsigned int data_len) {
     throw new MethodIsBPFRelatedFunction();

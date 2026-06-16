@@ -223,7 +223,7 @@ public class CompilerPluginTest {
                 int testJavaPrint2();
 
                 int testPrint() {
-                  bpf_trace_printk((const u8*)"Hello, World!\\\\n", 15);
+                  bpf_trace_printk((const u8 *)"Hello, World!\\\\n", 15);
                   return 0;
                 }
 

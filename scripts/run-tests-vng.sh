@@ -57,6 +57,7 @@ TESTS=(
     DataTypeTest
     FEntryExitAutoAttachTest
     FexitAnnotationTest
+    ForbiddenFileTest
     GetCurrentCommTest
     GlobalVariableStructTest
     GlobalVariableTest
@@ -67,6 +68,7 @@ TESTS=(
     KprobeAttachDynamicTest
     KsyscallAttachTest
     LRUHashMapBpfSideTest
+    LSMTest
     LpmTrieTest
     MapForEachLruTest
     MapForEachTest
@@ -82,6 +84,7 @@ TESTS=(
     RealVerifierClassificationTest
     RingBufferMultiEventTest
     RingBufferTypedEventTest
+    SchedulerBehaviorTest
     SchedulerSmokeTest
     SchedulerTimeoutTest
     SetFieldTest
@@ -122,12 +125,17 @@ ln -sfn "$LOGDIR" "$REPO/.vng-test-logs"
 
 declare -A COUNTS
 
+# Tests that require the BPF LSM module to be active in the kernel.
+# VNG boots with the host kernel which has CONFIG_BPF_LSM=y but does NOT
+# include "bpf" in the default LSM list.  We pass --append to add it.
+LSM_TESTS=(LSMTest ForbiddenFileTest)
+
 # Pre-compile both test modules on the host so that VNG (2G RAM) never has to
 # run the annotation processor + javac for all source files — that triggers
 # a JVM JIT crash inside virtme-ng.  The "Nothing to compile" fast-path inside
 # VNG takes <1 s.
 echo "--- Pre-compiling bpf and bpf-samples test classes on host ---"
-"$MVN" -ntp -pl bpf,bpf-samples test-compile -q 2>/dev/null || true
+"$MVN" -ntp -pl bpf,bpf-samples test-compile -Dmaven.test.skip=false -DskipTests=false -q 2>/dev/null || true
 echo "--- Done pre-compiling ---"
 
 for cls in "${TESTS[@]}"; do
@@ -147,7 +155,9 @@ for cls in "${TESTS[@]}"; do
     # offline-only resolution from the host m2 cache.
     inner="export HOME=$HOST_HOME JAVA_HOME=$JAVA_HOME PATH=$JAVA_HOME/bin:\$PATH && cd $REPO && $MVN -ntp -pl $MODULE test -Dtest=$cls -Dmaven.test.skip=false -DskipTests=false -Dmaven.repo.local=$HOST_HOME/.m2/repository"
 
-    vng --network user --memory 2G --run "$KERNEL" --user root --cwd "$REPO" -- "$inner" \
+    vng --network user --memory 2G --run "$KERNEL" --user root --cwd "$REPO" \
+        $([[ " ${LSM_TESTS[*]} " == *" $cls "* ]] && echo "--append lsm=lockdown,capability,landlock,yama,apparmor,bpf") \
+        -- "$inner" \
         > "$log" 2>&1 < /dev/null
 
     # Surefire summary line, e.g. "[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0"

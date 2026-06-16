@@ -340,7 +340,8 @@ public abstract class BPFProgram implements AutoCloseable {
                 me.bechberger.ebpf.annotations.bpf.RawTracepoint.class,
                 me.bechberger.ebpf.annotations.bpf.Ksyscall.class,
                 me.bechberger.ebpf.annotations.bpf.Uprobe.class,
-                me.bechberger.ebpf.annotations.bpf.Uretprobe.class)) {
+                me.bechberger.ebpf.annotations.bpf.Uretprobe.class,
+                me.bechberger.ebpf.annotations.bpf.LSM.class)) {
             var ann = findParentAnnotation(programClass, method, annClass);
             if (ann != null) {
                 return method.getName();
@@ -357,7 +358,10 @@ public abstract class BPFProgram implements AutoCloseable {
     public void attachLSMHooks() {
         for (var method : getClass().getSuperclass().getDeclaredMethods()) {
             var annotation = findParentAnnotation(getClass().getSuperclass(), method, BPFFunction.class);
-            if (annotation != null && annotation.section().startsWith("lsm/")) {
+            boolean isLsmSection = annotation != null && annotation.section().startsWith("lsm/");
+            boolean hasLsmAnnotation = findParentAnnotation(getClass().getSuperclass(), method,
+                    me.bechberger.ebpf.annotations.bpf.LSM.class) != null;
+            if (isLsmSection || hasLsmAnnotation) {
                 attachLSMHook(getProgramByName(getBPFFunctionName(method)));
             }
         }
@@ -377,6 +381,24 @@ public abstract class BPFProgram implements AutoCloseable {
             throw new BPFAttachError(prog.name, ret.err());
         }
         attachedPrograms.add(link);
+    }
+
+    /**
+     * Returns {@code true} if BPF LSM is active on this kernel.
+     *
+     * <p>Reads {@code /sys/kernel/security/lsm} and checks whether {@code bpf}
+     * appears in the comma-separated list. Returns {@code false} if the file
+     * cannot be read (e.g. securityfs not mounted) or {@code bpf} is absent.
+     */
+    public static boolean isLSMEnabled() {
+        try {
+            var lsmList = Files.readString(Path.of("/sys/kernel/security/lsm")).strip();
+            for (var module : lsmList.split(",")) {
+                if (module.strip().equals("bpf")) return true;
+            }
+        } catch (IOException ignored) {
+        }
+        return false;
     }
 
     private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_KPROBE =
@@ -798,10 +820,31 @@ public abstract class BPFProgram implements AutoCloseable {
      * @return
      */
     public BPFProgram autoAttachPrograms() {
+        var lsmNames = getLSMProgramNames();
         for (var name : getAllAutoAttachablePrograms()) {
-            autoAttachProgram(name);
+            if (lsmNames.contains(name)) {
+                attachLSMHook(getProgramByName(name));
+            } else {
+                autoAttachProgram(name);
+            }
         }
         return this;
+    }
+
+    /** Returns the C function names of all methods annotated with {@code @LSM} or having an lsm/ section. */
+    private java.util.Set<String> getLSMProgramNames() {
+        var names = new java.util.HashSet<String>();
+        var programClass = getClass().getSuperclass();
+        for (var method : programClass.getDeclaredMethods()) {
+            var annotation = findParentAnnotation(programClass, method, BPFFunction.class);
+            boolean isLsmSection = annotation != null && annotation.section().startsWith("lsm/");
+            boolean hasLsmAnnotation = findParentAnnotation(programClass, method,
+                    me.bechberger.ebpf.annotations.bpf.LSM.class) != null;
+            if (isLsmSection || hasLsmAnnotation) {
+                names.add(getBPFFunctionName(method));
+            }
+        }
+        return names;
     }
 
     private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_RAW_TRACEPOINT =

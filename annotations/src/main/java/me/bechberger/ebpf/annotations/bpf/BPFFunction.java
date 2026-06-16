@@ -89,5 +89,5 @@ public @interface BPFFunction {
 
     boolean addDefinition() default true;
 
-    Set<String> autoAttachableSections = Set.of("fentry", "fexit", "kprobe", "kretprobe", "ksyscall", "tp");
+    Set<String> autoAttachableSections = Set.of("fentry", "fexit", "kprobe", "kretprobe", "ksyscall", "tp", "lsm");
 }

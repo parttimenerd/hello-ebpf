@@ -344,6 +344,14 @@ public class CompilerPlugin implements Plugin {
             section = "uretprobe/" + ref;
         }
 
+        var lsm = getAnnotationOfMethodOrSuper(method, LSM.class);
+        if (lsm != null) {
+            section = "lsm/" + lsm.value();
+            headerTemplate = "int BPF_PROG($name, $params)";
+            // Do NOT set lastStatement: LSM hooks use their return value as the security
+            // decision; replacing explicit returns with "return 0;" would silently eat denials.
+        }
+
         if (section == null) return null;
 
         final String finalSection = section;
@@ -870,7 +878,7 @@ public class CompilerPlugin implements Plugin {
         if (!kfuncDecls.isEmpty()) {
             var existing = code;
             var kfuncProlog = kfuncDecls.entrySet().stream()
-                    .filter(e -> !existing.contains(e.getKey() + "("))
+                    .filter(e -> !existing.contains(e.getValue() + " __ksym;"))
                     .map(e -> e.getValue() + " __ksym;")
                     .collect(Collectors.joining("\n"));
             if (!kfuncProlog.isEmpty()) {
