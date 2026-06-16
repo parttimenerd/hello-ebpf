@@ -43,6 +43,7 @@ TESTS=(
     BpfSnprintfTest
     BpfStackTest
     BpfTimerTest
+    BPFProgramExtensionTest
     BPFTypedArenaTest
     ChainedBpfFunctionTest
     CoReFieldExistsTest
