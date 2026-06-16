@@ -39,6 +39,10 @@ jobs:
 
       - name: Install bpf-runtime
         run: ./mvnw -ntp -B install -DskipTests -f bpf-runtime/pom.xml
+        env:
+          # bpf-runtime has ~1000 generated files; JDK 22 javac hits StackOverflowError
+          # without a larger thread stack.
+          MAVEN_OPTS: "-Xss8m"
 
       - name: Install rawbpf
         run: ./mvnw -ntp -B install -DskipTests -f rawbpf/pom.xml
