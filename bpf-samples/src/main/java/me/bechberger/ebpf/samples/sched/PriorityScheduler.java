@@ -4,9 +4,12 @@ package me.bechberger.ebpf.samples.sched;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
+import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.Property;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.Scheduler;
+import me.bechberger.ebpf.bpf.SchedulerStats;
+import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
 import me.bechberger.ebpf.type.Ptr;
 
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
@@ -36,7 +39,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  * </pre>
  *
  * <p>Based on
- * <a href="https://github.com/torvalds/linux/blob/master/tools/sched_ext/scx_qmap.bpf.c">
+ * <a href="https://github.com/torvalds/linux/blob/05909810a946222aca5d0611d37be82d18f95228/tools/sched_ext/scx_qmap.bpf.c">
  * {@code tools/sched_ext/scx_qmap.bpf.c}</a> from the Linux kernel.
  */
 @BPF(license = "GPL")
@@ -44,6 +47,14 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 public abstract class PriorityScheduler extends BPFProgram implements Scheduler {
 
     static final int NUM_QUEUES = 5;
+
+    /** Per-CPU enqueue counter per queue — 5 entries, one per priority DSQ. */
+    @BPFMapDefinition(maxEntries = NUM_QUEUES)
+    BPFPerCpuArray<Long> queueEnqueueCounts;
+
+    /** Per-CPU dispatch counter per queue — 5 entries, one per priority DSQ. */
+    @BPFMapDefinition(maxEntries = NUM_QUEUES)
+    BPFPerCpuArray<Long> queueDispatchCounts;
 
     /** Maps a task's {@code scx.weight} to a queue index in [0, NUM_QUEUES). */
     @BPFFunction
@@ -81,6 +92,7 @@ public abstract class PriorityScheduler extends BPFProgram implements Scheduler 
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
         int q = weightToQueue(p.val().scx.weight);
         scx_bpf_dsq_insert(p, q, SCX_SLICE_DFL.value(), enq_flags);
+        SchedulerStats.incrementEnqueuedAt(queueEnqueueCounts, q);
     }
 
     @Override
@@ -89,9 +101,38 @@ public abstract class PriorityScheduler extends BPFProgram implements Scheduler 
         for (int q = NUM_QUEUES - 1; q >= 0; q--) {
             if (scx_bpf_dsq_nr_queued(q) > 0) {
                 scx_bpf_dsq_move_to_local(q);
+                SchedulerStats.incrementDispatchedAt(queueDispatchCounts, q);
                 return;
             }
         }
+    }
+
+    /** Returns total tasks enqueued into the given priority queue (0 = lowest, 4 = highest). */
+    public long getQueueEnqueueCount(int queue) {
+        return SchedulerStats.totalEnqueuedAt(queueEnqueueCounts, queue);
+    }
+
+    /** Returns total tasks dispatched from the given priority queue (0 = lowest, 4 = highest). */
+    public long getQueueDispatchCount(int queue) {
+        return SchedulerStats.totalDispatchedAt(queueDispatchCounts, queue);
+    }
+
+    /** Returns how many of the {@link #NUM_QUEUES} queues received at least one task. */
+    public int getActiveQueueCount() {
+        int count = 0;
+        for (int i = 0; i < NUM_QUEUES; i++) {
+            if (getQueueEnqueueCount(i) > 0) count++;
+        }
+        return count;
+    }
+
+    /** Returns how many of the {@link #NUM_QUEUES} queues dispatched at least one task. */
+    public int getActiveDispatchQueueCount() {
+        int count = 0;
+        for (int i = 0; i < NUM_QUEUES; i++) {
+            if (getQueueDispatchCount(i) > 0) count++;
+        }
+        return count;
     }
 
     public static void main(String[] args) throws Exception {

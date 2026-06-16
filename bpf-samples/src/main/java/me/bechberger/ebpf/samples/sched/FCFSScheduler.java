@@ -19,7 +19,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  * No CPU-selection heuristic is applied; the kernel picks any available CPU.
  *
  * <p>Conceptually equivalent to the FIFO mode of
- * <a href="https://github.com/torvalds/linux/blob/master/tools/sched_ext/scx_simple.bpf.c">
+ * <a href="https://github.com/torvalds/linux/blob/6712c4fefca0422851b71d1a58a32ea03f69310f/tools/sched_ext/scx_simple.bpf.c">
  * {@code scx_simple.bpf.c}</a> from the Linux kernel.
  *
  * <p>Run with:
@@ -32,7 +32,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 @Property(name = "timeout_ms", value = "10000")
 public abstract class FCFSScheduler extends BPFProgram implements Scheduler {
 
-    private static final int SHARED_DSQ_ID = 0;
+    static final long SHARED_DSQ_ID = 0;
 
     @Override
     public int init() {

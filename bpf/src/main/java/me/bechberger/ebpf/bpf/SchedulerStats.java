@@ -2,7 +2,6 @@
 package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.Unsigned;
-import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
@@ -101,5 +100,49 @@ public final class SchedulerStats {
      */
     public static long totalDispatched(BPFPerCpuArray<Long> counts) {
         return counts.getAll(0).stream().mapToLong(Long::longValue).sum();
+    }
+
+    /**
+     * Increments the per-CPU counter at {@code index} of {@code counts} by 1.
+     * Use when one array holds multiple counters, e.g. one entry per priority queue.
+     * Call from BPF context; read back from Java via {@link #totalEnqueuedAt}.
+     */
+    @NotUsableInJava
+    public static void incrementEnqueuedAt(BPFPerCpuArray<Long> counts, int index) {
+        Ptr<Long> ptr = counts.bpf_get(index);
+        if (ptr != null) {
+            ptr.set(ptr.val() + 1);
+        }
+    }
+
+    /**
+     * Increments the per-CPU counter at {@code index} of {@code counts} by 1.
+     * Use when one array holds multiple dispatch counters, e.g. one entry per priority queue.
+     * Call from BPF context; read back from Java via {@link #totalDispatchedAt}.
+     */
+    @NotUsableInJava
+    public static void incrementDispatchedAt(BPFPerCpuArray<Long> counts, int index) {
+        Ptr<Long> ptr = counts.bpf_get(index);
+        if (ptr != null) {
+            ptr.set(ptr.val() + 1);
+        }
+    }
+
+    /**
+     * Returns the sum of the per-CPU counter at {@code index} across all CPUs.
+     * Companion to {@link #incrementEnqueuedAt}.
+     * Call from Java (user-space) context.
+     */
+    public static long totalEnqueuedAt(BPFPerCpuArray<Long> counts, int index) {
+        return counts.getAll(index).stream().mapToLong(Long::longValue).sum();
+    }
+
+    /**
+     * Returns the sum of the per-CPU counter at {@code index} across all CPUs.
+     * Companion to {@link #incrementDispatchedAt}.
+     * Call from Java (user-space) context.
+     */
+    public static long totalDispatchedAt(BPFPerCpuArray<Long> counts, int index) {
+        return counts.getAll(index).stream().mapToLong(Long::longValue).sum();
     }
 }

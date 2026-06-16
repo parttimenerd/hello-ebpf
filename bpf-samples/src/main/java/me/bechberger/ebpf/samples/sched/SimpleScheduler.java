@@ -30,7 +30,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  * </ul>
  *
  * <p>Based on
- * <a href="https://github.com/torvalds/linux/blob/master/tools/sched_ext/scx_simple.bpf.c">
+ * <a href="https://github.com/torvalds/linux/blob/6712c4fefca0422851b71d1a58a32ea03f69310f/tools/sched_ext/scx_simple.bpf.c">
  * {@code tools/sched_ext/scx_simple.bpf.c}</a> from the Linux kernel.
  */
 @BPF(license = "GPL")

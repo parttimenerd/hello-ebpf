@@ -10,8 +10,6 @@ import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.SchedulerBase;
 import me.bechberger.ebpf.type.Ptr;
 
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_create_dsq;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_dsq_move_to_local;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 /**
@@ -36,11 +34,6 @@ public abstract class RunnableScheduler extends SchedulerBase implements Schedul
     final GlobalVariable<@Unsigned Long> runnableCalls = new GlobalVariable<>(0L);
 
     @Override
-    public int init() {
-        return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
-    }
-
-    @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
         dsqInsert(p, enq_flags);
     }
@@ -50,20 +43,13 @@ public abstract class RunnableScheduler extends SchedulerBase implements Schedul
         runnableCalls.set(runnableCalls.get() + 1);
     }
 
-    @Override
-    public void dispatch(int cpu, Ptr<task_struct> prev) {
-        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
-    }
-
     public long getRunnableCalls() {
         return runnableCalls.get();
     }
 
     public static void main(String[] args) throws Exception {
         try (var prog = BPFProgram.load(RunnableScheduler.class)) {
-            prog.attachScheduler();
-            Thread.sleep(500);
-            System.out.println("runnable() calls: " + prog.getRunnableCalls());
+            prog.runSchedulerLoop();
         }
     }
 }

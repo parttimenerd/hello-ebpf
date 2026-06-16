@@ -58,8 +58,9 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  * <p>This scheduler is an original Java/sched_ext design inspired by the
  * cache-affinity concepts described in
  * <a href="https://www.usenix.org/conference/osdi18/presentation/ousterhout">
- * Shenango (OSDI '18)</a> and the nest-aware scheduling hints in the
- * <a href="https://github.com/sched-ext/scx">sched-ext scheduler collection</a>.
+ * Shenango (OSDI '18)</a> and the nest-aware scheduling approach in
+ * <a href="https://github.com/sched-ext/scx/blob/d1810e6216c49f6c7bb52aaead1877d3176fa943/scheds/c/scx_nest.bpf.c">
+ * {@code scx_nest.bpf.c}</a> from the sched-ext scheduler collection.
  */
 @BPF(license = "GPL")
 @Property(name = "sched_name", value = "nest_scheduler")

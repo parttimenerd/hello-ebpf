@@ -3,8 +3,11 @@ package me.bechberger.ebpf.bpf;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.Property;
+import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.samples.sched.CPU0Scheduler;
+import me.bechberger.ebpf.samples.sched.DeadlineScheduler;
+import me.bechberger.ebpf.samples.sched.FlowScheduler;
 import me.bechberger.ebpf.samples.sched.PriorityScheduler;
 import me.bechberger.ebpf.samples.sched.SimpleScheduler;
 import me.bechberger.ebpf.samples.sched.VTimeScheduler;
@@ -15,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -104,7 +108,54 @@ class SchedulerBehaviorTest {
     }
 
     // -------------------------------------------------------------------------
-    // 3. CPU affinity — CPU0Scheduler
+    // 3. EDF ordering — DeadlineScheduler
+    // -------------------------------------------------------------------------
+
+    /**
+     * Verifies that {@link DeadlineScheduler} attaches, stays alive under load,
+     * and responds to a period change.
+     *
+     * <p>We cannot easily observe EDF ordering from userspace, but we can verify
+     * that the scheduler runs stably while we exercise its configurable period:
+     * change it mid-run and confirm the scheduler remains healthy.
+     */
+    @Test
+    @Timeout(20)
+    @TestScheduler(DeadlineScheduler.class)
+    void deadlineSchedulerRunsAndRespondsToConfig(DeadlineScheduler sched) throws Exception {
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "DeadlineScheduler should be attached initially");
+
+        // Drive some load at the default period (10 ms).
+        Thread spinner = new Thread(() -> {
+            long end = System.nanoTime() + 300_000_000L;
+            while (System.nanoTime() < end) {}
+        });
+        spinner.start();
+        spinner.join();
+
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "DeadlineScheduler should survive 300 ms spin workload");
+
+        // Change the period and verify the scheduler keeps running.
+        long newPeriod = 5_000_000L; // 5 ms
+        sched.setPeriodNs(newPeriod);
+        assertEquals(newPeriod, sched.getPeriodNs(),
+                "getPeriodNs() should reflect the updated period");
+
+        Thread spinner2 = new Thread(() -> {
+            long end = System.nanoTime() + 300_000_000L;
+            while (System.nanoTime() < end) {}
+        });
+        spinner2.start();
+        spinner2.join();
+
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "DeadlineScheduler should survive load after period change");
+    }
+
+    // -------------------------------------------------------------------------
+    // 4. CPU affinity — CPU0Scheduler
     // -------------------------------------------------------------------------
 
     /**
@@ -131,16 +182,16 @@ class SchedulerBehaviorTest {
     }
 
     // -------------------------------------------------------------------------
-    // 4. Priority ordering — PriorityScheduler
+    // 5. Priority ordering — PriorityScheduler
     // -------------------------------------------------------------------------
 
     /**
-     * Verifies that {@link PriorityScheduler} receives tasks across at least
-     * two of its five priority DSQs during normal system activity.
+     * Verifies that {@link PriorityScheduler} routes tasks into at least two of
+     * its five priority queues during 500 ms of normal system activity.
      *
-     * <p>In any realistic system there will be tasks with differing weights
-     * (kernel threads vs. user threads), so multiple queues should be non-empty
-     * at some point during a 500 ms window.
+     * <p>Any realistic system has tasks at several different nice levels (kernel
+     * threads, user threads, systemd units), so multiple weight classes must be
+     * served.  We count how many of the 5 per-queue enqueue counters are non-zero.
      */
     @Test
     @Timeout(15)
@@ -149,19 +200,13 @@ class SchedulerBehaviorTest {
         Thread.sleep(500);
         assertTrue(sched.isSchedulerAttachedProperly(),
                 "PriorityScheduler should remain attached for 500 ms");
-        // At least two queues must have seen tasks. We count non-zero DSQs by
-        // querying scx_bpf_dsq_nr_queued from Java context via the scheduler's
-        // enqueue method having routed them — the simplest observable proxy is
-        // that the scheduler stayed alive with normal system load, which already
-        // implies multiple weight classes were handled.  For a stronger check we
-        // could add per-queue counters to PriorityScheduler; the above is the
-        // minimum observable guarantee without changing the sample.
-        assertTrue(sched.isSchedulerAttachedProperly(),
-                "PriorityScheduler handled mixed-weight system tasks without crashing");
+        int activeQueues = sched.getActiveQueueCount();
+        assertTrue(activeQueues >= 2,
+                "Expected at least 2 of 5 priority queues to be used, got " + activeQueues);
     }
 
     // -------------------------------------------------------------------------
-    // 5. Callback coverage — tick, running, stopping
+    // 6. Callback coverage — tick, running, stopping
     // -------------------------------------------------------------------------
 
     /**
@@ -218,23 +263,61 @@ class SchedulerBehaviorTest {
      */
     @Test
     @Timeout(20)
-    void callbackCoverageSchedulerFiresAllOptionalCallbacks() throws Exception {
-        try (CallbackCoverageScheduler sched =
-                     BPFProgram.load(CallbackCoverageScheduler.class)) {
-            sched.attachScheduler();
-            Thread.sleep(500);
+    @TestScheduler(CallbackCoverageScheduler.class)
+    void callbackCoverageSchedulerFiresAllOptionalCallbacks(CallbackCoverageScheduler sched)
+            throws Exception {
+        Thread.sleep(500);
 
-            assertTrue(sched.isSchedulerAttachedProperly(),
-                    "CallbackCoverageScheduler should stay attached for 500 ms");
-            assertTrue(sched.tickCount.get() > 0,
-                    "tick() should have been called at least once in 500 ms; got "
-                            + sched.tickCount.get());
-            assertTrue(sched.runningCount.get() > 0,
-                    "running() should have been called at least once in 500 ms; got "
-                            + sched.runningCount.get());
-            assertTrue(sched.stoppingCount.get() > 0,
-                    "stopping() should have been called at least once in 500 ms; got "
-                            + sched.stoppingCount.get());
-        }
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "CallbackCoverageScheduler should stay attached for 500 ms");
+        assertTrue(sched.tickCount.get() > 0,
+                "tick() should have been called at least once in 500 ms; got "
+                        + sched.tickCount.get());
+        assertTrue(sched.runningCount.get() > 0,
+                "running() should have been called at least once in 500 ms; got "
+                        + sched.runningCount.get());
+        assertTrue(sched.stoppingCount.get() > 0,
+                "stopping() should have been called at least once in 500 ms; got "
+                        + sched.stoppingCount.get());
+    }
+
+    /**
+     * Exercises {@link FlowScheduler}: verifies that the scheduler attaches,
+     * stays alive under load, dispatches tasks through at least one tier DSQ,
+     * and that wakeup counters advance.  Also checks that tunable parameters
+     * can be changed while attached.
+     */
+    @Test
+    @Timeout(20)
+    @TestScheduler(FlowScheduler.class)
+    void flowSchedulerBudgetTiersAndCounters(FlowScheduler sched) throws Exception {
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "FlowScheduler should be attached");
+
+        // Spin to generate task activity
+        long end = System.nanoTime() + 400_000_000L;
+        while (System.nanoTime() < end) { /* busy */ }
+
+        Thread.sleep(100);
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "FlowScheduler should remain attached after 500 ms of activity");
+
+        long totalTierDispatches =
+                sched.getTierPriorityDispatches()
+                + sched.getTierNormalDispatches()
+                + sched.getTierLowDispatches()
+                + sched.getTierDeficitDispatches()
+                + sched.getPinnedDispatches()
+                + sched.getPrioDispatches();
+
+        assertTrue(totalTierDispatches > 0,
+                "FlowScheduler should have dispatched at least one task; got "
+                        + totalTierDispatches);
+
+        // Tunable: change max slice while running
+        sched.setReservedMaxNs(200_000L); // 200 µs
+        Thread.sleep(100);
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "FlowScheduler should remain attached after tunable change");
     }
 }

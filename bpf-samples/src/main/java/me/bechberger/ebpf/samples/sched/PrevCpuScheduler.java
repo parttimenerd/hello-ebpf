@@ -36,7 +36,7 @@ import me.bechberger.ebpf.runtime.runtime.cpumask;
  * </pre>
  *
  * <p>Based on
- * <a href="https://github.com/sched-ext/scx/blob/main/scheds/c/scx_prev.bpf.c">
+ * <a href="https://github.com/sched-ext/scx/blob/d1810e6216c49f6c7bb52aaead1877d3176fa943/scheds/c/scx_prev.bpf.c">
  * {@code scx_prev.bpf.c}</a> from the scx-c-examples repository.
  */
 @BPF(license = "GPL")

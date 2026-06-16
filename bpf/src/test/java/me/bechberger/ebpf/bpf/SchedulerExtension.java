@@ -3,6 +3,8 @@ package me.bechberger.ebpf.bpf;
 import org.junit.jupiter.api.extension.*;
 
 import java.lang.reflect.Parameter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 
 /**
@@ -26,12 +28,18 @@ import java.util.Optional;
  * <p>The scheduler is loaded once per test method, attached (if {@code autoAttach=true}),
  * injected as a parameter, and closed after the method completes (even on failure).
  * Closing a scheduler detaches it from the kernel automatically.
+ *
+ * <p>If the kernel does not support sched_ext (no {@code /sys/kernel/sched_ext}),
+ * the test is <em>skipped</em> rather than failed.
  */
 public class SchedulerExtension implements ParameterResolver, AfterEachCallback {
 
     private static final ExtensionContext.Namespace NS =
             ExtensionContext.Namespace.create(SchedulerExtension.class);
     private static final String KEY = "scheduler";
+
+    private static final boolean SCHED_EXT_AVAILABLE =
+            Files.exists(Path.of("/sys/kernel/sched_ext"));
 
     @Override
     public boolean supportsParameter(ParameterContext paramCtx, ExtensionContext extCtx)
@@ -43,6 +51,11 @@ public class SchedulerExtension implements ParameterResolver, AfterEachCallback 
     @Override
     public Object resolveParameter(ParameterContext paramCtx, ExtensionContext extCtx)
             throws ParameterResolutionException {
+        if (!SCHED_EXT_AVAILABLE) {
+            throw new org.opentest4j.TestAbortedException(
+                    "sched_ext not available on this kernel (no /sys/kernel/sched_ext)");
+        }
+
         TestScheduler ann = getAnnotation(extCtx)
                 .orElseThrow(() -> new ParameterResolutionException(
                         "@TestScheduler annotation not found on test method"));

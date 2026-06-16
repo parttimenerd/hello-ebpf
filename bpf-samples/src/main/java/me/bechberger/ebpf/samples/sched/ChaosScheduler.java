@@ -24,7 +24,8 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  * <p>Merges ideas from
  * <a href="https://github.com/parttimenerd/concurrency-fuzz-scheduler">concurrency-fuzz-scheduler</a>
  * and
- * <a href="https://github.com/sched-ext/scx/tree/main/scheds/rust/scx_chaos">scx_chaos</a>.
+ * <a href="https://github.com/sched-ext/scx/blob/29ae42129a78f76a2bdda1827f7d246f773a5c4f/scheds/rust/scx_chaos/src/bpf/main.bpf.c">
+ * {@code scx_chaos/main.bpf.c}</a> from the sched-ext scheduler collection.
  *
  * <h2>Chaos traits</h2>
  * <ol>
@@ -186,8 +187,9 @@ public abstract class ChaosScheduler extends SchedulerBase implements Scheduler 
 
     @Override
     public void enable(Ptr<task_struct> p) {
-        // Initialise vtime to 0 so newly enabled tasks start at the
-        // beginning of the vtime window.
+        // Intentionally start at vtime=0, not vtimeNow: chaos tasks begin at the
+        // front of the vtime window so the random delay in enqueue() is the only
+        // thing that separates them — no inherited lag from global vtime drift.
         p.val().scx.dsq_vtime = 0;
     }
 

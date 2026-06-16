@@ -2,10 +2,8 @@
 
 package me.bechberger.ebpf.samples.sched;
 
-import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
-import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.Property;
 import me.bechberger.ebpf.bpf.BPFProgram;
@@ -32,7 +30,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  * returning from a long sleep cannot monopolise the CPU.
  *
  * <p>Based on
- * <a href="https://github.com/torvalds/linux/blob/master/tools/sched_ext/scx_simple.bpf.c">
+ * <a href="https://github.com/torvalds/linux/blob/6712c4fefca0422851b71d1a58a32ea03f69310f/tools/sched_ext/scx_simple.bpf.c">
  * {@code scx_simple.bpf.c}</a> (vtime mode) from the Linux kernel.
  *
  * <p>Run with:
@@ -64,12 +62,6 @@ public abstract class VTimeScheduler extends BPFProgram
      * then we could just use SCX_DSQ_GLOBAL.
      */
     static final long SHARED_DSQ_ID = 0;
-
-    @BPFFunction
-    @AlwaysInline
-    public boolean isSmaller(@Unsigned long a, @Unsigned long b) {
-        return (long)(a - b) < 0;
-    }
 
     @Override
     public int init() {

@@ -66,7 +66,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  * </pre>
  *
  * <p>Inspired by
- * <a href="https://github.com/torvalds/linux/blob/master/tools/sched_ext/scx_pair.bpf.c">
+ * <a href="https://github.com/torvalds/linux/blob/f0262b102c7ce43f3744bdb0278ddf0d15bb1a71/tools/sched_ext/scx_pair.bpf.c">
  * {@code tools/sched_ext/scx_pair.bpf.c}</a> from the Linux kernel.
  */
 @BPF(license = "GPL")

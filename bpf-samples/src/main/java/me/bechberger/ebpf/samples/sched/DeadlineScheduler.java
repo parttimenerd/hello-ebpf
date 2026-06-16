@@ -3,7 +3,6 @@ package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
-import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.Property;
 import me.bechberger.ebpf.bpf.BPFProgram;
@@ -41,7 +40,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  * <a href="https://en.wikipedia.org/wiki/Earliest_deadline_first_scheduling">
  * Earliest deadline first scheduling</a>.  The vtime-ordered DSQ approach is
  * inspired by
- * <a href="https://github.com/torvalds/linux/blob/master/tools/sched_ext/scx_simple.bpf.c">
+ * <a href="https://github.com/torvalds/linux/blob/6712c4fefca0422851b71d1a58a32ea03f69310f/tools/sched_ext/scx_simple.bpf.c">
  * {@code scx_simple.bpf.c}</a> (vtime mode).
  *
  * <p>Run with:
@@ -84,12 +83,6 @@ public abstract class DeadlineScheduler extends BPFProgram implements Scheduler 
         return scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
     }
 
-    /** Unsigned-safe {@code a < b} for virtual-time deadline comparisons. */
-    @BPFFunction
-    boolean deadlineIsSmaller(@Unsigned long a, @Unsigned long b) {
-        return (long)(a - b) < 0;
-    }
-
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
         @Unsigned long now = scx_bpf_now();
@@ -106,7 +99,7 @@ public abstract class DeadlineScheduler extends BPFProgram implements Scheduler 
         if (stored != null) {
             @Unsigned long prev_deadline = stored.val();
             // If previous deadline hasn't expired yet and isn't stale (> 1 period old)
-            if (deadlineIsSmaller(now, prev_deadline) && deadlineIsSmaller(prev_deadline - now, period)) {
+            if (isSmaller(now, prev_deadline) && isSmaller(prev_deadline - now, period)) {
                 deadline = prev_deadline;
             }
         }

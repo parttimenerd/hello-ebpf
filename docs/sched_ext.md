@@ -61,7 +61,7 @@ You only need to override `enqueue()`.
 
 | Name | Default | Meaning |
 |------|---------|---------|
-| `sched_name` | `"bpf_scheduler"` | Name shown in `/sys/kernel/sched_ext/root/ops` |
+| `sched_name` | `"hello"` | Name shown in `/sys/kernel/sched_ext/root/ops` |
 | `timeout_ms` | `30000` | Watchdog: auto-detaches scheduler if it blocks for this long |
 | `extra_flags` | `0` | Additional `SCX_OPS_*` flags, e.g. `"SCX_OPS_ENQ_MIGRATION_DISABLED"` |
 
@@ -120,11 +120,25 @@ public int init() {
 | `scx_bpf_kick_cpu(cpu, flags)` | Wake up a specific CPU |
 
 Helper methods available on any `Scheduler` implementor (no import needed):
+
+**CPU selection**
+- `selectCpuDfl(p, prev_cpu, wake_flags)` — default idle-CPU selection; returns CPU, no pre-dispatch (safe for vtime DSQs)
+- `selectCpuDefault(p, prev_cpu, wake_flags)` — like `selectCpuDfl` but pre-dispatches to `SCX_DSQ_LOCAL` if idle
+- `selectCpuFifoIdleOrFallback(p, prev_cpu, wake_flags, dsq_id)` — idle-CPU selection + fast-path local dispatch (FIFO DSQs only; do not use with vtime DSQs)
+
+**Enqueue helpers**
 - `dsqInsert(p, enq_flags)` — insert into `SHARED_DSQ_ID` with auto-scaled slice
-- `selectCpuFifoIdleOrFallback(p, prev_cpu, wake_flags, dsq_id)` — idle-CPU selection + fast-path local dispatch
 - `vtimeEnqueue(p, enq_flags, vtime_now)` — vtime-ordered insert with idle budget clamping
+
+**Stopping / charging**
 - `vtimeCharge(p)` — charge elapsed slice to `p.scx.dsq_vtime`
-- `isSmaller(a, b)` — unsigned comparison for vtime
+
+**Filtering**
+- `hasSchedulingConstraints(p)` — true if the task has cpumask/affinity constraints; fast-path it to avoid DSQ starvation
+- `isDescendantOf(p, targetTgid)` — true if `p` is in the process group rooted at `targetTgid`
+
+**Comparison**
+- `isSmaller(a, b)` — unsigned less-than; required for correct vtime comparisons on 64-bit wraparound
 
 ## Scheduler callback reference
 
@@ -144,6 +158,11 @@ Helper methods available on any `Scheduler` implementor (no import needed):
 | `initTask(p, args)` | No | New task created; initialize per-task state |
 | `dequeue(p, flags)` | No | Task removed from scheduler (e.g. priority change) |
 | `updateIdle(cpu, idle)` | No | CPU idle state changed |
+| `cpuAcquire(cpu, args)` | No | CPU returned to SCX after preemption |
+| `cpuRelease(cpu, args)` | No | CPU preempted by RT/deadline task; call `scx_bpf_reenqueue_local()` |
+| `yield(from, to)` | No | Task called `sched_yield()`; return `true` to honour, `false` to ignore |
+| `setWeight(p, weight)` | No | Task scheduling weight changed (e.g. `setpriority(2)`) |
+| `setCpumask(p, cpumask)` | No | Task CPU affinity changed (e.g. `sched_setaffinity(2)`) |
 
 Callbacks are ordinary Java method overrides — no `@BPFFunction` needed.
 The annotation processor generates all necessary BPF struct_ops wiring.

@@ -119,8 +119,11 @@ public void enqueue(Ptr<task_struct> p, long enq_flags) {
 @Override
 public void running(Ptr<task_struct> p) {
     // Advance global vtime so newly-woken tasks don't accumulate unfair budget.
-    if (isSmaller(vtimeNow.get(), p.val().scx.dsq_vtime))
-        vtimeNow.set(p.val().scx.dsq_vtime);
+    // Only in vtime mode — in FIFO mode dsq_vtime is unused.
+    if (!fifoMode.get()) {
+        if (isSmaller(vtimeNow.get(), p.val().scx.dsq_vtime))
+            vtimeNow.set(p.val().scx.dsq_vtime);
+    }
 }
 
 @Override

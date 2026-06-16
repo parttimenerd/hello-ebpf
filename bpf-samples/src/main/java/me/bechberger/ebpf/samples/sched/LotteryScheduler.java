@@ -10,7 +10,15 @@ import me.bechberger.ebpf.type.Ptr;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_get_prandom_u32;
 
-/** A lottery scheduler without priorities */
+/**
+ * A lottery scheduler: each task receives a random time slice, simulating
+ * lottery scheduling by biasing dispatch order through slice length.
+ *
+ * <p>This is an original Java/sched_ext implementation.  The lottery scheduling
+ * concept is described in
+ * <a href="https://www.usenix.org/conference/osdi-94/lottery-and-stride-scheduling-flexible-proportional-share-resource-management">
+ * Waldspurger &amp; Weihl, OSDI '94</a>.
+ */
 @BPF(license = "GPL")
 @Property(name = "sched_name", value = "lottery_scheduler")
 public abstract class LotteryScheduler extends BPFProgram implements Scheduler {

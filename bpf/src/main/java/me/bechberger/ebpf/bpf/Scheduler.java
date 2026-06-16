@@ -13,6 +13,7 @@ import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.runtime.BpfDefinitions;
 import me.bechberger.ebpf.runtime.ScxDefinitions;
 import me.bechberger.ebpf.runtime.TaskDefinitions;
+import me.bechberger.ebpf.runtime.runtime.cpumask;
 import me.bechberger.ebpf.type.Ptr;
 
 import java.io.BufferedReader;
@@ -155,6 +156,12 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
                 	       .stopping        = (void *)simple_stopping,
                 	       .dequeue         = (void *)simple_dequeue,
                 	       .tick            = (void *)simple_tick,
+                	       .cpu_acquire     = (void *)sched_cpu_acquire,
+                	       .cpu_release     = (void *)sched_cpu_release,
+                	       .yield           = (void *)sched_yield,
+                	       .set_weight      = (void *)sched_set_weight,
+                	       .set_cpumask     = (void *)sched_set_cpumask,
+                	       .exit_task       = (void *)sched_exit_task,
                 	       .flags			= SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE | (__property_extra_flags),
                 	       .timeout_ms      = __property_timeout_ms,
                 	       .name			= "__property_sched_name");
@@ -473,6 +480,131 @@ public interface Scheduler {
         return;
     }
 
+    /**
+     * A CPU is being acquired by the scheduler after being released.
+     *
+     * @param cpu  CPU being acquired.
+     * @param args acquire arguments (currently empty, reserved for future use).
+     *
+     * Called when a CPU transitions back to SCX control after being released
+     * (e.g. after an RT or deadline task finishes).  Useful for resetting
+     * per-CPU state after a preemption.
+     */
+    @BPFFunction(
+            headerTemplate = "int BPF_STRUCT_OPS(sched_cpu_acquire, s32 cpu, struct scx_cpu_acquire_args *args)",
+            addDefinition = false
+    )
+    default void cpuAcquire(int cpu, Ptr<ScxDefinitions.scx_cpu_acquire_args> args) {
+        return;
+    }
+
+    /**
+     * A CPU is being released from the scheduler due to higher-priority preemption.
+     *
+     * @param cpu  CPU being released.
+     * @param args release arguments: {@code args.reason} ({@link ScxDefinitions#scx_cpu_preempt_reason})
+     *             and {@code args.task} (the preempting task, if any).
+     *
+     * <p>Called when an RT or deadline task preempts the current SCX task.
+     * The typical implementation re-enqueues locally runnable tasks so they
+     * can be picked up once the preemption ends:
+     * <pre>{@code
+     * \@Override
+     * public void cpuRelease(int cpu, Ptr<ScxDefinitions.scx_cpu_release_args> args) {
+     *     scx_bpf_reenqueue_local();
+     * }
+     * }</pre>
+     */
+    @BPFFunction(
+            headerTemplate = "int BPF_STRUCT_OPS(sched_cpu_release, s32 cpu, struct scx_cpu_release_args *args)",
+            addDefinition = false
+    )
+    default void cpuRelease(int cpu, Ptr<ScxDefinitions.scx_cpu_release_args> args) {
+        return;
+    }
+
+    /**
+     * A task is voluntarily yielding its CPU.
+     *
+     * @param from the yielding task
+     * @param to   the task being yielded to, or {@code null} for a general yield
+     * @return     {@code true} to honour the yield (reschedule {@code from});
+     *             {@code false} to ignore it (let {@code from} keep running)
+     *
+     * <p>Called when a task calls {@code sched_yield()}.  Returning {@code false}
+     * keeps the task running, which is fine for most schedulers.  Returning
+     * {@code true} forces an immediate dispatch cycle.
+     *
+     * <p>Available since kernel 6.12.
+     */
+    @BPFFunction(
+            headerTemplate = "bool BPF_STRUCT_OPS(sched_yield, struct task_struct *from, struct task_struct *to)",
+            addDefinition = false
+    )
+    default boolean yield(Ptr<TaskDefinitions.task_struct> from, Ptr<TaskDefinitions.task_struct> to) {
+        return false;
+    }
+
+    /**
+     * The weight of a task has changed.
+     *
+     * @param p      the task whose weight changed
+     * @param weight new weight value (proportional to priority)
+     *
+     * <p>Called when a task's scheduling weight is updated (e.g. via
+     * {@code setpriority(2)} or cgroup CPU weight changes).  Schedulers that
+     * cache weight in per-task storage should refresh it here.
+     */
+    @BPFFunction(
+            headerTemplate = "int BPF_STRUCT_OPS(sched_set_weight, struct task_struct *p, u32 weight)",
+            addDefinition = false
+    )
+    default void setWeight(Ptr<TaskDefinitions.task_struct> p, @Unsigned int weight) {
+        return;
+    }
+
+    /**
+     * The CPU affinity mask of a task has changed.
+     *
+     * @param p       the task whose cpumask changed
+     * @param cpumask new allowed-CPU mask
+     *
+     * <p>Called when a task's CPU affinity is updated (e.g. via
+     * {@code sched_setaffinity(2)}).  Schedulers that cache per-CPU placement
+     * decisions should invalidate them here.
+     *
+     * <p>Requires {@code import me.bechberger.ebpf.runtime.runtime.cpumask;}.
+     */
+    @BPFFunction(
+            headerTemplate = "int BPF_STRUCT_OPS(sched_set_cpumask, struct task_struct *p, const struct cpumask *cpumask)",
+            addDefinition = false
+    )
+    default void setCpumask(Ptr<TaskDefinitions.task_struct> p, Ptr<cpumask> cpumask) {
+        return;
+    }
+
+    /**
+     * A task is leaving the scheduler entirely.
+     *
+     * @param p    the task being removed
+     * @param args exit arguments: {@code args.cancelled} is {@code true} when
+     *             the task is being removed because {@link #initTask} was called
+     *             during load and then cancelled (e.g. the scheduler was
+     *             detached before the task's first dispatch).
+     *
+     * <p>Called once per task, always paired with a prior {@link #initTask}.
+     * Use this to free per-task state created in {@link #initTask}.
+     * {@link me.bechberger.ebpf.bpf.map.BPFTaskStorage} entries are freed
+     * automatically by the kernel, but any other resources must be released here.
+     */
+    @BPFFunction(
+            headerTemplate = "int BPF_STRUCT_OPS(sched_exit_task, struct task_struct *p, struct scx_exit_task_args *args)",
+            addDefinition = false
+    )
+    default void exitTask(Ptr<TaskDefinitions.task_struct> p, Ptr<ScxDefinitions.scx_exit_task_args> args) {
+        return;
+    }
+
     final int SCHED_EXT_UAPI_ID = 7;
 
     default void attachScheduler() {
@@ -601,6 +733,42 @@ public interface Scheduler {
             cur = cur.val().real_parent;
         }
         return false;
+    }
+
+    /**
+     * Returns {@code true} if the task cannot be migrated to another CPU.
+     *
+     * <p>A task is considered non-migratable if its allowed CPU count is 1
+     * ({@code nr_cpus_allowed == 1}) or if migration has been explicitly
+     * disabled ({@code migration_disabled > 1}).  The threshold of {@code > 1}
+     * accounts for the BPF prolog transiently calling {@code migrate_disable()}
+     * for the current task (setting the field to 1), which would otherwise
+     * produce a false positive for the task currently being observed.
+     *
+     * @param p the task to test
+     */
+    @BPFFunction
+    @AlwaysInline
+    default boolean isMigrationDisabled(Ptr<TaskDefinitions.task_struct> p) {
+        return p.val().nr_cpus_allowed == 1 || p.val().migration_disabled > 1;
+    }
+
+    /**
+     * Scales {@code value} proportionally to the task's scheduling weight.
+     *
+     * <p>Equivalent to {@code (value * p->scx.weight) / 100}.  The default
+     * weight is 100 (nice 0), so normal tasks get {@code value} unchanged.
+     * Higher-priority tasks (lower nice) get a larger result; lower-priority
+     * tasks get a smaller result.  Useful for budget refill calculations.
+     *
+     * @param p     the task whose weight is used
+     * @param value the base value to scale
+     * @return      {@code value} scaled by the task's weight
+     */
+    @BPFFunction
+    @AlwaysInline
+    default long scaleByTaskWeight(Ptr<TaskDefinitions.task_struct> p, long value) {
+        return (value * p.val().scx.weight) / 100;
     }
 
     /**
