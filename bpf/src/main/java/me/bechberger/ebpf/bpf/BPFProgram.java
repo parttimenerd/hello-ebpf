@@ -119,6 +119,23 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     /**
+     * Prints the generated C code for {@code clazz} to stdout and returns without loading.
+     *
+     * <p>Useful for inspecting what the compiler plugin generated without running as root.
+     * Equivalent to setting the environment variable {@code BPF_PRINT_CODE=1} before calling
+     * {@link #load(Class)}.
+     *
+     * <pre>{@code
+     * // From your IDE / unit test — no root required:
+     * BPFProgram.printCode(MinimalScheduler.class);
+     * }</pre>
+     */
+    public static <T extends BPFProgram> void printCode(Class<T> clazz) {
+        System.out.println("=== BPF C code for " + clazz.getSimpleName() + " ===");
+        System.out.println(getCode(clazz));
+    }
+
+    /**
      * Loads the implementation class of the given abstract BPFProgram subclass
      * <p>
      * Example: {@snippet :
@@ -132,6 +149,9 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public static <T extends BPFProgram, S extends T> S load(Class<T> clazz) {
         try {
+            if ("1".equals(System.getenv("BPF_PRINT_CODE"))) {
+                printCode(clazz);
+            }
             KernelFeatures.requireMinimumKernel();
             KernelFeatures.checkRequirements("Loading BPF program", clazz);
             long t0 = System.currentTimeMillis();
