@@ -33,13 +33,12 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang-19 libbpf-dev linux-tools-common linux-tools-$(uname -r) linux-tools-generic gcc-multilib || true
-      - name: Install bpftool from GitHub releases if not found
+      - name: Install bpftool from GitHub releases
         run: |
-          if ! command -v bpftool &>/dev/null; then
-            BPFTOOL_VER=$(curl -s https://api.github.com/repos/libbpf/bpftool/releases/latest | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
-            curl -sL "https://github.com/libbpf/bpftool/releases/download/v${BPFTOOL_VER}/bpftool-v${BPFTOOL_VER}-amd64.tar.gz" | sudo tar -xz -C /usr/local/bin/ bpftool
-            sudo chmod +x /usr/local/bin/bpftool
-          fi
+          BPFTOOL_VER=$(curl -s https://api.github.com/repos/libbpf/bpftool/releases/latest | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
+          curl -sL "https://github.com/libbpf/bpftool/releases/download/v${BPFTOOL_VER}/bpftool-v${BPFTOOL_VER}-amd64.tar.gz" | sudo tar -xz -C /usr/local/bin/ bpftool
+          sudo chmod +x /usr/local/bin/bpftool
+          echo "/usr/local/bin/bpftool" > .bpftool.path
 
       - name: Install reactor prerequisites (annotations + bpf-processor)
         run: ./mvnw -ntp -B install -DskipTests -N && ./mvnw -ntp -B install -DskipTests -pl annotations,shared,bpf-processor
