@@ -39,14 +39,11 @@ jobs:
 
       - name: Install bpf-runtime
         # bpf-runtime has ~1000 generated files; JDK 22 javac hits OOM/StackOverflow.
-        # Use -J flags to pass heap/stack settings into the forked javac process.
-        # Disable annotation processing since sources are pre-generated.
-        run: |
-          ./mvnw -ntp -B install -DskipTests -f bpf-runtime/pom.xml \
-            -Dmaven.compiler.proc=none \
-            -Dmaven.compiler.fork=true \
-            -Dmaven.compiler.meminitial=512m \
-            -Dmaven.compiler.maxmem=4g
+        # Disable annotation processing since sources are pre-generated and
+        # pass extra heap/stack via MAVEN_OPTS for the in-process compiler.
+        run: ./mvnw -ntp -B install -DskipTests -f bpf-runtime/pom.xml -Dmaven.compiler.proc=none
+        env:
+          MAVEN_OPTS: "-Xss16m -Xmx5g"
 
       - name: Install rawbpf
         run: ./mvnw -ntp -B install -DskipTests -f rawbpf/pom.xml
