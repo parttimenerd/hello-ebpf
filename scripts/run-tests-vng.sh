@@ -28,6 +28,7 @@ TESTS=(
     BpfAtomicOpsTest
     BpfContextHelpersTest
     BPFInlineTest
+    BPFStackTraceMapTest
     BpfLoopCallsBpfFunctionTest
     BpfLoopEarlyBreakTest
     BpfLoopLocalStructTest
