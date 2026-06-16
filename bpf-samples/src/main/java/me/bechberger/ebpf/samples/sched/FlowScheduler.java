@@ -45,11 +45,8 @@ import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
 import me.bechberger.ebpf.bpf.map.BPFTaskStorage;
 import me.bechberger.ebpf.runtime.ScxDefinitions;
-import me.bechberger.ebpf.runtime.runtime.cpumask;
 import me.bechberger.ebpf.type.Ptr;
 
-import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask_first;
-import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask_test_cpu;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL_ON;
@@ -332,13 +329,8 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
 
     @Override
     public int selectCPU(Ptr<task_struct> p, int prev_cpu, long wake_flags) {
-        long nrCpuIds = scx_bpf_nr_cpu_ids();
         Ptr<TaskCtx> tctx = taskCtxStor.bpf_get(p);
-        boolean isIdle = false;
-        int cpu;
-        int thisCpu = BPFJ.currentCpuId();
         boolean nonMigratable = isMigrationDisabled(p);
-        boolean thisAllowed = bpf_cpumask_test_cpu(thisCpu, p.val().cpus_ptr);
 
         if (tctx != null) {
             if (tctx.val().sleepStartedAt != 0) {
@@ -347,30 +339,19 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
             clearWakeTarget(tctx);
         }
 
-        if (!bpf_cpumask_test_cpu(prev_cpu, p.val().cpus_ptr)) {
-            prev_cpu = thisAllowed ? thisCpu : (int) bpf_cpumask_first(p.val().cpus_ptr);
-        }
-
+        // Prefer last-run CPU for cache locality (skip for first run or non-migratable)
         int preferredCpu = prev_cpu;
-        if (!nonMigratable && tctx != null && tctx.val().lastCpu >= 0
-                && bpf_cpumask_test_cpu(tctx.val().lastCpu, p.val().cpus_ptr)) {
+        if (!nonMigratable && tctx != null && tctx.val().lastCpu >= 0) {
             preferredCpu = tctx.val().lastCpu;
         }
 
+        boolean isIdle = false;
+        int cpu;
+
         if (nonMigratable) {
+            // Non-migratable: stay on current CPU; don't bother searching
             cpu = preferredCpu;
             isIdle = scx_bpf_test_and_clear_cpu_idle(preferredCpu);
-        } else if (tctx != null && tctx.val().firstRun) {
-            // First run: prefer an idle core (both SMT siblings idle = flag 1)
-            cpu = scx_bpf_pick_idle_cpu(p.val().cpus_ptr, 1L);
-            if (cpu < 0) cpu = scx_bpf_pick_idle_cpu(p.val().cpus_ptr, 0L);
-            if (cpu >= 0) {
-                isIdle = true;
-            } else {
-                boolean isIdleBox = false;
-                cpu = scx_bpf_select_cpu_dfl(p, preferredCpu, wake_flags, Ptr.of(isIdleBox));
-                isIdle = isIdleBox;
-            }
         } else {
             boolean isIdleBox = false;
             cpu = scx_bpf_select_cpu_dfl(p, preferredCpu, wake_flags, Ptr.of(isIdleBox));
@@ -381,8 +362,7 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
             int finalCpu = cpu >= 0 ? cpu : preferredCpu;
             tctx.val().wakeCpu = finalCpu;
             tctx.val().wakeCpuIdle = isIdle;
-            tctx.val().wakeCpuValid = finalCpu >= 0
-                    && bpf_cpumask_test_cpu(finalCpu, p.val().cpus_ptr);
+            tctx.val().wakeCpuValid = cpu >= 0;
         }
 
         return cpu >= 0 ? cpu : preferredCpu;
@@ -403,8 +383,7 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
         }
 
         int taskCpu = scx_bpf_task_cpu(p);
-        if (isMigrationDisabled(p) && taskCpu >= 0
-                && bpf_cpumask_test_cpu(taskCpu, p.val().cpus_ptr)) {
+        if (isMigrationDisabled(p) && taskCpu >= 0) {
             if (!hasWakeTarget || targetCpu != taskCpu) {
                 targetCpu = taskCpu;
                 hasWakeTarget = true;
