@@ -114,6 +114,9 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
                 bool scx_bpf_task_running(const struct task_struct *p) __ksym;
                 s32 scx_bpf_task_cpu(const struct task_struct *p) __ksym;
                 struct rq *scx_bpf_cpu_rq(s32 cpu) __ksym;
+                bool scx_bpf_dsq_move(struct bpf_iter_scx_dsq *it__iter, struct task_struct *p, u64 dsq_id, u64 enq_flags) __ksym __weak;
+                bool scx_bpf_dsq_move_vtime(struct bpf_iter_scx_dsq *it__iter, struct task_struct *p, u64 dsq_id, u64 enq_flags) __ksym __weak;
+                bool bpf_cpumask_test_cpu(u32 cpu, const struct cpumask *cpumask) __ksym __weak;
                 
                 #define BPF_STRUCT_OPS(name, args...)						\\
                 SEC("struct_ops/"#name)	BPF_PROG(name, ##args)
