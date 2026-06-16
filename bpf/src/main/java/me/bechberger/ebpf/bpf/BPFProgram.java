@@ -181,7 +181,7 @@ public abstract class BPFProgram implements AutoCloseable {
 
     private final Set<AttachedXDPIfIndex> attachedXDPIfIndexes = new HashSet<>();
 
-    record AttachedTCIfIndex(ProgramHandle handle, int ifindex, boolean ingress, int priority) {}
+    record AttachedTCIfIndex(ProgramHandle handle, int ifindex, boolean ingress, int priority, int tcHandle) {}
     private final Set<AttachedTCIfIndex> attachedTCIfIndices = new HashSet<>();
 
     private volatile boolean closed = false;
@@ -721,7 +721,7 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     public void tcAttach(ProgramHandle prog, int ifindex, boolean ingress) {
-        var tcIfIndex = new AttachedTCIfIndex(prog, ifindex, ingress, 0);
+        var tcIfIndex = new AttachedTCIfIndex(prog, ifindex, ingress, 0, 0);
         try (var arena = Arena.ofConfined()) {
             MemorySegment hook = allocateTCHookObject(arena, tcIfIndex);
             // run tc qdisc del dev $DEVICE clsact on the command line
@@ -740,7 +740,10 @@ public abstract class BPFProgram implements AutoCloseable {
             if (err != 0) {
                 throw new BPFAttachError(prog.name, err);
             }
-            attachedTCIfIndices.add(tcIfIndex);
+            // bpf_tc_attach writes back the kernel-assigned handle and priority into opts.
+            int assignedHandle   = bpf_tc_opts.handle(opts);
+            int assignedPriority = bpf_tc_opts.priority(opts);
+            attachedTCIfIndices.add(new AttachedTCIfIndex(prog, ifindex, ingress, assignedPriority, assignedHandle));
         }
     }
 
@@ -817,7 +820,7 @@ public abstract class BPFProgram implements AutoCloseable {
         }
         opts.fill((byte) 0);
         bpf_tc_opts.sz(opts, bpf_tc_opts.sizeof());
-        bpf_tc_opts.handle(opts, 1);
+        bpf_tc_opts.handle(opts, tcIfIndex.tcHandle);
         bpf_tc_opts.prog_fd(opts, progFd);
         bpf_tc_opts.prog_id(opts, 0);
         bpf_tc_opts.priority(opts, tcIfIndex.priority);
@@ -828,8 +831,9 @@ public abstract class BPFProgram implements AutoCloseable {
         try (var arena = Arena.ofConfined()) {
             MemorySegment hook = allocateTCHookObject(arena, tcIfIndex);
             MemorySegment opts = allocateTCOptsObject(arena, tcIfIndex);
-            /*bpf_tc_opts.prog_fd(opts, 0);
-            bpf_tc_opts.prog_id(opts, 0);*/
+            // bpf_tc_detach identifies the filter by handle+priority; prog_fd must be 0.
+            bpf_tc_opts.prog_fd(opts, 0);
+            bpf_tc_opts.prog_id(opts, 0);
             int err = Lib.bpf_tc_detach(hook, opts);
             if (err != 0) {
                 throw new BPFError("Detaching " + tcIfIndex.handle.name, err);

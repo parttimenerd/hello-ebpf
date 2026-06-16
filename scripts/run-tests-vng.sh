@@ -81,6 +81,7 @@ TESTS=(
     SetFieldTest
     SyscallProgramTest
     TailCallTest
+    TCHookTest
     TimerCallbackTest
     TracepointAnnotationTest
     TracepointAttachTest
