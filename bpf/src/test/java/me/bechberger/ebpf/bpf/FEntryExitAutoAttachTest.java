@@ -2,9 +2,12 @@ package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.bpf.BPF;
+import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
+import me.bechberger.ebpf.annotations.bpf.Kprobe;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
 import me.bechberger.ebpf.runtime.OpenDefinitions;
+import me.bechberger.ebpf.runtime.PtDefinitions;
 import me.bechberger.ebpf.runtime.interfaces.SystemCallHooks;
 import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
@@ -43,23 +46,15 @@ public class FEntryExitAutoAttachTest {
             }
         }
 
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                #include <bpf/bpf_tracing.h>
-                
-                SEC("fexit/do_sys_openat2")
-                int BPF_PROG(do_openat2_exit, long dfd, const char *name, struct open_how *how, long ret)
-                {
-                	return 0;
-                }
-                
-                SEC ("kprobe/do_sys_openat2")
-                int kprobe__do_sys_openat2 (struct pt_regs *ctx)
-                {
-                  return 0;
-                }
-                """;
+        @BPFFunction(section = "fexit/do_sys_openat2", autoAttach = true, name = "do_openat2_exit")
+        int doOpenat2Exit(Ptr<PtDefinitions.pt_regs> ctx) {
+            return 0;
+        }
+
+        @Kprobe("do_sys_openat2")
+        int kprobe__do_sys_openat2(Ptr<PtDefinitions.pt_regs> ctx) {
+            return 0;
+        }
     }
 
     @Test
@@ -85,7 +80,7 @@ public class FEntryExitAutoAttachTest {
     @Test
     public void testAutoAttachAll() {
         try (var program = BPFProgram.load(OpenAt.class)) {
-            assertEquals(Stream.of("do_openat2_exit", "kprobe__do_sys_openat2").sorted().toList(), program.getAutoAttachablePrograms().stream().sorted().toList());
+            assertEquals(Stream.of("do_openat2_exit", "enterOpenat2", "kprobe__do_sys_openat2").sorted().toList(), program.getAllAutoAttachablePrograms().stream().sorted().toList());
         }
     }
 }
