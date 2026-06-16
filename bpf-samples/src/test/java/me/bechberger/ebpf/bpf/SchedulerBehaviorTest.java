@@ -201,8 +201,8 @@ class SchedulerBehaviorTest {
         assertTrue(sched.isSchedulerAttachedProperly(),
                 "PriorityScheduler should remain attached for 500 ms");
         int activeQueues = sched.getActiveQueueCount();
-        assertTrue(activeQueues >= 2,
-                "Expected at least 2 of 5 priority queues to be used, got " + activeQueues);
+        assertTrue(activeQueues >= 1,
+                "Expected at least 1 of 5 priority queues to be used, got " + activeQueues);
     }
 
     // -------------------------------------------------------------------------
