@@ -53,7 +53,7 @@ import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL_ON;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_enq_flags.*;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_CPUPERF_ONE;
+// SCX_CPUPERF_ONE = 1024 (full CPU performance)
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 /**
@@ -436,7 +436,7 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
                     || tctx.val().budgetNs >= SLICE_MIN_NS)) {
                 wakeEnqFlags |= SCX_ENQ_PREEMPT.value();
             }
-            scx_bpf_cpuperf_set(targetCpu, SCX_CPUPERF_ONE.value());
+            scx_bpf_cpuperf_set(targetCpu, 1024); // SCX_CPUPERF_ONE
             scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL_ON.value() | targetCpu, SLICE_MIN_NS, wakeEnqFlags);
             prioDispatches.addAndGet(1L);
             clearWakeTarget(tctx);
@@ -472,25 +472,25 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
         // Rotating tier dispatch: each phase starts from a different tier
         int phase = (int)(gen & 3L);
         if (phase == 0) {
-            if (dispatchTier(TIER_PRIORITY_DSQ, tierPriorityDispatches)) return;
-            if (dispatchTier(TIER_NORMAL_DSQ,   tierNormalDispatches))   return;
-            if (dispatchTier(TIER_LOW_DSQ,      tierLowDispatches))      return;
-            if (dispatchTier(TIER_DEFICIT_DSQ,  tierDeficitDispatches))  return;
+            if (dispatchTierPriority()) return;
+            if (dispatchTierNormal())   return;
+            if (dispatchTierLow())      return;
+            if (dispatchTierDeficit())  return;
         } else if (phase == 1) {
-            if (dispatchTier(TIER_NORMAL_DSQ,   tierNormalDispatches))   return;
-            if (dispatchTier(TIER_LOW_DSQ,      tierLowDispatches))      return;
-            if (dispatchTier(TIER_DEFICIT_DSQ,  tierDeficitDispatches))  return;
-            if (dispatchTier(TIER_PRIORITY_DSQ, tierPriorityDispatches)) return;
+            if (dispatchTierNormal())   return;
+            if (dispatchTierLow())      return;
+            if (dispatchTierDeficit())  return;
+            if (dispatchTierPriority()) return;
         } else if (phase == 2) {
-            if (dispatchTier(TIER_LOW_DSQ,      tierLowDispatches))      return;
-            if (dispatchTier(TIER_DEFICIT_DSQ,  tierDeficitDispatches))  return;
-            if (dispatchTier(TIER_PRIORITY_DSQ, tierPriorityDispatches)) return;
-            if (dispatchTier(TIER_NORMAL_DSQ,   tierNormalDispatches))   return;
+            if (dispatchTierLow())      return;
+            if (dispatchTierDeficit())  return;
+            if (dispatchTierPriority()) return;
+            if (dispatchTierNormal())   return;
         } else {
-            if (dispatchTier(TIER_DEFICIT_DSQ,  tierDeficitDispatches))  return;
-            if (dispatchTier(TIER_PRIORITY_DSQ, tierPriorityDispatches)) return;
-            if (dispatchTier(TIER_NORMAL_DSQ,   tierNormalDispatches))   return;
-            if (dispatchTier(TIER_LOW_DSQ,      tierLowDispatches))      return;
+            if (dispatchTierDeficit())  return;
+            if (dispatchTierPriority()) return;
+            if (dispatchTierNormal())   return;
+            if (dispatchTierLow())      return;
         }
 
         // No tasks anywhere — let prev keep its slice if still queued
@@ -502,9 +502,39 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
 
     @BPFFunction
     @AlwaysInline
-    boolean dispatchTier(long dsqId, GlobalVariable<@Unsigned Long> counter) {
-        if (scx_bpf_dsq_nr_queued(dsqId) > 0 && scx_bpf_dsq_move_to_local(dsqId)) {
-            counter.addAndGet(1L);
+    boolean dispatchTierPriority() {
+        if (scx_bpf_dsq_nr_queued(TIER_PRIORITY_DSQ) > 0 && scx_bpf_dsq_move_to_local(TIER_PRIORITY_DSQ)) {
+            tierPriorityDispatches.addAndGet(1L);
+            return true;
+        }
+        return false;
+    }
+
+    @BPFFunction
+    @AlwaysInline
+    boolean dispatchTierNormal() {
+        if (scx_bpf_dsq_nr_queued(TIER_NORMAL_DSQ) > 0 && scx_bpf_dsq_move_to_local(TIER_NORMAL_DSQ)) {
+            tierNormalDispatches.addAndGet(1L);
+            return true;
+        }
+        return false;
+    }
+
+    @BPFFunction
+    @AlwaysInline
+    boolean dispatchTierLow() {
+        if (scx_bpf_dsq_nr_queued(TIER_LOW_DSQ) > 0 && scx_bpf_dsq_move_to_local(TIER_LOW_DSQ)) {
+            tierLowDispatches.addAndGet(1L);
+            return true;
+        }
+        return false;
+    }
+
+    @BPFFunction
+    @AlwaysInline
+    boolean dispatchTierDeficit() {
+        if (scx_bpf_dsq_nr_queued(TIER_DEFICIT_DSQ) > 0 && scx_bpf_dsq_move_to_local(TIER_DEFICIT_DSQ)) {
+            tierDeficitDispatches.addAndGet(1L);
             return true;
         }
         return false;

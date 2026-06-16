@@ -107,12 +107,16 @@ public final class SchedulerStats {
      * Use when one array holds multiple counters, e.g. one entry per priority queue.
      * Call from BPF context; read back from Java via {@link #totalEnqueuedAt}.
      */
+    @BuiltinBPFFunction("""
+            {
+              u32 __idx = (u32)$arg2;
+              long *__cnt = bpf_map_lookup_elem(&$arg1, &__idx);
+              if (__cnt) (*__cnt)++;
+            }
+            """)
     @NotUsableInJava
     public static void incrementEnqueuedAt(BPFPerCpuArray<Long> counts, int index) {
-        Ptr<Long> ptr = counts.bpf_get(index);
-        if (ptr != null) {
-            ptr.set(ptr.val() + 1);
-        }
+        throw new UnsupportedOperationException("BPF-only");
     }
 
     /**
@@ -120,12 +124,16 @@ public final class SchedulerStats {
      * Use when one array holds multiple dispatch counters, e.g. one entry per priority queue.
      * Call from BPF context; read back from Java via {@link #totalDispatchedAt}.
      */
+    @BuiltinBPFFunction("""
+            {
+              u32 __idx = (u32)$arg2;
+              long *__cnt = bpf_map_lookup_elem(&$arg1, &__idx);
+              if (__cnt) (*__cnt)++;
+            }
+            """)
     @NotUsableInJava
     public static void incrementDispatchedAt(BPFPerCpuArray<Long> counts, int index) {
-        Ptr<Long> ptr = counts.bpf_get(index);
-        if (ptr != null) {
-            ptr.set(ptr.val() + 1);
-        }
+        throw new UnsupportedOperationException("BPF-only");
     }
 
     /**
