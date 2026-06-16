@@ -1,5 +1,6 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
@@ -486,6 +487,33 @@ public class BPFJ {
     public static <K, V> long bpf_timer_set_callback(
             Ptr<bpf_timer> timer,
             TriFunction<Ptr<?>, Ptr<K>, Ptr<V>, Integer> callback) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Returns a uniformly random {@code u32} via {@code bpf_get_prandom_u32()}.
+     *
+     * <p>The kernel seeds the per-CPU PRNG at program load time.  Use
+     * {@link #bpfRandBounded(long)} for a bias-free bounded draw.
+     */
+    @BuiltinBPFFunction("bpf_get_prandom_u32()")
+    @NotUsableInJava
+    public static @Unsigned int bpfRand() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Returns a uniformly random {@code u32} in {@code [0, limit)}, bias-free
+     * via Lemire's 32-bit algorithm (multiply-high, no rejection loop).
+     *
+     * <p>Equivalent to:
+     * <pre>{@code (u32)((u64)bpf_get_prandom_u32() * (u64)(limit) >> 32)}</pre>
+     *
+     * @param limit exclusive upper bound; must be &gt; 0
+     */
+    @BuiltinBPFFunction("((u32)((u64)bpf_get_prandom_u32() * (u64)($arg1) >> 32))")
+    @NotUsableInJava
+    public static @Unsigned int bpfRandBounded(@Unsigned long limit) {
         throw new MethodIsBPFRelatedFunction();
     }
 

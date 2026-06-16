@@ -39,6 +39,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
+import static java.lang.foreign.ValueLayout.JAVA_BOOLEAN;
 import static java.lang.foreign.ValueLayout.JAVA_INT;
 import static me.bechberger.ebpf.NameUtil.toConstantCase;
 import static me.bechberger.ebpf.bpf.raw.Lib.*;
@@ -373,6 +374,55 @@ public abstract class BPFProgram implements AutoCloseable {
             throw new BPFAttachError(prog.name, ret.err());
         }
         attachedPrograms.add(link);
+    }
+
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_KPROBE =
+            new HandlerWithErrno<>("bpf_program__attach_kprobe",
+                    FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER,
+                            JAVA_BOOLEAN, PanamaUtil.POINTER));
+
+    /**
+     * Dynamically attach a kprobe (or kretprobe) to a kernel symbol by name.
+     *
+     * <p>Unlike the declarative {@code @Kprobe} annotation (which resolves the
+     * symbol at compile / annotation-processing time), this method accepts a
+     * runtime string — useful when the target symbol is configurable by the
+     * user at startup.
+     *
+     * <p>The returned {@link BPFLink} is managed by this program's lifetime:
+     * it is automatically destroyed when the program is closed.  To detach
+     * early, call {@link #detachProgram(BPFLink)}.
+     *
+     * @param prog      the BPF program to attach (must have prog_type KPROBE)
+     * @param symbol    kernel function name, e.g. {@code "do_sys_openat2"}
+     * @param retprobe  {@code true} to attach on function return (kretprobe)
+     * @return the link representing the attachment
+     * @throws BPFAttachError if libbpf reports an error
+     */
+    public BPFLink attachKProbe(ProgramHandle prog, String symbol, boolean retprobe) {
+        try (Arena arena = Arena.ofConfined()) {
+            var ret = BPF_PROGRAM__ATTACH_KPROBE.call(
+                    prog.prog(), retprobe, arena.allocateFrom(symbol));
+            if (ret.result() == MemorySegment.NULL) {
+                throw new BPFAttachError(prog.name, ret.err());
+            }
+            var link = new BPFLink(ret.result());
+            if (link.segment.address() == 0) {
+                throw new BPFAttachError(prog.name, ret.err());
+            }
+            attachedPrograms.add(link);
+            return link;
+        }
+    }
+
+    /**
+     * Dynamically attach a kprobe to a kernel symbol by name (entry point).
+     *
+     * <p>Convenience overload of {@link #attachKProbe(ProgramHandle, String, boolean)}
+     * with {@code retprobe = false}.
+     */
+    public BPFLink attachKProbe(ProgramHandle prog, String symbol) {
+        return attachKProbe(prog, symbol, false);
     }
 
     private <T extends Annotation> @Nullable T findParentAnnotation(Class<?> programClass, Method method, Class<T> annotationClass) {

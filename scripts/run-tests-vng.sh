@@ -63,6 +63,7 @@ TESTS=(
     HashMapTest
     HelloWorldTest
     KretprobeAttachTest
+    KprobeAttachDynamicTest
     KsyscallAttachTest
     LRUHashMapBpfSideTest
     MapForEachLruTest

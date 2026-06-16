@@ -10,6 +10,7 @@ import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.SchedulerBase;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.bpf.map.BPFTaskStorage;
+import me.bechberger.ebpf.bpf.map.BPFTimerMap;
 import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask;
 import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_timer;
 import me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
@@ -238,5 +239,117 @@ public class SchedulerFeatureTest {
                 "expected SEC(\"syscall\") in generated C:\n" + code);
         assertTrue(code.contains("int compute("),
                 "expected compute function definition in:\n" + code);
+    }
+
+    // -------------------------------------------------------------------------
+    // Feature A: BPFTimerMap — value type is timer_val with bpf_timer field
+    // -------------------------------------------------------------------------
+
+    @BPF(license = "GPL")
+    public static abstract class TimerMapProgram extends BPFProgram implements XDPHook {
+
+        @BPFMapDefinition(maxEntries = 1)
+        BPFTimerMap<BPFTimerMap.TimerVal> timerMap;
+
+        @BPFTimer
+        @BPFFunction
+        public int onTick(Ptr<?> map, Ptr<Integer> key, Ptr<BPFTimerMap.TimerVal> val) {
+            bpf_timer_start(Ptr.of(val.val().timer), 500_000_000L, 0);
+            return 0;
+        }
+
+        @Override
+        public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
+            Ptr<BPFTimerMap.TimerVal> slot = timerMap.bpf_get(0);
+            if (slot != null && slot.val().initialized == 0) {
+                slot.val().initialized = 1;
+                bpf_timer_init(Ptr.of(slot.val().timer), Ptr.of(timerMap), 1);
+                BPFJ.bpf_timer_set_callback(Ptr.of(slot.val().timer), this::onTick);
+                bpf_timer_start(Ptr.of(slot.val().timer), 500_000_000L, 0);
+            }
+            return xdp_action.XDP_PASS;
+        }
+    }
+
+    @Test
+    public void testBPFTimerMapEmitsHashMapWithTimerVal() {
+        var code = BPFProgram.getCode(TimerMapProgram.class);
+        assertTrue(code.contains("BPF_MAP_TYPE_HASH"),
+                "expected BPF_MAP_TYPE_HASH in:\n" + code);
+        assertTrue(code.contains("bpf_timer"),
+                "expected bpf_timer field in value type in:\n" + code);
+        assertTrue(code.contains("initialized"),
+                "expected initialized field in value type in:\n" + code);
+    }
+
+    // -------------------------------------------------------------------------
+    // Feature C: BPFJ.bpfRand / bpfRandBounded emit correct C expressions
+    // -------------------------------------------------------------------------
+
+    @BPF(license = "GPL")
+    public static abstract class RandProgram extends BPFProgram implements XDPHook {
+
+        @BPFFunction
+        @Override
+        public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
+            @Unsigned int r = BPFJ.bpfRand();
+            @Unsigned int b = BPFJ.bpfRandBounded(100L);
+            return xdp_action.XDP_PASS;
+        }
+    }
+
+    @Test
+    public void testBpfRandEmitsPrandom() {
+        var code = BPFProgram.getCode(RandProgram.class);
+        assertTrue(code.contains("bpf_get_prandom_u32()"),
+                "expected bpf_get_prandom_u32() in:\n" + code);
+    }
+
+    @Test
+    public void testBpfRandBoundedEmitsLemireExpression() {
+        var code = BPFProgram.getCode(RandProgram.class);
+        assertTrue(code.contains("bpf_get_prandom_u32()"),
+                "expected bpf_get_prandom_u32() in bounded rand expression in:\n" + code);
+        assertTrue(code.contains(">> 32"),
+                "expected >> 32 (Lemire shift) in bounded rand expression in:\n" + code);
+    }
+
+    // -------------------------------------------------------------------------
+    // Feature D: Scheduler.isDescendantOf emits bounded loop over real_parent
+    // -------------------------------------------------------------------------
+
+    @BPF(license = "GPL")
+    @Property(name = "sched_name", value = "descendant_sched")
+    public static abstract class DescendantScheduler extends SchedulerBase implements Scheduler {
+
+        @Override
+        public int init() {
+            return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
+        }
+
+        @Override
+        public void enqueue(Ptr<task_struct> p, long enq_flags) {
+            if (isDescendantOf(p, 12345)) {
+                dsqInsert(p, enq_flags);
+            } else {
+                dsqInsert(p, enq_flags);
+            }
+        }
+
+        @Override
+        public void dispatch(int cpu, Ptr<task_struct> prev) {
+            scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        }
+    }
+
+    @Test
+    public void testIsDescendantOfEmitsBoundedLoop() {
+        var code = BPFProgram.getCode(DescendantScheduler.class);
+        assertTrue(code.contains("real_parent"),
+                "expected real_parent traversal in isDescendantOf:\n" + code);
+        assertTrue(code.contains("tgid"),
+                "expected tgid comparison in isDescendantOf:\n" + code);
+        assertTrue(code.contains("isDescendantOf"),
+                "expected isDescendantOf function in generated C:\n" + code);
     }
 }

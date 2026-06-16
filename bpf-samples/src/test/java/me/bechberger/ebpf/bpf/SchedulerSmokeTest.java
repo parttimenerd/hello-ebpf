@@ -1,5 +1,6 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.samples.sched.ChaosScheduler;
 import me.bechberger.ebpf.samples.sched.CPU0Scheduler;
 import me.bechberger.ebpf.samples.sched.CentralScheduler;
 import me.bechberger.ebpf.samples.sched.DeadlineScheduler;
@@ -176,6 +177,20 @@ class SchedulerSmokeTest {
         Thread.sleep(300);
         assertTrue(sched.isSchedulerAttachedProperly(),
                 "LotteryScheduler should remain attached 300 ms after start");
+    }
+
+    /**
+     * Exercises {@link ChaosScheduler}: vtime delays, slice degradation, per-task state,
+     * and CPU frequency throttling.  Runs system-wide (no targetTgid filter) to maximise
+     * coverage.
+     */
+    @Test
+    @Timeout(15)
+    @TestScheduler(ChaosScheduler.class)
+    void chaosSchedulerAttachesAndRuns(ChaosScheduler sched) throws Exception {
+        Thread.sleep(300);
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "ChaosScheduler should remain attached 300 ms after start");
     }
 }
 

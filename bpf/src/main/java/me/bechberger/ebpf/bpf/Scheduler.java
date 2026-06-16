@@ -7,6 +7,7 @@
 package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.AlwaysInline;
+import me.bechberger.ebpf.annotations.BoundedBy;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.runtime.BpfDefinitions;
@@ -561,6 +562,41 @@ public interface Scheduler {
     default boolean hasSchedulingConstraints(Ptr<TaskDefinitions.task_struct> p) {
         return ((p.val().flags & PerProcessFlags.PF_KTHREAD) != 0)
                 || (p.val().nr_cpus_allowed != scx_bpf_nr_cpu_ids());
+    }
+
+    /**
+     * Returns {@code true} if task {@code p} belongs to the process subtree
+     * rooted at {@code targetTgid} (thread-group ID, i.e. the PID of the
+     * process group leader).
+     *
+     * <p>Walks up the {@code real_parent} chain — up to 8 levels — comparing
+     * each ancestor's {@code tgid} to {@code targetTgid}. This covers nested
+     * child processes (e.g., a process spawned by the target process). All
+     * threads of the target process share the same {@code tgid}, so this call
+     * correctly matches every thread.
+     *
+     * <p>Example — skip chaos for tasks not belonging to the target process:
+     * <pre>{@code
+     *   if (!isDescendantOf(p, targetTgid)) {
+     *       scx_bpf_dsq_insert(p, SCX_DSQ_GLOBAL.value(), SCX_SLICE_DFL.value(), 0);
+     *       return;
+     *   }
+     * }</pre>
+     *
+     * @param p          the task to test
+     * @param targetTgid the thread-group ID of the root process (as seen from
+     *                   user space: {@code ProcessHandle.current().pid()})
+     */
+    @BPFFunction
+    @AlwaysInline
+    default boolean isDescendantOf(Ptr<TaskDefinitions.task_struct> p, int targetTgid) {
+        Ptr<TaskDefinitions.task_struct> cur = p;
+        for (@BoundedBy(8) int i = 0; i < 8; i++) {
+            if (cur == null) return false;
+            if (cur.val().tgid == targetTgid) return true;
+            cur = cur.val().real_parent;
+        }
+        return false;
     }
 
     /**
