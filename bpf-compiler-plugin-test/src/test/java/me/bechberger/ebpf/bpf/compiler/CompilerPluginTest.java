@@ -16,6 +16,8 @@ import me.bechberger.ebpf.bpf.map.BPFInodeStorage;
 import me.bechberger.ebpf.bpf.map.BPFLpmTrie;
 import me.bechberger.ebpf.bpf.map.BPFProgArray;
 import me.bechberger.ebpf.bpf.map.BPFSkStorage;
+import me.bechberger.ebpf.bpf.map.BPFDevMap;
+import me.bechberger.ebpf.bpf.map.BPFCpuMap;
 import me.bechberger.ebpf.bpf.map.BPFTypedArena;
 import me.bechberger.ebpf.annotations.InArena;
 import me.bechberger.ebpf.runtime.runtime.inode;
@@ -215,16 +217,16 @@ public class CompilerPluginTest {
     public void testPrint() {
         assertEqualsDiffed("""
                 int testPrint();
-                
+
                 int testJavaPrint();
-                
+
                 int testJavaPrint2();
-                
+
                 int testPrint() {
-                  bpf_trace_printk((const u8 *)"Hello, World!\\\\n", 15);
+                  bpf_trace_printk((const u8*)"Hello, World!\\\\n", 15);
                   return 0;
                 }
-                
+
                 int testJavaPrint() {
                   bpf_trace_printk("Hello, World!\\\\n", sizeof("Hello, World!\\\\n"));
                   return 0;
@@ -3052,6 +3054,76 @@ public class CompilerPluginTest {
                 "BPF_F_NO_PREALLOC must appear for SK storage:\n" + code);
         assertTrue(code.contains("sockState"),
                 "Map field name 'sockState' must appear in generated C:\n" + code);
+    }
+
+    // ──────────────────────────────────────────────────────────
+    // BPFDevMap + BPFCpuMap C template generation
+    // ──────────────────────────────────────────────────────────
+
+    @BPF(license = "GPL")
+    public static abstract class DevMapUsage extends BPFProgram implements XDPHook {
+
+        @BPFMapDefinition(maxEntries = 8)
+        BPFDevMap devMap;
+
+        @Override
+        public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
+            return xdp_action.XDP_PASS;
+        }
+    }
+
+    @Test
+    public void testDevMapCTemplate() {
+        String code = BPFProgram.getCode(DevMapUsage.class);
+        assertTrue(code.contains("BPF_MAP_TYPE_DEVMAP"),
+                "DEVMAP type must appear in generated C:\n" + code);
+        assertTrue(code.contains("devMap"),
+                "Map field name 'devMap' must appear in generated C:\n" + code);
+    }
+
+    @BPF(license = "GPL")
+    public static abstract class CpuMapUsage extends BPFProgram implements XDPHook {
+
+        @BPFMapDefinition(maxEntries = 8)
+        BPFCpuMap cpuMap;
+
+        @Override
+        public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
+            return xdp_action.XDP_PASS;
+        }
+    }
+
+    @Test
+    public void testCpuMapCTemplate() {
+        String code = BPFProgram.getCode(CpuMapUsage.class);
+        assertTrue(code.contains("BPF_MAP_TYPE_CPUMAP"),
+                "CPUMAP type must appear in generated C:\n" + code);
+        assertTrue(code.contains("cpuMap"),
+                "Map field name 'cpuMap' must appear in generated C:\n" + code);
+    }
+
+    // ──────────────────────────────────────────────────────────
+    // BPFJ.bpfRedirect / bpfRedirectMap emission
+    // ──────────────────────────────────────────────────────────
+
+    @BPF(license = "GPL")
+    public static abstract class RedirectUsage extends BPFProgram implements XDPHook {
+
+        @BPFMapDefinition(maxEntries = 8)
+        BPFDevMap devMap;
+
+        @Override
+        public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
+            long r = BPFJ.bpfRedirectMap(Ptr.of(devMap), BPFJ.currentCpuId(), 2L);
+            return xdp_action.XDP_PASS;
+        }
+    }
+
+    @Test
+    public void testBpfRedirectMapEmission() {
+        String code = BPFProgram.getCode(RedirectUsage.class);
+        assertTrue(code.contains("bpf_redirect_map"),
+                "bpf_redirect_map must appear in generated C:\n" + code);
     }
 
 }

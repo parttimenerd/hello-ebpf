@@ -651,4 +651,43 @@ public class BPFJ {
     public static int getNumaNodeId() {
         throw new MethodIsBPFRelatedFunction();
     }
+
+    /**
+     * Redirect the packet to the network device {@code ifindex} at the end
+     * of the XDP or TC hook.
+     *
+     * <p>The redirect is not performed immediately — return
+     * {@code xdp_action.XDP_REDIRECT} (or {@code TC_ACT_REDIRECT}) to
+     * commit it.
+     *
+     * <p>Lowers to {@code bpf_redirect(ifindex, flags)}.
+     *
+     * @param ifindex target network interface index
+     * @param flags   reserved, must be 0
+     * @return {@code XDP_REDIRECT} on success, {@code XDP_ABORTED} on failure
+     */
+    @BuiltinBPFFunction("bpf_redirect($arg1, $arg2)")
+    @NotUsableInJava
+    public static @Unsigned long bpfRedirect(@Unsigned long ifindex, @Unsigned long flags) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Redirect the packet using a devmap, sockmap, or xskmap.
+     *
+     * <p>Returns {@code XDP_REDIRECT} on success, {@code XDP_ABORTED} on
+     * failure.  Commit the redirect by returning the result as the XDP action.
+     *
+     * <p>Lowers to {@code bpf_redirect_map($arg1, $arg2, $arg3)}.
+     *
+     * @param map   pointer to a {@code BPFDevMap}, {@code BPFXskMap}, or {@code BPFSockMap}
+     * @param key   lookup key (e.g. CPU id for devmap, queue id for xskmap)
+     * @param flags {@code XDP_PASS} or {@code XDP_DROP} as fallback if the entry is absent
+     * @return {@code XDP_REDIRECT} on success, the fallback action otherwise
+     */
+    @BuiltinBPFFunction("bpf_redirect_map($arg1, $arg2, $arg3)")
+    @NotUsableInJava
+    public static @Unsigned long bpfRedirectMap(Ptr<?> map, @Unsigned long key, @Unsigned long flags) {
+        throw new MethodIsBPFRelatedFunction();
+    }
 }
