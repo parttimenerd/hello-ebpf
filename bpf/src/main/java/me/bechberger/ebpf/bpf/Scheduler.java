@@ -520,6 +520,13 @@ public interface Scheduler {
      * specific CPU (rather than the caller's local queue).  It corresponds to the
      * pattern used in {@code scx_pair} and other per-CPU-targeted schedulers.
      *
+     * <p><b>Note:</b> This method calls {@code bpf_cpumask_test_cpu(cpu, p->cpus_ptr)}, which
+     * requires {@code cpus_ptr} to be a BTF-tracked pointer (stack or map value).
+     * When {@code p} is an {@code rcu_ptr_task_struct} obtained from a
+     * {@link #bpf_for_each_dsq} iterator, the BPF verifier rejects this call with
+     * {@code R2 type=scalar expected=fp}. Prefer {@code scx_bpf_dsq_move_to_local}
+     * in dispatch, which handles CPU affinity automatically.
+     *
      * <p>Returns {@code true} if the task was moved (the caller should stop iterating);
      * {@code false} if the CPU was not in the task's affinity mask.
      *

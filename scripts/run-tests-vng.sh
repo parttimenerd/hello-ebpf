@@ -88,6 +88,7 @@ TESTS=(
     TracePrintkTest
     TypeLayoutTest
     TypeProcessingTest
+    XDPContextTest
     VerifierLogCaptureSuccessTest
     VerifierLogCaptureTest
     VerifierLogCaptureUnitTest
