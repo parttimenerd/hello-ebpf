@@ -10,6 +10,7 @@ import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.SchedulerBase;
 import me.bechberger.ebpf.type.Ptr;
 
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_create_dsq;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_dsq_move_to_local;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
@@ -33,6 +34,11 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 public abstract class RunnableScheduler extends SchedulerBase implements Scheduler {
 
     final GlobalVariable<@Unsigned Long> runnableCalls = new GlobalVariable<>(0L);
+
+    @Override
+    public int init() {
+        return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
+    }
 
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
