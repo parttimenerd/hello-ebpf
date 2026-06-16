@@ -27,7 +27,9 @@ import java.lang.annotation.Annotation;
 import java.lang.foreign.Arena;
 import java.net.InetSocketAddress;
 import java.lang.foreign.FunctionDescriptor;
+import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
+import java.lang.foreign.StructLayout;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
@@ -41,6 +43,7 @@ import java.util.stream.IntStream;
 
 import static java.lang.foreign.ValueLayout.JAVA_BOOLEAN;
 import static java.lang.foreign.ValueLayout.JAVA_INT;
+import static java.lang.foreign.ValueLayout.JAVA_LONG;
 import static me.bechberger.ebpf.NameUtil.toConstantCase;
 import static me.bechberger.ebpf.bpf.raw.Lib.*;
 
@@ -423,6 +426,105 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public BPFLink attachKProbe(ProgramHandle prog, String symbol) {
         return attachKProbe(prog, symbol, false);
+    }
+
+    // -----------------------------------------------------------------------
+    // uprobe / uretprobe — dynamic attachment to user-space function symbols
+    // -----------------------------------------------------------------------
+
+    // bpf_program__attach_uprobe_opts layout (x86-64 LP64):
+    //   offset 0  : size_t sz              (8 bytes)
+    //   offset 8  : size_t ref_ctr_offset  (8 bytes)
+    //   offset 16 : u64    bpf_cookie      (8 bytes)
+    //   offset 24 : bool   retprobe        (1 byte, padded to 8 with align)
+    //   offset 32 : char * func_name       (8 bytes pointer)
+    //   offset 40 : int    attach_mode     (4 bytes)
+    //   total padded to 48 bytes (align to 8)
+    private static final StructLayout UPROBE_OPTS_LAYOUT = MemoryLayout.structLayout(
+            JAVA_LONG.withName("sz"),
+            JAVA_LONG.withName("ref_ctr_offset"),
+            JAVA_LONG.withName("bpf_cookie"),
+            JAVA_BOOLEAN.withName("retprobe"),
+            MemoryLayout.paddingLayout(7),
+            PanamaUtil.POINTER.withName("func_name"),
+            JAVA_INT.withName("attach_mode"),
+            MemoryLayout.paddingLayout(4)
+    );
+
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_UPROBE_OPTS =
+            new HandlerWithErrno<>("bpf_program__attach_uprobe_opts",
+                    FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER, JAVA_INT,
+                            PanamaUtil.POINTER, JAVA_LONG, PanamaUtil.POINTER));
+
+    /**
+     * Dynamically attach a uprobe (or uretprobe) to a user-space function by symbol name.
+     *
+     * <p>Resolves the symbol within {@code binaryPath} via libbpf's
+     * {@code bpf_program__attach_uprobe_opts}, so no manual ELF parsing is required.
+     * Pass {@code pid = -1} to trace all processes, or a specific PID to trace only
+     * that process.
+     *
+     * <p>The returned {@link BPFLink} is managed by this program's lifetime and is
+     * automatically destroyed when the program is closed.
+     *
+     * @param prog       the BPF program to attach (must have prog_type KPROBE)
+     * @param retprobe   {@code true} to attach on function return (uretprobe)
+     * @param pid        process ID to trace ({@code -1} = all processes)
+     * @param binaryPath path to the ELF binary, e.g. {@code "/usr/lib/libc.so.6"}
+     * @param funcName   function symbol name, e.g. {@code "malloc"}
+     * @return the link representing the attachment
+     * @throws BPFAttachError if libbpf reports an error
+     */
+    public BPFLink attachUprobe(ProgramHandle prog, boolean retprobe, int pid,
+                                String binaryPath, String funcName) {
+        try (Arena arena = Arena.ofConfined()) {
+            var opts = arena.allocate(UPROBE_OPTS_LAYOUT);
+            opts.set(JAVA_LONG, 0, UPROBE_OPTS_LAYOUT.byteSize());    // sz
+            opts.set(JAVA_LONG, 8, 0L);                                // ref_ctr_offset
+            opts.set(JAVA_LONG, 16, 0L);                               // bpf_cookie
+            opts.set(JAVA_BOOLEAN, 24, retprobe);                      // retprobe
+            opts.set(PanamaUtil.POINTER, 32, arena.allocateFrom(funcName)); // func_name
+            opts.set(JAVA_INT, 40, 0);                                 // attach_mode = default
+
+            var ret = BPF_PROGRAM__ATTACH_UPROBE_OPTS.call(
+                    prog.prog(),
+                    pid,
+                    arena.allocateFrom(binaryPath),
+                    0L,    // func_offset = 0 (resolved via func_name)
+                    opts);
+            if (ret.result() == MemorySegment.NULL) {
+                throw new BPFAttachError(prog.name, ret.err());
+            }
+            var link = new BPFLink(ret.result());
+            if (link.segment.address() == 0) {
+                throw new BPFAttachError(prog.name, ret.err());
+            }
+            attachedPrograms.add(link);
+            return link;
+        }
+    }
+
+    /**
+     * Attach a uprobe to the given symbol in {@code binaryPath} for all processes.
+     *
+     * <p>Convenience overload of
+     * {@link #attachUprobe(ProgramHandle, boolean, int, String, String)}
+     * with {@code pid = -1} (all processes) and {@code retprobe = false}.
+     */
+    public BPFLink attachUprobe(ProgramHandle prog, String binaryPath, String funcName) {
+        return attachUprobe(prog, false, -1, binaryPath, funcName);
+    }
+
+    /**
+     * Attach a uretprobe (return probe) to the given symbol in {@code binaryPath}
+     * for all processes.
+     *
+     * <p>Convenience overload of
+     * {@link #attachUprobe(ProgramHandle, boolean, int, String, String)}
+     * with {@code pid = -1} and {@code retprobe = true}.
+     */
+    public BPFLink attachUretprobe(ProgramHandle prog, String binaryPath, String funcName) {
+        return attachUprobe(prog, true, -1, binaryPath, funcName);
     }
 
     private <T extends Annotation> @Nullable T findParentAnnotation(Class<?> programClass, Method method, Class<T> annotationClass) {

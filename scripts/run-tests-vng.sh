@@ -71,6 +71,7 @@ TESTS=(
     MapForEachTypedCtxTest
     PerCpuArrayMultiKeyTest
     PerCpuArrayTest
+    PerCpuHashMapTest
     PerCpuVarTest
     PrefixIncrementTest
     QueueMapTest
@@ -90,6 +91,7 @@ TESTS=(
     TracePrintkTest
     TypeLayoutTest
     TypeProcessingTest
+    UprobeAttachDynamicTest
     XDPContextTest
     VerifierLogCaptureSuccessTest
     VerifierLogCaptureTest
