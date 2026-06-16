@@ -215,7 +215,7 @@ public class CompilerPluginTest {
                 int testJavaPrint2();
                 
                 int testPrint() {
-                  bpf_trace_printk((const u8*)"Hello, World!\\\\n", 15);
+                  bpf_trace_printk((const u8 *)"Hello, World!\\\\n", 15);
                   return 0;
                 }
                 
@@ -1296,8 +1296,9 @@ public class CompilerPluginTest {
 
                 struct {
                     __uint (type, BPF_MAP_TYPE_HASH);
-                    __uint (key_size, sizeof(s32));
-                    __uint (value_size, sizeof(struct Event));
+                    __uint (map_flags, BPF_F_NO_PREALLOC);
+                    __type (key, s32);
+                    __type (value, struct Event);
                     __uint (max_entries, 100);
                 } events SEC(".maps");
                 """, BPFProgram.getCode(TestUsingInterfaceWithStruct.class));
@@ -1351,8 +1352,9 @@ public class CompilerPluginTest {
         assertEqualsDiffed("""
                 struct {
                     __uint (type, BPF_MAP_TYPE_HASH);
-                    __uint (key_size, sizeof(s32));
-                    __uint (value_size, sizeof(s32));
+                    __uint (map_flags, BPF_F_NO_PREALLOC);
+                    __type (key, s32);
+                    __type (value, s32);
                     __uint (max_entries, 64);
                 } counts SEC(".maps");
 

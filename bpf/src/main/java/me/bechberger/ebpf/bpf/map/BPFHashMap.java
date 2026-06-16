@@ -22,8 +22,9 @@ import java.util.function.BiFunction;
         cTemplate = """
         struct {
             __uint (type, BPF_MAP_TYPE_HASH);
-            __uint (key_size, sizeof($c1));
-            __uint (value_size, sizeof($c2));
+            __uint (map_flags, BPF_F_NO_PREALLOC);
+            __type (key, $c1);
+            __type (value, $c2);
             __uint (max_entries, $maxEntries);
         } $field SEC(".maps");
         """,

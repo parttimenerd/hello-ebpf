@@ -4,6 +4,7 @@ import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.bpf.map.BPFArena;
+import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_timer;
 import me.bechberger.ebpf.runtime.helpers.BPFHelpers;
 import me.bechberger.ebpf.type.Ptr;
 
@@ -461,5 +462,51 @@ public class BPFJ {
     @NotUsableInJava
     public static <T> Ptr<T> castUser(Ptr<T> p) {
         throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Set a {@code bpf_timer}'s callback to a {@code @BPFFunction} method reference.
+     *
+     * <p>Java overload of {@code BPFHelpers.bpf_timer_set_callback} whose second parameter is
+     * typed as a functional interface so {@code this::onTick} compiles. The compiler plugin
+     * lowers the method reference to the bare C identifier of the target {@code @BPFFunction},
+     * which is what the verifier-callable {@code bpf_timer_set_callback} kernel helper expects.
+     *
+     * <p>Callback signature must match the BPF timer ABI: {@code (Ptr<map>, Ptr<K>, Ptr<V>) -> int}.
+     *
+     * <pre>{@code
+     *   bpf_timer_set_callback(Ptr.of(val.timer), this::timerCallback);
+     * }</pre>
+     *
+     * @param timer    pointer to the {@code bpf_timer} stored in a map value
+     * @param callback method reference to a {@code @BPFFunction} matching the timer ABI
+     */
+    @BuiltinBPFFunction("bpf_timer_set_callback($arg1, $arg2)")
+    @NotUsableInJava
+    public static <K, V> long bpf_timer_set_callback(
+            Ptr<bpf_timer> timer,
+            TriFunction<Ptr<?>, Ptr<K>, Ptr<V>, Integer> callback) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Userspace helper: allocate a {@code bpf_timer} whose internal {@code __opaque}
+     * slot is a zeroed {@code long[2]} of the right size for the kernel timer state.
+     *
+     * <p>Use when seeding a map entry that contains a {@code bpf_timer} field — a
+     * default-constructed {@code bpf_timer} has {@code __opaque == null}, which the
+     * struct serializer dereferences and crashes on. Calling this once at seed time
+     * avoids the boilerplate.
+     *
+     * <pre>{@code
+     *   var v = new TimerVal();
+     *   v.timer = BPFJ.newZeroedTimer();
+     *   map.put(0, v);
+     * }</pre>
+     */
+    public static bpf_timer newZeroedTimer() {
+        var t = new bpf_timer();
+        t.__opaque = new long[2];
+        return t;
     }
 }

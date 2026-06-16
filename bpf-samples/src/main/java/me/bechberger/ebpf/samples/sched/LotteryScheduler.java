@@ -1,19 +1,14 @@
 package me.bechberger.ebpf.samples.sched;
 
-import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.Scheduler;
-import me.bechberger.ebpf.runtime.BpfDefinitions;
 import me.bechberger.ebpf.runtime.TaskDefinitions;
 import me.bechberger.ebpf.type.Box;
 import me.bechberger.ebpf.type.Ptr;
 
-import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask_test_cpu;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL_ON;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_enq_flags.SCX_ENQ_PREEMPT;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_get_prandom_u32;
 
 /** A lottery scheduler without priorities */
@@ -34,20 +29,8 @@ public abstract class LotteryScheduler extends BPFProgram implements Scheduler {
         scx_bpf_dsq_insert(p, SHARED_DSQ_ID, sliceLength, enq_flags);
     }
 
-    @BPFFunction
-    @AlwaysInline
-    public boolean tryDispatching(Ptr<BpfDefinitions.bpf_iter_scx_dsq> iter, Ptr<TaskDefinitions.task_struct> p, int cpu) {
-        // check if the CPU is usable by the task
-        if (!bpf_cpumask_test_cpu(cpu, p.val().cpus_ptr)) {
-            return false;
-        }
-        return scx_bpf_dsq_move(iter, p, SCX_DSQ_LOCAL_ON.value() | cpu, SCX_ENQ_PREEMPT.value());
-    }
-
     /**
-     * Dispatch tasks
-     * <p/>
-     * Pick a random task from the shared DSQ and try to dispatch it
+     * Pick a random task from the shared DSQ and try to dispatch it to {@code cpu}.
      */
     @Override
     public void dispatch(int cpu, Ptr<TaskDefinitions.task_struct> prev) {
@@ -55,7 +38,7 @@ public abstract class LotteryScheduler extends BPFProgram implements Scheduler {
         Ptr<TaskDefinitions.task_struct> p = null;
         bpf_for_each_dsq(SHARED_DSQ_ID, p, iter -> {
             random.set(random.val() - 1);
-            if (random.val() <= 0 && tryDispatching(iter, p, cpu)) {
+            if (random.val() <= 0 && (hasSchedulingConstraints(p) || tryDispatchToLocalCpu(iter, p, cpu))) {
                 return;
             }
         });
@@ -63,10 +46,7 @@ public abstract class LotteryScheduler extends BPFProgram implements Scheduler {
 
     public static void main(String[] args) throws Exception {
         try (LotteryScheduler scheduler = BPFProgram.load(LotteryScheduler.class)) {
-            scheduler.attachScheduler();
-            while (scheduler.isSchedulerAttachedProperly()) {
-                Thread.sleep(1000);
-            }
+            scheduler.runSchedulerLoop();
         }
     }
 }

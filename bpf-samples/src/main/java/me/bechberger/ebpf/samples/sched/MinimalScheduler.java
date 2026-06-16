@@ -17,6 +17,16 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  *
  * <p>Only {@link #enqueue} needs to be implemented — {@link SchedulerBase}
  * provides {@link #init()}, {@link #dispatch}, and {@link #dsqInsert}.
+ *
+ * <p>Conceptually equivalent to the FIFO mode of
+ * <a href="https://github.com/torvalds/linux/blob/master/tools/sched_ext/scx_simple.bpf.c">
+ * {@code scx_simple.bpf.c}</a> from the Linux kernel, stripped to the minimum
+ * required to demonstrate the {@link SchedulerBase} convenience API.
+ *
+ * <p>Run with:
+ * <pre>
+ *   sudo ./run.sh MinimalScheduler
+ * </pre>
  */
 @BPF(license = "GPL")
 @Property(name = "sched_name", value = "minimal_scheduler")

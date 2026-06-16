@@ -78,7 +78,9 @@ TESTS=(
     SchedulerSmokeTest
     SchedulerTimeoutTest
     SetFieldTest
+    SyscallProgramTest
     TailCallTest
+    TimerCallbackTest
     TracepointAnnotationTest
     TracepointAttachTest
     TracePrintkTest
@@ -127,7 +129,7 @@ for cls in "${TESTS[@]}"; do
     # offline-only resolution from the host m2 cache.
     inner="export HOME=$HOST_HOME JAVA_HOME=$JAVA_HOME PATH=$JAVA_HOME/bin:\$PATH && cd $REPO && $MVN -ntp -pl $MODULE test -Dtest=$cls -Dmaven.test.skip=false -DskipTests=false -Dmaven.repo.local=$HOST_HOME/.m2/repository"
 
-    vng --network user --run "$KERNEL" --user root --cwd "$REPO" -- "$inner" \
+    vng --network user --memory 2G --run "$KERNEL" --user root --cwd "$REPO" -- "$inner" \
         > "$log" 2>&1 < /dev/null
 
     # Surefire summary line, e.g. "[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0"

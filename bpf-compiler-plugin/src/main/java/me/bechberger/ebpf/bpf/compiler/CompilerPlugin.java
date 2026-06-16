@@ -466,9 +466,14 @@ public class CompilerPlugin implements Plugin {
     }
 
     record FuncDeclStatementResult(FunctionDeclarationStatement decl, Set<Define> requiredDefines, boolean addDefine,
-                                   List<FunctionDeclarationStatement> syntheticFunctions) {
+                                   List<FunctionDeclarationStatement> syntheticFunctions,
+                                   Map<String, String> calledKFuncs) {
         FuncDeclStatementResult(FunctionDeclarationStatement decl, Set<Define> requiredDefines, boolean addDefine) {
-            this(decl, requiredDefines, addDefine, List.of());
+            this(decl, requiredDefines, addDefine, List.of(), Map.of());
+        }
+        FuncDeclStatementResult(FunctionDeclarationStatement decl, Set<Define> requiredDefines, boolean addDefine,
+                                List<FunctionDeclarationStatement> syntheticFunctions) {
+            this(decl, requiredDefines, addDefine, syntheticFunctions, Map.of());
         }
     }
 
@@ -491,11 +496,12 @@ public class CompilerPlugin implements Plugin {
         new StackBudgetPass(this, methodPath, ctx).analyze();
         new HelperContextPass(this, methodPath, ctx).analyze();
         new ArenaAccessCheckPass(this, methodPath, ctx).analyze();
+        var calledKFuncs = new KFuncCollectPass(this, methodPath).analyze();
         var translator = new Translator(this, methodPath, ctx);
         return callIfNonNull(translator.translate(), decl -> {
             var requiredDefines = translator.getRequiredDefines();
             return new FuncDeclStatementResult(decl, requiredDefines, translator.addDefinition(),
-                    List.copyOf(translator.getSyntheticFunctions()));
+                    List.copyOf(translator.getSyntheticFunctions()), calledKFuncs);
         });
     }
 
@@ -848,6 +854,29 @@ public class CompilerPlugin implements Plugin {
         }
 
         code = implAnn.before() + code;
+
+        // Aggregate __ksym forward decls for all kfuncs called transitively from
+        // any @BPFFunction in this program. Each kfunc's C signature comes from
+        // the @KFunc annotation on its Java stub (emitted by bpf-gen from BTF
+        // DECL_TAG "bpf_kfunc"). Deduped by kfunc name; insertion-ordered.
+        // Skip kfuncs already declared in the program's `before=` block (or any
+        // earlier interface code) — duplicate decls with mismatched type names
+        // (BTF produces `_Bool`/`long long unsigned int`, hand-written decls
+        // use `bool`/`u64`) cause libbpf to reject the load with EINVAL.
+        var kfuncDecls = new java.util.LinkedHashMap<String, String>();
+        for (var d : declsWithDefines) {
+            kfuncDecls.putAll(d.calledKFuncs());
+        }
+        if (!kfuncDecls.isEmpty()) {
+            var existing = code;
+            var kfuncProlog = kfuncDecls.entrySet().stream()
+                    .filter(e -> !existing.contains(e.getKey() + "("))
+                    .map(e -> e.getValue() + " __ksym;")
+                    .collect(Collectors.joining("\n"));
+            if (!kfuncProlog.isEmpty()) {
+                code = kfuncProlog + "\n\n" + code;
+            }
+        }
 
         var properties = getAllPropertyValues(programPath, superClassElement);
 

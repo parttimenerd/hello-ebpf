@@ -12,7 +12,20 @@ import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 /**
- * A simple scheduler that doesn't preempt tasks.
+ * First-Come-First-Served scheduler — tasks are dispatched in arrival order
+ * with no preemption ({@code slice = -1}).
+ *
+ * <p>All tasks share a single DSQ and are dispatched strictly in FIFO order.
+ * No CPU-selection heuristic is applied; the kernel picks any available CPU.
+ *
+ * <p>Conceptually equivalent to the FIFO mode of
+ * <a href="https://github.com/torvalds/linux/blob/master/tools/sched_ext/scx_simple.bpf.c">
+ * {@code scx_simple.bpf.c}</a> from the Linux kernel.
+ *
+ * <p>Run with:
+ * <pre>
+ *   sudo ./run.sh FCFSScheduler
+ * </pre>
  */
 @BPF(license = "GPL")
 @Property(name = "sched_name", value = "fcfs_scheduler")

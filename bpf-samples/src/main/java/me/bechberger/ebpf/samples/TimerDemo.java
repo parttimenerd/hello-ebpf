@@ -1,29 +1,34 @@
 package me.bechberger.ebpf.samples;
 
+import me.bechberger.ebpf.annotations.Type;
+import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
-import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
+import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.BPFTimer;
 import me.bechberger.ebpf.bpf.BPFProgram;
+import me.bechberger.ebpf.bpf.BPFJ;
 import me.bechberger.ebpf.bpf.GlobalVariable;
-import me.bechberger.ebpf.bpf.NetworkUtil;
 import me.bechberger.ebpf.bpf.XDPHook;
-import me.bechberger.ebpf.annotations.Unsigned;
+import me.bechberger.ebpf.bpf.map.BPFHashMap;
+import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_timer;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
 import me.bechberger.ebpf.type.Ptr;
 
+import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_timer_init;
+import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_timer_start;
+
 /**
- * Demonstrates BPF timers: a 1-second self-rearming kernel-side timer.
+ * Demonstrates BPF timers in pure Java: a 1-second self-rearming kernel-side timer.
  *
  * <p>On the first incoming packet the XDP hook initializes a {@code bpf_timer}
  * stored in a hash map. The timer fires every second, incrementing
  * {@code tickCount}. The current tick count is printed from Java.
  *
- * <p>Design note: the timer callback ({@link #timerCallback}) uses a raw C
- * string body because the compiler plugin does not yet support passing a
- * Java method reference as a {@code bpf_timer_set_callback} function pointer.
- * The {@link BPFTimer} annotation marks the callback for future auto-wiring.
+ * <p>The callback is passed as a Java method reference ({@code this::timerCallback});
+ * the compiler plugin lowers it to the bare C identifier expected by
+ * {@code bpf_timer_set_callback}.
  *
  * <p>Usage (requires root):
  * <pre>
@@ -33,58 +38,41 @@ import me.bechberger.ebpf.type.Ptr;
 @BPF(license = "GPL")
 public abstract class TimerDemo extends BPFProgram implements XDPHook {
 
-    /** The timer map struct is declared in the raw C header below. */
-    private static final String EBPF_PROGRAM = """
-            #include <vmlinux.h>
-            #include <bpf/bpf_helpers.h>
+    /** Map value: a {@code bpf_timer} plus a one-shot init flag. */
+    @Type
+    static class TimerVal {
+        bpf_timer timer;
+        @Unsigned int initialized;
+    }
 
-            struct timer_val {
-                struct bpf_timer timer;
-                __u32 initialized;
-            };
-
-            struct {
-                __uint(type, BPF_MAP_TYPE_HASH);
-                __type(key, __u32);
-                __type(value, struct timer_val);
-                __uint(max_entries, 1);
-            } timer_map SEC(".maps");
-            """;
+    @BPFMapDefinition(maxEntries = 1)
+    BPFHashMap<@Unsigned Integer, TimerVal> timerMap;
 
     /** Tick counter — incremented by the timer callback every second. */
     final GlobalVariable<@Unsigned Integer> tickCount = new GlobalVariable<>(0);
 
-    /**
-     * BPF timer callback: increments the tick counter and re-arms for 1 s.
-     *
-     * <p>Raw C body is required because function pointers for
-     * {@code bpf_timer_set_callback} are not yet supported by the plugin.
-     */
+    /** Re-arms the timer for another 1 s. */
     @BPFTimer
     @BPFFunction
-    public int timerCallback(Ptr<?> map, Ptr<Integer> key, Ptr<?> val) {
-        String code = """
-                tickCount++;
-                bpf_timer_start(&((struct timer_val *)val)->timer, 1000000000ULL, 0);
-                return 0;
-                """;
+    public int timerCallback(Ptr<?> map, Ptr<Integer> key, Ptr<TimerVal> val) {
+        tickCount.set(tickCount.get() + 1);
+        bpf_timer_start(Ptr.of(val.val().timer), 1_000_000_000L, 0);
         return 0;
     }
 
     @Override
     public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
-        String code = """
-                __u32 key = 0;
-                struct timer_val *val = bpf_map_lookup_elem(&timer_map, &key);
-                if (!val) return XDP_PASS;
-                if (!val->initialized) {
-                    val->initialized = 1;
-                    bpf_timer_init(&val->timer, &timer_map, 1 /* CLOCK_MONOTONIC */);
-                    bpf_timer_set_callback(&val->timer, timerCallback);
-                    bpf_timer_start(&val->timer, 1000000000ULL, 0);
-                }
-                return XDP_PASS;
-                """;
+        int key = 0;
+        Ptr<TimerVal> val = timerMap.bpf_get(key);
+        if (val == null) {
+            return xdp_action.XDP_PASS;
+        }
+        if (val.val().initialized == 0) {
+            val.val().initialized = 1;
+            bpf_timer_init(Ptr.of(val.val().timer), Ptr.of(timerMap), 1 /* CLOCK_MONOTONIC */);
+            BPFJ.bpf_timer_set_callback(Ptr.of(val.val().timer), this::timerCallback);
+            bpf_timer_start(Ptr.of(val.val().timer), 1_000_000_000L, 0);
+        }
         return xdp_action.XDP_PASS;
     }
 

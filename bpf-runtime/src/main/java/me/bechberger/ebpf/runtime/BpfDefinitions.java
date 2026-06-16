@@ -1124,52 +1124,52 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_core_types_are_compat((const struct btf*)$arg1, $arg2, (const struct btf*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_core_types_are_compat((const struct btf *)$arg1, $arg2, (const struct btf *)$arg3, $arg4, $arg5)")
   public static int __bpf_core_types_are_compat(Ptr<btf> local_btf, @Unsigned int local_id,
       Ptr<btf> targ_btf, @Unsigned int targ_id, int level) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_core_types_match((const struct btf*)$arg1, $arg2, (const struct btf*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__bpf_core_types_match((const struct btf *)$arg1, $arg2, (const struct btf *)$arg3, $arg4, $arg5, $arg6)")
   public static int __bpf_core_types_match(Ptr<btf> local_btf, @Unsigned int local_id,
       Ptr<btf> targ_btf, @Unsigned int targ_id, boolean behind_ptr, int level) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)__bpf_dynptr_data((const struct bpf_dynptr_kern*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const void*)__bpf_dynptr_data((const struct bpf_dynptr_kern *)$arg1, $arg2))")
   public static Ptr<?> __bpf_dynptr_data(Ptr<bpf_dynptr_kern> ptr, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_dynptr_data_rw((const struct bpf_dynptr_kern*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__bpf_dynptr_data_rw((const struct bpf_dynptr_kern *)$arg1, $arg2)")
   public static Ptr<?> __bpf_dynptr_data_rw(Ptr<bpf_dynptr_kern> ptr, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_dynptr_is_rdonly((const struct bpf_dynptr_kern*)$arg1)")
+  @BuiltinBPFFunction("__bpf_dynptr_is_rdonly((const struct bpf_dynptr_kern *)$arg1)")
   public static boolean __bpf_dynptr_is_rdonly(Ptr<bpf_dynptr_kern> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_dynptr_read($arg1, $arg2, (const struct bpf_dynptr_kern*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_dynptr_read($arg1, $arg2, (const struct bpf_dynptr_kern *)$arg3, $arg4, $arg5)")
   public static int __bpf_dynptr_read(Ptr<?> dst, @Unsigned int len, Ptr<bpf_dynptr_kern> src,
       @Unsigned int offset, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_dynptr_size((const struct bpf_dynptr_kern*)$arg1)")
+  @BuiltinBPFFunction("__bpf_dynptr_size((const struct bpf_dynptr_kern *)$arg1)")
   public static @Unsigned int __bpf_dynptr_size(Ptr<bpf_dynptr_kern> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_dynptr_write((const struct bpf_dynptr_kern*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_dynptr_write((const struct bpf_dynptr_kern *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int __bpf_dynptr_write(Ptr<bpf_dynptr_kern> dst, @Unsigned int offset, Ptr<?> src,
       @Unsigned int len, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1288,7 +1288,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_obj_drop_impl($arg1, (const struct btf_record*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_obj_drop_impl($arg1, (const struct btf_record *)$arg2, $arg3)")
   public static void __bpf_obj_drop_impl(Ptr<?> p, Ptr<btf_record> rec, boolean percpu) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1409,7 +1409,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_prog_map_compatible($arg1, (const struct bpf_prog*)$arg2)")
+  @BuiltinBPFFunction("__bpf_prog_map_compatible($arg1, (const struct bpf_prog *)$arg2)")
   public static boolean __bpf_prog_map_compatible(Ptr<bpf_map> map, Ptr<bpf_prog> fp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1439,19 +1439,19 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_prog_ret0_warn((const void*)$arg1, (const struct bpf_insn*)$arg2)")
+  @BuiltinBPFFunction("__bpf_prog_ret0_warn((const void *)$arg1, (const struct bpf_insn *)$arg2)")
   public static @Unsigned int __bpf_prog_ret0_warn(Ptr<?> ctx, Ptr<bpf_insn> insn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_prog_ret1((const void*)$arg1, (const struct bpf_insn*)$arg2)")
+  @BuiltinBPFFunction("__bpf_prog_ret1((const void *)$arg1, (const struct bpf_insn *)$arg2)")
   public static @Unsigned int __bpf_prog_ret1(Ptr<?> ctx, Ptr<bpf_insn> insn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_prog_run_save_cb((const struct bpf_prog*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("__bpf_prog_run_save_cb((const struct bpf_prog *)$arg1, (const void *)$arg2)")
   public static @Unsigned int __bpf_prog_run_save_cb(Ptr<bpf_prog> prog, Ptr<?> ctx) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1524,14 +1524,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_skb_load_bytes((const struct sk_buff*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_skb_load_bytes((const struct sk_buff *)$arg1, $arg2, $arg3, $arg4)")
   public static int __bpf_skb_load_bytes(Ptr<sk_buff> skb, @Unsigned int offset, Ptr<?> to,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_skb_store_bytes($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_skb_store_bytes($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static int __bpf_skb_store_bytes(Ptr<sk_buff> skb, @Unsigned int offset, Ptr<?> from,
       @Unsigned int len, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1558,13 +1558,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_stream_push_str($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_stream_push_str($arg1, (const u8 *)$arg2, $arg3)")
   public static int __bpf_stream_push_str(Ptr<llist_head> log, String str, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_strtoull((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_strtoull((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int __bpf_strtoull(String buf, @Unsigned long buf_len, @Unsigned long flags,
       Ptr<java.lang. @Unsigned Long> res,
       Ptr<java.lang. @OriginalName("bool") Boolean> is_negative) {
@@ -1598,7 +1598,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_aer_event($arg1, (const u8*)$arg2, (const unsigned int)$arg3, (const u8)$arg4, (const u8)$arg5, $arg6)")
+  @BuiltinBPFFunction("__bpf_trace_aer_event($arg1, (const u8 *)$arg2, (const unsigned int)$arg3, (const u8)$arg4, (const u8)$arg5, $arg6)")
   public static void __bpf_trace_aer_event(Ptr<?> __data, String dev_name, @Unsigned int status,
       char severity, char tlp_header_valid, Ptr<pcie_tlp_log> tlp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1642,7 +1642,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_arm_event($arg1, (const struct cper_sec_proc_arm*)$arg2, (const u8*)$arg3, (const unsigned int)$arg4, (const u8*)$arg5, (const unsigned int)$arg6, (const u8*)$arg7, (const unsigned int)$arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("__bpf_trace_arm_event($arg1, (const struct cper_sec_proc_arm *)$arg2, (const u8 *)$arg3, (const unsigned int)$arg4, (const u8 *)$arg5, (const unsigned int)$arg6, (const u8 *)$arg7, (const unsigned int)$arg8, $arg9, $arg10)")
   public static void __bpf_trace_arm_event(Ptr<?> __data, Ptr<cper_sec_proc_arm> proc,
       Ptr<java.lang.Character> pei_err, @Unsigned int pei_len, Ptr<java.lang.Character> ctx_err,
       @Unsigned int ctx_len, Ptr<java.lang.Character> oem, @Unsigned int oem_len, char sev,
@@ -1678,7 +1678,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_ata_exec_command_template($arg1, $arg2, (const struct ata_taskfile*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_ata_exec_command_template($arg1, $arg2, (const struct ata_taskfile *)$arg3, $arg4)")
   public static void __bpf_trace_ata_exec_command_template(Ptr<?> __data, Ptr<ata_port> ap,
       Ptr<ata_taskfile> tf, @Unsigned int tag) {
     throw new MethodIsBPFRelatedFunction();
@@ -1730,7 +1730,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_ata_tf_load($arg1, $arg2, (const struct ata_taskfile*)$arg3)")
+  @BuiltinBPFFunction("__bpf_trace_ata_tf_load($arg1, $arg2, (const struct ata_taskfile *)$arg3)")
   public static void __bpf_trace_ata_tf_load(Ptr<?> __data, Ptr<ata_port> ap,
       Ptr<ata_taskfile> tf) {
     throw new MethodIsBPFRelatedFunction();
@@ -1853,7 +1853,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_bpf_trace_printk($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_bpf_trace_printk($arg1, (const u8 *)$arg2)")
   public static void __bpf_trace_bpf_trace_printk(Ptr<?> __data, String bpf_string) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1865,34 +1865,34 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_bpf_xdp_link_attach_failed($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_bpf_xdp_link_attach_failed($arg1, (const u8 *)$arg2)")
   public static void __bpf_trace_bpf_xdp_link_attach_failed(Ptr<?> __data, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_br_fdb_add($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__bpf_trace_br_fdb_add($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static void __bpf_trace_br_fdb_add(Ptr<?> __data, Ptr<ndmsg> ndm, Ptr<net_device> dev,
       String addr, @Unsigned short vid, @Unsigned short nlh_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_br_fdb_external_learn_add($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_br_fdb_external_learn_add($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static void __bpf_trace_br_fdb_external_learn_add(Ptr<?> __data, Ptr<net_bridge> br,
       Ptr<net_bridge_port> p, String addr, @Unsigned short vid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_br_fdb_update($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__bpf_trace_br_fdb_update($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static void __bpf_trace_br_fdb_update(Ptr<?> __data, Ptr<net_bridge> br,
       Ptr<net_bridge_port> source, String addr, @Unsigned short vid, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_br_mdb_full($arg1, (const struct net_device*)$arg2, (const struct br_ip*)$arg3)")
+  @BuiltinBPFFunction("__bpf_trace_br_mdb_full($arg1, (const struct net_device *)$arg2, (const struct br_ip *)$arg3)")
   public static void __bpf_trace_br_mdb_full(Ptr<?> __data, Ptr<net_device> dev, Ptr<br_ip> group) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1912,7 +1912,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_cap_capable($arg1, (const struct cred*)$arg2, $arg3, (const struct user_namespace*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__bpf_trace_cap_capable($arg1, (const struct cred *)$arg2, $arg3, (const struct user_namespace *)$arg4, $arg5, $arg6)")
   public static void __bpf_trace_cap_capable(Ptr<?> __data, Ptr<cred> cred,
       Ptr<user_namespace> target_ns, Ptr<user_namespace> capable_ns, int cap, int ret) {
     throw new MethodIsBPFRelatedFunction();
@@ -1926,20 +1926,20 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_cgroup($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__bpf_trace_cgroup($arg1, $arg2, (const u8 *)$arg3)")
   public static void __bpf_trace_cgroup(Ptr<?> __data, Ptr<cgroup> cgrp, String path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_cgroup_event($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_cgroup_event($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void __bpf_trace_cgroup_event(Ptr<?> __data, Ptr<cgroup> cgrp, String path,
       int val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_cgroup_migrate($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_cgroup_migrate($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void __bpf_trace_cgroup_migrate(Ptr<?> __data, Ptr<cgroup> dst_cgrp, String path,
       Ptr<task_struct> task, boolean threadgroup) {
     throw new MethodIsBPFRelatedFunction();
@@ -2004,28 +2004,28 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_cma_alloc_busy_retry($arg1, (const u8*)$arg2, $arg3, (const struct page*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__bpf_trace_cma_alloc_busy_retry($arg1, (const u8 *)$arg2, $arg3, (const struct page *)$arg4, $arg5, $arg6)")
   public static void __bpf_trace_cma_alloc_busy_retry(Ptr<?> __data, String name,
       @Unsigned long pfn, Ptr<page> page, @Unsigned long count, @Unsigned int align) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_cma_alloc_finish($arg1, (const u8*)$arg2, $arg3, (const struct page*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__bpf_trace_cma_alloc_finish($arg1, (const u8 *)$arg2, $arg3, (const struct page *)$arg4, $arg5, $arg6, $arg7)")
   public static void __bpf_trace_cma_alloc_finish(Ptr<?> __data, String name, @Unsigned long pfn,
       Ptr<page> page, @Unsigned long count, @Unsigned int align, int errorno) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_cma_alloc_start($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_cma_alloc_start($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void __bpf_trace_cma_alloc_start(Ptr<?> __data, String name, @Unsigned long count,
       @Unsigned int align) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_cma_release($arg1, (const u8*)$arg2, $arg3, (const struct page*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_cma_release($arg1, (const u8 *)$arg2, $arg3, (const struct page *)$arg4, $arg5)")
   public static void __bpf_trace_cma_release(Ptr<?> __data, String name, @Unsigned long pfn,
       Ptr<page> page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -2039,7 +2039,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_console($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_console($arg1, (const u8 *)$arg2, $arg3)")
   public static void __bpf_trace_console(Ptr<?> __data, String text, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2179,7 +2179,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_dev_pm_qos_request($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_dev_pm_qos_request($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void __bpf_trace_dev_pm_qos_request(Ptr<?> __data, String name,
       dev_pm_qos_req_type type, int new_value) {
     throw new MethodIsBPFRelatedFunction();
@@ -2205,56 +2205,56 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_device_pm_callback_start($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_device_pm_callback_start($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void __bpf_trace_device_pm_callback_start(Ptr<?> __data, Ptr<device> dev,
       String pm_ops, int event) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_devlink_health_recover_aborted($arg1, (const struct devlink*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_devlink_health_recover_aborted($arg1, (const struct devlink *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void __bpf_trace_devlink_health_recover_aborted(Ptr<?> __data, Ptr<devlink> devlink,
       String reporter_name, boolean health_state, @Unsigned long time_since_last_recover) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_devlink_health_report($arg1, (const struct devlink*)$arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__bpf_trace_devlink_health_report($arg1, (const struct devlink *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static void __bpf_trace_devlink_health_report(Ptr<?> __data, Ptr<devlink> devlink,
       String reporter_name, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_devlink_health_reporter_state_update($arg1, (const struct devlink*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_devlink_health_reporter_state_update($arg1, (const struct devlink *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void __bpf_trace_devlink_health_reporter_state_update(Ptr<?> __data,
       Ptr<devlink> devlink, String reporter_name, boolean new_state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_devlink_hwerr($arg1, (const struct devlink*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__bpf_trace_devlink_hwerr($arg1, (const struct devlink *)$arg2, $arg3, (const u8 *)$arg4)")
   public static void __bpf_trace_devlink_hwerr(Ptr<?> __data, Ptr<devlink> devlink, int err,
       String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_devlink_hwmsg($arg1, (const struct devlink*)$arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("__bpf_trace_devlink_hwmsg($arg1, (const struct devlink *)$arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static void __bpf_trace_devlink_hwmsg(Ptr<?> __data, Ptr<devlink> devlink,
       boolean incoming, @Unsigned long type, Ptr<java.lang.Character> buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_devlink_trap_report($arg1, (const struct devlink*)$arg2, $arg3, (const struct devlink_trap_metadata*)$arg4)")
+  @BuiltinBPFFunction("__bpf_trace_devlink_trap_report($arg1, (const struct devlink *)$arg2, $arg3, (const struct devlink_trap_metadata *)$arg4)")
   public static void __bpf_trace_devlink_trap_report(Ptr<?> __data, Ptr<devlink> devlink,
       Ptr<sk_buff> skb, Ptr<devlink_trap_metadata> metadata) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_devres($arg1, $arg2, (const u8*)$arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("__bpf_trace_devres($arg1, $arg2, (const u8 *)$arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static void __bpf_trace_devres(Ptr<?> __data, Ptr<device> dev, String op, Ptr<?> node,
       String name, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -2615,7 +2615,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_ext4_error($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_ext4_error($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void __bpf_trace_ext4_error(Ptr<?> __data, Ptr<super_block> sb, String function,
       @Unsigned int line) {
     throw new MethodIsBPFRelatedFunction();
@@ -3070,7 +3070,7 @@ public final class BpfDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("__bpf_trace_extlog_mem_event($arg1, $arg2, $arg3, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg4, (const u8*)$arg5, $arg6)")
+          + "} *)$arg4, (const u8 *)$arg5, $arg6)")
   public static void __bpf_trace_extlog_mem_event(Ptr<?> __data, Ptr<cper_sec_mem_err> mem,
       @Unsigned int err_seq, Ptr<@OriginalName("guid_t") uuid_t> fru_id, String fru_text,
       char sev) {
@@ -3085,14 +3085,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_fib6_table_lookup($arg1, (const struct net*)$arg2, (const struct fib6_result*)$arg3, $arg4, (const struct flowi6*)$arg5)")
+  @BuiltinBPFFunction("__bpf_trace_fib6_table_lookup($arg1, (const struct net *)$arg2, (const struct fib6_result *)$arg3, $arg4, (const struct flowi6 *)$arg5)")
   public static void __bpf_trace_fib6_table_lookup(Ptr<?> __data, Ptr<net> net,
       Ptr<fib6_result> res, Ptr<fib6_table> table, Ptr<flowi6> flp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_fib_table_lookup($arg1, $arg2, (const struct flowi4*)$arg3, (const struct fib_nh_common*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_fib_table_lookup($arg1, $arg2, (const struct flowi4 *)$arg3, (const struct fib_nh_common *)$arg4, $arg5)")
   public static void __bpf_trace_fib_table_lookup(Ptr<?> __data, @Unsigned int tb_id,
       Ptr<flowi4> flp, Ptr<fib_nh_common> nhc, int err) {
     throw new MethodIsBPFRelatedFunction();
@@ -3154,13 +3154,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_fuse_request_end($arg1, (const struct fuse_req*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_fuse_request_end($arg1, (const struct fuse_req *)$arg2)")
   public static void __bpf_trace_fuse_request_end(Ptr<?> __data, Ptr<fuse_req> req) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_fuse_request_send($arg1, (const struct fuse_req*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_fuse_request_send($arg1, (const struct fuse_req *)$arg2)")
   public static void __bpf_trace_fuse_request_send(Ptr<?> __data, Ptr<fuse_req> req) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3200,35 +3200,35 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_handshake_alert_class($arg1, (const struct sock*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_handshake_alert_class($arg1, (const struct sock *)$arg2, $arg3, $arg4)")
   public static void __bpf_trace_handshake_alert_class(Ptr<?> __data, Ptr<sock> sk, char level,
       char description) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_handshake_complete($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_handshake_complete($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4, $arg5)")
   public static void __bpf_trace_handshake_complete(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk, int status) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_handshake_error_class($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_handshake_error_class($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4, $arg5)")
   public static void __bpf_trace_handshake_error_class(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk, int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_handshake_event_class($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4)")
+  @BuiltinBPFFunction("__bpf_trace_handshake_event_class($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4)")
   public static void __bpf_trace_handshake_event_class(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_handshake_fd_class($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_handshake_fd_class($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4, $arg5)")
   public static void __bpf_trace_handshake_fd_class(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk, int fd) {
     throw new MethodIsBPFRelatedFunction();
@@ -3289,21 +3289,21 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_hwmon_attr_class($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_hwmon_attr_class($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void __bpf_trace_hwmon_attr_class(Ptr<?> __data, int index, String attr_name,
       long val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_hwmon_attr_show_string($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__bpf_trace_hwmon_attr_show_string($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static void __bpf_trace_hwmon_attr_show_string(Ptr<?> __data, int index, String attr_name,
       String s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_hyperv_mmu_flush_tlb_multi($arg1, (const struct cpumask*)$arg2, (const struct flush_tlb_info*)$arg3)")
+  @BuiltinBPFFunction("__bpf_trace_hyperv_mmu_flush_tlb_multi($arg1, (const struct cpumask *)$arg2, (const struct flush_tlb_info *)$arg3)")
   public static void __bpf_trace_hyperv_mmu_flush_tlb_multi(Ptr<?> __data, Ptr<cpumask> cpus,
       Ptr<flush_tlb_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -3324,7 +3324,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_hyperv_send_ipi_mask($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_hyperv_send_ipi_mask($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static void __bpf_trace_hyperv_send_ipi_mask(Ptr<?> __data, Ptr<cpumask> cpus,
       int vector) {
     throw new MethodIsBPFRelatedFunction();
@@ -3337,35 +3337,35 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_i2c_read($arg1, (const struct i2c_adapter*)$arg2, (const struct i2c_msg*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_i2c_read($arg1, (const struct i2c_adapter *)$arg2, (const struct i2c_msg *)$arg3, $arg4)")
   public static void __bpf_trace_i2c_read(Ptr<?> __data, Ptr<i2c_adapter> adap, Ptr<i2c_msg> msg,
       int num) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_i2c_reply($arg1, (const struct i2c_adapter*)$arg2, (const struct i2c_msg*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_i2c_reply($arg1, (const struct i2c_adapter *)$arg2, (const struct i2c_msg *)$arg3, $arg4)")
   public static void __bpf_trace_i2c_reply(Ptr<?> __data, Ptr<i2c_adapter> adap, Ptr<i2c_msg> msg,
       int num) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_i2c_result($arg1, (const struct i2c_adapter*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_i2c_result($arg1, (const struct i2c_adapter *)$arg2, $arg3, $arg4)")
   public static void __bpf_trace_i2c_result(Ptr<?> __data, Ptr<i2c_adapter> adap, int num,
       int ret) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_i2c_slave($arg1, (const struct i2c_client*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_i2c_slave($arg1, (const struct i2c_client *)$arg2, $arg3, $arg4, $arg5)")
   public static void __bpf_trace_i2c_slave(Ptr<?> __data, Ptr<i2c_client> client,
       i2c_slave_event event, Ptr<java.lang.Character> val, int cb_ret) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_i2c_write($arg1, (const struct i2c_adapter*)$arg2, (const struct i2c_msg*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_i2c_write($arg1, (const struct i2c_adapter *)$arg2, (const struct i2c_msg *)$arg3, $arg4)")
   public static void __bpf_trace_i2c_write(Ptr<?> __data, Ptr<i2c_adapter> adap, Ptr<i2c_msg> msg,
       int num) {
     throw new MethodIsBPFRelatedFunction();
@@ -3385,19 +3385,19 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_icmp_send($arg1, (const struct sk_buff*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_icmp_send($arg1, (const struct sk_buff *)$arg2, $arg3, $arg4)")
   public static void __bpf_trace_icmp_send(Ptr<?> __data, Ptr<sk_buff> skb, int type, int code) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_inet_sk_error_report($arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_inet_sk_error_report($arg1, (const struct sock *)$arg2)")
   public static void __bpf_trace_inet_sk_error_report(Ptr<?> __data, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_inet_sock_set_state($arg1, (const struct sock*)$arg2, (const int)$arg3, (const int)$arg4)")
+  @BuiltinBPFFunction("__bpf_trace_inet_sock_set_state($arg1, (const struct sock *)$arg2, (const int)$arg3, (const int)$arg4)")
   public static void __bpf_trace_inet_sock_set_state(Ptr<?> __data, Ptr<sock> sk, int oldstate,
       int newstate) {
     throw new MethodIsBPFRelatedFunction();
@@ -3411,7 +3411,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_initcall_level($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_initcall_level($arg1, (const u8 *)$arg2)")
   public static void __bpf_trace_initcall_level(Ptr<?> __data, String level) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3519,7 +3519,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_io_uring_req_failed($arg1, (const struct io_uring_sqe*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_io_uring_req_failed($arg1, (const struct io_uring_sqe *)$arg2, $arg3, $arg4)")
   public static void __bpf_trace_io_uring_req_failed(Ptr<?> __data, Ptr<io_uring_sqe> sqe,
       Ptr<io_kiocb> req, int error) {
     throw new MethodIsBPFRelatedFunction();
@@ -3552,7 +3552,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_iocg_inuse_update($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__bpf_trace_iocg_inuse_update($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void __bpf_trace_iocg_inuse_update(Ptr<?> __data, Ptr<ioc_gq> iocg, String path,
       Ptr<ioc_now> now, @Unsigned int old_inuse, @Unsigned int new_inuse,
       @Unsigned long old_hw_inuse, @Unsigned long new_hw_inuse) {
@@ -3568,7 +3568,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_iocost_iocg_forgive_debt($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("__bpf_trace_iocost_iocg_forgive_debt($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static void __bpf_trace_iocost_iocg_forgive_debt(Ptr<?> __data, Ptr<ioc_gq> iocg,
       String path, Ptr<ioc_now> now, @Unsigned int usage_pct, @Unsigned long old_debt,
       @Unsigned long new_debt, @Unsigned long old_delay, @Unsigned long new_delay) {
@@ -3576,7 +3576,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_iocost_iocg_state($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__bpf_trace_iocost_iocg_state($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static void __bpf_trace_iocost_iocg_state(Ptr<?> __data, Ptr<ioc_gq> iocg, String path,
       Ptr<ioc_now> now, @Unsigned long last_period, @Unsigned long cur_period,
       @Unsigned long vtime) {
@@ -3611,7 +3611,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_iomap_iter($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_iomap_iter($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static void __bpf_trace_iomap_iter(Ptr<?> __data, Ptr<iomap_iter> iter, Ptr<?> ops,
       @Unsigned long caller) {
     throw new MethodIsBPFRelatedFunction();
@@ -3658,7 +3658,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_ipi_send_cpumask($arg1, (const struct cpumask*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_ipi_send_cpumask($arg1, (const struct cpumask *)$arg2, $arg3, $arg4)")
   public static void __bpf_trace_ipi_send_cpumask(Ptr<?> __data, Ptr<cpumask> cpumask,
       @Unsigned long callsite, Ptr<?> callback) {
     throw new MethodIsBPFRelatedFunction();
@@ -3698,7 +3698,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_irq_noise($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_irq_noise($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void __bpf_trace_irq_noise(Ptr<?> __data, int vector, String desc,
       @Unsigned long start, @Unsigned long duration) {
     throw new MethodIsBPFRelatedFunction();
@@ -3846,7 +3846,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_kfree($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("__bpf_trace_kfree($arg1, $arg2, (const void *)$arg3)")
   public static void __bpf_trace_kfree(Ptr<?> __data, @Unsigned long call_site, Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3859,7 +3859,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_kmalloc($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__bpf_trace_kmalloc($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static void __bpf_trace_kmalloc(Ptr<?> __data, @Unsigned long call_site, Ptr<?> ptr,
       @Unsigned long bytes_req, @Unsigned long bytes_alloc,
       @Unsigned @OriginalName("gfp_t") int gfp_flags, int node) {
@@ -3867,14 +3867,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_kmem_cache_alloc($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__bpf_trace_kmem_cache_alloc($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6)")
   public static void __bpf_trace_kmem_cache_alloc(Ptr<?> __data, @Unsigned long call_site,
       Ptr<?> ptr, Ptr<kmem_cache> s, @Unsigned @OriginalName("gfp_t") int gfp_flags, int node) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_kmem_cache_free($arg1, $arg2, (const void*)$arg3, (const struct kmem_cache*)$arg4)")
+  @BuiltinBPFFunction("__bpf_trace_kmem_cache_free($arg1, $arg2, (const void *)$arg3, (const struct kmem_cache *)$arg4)")
   public static void __bpf_trace_kmem_cache_free(Ptr<?> __data, @Unsigned long call_site,
       Ptr<?> ptr, Ptr<kmem_cache> s) {
     throw new MethodIsBPFRelatedFunction();
@@ -3942,19 +3942,19 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_ma_op($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_ma_op($arg1, (const u8 *)$arg2, $arg3)")
   public static void __bpf_trace_ma_op(Ptr<?> __data, String fn, Ptr<ma_state> mas) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_ma_read($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_ma_read($arg1, (const u8 *)$arg2, $arg3)")
   public static void __bpf_trace_ma_read(Ptr<?> __data, String fn, Ptr<ma_state> mas) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_ma_write($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_ma_write($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static void __bpf_trace_ma_write(Ptr<?> __data, String fn, Ptr<ma_state> mas,
       @Unsigned long piv, Ptr<?> val) {
     throw new MethodIsBPFRelatedFunction();
@@ -3975,7 +3975,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_mc_event($arg1, (const unsigned int)$arg2, (const u8*)$arg3, (const u8*)$arg4, (const int)$arg5, (const u8)$arg6, (const s8)$arg7, (const s8)$arg8, (const s8)$arg9, $arg10, (const u8)$arg11, $arg12, (const u8*)$arg13)")
+  @BuiltinBPFFunction("__bpf_trace_mc_event($arg1, (const unsigned int)$arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const int)$arg5, (const u8)$arg6, (const s8)$arg7, (const s8)$arg8, (const s8)$arg9, $arg10, (const u8)$arg11, $arg12, (const u8 *)$arg13)")
   public static void __bpf_trace_mc_event(Ptr<?> __data, @Unsigned int err_type, String error_msg,
       String label, int error_count, char mc_index, @OriginalName("s8") byte top_layer,
       @OriginalName("s8") byte mid_layer, @OriginalName("s8") byte low_layer,
@@ -3990,13 +3990,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_mctp_key_acquire($arg1, (const struct mctp_sk_key*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_mctp_key_acquire($arg1, (const struct mctp_sk_key *)$arg2)")
   public static void __bpf_trace_mctp_key_acquire(Ptr<?> __data, Ptr<mctp_sk_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_mctp_key_release($arg1, (const struct mctp_sk_key*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_mctp_key_release($arg1, (const struct mctp_sk_key *)$arg2, $arg3)")
   public static void __bpf_trace_mctp_key_release(Ptr<?> __data, Ptr<mctp_sk_key> key, int reason) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4009,14 +4009,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_mem_connect($arg1, (const struct xdp_mem_allocator*)$arg2, (const struct xdp_rxq_info*)$arg3)")
+  @BuiltinBPFFunction("__bpf_trace_mem_connect($arg1, (const struct xdp_mem_allocator *)$arg2, (const struct xdp_rxq_info *)$arg3)")
   public static void __bpf_trace_mem_connect(Ptr<?> __data, Ptr<xdp_mem_allocator> xa,
       Ptr<xdp_rxq_info> rxq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_mem_disconnect($arg1, (const struct xdp_mem_allocator*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_mem_disconnect($arg1, (const struct xdp_mem_allocator *)$arg2)")
   public static void __bpf_trace_mem_disconnect(Ptr<?> __data, Ptr<xdp_mem_allocator> xa) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4462,14 +4462,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_neigh_create($arg1, $arg2, $arg3, (const void*)$arg4, (const struct neighbour*)$arg5, $arg6)")
+  @BuiltinBPFFunction("__bpf_trace_neigh_create($arg1, $arg2, $arg3, (const void *)$arg4, (const struct neighbour *)$arg5, $arg6)")
   public static void __bpf_trace_neigh_create(Ptr<?> __data, Ptr<neigh_table> tbl,
       Ptr<net_device> dev, Ptr<?> pkey, Ptr<neighbour> n, boolean exempt_from_gc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_neigh_update($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__bpf_trace_neigh_update($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static void __bpf_trace_neigh_update(Ptr<?> __data, Ptr<neighbour> n,
       Ptr<java.lang.Character> lladdr, char _new, @Unsigned int flags, @Unsigned int nlmsg_pid) {
     throw new MethodIsBPFRelatedFunction();
@@ -4482,13 +4482,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_net_dev_rx_verbose_template($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_net_dev_rx_verbose_template($arg1, (const struct sk_buff *)$arg2)")
   public static void __bpf_trace_net_dev_rx_verbose_template(Ptr<?> __data, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_net_dev_start_xmit($arg1, (const struct sk_buff*)$arg2, (const struct net_device*)$arg3)")
+  @BuiltinBPFFunction("__bpf_trace_net_dev_start_xmit($arg1, (const struct sk_buff *)$arg2, (const struct net_device *)$arg3)")
   public static void __bpf_trace_net_dev_start_xmit(Ptr<?> __data, Ptr<sk_buff> skb,
       Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
@@ -4515,7 +4515,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_netlink_extack($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_netlink_extack($arg1, (const u8 *)$arg2)")
   public static void __bpf_trace_netlink_extack(Ptr<?> __data, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4537,9 +4537,9 @@ public final class BpfDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("__bpf_trace_non_standard_event($arg1, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg2, (const struct {\n"
+          + "} *)$arg2, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg3, (const u8*)$arg4, (const u8)$arg5, (const u8*)$arg6, (const unsigned int)$arg7)")
+          + "} *)$arg3, (const u8 *)$arg4, (const u8)$arg5, (const u8 *)$arg6, (const unsigned int)$arg7)")
   public static void __bpf_trace_non_standard_event(Ptr<?> __data,
       Ptr<@OriginalName("guid_t") uuid_t> sec_type, Ptr<@OriginalName("guid_t") uuid_t> fru_id,
       String fru_text, char sev, Ptr<java.lang.Character> err, @Unsigned int len) {
@@ -4565,28 +4565,28 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_page_pool_release($arg1, (const struct page_pool*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_page_pool_release($arg1, (const struct page_pool *)$arg2, $arg3, $arg4, $arg5)")
   public static void __bpf_trace_page_pool_release(Ptr<?> __data, Ptr<page_pool> pool, int inflight,
       @Unsigned int hold, @Unsigned int release) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_page_pool_state_hold($arg1, (const struct page_pool*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_page_pool_state_hold($arg1, (const struct page_pool *)$arg2, $arg3, $arg4)")
   public static void __bpf_trace_page_pool_state_hold(Ptr<?> __data, Ptr<page_pool> pool,
       @Unsigned @OriginalName("netmem_ref") long netmem, @Unsigned int hold) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_page_pool_state_release($arg1, (const struct page_pool*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_page_pool_state_release($arg1, (const struct page_pool *)$arg2, $arg3, $arg4)")
   public static void __bpf_trace_page_pool_state_release(Ptr<?> __data, Ptr<page_pool> pool,
       @Unsigned @OriginalName("netmem_ref") long netmem, @Unsigned int release) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_page_pool_update_nid($arg1, (const struct page_pool*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_page_pool_update_nid($arg1, (const struct page_pool *)$arg2, $arg3)")
   public static void __bpf_trace_page_pool_update_nid(Ptr<?> __data, Ptr<page_pool> pool,
       int new_nid) {
     throw new MethodIsBPFRelatedFunction();
@@ -4714,7 +4714,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_pwm($arg1, $arg2, (const struct pwm_state*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_pwm($arg1, $arg2, (const struct pwm_state *)$arg3, $arg4)")
   public static void __bpf_trace_pwm(Ptr<?> __data, Ptr<pwm_device> pwm, Ptr<pwm_state> state,
       int err) {
     throw new MethodIsBPFRelatedFunction();
@@ -4728,35 +4728,35 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_pwm_round_waveform_fromhw($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_pwm_round_waveform_fromhw($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static void __bpf_trace_pwm_round_waveform_fromhw(Ptr<?> __data, Ptr<pwm_device> pwm,
       Ptr<?> wfhw, Ptr<pwm_waveform> wf, int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_pwm_round_waveform_tohw($arg1, $arg2, (const struct pwm_waveform*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_pwm_round_waveform_tohw($arg1, $arg2, (const struct pwm_waveform *)$arg3, $arg4, $arg5)")
   public static void __bpf_trace_pwm_round_waveform_tohw(Ptr<?> __data, Ptr<pwm_device> pwm,
       Ptr<pwm_waveform> wf, Ptr<?> wfhw, int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_pwm_write_waveform($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_pwm_write_waveform($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static void __bpf_trace_pwm_write_waveform(Ptr<?> __data, Ptr<pwm_device> pwm, Ptr<?> wfhw,
       int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_qdisc_create($arg1, (const struct Qdisc_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_qdisc_create($arg1, (const struct Qdisc_ops *)$arg2, $arg3, $arg4)")
   public static void __bpf_trace_qdisc_create(Ptr<?> __data, Ptr<Qdisc_ops> ops,
       Ptr<net_device> dev, @Unsigned int parent) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_qdisc_dequeue($arg1, $arg2, (const struct netdev_queue*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_qdisc_dequeue($arg1, $arg2, (const struct netdev_queue *)$arg3, $arg4, $arg5)")
   public static void __bpf_trace_qdisc_dequeue(Ptr<?> __data, Ptr<Qdisc> qdisc,
       Ptr<netdev_queue> txq, int packets, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
@@ -4769,7 +4769,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_qdisc_enqueue($arg1, $arg2, (const struct netdev_queue*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_qdisc_enqueue($arg1, $arg2, (const struct netdev_queue *)$arg3, $arg4)")
   public static void __bpf_trace_qdisc_enqueue(Ptr<?> __data, Ptr<Qdisc> qdisc,
       Ptr<netdev_queue> txq, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
@@ -4789,13 +4789,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_rcu_stall_warning($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__bpf_trace_rcu_stall_warning($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static void __bpf_trace_rcu_stall_warning(Ptr<?> __data, String rcuname, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_rcu_utilization($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_rcu_utilization($arg1, (const u8 *)$arg2)")
   public static void __bpf_trace_rcu_utilization(Ptr<?> __data, String s) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4816,7 +4816,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_regcache_sync($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__bpf_trace_regcache_sync($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static void __bpf_trace_regcache_sync(Ptr<?> __data, Ptr<regmap> map, String type,
       String status) {
     throw new MethodIsBPFRelatedFunction();
@@ -4842,7 +4842,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_regmap_bulk($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_regmap_bulk($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static void __bpf_trace_regmap_bulk(Ptr<?> __data, Ptr<regmap> map, @Unsigned int reg,
       Ptr<?> val, int val_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -4856,19 +4856,19 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_regulator_basic($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_regulator_basic($arg1, (const u8 *)$arg2)")
   public static void __bpf_trace_regulator_basic(Ptr<?> __data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_regulator_range($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_regulator_range($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void __bpf_trace_regulator_range(Ptr<?> __data, String name, int min, int max) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_regulator_value($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_regulator_value($arg1, (const u8 *)$arg2, $arg3)")
   public static void __bpf_trace_regulator_value(Ptr<?> __data, String name, @Unsigned int val) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4988,13 +4988,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_sched_ext_dump($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_sched_ext_dump($arg1, (const u8 *)$arg2)")
   public static void __bpf_trace_sched_ext_dump(Ptr<?> __data, String line) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_sched_ext_event($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_sched_ext_event($arg1, (const u8 *)$arg2, $arg3)")
   public static void __bpf_trace_sched_ext_event(Ptr<?> __data, String name, long delta) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5226,7 +5226,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_selinux_audited($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("__bpf_trace_selinux_audited($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static void __bpf_trace_selinux_audited(Ptr<?> __data, Ptr<selinux_audit_data> sad,
       String scontext, String tcontext, String tclass) {
     throw new MethodIsBPFRelatedFunction();
@@ -5247,13 +5247,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_sk_data_ready($arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_sk_data_ready($arg1, (const struct sock *)$arg2)")
   public static void __bpf_trace_sk_data_ready(Ptr<?> __data, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_skb_copy_datagram_iovec($arg1, (const struct sk_buff*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_skb_copy_datagram_iovec($arg1, (const struct sk_buff *)$arg2, $arg3)")
   public static void __bpf_trace_skb_copy_datagram_iovec(Ptr<?> __data, Ptr<sk_buff> skb, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5265,14 +5265,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_smbus_read($arg1, (const struct i2c_adapter*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__bpf_trace_smbus_read($arg1, (const struct i2c_adapter *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static void __bpf_trace_smbus_read(Ptr<?> __data, Ptr<i2c_adapter> adap,
       @Unsigned short addr, @Unsigned short flags, char read_write, char command, int protocol) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_smbus_reply($arg1, (const struct i2c_adapter*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const union i2c_smbus_data*)$arg8, $arg9)")
+  @BuiltinBPFFunction("__bpf_trace_smbus_reply($arg1, (const struct i2c_adapter *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const union i2c_smbus_data *)$arg8, $arg9)")
   public static void __bpf_trace_smbus_reply(Ptr<?> __data, Ptr<i2c_adapter> adap,
       @Unsigned short addr, @Unsigned short flags, char read_write, char command, int protocol,
       Ptr<i2c_smbus_data> data, int res) {
@@ -5280,7 +5280,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_smbus_result($arg1, (const struct i2c_adapter*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__bpf_trace_smbus_result($arg1, (const struct i2c_adapter *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void __bpf_trace_smbus_result(Ptr<?> __data, Ptr<i2c_adapter> adap,
       @Unsigned short addr, @Unsigned short flags, char read_write, char command, int protocol,
       int res) {
@@ -5288,7 +5288,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_smbus_write($arg1, (const struct i2c_adapter*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const union i2c_smbus_data*)$arg8)")
+  @BuiltinBPFFunction("__bpf_trace_smbus_write($arg1, (const struct i2c_adapter *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const union i2c_smbus_data *)$arg8)")
   public static void __bpf_trace_smbus_write(Ptr<?> __data, Ptr<i2c_adapter> adap,
       @Unsigned short addr, @Unsigned short flags, char read_write, char command, int protocol,
       Ptr<i2c_smbus_data> data) {
@@ -5378,7 +5378,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_suspend_resume($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_suspend_resume($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void __bpf_trace_suspend_resume(Ptr<?> __data, String action, int val,
       boolean start) {
     throw new MethodIsBPFRelatedFunction();
@@ -5424,7 +5424,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_task_rename($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__bpf_trace_task_rename($arg1, $arg2, (const u8 *)$arg3)")
   public static void __bpf_trace_task_rename(Ptr<?> __data, Ptr<task_struct> task, String comm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5436,21 +5436,21 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tcp_ao_event($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
+  @BuiltinBPFFunction("__bpf_trace_tcp_ao_event($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
   public static void __bpf_trace_tcp_ao_event(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb,
       char keyid, char rnext, char maclen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tcp_ao_event_sk($arg1, (const struct sock*)$arg2, (const u8)$arg3, (const u8)$arg4)")
+  @BuiltinBPFFunction("__bpf_trace_tcp_ao_event_sk($arg1, (const struct sock *)$arg2, (const u8)$arg3, (const u8)$arg4)")
   public static void __bpf_trace_tcp_ao_event_sk(Ptr<?> __data, Ptr<sock> sk, char keyid,
       char rnext) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tcp_ao_event_sne($arg1, (const struct sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_tcp_ao_event_sne($arg1, (const struct sock *)$arg2, $arg3)")
   public static void __bpf_trace_tcp_ao_event_sne(Ptr<?> __data, Ptr<sock> sk,
       @Unsigned int new_sne) {
     throw new MethodIsBPFRelatedFunction();
@@ -5463,7 +5463,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tcp_cwnd_reduction_tp($arg1, (const struct sock*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_tcp_cwnd_reduction_tp($arg1, (const struct sock *)$arg2, $arg3, $arg4, $arg5)")
   public static void __bpf_trace_tcp_cwnd_reduction_tp(Ptr<?> __data, Ptr<sock> sk,
       int newly_acked_sacked, int newly_lost, int flag) {
     throw new MethodIsBPFRelatedFunction();
@@ -5476,19 +5476,19 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tcp_event_skb($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_tcp_event_skb($arg1, (const struct sk_buff *)$arg2)")
   public static void __bpf_trace_tcp_event_skb(Ptr<?> __data, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tcp_hash_event($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("__bpf_trace_tcp_hash_event($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3)")
   public static void __bpf_trace_tcp_hash_event(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tcp_probe($arg1, $arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("__bpf_trace_tcp_probe($arg1, $arg2, (const struct sk_buff *)$arg3)")
   public static void __bpf_trace_tcp_probe(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5500,28 +5500,28 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tcp_retransmit_skb($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_tcp_retransmit_skb($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, $arg4)")
   public static void __bpf_trace_tcp_retransmit_skb(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb,
       int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tcp_retransmit_synack($arg1, (const struct sock*)$arg2, (const struct request_sock*)$arg3)")
+  @BuiltinBPFFunction("__bpf_trace_tcp_retransmit_synack($arg1, (const struct sock *)$arg2, (const struct request_sock *)$arg3)")
   public static void __bpf_trace_tcp_retransmit_synack(Ptr<?> __data, Ptr<sock> sk,
       Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tcp_send_reset($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, (const enum sk_rst_reason)$arg4)")
+  @BuiltinBPFFunction("__bpf_trace_tcp_send_reset($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, (const enum sk_rst_reason)$arg4)")
   public static void __bpf_trace_tcp_send_reset(Ptr<?> __data, Ptr<sock> sk,
       Ptr<sk_buff> skb__nullable, sk_rst_reason reason) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tcp_sendmsg_locked($arg1, (const struct sock*)$arg2, (const struct msghdr*)$arg3, (const struct sk_buff*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_tcp_sendmsg_locked($arg1, (const struct sock *)$arg2, (const struct msghdr *)$arg3, (const struct sk_buff *)$arg4, $arg5)")
   public static void __bpf_trace_tcp_sendmsg_locked(Ptr<?> __data, Ptr<sock> sk, Ptr<msghdr> msg,
       Ptr<sk_buff> skb, int size_goal) {
     throw new MethodIsBPFRelatedFunction();
@@ -5639,7 +5639,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tls_contenttype($arg1, (const struct sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_tls_contenttype($arg1, (const struct sock *)$arg2, $arg3)")
   public static void __bpf_trace_tls_contenttype(Ptr<?> __data, Ptr<sock> sk, char type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5704,20 +5704,20 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tsm_mr_read($arg1, (const struct tsm_measurement_register*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_tsm_mr_read($arg1, (const struct tsm_measurement_register *)$arg2)")
   public static void __bpf_trace_tsm_mr_read(Ptr<?> __data, Ptr<tsm_measurement_register> mr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tsm_mr_refresh($arg1, (const struct tsm_measurement_register*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_tsm_mr_refresh($arg1, (const struct tsm_measurement_register *)$arg2, $arg3)")
   public static void __bpf_trace_tsm_mr_refresh(Ptr<?> __data, Ptr<tsm_measurement_register> mr,
       int rc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_tsm_mr_write($arg1, (const struct tsm_measurement_register*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__bpf_trace_tsm_mr_write($arg1, (const struct tsm_measurement_register *)$arg2, (const u8 *)$arg3)")
   public static void __bpf_trace_tsm_mr_write(Ptr<?> __data, Ptr<tsm_measurement_register> mr,
       Ptr<java.lang.Character> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -5813,7 +5813,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_wakeup_source($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_wakeup_source($arg1, (const u8 *)$arg2, $arg3)")
   public static void __bpf_trace_wakeup_source(Ptr<?> __data, String name, @Unsigned int state) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5854,7 +5854,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_wbt_step($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__bpf_trace_wbt_step($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void __bpf_trace_wbt_step(Ptr<?> __data, Ptr<backing_dev_info> bdi, String msg,
       int step, @Unsigned long window, @Unsigned int bg, @Unsigned int normal, @Unsigned int max) {
     throw new MethodIsBPFRelatedFunction();
@@ -5978,7 +5978,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_xdp_bulk_tx($arg1, (const struct net_device*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_xdp_bulk_tx($arg1, (const struct net_device *)$arg2, $arg3, $arg4, $arg5)")
   public static void __bpf_trace_xdp_bulk_tx(Ptr<?> __data, Ptr<net_device> dev, int sent,
       int drops, int err) {
     throw new MethodIsBPFRelatedFunction();
@@ -5999,21 +5999,21 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_xdp_devmap_xmit($arg1, (const struct net_device*)$arg2, (const struct net_device*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__bpf_trace_xdp_devmap_xmit($arg1, (const struct net_device *)$arg2, (const struct net_device *)$arg3, $arg4, $arg5, $arg6)")
   public static void __bpf_trace_xdp_devmap_xmit(Ptr<?> __data, Ptr<net_device> from_dev,
       Ptr<net_device> to_dev, int sent, int drops, int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_xdp_exception($arg1, (const struct net_device*)$arg2, (const struct bpf_prog*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bpf_trace_xdp_exception($arg1, (const struct net_device *)$arg2, (const struct bpf_prog *)$arg3, $arg4)")
   public static void __bpf_trace_xdp_exception(Ptr<?> __data, Ptr<net_device> dev,
       Ptr<bpf_prog> xdp, @Unsigned int act) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_xdp_redirect_template($arg1, (const struct net_device*)$arg2, (const struct bpf_prog*)$arg3, (const void*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__bpf_trace_xdp_redirect_template($arg1, (const struct net_device *)$arg2, (const struct bpf_prog *)$arg3, (const void *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void __bpf_trace_xdp_redirect_template(Ptr<?> __data, Ptr<net_device> dev,
       Ptr<bpf_prog> xdp, Ptr<?> tgt, int err, bpf_map_type map_type, @Unsigned int map_id,
       @Unsigned int index) {
@@ -6021,27 +6021,27 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_xen_cpu_load_idt($arg1, (const struct desc_ptr*)$arg2)")
+  @BuiltinBPFFunction("__bpf_trace_xen_cpu_load_idt($arg1, (const struct desc_ptr *)$arg2)")
   public static void __bpf_trace_xen_cpu_load_idt(Ptr<?> __data, Ptr<desc_ptr> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_xen_cpu_set_ldt($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bpf_trace_xen_cpu_set_ldt($arg1, (const void *)$arg2, $arg3)")
   public static void __bpf_trace_xen_cpu_set_ldt(Ptr<?> __data, Ptr<?> addr,
       @Unsigned int entries) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_xen_cpu_write_gdt_entry($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_xen_cpu_write_gdt_entry($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static void __bpf_trace_xen_cpu_write_gdt_entry(Ptr<?> __data, Ptr<desc_struct> dt,
       int entrynum, Ptr<?> desc, int type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_xen_cpu_write_idt_entry($arg1, $arg2, $arg3, (const gate_struct*)$arg4)")
+  @BuiltinBPFFunction("__bpf_trace_xen_cpu_write_idt_entry($arg1, $arg2, $arg3, (const gate_struct *)$arg4)")
   public static void __bpf_trace_xen_cpu_write_idt_entry(Ptr<?> __data,
       Ptr<@OriginalName("gate_desc") gate_struct> dt, int entrynum,
       Ptr<@OriginalName("gate_desc") gate_struct> ent) {
@@ -6115,7 +6115,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bpf_trace_xen_mmu_flush_tlb_multi($arg1, (const struct cpumask*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__bpf_trace_xen_mmu_flush_tlb_multi($arg1, (const struct cpumask *)$arg2, $arg3, $arg4, $arg5)")
   public static void __bpf_trace_xen_mmu_flush_tlb_multi(Ptr<?> __data, Ptr<cpumask> cpus,
       Ptr<mm_struct> mm, @Unsigned long addr, @Unsigned long end) {
     throw new MethodIsBPFRelatedFunction();
@@ -6308,6 +6308,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void __bpf_trap()"
+  )
   public static void __bpf_trap() {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6374,6 +6377,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction("")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = ""
+  )
   public static Ptr<?> bpf_arena_alloc_pages(Ptr<?> p__map, Ptr<?> addr__ign,
       @Unsigned int page_cnt, int node_id, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -6381,6 +6387,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction("")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = ""
+  )
   public static void bpf_arena_free_pages(Ptr<?> p__map, Ptr<?> ptr__ign, @Unsigned int page_cnt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6399,6 +6408,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction("")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = ""
+  )
   public static int bpf_arena_reserve_pages(Ptr<?> p__map, Ptr<?> ptr__ign,
       @Unsigned int page_cnt) {
     throw new MethodIsBPFRelatedFunction();
@@ -6431,13 +6443,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_audit_prog((const struct bpf_prog*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_audit_prog((const struct bpf_prog *)$arg1, $arg2)")
   public static void bpf_audit_prog(Ptr<bpf_prog> prog, @Unsigned int op) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_base_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_base_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> bpf_base_func_proto(bpf_func_id func_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6456,7 +6468,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_bprintf_prepare((const u8*)$arg1, $arg2, (const long long unsigned int*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_bprintf_prepare((const u8 *)$arg1, $arg2, (const long long unsigned int *)$arg3, $arg4, $arg5)")
   public static int bpf_bprintf_prepare(String fmt, @Unsigned int fmt_size,
       Ptr<java.lang. @Unsigned Long> raw_args, @Unsigned int num_args, Ptr<bpf_bprintf_data> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -6483,7 +6495,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_build_state($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("bpf_build_state($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int bpf_build_state(Ptr<net> net, Ptr<nlattr> nla, @Unsigned int family, Ptr<?> cfg,
       Ptr<Ptr<lwtunnel_state>> ts, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -6491,18 +6503,27 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void* bpf_cast_to_kern_ctx(void *obj)"
+  )
   public static Ptr<?> bpf_cast_to_kern_ctx(Ptr<?> obj) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct cgroup* bpf_cgroup_acquire(struct cgroup *cgrp)"
+  )
   public static Ptr<cgroup> bpf_cgroup_acquire(Ptr<cgroup> cgrp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct cgroup* bpf_cgroup_ancestor(struct cgroup *cgrp, int level)"
+  )
   public static Ptr<cgroup> bpf_cgroup_ancestor(Ptr<cgroup> cgrp, int level) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6528,6 +6549,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct cgroup* bpf_cgroup_from_id(long long unsigned int cgid)"
+  )
   public static Ptr<cgroup> bpf_cgroup_from_id(@Unsigned long cgid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6551,7 +6575,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cgroup_link_fill_link_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_cgroup_link_fill_link_info((const struct bpf_link *)$arg1, $arg2)")
   public static int bpf_cgroup_link_fill_link_info(Ptr<bpf_link> link, Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6563,13 +6587,16 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cgroup_link_show_fdinfo((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_cgroup_link_show_fdinfo((const struct bpf_link *)$arg1, $arg2)")
   public static void bpf_cgroup_link_show_fdinfo(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cgroup_read_xattr($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_cgroup_read_xattr($arg1, (const u8 *)$arg2, $arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_cgroup_read_xattr(struct cgroup *cgroup, const u8 *name__str, struct bpf_dynptr *value_p)"
+  )
   public static int bpf_cgroup_read_xattr(Ptr<cgroup> cgroup, String name__str,
       Ptr<bpf_dynptr> value_p) {
     throw new MethodIsBPFRelatedFunction();
@@ -6577,6 +6604,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_cgroup_release(struct cgroup *cgrp)"
+  )
   public static void bpf_cgroup_release(Ptr<cgroup> cgrp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6672,14 +6702,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_check_attach_target($arg1, (const struct bpf_prog*)$arg2, (const struct bpf_prog*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_check_attach_target($arg1, (const struct bpf_prog *)$arg2, (const struct bpf_prog *)$arg3, $arg4, $arg5)")
   public static int bpf_check_attach_target(Ptr<bpf_verifier_log> log, Ptr<bpf_prog> prog,
       Ptr<bpf_prog> tgt_prog, @Unsigned int btf_id, Ptr<bpf_attach_target_info> tgt_info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_check_classic((const struct sock_filter*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_check_classic((const struct sock_filter *)$arg1, $arg2)")
   public static int bpf_check_classic(Ptr<sock_filter> filter, @Unsigned int flen) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6718,7 +6748,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int bpf_convert_ctx_access(bpf_access_type type, Ptr<bpf_insn> si,
       Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog, Ptr<java.lang. @Unsigned Integer> target_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -6739,21 +6769,30 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_copy_from_user_dynptr($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("bpf_copy_from_user_dynptr($arg1, $arg2, $arg3, (const void *)$arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_copy_from_user_dynptr(struct bpf_dynptr *dptr, unsigned int off, unsigned int size, const void *unsafe_ptr__ign)"
+  )
   public static int bpf_copy_from_user_dynptr(Ptr<bpf_dynptr> dptr, @Unsigned int off,
       @Unsigned int size, Ptr<?> unsafe_ptr__ign) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_copy_from_user_str($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_copy_from_user_str($arg1, $arg2, (const void *)$arg3, $arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_copy_from_user_str(void *dst, unsigned int dst__sz, const void *unsafe_ptr__ign, long long unsigned int flags)"
+  )
   public static int bpf_copy_from_user_str(Ptr<?> dst, @Unsigned int dst__sz,
       Ptr<?> unsafe_ptr__ign, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_copy_from_user_str_dynptr($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("bpf_copy_from_user_str_dynptr($arg1, $arg2, $arg3, (const void *)$arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_copy_from_user_str_dynptr(struct bpf_dynptr *dptr, unsigned int off, unsigned int size, const void *unsafe_ptr__ign)"
+  )
   public static int bpf_copy_from_user_str_dynptr(Ptr<bpf_dynptr> dptr, @Unsigned int off,
       @Unsigned int size, Ptr<?> unsafe_ptr__ign) {
     throw new MethodIsBPFRelatedFunction();
@@ -6767,49 +6806,58 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_copy_from_user_task_dynptr($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_copy_from_user_task_dynptr($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_copy_from_user_task_dynptr(struct bpf_dynptr *dptr, unsigned int off, unsigned int size, const void *unsafe_ptr__ign, struct task_struct *tsk)"
+  )
   public static int bpf_copy_from_user_task_dynptr(Ptr<bpf_dynptr> dptr, @Unsigned int off,
       @Unsigned int size, Ptr<?> unsafe_ptr__ign, Ptr<task_struct> tsk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_copy_from_user_task_str($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_copy_from_user_task_str($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_copy_from_user_task_str(void *dst, unsigned int dst__sz, const void *unsafe_ptr__ign, struct task_struct *tsk, long long unsigned int flags)"
+  )
   public static int bpf_copy_from_user_task_str(Ptr<?> dst, @Unsigned int dst__sz,
       Ptr<?> unsafe_ptr__ign, Ptr<task_struct> tsk, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_copy_from_user_task_str_dynptr($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_copy_from_user_task_str_dynptr($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_copy_from_user_task_str_dynptr(struct bpf_dynptr *dptr, unsigned int off, unsigned int size, const void *unsafe_ptr__ign, struct task_struct *tsk)"
+  )
   public static int bpf_copy_from_user_task_str_dynptr(Ptr<bpf_dynptr> dptr, @Unsigned int off,
       @Unsigned int size, Ptr<?> unsafe_ptr__ign, Ptr<task_struct> tsk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_copy_to_user($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_copy_to_user($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int bpf_copy_to_user(String ubuf, String buf, @Unsigned int ulen,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_add_cands($arg1, (const struct btf*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_core_add_cands($arg1, (const struct btf *)$arg2, $arg3)")
   public static Ptr<bpf_cand_cache> bpf_core_add_cands(Ptr<bpf_cand_cache> cands, Ptr<btf> targ_btf,
       int targ_start_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_apply($arg1, (const struct bpf_core_relo*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_core_apply($arg1, (const struct bpf_core_relo *)$arg2, $arg3, $arg4)")
   public static int bpf_core_apply(Ptr<bpf_core_ctx> ctx, Ptr<bpf_core_relo> relo, int relo_idx,
       Ptr<?> insn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_calc_field_relo((const u8*)$arg1, (const struct bpf_core_relo*)$arg2, (const struct bpf_core_spec*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("bpf_core_calc_field_relo((const u8 *)$arg1, (const struct bpf_core_relo *)$arg2, (const struct bpf_core_spec *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int bpf_core_calc_field_relo(String prog_name, Ptr<bpf_core_relo> relo,
       Ptr<bpf_core_spec> spec, Ptr<java.lang. @Unsigned Long> val,
       Ptr<java.lang. @Unsigned Integer> field_sz, Ptr<java.lang. @Unsigned Integer> type_id,
@@ -6818,14 +6866,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_calc_relo((const u8*)$arg1, (const struct bpf_core_relo*)$arg2, $arg3, (const struct bpf_core_spec*)$arg4, (const struct bpf_core_spec*)$arg5, $arg6)")
+  @BuiltinBPFFunction("bpf_core_calc_relo((const u8 *)$arg1, (const struct bpf_core_relo *)$arg2, $arg3, (const struct bpf_core_spec *)$arg4, (const struct bpf_core_spec *)$arg5, $arg6)")
   public static int bpf_core_calc_relo(String prog_name, Ptr<bpf_core_relo> relo, int relo_idx,
       Ptr<bpf_core_spec> local_spec, Ptr<bpf_core_spec> targ_spec, Ptr<bpf_core_relo_res> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_calc_relo_insn((const u8*)$arg1, (const struct bpf_core_relo*)$arg2, $arg3, (const struct btf*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("bpf_core_calc_relo_insn((const u8 *)$arg1, (const struct bpf_core_relo *)$arg2, $arg3, (const struct btf *)$arg4, $arg5, $arg6, $arg7)")
   public static int bpf_core_calc_relo_insn(String prog_name, Ptr<bpf_core_relo> relo, int relo_idx,
       Ptr<btf> local_btf, Ptr<bpf_core_cand_list> cands, Ptr<bpf_core_spec> specs_scratch,
       Ptr<bpf_core_relo_res> targ_res) {
@@ -6833,34 +6881,34 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_calc_type_relo((const struct bpf_core_relo*)$arg1, (const struct bpf_core_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_core_calc_type_relo((const struct bpf_core_relo *)$arg1, (const struct bpf_core_spec *)$arg2, $arg3, $arg4)")
   public static int bpf_core_calc_type_relo(Ptr<bpf_core_relo> relo, Ptr<bpf_core_spec> spec,
       Ptr<java.lang. @Unsigned Long> val, Ptr<java.lang. @OriginalName("bool") Boolean> validate) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_essential_name_len((const u8*)$arg1)")
+  @BuiltinBPFFunction("bpf_core_essential_name_len((const u8 *)$arg1)")
   public static @Unsigned long bpf_core_essential_name_len(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_fields_are_compat((const struct btf*)$arg1, $arg2, (const struct btf*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_core_fields_are_compat((const struct btf *)$arg1, $arg2, (const struct btf *)$arg3, $arg4)")
   public static int bpf_core_fields_are_compat(Ptr<btf> local_btf, @Unsigned int local_id,
       Ptr<btf> targ_btf, @Unsigned int targ_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_format_spec($arg1, $arg2, (const struct bpf_core_spec*)$arg3)")
+  @BuiltinBPFFunction("bpf_core_format_spec($arg1, $arg2, (const struct bpf_core_spec *)$arg3)")
   public static int bpf_core_format_spec(String buf, @Unsigned long buf_sz,
       Ptr<bpf_core_spec> spec) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_match_member((const struct btf*)$arg1, (const struct bpf_core_accessor*)$arg2, (const struct btf*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("bpf_core_match_member((const struct btf *)$arg1, (const struct bpf_core_accessor *)$arg2, (const struct btf *)$arg3, $arg4, $arg5, $arg6)")
   public static int bpf_core_match_member(Ptr<btf> local_btf, Ptr<bpf_core_accessor> local_acc,
       Ptr<btf> targ_btf, @Unsigned int targ_id, Ptr<bpf_core_spec> spec,
       Ptr<java.lang. @Unsigned Integer> next_targ_id) {
@@ -6868,42 +6916,42 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_names_match((const struct btf*)$arg1, $arg2, (const struct btf*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_core_names_match((const struct btf *)$arg1, $arg2, (const struct btf *)$arg3, $arg4)")
   public static boolean bpf_core_names_match(Ptr<btf> local_btf, @Unsigned long local_name_off,
       Ptr<btf> targ_btf, @Unsigned long targ_name_off) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_parse_spec((const u8*)$arg1, (const struct btf*)$arg2, (const struct bpf_core_relo*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_core_parse_spec((const u8 *)$arg1, (const struct btf *)$arg2, (const struct bpf_core_relo *)$arg3, $arg4)")
   public static int bpf_core_parse_spec(String prog_name, Ptr<btf> btf, Ptr<bpf_core_relo> relo,
       Ptr<bpf_core_spec> spec) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_patch_insn((const u8*)$arg1, $arg2, $arg3, (const struct bpf_core_relo*)$arg4, $arg5, (const struct bpf_core_relo_res*)$arg6)")
+  @BuiltinBPFFunction("bpf_core_patch_insn((const u8 *)$arg1, $arg2, $arg3, (const struct bpf_core_relo *)$arg4, $arg5, (const struct bpf_core_relo_res *)$arg6)")
   public static int bpf_core_patch_insn(String prog_name, Ptr<bpf_insn> insn, int insn_idx,
       Ptr<bpf_core_relo> relo, int relo_idx, Ptr<bpf_core_relo_res> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_spec_match($arg1, (const struct btf*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_core_spec_match($arg1, (const struct btf *)$arg2, $arg3, $arg4)")
   public static int bpf_core_spec_match(Ptr<bpf_core_spec> local_spec, Ptr<btf> targ_btf,
       @Unsigned int targ_id, Ptr<bpf_core_spec> targ_spec) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_types_are_compat((const struct btf*)$arg1, $arg2, (const struct btf*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_core_types_are_compat((const struct btf *)$arg1, $arg2, (const struct btf *)$arg3, $arg4)")
   public static int bpf_core_types_are_compat(Ptr<btf> local_btf, @Unsigned int local_id,
       Ptr<btf> targ_btf, @Unsigned int targ_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_core_types_match((const struct btf*)$arg1, $arg2, (const struct btf*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_core_types_match((const struct btf *)$arg1, $arg2, (const struct btf *)$arg3, $arg4)")
   public static int bpf_core_types_match(Ptr<btf> local_btf, @Unsigned int local_id,
       Ptr<btf> targ_btf, @Unsigned int targ_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -6911,109 +6959,160 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_cpumask* bpf_cpumask_acquire(struct bpf_cpumask *cpumask)"
+  )
   public static Ptr<bpf_cpumask> bpf_cpumask_acquire(Ptr<bpf_cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_and($arg1, (const struct cpumask*)$arg2, (const struct cpumask*)$arg3)")
+  @BuiltinBPFFunction("bpf_cpumask_and($arg1, (const struct cpumask *)$arg2, (const struct cpumask *)$arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool bpf_cpumask_and(struct bpf_cpumask *dst, const struct cpumask *src1, const struct cpumask *src2)"
+  )
   public static boolean bpf_cpumask_and(Ptr<bpf_cpumask> dst, Ptr<cpumask> src1,
       Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_any_and_distribute((const struct cpumask*)$arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("bpf_cpumask_any_and_distribute((const struct cpumask *)$arg1, (const struct cpumask *)$arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int bpf_cpumask_any_and_distribute(const struct cpumask *src1, const struct cpumask *src2)"
+  )
   public static @Unsigned int bpf_cpumask_any_and_distribute(Ptr<cpumask> src1, Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_any_distribute((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("bpf_cpumask_any_distribute((const struct cpumask *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int bpf_cpumask_any_distribute(const struct cpumask *cpumask)"
+  )
   public static @Unsigned int bpf_cpumask_any_distribute(Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_cpumask_clear(struct bpf_cpumask *cpumask)"
+  )
   public static void bpf_cpumask_clear(Ptr<bpf_cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_cpumask_clear_cpu(unsigned int cpu, struct bpf_cpumask *cpumask)"
+  )
   public static void bpf_cpumask_clear_cpu(@Unsigned int cpu, Ptr<bpf_cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_copy($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("bpf_cpumask_copy($arg1, (const struct cpumask *)$arg2)")
   public static void bpf_cpumask_copy(Ptr<bpf_cpumask> dst, Ptr<cpumask> src) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_cpumask* bpf_cpumask_create()"
+  )
   public static Ptr<bpf_cpumask> bpf_cpumask_create() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_empty((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("bpf_cpumask_empty((const struct cpumask *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool bpf_cpumask_empty(const struct cpumask *cpumask)"
+  )
   public static boolean bpf_cpumask_empty(Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_equal((const struct cpumask*)$arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("bpf_cpumask_equal((const struct cpumask *)$arg1, (const struct cpumask *)$arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool bpf_cpumask_equal(const struct cpumask *src1, const struct cpumask *src2)"
+  )
   public static boolean bpf_cpumask_equal(Ptr<cpumask> src1, Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_first((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("bpf_cpumask_first((const struct cpumask *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int bpf_cpumask_first(const struct cpumask *cpumask)"
+  )
   public static @Unsigned int bpf_cpumask_first(Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_first_and((const struct cpumask*)$arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("bpf_cpumask_first_and((const struct cpumask *)$arg1, (const struct cpumask *)$arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int bpf_cpumask_first_and(const struct cpumask *src1, const struct cpumask *src2)"
+  )
   public static @Unsigned int bpf_cpumask_first_and(Ptr<cpumask> src1, Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_first_zero((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("bpf_cpumask_first_zero((const struct cpumask *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int bpf_cpumask_first_zero(const struct cpumask *cpumask)"
+  )
   public static @Unsigned int bpf_cpumask_first_zero(Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_full((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("bpf_cpumask_full((const struct cpumask *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool bpf_cpumask_full(const struct cpumask *cpumask)"
+  )
   public static boolean bpf_cpumask_full(Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_intersects((const struct cpumask*)$arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("bpf_cpumask_intersects((const struct cpumask *)$arg1, (const struct cpumask *)$arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool bpf_cpumask_intersects(const struct cpumask *src1, const struct cpumask *src2)"
+  )
   public static boolean bpf_cpumask_intersects(Ptr<cpumask> src1, Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_or($arg1, (const struct cpumask*)$arg2, (const struct cpumask*)$arg3)")
+  @BuiltinBPFFunction("bpf_cpumask_or($arg1, (const struct cpumask *)$arg2, (const struct cpumask *)$arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_cpumask_or(struct bpf_cpumask *dst, const struct cpumask *src1, const struct cpumask *src2)"
+  )
   public static void bpf_cpumask_or(Ptr<bpf_cpumask> dst, Ptr<cpumask> src1, Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_cpumask_populate(struct cpumask *cpumask, void *src, long unsigned int src__sz)"
+  )
   public static int bpf_cpumask_populate(Ptr<cpumask> cpumask, Ptr<?> src, @Unsigned long src__sz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_cpumask_release(struct bpf_cpumask *cpumask)"
+  )
   public static void bpf_cpumask_release(Ptr<bpf_cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7026,24 +7125,36 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_cpumask_set_cpu(unsigned int cpu, struct bpf_cpumask *cpumask)"
+  )
   public static void bpf_cpumask_set_cpu(@Unsigned int cpu, Ptr<bpf_cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_cpumask_setall(struct bpf_cpumask *cpumask)"
+  )
   public static void bpf_cpumask_setall(Ptr<bpf_cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_subset((const struct cpumask*)$arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("bpf_cpumask_subset((const struct cpumask *)$arg1, (const struct cpumask *)$arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool bpf_cpumask_subset(const struct cpumask *src1, const struct cpumask *src2)"
+  )
   public static boolean bpf_cpumask_subset(Ptr<cpumask> src1, Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool bpf_cpumask_test_and_clear_cpu(unsigned int cpu, struct bpf_cpumask *cpumask)"
+  )
   public static boolean bpf_cpumask_test_and_clear_cpu(@Unsigned int cpu,
       Ptr<bpf_cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
@@ -7051,30 +7162,42 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool bpf_cpumask_test_and_set_cpu(unsigned int cpu, struct bpf_cpumask *cpumask)"
+  )
   public static boolean bpf_cpumask_test_and_set_cpu(@Unsigned int cpu, Ptr<bpf_cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_test_cpu($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("bpf_cpumask_test_cpu($arg1, (const struct cpumask *)$arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool bpf_cpumask_test_cpu(unsigned int cpu, const struct cpumask *cpumask)"
+  )
   public static boolean bpf_cpumask_test_cpu(@Unsigned int cpu, Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_weight((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("bpf_cpumask_weight((const struct cpumask *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int bpf_cpumask_weight(const struct cpumask *cpumask)"
+  )
   public static @Unsigned int bpf_cpumask_weight(Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_cpumask_xor($arg1, (const struct cpumask*)$arg2, (const struct cpumask*)$arg3)")
+  @BuiltinBPFFunction("bpf_cpumask_xor($arg1, (const struct cpumask *)$arg2, (const struct cpumask *)$arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_cpumask_xor(struct bpf_cpumask *dst, const struct cpumask *src1, const struct cpumask *src2)"
+  )
   public static void bpf_cpumask_xor(Ptr<bpf_cpumask> dst, Ptr<cpumask> src1, Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_crypto_crypt((const struct bpf_crypto_ctx*)$arg1, (const struct bpf_dynptr_kern*)$arg2, (const struct bpf_dynptr_kern*)$arg3, (const struct bpf_dynptr_kern*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_crypto_crypt((const struct bpf_crypto_ctx *)$arg1, (const struct bpf_dynptr_kern *)$arg2, (const struct bpf_dynptr_kern *)$arg3, (const struct bpf_dynptr_kern *)$arg4, $arg5)")
   public static int bpf_crypto_crypt(Ptr<bpf_crypto_ctx> ctx, Ptr<bpf_dynptr_kern> src,
       Ptr<bpf_dynptr_kern> dst, Ptr<bpf_dynptr_kern> siv, boolean decrypt) {
     throw new MethodIsBPFRelatedFunction();
@@ -7082,12 +7205,18 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_crypto_ctx* bpf_crypto_ctx_acquire(struct bpf_crypto_ctx *ctx)"
+  )
   public static Ptr<bpf_crypto_ctx> bpf_crypto_ctx_acquire(Ptr<bpf_crypto_ctx> ctx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_crypto_ctx_create((const struct bpf_crypto_params*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_crypto_ctx_create((const struct bpf_crypto_params *)$arg1, $arg2, $arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_crypto_ctx* bpf_crypto_ctx_create(const struct bpf_crypto_params *params, unsigned int params__sz, int *err)"
+  )
   public static Ptr<bpf_crypto_ctx> bpf_crypto_ctx_create(Ptr<bpf_crypto_params> params,
       @Unsigned int params__sz, Ptr<java.lang.Integer> err) {
     throw new MethodIsBPFRelatedFunction();
@@ -7095,39 +7224,48 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_crypto_ctx_release(struct bpf_crypto_ctx *ctx)"
+  )
   public static void bpf_crypto_ctx_release(Ptr<bpf_crypto_ctx> ctx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_crypto_decrypt($arg1, (const struct bpf_dynptr*)$arg2, (const struct bpf_dynptr*)$arg3, (const struct bpf_dynptr*)$arg4)")
+  @BuiltinBPFFunction("bpf_crypto_decrypt($arg1, (const struct bpf_dynptr *)$arg2, (const struct bpf_dynptr *)$arg3, (const struct bpf_dynptr *)$arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_crypto_decrypt(struct bpf_crypto_ctx *ctx, const struct bpf_dynptr *src, const struct bpf_dynptr *dst, const struct bpf_dynptr *siv__nullable)"
+  )
   public static int bpf_crypto_decrypt(Ptr<bpf_crypto_ctx> ctx, Ptr<bpf_dynptr> src,
       Ptr<bpf_dynptr> dst, Ptr<bpf_dynptr> siv__nullable) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_crypto_encrypt($arg1, (const struct bpf_dynptr*)$arg2, (const struct bpf_dynptr*)$arg3, (const struct bpf_dynptr*)$arg4)")
+  @BuiltinBPFFunction("bpf_crypto_encrypt($arg1, (const struct bpf_dynptr *)$arg2, (const struct bpf_dynptr *)$arg3, (const struct bpf_dynptr *)$arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_crypto_encrypt(struct bpf_crypto_ctx *ctx, const struct bpf_dynptr *src, const struct bpf_dynptr *dst, const struct bpf_dynptr *siv__nullable)"
+  )
   public static int bpf_crypto_encrypt(Ptr<bpf_crypto_ctx> ctx, Ptr<bpf_dynptr> src,
       Ptr<bpf_dynptr> dst, Ptr<bpf_dynptr> siv__nullable) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_crypto_lskcipher_alloc_tfm((const u8*)$arg1)")
+  @BuiltinBPFFunction("bpf_crypto_lskcipher_alloc_tfm((const u8 *)$arg1)")
   public static Ptr<?> bpf_crypto_lskcipher_alloc_tfm(String algo) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_crypto_lskcipher_decrypt($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_crypto_lskcipher_decrypt($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int bpf_crypto_lskcipher_decrypt(Ptr<?> tfm, Ptr<java.lang.Character> src,
       Ptr<java.lang.Character> dst, @Unsigned int len, Ptr<java.lang.Character> siv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_crypto_lskcipher_encrypt($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_crypto_lskcipher_encrypt($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int bpf_crypto_lskcipher_encrypt(Ptr<?> tfm, Ptr<java.lang.Character> src,
       Ptr<java.lang.Character> dst, @Unsigned int len, Ptr<java.lang.Character> siv) {
     throw new MethodIsBPFRelatedFunction();
@@ -7146,7 +7284,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_crypto_lskcipher_has_algo((const u8*)$arg1)")
+  @BuiltinBPFFunction("bpf_crypto_lskcipher_has_algo((const u8 *)$arg1)")
   public static int bpf_crypto_lskcipher_has_algo(String algo) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7158,7 +7296,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_crypto_lskcipher_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_crypto_lskcipher_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int bpf_crypto_lskcipher_setkey(Ptr<?> tfm, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -7171,7 +7309,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_crypto_register_type((const struct bpf_crypto_type*)$arg1)")
+  @BuiltinBPFFunction("bpf_crypto_register_type((const struct bpf_crypto_type *)$arg1)")
   public static int bpf_crypto_register_type(Ptr<bpf_crypto_type> type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7189,7 +7327,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_crypto_unregister_type((const struct bpf_crypto_type*)$arg1)")
+  @BuiltinBPFFunction("bpf_crypto_unregister_type((const struct bpf_crypto_type *)$arg1)")
   public static int bpf_crypto_unregister_type(Ptr<bpf_crypto_type> type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7216,7 +7354,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_ctx_init((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_ctx_init((const union bpf_attr *)$arg1, $arg2)")
   public static Ptr<?> bpf_ctx_init(Ptr<bpf_attr> kattr, @Unsigned int max_size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7236,7 +7374,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_d_path_allowed((const struct bpf_prog*)$arg1)")
+  @BuiltinBPFFunction("bpf_d_path_allowed((const struct bpf_prog *)$arg1)")
   public static boolean bpf_d_path_allowed(Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7286,7 +7424,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dispatcher_nop_func((const void*)$arg1, (const struct bpf_insn*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_dispatcher_nop_func((const void *)$arg1, (const struct bpf_insn *)$arg2, $arg3)")
   public static @Unsigned int bpf_dispatcher_nop_func(Ptr<?> ctx, Ptr<bpf_insn> insnsi,
       @OriginalName("bpf_func_t") Ptr<?> bpf_func) {
     throw new MethodIsBPFRelatedFunction();
@@ -7299,7 +7437,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dispatcher_xdp_func((const void*)$arg1, (const struct bpf_insn*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_dispatcher_xdp_func((const void *)$arg1, (const struct bpf_insn *)$arg2, $arg3)")
   public static @Unsigned int bpf_dispatcher_xdp_func(Ptr<?> ctx, Ptr<bpf_insn> insnsi,
       @OriginalName("bpf_func_t") Ptr<?> bpf_func) {
     throw new MethodIsBPFRelatedFunction();
@@ -7312,7 +7450,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dummy_init_member((const struct btf_type*)$arg1, (const struct btf_member*)$arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("bpf_dummy_init_member((const struct btf_type *)$arg1, (const struct btf_member *)$arg2, $arg3, (const void *)$arg4)")
   public static int bpf_dummy_init_member(Ptr<btf_type> t, Ptr<btf_member> member, Ptr<?> kdata,
       Ptr<?> udata) {
     throw new MethodIsBPFRelatedFunction();
@@ -7325,21 +7463,21 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dummy_ops_btf_struct_access($arg1, (const struct bpf_reg_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_dummy_ops_btf_struct_access($arg1, (const struct bpf_reg_state *)$arg2, $arg3, $arg4)")
   public static int bpf_dummy_ops_btf_struct_access(Ptr<bpf_verifier_log> log,
       Ptr<bpf_reg_state> reg, int off, int size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dummy_ops_check_member((const struct btf_type*)$arg1, (const struct btf_member*)$arg2, (const struct bpf_prog*)$arg3)")
+  @BuiltinBPFFunction("bpf_dummy_ops_check_member((const struct btf_type *)$arg1, (const struct btf_member *)$arg2, (const struct bpf_prog *)$arg3)")
   public static int bpf_dummy_ops_check_member(Ptr<btf_type> t, Ptr<btf_member> member,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dummy_ops_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_dummy_ops_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean bpf_dummy_ops_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -7384,14 +7522,17 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dummy_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_dummy_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long bpf_dummy_write(Ptr<file> filp, String buf,
       @Unsigned long siz, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dynptr_adjust((const struct bpf_dynptr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_dynptr_adjust((const struct bpf_dynptr *)$arg1, $arg2, $arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_dynptr_adjust(const struct bpf_dynptr *p, unsigned int start, unsigned int end)"
+  )
   public static int bpf_dynptr_adjust(Ptr<bpf_dynptr> p, @Unsigned int start, @Unsigned int end) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7403,13 +7544,19 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dynptr_clone((const struct bpf_dynptr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_dynptr_clone((const struct bpf_dynptr *)$arg1, $arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_dynptr_clone(const struct bpf_dynptr *p, struct bpf_dynptr *clone__uninit)"
+  )
   public static int bpf_dynptr_clone(Ptr<bpf_dynptr> p, Ptr<bpf_dynptr> clone__uninit) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_dynptr_copy(struct bpf_dynptr *dst_ptr, unsigned int dst_off, struct bpf_dynptr *src_ptr, unsigned int src_off, unsigned int size)"
+  )
   public static int bpf_dynptr_copy(Ptr<bpf_dynptr> dst_ptr, @Unsigned int dst_off,
       Ptr<bpf_dynptr> src_ptr, @Unsigned int src_off, @Unsigned int size) {
     throw new MethodIsBPFRelatedFunction();
@@ -7431,6 +7578,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_dynptr_from_skb(struct __sk_buff *s, long long unsigned int flags, struct bpf_dynptr *ptr__uninit)"
+  )
   public static int bpf_dynptr_from_skb(Ptr<__sk_buff> s, @Unsigned long flags,
       Ptr<bpf_dynptr> ptr__uninit) {
     throw new MethodIsBPFRelatedFunction();
@@ -7445,6 +7595,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_dynptr_from_xdp(struct xdp_md *x, long long unsigned int flags, struct bpf_dynptr *ptr__uninit)"
+  )
   public static int bpf_dynptr_from_xdp(Ptr<xdp_md> x, @Unsigned long flags,
       Ptr<bpf_dynptr> ptr__uninit) {
     throw new MethodIsBPFRelatedFunction();
@@ -7458,19 +7611,28 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dynptr_is_null((const struct bpf_dynptr*)$arg1)")
+  @BuiltinBPFFunction("bpf_dynptr_is_null((const struct bpf_dynptr *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool bpf_dynptr_is_null(const struct bpf_dynptr *p)"
+  )
   public static boolean bpf_dynptr_is_null(Ptr<bpf_dynptr> p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dynptr_is_rdonly((const struct bpf_dynptr*)$arg1)")
+  @BuiltinBPFFunction("bpf_dynptr_is_rdonly((const struct bpf_dynptr *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool bpf_dynptr_is_rdonly(const struct bpf_dynptr *p)"
+  )
   public static boolean bpf_dynptr_is_rdonly(Ptr<bpf_dynptr> p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_dynptr_memset(struct bpf_dynptr *p, unsigned int offset, unsigned int size, u8 val)"
+  )
   public static int bpf_dynptr_memset(Ptr<bpf_dynptr> p, @Unsigned int offset, @Unsigned int size,
       char val) {
     throw new MethodIsBPFRelatedFunction();
@@ -7496,20 +7658,29 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dynptr_size((const struct bpf_dynptr*)$arg1)")
+  @BuiltinBPFFunction("bpf_dynptr_size((const struct bpf_dynptr *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int bpf_dynptr_size(const struct bpf_dynptr *p)"
+  )
   public static @Unsigned int bpf_dynptr_size(Ptr<bpf_dynptr> p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dynptr_slice((const struct bpf_dynptr*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_dynptr_slice((const struct bpf_dynptr *)$arg1, $arg2, $arg3, $arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void* bpf_dynptr_slice(const struct bpf_dynptr *p, unsigned int offset, void *buffer__opt, unsigned int buffer__szk)"
+  )
   public static Ptr<?> bpf_dynptr_slice(Ptr<bpf_dynptr> p, @Unsigned int offset, Ptr<?> buffer__opt,
       @Unsigned int buffer__szk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dynptr_slice_rdwr((const struct bpf_dynptr*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_dynptr_slice_rdwr((const struct bpf_dynptr *)$arg1, $arg2, $arg3, $arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void* bpf_dynptr_slice_rdwr(const struct bpf_dynptr *p, unsigned int offset, void *buffer__opt, unsigned int buffer__szk)"
+  )
   public static Ptr<?> bpf_dynptr_slice_rdwr(Ptr<bpf_dynptr> p, @Unsigned int offset,
       Ptr<?> buffer__opt, @Unsigned int buffer__szk) {
     throw new MethodIsBPFRelatedFunction();
@@ -7609,7 +7780,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_fd_pass((const struct file*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_fd_pass((const struct file *)$arg1, $arg2)")
   public static int bpf_fd_pass(Ptr<file> file, @Unsigned int sid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7654,12 +7825,15 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_fentry_test1(int a)"
+  )
   public static int bpf_fentry_test1(int a) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_fentry_test10((const void*)$arg1)")
+  @BuiltinBPFFunction("bpf_fentry_test10((const void *)$arg1)")
   public static int bpf_fentry_test10(Ptr<?> a) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7738,7 +7912,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_find_btf_id((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_find_btf_id((const u8 *)$arg1, $arg2, $arg3)")
   public static int bpf_find_btf_id(String name, @Unsigned int kind, Ptr<Ptr<btf>> btf_p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7806,7 +7980,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_fs_kfuncs_filter((const struct bpf_prog*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_fs_kfuncs_filter((const struct bpf_prog *)$arg1, $arg2)")
   public static int bpf_fs_kfuncs_filter(Ptr<bpf_prog> prog, @Unsigned int kfunc_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7818,7 +7992,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_gen_ld_abs((const struct bpf_insn*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_gen_ld_abs((const struct bpf_insn *)$arg1, $arg2)")
   public static int bpf_gen_ld_abs(Ptr<bpf_insn> orig, Ptr<bpf_insn> insn_buf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7942,7 +8116,10 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_get_dentry_xattr($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_get_dentry_xattr($arg1, (const u8 *)$arg2, $arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_get_dentry_xattr(struct dentry *dentry, const u8 *name__str, struct bpf_dynptr *value_p)"
+  )
   public static int bpf_get_dentry_xattr(Ptr<dentry> dentry, String name__str,
       Ptr<bpf_dynptr> value_p) {
     throw new MethodIsBPFRelatedFunction();
@@ -7955,19 +8132,25 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_get_file_xattr($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_get_file_xattr($arg1, (const u8 *)$arg2, $arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_get_file_xattr(struct file *file, const u8 *name__str, struct bpf_dynptr *value_p)"
+  )
   public static int bpf_get_file_xattr(Ptr<file> file, String name__str, Ptr<bpf_dynptr> value_p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_get_fsverity_digest(struct file *file, struct bpf_dynptr *digest_p)"
+  )
   public static int bpf_get_fsverity_digest(Ptr<file> file, Ptr<bpf_dynptr> digest_p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_get_fsverity_digest_filter((const struct bpf_prog*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_get_fsverity_digest_filter((const struct bpf_prog *)$arg1, $arg2)")
   public static int bpf_get_fsverity_digest_filter(Ptr<bpf_prog> prog, @Unsigned int kfunc_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8008,7 +8191,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_get_inode($arg1, (const struct inode*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_get_inode($arg1, (const struct inode *)$arg2, $arg3)")
   public static Ptr<inode> bpf_get_inode(Ptr<super_block> sb, Ptr<inode> dir,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -8022,7 +8205,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_get_kfunc_addr((const struct bpf_prog*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_get_kfunc_addr((const struct bpf_prog *)$arg1, $arg2, $arg3, $arg4)")
   public static int bpf_get_kfunc_addr(Ptr<bpf_prog> prog, @Unsigned int func_id,
       @Unsigned short btf_fd_idx, Ptr<Ptr<java.lang.Character>> func_addr) {
     throw new MethodIsBPFRelatedFunction();
@@ -8030,12 +8213,15 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct kmem_cache* bpf_get_kmem_cache(long long unsigned int addr)"
+  )
   public static Ptr<kmem_cache> bpf_get_kmem_cache(@Unsigned long addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_get_kprobe_info((const struct perf_event*)$arg1, $arg2, (const u8**)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("bpf_get_kprobe_info((const struct perf_event *)$arg1, $arg2, (const u8**)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int bpf_get_kprobe_info(Ptr<perf_event> event,
       Ptr<java.lang. @Unsigned Integer> fd_type, Ptr<String> symbol,
       Ptr<java.lang. @Unsigned Long> probe_offset, Ptr<java.lang. @Unsigned Long> probe_addr,
@@ -8114,7 +8300,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_get_perf_event_info((const struct perf_event*)$arg1, $arg2, $arg3, (const u8**)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("bpf_get_perf_event_info((const struct perf_event *)$arg1, $arg2, $arg3, (const u8**)$arg4, $arg5, $arg6, $arg7)")
   public static int bpf_get_perf_event_info(Ptr<perf_event> event,
       Ptr<java.lang. @Unsigned Integer> prog_id, Ptr<java.lang. @Unsigned Integer> fd_type,
       Ptr<String> buf, Ptr<java.lang. @Unsigned Long> probe_offset,
@@ -8136,7 +8322,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_get_raw_tracepoint((const u8*)$arg1)")
+  @BuiltinBPFFunction("bpf_get_raw_tracepoint((const u8 *)$arg1)")
   public static Ptr<bpf_raw_event_map> bpf_get_raw_tracepoint(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8275,6 +8461,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct file* bpf_get_task_exe_file(struct task_struct *task)"
+  )
   public static Ptr<file> bpf_get_task_exe_file(Ptr<task_struct> task) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8319,7 +8508,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_get_uprobe_info((const struct perf_event*)$arg1, $arg2, (const u8**)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("bpf_get_uprobe_info((const struct perf_event *)$arg1, $arg2, (const u8**)$arg3, $arg4, $arg5, $arg6)")
   public static int bpf_get_uprobe_info(Ptr<perf_event> event,
       Ptr<java.lang. @Unsigned Integer> fd_type, Ptr<String> filename,
       Ptr<java.lang. @Unsigned Long> probe_offset, Ptr<java.lang. @Unsigned Long> probe_addr,
@@ -8387,7 +8576,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_ima_inode_hash_allowed((const struct bpf_prog*)$arg1)")
+  @BuiltinBPFFunction("bpf_ima_inode_hash_allowed((const struct bpf_prog *)$arg1)")
   public static boolean bpf_ima_inode_hash_allowed(Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8449,7 +8638,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_insn_prepare_dump((const struct bpf_prog*)$arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("bpf_insn_prepare_dump((const struct bpf_prog *)$arg1, (const struct cred *)$arg2)")
   public static Ptr<bpf_insn> bpf_insn_prepare_dump(Ptr<bpf_prog> prog, Ptr<cred> f_cred) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8461,7 +8650,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_internal_load_pointer_neg_helper((const struct sk_buff*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_internal_load_pointer_neg_helper((const struct sk_buff *)$arg1, $arg2, $arg3)")
   public static Ptr<?> bpf_internal_load_pointer_neg_helper(Ptr<sk_buff> skb, int k,
       @Unsigned int size) {
     throw new MethodIsBPFRelatedFunction();
@@ -8504,12 +8693,18 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_iter_bits_destroy(struct bpf_iter_bits *it)"
+  )
   public static void bpf_iter_bits_destroy(Ptr<bpf_iter_bits> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_bits_new($arg1, (const long long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_iter_bits_new($arg1, (const long long unsigned int *)$arg2, $arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_iter_bits_new(struct bpf_iter_bits *it, const long long unsigned int *unsafe_ptr__ign, unsigned int nr_words)"
+  )
   public static int bpf_iter_bits_new(Ptr<bpf_iter_bits> it,
       Ptr<java.lang. @Unsigned Long> unsafe_ptr__ign, @Unsigned int nr_words) {
     throw new MethodIsBPFRelatedFunction();
@@ -8517,6 +8712,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int* bpf_iter_bits_next(struct bpf_iter_bits *it)"
+  )
   public static Ptr<java.lang.Integer> bpf_iter_bits_next(Ptr<bpf_iter_bits> it) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8560,26 +8758,32 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_cgroup_fill_link_info((const struct bpf_iter_aux_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_iter_cgroup_fill_link_info((const struct bpf_iter_aux_info *)$arg1, $arg2)")
   public static int bpf_iter_cgroup_fill_link_info(Ptr<bpf_iter_aux_info> aux,
       Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_cgroup_show_fdinfo((const struct bpf_iter_aux_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_iter_cgroup_show_fdinfo((const struct bpf_iter_aux_info *)$arg1, $arg2)")
   public static void bpf_iter_cgroup_show_fdinfo(Ptr<bpf_iter_aux_info> aux, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_iter_css_destroy(struct bpf_iter_css *it)"
+  )
   public static void bpf_iter_css_destroy(Ptr<bpf_iter_css> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_iter_css_new(struct bpf_iter_css *it, struct cgroup_subsys_state *start, unsigned int flags)"
+  )
   public static int bpf_iter_css_new(Ptr<bpf_iter_css> it, Ptr<cgroup_subsys_state> start,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -8587,18 +8791,27 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct cgroup_subsys_state* bpf_iter_css_next(struct bpf_iter_css *it)"
+  )
   public static Ptr<cgroup_subsys_state> bpf_iter_css_next(Ptr<bpf_iter_css> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_iter_css_task_destroy(struct bpf_iter_css_task *it)"
+  )
   public static void bpf_iter_css_task_destroy(Ptr<bpf_iter_css_task> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_iter_css_task_new(struct bpf_iter_css_task *it, struct cgroup_subsys_state *css, unsigned int flags)"
+  )
   public static int bpf_iter_css_task_new(Ptr<bpf_iter_css_task> it, Ptr<cgroup_subsys_state> css,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -8606,6 +8819,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct task_struct* bpf_iter_css_task_next(struct bpf_iter_css_task *it)"
+  )
   public static Ptr<task_struct> bpf_iter_css_task_next(Ptr<bpf_iter_css_task> it) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8624,30 +8840,39 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_iter_dmabuf_destroy(struct bpf_iter_dmabuf *it)"
+  )
   public static void bpf_iter_dmabuf_destroy(Ptr<bpf_iter_dmabuf> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_iter_dmabuf_new(struct bpf_iter_dmabuf *it)"
+  )
   public static int bpf_iter_dmabuf_new(Ptr<bpf_iter_dmabuf> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct dma_buf* bpf_iter_dmabuf_next(struct bpf_iter_dmabuf *it)"
+  )
   public static Ptr<dma_buf> bpf_iter_dmabuf_next(Ptr<bpf_iter_dmabuf> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_dmabuf_show_fdinfo((const struct bpf_iter_aux_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_iter_dmabuf_show_fdinfo((const struct bpf_iter_aux_info *)$arg1, $arg2)")
   public static void bpf_iter_dmabuf_show_fdinfo(Ptr<bpf_iter_aux_info> aux, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_fill_link_info((const struct bpf_iter_aux_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_iter_fill_link_info((const struct bpf_iter_aux_info *)$arg1, $arg2)")
   public static int bpf_iter_fill_link_info(Ptr<bpf_iter_aux_info> aux, Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8695,7 +8920,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_iter_get_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_iter_get_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> bpf_iter_get_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -8757,24 +8982,33 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_iter_kmem_cache_destroy(struct bpf_iter_kmem_cache *it)"
+  )
   public static void bpf_iter_kmem_cache_destroy(Ptr<bpf_iter_kmem_cache> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_iter_kmem_cache_new(struct bpf_iter_kmem_cache *it)"
+  )
   public static int bpf_iter_kmem_cache_new(Ptr<bpf_iter_kmem_cache> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct kmem_cache* bpf_iter_kmem_cache_next(struct bpf_iter_kmem_cache *it)"
+  )
   public static Ptr<kmem_cache> bpf_iter_kmem_cache_next(Ptr<bpf_iter_kmem_cache> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_kmem_cache_show_fdinfo((const struct bpf_iter_aux_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_iter_kmem_cache_show_fdinfo((const struct bpf_iter_aux_info *)$arg1, $arg2)")
   public static void bpf_iter_kmem_cache_show_fdinfo(Ptr<bpf_iter_aux_info> aux,
       Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
@@ -8805,7 +9039,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_link_attach((const union bpf_attr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_iter_link_attach((const union bpf_attr *)$arg1, $arg2, $arg3)")
   public static int bpf_iter_link_attach(Ptr<bpf_attr> attr,
       @OriginalName("bpfptr_t") sockptr_t uattr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -8818,7 +9052,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_link_fill_link_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_iter_link_fill_link_info((const struct bpf_link *)$arg1, $arg2)")
   public static int bpf_iter_link_fill_link_info(Ptr<bpf_link> link, Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8837,20 +9071,20 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_link_show_fdinfo((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_iter_link_show_fdinfo((const struct bpf_link *)$arg1, $arg2)")
   public static void bpf_iter_link_show_fdinfo(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_map_fill_link_info((const struct bpf_iter_aux_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_iter_map_fill_link_info((const struct bpf_iter_aux_info *)$arg1, $arg2)")
   public static int bpf_iter_map_fill_link_info(Ptr<bpf_iter_aux_info> aux,
       Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_map_show_fdinfo((const struct bpf_iter_aux_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_iter_map_show_fdinfo((const struct bpf_iter_aux_info *)$arg1, $arg2)")
   public static void bpf_iter_map_show_fdinfo(Ptr<bpf_iter_aux_info> aux, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8869,18 +9103,27 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_iter_num_destroy(struct bpf_iter_num *it)"
+  )
   public static void bpf_iter_num_destroy(Ptr<bpf_iter_num> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_iter_num_new(struct bpf_iter_num *it, int start, int end)"
+  )
   public static int bpf_iter_num_new(Ptr<bpf_iter_num> it, int start, int end) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int* bpf_iter_num_next(struct bpf_iter_num *it)"
+  )
   public static Ptr<java.lang.Integer> bpf_iter_num_next(Ptr<bpf_iter_num> it) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8892,7 +9135,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_reg_target((const struct bpf_iter_reg*)$arg1)")
+  @BuiltinBPFFunction("bpf_iter_reg_target((const struct bpf_iter_reg *)$arg1)")
   public static int bpf_iter_reg_target(Ptr<bpf_iter_reg> reg_info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8905,12 +9148,18 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_iter_scx_dsq_destroy(struct bpf_iter_scx_dsq *it)"
+  )
   public static void bpf_iter_scx_dsq_destroy(Ptr<bpf_iter_scx_dsq> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_iter_scx_dsq_new(struct bpf_iter_scx_dsq *it, long long unsigned int dsq_id, long long unsigned int flags)"
+  )
   public static int bpf_iter_scx_dsq_new(Ptr<bpf_iter_scx_dsq> it, @Unsigned long dsq_id,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -8918,6 +9167,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct task_struct* bpf_iter_scx_dsq_next(struct bpf_iter_scx_dsq *it)"
+  )
   public static Ptr<task_struct> bpf_iter_scx_dsq_next(Ptr<bpf_iter_scx_dsq> it) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8931,6 +9183,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_iter_task_destroy(struct bpf_iter_task *it)"
+  )
   public static void bpf_iter_task_destroy(Ptr<bpf_iter_task> it) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8944,6 +9199,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_iter_task_new(struct bpf_iter_task *it, struct task_struct *task__nullable, unsigned int flags)"
+  )
   public static int bpf_iter_task_new(Ptr<bpf_iter_task> it, Ptr<task_struct> task__nullable,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -8951,24 +9209,33 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct task_struct* bpf_iter_task_next(struct bpf_iter_task *it)"
+  )
   public static Ptr<task_struct> bpf_iter_task_next(Ptr<bpf_iter_task> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_task_show_fdinfo((const struct bpf_iter_aux_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_iter_task_show_fdinfo((const struct bpf_iter_aux_info *)$arg1, $arg2)")
   public static void bpf_iter_task_show_fdinfo(Ptr<bpf_iter_aux_info> aux, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_iter_task_vma_destroy(struct bpf_iter_task_vma *it)"
+  )
   public static void bpf_iter_task_vma_destroy(Ptr<bpf_iter_task_vma> it) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_iter_task_vma_new(struct bpf_iter_task_vma *it, struct task_struct *task, long long unsigned int addr)"
+  )
   public static int bpf_iter_task_vma_new(Ptr<bpf_iter_task_vma> it, Ptr<task_struct> task,
       @Unsigned long addr) {
     throw new MethodIsBPFRelatedFunction();
@@ -8976,6 +9243,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct vm_area_struct* bpf_iter_task_vma_next(struct bpf_iter_task_vma *it)"
+  )
   public static Ptr<vm_area_struct> bpf_iter_task_vma_next(Ptr<bpf_iter_task_vma> it) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9001,7 +9271,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_iter_tcp_get_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_iter_tcp_get_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> bpf_iter_tcp_get_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -9132,7 +9402,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_iter_unix_get_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_iter_unix_get_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> bpf_iter_unix_get_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -9172,7 +9442,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_iter_unreg_target((const struct bpf_iter_reg*)$arg1)")
+  @BuiltinBPFFunction("bpf_iter_unreg_target((const struct bpf_iter_reg *)$arg1)")
   public static void bpf_iter_unreg_target(Ptr<bpf_iter_reg> reg_info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9241,7 +9511,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_jit_binary_pack_hdr((const struct bpf_prog*)$arg1)")
+  @BuiltinBPFFunction("bpf_jit_binary_pack_hdr((const struct bpf_prog *)$arg1)")
   public static Ptr<bpf_binary_header> bpf_jit_binary_pack_hdr(Ptr<bpf_prog> fp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9253,7 +9523,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_jit_blind_insn((const struct bpf_insn*)$arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_jit_blind_insn((const struct bpf_insn *)$arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4)")
   public static int bpf_jit_blind_insn(Ptr<bpf_insn> from, Ptr<bpf_insn> aux, Ptr<bpf_insn> to_buff,
       boolean emit_zext) {
     throw new MethodIsBPFRelatedFunction();
@@ -9296,7 +9566,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct btf_func_model*)bpf_jit_find_kfunc_model((const struct bpf_prog*)$arg1, (const struct bpf_insn*)$arg2))")
+  @BuiltinBPFFunction("((const struct btf_func_model*)bpf_jit_find_kfunc_model((const struct bpf_prog *)$arg1, (const struct bpf_insn *)$arg2))")
   public static Ptr<btf_func_model> bpf_jit_find_kfunc_model(Ptr<bpf_prog> prog,
       Ptr<bpf_insn> insn) {
     throw new MethodIsBPFRelatedFunction();
@@ -9315,7 +9585,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_jit_get_func_addr((const struct bpf_prog*)$arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_jit_get_func_addr((const struct bpf_prog *)$arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static int bpf_jit_get_func_addr(Ptr<bpf_prog> prog, Ptr<bpf_insn> insn,
       boolean extra_pass, Ptr<java.lang. @Unsigned Long> func_addr,
       Ptr<java.lang. @OriginalName("bool") Boolean> func_addr_fixed) {
@@ -9433,12 +9703,18 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_kfree_skb(struct sk_buff *skb)"
+  )
   public static void bpf_kfree_skb(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_kfunc_call_memb_release(struct prog_test_member *p)"
+  )
   public static void bpf_kfunc_call_memb_release(Ptr<prog_test_member> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9451,6 +9727,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_kfunc_call_test_release(struct prog_test_ref_kfunc *p)"
+  )
   public static void bpf_kfunc_call_test_release(Ptr<prog_test_ref_kfunc> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9480,25 +9759,25 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_kprobe_multi_addrs_cmp((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("bpf_kprobe_multi_addrs_cmp((const void *)$arg1, (const void *)$arg2)")
   public static int bpf_kprobe_multi_addrs_cmp(Ptr<?> a, Ptr<?> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_kprobe_multi_cookie_cmp((const void*)$arg1, (const void*)$arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("bpf_kprobe_multi_cookie_cmp((const void *)$arg1, (const void *)$arg2, (const void *)$arg3)")
   public static int bpf_kprobe_multi_cookie_cmp(Ptr<?> a, Ptr<?> b, Ptr<?> priv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_kprobe_multi_cookie_swap($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("bpf_kprobe_multi_cookie_swap($arg1, $arg2, $arg3, (const void *)$arg4)")
   public static void bpf_kprobe_multi_cookie_swap(Ptr<?> a, Ptr<?> b, int size, Ptr<?> priv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_kprobe_multi_filter((const struct bpf_prog*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_kprobe_multi_filter((const struct bpf_prog *)$arg1, $arg2)")
   public static int bpf_kprobe_multi_filter(Ptr<bpf_prog> prog, @Unsigned int kfunc_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9510,7 +9789,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_kprobe_multi_link_attach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_kprobe_multi_link_attach((const union bpf_attr *)$arg1, $arg2)")
   public static int bpf_kprobe_multi_link_attach(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9522,7 +9801,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_kprobe_multi_link_fill_link_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_kprobe_multi_link_fill_link_info((const struct bpf_link *)$arg1, $arg2)")
   public static int bpf_kprobe_multi_link_fill_link_info(Ptr<bpf_link> link,
       Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -9535,7 +9814,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_kprobe_multi_show_fdinfo((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_kprobe_multi_show_fdinfo((const struct bpf_link *)$arg1, $arg2)")
   public static void bpf_kprobe_multi_show_fdinfo(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9674,14 +9953,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_link_init($arg1, $arg2, (const struct bpf_link_ops*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_link_init($arg1, $arg2, (const struct bpf_link_ops *)$arg3, $arg4, $arg5)")
   public static void bpf_link_init(Ptr<bpf_link> link, bpf_link_type type, Ptr<bpf_link_ops> ops,
       Ptr<bpf_prog> prog, bpf_attach_type attach_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_link_init_sleepable($arg1, $arg2, (const struct bpf_link_ops*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("bpf_link_init_sleepable($arg1, $arg2, (const struct bpf_link_ops *)$arg3, $arg4, $arg5, $arg6)")
   public static void bpf_link_init_sleepable(Ptr<bpf_link> link, bpf_link_type type,
       Ptr<bpf_link_ops> ops, Ptr<bpf_prog> prog, bpf_attach_type attach_type, boolean sleepable) {
     throw new MethodIsBPFRelatedFunction();
@@ -9776,18 +10055,24 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_list_node* bpf_list_back(struct bpf_list_head *head)"
+  )
   public static Ptr<bpf_list_node> bpf_list_back(Ptr<bpf_list_head> head) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_list_node* bpf_list_front(struct bpf_list_head *head)"
+  )
   public static Ptr<bpf_list_node> bpf_list_front(Ptr<bpf_list_head> head) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_list_head_free((const struct btf_field*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_list_head_free((const struct btf_field *)$arg1, $arg2, $arg3)")
   public static void bpf_list_head_free(Ptr<btf_field> field, Ptr<?> list_head,
       Ptr<bpf_spin_lock> spin_lock) {
     throw new MethodIsBPFRelatedFunction();
@@ -9795,18 +10080,27 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_list_node* bpf_list_pop_back(struct bpf_list_head *head)"
+  )
   public static Ptr<bpf_list_node> bpf_list_pop_back(Ptr<bpf_list_head> head) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_list_node* bpf_list_pop_front(struct bpf_list_head *head)"
+  )
   public static Ptr<bpf_list_node> bpf_list_pop_front(Ptr<bpf_list_head> head) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_list_push_back_impl(struct bpf_list_head *head, struct bpf_list_node *node, void *meta__ign, long long unsigned int off)"
+  )
   public static int bpf_list_push_back_impl(Ptr<bpf_list_head> head, Ptr<bpf_list_node> node,
       Ptr<?> meta__ign, @Unsigned long off) {
     throw new MethodIsBPFRelatedFunction();
@@ -9814,6 +10108,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_list_push_front_impl(struct bpf_list_head *head, struct bpf_list_node *node, void *meta__ign, long long unsigned int off)"
+  )
   public static int bpf_list_push_front_impl(Ptr<bpf_list_head> head, Ptr<bpf_list_node> node,
       Ptr<?> meta__ign, @Unsigned long off) {
     throw new MethodIsBPFRelatedFunction();
@@ -9821,12 +10118,18 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_local_irq_restore(long unsigned int *flags__irq_flag)"
+  )
   public static void bpf_local_irq_restore(Ptr<java.lang. @Unsigned Long> flags__irq_flag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_local_irq_save(long unsigned int *flags__irq_flag)"
+  )
   public static void bpf_local_irq_save(Ptr<java.lang. @Unsigned Long> flags__irq_flag) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9877,7 +10180,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_local_storage_map_check_btf((const struct bpf_map*)$arg1, (const struct btf*)$arg2, (const struct btf_type*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("bpf_local_storage_map_check_btf((const struct bpf_map *)$arg1, (const struct btf *)$arg2, (const struct btf_type *)$arg3, (const struct btf_type *)$arg4)")
   public static int bpf_local_storage_map_check_btf(Ptr<bpf_map> map, Ptr<btf> btf,
       Ptr<btf_type> key_type, Ptr<btf_type> value_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -9891,7 +10194,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_local_storage_map_mem_usage((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("bpf_local_storage_map_mem_usage((const struct bpf_map *)$arg1)")
   public static @Unsigned long bpf_local_storage_map_mem_usage(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9905,7 +10208,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_log($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("bpf_log($arg1, (const u8 *)$arg2, $arg3_)")
   public static void bpf_log(Ptr<bpf_verifier_log> log, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9918,12 +10221,18 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_key* bpf_lookup_system_key(long long unsigned int id)"
+  )
   public static Ptr<bpf_key> bpf_lookup_system_key(@Unsigned long id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_key* bpf_lookup_user_key(int serial, long long unsigned int flags)"
+  )
   public static Ptr<bpf_key> bpf_lookup_user_key(int serial, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10006,32 +10315,32 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_bdev_setintegrity($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_lsm_bdev_setintegrity($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int bpf_lsm_bdev_setintegrity(Ptr<block_device> bdev, lsm_integrity_type type,
       Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_binder_set_context_mgr((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("bpf_lsm_binder_set_context_mgr((const struct cred *)$arg1)")
   public static int bpf_lsm_binder_set_context_mgr(Ptr<cred> mgr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_binder_transaction((const struct cred*)$arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("bpf_lsm_binder_transaction((const struct cred *)$arg1, (const struct cred *)$arg2)")
   public static int bpf_lsm_binder_transaction(Ptr<cred> from, Ptr<cred> to) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_binder_transfer_binder((const struct cred*)$arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("bpf_lsm_binder_transfer_binder((const struct cred *)$arg1, (const struct cred *)$arg2)")
   public static int bpf_lsm_binder_transfer_binder(Ptr<cred> from, Ptr<cred> to) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_binder_transfer_file((const struct cred*)$arg1, (const struct cred*)$arg2, (const struct file*)$arg3)")
+  @BuiltinBPFFunction("bpf_lsm_binder_transfer_file((const struct cred *)$arg1, (const struct cred *)$arg2, (const struct file *)$arg3)")
   public static int bpf_lsm_binder_transfer_file(Ptr<cred> from, Ptr<cred> to, Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10082,19 +10391,19 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_bpf_token_capable((const struct bpf_token*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_lsm_bpf_token_capable((const struct bpf_token *)$arg1, $arg2)")
   public static int bpf_lsm_bpf_token_capable(Ptr<bpf_token> token, int cap) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_bpf_token_cmd((const struct bpf_token*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_lsm_bpf_token_cmd((const struct bpf_token *)$arg1, $arg2)")
   public static int bpf_lsm_bpf_token_cmd(Ptr<bpf_token> token, bpf_cmd cmd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_bpf_token_create($arg1, $arg2, (const struct path*)$arg3)")
+  @BuiltinBPFFunction("bpf_lsm_bpf_token_create($arg1, $arg2, (const struct path *)$arg3)")
   public static int bpf_lsm_bpf_token_create(Ptr<bpf_token> token, Ptr<bpf_attr> attr,
       Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
@@ -10113,13 +10422,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_bprm_committed_creds((const struct linux_binprm*)$arg1)")
+  @BuiltinBPFFunction("bpf_lsm_bprm_committed_creds((const struct linux_binprm *)$arg1)")
   public static void bpf_lsm_bprm_committed_creds(Ptr<linux_binprm> bprm) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_bprm_committing_creds((const struct linux_binprm*)$arg1)")
+  @BuiltinBPFFunction("bpf_lsm_bprm_committing_creds((const struct linux_binprm *)$arg1)")
   public static void bpf_lsm_bprm_committing_creds(Ptr<linux_binprm> bprm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10131,33 +10440,33 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_bprm_creds_from_file($arg1, (const struct file*)$arg2)")
+  @BuiltinBPFFunction("bpf_lsm_bprm_creds_from_file($arg1, (const struct file *)$arg2)")
   public static int bpf_lsm_bprm_creds_from_file(Ptr<linux_binprm> bprm, Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_capable((const struct cred*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_lsm_capable((const struct cred *)$arg1, $arg2, $arg3, $arg4)")
   public static int bpf_lsm_capable(Ptr<cred> cred, Ptr<user_namespace> ns, int cap,
       @Unsigned int opts) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_capget((const struct task_struct*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_lsm_capget((const struct task_struct *)$arg1, $arg2, $arg3, $arg4)")
   public static int bpf_lsm_capget(Ptr<task_struct> target, Ptr<kernel_cap_t> effective,
       Ptr<kernel_cap_t> inheritable, Ptr<kernel_cap_t> permitted) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_capset($arg1, (const struct cred*)$arg2, (const struct {\n"
+  @BuiltinBPFFunction("bpf_lsm_capset($arg1, (const struct cred *)$arg2, (const struct {\n"
           + "  long long unsigned int val;\n"
-          + "}*)$arg3, (const struct {\n"
+          + "} *)$arg3, (const struct {\n"
           + "  long long unsigned int val;\n"
-          + "}*)$arg4, (const struct {\n"
+          + "} *)$arg4, (const struct {\n"
           + "  long long unsigned int val;\n"
-          + "}*)$arg5)")
+          + "} *)$arg5)")
   public static int bpf_lsm_capset(Ptr<cred> _new, Ptr<cred> old, Ptr<kernel_cap_t> effective,
       Ptr<kernel_cap_t> inheritable, Ptr<kernel_cap_t> permitted) {
     throw new MethodIsBPFRelatedFunction();
@@ -10177,26 +10486,26 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_cred_getlsmprop((const struct cred*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_lsm_cred_getlsmprop((const struct cred *)$arg1, $arg2)")
   public static void bpf_lsm_cred_getlsmprop(Ptr<cred> c, Ptr<lsm_prop> prop) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_cred_getsecid((const struct cred*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_lsm_cred_getsecid((const struct cred *)$arg1, $arg2)")
   public static void bpf_lsm_cred_getsecid(Ptr<cred> c, Ptr<java.lang. @Unsigned Integer> secid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_cred_prepare($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_cred_prepare($arg1, (const struct cred *)$arg2, $arg3)")
   public static int bpf_lsm_cred_prepare(Ptr<cred> _new, Ptr<cred> old,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_cred_transfer($arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("bpf_lsm_cred_transfer($arg1, (const struct cred *)$arg2)")
   public static void bpf_lsm_cred_transfer(Ptr<cred> _new, Ptr<cred> old) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10214,14 +10523,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_dentry_create_files_as($arg1, $arg2, $arg3, (const struct cred*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_lsm_dentry_create_files_as($arg1, $arg2, $arg3, (const struct cred *)$arg4, $arg5)")
   public static int bpf_lsm_dentry_create_files_as(Ptr<dentry> dentry, int mode, Ptr<qstr> name,
       Ptr<cred> old, Ptr<cred> _new) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_dentry_init_security($arg1, $arg2, (const struct qstr*)$arg3, (const u8**)$arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_lsm_dentry_init_security($arg1, $arg2, (const struct qstr *)$arg3, (const u8**)$arg4, $arg5)")
   public static int bpf_lsm_dentry_init_security(Ptr<dentry> dentry, int mode, Ptr<qstr> name,
       Ptr<String> xattr_name, Ptr<lsm_context> cp) {
     throw new MethodIsBPFRelatedFunction();
@@ -10321,7 +10630,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_find_cgroup_shim((const struct bpf_prog*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_lsm_find_cgroup_shim((const struct bpf_prog *)$arg1, $arg2)")
   public static void bpf_lsm_find_cgroup_shim(Ptr<bpf_prog> prog,
       Ptr<@OriginalName("bpf_func_t") Ptr<?>> bpf_func) {
     throw new MethodIsBPFRelatedFunction();
@@ -10346,20 +10655,20 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_lsm_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_lsm_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> bpf_lsm_func_proto(bpf_func_id func_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_get_retval_range((const struct bpf_prog*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_lsm_get_retval_range((const struct bpf_prog *)$arg1, $arg2)")
   public static int bpf_lsm_get_retval_range(Ptr<bpf_prog> prog,
       Ptr<bpf_retval_range> retval_range) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_getprocattr($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_getprocattr($arg1, (const u8 *)$arg2, $arg3)")
   public static int bpf_lsm_getprocattr(Ptr<task_struct> p, String name, Ptr<String> value) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10372,7 +10681,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_has_d_inode_locked((const struct bpf_prog*)$arg1)")
+  @BuiltinBPFFunction("bpf_lsm_has_d_inode_locked((const struct bpf_prog *)$arg1)")
   public static boolean bpf_lsm_has_d_inode_locked(Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10384,7 +10693,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_ib_endport_manage_subnet($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_ib_endport_manage_subnet($arg1, (const u8 *)$arg2, $arg3)")
   public static int bpf_lsm_ib_endport_manage_subnet(Ptr<?> sec, String dev_name, char port_num) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10403,14 +10712,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inet_conn_request((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_inet_conn_request((const struct sock *)$arg1, $arg2, $arg3)")
   public static int bpf_lsm_inet_conn_request(Ptr<sock> sk, Ptr<sk_buff> skb,
       Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inet_csk_clone($arg1, (const struct request_sock*)$arg2)")
+  @BuiltinBPFFunction("bpf_lsm_inet_csk_clone($arg1, (const struct request_sock *)$arg2)")
   public static void bpf_lsm_inet_csk_clone(Ptr<sock> newsk, Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10440,7 +10749,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_copy_up_xattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("bpf_lsm_inode_copy_up_xattr($arg1, (const u8 *)$arg2)")
   public static int bpf_lsm_inode_copy_up_xattr(Ptr<dentry> src, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10483,14 +10792,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_get_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("bpf_lsm_inode_get_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static int bpf_lsm_inode_get_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_getattr((const struct path*)$arg1)")
+  @BuiltinBPFFunction("bpf_lsm_inode_getattr((const struct path *)$arg1)")
   public static int bpf_lsm_inode_getattr(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10508,27 +10817,27 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_getsecurity($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_lsm_inode_getsecurity($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int bpf_lsm_inode_getsecurity(Ptr<mnt_idmap> idmap, Ptr<inode> inode, String name,
       Ptr<Ptr<?>> buffer, boolean alloc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_getxattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("bpf_lsm_inode_getxattr($arg1, (const u8 *)$arg2)")
   public static int bpf_lsm_inode_getxattr(Ptr<dentry> dentry, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_init_security($arg1, $arg2, (const struct qstr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_lsm_inode_init_security($arg1, $arg2, (const struct qstr *)$arg3, $arg4, $arg5)")
   public static int bpf_lsm_inode_init_security(Ptr<inode> inode, Ptr<inode> dir, Ptr<qstr> qstr,
       Ptr<xattr> xattrs, Ptr<java.lang.Integer> xattr_count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_init_security_anon($arg1, (const struct qstr*)$arg2, (const struct inode*)$arg3)")
+  @BuiltinBPFFunction("bpf_lsm_inode_init_security_anon($arg1, (const struct qstr *)$arg2, (const struct inode *)$arg3)")
   public static int bpf_lsm_inode_init_security_anon(Ptr<inode> inode, Ptr<qstr> name,
       Ptr<inode> context_inode) {
     throw new MethodIsBPFRelatedFunction();
@@ -10605,20 +10914,20 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_post_remove_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("bpf_lsm_inode_post_remove_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static void bpf_lsm_inode_post_remove_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_post_removexattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("bpf_lsm_inode_post_removexattr($arg1, (const u8 *)$arg2)")
   public static void bpf_lsm_inode_post_removexattr(Ptr<dentry> dentry, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_post_set_acl($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_inode_post_set_acl($arg1, (const u8 *)$arg2, $arg3)")
   public static void bpf_lsm_inode_post_set_acl(Ptr<dentry> dentry, String acl_name,
       Ptr<posix_acl> kacl) {
     throw new MethodIsBPFRelatedFunction();
@@ -10632,7 +10941,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_post_setxattr($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_lsm_inode_post_setxattr($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static void bpf_lsm_inode_post_setxattr(Ptr<dentry> dentry, String name, Ptr<?> value,
       @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -10645,14 +10954,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_remove_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("bpf_lsm_inode_remove_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static int bpf_lsm_inode_remove_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_removexattr($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("bpf_lsm_inode_removexattr($arg1, $arg2, (const u8 *)$arg3)")
   public static int bpf_lsm_inode_removexattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -10672,7 +10981,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_set_acl($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_lsm_inode_set_acl($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int bpf_lsm_inode_set_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String acl_name,
       Ptr<posix_acl> kacl) {
     throw new MethodIsBPFRelatedFunction();
@@ -10686,7 +10995,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_setintegrity((const struct inode*)$arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_lsm_inode_setintegrity((const struct inode *)$arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int bpf_lsm_inode_setintegrity(Ptr<inode> inode, lsm_integrity_type type,
       Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -10699,21 +11008,21 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_setsecurity($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_lsm_inode_setsecurity($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static int bpf_lsm_inode_setsecurity(Ptr<inode> inode, String name, Ptr<?> value,
       @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_setxattr($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("bpf_lsm_inode_setxattr($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int bpf_lsm_inode_setxattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name,
       Ptr<?> value, @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_symlink($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("bpf_lsm_inode_symlink($arg1, $arg2, (const u8 *)$arg3)")
   public static int bpf_lsm_inode_symlink(Ptr<inode> dir, Ptr<dentry> dentry, String old_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10725,7 +11034,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_inode_xattr_skipcap((const u8*)$arg1)")
+  @BuiltinBPFFunction("bpf_lsm_inode_xattr_skipcap((const u8 *)$arg1)")
   public static int bpf_lsm_inode_xattr_skipcap(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10749,13 +11058,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_is_trusted((const struct bpf_prog*)$arg1)")
+  @BuiltinBPFFunction("bpf_lsm_is_trusted((const struct bpf_prog *)$arg1)")
   public static boolean bpf_lsm_is_trusted(Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_ismaclabel((const u8*)$arg1)")
+  @BuiltinBPFFunction("bpf_lsm_ismaclabel((const u8 *)$arg1)")
   public static int bpf_lsm_ismaclabel(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10812,7 +11121,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_key_alloc($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_key_alloc($arg1, (const struct cred *)$arg2, $arg3)")
   public static int bpf_lsm_key_alloc(Ptr<key> key, Ptr<cred> cred, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10824,7 +11133,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_key_permission($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_key_permission($arg1, (const struct cred *)$arg2, $arg3)")
   public static int bpf_lsm_key_permission(
       @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> key_ref,
       Ptr<cred> cred, key_need_perm need_perm) {
@@ -10832,14 +11141,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_key_post_create_or_update($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("bpf_lsm_key_post_create_or_update($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6)")
   public static void bpf_lsm_key_post_create_or_update(Ptr<key> keyring, Ptr<key> key,
       Ptr<?> payload, @Unsigned long payload_len, @Unsigned long flags, boolean create) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_lock_kernel_down((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_lsm_lock_kernel_down((const u8 *)$arg1, $arg2)")
   public static int bpf_lsm_lock_kernel_down(String where, lockdown_reason level) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10870,7 +11179,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_move_mount((const struct path*)$arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("bpf_lsm_move_mount((const struct path *)$arg1, (const struct path *)$arg2)")
   public static int bpf_lsm_move_mount(Ptr<path> from_path, Ptr<path> to_path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10938,47 +11247,47 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_path_chmod((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_lsm_path_chmod((const struct path *)$arg1, $arg2)")
   public static int bpf_lsm_path_chmod(Ptr<path> path,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_path_chown((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_path_chown((const struct path *)$arg1, $arg2, $arg3)")
   public static int bpf_lsm_path_chown(Ptr<path> path, kuid_t uid, kgid_t gid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_path_chroot((const struct path*)$arg1)")
+  @BuiltinBPFFunction("bpf_lsm_path_chroot((const struct path *)$arg1)")
   public static int bpf_lsm_path_chroot(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_path_link($arg1, (const struct path*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_path_link($arg1, (const struct path *)$arg2, $arg3)")
   public static int bpf_lsm_path_link(Ptr<dentry> old_dentry, Ptr<path> new_dir,
       Ptr<dentry> new_dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_path_mkdir((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_path_mkdir((const struct path *)$arg1, $arg2, $arg3)")
   public static int bpf_lsm_path_mkdir(Ptr<path> dir, Ptr<dentry> dentry,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_path_mknod((const struct path*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_lsm_path_mknod((const struct path *)$arg1, $arg2, $arg3, $arg4)")
   public static int bpf_lsm_path_mknod(Ptr<path> dir, Ptr<dentry> dentry,
       @Unsigned @OriginalName("umode_t") short mode, @Unsigned int dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_path_notify((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_path_notify((const struct path *)$arg1, $arg2, $arg3)")
   public static int bpf_lsm_path_notify(Ptr<path> path, @Unsigned long mask,
       @Unsigned int obj_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -10991,32 +11300,32 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_path_rename((const struct path*)$arg1, $arg2, (const struct path*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_lsm_path_rename((const struct path *)$arg1, $arg2, (const struct path *)$arg3, $arg4, $arg5)")
   public static int bpf_lsm_path_rename(Ptr<path> old_dir, Ptr<dentry> old_dentry,
       Ptr<path> new_dir, Ptr<dentry> new_dentry, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_path_rmdir((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_lsm_path_rmdir((const struct path *)$arg1, $arg2)")
   public static int bpf_lsm_path_rmdir(Ptr<path> dir, Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_path_symlink((const struct path*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("bpf_lsm_path_symlink((const struct path *)$arg1, $arg2, (const u8 *)$arg3)")
   public static int bpf_lsm_path_symlink(Ptr<path> dir, Ptr<dentry> dentry, String old_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_path_truncate((const struct path*)$arg1)")
+  @BuiltinBPFFunction("bpf_lsm_path_truncate((const struct path *)$arg1)")
   public static int bpf_lsm_path_truncate(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_path_unlink((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_lsm_path_unlink((const struct path *)$arg1, $arg2)")
   public static int bpf_lsm_path_unlink(Ptr<path> dir, Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11046,7 +11355,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_post_notification((const struct cred*)$arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_post_notification((const struct cred *)$arg1, (const struct cred *)$arg2, $arg3)")
   public static int bpf_lsm_post_notification(Ptr<cred> w_cred, Ptr<cred> cred,
       Ptr<watch_notification> n) {
     throw new MethodIsBPFRelatedFunction();
@@ -11071,7 +11380,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_quotactl($arg1, $arg2, $arg3, (const struct super_block*)$arg4)")
+  @BuiltinBPFFunction("bpf_lsm_quotactl($arg1, $arg2, $arg3, (const struct super_block *)$arg4)")
   public static int bpf_lsm_quotactl(int cmds, int type, int id, Ptr<super_block> sb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11083,7 +11392,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_req_classify_flow((const struct request_sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_lsm_req_classify_flow((const struct request_sock *)$arg1, $arg2)")
   public static void bpf_lsm_req_classify_flow(Ptr<request_sock> req, Ptr<flowi_common> flic) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11095,7 +11404,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_sb_clone_mnt_opts((const struct super_block*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_lsm_sb_clone_mnt_opts((const struct super_block *)$arg1, $arg2, $arg3, $arg4)")
   public static int bpf_lsm_sb_clone_mnt_opts(Ptr<super_block> oldsb, Ptr<super_block> newsb,
       @Unsigned long kern_flags, Ptr<java.lang. @Unsigned Long> set_kern_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -11126,7 +11435,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_sb_kern_mount((const struct super_block*)$arg1)")
+  @BuiltinBPFFunction("bpf_lsm_sb_kern_mount((const struct super_block *)$arg1)")
   public static int bpf_lsm_sb_kern_mount(Ptr<super_block> sb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11138,14 +11447,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_sb_mount((const u8*)$arg1, (const struct path*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_lsm_sb_mount((const u8 *)$arg1, (const struct path *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int bpf_lsm_sb_mount(String dev_name, Ptr<path> path, String type,
       @Unsigned long flags, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_sb_pivotroot((const struct path*)$arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("bpf_lsm_sb_pivotroot((const struct path *)$arg1, (const struct path *)$arg2)")
   public static int bpf_lsm_sb_pivotroot(Ptr<path> old_path, Ptr<path> new_path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11208,7 +11517,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_secctx_to_secid((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_secctx_to_secid((const u8 *)$arg1, $arg2, $arg3)")
   public static int bpf_lsm_secctx_to_secid(String secdata, @Unsigned int seclen,
       Ptr<java.lang. @Unsigned Integer> secid) {
     throw new MethodIsBPFRelatedFunction();
@@ -11270,7 +11579,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_setprocattr((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_setprocattr((const u8 *)$arg1, $arg2, $arg3)")
   public static int bpf_lsm_setprocattr(String name, Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11283,7 +11592,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_settime((const struct timespec64*)$arg1, (const struct timezone*)$arg2)")
+  @BuiltinBPFFunction("bpf_lsm_settime((const struct timespec64 *)$arg1, (const struct timezone *)$arg2)")
   public static int bpf_lsm_settime(Ptr<timespec64> ts, Ptr<timezone> tz) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11326,7 +11635,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_sk_clone_security((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_lsm_sk_clone_security((const struct sock *)$arg1, $arg2)")
   public static void bpf_lsm_sk_clone_security(Ptr<sock> sk, Ptr<sock> newsk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11338,7 +11647,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_sk_getsecid((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_lsm_sk_getsecid((const struct sock *)$arg1, $arg2)")
   public static void bpf_lsm_sk_getsecid(Ptr<sock> sk, Ptr<java.lang. @Unsigned Integer> secid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11467,19 +11776,19 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_task_fix_setgid($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_task_fix_setgid($arg1, (const struct cred *)$arg2, $arg3)")
   public static int bpf_lsm_task_fix_setgid(Ptr<cred> _new, Ptr<cred> old, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_task_fix_setgroups($arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("bpf_lsm_task_fix_setgroups($arg1, (const struct cred *)$arg2)")
   public static int bpf_lsm_task_fix_setgroups(Ptr<cred> _new, Ptr<cred> old) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_task_fix_setuid($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_task_fix_setuid($arg1, (const struct cred *)$arg2, $arg3)")
   public static int bpf_lsm_task_fix_setuid(Ptr<cred> _new, Ptr<cred> old, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11521,7 +11830,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_task_kill($arg1, $arg2, $arg3, (const struct cred*)$arg4)")
+  @BuiltinBPFFunction("bpf_lsm_task_kill($arg1, $arg2, $arg3, (const struct cred *)$arg4)")
   public static int bpf_lsm_task_kill(Ptr<task_struct> p, Ptr<kernel_siginfo> info, int sig,
       Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
@@ -11541,7 +11850,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_task_prlimit((const struct cred*)$arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_lsm_task_prlimit((const struct cred *)$arg1, (const struct cred *)$arg2, $arg3)")
   public static int bpf_lsm_task_prlimit(Ptr<cred> cred, Ptr<cred> tcred, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11638,7 +11947,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_uring_override_creds((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("bpf_lsm_uring_override_creds((const struct cred *)$arg1)")
   public static int bpf_lsm_uring_override_creds(Ptr<cred> _new) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11650,13 +11959,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_userns_create((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("bpf_lsm_userns_create((const struct cred *)$arg1)")
   public static int bpf_lsm_userns_create(Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_verify_prog($arg1, (const struct bpf_prog*)$arg2)")
+  @BuiltinBPFFunction("bpf_lsm_verify_prog($arg1, (const struct bpf_prog *)$arg2)")
   public static int bpf_lsm_verify_prog(Ptr<bpf_verifier_log> vlog, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11738,7 +12047,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lsm_xfrm_state_pol_flow_match($arg1, $arg2, (const struct flowi_common*)$arg3)")
+  @BuiltinBPFFunction("bpf_lsm_xfrm_state_pol_flow_match($arg1, $arg2, (const struct flowi_common *)$arg3)")
   public static int bpf_lsm_xfrm_state_pol_flow_match(Ptr<xfrm_state> x, Ptr<xfrm_policy> xp,
       Ptr<flowi_common> flic) {
     throw new MethodIsBPFRelatedFunction();
@@ -11805,14 +12114,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_alloc_pages((const struct bpf_map*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_map_alloc_pages((const struct bpf_map *)$arg1, $arg2, $arg3, $arg4)")
   public static int bpf_map_alloc_pages(Ptr<bpf_map> map, int nid, @Unsigned long nr_pages,
       Ptr<Ptr<page>> pages) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_alloc_percpu((const struct bpf_map*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_map_alloc_percpu((const struct bpf_map *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<?> bpf_map_alloc_percpu(Ptr<bpf_map> map, @Unsigned long size,
       @Unsigned long align, @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -11851,7 +12160,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_do_batch((const union bpf_attr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_map_do_batch((const union bpf_attr *)$arg1, $arg2, $arg3)")
   public static int bpf_map_do_batch(Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr, int cmd) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11917,13 +12226,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_get_fd_by_id((const union bpf_attr*)$arg1)")
+  @BuiltinBPFFunction("bpf_map_get_fd_by_id((const union bpf_attr *)$arg1)")
   public static int bpf_map_get_fd_by_id(Ptr<bpf_attr> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_get_memcg((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("bpf_map_get_memcg((const struct bpf_map *)$arg1)")
   public static Ptr<mem_cgroup> bpf_map_get_memcg(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11965,7 +12274,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_kmalloc_node((const struct bpf_map*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_map_kmalloc_node((const struct bpf_map *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<?> bpf_map_kmalloc_node(Ptr<bpf_map> map, @Unsigned long size,
       @Unsigned @OriginalName("gfp_t") int flags, int node) {
     throw new MethodIsBPFRelatedFunction();
@@ -11979,7 +12288,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_kzalloc((const struct bpf_map*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_map_kzalloc((const struct bpf_map *)$arg1, $arg2, $arg3)")
   public static Ptr<?> bpf_map_kzalloc(Ptr<bpf_map> map, @Unsigned long size,
       @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -12006,7 +12315,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_meta_equal((const struct bpf_map*)$arg1, (const struct bpf_map*)$arg2)")
+  @BuiltinBPFFunction("bpf_map_meta_equal((const struct bpf_map *)$arg1, (const struct bpf_map *)$arg2)")
   public static boolean bpf_map_meta_equal(Ptr<bpf_map> meta0, Ptr<bpf_map> meta1) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12084,7 +12393,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_offload_map_mem_usage((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("bpf_map_offload_map_mem_usage((const struct bpf_map *)$arg1)")
   public static @Unsigned long bpf_map_offload_map_mem_usage(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12187,7 +12496,10 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_sum_elem_count((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("bpf_map_sum_elem_count((const struct bpf_map *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "long long int bpf_map_sum_elem_count(const struct bpf_map *map)"
+  )
   public static long bpf_map_sum_elem_count(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12207,13 +12519,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_value_size((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("bpf_map_value_size((const struct bpf_map *)$arg1)")
   public static @Unsigned int bpf_map_value_size(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_write_active((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("bpf_map_write_active((const struct bpf_map *)$arg1)")
   public static boolean bpf_map_write_active(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12319,7 +12631,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_mkobj_ops($arg1, $arg2, $arg3, (const struct inode_operations*)$arg4, (const struct file_operations*)$arg5)")
+  @BuiltinBPFFunction("bpf_mkobj_ops($arg1, $arg2, $arg3, (const struct inode_operations *)$arg4, (const struct file_operations *)$arg5)")
   public static int bpf_mkobj_ops(Ptr<dentry> dentry, @Unsigned @OriginalName("umode_t") short mode,
       Ptr<?> raw, Ptr<inode_operations> iops, Ptr<file_operations> fops) {
     throw new MethodIsBPFRelatedFunction();
@@ -12334,12 +12646,18 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_modify_return_test(int a, int *b)"
+  )
   public static int bpf_modify_return_test(int a, Ptr<java.lang.Integer> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_modify_return_test2(int a, int *b, short int c, int d, void *e, u8 f, int g)"
+  )
   public static int bpf_modify_return_test2(int a, Ptr<java.lang.Integer> b, short c, int d,
       Ptr<?> e, char f, int g) {
     throw new MethodIsBPFRelatedFunction();
@@ -12347,6 +12665,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_modify_return_test_tp(int nonce)"
+  )
   public static int bpf_modify_return_test_tp(int nonce) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12399,7 +12720,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_mprog_query((const union bpf_attr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_mprog_query((const union bpf_attr *)$arg1, $arg2, $arg3)")
   public static int bpf_mprog_query(Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr,
       Ptr<bpf_mprog_entry> entry) {
     throw new MethodIsBPFRelatedFunction();
@@ -12486,7 +12807,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_netns_link_fill_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_netns_link_fill_info((const struct bpf_link *)$arg1, $arg2)")
   public static int bpf_netns_link_fill_info(Ptr<bpf_link> link, Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12498,7 +12819,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_netns_link_show_fdinfo((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_netns_link_show_fdinfo((const struct bpf_link *)$arg1, $arg2)")
   public static void bpf_netns_link_show_fdinfo(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12511,13 +12832,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_nf_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_nf_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> bpf_nf_func_proto(bpf_func_id func_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_nf_link_attach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_nf_link_attach((const union bpf_attr *)$arg1, $arg2)")
   public static int bpf_nf_link_attach(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12535,7 +12856,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_nf_link_fill_link_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_nf_link_fill_link_info((const struct bpf_link *)$arg1, $arg2)")
   public static int bpf_nf_link_fill_link_info(Ptr<bpf_link> link, Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12547,7 +12868,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_nf_link_show_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_nf_link_show_info((const struct bpf_link *)$arg1, $arg2)")
   public static void bpf_nf_link_show_info(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12560,7 +12881,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_noop_prologue($arg1, $arg2, (const struct bpf_prog*)$arg3)")
+  @BuiltinBPFFunction("bpf_noop_prologue($arg1, $arg2, (const struct bpf_prog *)$arg3)")
   public static int bpf_noop_prologue(Ptr<bpf_insn> insn_buf, boolean direct_write,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -12568,49 +12889,52 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_obj_drop_impl(void *p__alloc, void *meta__ign)"
+  )
   public static void bpf_obj_drop_impl(Ptr<?> p__alloc, Ptr<?> meta__ign) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_obj_free_fields((const struct btf_record*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_obj_free_fields((const struct btf_record *)$arg1, $arg2)")
   public static void bpf_obj_free_fields(Ptr<btf_record> rec, Ptr<?> obj) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_obj_free_timer((const struct btf_record*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_obj_free_timer((const struct btf_record *)$arg1, $arg2)")
   public static void bpf_obj_free_timer(Ptr<btf_record> rec, Ptr<?> obj) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_obj_free_workqueue((const struct btf_record*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_obj_free_workqueue((const struct btf_record *)$arg1, $arg2)")
   public static void bpf_obj_free_workqueue(Ptr<btf_record> rec, Ptr<?> obj) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_obj_get_info_by_fd((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_obj_get_info_by_fd((const union bpf_attr *)$arg1, $arg2)")
   public static int bpf_obj_get_info_by_fd(Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_obj_get_next_id((const union bpf_attr*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_obj_get_next_id((const union bpf_attr *)$arg1, $arg2, $arg3, $arg4)")
   public static int bpf_obj_get_next_id(Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr, Ptr<idr> idr,
       Ptr<@OriginalName("spinlock_t") spinlock> lock) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_obj_get_user($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_obj_get_user($arg1, (const u8 *)$arg2, $arg3)")
   public static int bpf_obj_get_user(int path_fd, String pathname, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_obj_init((const struct btf_record*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_obj_init((const struct btf_record *)$arg1, $arg2)")
   public static void bpf_obj_init(Ptr<btf_record> rec, Ptr<?> obj) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12623,13 +12947,16 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_obj_name_cpy($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_obj_name_cpy($arg1, (const u8 *)$arg2, $arg3)")
   public static int bpf_obj_name_cpy(String dst, String src, @Unsigned int size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void* bpf_obj_new_impl(long long unsigned int local_type_id__k, void *meta__ign)"
+  )
   public static Ptr<?> bpf_obj_new_impl(@Unsigned long local_type_id__k, Ptr<?> meta__ign) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12641,13 +12968,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_obj_pin_user($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("bpf_obj_pin_user($arg1, $arg2, (const u8 *)$arg3)")
   public static int bpf_obj_pin_user(@Unsigned int ufd, int path_fd, String pathname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_offload_dev_create((const struct bpf_prog_offload_ops*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_offload_dev_create((const struct bpf_prog_offload_ops *)$arg1, $arg2)")
   public static Ptr<bpf_offload_dev> bpf_offload_dev_create(Ptr<bpf_prog_offload_ops> ops,
       Ptr<?> priv) {
     throw new MethodIsBPFRelatedFunction();
@@ -12742,14 +13069,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_patch_insn_data($arg1, $arg2, (const struct bpf_insn*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_patch_insn_data($arg1, $arg2, (const struct bpf_insn *)$arg3, $arg4)")
   public static Ptr<bpf_prog> bpf_patch_insn_data(Ptr<bpf_verifier_env> env, @Unsigned int off,
       Ptr<bpf_insn> patch, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_patch_insn_single($arg1, $arg2, (const struct bpf_insn*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_patch_insn_single($arg1, $arg2, (const struct bpf_insn *)$arg3, $arg4)")
   public static Ptr<bpf_prog> bpf_patch_insn_single(Ptr<bpf_prog> prog, @Unsigned int off,
       Ptr<bpf_insn> patch, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -12757,6 +13084,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_path_d_path(struct path *path, u8 *buf, long unsigned int buf__sz)"
+  )
   public static int bpf_path_d_path(Ptr<path> path, String buf, @Unsigned long buf__sz) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12816,12 +13146,18 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_percpu_obj_drop_impl(void *p__alloc, void *meta__ign)"
+  )
   public static void bpf_percpu_obj_drop_impl(Ptr<?> p__alloc, Ptr<?> meta__ign) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void* bpf_percpu_obj_new_impl(long long unsigned int local_type_id__k, void *meta__ign)"
+  )
   public static Ptr<?> bpf_percpu_obj_new_impl(@Unsigned long local_type_id__k, Ptr<?> meta__ign) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12862,7 +13198,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_perf_link_attach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_perf_link_attach((const union bpf_attr *)$arg1, $arg2)")
   public static int bpf_perf_link_attach(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12874,7 +13210,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_perf_link_fill_common((const struct perf_event*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("bpf_perf_link_fill_common((const struct perf_event *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int bpf_perf_link_fill_common(Ptr<perf_event> event, String uname,
       Ptr<java.lang. @Unsigned Integer> ulenp, Ptr<java.lang. @Unsigned Long> probe_offset,
       Ptr<java.lang. @Unsigned Long> probe_addr, Ptr<java.lang. @Unsigned Integer> fd_type,
@@ -12883,7 +13219,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_perf_link_fill_link_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_perf_link_fill_link_info((const struct bpf_link *)$arg1, $arg2)")
   public static int bpf_perf_link_fill_link_info(Ptr<bpf_link> link, Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12895,7 +13231,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_perf_link_show_fdinfo((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_perf_link_show_fdinfo((const struct bpf_link *)$arg1, $arg2)")
   public static void bpf_perf_link_show_fdinfo(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12928,12 +13264,18 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_preempt_disable()"
+  )
   public static void bpf_preempt_disable() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_preempt_enable()"
+  )
   public static void bpf_preempt_enable() {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12967,7 +13309,10 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_probe_read_kernel_dynptr($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("bpf_probe_read_kernel_dynptr($arg1, $arg2, $arg3, (const void *)$arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_probe_read_kernel_dynptr(struct bpf_dynptr *dptr, unsigned int off, unsigned int size, const void *unsafe_ptr__ign)"
+  )
   public static int bpf_probe_read_kernel_dynptr(Ptr<bpf_dynptr> dptr, @Unsigned int off,
       @Unsigned int size, Ptr<?> unsafe_ptr__ign) {
     throw new MethodIsBPFRelatedFunction();
@@ -12981,7 +13326,10 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_probe_read_kernel_str_dynptr($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("bpf_probe_read_kernel_str_dynptr($arg1, $arg2, $arg3, (const void *)$arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_probe_read_kernel_str_dynptr(struct bpf_dynptr *dptr, unsigned int off, unsigned int size, const void *unsafe_ptr__ign)"
+  )
   public static int bpf_probe_read_kernel_str_dynptr(Ptr<bpf_dynptr> dptr, @Unsigned int off,
       @Unsigned int size, Ptr<?> unsafe_ptr__ign) {
     throw new MethodIsBPFRelatedFunction();
@@ -12995,7 +13343,10 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_probe_read_user_dynptr($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("bpf_probe_read_user_dynptr($arg1, $arg2, $arg3, (const void *)$arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_probe_read_user_dynptr(struct bpf_dynptr *dptr, unsigned int off, unsigned int size, const void *unsafe_ptr__ign)"
+  )
   public static int bpf_probe_read_user_dynptr(Ptr<bpf_dynptr> dptr, @Unsigned int off,
       @Unsigned int size, Ptr<?> unsafe_ptr__ign) {
     throw new MethodIsBPFRelatedFunction();
@@ -13009,7 +13360,10 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_probe_read_user_str_dynptr($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("bpf_probe_read_user_str_dynptr($arg1, $arg2, $arg3, (const void *)$arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_probe_read_user_str_dynptr(struct bpf_dynptr *dptr, unsigned int off, unsigned int size, const void *unsafe_ptr__ign)"
+  )
   public static int bpf_probe_read_user_str_dynptr(Ptr<bpf_dynptr> dptr, @Unsigned int off,
       @Unsigned int size, Ptr<?> unsafe_ptr__ign) {
     throw new MethodIsBPFRelatedFunction();
@@ -13133,13 +13487,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_attach((const union bpf_attr*)$arg1)")
+  @BuiltinBPFFunction("bpf_prog_attach((const union bpf_attr *)$arg1)")
   public static int bpf_prog_attach(Ptr<bpf_attr> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_attach_check_attach_type((const struct bpf_prog*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_prog_attach_check_attach_type((const struct bpf_prog *)$arg1, $arg2)")
   public static int bpf_prog_attach_check_attach_type(Ptr<bpf_prog> prog,
       bpf_attach_type attach_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -13190,7 +13544,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_ctx_arg_info_init($arg1, (const struct bpf_ctx_arg_aux*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_prog_ctx_arg_info_init($arg1, (const struct bpf_ctx_arg_aux *)$arg2, $arg3)")
   public static int bpf_prog_ctx_arg_info_init(Ptr<bpf_prog> prog, Ptr<bpf_ctx_arg_aux> info,
       @Unsigned int cnt) {
     throw new MethodIsBPFRelatedFunction();
@@ -13203,7 +13557,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_detach((const union bpf_attr*)$arg1)")
+  @BuiltinBPFFunction("bpf_prog_detach((const union bpf_attr *)$arg1)")
   public static int bpf_prog_detach(Ptr<bpf_attr> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -13227,13 +13581,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_dev_bound_match((const struct bpf_prog*)$arg1, (const struct bpf_prog*)$arg2)")
+  @BuiltinBPFFunction("bpf_prog_dev_bound_match((const struct bpf_prog *)$arg1, (const struct bpf_prog *)$arg2)")
   public static boolean bpf_prog_dev_bound_match(Ptr<bpf_prog> lhs, Ptr<bpf_prog> rhs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_fill_jited_linfo($arg1, (const unsigned int*)$arg2)")
+  @BuiltinBPFFunction("bpf_prog_fill_jited_linfo($arg1, (const unsigned int *)$arg2)")
   public static void bpf_prog_fill_jited_linfo(Ptr<bpf_prog> prog,
       Ptr<java.lang. @Unsigned Integer> insn_to_jit_off) {
     throw new MethodIsBPFRelatedFunction();
@@ -13283,7 +13637,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_get_info_by_fd($arg1, $arg2, (const union bpf_attr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_prog_get_info_by_fd($arg1, $arg2, (const union bpf_attr *)$arg3, $arg4)")
   public static int bpf_prog_get_info_by_fd(Ptr<file> file, Ptr<bpf_prog> prog, Ptr<bpf_attr> attr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -13297,13 +13651,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_get_stats((const struct bpf_prog*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_prog_get_stats((const struct bpf_prog *)$arg1, $arg2)")
   public static void bpf_prog_get_stats(Ptr<bpf_prog> prog, Ptr<bpf_prog_kstats> stats) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_get_target_btf((const struct bpf_prog*)$arg1)")
+  @BuiltinBPFFunction("bpf_prog_get_target_btf((const struct bpf_prog *)$arg1)")
   public static Ptr<btf> bpf_prog_get_target_btf(Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -13316,19 +13670,19 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_get_type_path((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_prog_get_type_path((const u8 *)$arg1, $arg2)")
   public static Ptr<bpf_prog> bpf_prog_get_type_path(String name, bpf_prog_type type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_has_kfunc_call((const struct bpf_prog*)$arg1)")
+  @BuiltinBPFFunction("bpf_prog_has_kfunc_call((const struct bpf_prog *)$arg1)")
   public static boolean bpf_prog_has_kfunc_call(Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_has_trampoline((const struct bpf_prog*)$arg1)")
+  @BuiltinBPFFunction("bpf_prog_has_trampoline((const struct bpf_prog *)$arg1)")
   public static boolean bpf_prog_has_trampoline(Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -13403,7 +13757,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_map_compatible($arg1, (const struct bpf_prog*)$arg2)")
+  @BuiltinBPFFunction("bpf_prog_map_compatible($arg1, (const struct bpf_prog *)$arg2)")
   public static boolean bpf_prog_map_compatible(Ptr<bpf_map> map, Ptr<bpf_prog> fp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -13491,7 +13845,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_query((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_prog_query((const union bpf_attr *)$arg1, $arg2)")
   public static int bpf_prog_query(Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -13516,14 +13870,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_report_rqspinlock_violation((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_prog_report_rqspinlock_violation((const u8 *)$arg1, $arg2, $arg3)")
   public static void bpf_prog_report_rqspinlock_violation(String str, Ptr<?> lock,
       boolean irqsave) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_run_generic_xdp($arg1, $arg2, (const struct bpf_prog*)$arg3)")
+  @BuiltinBPFFunction("bpf_prog_run_generic_xdp($arg1, $arg2, (const struct bpf_prog *)$arg3)")
   public static @Unsigned int bpf_prog_run_generic_xdp(Ptr<sk_buff> skb, Ptr<xdp_buff> xdp,
       Ptr<bpf_prog> xdp_prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -13569,7 +13923,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_store_orig_filter($arg1, (const struct sock_fprog*)$arg2)")
+  @BuiltinBPFFunction("bpf_prog_store_orig_filter($arg1, (const struct sock_fprog *)$arg2)")
   public static int bpf_prog_store_orig_filter(Ptr<bpf_prog> fp, Ptr<sock_fprog> fprog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -13600,7 +13954,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_test_run_flow_dissector($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_prog_test_run_flow_dissector($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int bpf_prog_test_run_flow_dissector(Ptr<bpf_prog> prog, Ptr<bpf_attr> kattr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -13613,56 +13967,56 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_test_run_nf($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_prog_test_run_nf($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int bpf_prog_test_run_nf(Ptr<bpf_prog> prog, Ptr<bpf_attr> kattr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_test_run_raw_tp($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_prog_test_run_raw_tp($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int bpf_prog_test_run_raw_tp(Ptr<bpf_prog> prog, Ptr<bpf_attr> kattr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_test_run_sk_lookup($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_prog_test_run_sk_lookup($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int bpf_prog_test_run_sk_lookup(Ptr<bpf_prog> prog, Ptr<bpf_attr> kattr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_test_run_skb($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_prog_test_run_skb($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int bpf_prog_test_run_skb(Ptr<bpf_prog> prog, Ptr<bpf_attr> kattr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_test_run_syscall($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_prog_test_run_syscall($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int bpf_prog_test_run_syscall(Ptr<bpf_prog> prog, Ptr<bpf_attr> kattr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_test_run_tracing($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_prog_test_run_tracing($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int bpf_prog_test_run_tracing(Ptr<bpf_prog> prog, Ptr<bpf_attr> kattr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_test_run_xdp($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_prog_test_run_xdp($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int bpf_prog_test_run_xdp(Ptr<bpf_prog> prog, Ptr<bpf_attr> kattr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_prog_warn_on_exec((const void*)$arg1, (const struct bpf_insn*)$arg2)")
+  @BuiltinBPFFunction("bpf_prog_warn_on_exec((const void *)$arg1, (const struct bpf_insn *)$arg2)")
   public static @Unsigned int bpf_prog_warn_on_exec(Ptr<?> ctx, Ptr<bpf_insn> insn) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -13682,6 +14036,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_put_file(struct file *file)"
+  )
   public static void bpf_put_file(Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -13693,27 +14050,30 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_qdisc_bstats_update($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("bpf_qdisc_bstats_update($arg1, (const struct sk_buff *)$arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_qdisc_bstats_update(struct Qdisc *sch, const struct sk_buff *skb)"
+  )
   public static void bpf_qdisc_bstats_update(Ptr<Qdisc> sch, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_qdisc_btf_struct_access($arg1, (const struct bpf_reg_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_qdisc_btf_struct_access($arg1, (const struct bpf_reg_state *)$arg2, $arg3, $arg4)")
   public static int bpf_qdisc_btf_struct_access(Ptr<bpf_verifier_log> log, Ptr<bpf_reg_state> reg,
       int off, int size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_qdisc_gen_epilogue($arg1, (const struct bpf_prog*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_qdisc_gen_epilogue($arg1, (const struct bpf_prog *)$arg2, $arg3)")
   public static int bpf_qdisc_gen_epilogue(Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog,
       short ctx_stack_off) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_qdisc_gen_prologue($arg1, $arg2, (const struct bpf_prog*)$arg3)")
+  @BuiltinBPFFunction("bpf_qdisc_gen_prologue($arg1, $arg2, (const struct bpf_prog *)$arg3)")
   public static int bpf_qdisc_gen_prologue(Ptr<bpf_insn> insn_buf, boolean direct_write,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -13726,7 +14086,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_qdisc_init_member((const struct btf_type*)$arg1, (const struct btf_member*)$arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("bpf_qdisc_init_member((const struct btf_type *)$arg1, (const struct btf_member *)$arg2, $arg3, (const void *)$arg4)")
   public static int bpf_qdisc_init_member(Ptr<btf_type> t, Ptr<btf_member> member, Ptr<?> kdata,
       Ptr<?> udata) {
     throw new MethodIsBPFRelatedFunction();
@@ -13734,19 +14094,22 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_qdisc_init_prologue(struct Qdisc *sch, struct netlink_ext_ack *extack)"
+  )
   public static int bpf_qdisc_init_prologue(Ptr<Qdisc> sch, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_qdisc_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_qdisc_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean bpf_qdisc_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_qdisc_kfunc_filter((const struct bpf_prog*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_qdisc_kfunc_filter((const struct bpf_prog *)$arg1, $arg2)")
   public static int bpf_qdisc_kfunc_filter(Ptr<bpf_prog> prog, @Unsigned int kfunc_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -13765,12 +14128,18 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_qdisc_reset_destroy_epilogue(struct Qdisc *sch)"
+  )
   public static void bpf_qdisc_reset_destroy_epilogue(Ptr<Qdisc> sch) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_qdisc_skb_drop(struct sk_buff *skb, struct bpf_sk_buff_ptr *to_free_list)"
+  )
   public static void bpf_qdisc_skb_drop(Ptr<sk_buff> skb, Ptr<bpf_sk_buff_ptr> to_free_list) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -13789,13 +14158,16 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_qdisc_watchdog_schedule(struct Qdisc *sch, long long unsigned int expire, long long unsigned int delta_ns)"
+  )
   public static void bpf_qdisc_watchdog_schedule(Ptr<Qdisc> sch, @Unsigned long expire,
       @Unsigned long delta_ns) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_raw_tp_link_attach($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_raw_tp_link_attach($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int bpf_raw_tp_link_attach(Ptr<bpf_prog> prog, String user_tp_name,
       @Unsigned long cookie, bpf_attach_type attach_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -13808,7 +14180,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_raw_tp_link_fill_link_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_raw_tp_link_fill_link_info((const struct bpf_link *)$arg1, $arg2)")
   public static int bpf_raw_tp_link_fill_link_info(Ptr<bpf_link> link, Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -13820,13 +14192,13 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_raw_tp_link_show_fdinfo((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_raw_tp_link_show_fdinfo((const struct bpf_link *)$arg1, $arg2)")
   public static void bpf_raw_tp_link_show_fdinfo(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_rb_root_free((const struct btf_field*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_rb_root_free((const struct btf_field *)$arg1, $arg2, $arg3)")
   public static void bpf_rb_root_free(Ptr<btf_field> field, Ptr<?> rb_root,
       Ptr<bpf_spin_lock> spin_lock) {
     throw new MethodIsBPFRelatedFunction();
@@ -13834,6 +14206,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction("bpf_rbtree_add_impl($arg1, $arg2, (_Bool (*)(struct bpf_rb_node*, const struct bpf_rb_node*))$arg3, $arg4, $arg5)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_rbtree_add_impl(struct bpf_rb_root *root, struct bpf_rb_node *node, _Bool (*less)(struct bpf_rb_node*, const struct bpf_rb_node*), void *meta__ign, long long unsigned int off)"
+  )
   public static int bpf_rbtree_add_impl(Ptr<bpf_rb_root> root, Ptr<bpf_rb_node> node, Ptr<?> less,
       Ptr<?> meta__ign, @Unsigned long off) {
     throw new MethodIsBPFRelatedFunction();
@@ -13841,48 +14216,72 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_rb_node* bpf_rbtree_first(struct bpf_rb_root *root)"
+  )
   public static Ptr<bpf_rb_node> bpf_rbtree_first(Ptr<bpf_rb_root> root) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_rb_node* bpf_rbtree_left(struct bpf_rb_root *root, struct bpf_rb_node *node)"
+  )
   public static Ptr<bpf_rb_node> bpf_rbtree_left(Ptr<bpf_rb_root> root, Ptr<bpf_rb_node> node) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_rb_node* bpf_rbtree_remove(struct bpf_rb_root *root, struct bpf_rb_node *node)"
+  )
   public static Ptr<bpf_rb_node> bpf_rbtree_remove(Ptr<bpf_rb_root> root, Ptr<bpf_rb_node> node) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_rb_node* bpf_rbtree_right(struct bpf_rb_root *root, struct bpf_rb_node *node)"
+  )
   public static Ptr<bpf_rb_node> bpf_rbtree_right(Ptr<bpf_rb_root> root, Ptr<bpf_rb_node> node) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct bpf_rb_node* bpf_rbtree_root(struct bpf_rb_root *root)"
+  )
   public static Ptr<bpf_rb_node> bpf_rbtree_root(Ptr<bpf_rb_root> root) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_rcu_read_lock()"
+  )
   public static void bpf_rcu_read_lock() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_rcu_read_unlock()"
+  )
   public static void bpf_rcu_read_unlock() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_rdonly_cast((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_rdonly_cast((const void *)$arg1, $arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void* bpf_rdonly_cast(const void *obj__ign, unsigned int btf_id__k)"
+  )
   public static Ptr<?> bpf_rdonly_cast(Ptr<?> obj__ign, @Unsigned int btf_id__k) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -13917,18 +14316,24 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void* bpf_refcount_acquire_impl(void *p__refcounted_kptr, void *meta__ign)"
+  )
   public static Ptr<?> bpf_refcount_acquire_impl(Ptr<?> p__refcounted_kptr, Ptr<?> meta__ign) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_remove_dentry_xattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("bpf_remove_dentry_xattr($arg1, (const u8 *)$arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_remove_dentry_xattr(struct dentry *dentry, const u8 *name__str)"
+  )
   public static int bpf_remove_dentry_xattr(Ptr<dentry> dentry, String name__str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_remove_dentry_xattr_locked($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("bpf_remove_dentry_xattr_locked($arg1, (const u8 *)$arg2)")
   public static int bpf_remove_dentry_xattr_locked(Ptr<dentry> dentry, String name__str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -13941,6 +14346,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_res_spin_lock_irqsave(struct bpf_res_spin_lock *lock, long unsigned int *flags__irq_flag)"
+  )
   public static int bpf_res_spin_lock_irqsave(Ptr<bpf_res_spin_lock> lock,
       Ptr<java.lang. @Unsigned Long> flags__irq_flag) {
     throw new MethodIsBPFRelatedFunction();
@@ -13948,12 +14356,18 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_res_spin_unlock(struct bpf_res_spin_lock *lock)"
+  )
   public static void bpf_res_spin_unlock(Ptr<bpf_res_spin_lock> lock) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_res_spin_unlock_irqrestore(struct bpf_res_spin_lock *lock, long unsigned int *flags__irq_flag)"
+  )
   public static void bpf_res_spin_unlock_irqrestore(Ptr<bpf_res_spin_lock> lock,
       Ptr<java.lang. @Unsigned Long> flags__irq_flag) {
     throw new MethodIsBPFRelatedFunction();
@@ -14047,14 +14461,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_scx_btf_struct_access($arg1, (const struct bpf_reg_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_scx_btf_struct_access($arg1, (const struct bpf_reg_state *)$arg2, $arg3, $arg4)")
   public static int bpf_scx_btf_struct_access(Ptr<bpf_verifier_log> log, Ptr<bpf_reg_state> reg,
       int off, int size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_scx_check_member((const struct btf_type*)$arg1, (const struct btf_member*)$arg2, (const struct bpf_prog*)$arg3)")
+  @BuiltinBPFFunction("bpf_scx_check_member((const struct btf_type *)$arg1, (const struct btf_member *)$arg2, (const struct bpf_prog *)$arg3)")
   public static int bpf_scx_check_member(Ptr<btf_type> t, Ptr<btf_member> member,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -14067,14 +14481,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_scx_init_member((const struct btf_type*)$arg1, (const struct btf_member*)$arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("bpf_scx_init_member((const struct btf_type *)$arg1, (const struct btf_member *)$arg2, $arg3, (const void *)$arg4)")
   public static int bpf_scx_init_member(Ptr<btf_type> t, Ptr<btf_member> member, Ptr<?> kdata,
       Ptr<?> udata) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_scx_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_scx_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean bpf_scx_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -14105,7 +14519,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)bpf_search_tcp_opt((const u8*)$arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, $arg5, $arg6))")
+  @BuiltinBPFFunction("((const u8*)bpf_search_tcp_opt((const u8 *)$arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6))")
   public static Ptr<java.lang.Character> bpf_search_tcp_opt(Ptr<java.lang.Character> op,
       Ptr<java.lang.Character> opend, char search_kind, Ptr<java.lang.Character> magic,
       char magic_len, Ptr<java.lang. @OriginalName("bool") Boolean> eol) {
@@ -14182,6 +14596,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_send_signal_task(struct task_struct *task, int sig, enum pid_type type, long long unsigned int value)"
+  )
   public static int bpf_send_signal_task(Ptr<task_struct> task, int sig, pid_type type,
       @Unsigned long value) {
     throw new MethodIsBPFRelatedFunction();
@@ -14224,25 +14641,34 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "long long unsigned int* bpf_session_cookie()"
+  )
   public static Ptr<java.lang. @Unsigned Long> bpf_session_cookie() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool bpf_session_is_return()"
+  )
   public static boolean bpf_session_is_return() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_set_dentry_xattr($arg1, (const u8*)$arg2, (const struct bpf_dynptr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_set_dentry_xattr($arg1, (const u8 *)$arg2, (const struct bpf_dynptr *)$arg3, $arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_set_dentry_xattr(struct dentry *dentry, const u8 *name__str, const struct bpf_dynptr *value_p, int flags)"
+  )
   public static int bpf_set_dentry_xattr(Ptr<dentry> dentry, String name__str,
       Ptr<bpf_dynptr> value_p, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_set_dentry_xattr_locked($arg1, (const u8*)$arg2, (const struct bpf_dynptr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_set_dentry_xattr_locked($arg1, (const u8 *)$arg2, (const struct bpf_dynptr *)$arg3, $arg4)")
   public static int bpf_set_dentry_xattr_locked(Ptr<dentry> dentry, String name__str,
       Ptr<bpf_dynptr> value_p, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -14310,7 +14736,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_sk_base_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_sk_base_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> bpf_sk_base_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -14345,7 +14771,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_sk_lookup_run_v4((const struct net*)$arg1, $arg2, (const unsigned int)$arg3, (const short unsigned int)$arg4, (const unsigned int)$arg5, (const short unsigned int)$arg6, (const int)$arg7, $arg8)")
+  @BuiltinBPFFunction("bpf_sk_lookup_run_v4((const struct net *)$arg1, $arg2, (const unsigned int)$arg3, (const short unsigned int)$arg4, (const unsigned int)$arg5, (const short unsigned int)$arg6, (const int)$arg7, $arg8)")
   public static boolean bpf_sk_lookup_run_v4(Ptr<net> net, int protocol,
       @Unsigned @OriginalName("__be32") int saddr, @Unsigned @OriginalName("__be16") short sport,
       @Unsigned @OriginalName("__be32") int daddr, @Unsigned short dport, int ifindex,
@@ -14354,7 +14780,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_sk_lookup_run_v6((const struct net*)$arg1, $arg2, (const struct in6_addr*)$arg3, (const short unsigned int)$arg4, (const struct in6_addr*)$arg5, (const short unsigned int)$arg6, (const int)$arg7, $arg8)")
+  @BuiltinBPFFunction("bpf_sk_lookup_run_v6((const struct net *)$arg1, $arg2, (const struct in6_addr *)$arg3, (const short unsigned int)$arg4, (const struct in6_addr *)$arg5, (const short unsigned int)$arg6, (const int)$arg7, $arg8)")
   public static boolean bpf_sk_lookup_run_v6(Ptr<net> net, int protocol, Ptr<in6_addr> saddr,
       @Unsigned @OriginalName("__be16") short sport, Ptr<in6_addr> daddr, @Unsigned short dport,
       int ifindex, Ptr<Ptr<sock>> psk) {
@@ -14417,7 +14843,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_sk_storage_clone((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_sk_storage_clone((const struct sock *)$arg1, $arg2)")
   public static int bpf_sk_storage_clone(Ptr<sock> sk, Ptr<sock> newsk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -14443,7 +14869,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_sk_storage_diag_alloc((const struct nlattr*)$arg1)")
+  @BuiltinBPFFunction("bpf_sk_storage_diag_alloc((const struct nlattr *)$arg1)")
   public static Ptr<bpf_sk_storage_diag> bpf_sk_storage_diag_alloc(Ptr<nlattr> nla_stgs) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -14539,7 +14965,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_sk_storage_tracing_allowed((const struct bpf_prog*)$arg1)")
+  @BuiltinBPFFunction("bpf_sk_storage_tracing_allowed((const struct bpf_prog *)$arg1)")
   public static boolean bpf_sk_storage_tracing_allowed(Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -14616,7 +15042,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_skb_copy($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_skb_copy($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static @Unsigned long bpf_skb_copy(Ptr<?> dst_buff, Ptr<?> skb, @Unsigned long off,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -14657,6 +15083,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int bpf_skb_get_hash(struct sk_buff *skb)"
+  )
   public static @Unsigned int bpf_skb_get_hash(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -14928,7 +15357,10 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_sock_addr_set_sun_path($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_sock_addr_set_sun_path($arg1, (const u8 *)$arg2, $arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_sock_addr_set_sun_path(struct bpf_sock_addr_kern *sa_kern, const u8 *sun_path, unsigned int sun_path__sz)"
+  )
   public static int bpf_sock_addr_set_sun_path(Ptr<bpf_sock_addr_kern> sa_kern,
       Ptr<java.lang.Character> sun_path, @Unsigned int sun_path__sz) {
     throw new MethodIsBPFRelatedFunction();
@@ -14970,7 +15402,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_sock_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_sock_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int bpf_sock_convert_ctx_access(bpf_access_type type, Ptr<bpf_insn> si,
       Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog, Ptr<java.lang. @Unsigned Integer> target_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -14978,6 +15410,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_sock_destroy(struct sock_common *sock)"
+  )
   public static int bpf_sock_destroy(Ptr<sock_common> sock) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -15012,6 +15447,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_sock_ops_enable_tx_tstamp(struct bpf_sock_ops_kern *skops, long long unsigned int flags)"
+  )
   public static int bpf_sock_ops_enable_tx_tstamp(Ptr<bpf_sock_ops_kern> skops,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -15085,7 +15523,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_stats_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_stats_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int bpf_stats_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -15098,25 +15536,37 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strchr((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_strchr((const u8 *)$arg1, $arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_strchr(const u8 *s__ign, u8 c)"
+  )
   public static int bpf_strchr(String s__ign, char c) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strchrnul((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_strchrnul((const u8 *)$arg1, $arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_strchrnul(const u8 *s__ign, u8 c)"
+  )
   public static int bpf_strchrnul(String s__ign, char c) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strcmp((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("bpf_strcmp((const u8 *)$arg1, (const u8 *)$arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_strcmp(const u8 *s1__ign, const u8 *s2__ign)"
+  )
   public static int bpf_strcmp(String s1__ign, String s2__ign) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strcspn((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("bpf_strcspn((const u8 *)$arg1, (const u8 *)$arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_strcspn(const u8 *s__ign, const u8 *reject__ign)"
+  )
   public static int bpf_strcspn(String s__ign, String reject__ign) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -15171,27 +15621,36 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_stream_stage_printk($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("bpf_stream_stage_printk($arg1, (const u8 *)$arg2, $arg3_)")
   public static int bpf_stream_stage_printk(Ptr<bpf_stream_stage> ss, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_stream_vprintk($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_stream_vprintk($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_stream_vprintk(int stream_id, const u8 *fmt__str, const void *args, unsigned int len__sz, void *aux__prog)"
+  )
   public static int bpf_stream_vprintk(int stream_id, String fmt__str, Ptr<?> args,
       @Unsigned int len__sz, Ptr<?> aux__prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strlen((const u8*)$arg1)")
+  @BuiltinBPFFunction("bpf_strlen((const u8 *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_strlen(const u8 *s__ign)"
+  )
   public static int bpf_strlen(String s__ign) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strnchr((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_strnchr((const u8 *)$arg1, $arg2, $arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_strnchr(const u8 *s__ign, long unsigned int count, u8 c)"
+  )
   public static int bpf_strnchr(String s__ign, @Unsigned long count, char c) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -15204,31 +15663,46 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strnlen((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_strnlen((const u8 *)$arg1, $arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_strnlen(const u8 *s__ign, long unsigned int count)"
+  )
   public static int bpf_strnlen(String s__ign, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strnstr((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_strnstr((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_strnstr(const u8 *s1__ign, const u8 *s2__ign, long unsigned int len)"
+  )
   public static int bpf_strnstr(String s1__ign, String s2__ign, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strrchr((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_strrchr((const u8 *)$arg1, $arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_strrchr(const u8 *s__ign, int c)"
+  )
   public static int bpf_strrchr(String s__ign, int c) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strspn((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("bpf_strspn((const u8 *)$arg1, (const u8 *)$arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_strspn(const u8 *s__ign, const u8 *accept__ign)"
+  )
   public static int bpf_strspn(String s__ign, String accept__ign) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_strstr((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("bpf_strstr((const u8 *)$arg1, (const u8 *)$arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_strstr(const u8 *s1__ign, const u8 *s2__ign)"
+  )
   public static int bpf_strstr(String s1__ign, String s2__ign) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -15274,7 +15748,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_struct_ops_get((const void*)$arg1)")
+  @BuiltinBPFFunction("bpf_struct_ops_get((const void *)$arg1)")
   public static boolean bpf_struct_ops_get(Ptr<?> kdata) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -15346,7 +15820,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_struct_ops_map_link_fill_link_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_struct_ops_map_link_fill_link_info((const struct bpf_link *)$arg1, $arg2)")
   public static int bpf_struct_ops_map_link_fill_link_info(Ptr<bpf_link> link,
       Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -15360,7 +15834,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_struct_ops_map_link_show_fdinfo((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_struct_ops_map_link_show_fdinfo((const struct bpf_link *)$arg1, $arg2)")
   public static void bpf_struct_ops_map_link_show_fdinfo(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -15379,7 +15853,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_struct_ops_map_mem_usage((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("bpf_struct_ops_map_mem_usage((const struct bpf_map *)$arg1)")
   public static @Unsigned long bpf_struct_ops_map_mem_usage(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -15405,7 +15879,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_struct_ops_prepare_trampoline($arg1, $arg2, (const struct btf_func_model*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("bpf_struct_ops_prepare_trampoline($arg1, $arg2, (const struct btf_func_model *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int bpf_struct_ops_prepare_trampoline(Ptr<bpf_tramp_links> tlinks,
       Ptr<bpf_tramp_link> link, Ptr<btf_func_model> model, Ptr<?> stub_func, Ptr<Ptr<?>> _image,
       Ptr<java.lang. @Unsigned Integer> _image_off, boolean allow_alloc) {
@@ -15413,26 +15887,26 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_struct_ops_put((const void*)$arg1)")
+  @BuiltinBPFFunction("bpf_struct_ops_put((const void *)$arg1)")
   public static void bpf_struct_ops_put(Ptr<?> kdata) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_struct_ops_supported((const struct bpf_struct_ops*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_struct_ops_supported((const struct bpf_struct_ops *)$arg1, $arg2)")
   public static int bpf_struct_ops_supported(Ptr<bpf_struct_ops> st_ops, @Unsigned int moff) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_struct_ops_test_run($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_struct_ops_test_run($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int bpf_struct_ops_test_run(Ptr<bpf_prog> prog, Ptr<bpf_attr> kattr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_symlink($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("bpf_symlink($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int bpf_symlink(Ptr<mnt_idmap> idmap, Ptr<inode> dir, Ptr<dentry> dentry,
       String target) {
     throw new MethodIsBPFRelatedFunction();
@@ -15488,18 +15962,21 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct task_struct* bpf_task_acquire(struct task_struct *p)"
+  )
   public static Ptr<task_struct> bpf_task_acquire(Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_task_fd_query((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_task_fd_query((const union bpf_attr *)$arg1, $arg2)")
   public static int bpf_task_fd_query(Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_task_fd_query_copy((const union bpf_attr*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("bpf_task_fd_query_copy((const union bpf_attr *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6, $arg7)")
   public static int bpf_task_fd_query_copy(Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr,
       @Unsigned int prog_id, @Unsigned int fd_type, String buf, @Unsigned long probe_offset,
       @Unsigned long probe_addr) {
@@ -15508,18 +15985,27 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct task_struct* bpf_task_from_pid(int pid)"
+  )
   public static Ptr<task_struct> bpf_task_from_pid(int pid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct task_struct* bpf_task_from_vpid(int vpid)"
+  )
   public static Ptr<task_struct> bpf_task_from_vpid(int vpid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct cgroup* bpf_task_get_cgroup1(struct task_struct *task, int hierarchy_id)"
+  )
   public static Ptr<cgroup> bpf_task_get_cgroup1(Ptr<task_struct> task, int hierarchy_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -15533,6 +16019,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_task_release(struct task_struct *p)"
+  )
   public static void bpf_task_release(Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -15579,6 +16068,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "long int bpf_task_under_cgroup(struct task_struct *task, struct cgroup *ancestor)"
+  )
   public static long bpf_task_under_cgroup(Ptr<task_struct> task, Ptr<cgroup> ancestor) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -15605,7 +16097,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_tcp_ca_btf_struct_access($arg1, (const struct bpf_reg_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_tcp_ca_btf_struct_access($arg1, (const struct bpf_reg_state *)$arg2, $arg3, $arg4)")
   public static int bpf_tcp_ca_btf_struct_access(Ptr<bpf_verifier_log> log, Ptr<bpf_reg_state> reg,
       int off, int size) {
     throw new MethodIsBPFRelatedFunction();
@@ -15618,7 +16110,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_tcp_ca_cong_control($arg1, $arg2, $arg3, (const struct rate_sample*)$arg4)")
+  @BuiltinBPFFunction("bpf_tcp_ca_cong_control($arg1, $arg2, $arg3, (const struct rate_sample *)$arg4)")
   public static void bpf_tcp_ca_cong_control(Ptr<sock> sk, @Unsigned int ack, int flag,
       Ptr<rate_sample> rs) {
     throw new MethodIsBPFRelatedFunction();
@@ -15631,7 +16123,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_tcp_ca_get_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_tcp_ca_get_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> bpf_tcp_ca_get_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -15650,14 +16142,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_tcp_ca_init_member((const struct btf_type*)$arg1, (const struct btf_member*)$arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("bpf_tcp_ca_init_member((const struct btf_type *)$arg1, (const struct btf_member *)$arg2, $arg3, (const void *)$arg4)")
   public static int bpf_tcp_ca_init_member(Ptr<btf_type> t, Ptr<btf_member> member, Ptr<?> kdata,
       Ptr<?> udata) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_tcp_ca_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_tcp_ca_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean bpf_tcp_ca_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -15676,7 +16168,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_tcp_ca_pkts_acked($arg1, (const struct ack_sample*)$arg2)")
+  @BuiltinBPFFunction("bpf_tcp_ca_pkts_acked($arg1, (const struct ack_sample *)$arg2)")
   public static void bpf_tcp_ca_pkts_acked(Ptr<sock> sk, Ptr<ack_sample> sample) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -15786,7 +16278,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_tcp_sock_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_tcp_sock_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int bpf_tcp_sock_convert_ctx_access(bpf_access_type type,
       Ptr<bpf_insn> si, Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog,
       Ptr<java.lang. @Unsigned Integer> target_size) {
@@ -15832,6 +16324,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_throw(long long unsigned int cookie)"
+  )
   public static void bpf_throw(@Unsigned long cookie) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -15884,26 +16379,26 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_token_allow_cmd((const struct bpf_token*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_token_allow_cmd((const struct bpf_token *)$arg1, $arg2)")
   public static boolean bpf_token_allow_cmd(Ptr<bpf_token> token, bpf_cmd cmd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_token_allow_map_type((const struct bpf_token*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_token_allow_map_type((const struct bpf_token *)$arg1, $arg2)")
   public static boolean bpf_token_allow_map_type(Ptr<bpf_token> token, bpf_map_type type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_token_allow_prog_type((const struct bpf_token*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_token_allow_prog_type((const struct bpf_token *)$arg1, $arg2, $arg3)")
   public static boolean bpf_token_allow_prog_type(Ptr<bpf_token> token, bpf_prog_type prog_type,
       bpf_attach_type attach_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_token_capable((const struct bpf_token*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_token_capable((const struct bpf_token *)$arg1, $arg2)")
   public static boolean bpf_token_capable(Ptr<bpf_token> token, int cap) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -15927,7 +16422,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_token_get_info_by_fd($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_token_get_info_by_fd($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int bpf_token_get_info_by_fd(Ptr<bpf_token> token, Ptr<bpf_attr> attr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -16071,7 +16566,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_tracing_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)bpf_tracing_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> bpf_tracing_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -16084,7 +16579,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_tracing_link_fill_link_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_tracing_link_fill_link_info((const struct bpf_link *)$arg1, $arg2)")
   public static int bpf_tracing_link_fill_link_info(Ptr<bpf_link> link, Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -16096,7 +16591,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_tracing_link_show_fdinfo((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_tracing_link_show_fdinfo((const struct bpf_link *)$arg1, $arg2)")
   public static void bpf_tracing_link_show_fdinfo(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -16127,14 +16622,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_trampoline_enter((const struct bpf_prog*)$arg1)")
+  @BuiltinBPFFunction("bpf_trampoline_enter((const struct bpf_prog *)$arg1)")
   public static @OriginalName("bpf_trampoline_enter_t") Ptr<?> bpf_trampoline_enter(
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_trampoline_exit((const struct bpf_prog*)$arg1)")
+  @BuiltinBPFFunction("bpf_trampoline_exit((const struct bpf_prog *)$arg1)")
   public static @OriginalName("bpf_trampoline_exit_t") Ptr<?> bpf_trampoline_exit(
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -16213,7 +16708,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_unpriv_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_unpriv_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int bpf_unpriv_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -16226,7 +16721,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_uprobe_multi_link_attach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_uprobe_multi_link_attach((const union bpf_attr *)$arg1, $arg2)")
   public static int bpf_uprobe_multi_link_attach(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -16238,7 +16733,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_uprobe_multi_link_fill_link_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_uprobe_multi_link_fill_link_info((const struct bpf_link *)$arg1, $arg2)")
   public static int bpf_uprobe_multi_link_fill_link_info(Ptr<bpf_link> link,
       Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -16251,7 +16746,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_uprobe_multi_show_fdinfo((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_uprobe_multi_show_fdinfo((const struct bpf_link *)$arg1, $arg2)")
   public static void bpf_uprobe_multi_show_fdinfo(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -16278,14 +16773,14 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_verifier_log_write($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("bpf_verifier_log_write($arg1, (const u8 *)$arg2, $arg3_)")
   public static void bpf_verifier_log_write(Ptr<bpf_verifier_env> env, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_verifier_vlog($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_verifier_vlog($arg1, (const u8 *)$arg2, $arg3)")
   public static void bpf_verifier_vlog(Ptr<bpf_verifier_log> log, String fmt,
       Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
@@ -16293,6 +16788,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_verify_pkcs7_signature(struct bpf_dynptr *data_p, struct bpf_dynptr *sig_p, struct bpf_key *trusted_keyring)"
+  )
   public static int bpf_verify_pkcs7_signature(Ptr<bpf_dynptr> data_p, Ptr<bpf_dynptr> sig_p,
       Ptr<bpf_key> trusted_keyring) {
     throw new MethodIsBPFRelatedFunction();
@@ -16325,7 +16823,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_warn_invalid_xdp_action((const struct net_device*)$arg1, (const struct bpf_prog*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_warn_invalid_xdp_action((const struct net_device *)$arg1, (const struct bpf_prog *)$arg2, $arg3)")
   public static void bpf_warn_invalid_xdp_action(Ptr<net_device> dev, Ptr<bpf_prog> prog,
       @Unsigned int act) {
     throw new MethodIsBPFRelatedFunction();
@@ -16345,12 +16843,18 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_wq_init(struct bpf_wq *wq, void *p__map, unsigned int flags)"
+  )
   public static int bpf_wq_init(Ptr<bpf_wq> wq, Ptr<?> p__map, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction("bpf_wq_set_callback_impl($arg1, (int (*)(void*, int*, void*))$arg2, $arg3, $arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_wq_set_callback_impl(struct bpf_wq *wq, int (*callback_fn)(void*, int*, void*), unsigned int flags, void *aux__prog)"
+  )
   public static int bpf_wq_set_callback_impl(Ptr<bpf_wq> wq, Ptr<?> callback_fn,
       @Unsigned int flags, Ptr<?> aux__prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -16358,6 +16862,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_wq_start(struct bpf_wq *wq, unsigned int flags)"
+  )
   public static int bpf_wq_start(Ptr<bpf_wq> wq, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -16397,7 +16904,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_xdp_copy($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_xdp_copy($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static @Unsigned long bpf_xdp_copy(Ptr<?> dst, Ptr<?> ctx, @Unsigned long off,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -16439,13 +16946,16 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct xfrm_state* bpf_xdp_get_xfrm_state(struct xdp_md *ctx, struct bpf_xfrm_state_opts *opts, unsigned int opts__sz)"
+  )
   public static Ptr<xfrm_state> bpf_xdp_get_xfrm_state(Ptr<xdp_md> ctx,
       Ptr<bpf_xfrm_state_opts> opts, @Unsigned int opts__sz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_xdp_link_attach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_xdp_link_attach((const union bpf_attr *)$arg1, $arg2)")
   public static int bpf_xdp_link_attach(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -16463,7 +16973,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_xdp_link_fill_link_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_xdp_link_fill_link_info((const struct bpf_link *)$arg1, $arg2)")
   public static int bpf_xdp_link_fill_link_info(Ptr<bpf_link> link, Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -16475,7 +16985,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_xdp_link_show_fdinfo((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_xdp_link_show_fdinfo((const struct bpf_link *)$arg1, $arg2)")
   public static void bpf_xdp_link_show_fdinfo(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -16501,21 +17011,30 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_xdp_metadata_rx_hash((const struct xdp_md*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_xdp_metadata_rx_hash((const struct xdp_md *)$arg1, $arg2, $arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_xdp_metadata_rx_hash(const struct xdp_md *ctx, unsigned int *hash, enum xdp_rss_hash_type *rss_type)"
+  )
   public static int bpf_xdp_metadata_rx_hash(Ptr<xdp_md> ctx,
       Ptr<java.lang. @Unsigned Integer> hash, Ptr<xdp_rss_hash_type> rss_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_xdp_metadata_rx_timestamp((const struct xdp_md*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_xdp_metadata_rx_timestamp((const struct xdp_md *)$arg1, $arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_xdp_metadata_rx_timestamp(const struct xdp_md *ctx, long long unsigned int *timestamp)"
+  )
   public static int bpf_xdp_metadata_rx_timestamp(Ptr<xdp_md> ctx,
       Ptr<java.lang. @Unsigned Long> timestamp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_xdp_metadata_rx_vlan_tag((const struct xdp_md*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_xdp_metadata_rx_vlan_tag((const struct xdp_md *)$arg1, $arg2, $arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int bpf_xdp_metadata_rx_vlan_tag(const struct xdp_md *ctx, short unsigned int *vlan_proto, short unsigned int *vlan_tci)"
+  )
   public static int bpf_xdp_metadata_rx_vlan_tag(Ptr<xdp_md> ctx,
       Ptr<java.lang. @Unsigned @OriginalName("__be16") Short> vlan_proto,
       Ptr<java.lang. @Unsigned Short> vlan_tci) {
@@ -16564,7 +17083,7 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_xdp_sock_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_xdp_sock_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int bpf_xdp_sock_convert_ctx_access(bpf_access_type type,
       Ptr<bpf_insn> si, Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog,
       Ptr<java.lang. @Unsigned Integer> target_size) {
@@ -16587,6 +17106,9 @@ public final class BpfDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void bpf_xdp_xfrm_state_release(struct xfrm_state *x)"
+  )
   public static void bpf_xdp_xfrm_state_release(Ptr<xfrm_state> x) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -27196,7 +27718,7 @@ public final class BpfDefinitions {
 
     public @Unsigned short cnt;
 
-    public AnonymousType394349340C48 @Size(0) [] cands;
+    public AnonymousType394349340C54 @Size(0) [] cands;
   }
 
   @Type(
@@ -28903,11 +29425,11 @@ public final class BpfDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const struct btf*; unsigned int id; }"
+      cType = "struct { const struct btf *btf; unsigned int id; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType394349340C48 extends Struct {
+  public static class AnonymousType394349340C54 extends Struct {
     public Ptr<btf> btf;
 
     public @Unsigned int id;

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.samples.sched.DeadlineScheduler;
 import me.bechberger.ebpf.samples.sched.NestScheduler;
 import me.bechberger.ebpf.samples.sched.PrevCpuScheduler;
 import me.bechberger.ebpf.samples.sched.PriorityScheduler;
+import me.bechberger.ebpf.samples.sched.RunnableScheduler;
 import me.bechberger.ebpf.samples.sched.SMTPairScheduler;
 import me.bechberger.ebpf.samples.sched.SimpleScheduler;
 import me.bechberger.ebpf.samples.sched.TaskStorageScheduler;
@@ -110,6 +111,23 @@ class SchedulerSmokeTest {
         Thread.sleep(300);
         assertTrue(sched.isSchedulerAttachedProperly(),
                 "TaskStorageScheduler should remain attached 300 ms after start");
+    }
+
+    /**
+     * Exercises Item 1 ({@code @Property("extra_flags")}) and Item 2 ({@code runnable()} ops slot):
+     * after 300 ms of normal system activity the kernel should have invoked
+     * {@link RunnableScheduler#runnable} at least once.
+     */
+    @Test
+    @Timeout(15)
+    @TestScheduler(RunnableScheduler.class)
+    void runnableSchedulerInvokesRunnableCallback(RunnableScheduler sched) throws Exception {
+        Thread.sleep(300);
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "RunnableScheduler should remain attached 300 ms after start");
+        assertTrue(sched.getRunnableCalls() > 0,
+                "kernel should have called runnable() at least once in 300 ms; got "
+                        + sched.getRunnableCalls());
     }
 }
 

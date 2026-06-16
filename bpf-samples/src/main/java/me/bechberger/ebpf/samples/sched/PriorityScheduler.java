@@ -35,7 +35,9 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  *   sudo ./run.sh PriorityScheduler
  * </pre>
  *
- * <p>Based on {@code tools/sched_ext/scx_qmap.bpf.c} from the Linux kernel.
+ * <p>Based on
+ * <a href="https://github.com/torvalds/linux/blob/master/tools/sched_ext/scx_qmap.bpf.c">
+ * {@code tools/sched_ext/scx_qmap.bpf.c}</a> from the Linux kernel.
  */
 @BPF(license = "GPL")
 @Property(name = "sched_name", value = "priority_scheduler")

@@ -18,7 +18,24 @@ import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SL
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 /**
- * A vtime scheduler that tries to schedule fairly.
+ * A weighted virtual-time fair scheduler.
+ *
+ * <p>Tasks are dispatched from a vtime-ordered DSQ; the task with the smallest
+ * virtual time runs first.  After a task finishes a scheduling slice its vtime
+ * is advanced by {@code elapsed_ns * 100 / weight}, so heavier (higher-priority)
+ * tasks accumulate vtime more slowly and are therefore preferred.
+ *
+ * <p>Sleeping tasks can accumulate at most one slice of budget so that a task
+ * returning from a long sleep cannot monopolise the CPU.
+ *
+ * <p>Based on
+ * <a href="https://github.com/torvalds/linux/blob/master/tools/sched_ext/scx_simple.bpf.c">
+ * {@code scx_simple.bpf.c}</a> (vtime mode) from the Linux kernel.
+ *
+ * <p>Run with:
+ * <pre>
+ *   sudo ./run.sh VTimeScheduler
+ * </pre>
  */
 @BPF(license = "GPL")
 @Property(name = "sched_name", value = "vtime_scheduler")

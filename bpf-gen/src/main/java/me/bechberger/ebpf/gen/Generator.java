@@ -40,6 +40,12 @@ public class Generator {
     private static final Logger logger = Logger.getLogger(Generator.class.getName());
 
     private final String basePackage;
+    /**
+     * FUNC type-IDs whose {@code DECL_TAG} is {@code "bpf_kfunc"} — i.e. kernel
+     * BPF kfuncs requiring an {@code __ksym} forward declaration in emitted C.
+     * Populated by a pre-pass over rawTypes; consumed by {@link FuncType#toMethodSpec}.
+     */
+    private final java.util.Set<Integer> kfuncFuncIds = new java.util.HashSet<>();
     private static final boolean markAllCombinedTypesAsNotUsableInJava = true;
     private static final boolean dontEmitTypeDefs = true;
     private static final boolean ignoreBitOffset = true;
@@ -1409,6 +1415,18 @@ public class Generator {
             @Override
             public MethodSpec toMethodSpec(Generator gen) {
                 var spec = impl.toMethodSpec(gen, name, javaDoc);
+                if (spec != null && gen.kfuncFuncIds.contains(id)) {
+                    String signature;
+                    try {
+                        var stmt = impl.toCType(name).toStatement().toPrettyString();
+                        signature = stmt.endsWith(";") ? stmt.substring(0, stmt.length() - 1).strip() : stmt.strip();
+                    } catch (Exception e) {
+                        signature = "";
+                    }
+                    var kfuncAnn = AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.bpf.KFunc.class))
+                            .addMember("signature", "$S", signature).build();
+                    spec = spec.toBuilder().addAnnotation(kfuncAnn).build();
+                }
                 if (deprecated && spec != null) {
                     spec = spec.toBuilder().addAnnotation(Deprecated.class).build();
                 }
@@ -1871,6 +1889,18 @@ public class Generator {
     }
 
     private void process(List<JSONObjectWithType> rawTypes) {
+        // Pre-pass: collect FUNC type-IDs tagged "bpf_kfunc" so we can emit
+        // @KFunc on the generated method stubs. The DECL_TAG record points
+        // at its target via type_id and carries the tag string in name.
+        for (var rawType : rawTypes) {
+            if (rawType.kind == Kind.DECL_TAG && "bpf_kfunc".equals(rawType.getName())) {
+                try {
+                    kfuncFuncIds.add(rawType.getInteger("type_id"));
+                } catch (Exception ignored) {
+                    // malformed DECL_TAG, skip
+                }
+            }
+        }
         for (var rawType : rawTypes) {
             processRawType(rawType);
         }

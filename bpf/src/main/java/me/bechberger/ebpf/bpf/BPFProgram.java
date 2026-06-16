@@ -519,6 +519,56 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     /**
+     * Invoke a {@code SEC("syscall")} BPF program from userspace via {@code BPF_PROG_TEST_RUN}.
+     *
+     * <p>The program must be declared with {@code @BPFFunction(section = "syscall",
+     * headerTemplate = "int BPF_PROG($name, struct ctx *ctx)", autoAttach = false)}. The Java
+     * {@code ctx} class must be a {@code @Type} struct registered with this BPFProgram.
+     *
+     * <p>The ctx struct is serialized into a flat buffer, handed to the kernel as
+     * {@code bpf_test_run_opts.ctx_in}, and the buffer (with any kernel-side writes) is parsed
+     * back into a fresh {@code T} on success.
+     *
+     * @param programName the name of the {@code @BPFFunction} (must match the Java method name)
+     * @param ctx         the input context
+     * @param <T>         the {@code @Type} class of the context struct
+     * @return a {@link SyscallResult} carrying the program's {@code int} return value and the
+     *         post-call ctx state
+     * @throws BPFError if the program is not found, the ctx type is unknown, or the kernel call fails
+     */
+    public <T> SyscallResult<T> runSyscallProgram(String programName, T ctx) {
+        @SuppressWarnings("unchecked")
+        Class<T> ctxClass = (Class<T>) ctx.getClass();
+        BPFStructType<T> type = getStructTypeForClass(ctxClass);
+        ProgramHandle prog = getProgramByName(programName);
+        int progFd = Lib_2.bpf_program__fd(prog.prog());
+        if (progFd < 0) {
+            throw new BPFError("Failed to get fd for syscall program '" + programName + "'", -progFd);
+        }
+        try (Arena arena = Arena.ofConfined()) {
+            long ctxSize = type.size();
+            MemorySegment ctxBuf = arena.allocate(ctxSize);
+            type.setMemory(ctxBuf, ctx);
+            MemorySegment opts = bpf_test_run_opts.allocate(arena);
+            bpf_test_run_opts.sz(opts, bpf_test_run_opts.sizeof());
+            bpf_test_run_opts.ctx_in(opts, ctxBuf);
+            bpf_test_run_opts.ctx_size_in(opts, (int) ctxSize);
+            int ret = Lib_2.bpf_prog_test_run_opts(progFd, opts);
+            if (ret != 0) {
+                throw new BPFError("bpf_prog_test_run_opts failed for '" + programName + "'", -ret);
+            }
+            T updated = type.parseMemory(ctxBuf);
+            return new SyscallResult<>(bpf_test_run_opts.retval(opts), updated);
+        }
+    }
+
+    /**
+     * Result of {@link #runSyscallProgram(String, Object)}: the program's return value and the
+     * post-call ctx state.
+     */
+    public record SyscallResult<T>(int retval, T ctx) {}
+
+    /**
      * Thrown when attaching a specific program / entry function fails
      */
     public static class BPFAttachError extends BPFError {

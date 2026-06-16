@@ -29,7 +29,9 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  *       to {@link VTimeScheduler}.  Idle tasks are given at most one slice budget.</li>
  * </ul>
  *
- * <p>Based on {@code tools/sched_ext/scx_simple.bpf.c} from the Linux kernel.
+ * <p>Based on
+ * <a href="https://github.com/torvalds/linux/blob/master/tools/sched_ext/scx_simple.bpf.c">
+ * {@code tools/sched_ext/scx_simple.bpf.c}</a> from the Linux kernel.
  */
 @BPF(license = "GPL")
 @Property(name = "sched_name", value = "simple_scheduler")
@@ -54,7 +56,7 @@ public abstract class SimpleScheduler extends SchedulerBase implements Scheduler
 
     @Override
     public int selectCPU(Ptr<task_struct> p, int prev_cpu, long wake_flags) {
-        return selectCpuIdleOrFallback(p, prev_cpu, wake_flags, SHARED_DSQ_ID);
+        return selectCpuFifoIdleOrFallback(p, prev_cpu, wake_flags, SHARED_DSQ_ID);
     }
 
     @Override
