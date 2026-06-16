@@ -12,10 +12,14 @@ import me.bechberger.ebpf.bpf.BPFJ;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
+import me.bechberger.ebpf.bpf.map.BPFInodeStorage;
 import me.bechberger.ebpf.bpf.map.BPFLpmTrie;
 import me.bechberger.ebpf.bpf.map.BPFProgArray;
+import me.bechberger.ebpf.bpf.map.BPFSkStorage;
 import me.bechberger.ebpf.bpf.map.BPFTypedArena;
 import me.bechberger.ebpf.annotations.InArena;
+import me.bechberger.ebpf.runtime.runtime.inode;
+import me.bechberger.ebpf.runtime.runtime.sock;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
 import me.bechberger.ebpf.bpf.XDPHook;
@@ -2994,6 +2998,60 @@ public class CompilerPluginTest {
                 "currentBootNs() must lower to bpf_ktime_get_boot_ns():\n" + code);
         assertTrue(code.contains("bpf_get_numa_node_id()"),
                 "getNumaNodeId() must lower to bpf_get_numa_node_id():\n" + code);
+    }
+
+    // ──────────────────────────────────────────────────────────
+    // BPFInodeStorage C template generation
+    // ──────────────────────────────────────────────────────────
+
+    @Type
+    static class InodeState extends Struct {
+        public long openCount;
+    }
+
+    @BPF(license = "GPL")
+    public static abstract class InodeStorageUsage extends BPFProgram {
+
+        @BPFMapDefinition(maxEntries = 1)
+        BPFInodeStorage<InodeState> inodeState;
+    }
+
+    @Test
+    public void testInodeStorageCTemplate() {
+        String code = BPFProgram.getCode(InodeStorageUsage.class);
+        assertTrue(code.contains("BPF_MAP_TYPE_INODE_STORAGE"),
+                "Inode storage map type must appear in generated C:\n" + code);
+        assertTrue(code.contains("BPF_F_NO_PREALLOC"),
+                "BPF_F_NO_PREALLOC must appear for inode storage:\n" + code);
+        assertTrue(code.contains("inodeState"),
+                "Map field name 'inodeState' must appear in generated C:\n" + code);
+    }
+
+    // ──────────────────────────────────────────────────────────
+    // BPFSkStorage C template generation
+    // ──────────────────────────────────────────────────────────
+
+    @Type
+    static class SockState extends Struct {
+        public long bytesSent;
+    }
+
+    @BPF(license = "GPL")
+    public static abstract class SkStorageUsage extends BPFProgram {
+
+        @BPFMapDefinition(maxEntries = 1)
+        BPFSkStorage<SockState> sockState;
+    }
+
+    @Test
+    public void testSkStorageCTemplate() {
+        String code = BPFProgram.getCode(SkStorageUsage.class);
+        assertTrue(code.contains("BPF_MAP_TYPE_SK_STORAGE"),
+                "SK storage map type must appear in generated C:\n" + code);
+        assertTrue(code.contains("BPF_F_NO_PREALLOC"),
+                "BPF_F_NO_PREALLOC must appear for SK storage:\n" + code);
+        assertTrue(code.contains("sockState"),
+                "Map field name 'sockState' must appear in generated C:\n" + code);
     }
 
 }

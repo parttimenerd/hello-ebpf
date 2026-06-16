@@ -70,6 +70,7 @@ TESTS=(
     LpmTrieTest
     MapForEachLruTest
     MapForEachTest
+    MapPinningTest
     MapForEachTypedCtxTest
     PerCpuArrayMultiKeyTest
     PerCpuArrayTest

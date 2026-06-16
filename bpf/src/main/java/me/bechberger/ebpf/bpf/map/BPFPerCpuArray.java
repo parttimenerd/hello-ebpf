@@ -15,6 +15,7 @@ import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 /**
  * Per-CPU array map ({@code BPF_MAP_TYPE_PERCPU_ARRAY}).
@@ -151,5 +152,26 @@ public class BPFPerCpuArray<V> extends BPFMap {
     @NotUsableInJava
     public Ptr<V> bpf_get(@Unsigned int index) {
         throw new me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Iterates over all (index, per-CPU values) pairs in the array.
+     */
+    public void forEach(BiConsumer<Integer, List<V>> action) {
+        for (int i = 0; i < size; i++) {
+            action.accept(i, getAll(i));
+        }
+    }
+
+    /**
+     * Returns a list where each element is the list of per-CPU values for that index.
+     * The outer list has {@link #size()} elements.
+     */
+    public List<List<V>> toList() {
+        List<List<V>> result = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            result.add(getAll(i));
+        }
+        return result;
     }
 }

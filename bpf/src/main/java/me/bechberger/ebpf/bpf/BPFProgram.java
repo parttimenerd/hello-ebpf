@@ -1124,6 +1124,75 @@ public abstract class BPFProgram implements AutoCloseable {
         return recordMap(mapCreator.apply(getMapDescriptorByName(name)));
     }
 
+    // ──────────────────────────────────────────────────────────
+    // BPF object pinning
+    // ──────────────────────────────────────────────────────────
+
+    /**
+     * Pins the named BPF map to the BPF filesystem at the given path.
+     *
+     * <p>After pinning, the map survives the Java process exit and can be
+     * re-opened by another process using {@link #openPinnedMap}.
+     *
+     * @param mapName the map field name as declared in the {@code @BPF} class
+     * @param path    absolute path under the BPF filesystem (e.g. {@code /sys/fs/bpf/mymap})
+     * @throws BPFError if pinning fails
+     */
+    public void pinMap(String mapName, String path) {
+        try (Arena arena = Arena.ofConfined()) {
+            var fd = getMapDescriptorByName(mapName);
+            int ret = Lib_2.bpf_map__pin(fd.map(), arena.allocateFrom(path));
+            if (ret != 0) {
+                throw new BPFError("Failed to pin map '" + mapName + "' to " + path + ": " + ret);
+            }
+        }
+    }
+
+    /**
+     * Pins a {@link BPFLink} (an attached kprobe/uprobe/tracepoint/…) to the BPF
+     * filesystem at the given path so it survives the Java process exit.
+     *
+     * @param link the link returned by one of the {@code attach*} methods
+     * @param path absolute path under the BPF filesystem
+     * @throws BPFError if pinning fails
+     */
+    public void pinLink(BPFLink link, String path) {
+        try (Arena arena = Arena.ofConfined()) {
+            int ret = Lib_2.bpf_link__pin(link.segment(), arena.allocateFrom(path));
+            if (ret != 0) {
+                throw new BPFError("Failed to pin link to " + path + ": " + ret);
+            }
+        }
+    }
+
+    /**
+     * Opens a previously pinned BPF map from the BPF filesystem and wraps it
+     * with the supplied creator function.
+     *
+     * <pre>{@code
+     * BPFHashMap<Integer, Long> map = program.openPinnedMap(
+     *     "/sys/fs/bpf/mymap",
+     *     fd -> new BPFHashMap<>(fd, BPFType.INT32, BPFType.INT64));
+     * }</pre>
+     *
+     * @param path       absolute path to the pinned object
+     * @param mapCreator function that wraps the opened FD in a typed map
+     * @param <M>        map type
+     * @return the opened map
+     * @throws BPFError if the path cannot be opened
+     */
+    public <M extends BPFMap> M openPinnedMap(String path, Function<FileDescriptor, M> mapCreator) {
+        try (Arena arena = Arena.ofConfined()) {
+            int fd = Lib_2.bpf_obj_get(arena.allocateFrom(path));
+            if (fd < 0) {
+                throw new BPFError("Failed to open pinned map at " + path + ": " + fd);
+            }
+            openedFDs.add(fd);
+            var fileFd = new FileDescriptor(path, MemorySegment.NULL, fd);
+            return recordMap(mapCreator.apply(fileFd));
+        }
+    }
+
     /**
      * Get a ring buffer by name
      * <p>
