@@ -38,11 +38,12 @@ jobs:
         run: ./mvnw -ntp -B install -DskipTests -N && ./mvnw -ntp -B install -DskipTests -pl annotations,shared,bpf-processor
 
       - name: Install bpf-runtime
-        run: ./mvnw -ntp -B install -DskipTests -f bpf-runtime/pom.xml
+        run: ./mvnw -ntp -B install -DskipTests -f bpf-runtime/pom.xml -Dmaven.compiler.proc=none
         env:
-          # bpf-runtime has ~1000 generated files; JDK 22 javac hits StackOverflowError
-          # without a larger thread stack, and OOM without more heap.
-          MAVEN_OPTS: "-Xss8m -Xmx2g"
+          # bpf-runtime has ~1000 generated files; JDK 22 javac hits OOM/StackOverflow
+          # without extra heap and stack. Disable annotation processing (-proc:none)
+          # since bpf-runtime sources are pre-generated and don't need it.
+          MAVEN_OPTS: "-Xss8m -Xmx4g"
 
       - name: Install rawbpf
         run: ./mvnw -ntp -B install -DskipTests -f rawbpf/pom.xml
