@@ -135,13 +135,16 @@ jobs:
       - name: Install rawbpf
         run: ./mvnw -ntp -B install -DskipTests -f rawbpf/pom.xml
 
+      - name: Install full reactor (bpf-compiler-plugin, bpf, bpf-samples)
+        run: ./mvnw -ntp -B install -DskipTests
+
       - name: Run BPF tests (as root)
         run: |
           USER_M2=$HOME/.m2/repository
           sudo -E env HOME=$HOME JAVA_HOME=$JAVA_HOME PATH=$JAVA_HOME/bin:$PATH \
             ./mvnw -ntp -B test -pl bpf,bpf-samples \
             -Dmaven.test.skip=false -DskipTests=false \
-            -Dmaven.repo.local=$USER_M2
+            -Dmaven.repo.local=$USER_M2 -o
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v4
