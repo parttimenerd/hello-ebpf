@@ -11,8 +11,8 @@ import me.bechberger.ebpf.runtime.PtDefinitions;
 import me.bechberger.ebpf.runtime.interfaces.SystemCallHooks;
 import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,22 +58,29 @@ public class FEntryExitAutoAttachTest {
     }
 
     @Test
-    public void testOpenAt() throws IOException {
+    @Timeout(15)
+    public void testOpenAt() throws Exception {
         Path testFile = Path.of("");
         List<String> files = new ArrayList<>();
         try (var program = BPFProgram.load(OpenAt.class)) {
             program.autoAttachPrograms();
             program.targetPid.set((int) ProcessHandle.current().pid());
-            program.pathBuffer.setCallback(path -> {
-                files.add(path);
-            });
+            program.pathBuffer.setCallback(path -> files.add(path));
             testFile = TestUtil.triggerOpenAt();
-            try {
-                program.pathBuffer.consume();
-            } catch (Exception e) {
-                // Ignore
+            final Path expected = testFile;
+            long deadline = System.currentTimeMillis() + 5000;
+            while (!files.contains(expected.toString()) && System.currentTimeMillis() < deadline) {
+                try {
+                    program.pathBuffer.consume();
+                } catch (Exception e) {
+                    // ring buffer consume may throw if no events — ignore
+                }
+                if (!files.contains(expected.toString())) {
+                    Thread.sleep(50);
+                }
             }
-            assertTrue(files.contains(testFile.toString()));
+            assertTrue(files.contains(testFile.toString()),
+                    "Expected '" + testFile + "' in captured paths; got: " + files);
         }
     }
 

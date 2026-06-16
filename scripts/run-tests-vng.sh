@@ -115,6 +115,14 @@ ln -sfn "$LOGDIR" "$REPO/.vng-test-logs"
 
 declare -A COUNTS
 
+# Pre-compile both test modules on the host so that VNG (2G RAM) never has to
+# run the annotation processor + javac for all source files — that triggers
+# a JVM JIT crash inside virtme-ng.  The "Nothing to compile" fast-path inside
+# VNG takes <1 s.
+echo "--- Pre-compiling bpf and bpf-samples test classes on host ---"
+"$MVN" -ntp -pl bpf,bpf-samples test-compile -q 2>/dev/null || true
+echo "--- Done pre-compiling ---"
+
 for cls in "${TESTS[@]}"; do
     log="$LOGDIR/$cls.log"
     echo "=== $cls ==="
