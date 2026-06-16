@@ -6,10 +6,13 @@ import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
+import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.Property;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.Scheduler;
+import me.bechberger.ebpf.bpf.SchedulerStats;
+import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
 import me.bechberger.ebpf.type.Ptr;
 
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
@@ -45,6 +48,12 @@ public abstract class VTimeScheduler extends BPFProgram
     // current vtime
     final GlobalVariable<@Unsigned Long> vtime_now =
             new GlobalVariable<>(0L);
+
+    @BPFMapDefinition(maxEntries = 1)
+    BPFPerCpuArray<Long> enqueuedCounts;
+
+    @BPFMapDefinition(maxEntries = 1)
+    BPFPerCpuArray<Long> dispatchedCounts;
 
     /*
      * Built-in DSQs such as SCX_DSQ_GLOBAL cannot be used as
@@ -102,11 +111,13 @@ public abstract class VTimeScheduler extends BPFProgram
         scx_bpf_dsq_insert_vtime(p, SHARED_DSQ_ID,
                 SCX_SLICE_DFL.value(), vtime,
                 enq_flags);
+        SchedulerStats.incrementEnqueued(enqueuedCounts);
     }
 
     @Override
     public void dispatch(int cpu, Ptr<task_struct> prev) {
         scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        SchedulerStats.incrementDispatched(dispatchedCounts);
     }
 
     @Override
@@ -150,6 +161,14 @@ public abstract class VTimeScheduler extends BPFProgram
          * is about to be scheduled for the first time
          */
         p.val().scx.dsq_vtime = vtime_now.get();
+    }
+
+    public long getTotalEnqueued() {
+        return SchedulerStats.totalEnqueued(enqueuedCounts);
+    }
+
+    public long getTotalDispatched() {
+        return SchedulerStats.totalDispatched(dispatchedCounts);
     }
 
     public static void main(String[] args) {

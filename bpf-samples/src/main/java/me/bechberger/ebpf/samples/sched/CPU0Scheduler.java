@@ -2,9 +2,12 @@
 package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.annotations.bpf.BPF;
+import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.Property;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.Scheduler;
+import me.bechberger.ebpf.bpf.SchedulerStats;
+import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
 import me.bechberger.ebpf.type.Ptr;
 
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
@@ -39,6 +42,9 @@ public abstract class CPU0Scheduler extends BPFProgram implements Scheduler {
 
     static final long CPU0_DSQ_ID = 0;
 
+    @BPFMapDefinition(maxEntries = 1)
+    BPFPerCpuArray<Long> dispatchedCounts;
+
     @Override
     public int init() {
         return scx_bpf_create_dsq(CPU0_DSQ_ID, -1);
@@ -64,7 +70,12 @@ public abstract class CPU0Scheduler extends BPFProgram implements Scheduler {
     public void dispatch(int cpu, Ptr<task_struct> prev) {
         if (cpu == 0) {
             scx_bpf_dsq_move_to_local(CPU0_DSQ_ID);
+            SchedulerStats.incrementDispatched(dispatchedCounts);
         }
+    }
+
+    public long getTotalDispatched() {
+        return SchedulerStats.totalDispatched(dispatchedCounts);
     }
 
     public static void main(String[] args) throws Exception {

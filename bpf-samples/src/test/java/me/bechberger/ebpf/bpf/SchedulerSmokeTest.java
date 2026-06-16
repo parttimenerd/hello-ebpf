@@ -1,5 +1,6 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.samples.SampleScheduler;
 import me.bechberger.ebpf.samples.sched.ChaosScheduler;
 import me.bechberger.ebpf.samples.sched.CPU0Scheduler;
 import me.bechberger.ebpf.samples.sched.CentralScheduler;
@@ -191,6 +192,16 @@ class SchedulerSmokeTest {
         Thread.sleep(300);
         assertTrue(sched.isSchedulerAttachedProperly(),
                 "ChaosScheduler should remain attached 300 ms after start");
+    }
+
+    @Test
+    @Timeout(15)
+    @TestScheduler(value = SampleScheduler.class, autoAttach = false)
+    void sampleSchedulerAttachesAndRuns(SampleScheduler sched) throws Exception {
+        sched.attachScheduler();
+        Thread.sleep(300);
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "SampleScheduler should remain attached 300 ms after start");
     }
 }
 
