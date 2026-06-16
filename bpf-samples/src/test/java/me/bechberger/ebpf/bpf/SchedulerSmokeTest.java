@@ -3,6 +3,9 @@ package me.bechberger.ebpf.bpf;
 import me.bechberger.ebpf.samples.sched.CPU0Scheduler;
 import me.bechberger.ebpf.samples.sched.CentralScheduler;
 import me.bechberger.ebpf.samples.sched.DeadlineScheduler;
+import me.bechberger.ebpf.samples.sched.FCFSScheduler;
+import me.bechberger.ebpf.samples.sched.LotteryScheduler;
+import me.bechberger.ebpf.samples.sched.MinimalScheduler;
 import me.bechberger.ebpf.samples.sched.NestScheduler;
 import me.bechberger.ebpf.samples.sched.PrevCpuScheduler;
 import me.bechberger.ebpf.samples.sched.PriorityScheduler;
@@ -10,6 +13,7 @@ import me.bechberger.ebpf.samples.sched.RunnableScheduler;
 import me.bechberger.ebpf.samples.sched.SMTPairScheduler;
 import me.bechberger.ebpf.samples.sched.SimpleScheduler;
 import me.bechberger.ebpf.samples.sched.TaskStorageScheduler;
+import me.bechberger.ebpf.samples.sched.VTimeScheduler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +37,10 @@ class SchedulerSmokeTest {
         Thread.sleep(300);
         assertTrue(sched.isSchedulerAttachedProperly(),
                 "SimpleScheduler should remain attached 300 ms after start");
+        assertTrue(sched.getTotalEnqueued() > 0,
+                "SchedulerStats.totalEnqueued should be positive after 300 ms of activity");
+        assertTrue(sched.getTotalDispatched() > 0,
+                "SchedulerStats.totalDispatched should be positive after 300 ms of activity");
     }
 
     @Test
@@ -128,6 +136,46 @@ class SchedulerSmokeTest {
         assertTrue(sched.getRunnableCalls() > 0,
                 "kernel should have called runnable() at least once in 300 ms; got "
                         + sched.getRunnableCalls());
+    }
+
+    @Test
+    @Timeout(15)
+    @TestScheduler(MinimalScheduler.class)
+    void minimalSchedulerAttachesAndRuns(MinimalScheduler sched) throws Exception {
+        Thread.sleep(300);
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "MinimalScheduler should remain attached 300 ms after start");
+    }
+
+    @Test
+    @Timeout(15)
+    @TestScheduler(FCFSScheduler.class)
+    void fcfsSchedulerAttachesAndRuns(FCFSScheduler sched) throws Exception {
+        Thread.sleep(300);
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "FCFSScheduler should remain attached 300 ms after start");
+    }
+
+    @Test
+    @Timeout(15)
+    @TestScheduler(VTimeScheduler.class)
+    void vtimeSchedulerAttachesAndRuns(VTimeScheduler sched) throws Exception {
+        Thread.sleep(300);
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "VTimeScheduler should remain attached 300 ms after start");
+    }
+
+    /**
+     * Exercises {@link Scheduler#bpf_for_each_dsq}, {@link Scheduler#tryDispatchToLocalCpu},
+     * {@link Scheduler#hasSchedulingConstraints}, and {@link me.bechberger.ebpf.type.Box} usage.
+     */
+    @Test
+    @Timeout(15)
+    @TestScheduler(LotteryScheduler.class)
+    void lotterySchedulerAttachesAndRuns(LotteryScheduler sched) throws Exception {
+        Thread.sleep(300);
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "LotteryScheduler should remain attached 300 ms after start");
     }
 }
 
