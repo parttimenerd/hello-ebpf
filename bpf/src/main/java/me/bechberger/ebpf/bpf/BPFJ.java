@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.bpf.map.BPFArena;
 import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_timer;
+import me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 import me.bechberger.ebpf.runtime.helpers.BPFHelpers;
 import me.bechberger.ebpf.type.Ptr;
 
@@ -536,5 +537,77 @@ public class BPFJ {
         var t = new bpf_timer();
         t.__opaque = new long[2];
         return t;
+    }
+
+    // -----------------------------------------------------------------------
+    // Process / task helpers
+    // -----------------------------------------------------------------------
+
+    /**
+     * Returns a BTF-tracked pointer to the {@code task_struct} of the currently
+     * executing task.
+     *
+     * <p>Unlike the raw {@code bpf_get_current_task()} which returns an opaque
+     * {@code unsigned long}, this variant returns a proper {@code Ptr<task_struct>}
+     * that participates in CO-RE field access and allows the BPF verifier to check
+     * field types.
+     *
+     * <p>Equivalent to the kernel helper {@code bpf_get_current_task_btf()}.
+     */
+    @BuiltinBPFFunction("bpf_get_current_task_btf()")
+    @NotUsableInJava
+    public static Ptr<task_struct> currentTask() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Sends the given signal to the current process.
+     *
+     * <p>The signal is sent to the thread group of the task that triggered the
+     * BPF program. Equivalent to {@code bpf_send_signal(sig)}.
+     *
+     * <p>Requires kernel ≥ 5.3. Returns 0 on success, negative errno otherwise.
+     *
+     * @param sig signal number, e.g. {@code 9} for {@code SIGKILL}
+     * @return 0 on success, negative errno on error
+     */
+    @BuiltinBPFFunction("bpf_send_signal($arg1)")
+    @NotUsableInJava
+    public static long sendSignal(@Unsigned int sig) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Sends the given signal to the current <em>thread</em> only (not the whole
+     * process). Equivalent to {@code bpf_send_signal_thread(sig)}.
+     *
+     * <p>Requires kernel ≥ 5.10.
+     *
+     * @param sig signal number
+     * @return 0 on success, negative errno on error
+     */
+    @BuiltinBPFFunction("bpf_send_signal_thread($arg1)")
+    @NotUsableInJava
+    public static long sendSignalThread(@Unsigned int sig) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Overrides the return value of the probed function.
+     *
+     * <p>Only available in {@code kretprobe} programs. Equivalent to
+     * {@code bpf_override_return(ctx, retval)}.
+     *
+     * <p>Requires kernel ≥ 4.16 and the kernel to be compiled with
+     * {@code CONFIG_BPF_KPROBE_OVERRIDE}.
+     *
+     * @param ctx    the kretprobe context (pt_regs)
+     * @param retval the return value to inject
+     * @return 0 on success, negative errno on error
+     */
+    @BuiltinBPFFunction("bpf_override_return($arg1, $arg2)")
+    @NotUsableInJava
+    public static long overrideReturn(Ptr<?> ctx, long retval) {
+        throw new MethodIsBPFRelatedFunction();
     }
 }
