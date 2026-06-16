@@ -135,7 +135,7 @@ LSM_TESTS=(LSMTest ForbiddenFileTest)
 # a JVM JIT crash inside virtme-ng.  The "Nothing to compile" fast-path inside
 # VNG takes <1 s.
 echo "--- Pre-compiling bpf and bpf-samples test classes on host ---"
-"$MVN" -ntp -pl bpf,bpf-samples test-compile -Dmaven.test.skip=false -DskipTests=false -q 2>/dev/null || true
+JAVA_HOME=$JAVA_HOME PATH=$JAVA_HOME/bin:$PATH "$MVN" -ntp -pl bpf,bpf-samples test-compile -Dmaven.test.skip=false -DskipTests=false -q 2>/dev/null || true
 echo "--- Done pre-compiling ---"
 
 for cls in "${TESTS[@]}"; do
