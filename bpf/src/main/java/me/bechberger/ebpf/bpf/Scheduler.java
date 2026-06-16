@@ -491,7 +491,7 @@ public interface Scheduler {
      * per-CPU state after a preemption.
      */
     @BPFFunction(
-            headerTemplate = "int BPF_STRUCT_OPS(sched_cpu_acquire, s32 cpu, struct scx_cpu_acquire_args *args)",
+            headerTemplate = "void BPF_STRUCT_OPS(sched_cpu_acquire, s32 cpu, struct scx_cpu_acquire_args *args)",
             addDefinition = false
     )
     default void cpuAcquire(int cpu, Ptr<ScxDefinitions.scx_cpu_acquire_args> args) {
@@ -516,7 +516,7 @@ public interface Scheduler {
      * }</pre>
      */
     @BPFFunction(
-            headerTemplate = "int BPF_STRUCT_OPS(sched_cpu_release, s32 cpu, struct scx_cpu_release_args *args)",
+            headerTemplate = "void BPF_STRUCT_OPS(sched_cpu_release, s32 cpu, struct scx_cpu_release_args *args)",
             addDefinition = false
     )
     default void cpuRelease(int cpu, Ptr<ScxDefinitions.scx_cpu_release_args> args) {
@@ -556,7 +556,7 @@ public interface Scheduler {
      * cache weight in per-task storage should refresh it here.
      */
     @BPFFunction(
-            headerTemplate = "int BPF_STRUCT_OPS(sched_set_weight, struct task_struct *p, u32 weight)",
+            headerTemplate = "void BPF_STRUCT_OPS(sched_set_weight, struct task_struct *p, u32 weight)",
             addDefinition = false
     )
     default void setWeight(Ptr<TaskDefinitions.task_struct> p, @Unsigned int weight) {
@@ -576,7 +576,7 @@ public interface Scheduler {
      * <p>Requires {@code import me.bechberger.ebpf.runtime.runtime.cpumask;}.
      */
     @BPFFunction(
-            headerTemplate = "int BPF_STRUCT_OPS(sched_set_cpumask, struct task_struct *p, const struct cpumask *cpumask)",
+            headerTemplate = "void BPF_STRUCT_OPS(sched_set_cpumask, struct task_struct *p, const struct cpumask *cpumask)",
             addDefinition = false
     )
     default void setCpumask(Ptr<TaskDefinitions.task_struct> p, Ptr<cpumask> cpumask) {
@@ -598,7 +598,7 @@ public interface Scheduler {
      * automatically by the kernel, but any other resources must be released here.
      */
     @BPFFunction(
-            headerTemplate = "int BPF_STRUCT_OPS(sched_exit_task, struct task_struct *p, struct scx_exit_task_args *args)",
+            headerTemplate = "void BPF_STRUCT_OPS(sched_exit_task, struct task_struct *p, struct scx_exit_task_args *args)",
             addDefinition = false
     )
     default void exitTask(Ptr<TaskDefinitions.task_struct> p, Ptr<ScxDefinitions.scx_exit_task_args> args) {
