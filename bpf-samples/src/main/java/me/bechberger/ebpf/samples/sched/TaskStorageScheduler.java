@@ -15,6 +15,7 @@ import me.bechberger.ebpf.bpf.map.BPFTaskStorage;
 import me.bechberger.ebpf.type.Ptr;
 
 import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_dsq_move_to_local;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 /**
@@ -48,6 +49,11 @@ public abstract class TaskStorageScheduler extends SchedulerBase implements Sche
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
         dsqInsert(p, enq_flags);
+    }
+
+    @Override
+    public void dispatch(int cpu, Ptr<task_struct> prev) {
+        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
     }
 
     @Override
