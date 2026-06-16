@@ -5,6 +5,7 @@ import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
+import me.bechberger.ebpf.annotations.bpf.BPFTimer;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_timer;
 import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
@@ -47,6 +48,7 @@ public class TimerCallbackTest {
         final GlobalVariable<@Unsigned Integer> tickCount = new GlobalVariable<>(0);
 
         /** Re-arms itself for another 50 ms tick. */
+        @BPFTimer
         @BPFFunction
         public int onTick(Ptr<?> map, Ptr<Integer> key, Ptr<TimerVal> val) {
             tickCount.set(tickCount.get() + 1);

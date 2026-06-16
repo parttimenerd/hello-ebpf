@@ -22,6 +22,7 @@ import me.bechberger.ebpf.annotations.CustomType;
 import me.bechberger.ebpf.annotations.InArena;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFInline;
+import me.bechberger.ebpf.annotations.bpf.BPFTimer;
 import me.bechberger.ebpf.annotations.EnumMember;
 import me.bechberger.ebpf.bpf.compiler.CompilerPlugin.TypedTreePath;
 import me.bechberger.ebpf.bpf.compiler.MethodTemplate.Argument;
@@ -190,12 +191,17 @@ class Translator {
         assert annotation != null;
         var alwaysInline = compilerPlugin.getAnnotationOfMethodOrSuper(methodElement, AlwaysInline.class);
         var bpfInline = compilerPlugin.getAnnotationOfMethodOrSuper(methodElement, BPFInline.class);
+        var bpfTimer = compilerPlugin.getAnnotationOfMethodOrSuper(methodElement, BPFTimer.class);
         // Helper functions (no SEC entry point) default to __always_inline unless opted out.
         // Entry-point functions (section != "") do not inline by default.
+        // Timer callbacks (@BPFTimer) must be static (kernel requirement) and never __always_inline
+        // (libbpf needs a BTF entry for them to resolve the callback pointer).
         boolean isEntryPoint = !annotation.section().isBlank();
-        boolean shouldInline = (alwaysInline != null || bpfInline != null)
-                || (!isEntryPoint && annotation.inline());
-        return MethodHeaderTemplate.parse(annotation.headerTemplate()).call(decl, shouldInline ? "__always_inline " : "");
+        boolean shouldInline = bpfTimer == null
+                && ((alwaysInline != null || bpfInline != null)
+                    || (!isEntryPoint && annotation.inline()));
+        String prefix = bpfTimer != null ? "static " : (shouldInline ? "__always_inline " : "");
+        return MethodHeaderTemplate.parse(annotation.headerTemplate()).call(decl, prefix);
     }
 
     @Nullable
