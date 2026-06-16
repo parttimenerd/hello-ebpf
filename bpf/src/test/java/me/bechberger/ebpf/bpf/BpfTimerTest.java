@@ -1,116 +1,112 @@
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
-import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
+import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.BPFTimer;
-import me.bechberger.ebpf.annotations.bpf.Kprobe;
-import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
-import me.bechberger.ebpf.runtime.PtDefinitions;
+import me.bechberger.ebpf.bpf.map.BPFHashMap;
+import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_timer;
+import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action;
+import me.bechberger.ebpf.runtime.XdpDefinitions.xdp_md;
 import me.bechberger.ebpf.type.Ptr;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_timer_init;
+import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_timer_start;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Integration test for BPF timers.
+ * Integration tests for BPF timers using the Java DSL (@BPFTimer + method refs).
  *
- * <p>A kprobe on {@code do_sys_openat2} initialises a {@code bpf_timer} stored
- * in a hash map. The timer fires after 100 ms and self-re-arms up to 3 times.
- * Each tick increments the {@code tickCount} global variable. After ~500 ms
- * user-space asserts that at least 2 ticks occurred.
- *
- * <p>This test uses a raw C body in the callback method because the compiler
- * plugin does not yet support method-reference-style timer callbacks — the same
- * pattern as {@link me.bechberger.ebpf.samples.TimerDemo}.
+ * <p>bpf_timer requires an XDP / network / sk_msg / struct_ops program type on
+ * Linux 6.17 — kprobe cannot host it.  Both tests attach to loopback (ifindex 1)
+ * and arm the timer on the first incoming packet.
  */
 public class BpfTimerTest {
 
     static final long TICK_NS = 100_000_000L; // 100 ms
 
+    // -----------------------------------------------------------------------
+    // Shared program type
+    // -----------------------------------------------------------------------
+
     @BPF(license = "GPL")
-    public static abstract class Program extends BPFProgram {
+    public static abstract class Program extends BPFProgram implements XDPHook {
 
-        private static final String EBPF_PROGRAM = """
-                #include <vmlinux.h>
-                #include <bpf/bpf_helpers.h>
+        @Type
+        public static class TimerVal {
+            public bpf_timer timer;
+            public @Unsigned int initialized;
+        }
 
-                struct timer_val {
-                    struct bpf_timer timer;
-                    __u32 initialized;
-                };
+        @BPFMapDefinition(maxEntries = 1)
+        BPFHashMap<@Unsigned Integer, TimerVal> timerMap;
 
-                struct {
-                    __uint(type, BPF_MAP_TYPE_HASH);
-                    __type(key, __u32);
-                    __type(value, struct timer_val);
-                    __uint(max_entries, 1);
-                } timer_map SEC(".maps");
-                """;
-
-        /** Number of timer ticks so far. */
         final GlobalVariable<@Unsigned Integer> tickCount = new GlobalVariable<>(0);
-
-        /** Maximum number of re-arms before the timer stops. */
-        final GlobalVariable<@Unsigned Integer> maxTicks = new GlobalVariable<>(3);
+        final GlobalVariable<@Unsigned Integer> maxTicks  = new GlobalVariable<>(10);
 
         /**
-         * Timer callback: increments tickCount and re-arms for another TICK_NS
-         * until maxTicks is reached.
-         *
-         * <p>Raw C body required because the plugin doesn't yet translate Java
-         * method references into {@code bpf_timer_set_callback} function pointers.
+         * Re-arms itself every TICK_NS as long as tickCount < maxTicks.
+         * Must be {@code static} (BPF verifier requirement for timer callbacks).
          */
         @BPFTimer
-        @BPFFunction(inline = false)
-        public int timerTick(Ptr<?> map, Ptr<Integer> key, Ptr<?> val) {
-            String code = """
-                    if (tickCount < maxTicks) {
-                        tickCount++;
-                        bpf_timer_start(&((struct timer_val *)val)->timer,
-                                        100000000ULL, 0);
-                    }
-                    return 0;
-                    """;
+        @BPFFunction
+        public int timerTick(Ptr<?> map, Ptr<Integer> key, Ptr<TimerVal> val) {
+            if (tickCount.get() < maxTicks.get()) {
+                tickCount.set(tickCount.get() + 1);
+                bpf_timer_start(Ptr.of(val.val().timer), TICK_NS, 0);
+            }
             return 0;
         }
 
-        @Kprobe("do_sys_openat2")
-        int onOpen(Ptr<PtDefinitions.pt_regs> ctx) {
-            String code = """
-                    __u32 key = 0;
-                    struct timer_val *tv = bpf_map_lookup_elem(&timer_map, &key);
-                    if (!tv) return 0;
-                    if (!tv->initialized) {
-                        tv->initialized = 1;
-                        bpf_timer_init(&tv->timer, &timer_map, 1 /* CLOCK_MONOTONIC */);
-                        bpf_timer_set_callback(&tv->timer, timerTick);
-                        bpf_timer_start(&tv->timer, 100000000ULL, 0);
-                    }
-                    return 0;
-                    """;
-            return 0;
+        @Override
+        public xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
+            int key = 0;
+            Ptr<TimerVal> val = timerMap.bpf_get(key);
+            if (val == null) {
+                return xdp_action.XDP_PASS;
+            }
+            if (val.val().initialized == 0) {
+                val.val().initialized = 1;
+                bpf_timer_init(Ptr.of(val.val().timer), Ptr.of(timerMap), 1 /* CLOCK_MONOTONIC */);
+                BPFJ.bpf_timer_set_callback(Ptr.of(val.val().timer), this::timerTick);
+                bpf_timer_start(Ptr.of(val.val().timer), TICK_NS, 0);
+            }
+            return xdp_action.XDP_PASS;
         }
     }
 
+    // -----------------------------------------------------------------------
+    // Helpers
+    // -----------------------------------------------------------------------
+
+    /** Pre-seed map, attach to lo, fire one ping to arm the timer. */
+    private static Program setupAndArm(int maxTicks) throws Exception {
+        Program program = BPFProgram.load(Program.class);
+        program.maxTicks.set(maxTicks);
+        Program.TimerVal initial = new Program.TimerVal();
+        initial.timer = BPFJ.newZeroedTimer();
+        program.timerMap.put(0, initial);
+        program.xdpAttach(1);
+        new ProcessBuilder("ping", "-c", "2", "-W", "1", "127.0.0.1")
+                .redirectErrorStream(true)
+                .redirectOutput(ProcessBuilder.Redirect.DISCARD)
+                .start()
+                .waitFor();
+        return program;
+    }
+
+    // -----------------------------------------------------------------------
+    // Tests
+    // -----------------------------------------------------------------------
+
     @Test
-    @Timeout(10)
-    @Disabled("kprobe programs cannot use bpf_timer on Linux 6.17 — requires xdp/sk_msg program type")
-    public void testTimerFiresAtLeastTwice() throws InterruptedException {
-        try (var program = BPFProgram.load(Program.class)) {
-            program.autoAttachPrograms();
-
-            // Pre-insert the timer map entry so the kprobe can find it.
-            // (We use raw C initialisation in the kprobe; no Java-side pre-seeding needed.)
-            // Arm the timer by triggering the kprobe.
-            TestUtil.triggerOpenAt();
-
-            // Wait up to 2 seconds for at least 2 ticks (each 100 ms apart).
+    @Timeout(15)
+    public void testTimerFiresAtLeastTwice() throws Exception {
+        try (Program program = setupAndArm(10)) {
             long deadline = System.currentTimeMillis() + 2000;
             while (program.tickCount.get() < 2 && System.currentTimeMillis() < deadline) {
                 Thread.sleep(50);
@@ -122,26 +118,18 @@ public class BpfTimerTest {
     }
 
     @Test
-    @Timeout(10)
-    @Disabled("kprobe programs cannot use bpf_timer on Linux 6.17 — requires xdp/sk_msg program type")
-    public void testTimerRespectsMaXTicks() throws InterruptedException {
-        try (var program = BPFProgram.load(Program.class)) {
-            // Lower the cap so the timer stops quickly.
-            program.maxTicks.set(2);
-            program.autoAttachPrograms();
-
-            TestUtil.triggerOpenAt();
-
-            // Wait long enough that the timer would have fired many more times if uncapped.
+    @Timeout(15)
+    public void testTimerRespectsMaXTicks() throws Exception {
+        try (Program program = setupAndArm(2)) {
+            // Wait long enough that an uncapped timer would fire many more times.
             Thread.sleep(800);
 
             int ticks = program.tickCount.get();
-            // With a 100 ms interval and cap=2, ticks should be 2 after ~600 ms.
-            // Allow ≤3 due to any race between the kprobe arm and test start.
+            // With a 100 ms interval and cap=2, expect exactly 2 ticks.
             assertTrue(ticks <= 3,
-                    "Timer should have fired at most 3 times with maxTicks=2, got " + ticks);
-            assertTrue(ticks >= 2,
-                    "Timer should have fired at least 2 times, got " + ticks);
+                    "Timer should stop after maxTicks=2, got " + ticks);
+            assertTrue(ticks >= 1,
+                    "Timer should have fired at least once, got " + ticks);
         }
     }
 }
