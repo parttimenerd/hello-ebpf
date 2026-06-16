@@ -415,7 +415,34 @@ public class CompilerPlugin implements Plugin {
             return false;
         }
         methodElementToCode.put(method, code);
+        // Persist code to @InternalMethodDefinition on the method symbol so that downstream
+        // compilations (e.g. bpf-samples compiling a subclass of SchedulerBase) can inject
+        // these inherited implementations without needing the source in the current unit.
+        var methodSymbol = (MethodSymbol) trees.getElement(path.path());
+        if (methodSymbol != null && !(methodSymbol.owner instanceof Symbol.ClassSymbol ownerClass && ownerClass.isInterface())) {
+            storeInternalMethodDefinition(methodSymbol, code.decl.toPrettyString());
+        }
         return true;
+    }
+
+    private void storeInternalMethodDefinition(MethodSymbol methodSymbol, String codeStr) {
+        try {
+            var internalMethodValueSymbol = (Symbol.MethodSymbol) ((Type.ClassType) typeUtils.getTypeMirror(InternalMethodDefinition.class))
+                    .asElement().getEnclosedElements().stream()
+                    .filter(e -> e instanceof MethodSymbol m && m.getSimpleName().toString().equals("value"))
+                    .findFirst().orElseThrow();
+            var methodMeta = methodSymbol.getMetadata();
+            var methodAttributesField = methodMeta.getClass().getDeclaredField("attributes");
+            methodAttributesField.setAccessible(true);
+            var methodAttributes = (com.sun.tools.javac.util.List<Attribute>) methodAttributesField.get(methodMeta);
+            methodAttributes = methodAttributes.append(new Attribute.Compound(
+                    (Type.ClassType) typeUtils.getTypeMirror(InternalMethodDefinition.class),
+                    com.sun.tools.javac.util.List.of(new Pair<>(internalMethodValueSymbol,
+                            new Attribute.Constant((Type.ClassType) typeUtils.getTypeMirror(String.class), codeStr)))));
+            methodAttributesField.set(methodMeta, methodAttributes);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private TypeMirror getTypeMirror(CompilerPlugin.TypedTreePath<?> path, Tree typeTree) {
@@ -978,13 +1005,35 @@ public class CompilerPlugin implements Plugin {
     }
 
     private Map<MethodSymbol, String> getInterfaceMethodsWithDefaultCode(Symbol.ClassSymbol superClassElement) {
-        return getInterfaceMethods(superClassElement).stream().map(m -> {
+        var result = new HashMap<MethodSymbol, String>();
+        // Collect default implementations from interfaces (@InternalMethodDefinition on interface methods)
+        for (var m : getInterfaceMethods(superClassElement)) {
             var ann = m.getAnnotation(InternalMethodDefinition.class);
-            if (ann == null) {
-                return null;
+            if (ann != null) {
+                result.put(m, ann.value());
             }
-            return Map.entry(m, ann.value());
-        }).filter(Objects::nonNull).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        }
+        // Also collect @BPFFunction implementations from concrete superclasses (e.g. SchedulerBase).
+        // These are stored via @InternalMethodDefinition on the class method by processBPFFunction.
+        // Walk up the class hierarchy (stop at Object / BPFProgram which have no scheduler methods).
+        var current = superClassElement;
+        while (current != null && !current.getQualifiedName().toString().equals("java.lang.Object")) {
+            for (var e : current.getEnclosedElements()) {
+                if (!(e instanceof MethodSymbol ms)) continue;
+                var ann = ms.getAnnotation(InternalMethodDefinition.class);
+                if (ann == null) continue;
+                // Only add if not already covered by an interface entry or a more-derived class entry.
+                var alreadyPresent = result.keySet().stream()
+                        .anyMatch(existing -> existing.getSimpleName().equals(ms.getSimpleName())
+                                && existing.asType().toString().equals(ms.asType().toString()));
+                if (!alreadyPresent) {
+                    result.put(ms, ann.value());
+                }
+            }
+            var sc = current.getSuperclass();
+            current = (sc instanceof Type.ClassType ct) ? (Symbol.ClassSymbol) ct.asElement() : null;
+        }
+        return result;
     }
 
     private List<MethodSymbol> getInterfaceMethods(Symbol.ClassSymbol element) {
