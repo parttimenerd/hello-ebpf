@@ -81,6 +81,13 @@ public final class TCContext {
      *
      * <p>Lowers to:
      * {@code ((void *)(long)$this->data + ($arg1) + ($arg2) <= (void *)(long)$this->data_end)}
+     *
+     * <p><b>Verifier limitation:</b> Re-loads {@code skb->data} into a fresh BPF register.
+     * Subsequent calls to {@link #byteAt}, {@link #shortAtNetworkOrder}, or
+     * {@link #intAtNetworkOrder} also reload {@code skb->data} independently, so the verifier
+     * cannot link their access register back to this bounds check — the program will be rejected.
+     * Use {@link #data()}/{@link #dataEnd()} once, then do all accesses via typed
+     * {@link me.bechberger.ebpf.type.Ptr} arithmetic (as in {@link BasePacketParser}).
      */
     @BuiltinBPFFunction("((void *)(long)$this->data + ($arg1) + ($arg2) <= (void *)(long)$this->data_end)")
     @NotUsableInJava
