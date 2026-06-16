@@ -247,7 +247,8 @@ class Translator {
         }
         var declarator = toDeclarator();
         var body = ignoreBody ? new CompoundStatement(List.of()) : translate(method.getBody());
-        boolean addReturnZero = method.getReturnType().toString().equals("void");
+        boolean cReturnsVoid = bpfAnn.headerTemplate().trim().startsWith("void ");
+        boolean addReturnZero = !cReturnsVoid && method.getReturnType().toString().equals("void");
         return callIfNonNull(declarator, body,
                 (d, b) -> {
                     if (!bpfAnn.lastStatement().isBlank() || addReturnZero) {
