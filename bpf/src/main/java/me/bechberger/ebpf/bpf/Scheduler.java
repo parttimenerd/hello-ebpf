@@ -495,7 +495,6 @@ public interface Scheduler {
             addDefinition = false
     )
     default void cpuAcquire(int cpu, Ptr<ScxDefinitions.scx_cpu_acquire_args> args) {
-        return;
     }
 
     /**
@@ -520,7 +519,6 @@ public interface Scheduler {
             addDefinition = false
     )
     default void cpuRelease(int cpu, Ptr<ScxDefinitions.scx_cpu_release_args> args) {
-        return;
     }
 
     /**
@@ -560,7 +558,6 @@ public interface Scheduler {
             addDefinition = false
     )
     default void setWeight(Ptr<TaskDefinitions.task_struct> p, @Unsigned int weight) {
-        return;
     }
 
     /**
@@ -580,7 +577,6 @@ public interface Scheduler {
             addDefinition = false
     )
     default void setCpumask(Ptr<TaskDefinitions.task_struct> p, Ptr<cpumask> cpumask) {
-        return;
     }
 
     /**
@@ -602,7 +598,6 @@ public interface Scheduler {
             addDefinition = false
     )
     default void exitTask(Ptr<TaskDefinitions.task_struct> p, Ptr<ScxDefinitions.scx_exit_task_args> args) {
-        return;
     }
 
     final int SCHED_EXT_UAPI_ID = 7;
