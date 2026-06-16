@@ -2,8 +2,7 @@
 package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.Unsigned;
-import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
-import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
+import me.bechberger.ebpf.runtime.ScxDefinitions;
 import me.bechberger.ebpf.runtime.ScxDefinitions.scx_exit_kind;
 import me.bechberger.ebpf.type.Ptr;
 
