@@ -34,6 +34,7 @@
 package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.annotations.AlwaysInline;
+import me.bechberger.ebpf.annotations.BoundedBy;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.*;
@@ -82,6 +83,9 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
     // -------------------------------------------------------------------------
     // Constants
     // -------------------------------------------------------------------------
+
+    /** Maximum supported CPU count — gives the BPF verifier a compile-time loop bound. */
+    static final int MAX_CPUS = 512;
 
     static final long NSEC_PER_USEC = 1_000L;
     static final long NSEC_PER_MSEC = 1_000_000L;
@@ -287,7 +291,7 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
     @Override
     public int init() {
         long nrCpuIds = scx_bpf_nr_cpu_ids();
-        for (int cpu = 0; (@Unsigned long) cpu < (@Unsigned long) nrCpuIds; cpu++) {
+        for (@BoundedBy(MAX_CPUS) int cpu = 0; (@Unsigned long) cpu < (@Unsigned long) nrCpuIds; cpu++) {
             int ret = scx_bpf_create_dsq(PINNED_DSQ_BASE + cpu, -1);
             if (ret < 0) return ret;
         }
