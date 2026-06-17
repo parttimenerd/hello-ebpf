@@ -152,39 +152,3 @@ jobs:
         with:
           check_name: 'Test Report (ubuntu-26.04)'
           report_paths: '**/target/surefire-reports/TEST-*.xml'
-
-  vm-test:
-    # Runs on a self-hosted runner — kept for local full-suite runs.
-    # To run locally: ./scripts/ts.sh --no-tty 'bash scripts/run-tests-vng.sh'
-    if: false
-    name: Run tests on pre-built kernel
-    runs-on: [self-hosted, linux, thinkstation]
-    needs: build
-    timeout-minutes: 10
-    strategy:
-      matrix:
-        version: ["6.14"]
-    env:
-      HBT_KERNEL_VERSION: "${{ matrix.version }}"
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '22'
-          distribution: 'adopt'
-
-      - run: sudo pip3 install https://github.com/amluto/virtme/archive/beb85146cd91de37ae455eccb6ab67c393e6e290.zip
-      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends qemu-system-x86 linux-headers-$(uname -r) linux-cloud-tools-generic gcc-multilib
-
-      - name: Test
-        run: |
-          ./mvnw -ntp -B test -Djvm=testutil/bin/java
-
-      - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v4
-        if: always()
-        with:
-          check_name: 'Test Report (Kernel ${{ matrix.KERNEL_VERSION }})'
-          report_paths: '**/build/test-results/test/TEST-*.xml'
