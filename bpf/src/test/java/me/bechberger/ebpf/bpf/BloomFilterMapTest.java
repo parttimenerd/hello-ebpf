@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class BloomFilterMapTest {
 
@@ -108,7 +109,14 @@ public class BloomFilterMapTest {
             });
 
             while (results.size() < 3) {
-                program.results.consumeAndThrow();
+                try {
+                    program.results.consumeAndThrow();
+                } catch (BPFRingBuffer.BPFRingBufferError e) {
+                    // EOPNOTSUPP (95): epoll-based ring buffer consume not supported on this kernel
+                    assumeTrue(!e.getMessage().contains("(95)"),
+                            "Ring buffer consume not supported on this kernel: " + e.getMessage());
+                    throw e;
+                }
             }
 
             for (var result : results) {
