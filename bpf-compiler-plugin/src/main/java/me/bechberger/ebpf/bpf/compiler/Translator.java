@@ -2231,14 +2231,30 @@ class Translator {
             return new VerbatimExpression("({ })");
         }
 
-        var sb = new StringBuilder("({ ");
-        for (var stmt : statements) {
-            var s = stmt.toPrettyString();
+        // Collect non-blank statements, stripping "return " from the last one.
+        var nonBlank = new ArrayList<String>();
+        for (int i = 0; i < statements.size(); i++) {
+            var s = statements.get(i).toPrettyString().trim();
             if (!s.isBlank()) {
-                sb.append(s.trim());
-                if (!s.trim().endsWith(";") && !s.trim().endsWith("}")) sb.append(";");
-                sb.append(" ");
+                if (i == statements.size() - 1 && s.startsWith("return ") && s.endsWith(";")) {
+                    s = s.substring("return ".length(), s.length() - 1);
+                }
+                nonBlank.add(s);
             }
+        }
+
+        // Single-expression body: skip the GNU statement wrapper entirely.
+        if (nonBlank.size() == 1) {
+            var expr = nonBlank.get(0);
+            if (expr.endsWith(";")) expr = expr.substring(0, expr.length() - 1);
+            return new VerbatimExpression(expr);
+        }
+
+        var sb = new StringBuilder("({ ");
+        for (var s : nonBlank) {
+            sb.append(s);
+            if (!s.endsWith(";") && !s.endsWith("}")) sb.append(";");
+            sb.append(" ");
         }
         sb.append("})");
         return new VerbatimExpression(sb.toString());
@@ -2297,6 +2313,17 @@ class Translator {
         if (builtinAnn == null || builtinAnn.carrier().isBlank()) return null;
 
         // Resolve $argN placeholders in carrier template
-        return resolveAbstractionPlaceholders(builtinAnn.carrier(), ctorArgs);
+        var carrier = resolveAbstractionPlaceholders(builtinAnn.carrier(), ctorArgs);
+
+        // If <auto> remains, look up the processor-resolved id from the impl class
+        if (carrier.contains("<auto>")) {
+            var enclosingClass = field.getEnclosingElement();
+            var qualifiedKey = enclosingClass.toString() + "." + field.getSimpleName();
+            var resolved = compilerPlugin.abstractionFieldCarrierOverrides.get(qualifiedKey);
+            if (resolved != null) return resolved;
+            // Fallback: use field name as a stable placeholder (produces broken C, but avoids crash)
+            return carrier.replace("<auto>", field.getSimpleName().toString() + "_DSQ_ID");
+        }
+        return carrier;
     }
 }

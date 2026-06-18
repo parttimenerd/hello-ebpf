@@ -77,6 +77,14 @@ public class CompilerPlugin implements Plugin {
     private final Map<Type.ClassType, Integer> classToMethodCountToImplement = new HashMap<>();
 
     /**
+     * Field-name → resolved C carrier expression for {@code @BPFAbstraction} fields whose
+     * carrier was auto-allocated ({@code <auto>}) or otherwise needed processor-time resolution.
+     * Key: {@code "qualifiedClassName.fieldName"}.
+     * Populated lazily from the impl class's {@code ABSTRACTION_CARRIERS} field.
+     */
+    Map<String, String> abstractionFieldCarrierOverrides = new HashMap<>();
+
+    /**
      * dumpC option from {@code -Xplugin:"BPFCompilerPlugin dumpC=true|false|<path>"}.
      * Default "true" (write .c file next to source). Set to "false" to suppress.
      */
@@ -831,6 +839,12 @@ public class CompilerPlugin implements Plugin {
 
         // Collect @BPFAbstraction field prologues from the @BPF super-class and prepend
         // them to the target methods (typically init()) in the decls list.
+        // Load carrier overrides into the plugin-level map keyed by "superClassName.fieldName".
+        var carriers = readAbstractionCarriers((JCClassDecl) bpfProgram);
+        var superClassName = superClassElement.getQualifiedName().toString();
+        carriers.forEach((fieldName, carrier) ->
+                abstractionFieldCarrierOverrides.put(superClassName + "." + fieldName, carrier));
+        // Emit #define NAME value for any auto-id carriers so field references that were
         decls = injectAbstractionPrologues(decls, declJavaNames, (JCClassDecl) bpfProgram);
         // Synthetic top-level functions (e.g. lambdas lifted for bpf_loop / bpf_for_each_map_elem).
         // These come BEFORE the main function decls in declarator-emission order so that the
@@ -847,7 +861,16 @@ public class CompilerPlugin implements Plugin {
 
         // get value of CODE field in the bpfProgram
         var codeField = getMember(bpfProgram, "CODE");
-        var code = (String) ((LiteralTree) codeField.getInitializer()).getValue();
+        var code = evalStringTree(codeField.getInitializer());
+
+        // Emit #define NAME value for any auto-id carriers so field references that were
+        // translated before the carrier map was populated (fallback placeholder = fieldName_DSQ_ID).
+        if (!carriers.isEmpty()) {
+            var autoDefines = carriers.entrySet().stream()
+                    .map(e -> "#define " + e.getKey() + "_DSQ_ID " + e.getValue())
+                    .collect(java.util.stream.Collectors.joining("\n"));
+            code = autoDefines + "\n" + code;
+        }
 
         // now get the "body" value of all BPFInterface annotations of all interfaces of the super class
         var bpfInterfaceBodies = superClassElement.getInterfaces().stream()
@@ -1094,6 +1117,14 @@ public class CompilerPlugin implements Plugin {
         return modified;
     }
 
+    /** Evaluate a compile-time string constant tree (handles single literals and + concatenations). */
+    private static String evalStringTree(ExpressionTree tree) {
+        if (tree instanceof LiteralTree lit) return (String) lit.getValue();
+        if (tree instanceof BinaryTree bin && bin.getKind() == Tree.Kind.PLUS)
+            return evalStringTree(bin.getLeftOperand()) + evalStringTree(bin.getRightOperand());
+        throw new IllegalArgumentException("Cannot evaluate string tree: " + tree.getKind());
+    }
+
     /**
      * Parses the {@code ABSTRACTION_PROLOGUES} field from the generated impl class.
      * Format: each line is {@code "methodName\tstatement"}.
@@ -1101,7 +1132,7 @@ public class CompilerPlugin implements Plugin {
     private Map<String, List<String>> readAbstractionPrologues(JCClassDecl bpfProgram) {
         var prologuesField = getMemberOptional(bpfProgram, "ABSTRACTION_PROLOGUES");
         if (prologuesField == null) return Map.of();
-        var raw = (String) ((LiteralTree) prologuesField.getInitializer()).getValue();
+        var raw = evalStringTree(prologuesField.getInitializer());
         if (raw.isBlank()) return Map.of();
         var result = new java.util.LinkedHashMap<String, List<String>>();
         for (var line : raw.split("\n")) {
@@ -1110,6 +1141,24 @@ public class CompilerPlugin implements Plugin {
             var method = line.substring(0, tab);
             var stmt = line.substring(tab + 1);
             result.computeIfAbsent(method, k -> new ArrayList<>()).add(stmt);
+        }
+        return result;
+    }
+
+    /**
+     * Parses the {@code ABSTRACTION_CARRIERS} field from the generated impl class.
+     * Format: each line is {@code "fieldName\tcarrierExpr"}.
+     */
+    private Map<String, String> readAbstractionCarriers(JCClassDecl bpfProgram) {
+        var carriersField = getMemberOptional(bpfProgram, "ABSTRACTION_CARRIERS");
+        if (carriersField == null) return Map.of();
+        var raw = evalStringTree(carriersField.getInitializer());
+        if (raw.isBlank()) return Map.of();
+        var result = new java.util.LinkedHashMap<String, String>();
+        for (var line : raw.split("\n")) {
+            int tab = line.indexOf('\t');
+            if (tab < 0) continue;
+            result.put(line.substring(0, tab), line.substring(tab + 1));
         }
         return result;
     }

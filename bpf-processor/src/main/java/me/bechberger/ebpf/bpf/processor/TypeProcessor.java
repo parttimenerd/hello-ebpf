@@ -217,17 +217,27 @@ public class TypeProcessor {
      * Per-method prologue statements collected from {@code @BPFAbstraction} field initialisers.
      * Key = target method name (from {@code @BPFAbstraction#constructorPrependTo}),
      * value = ordered list of C side-effect statements to prepend to that method's body.
+     * {@code abstractionFieldCarriers}: field name → resolved C carrier expression (for {@code <auto>} DSQ ids).
      */
     public record TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements,
                                @Nullable Statement licenseDefinition, List<MapDefinition> mapDefinitions,
                                List<GlobalVariableDefinition> globalVariableDefinitions, InterfaceAdditions additions,
-                               Map<String, List<String>> abstractionFieldPrologues) {
-        /** Back-compat constructor for call-sites that don't supply abstractionFieldPrologues. */
+                               Map<String, List<String>> abstractionFieldPrologues,
+                               Map<String, String> abstractionFieldCarriers) {
+        /** Back-compat constructor for call-sites that don't supply abstractionFieldPrologues/Carriers. */
         public TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements,
                                    @Nullable Statement licenseDefinition, List<MapDefinition> mapDefinitions,
                                    List<GlobalVariableDefinition> globalVariableDefinitions, InterfaceAdditions additions) {
             this(fields, defines, definingStatements, licenseDefinition, mapDefinitions, globalVariableDefinitions,
-                    additions, Map.of());
+                    additions, Map.of(), Map.of());
+        }
+        /** Back-compat constructor without carriers. */
+        public TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements,
+                                   @Nullable Statement licenseDefinition, List<MapDefinition> mapDefinitions,
+                                   List<GlobalVariableDefinition> globalVariableDefinitions, InterfaceAdditions additions,
+                                   Map<String, List<String>> abstractionFieldPrologues) {
+            this(fields, defines, definingStatements, licenseDefinition, mapDefinitions, globalVariableDefinitions,
+                    additions, abstractionFieldPrologues, Map.of());
         }
     }
 
@@ -315,12 +325,13 @@ public class TypeProcessor {
         if (additions == null) {
             return null;
         }
-        var abstractionPrologues = collectAbstractionFieldPrologues(outerTypeElement);
+        var abstractionResult = collectAbstractionFieldPrologues(outerTypeElement);
         return new TypeProcessorResult(fields, defines, definingStatements,
                 getLicenseDefinitionStatement(outerTypeElement), mapDefinitions,
                 globals,
                 additions,
-                abstractionPrologues);
+                abstractionResult.prologues(),
+                abstractionResult.carriers());
     }
 
     private static final String IN_ARENA_ANNOTATION = "me.bechberger.ebpf.annotations.InArena";
@@ -390,8 +401,15 @@ public class TypeProcessor {
      *
      * @return map from target-method-name → ordered list of prologue C statements
      */
-    private Map<String, List<String>> collectAbstractionFieldPrologues(TypeElement outerTypeElement) {
-        var result = new LinkedHashMap<String, List<String>>();
+    /** Base value for auto-allocated DSQ ids: 0x1_0000_0000 (above user-id range). */
+    private static final long AUTO_DSQ_ID_BASE = 0x1_0000_0000L;
+
+    private record AbstractionPrologueResult(Map<String, List<String>> prologues, Map<String, String> carriers) {}
+
+    private AbstractionPrologueResult collectAbstractionFieldPrologues(TypeElement outerTypeElement) {
+        var prologues = new LinkedHashMap<String, List<String>>();
+        var carriers = new LinkedHashMap<String, String>();
+        int autoIdCounter = 0;
         for (var enclosed : outerTypeElement.getEnclosedElements()) {
             if (enclosed.getKind() != ElementKind.FIELD) continue;
             var field = (VariableElement) enclosed;
@@ -404,7 +422,6 @@ public class TypeProcessor {
 
             // @BPFAbstraction(constructorPrependTo = ?) — default "init"
             var prependTo = getAnnotationValue(abstractionMirror.get(), "constructorPrependTo", "init");
-            if (prependTo.isBlank()) continue; // explicitly disabled
 
             // field must be final
             if (!field.getModifiers().contains(Modifier.FINAL)) {
@@ -414,8 +431,6 @@ public class TypeProcessor {
             }
 
             // inspect the field initializer in the AST
-            // getTree(field) may return null in annotation processing; instead get the class tree
-            // and locate the field declaration inside it.
             var classTree = javacProcessingEnv.getElementUtils().getTree(outerTypeElement);
             JCVariableDecl varDecl = null;
             if (classTree instanceof JCTree.JCClassDecl classDecl) {
@@ -438,16 +453,35 @@ public class TypeProcessor {
             var builtinAnn = getAnnotationMirror(ctor, BUILTIN_BPF_FUNCTION_ANNOTATION);
             if (builtinAnn.isEmpty()) continue;
 
-            var sideEffect = AnnotationUtils.getAnnotationValue(builtinAnn.get(), "value", "");
-            if (sideEffect.isBlank()) continue; // no side effect — attach/pure-factory, nothing to lift
+            // Resolve the carrier (needed for <auto> substitution)
+            var carrierTemplate = AnnotationUtils.getAnnotationValue(builtinAnn.get(), "carrier", "");
+            var fieldName = field.getSimpleName().toString();
+            String resolvedCarrier = null;
+            if (carrierTemplate.contains("<auto>")) {
+                // Mint a unique u64 id for this field, stable within the class.
+                var autoId = "0x" + Long.toHexString(AUTO_DSQ_ID_BASE + autoIdCounter++) + "ULL";
+                resolvedCarrier = autoId;
+                carriers.put(fieldName, resolvedCarrier);
+            } else if (!carrierTemplate.isBlank()) {
+                resolvedCarrier = resolvePlaceholders(carrierTemplate, newClass.getArguments());
+                carriers.put(fieldName, resolvedCarrier);
+            }
 
-            // resolve $arg1, $arg2, … in the side-effect template against the constructor args
-            var resolved = resolvePlaceholders(sideEffect, newClass.getArguments());
-            // Ensure the statement ends with a semicolon (VerbatimStatement doesn't add one).
+            var sideEffect = AnnotationUtils.getAnnotationValue(builtinAnn.get(), "value", "");
+            if (sideEffect.isBlank() || prependTo.isBlank()) continue; // no side effect or disabled
+
+            // resolve $arg1, $arg2, … and <auto> in the side-effect template
+            String resolved;
+            if (sideEffect.contains("<auto>") && resolvedCarrier != null) {
+                resolved = resolvePlaceholders(sideEffect, newClass.getArguments())
+                        .replace("<auto>", resolvedCarrier);
+            } else {
+                resolved = resolvePlaceholders(sideEffect, newClass.getArguments());
+            }
             if (!resolved.endsWith(";")) resolved = resolved + ";";
-            result.computeIfAbsent(prependTo, k -> new ArrayList<>()).add(resolved);
+            prologues.computeIfAbsent(prependTo, k -> new ArrayList<>()).add(resolved);
         }
-        return result;
+        return new AbstractionPrologueResult(prologues, carriers);
     }
 
     /** Return the resolved constructor from the javac-typed {@code newClass} node. */
@@ -482,9 +516,6 @@ public class TypeProcessor {
      */
     private String resolvePlaceholders(String template, com.sun.tools.javac.util.List<JCExpression> args) {
         var result = template;
-        // Also resolve <auto> placeholder — when present we use the field name as the id since
-        // auto-id allocation is the annotation processor's job; here we just need a stable expression.
-        // For now keep "<auto>" unresolved — the compiler plugin will handle it.
         for (int i = 0; i < args.size(); i++) {
             result = result.replace("$arg" + (i + 1), renderArg(args.get(i)));
         }

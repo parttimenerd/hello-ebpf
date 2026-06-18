@@ -318,6 +318,17 @@ public final class DispatchQueue {
     @NotUsableInJava
     public boolean nonEmpty() { throw new MethodIsBPFRelatedFunction(); }
 
+    /**
+     * {@code true} when this DSQ has no tasks ({@link #nrQueued()} {@code == 0}).
+     * <pre>{@code
+     * if (chaos.isEmpty()) shared.moveToLocal();
+     * else                 chaos.moveToLocal();
+     * }</pre>
+     */
+    @BuiltinBPFFunction("(scx_bpf_dsq_nr_queued($this) == 0)")
+    @NotUsableInJava
+    public boolean isEmpty() { throw new MethodIsBPFRelatedFunction(); }
+
     // ── Iteration ─────────────────────────────────────────────────────────────
 
     /**

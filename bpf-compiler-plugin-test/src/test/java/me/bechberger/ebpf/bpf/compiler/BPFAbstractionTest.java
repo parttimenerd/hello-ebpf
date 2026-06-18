@@ -7,11 +7,13 @@ import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.SchedulerBase;
 import me.bechberger.ebpf.bpf.map.BPFStackTraceMap;
 import me.bechberger.ebpf.bpf.perf.PerfEvent;
+import me.bechberger.ebpf.bpf.probe.ProbeContext;
 import me.bechberger.ebpf.bpf.sched.DispatchQueue;
 import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.bpf.sched.KickFlags;
 import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_perf_event_data;
 import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_perf_event_value;
+import me.bechberger.ebpf.runtime.PtDefinitions.pt_regs;
 import me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
@@ -550,6 +552,47 @@ public class BPFAbstractionTest {
         assertTrue(code.contains("* 2"), "doubled() expression 'n * 2' or similar must appear\n" + code);
     }
 
+    // ── Test 13a: auto-id DispatchQueue — <auto> resolved to stable hex constant ─
+
+    @BPF(license = "GPL")
+    @Property(name = "sched_name", value = "abstr_autoid")
+    public static abstract class AutoIdTest extends SchedulerBase implements Scheduler {
+        // Two auto-id queues — should get different stable ids in scx_bpf_create_dsq(...)
+        final DispatchQueue q0 = new DispatchQueue();
+        final DispatchQueue q1 = new DispatchQueue();
+
+        @Override public void enqueue(Ptr<task_struct> p, long enq_flags) {
+            q0.insert(p, 5000000L, EnqFlags.passThrough(enq_flags));
+        }
+        @Override public void dispatch(int cpu, Ptr<task_struct> prev) {
+            q0.moveToLocal();
+        }
+    }
+
+    @Test
+    void testAutoIdNoPendingAuto() {
+        String code = stripped(codeOf(AutoIdTest.class));
+        assertFalse(code.contains("<auto>"),
+                "No unresolved <auto> placeholder must remain in generated C\n" + code);
+    }
+
+    @Test
+    void testAutoIdTwoDistinctIds() {
+        String code = stripped(codeOf(AutoIdTest.class));
+        // Both queues must produce scx_bpf_create_dsq calls with distinct id literals
+        var createLines = code.lines()
+                .filter(l -> l.contains("scx_bpf_create_dsq("))
+                .toList();
+        assertTrue(createLines.size() >= 2,
+                "Expected ≥2 scx_bpf_create_dsq calls for two auto-id queues\n" + code);
+        // Extract the id arguments — they must be distinct
+        var ids = createLines.stream()
+                .map(l -> l.replaceAll(".*scx_bpf_create_dsq\\(([^,]+),.*", "$1").trim())
+                .collect(java.util.stream.Collectors.toSet());
+        assertTrue(ids.size() >= 2,
+                "Auto-allocated ids must be distinct; got ids=" + ids + "\n" + code);
+    }
+
     // ── Test 13: PerfEvent — carrier = ctx, field access inlining ─────────────
 
     @BPF(license = "GPL")
@@ -625,5 +668,84 @@ public class BPFAbstractionTest {
         String code = stripped(codeOf(PerfEventTest.class));
         // PerfEvent is a @BPFAbstraction — must not appear as a C type
         assertFalse(code.contains("PerfEvent"), "PerfEvent must not appear as a C type\n" + code);
+    }
+
+    // ── Test 14: ProbeContext — arg/retval/ip/sp carrier inlining ─────────────
+
+    @BPF(license = "GPL")
+    public static abstract class ProbeContextTest extends BPFProgram {
+
+        @BPFFunction
+        public void onKprobe(Ptr<pt_regs> ctx) {
+            ProbeContext pc = ProbeContext.of(ctx);
+            long a0 = pc.arg0();
+            long a1 = pc.arg1();
+            long a2 = pc.arg2();
+            long a3 = pc.arg3();
+            long a4 = pc.arg4();
+            long a5 = pc.arg5();
+        }
+
+        @BPFFunction
+        public void onKretprobe(Ptr<pt_regs> ctx) {
+            ProbeContext pc = ProbeContext.of(ctx);
+            long rv = pc.retval();
+        }
+
+        @BPFFunction
+        public void onKprobeIpSp(Ptr<pt_regs> ctx) {
+            ProbeContext pc = ProbeContext.of(ctx);
+            long instrPtr = pc.ip();
+            long stackPtr = pc.sp();
+        }
+
+        @BPFFunction
+        public void probeReadTest(Ptr<pt_regs> ctx, Ptr<?> dst, Ptr<?> src) {
+            ProbeContext.probeRead(dst, 8, src);
+        }
+    }
+
+    @Test
+    void testProbeContextArg0Inlined() {
+        String code = stripped(codeOf(ProbeContextTest.class));
+        // pc.arg0() → PT_REGS_PARM1(ctx)
+        assertTrue(code.contains("PT_REGS_PARM1"), "arg0() must inline to PT_REGS_PARM1\n" + code);
+    }
+
+    @Test
+    void testProbeContextAllArgsInlined() {
+        String code = stripped(codeOf(ProbeContextTest.class));
+        assertTrue(code.contains("PT_REGS_PARM1"), "arg0 must appear\n" + code);
+        assertTrue(code.contains("PT_REGS_PARM2"), "arg1 must appear\n" + code);
+        assertTrue(code.contains("PT_REGS_PARM3"), "arg2 must appear\n" + code);
+        assertTrue(code.contains("PT_REGS_PARM4"), "arg3 must appear\n" + code);
+        assertTrue(code.contains("PT_REGS_PARM5"), "arg4 must appear\n" + code);
+        assertTrue(code.contains("PT_REGS_PARM6"), "arg5 must appear\n" + code);
+    }
+
+    @Test
+    void testProbeContextRetvalInlined() {
+        String code = stripped(codeOf(ProbeContextTest.class));
+        // pc.retval() → PT_REGS_RC(ctx)
+        assertTrue(code.contains("PT_REGS_RC"), "retval() must inline to PT_REGS_RC\n" + code);
+    }
+
+    @Test
+    void testProbeContextIpSpInlined() {
+        String code = stripped(codeOf(ProbeContextTest.class));
+        assertTrue(code.contains("PT_REGS_IP"), "ip() must inline to PT_REGS_IP\n" + code);
+        assertTrue(code.contains("PT_REGS_SP"), "sp() must inline to PT_REGS_SP\n" + code);
+    }
+
+    @Test
+    void testProbeContextProbeReadInlined() {
+        String code = stripped(codeOf(ProbeContextTest.class));
+        assertTrue(code.contains("bpf_probe_read_kernel"), "probeRead must inline to bpf_probe_read_kernel\n" + code);
+    }
+
+    @Test
+    void testProbeContextNoCType() {
+        String code = stripped(codeOf(ProbeContextTest.class));
+        assertFalse(code.contains("ProbeContext"), "ProbeContext must not appear as a C type\n" + code);
     }
 }

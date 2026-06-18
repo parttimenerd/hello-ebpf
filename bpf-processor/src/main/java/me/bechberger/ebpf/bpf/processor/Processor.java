@@ -111,7 +111,8 @@ public class Processor extends AbstractProcessor {
         TypeSpec typeSpec = createType(implName.className, typeElement.asType(), bytes,
                 typeProcessorResult.fields(), combinedCode, typeProcessorResult.globalVariableDefinitions(),
                 typeProcessorResult.additions(), typeElement,
-                typeProcessorResult.abstractionFieldPrologues());
+                typeProcessorResult.abstractionFieldPrologues(),
+                typeProcessorResult.abstractionFieldCarriers());
         try {
             var file = processingEnv.getFiler().createSourceFile(implName.fullyQualifiedClassName, typeElement);
             // delete file if it exists
@@ -213,12 +214,18 @@ public class Processor extends AbstractProcessor {
     private TypeSpec createType(String name, TypeMirror baseType, byte[] byteCode, List<FieldSpec> bpfTypeFields,
                                 CombinedCode code, List<GlobalVariableDefinition> globalVariableDefinitions,
                                 TypeProcessor.InterfaceAdditions additions, TypeElement outerTypeElement,
-                                Map<String, List<String>> abstractionFieldPrologues) {
+                                Map<String, List<String>> abstractionFieldPrologues,
+                                Map<String, String> abstractionFieldCarriers) {
         var suppressWarnings = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "{\"unchecked\", \"rawtypes\"}").build();
 
         // Serialize prologues as tab-delimited lines: "methodName\tstatement"
         var prologuesSerialized = abstractionFieldPrologues.entrySet().stream()
                 .flatMap(e -> e.getValue().stream().map(s -> e.getKey() + "\t" + s))
+                .collect(Collectors.joining("\n"));
+
+        // Serialize carriers as tab-delimited lines: "fieldName\tcarrierExpr"
+        var carriersSerialized = abstractionFieldCarriers.entrySet().stream()
+                .map(e -> e.getKey() + "\t" + e.getValue())
                 .collect(Collectors.joining("\n"));
 
         var spec =
@@ -234,7 +241,9 @@ public class Processor extends AbstractProcessor {
                         .addField(FieldSpec.builder(String.class, "CODE", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                                 .initializer("$S", code.ebpfProgram).build())
                         .addField(FieldSpec.builder(String.class, "ABSTRACTION_PROLOGUES", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                                .initializer("$S", prologuesSerialized).build());
+                                .initializer("$S", prologuesSerialized).build())
+                        .addField(FieldSpec.builder(String.class, "ABSTRACTION_CARRIERS", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                                .initializer("$S", carriersSerialized).build());
         bpfTypeFields.forEach(spec::addField);
         spec.addMethod(MethodSpec.methodBuilder("getByteCodeBytesStatic")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(String.class)
