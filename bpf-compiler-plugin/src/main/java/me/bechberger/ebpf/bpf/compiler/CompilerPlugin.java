@@ -420,7 +420,14 @@ public class CompilerPlugin implements Plugin {
         // these inherited implementations without needing the source in the current unit.
         var methodSymbol = (MethodSymbol) trees.getElement(path.path());
         if (methodSymbol != null && !(methodSymbol.owner instanceof Symbol.ClassSymbol ownerClass && ownerClass.isInterface())) {
-            storeInternalMethodDefinition(methodSymbol, code.decl.toPrettyString());
+            // Prepend any required #define lines so the injected snippet is self-contained.
+            var definesPrefix = code.requiredDefines().stream()
+                    .map(d -> d.toPrettyString())
+                    .collect(java.util.stream.Collectors.joining("\n"));
+            var codeStr = definesPrefix.isBlank()
+                    ? code.decl.toPrettyString()
+                    : definesPrefix + "\n" + code.decl.toPrettyString();
+            storeInternalMethodDefinition(methodSymbol, codeStr);
         }
         return true;
     }
@@ -806,16 +813,25 @@ public class CompilerPlugin implements Plugin {
 
         var toImplement = classToMethodCountToImplement.getOrDefault((Type.ClassType) superClassType, 0);
 
-        var declsWithDefines =
-                methods.stream().map(m -> task.getTypes().asMemberOf((DeclaredType) superClassElement.asType(), m))
-                .filter(m -> m instanceof MethodType)
-                .map(m -> (MethodType) m)
-                .map(methodElementToCode::get)
-                .filter(Objects::nonNull)
-                .toList();
+        // Build declsWithDefines while tracking each method's Java name for prologue injection.
+        var declsWithDefines = new ArrayList<FuncDeclStatementResult>();
+        // Parallel list: declJavaNames[i] is the Java method simple-name for declsWithDefines[i].
+        var declJavaNames = new ArrayList<String>();
+        for (var m : methods) {
+            var mt = task.getTypes().asMemberOf((DeclaredType) superClassElement.asType(), m);
+            if (!(mt instanceof MethodType methodType)) continue;
+            var result = methodElementToCode.get(methodType);
+            if (result == null) continue;
+            declsWithDefines.add(result);
+            declJavaNames.add(m.getSimpleName().toString());
+        }
 
         var defines = declsWithDefines.stream().flatMap(r -> r.requiredDefines().stream()).collect(Collectors.toSet());
         var decls = declsWithDefines.stream().map(d -> new FuncDecl(d.decl, d.addDefine)).toList();
+
+        // Collect @BPFAbstraction field prologues from the @BPF super-class and prepend
+        // them to the target methods (typically init()) in the decls list.
+        decls = injectAbstractionPrologues(decls, declJavaNames, (JCClassDecl) bpfProgram);
         // Synthetic top-level functions (e.g. lambdas lifted for bpf_loop / bpf_for_each_map_elem).
         // These come BEFORE the main function decls in declarator-emission order so that the
         // helper that takes their address has a forward declaration in scope.
@@ -1006,23 +1022,16 @@ public class CompilerPlugin implements Plugin {
 
     private Map<MethodSymbol, String> getInterfaceMethodsWithDefaultCode(Symbol.ClassSymbol superClassElement) {
         var result = new HashMap<MethodSymbol, String>();
-        // Collect default implementations from interfaces (@InternalMethodDefinition on interface methods)
-        for (var m : getInterfaceMethods(superClassElement)) {
-            var ann = m.getAnnotation(InternalMethodDefinition.class);
-            if (ann != null) {
-                result.put(m, ann.value());
-            }
-        }
-        // Also collect @BPFFunction implementations from concrete superclasses (e.g. SchedulerBase).
+        // Collect @BPFFunction implementations from concrete superclasses first (highest priority).
         // These are stored via @InternalMethodDefinition on the class method by processBPFFunction.
-        // Walk up the class hierarchy (stop at Object / BPFProgram which have no scheduler methods).
+        // Walk from the most-derived class upward; the first (most-derived) definition wins.
         var current = superClassElement;
         while (current != null && !current.getQualifiedName().toString().equals("java.lang.Object")) {
             for (var e : current.getEnclosedElements()) {
                 if (!(e instanceof MethodSymbol ms)) continue;
                 var ann = ms.getAnnotation(InternalMethodDefinition.class);
                 if (ann == null) continue;
-                // Only add if not already covered by an interface entry or a more-derived class entry.
+                // Only add if not already covered by a more-derived class entry.
                 var alreadyPresent = result.keySet().stream()
                         .anyMatch(existing -> existing.getSimpleName().equals(ms.getSimpleName())
                                 && existing.asType().toString().equals(ms.asType().toString()));
@@ -1032,6 +1041,75 @@ public class CompilerPlugin implements Plugin {
             }
             var sc = current.getSuperclass();
             current = (sc instanceof Type.ClassType ct) ? (Symbol.ClassSymbol) ct.asElement() : null;
+        }
+        // Collect default implementations from interfaces (@InternalMethodDefinition on interface methods)
+        // as fallback — only when no concrete superclass provided an implementation.
+        for (var m : getInterfaceMethods(superClassElement)) {
+            var ann = m.getAnnotation(InternalMethodDefinition.class);
+            if (ann == null) continue;
+            var alreadyPresent = result.keySet().stream()
+                    .anyMatch(existing -> existing.getSimpleName().equals(m.getSimpleName())
+                            && existing.asType().toString().equals(m.asType().toString()));
+            if (!alreadyPresent) {
+                result.put(m, ann.value());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Prepends {@code @BPFAbstraction} constructor side-effects to the matching BPF function.
+     * Prologues are read from the {@code ABSTRACTION_PROLOGUES} field of the generated impl class.
+     *
+     * @param javaMethodNames parallel list of Java method simple-names for {@code decls} (same indices)
+     * @param bpfProgram the generated impl class (JCClassDecl) being compiled
+     */
+    private List<FuncDecl> injectAbstractionPrologues(List<FuncDecl> decls,
+                                                      List<String> javaMethodNames,
+                                                      JCClassDecl bpfProgram) {
+        var prologues = readAbstractionPrologues(bpfProgram);
+        if (prologues.isEmpty()) {
+            return decls;
+        }
+        var modified = new ArrayList<>(decls);
+        for (int i = 0; i < modified.size(); i++) {
+            // Match by Java method name (constructorPrependTo refers to Java names, not C names).
+            var javaName = i < javaMethodNames.size() ? javaMethodNames.get(i) : null;
+            if (javaName == null) continue;
+            var stmts = prologues.get(javaName);
+            if (stmts == null || stmts.isEmpty()) continue;
+            var fd = modified.get(i);
+            // Prepend prologue statements to the body
+            var existingStatements = new ArrayList<>(fd.decl().body().statements());
+            var prologueStatements = stmts.stream()
+                    .map(s -> (CAST.Statement) CAST.Statement.verbatim(s))
+                    .toList();
+            var newStatements = new ArrayList<>(prologueStatements);
+            newStatements.addAll(existingStatements);
+            var newBody = new CAST.Statement.CompoundStatement(newStatements);
+            var newDecl = new FunctionDeclarationStatement(fd.decl().declarator(), newBody,
+                    fd.decl().annotations());
+            modified.set(i, new FuncDecl(newDecl, fd.addDefine()));
+        }
+        return modified;
+    }
+
+    /**
+     * Parses the {@code ABSTRACTION_PROLOGUES} field from the generated impl class.
+     * Format: each line is {@code "methodName\tstatement"}.
+     */
+    private Map<String, List<String>> readAbstractionPrologues(JCClassDecl bpfProgram) {
+        var prologuesField = getMemberOptional(bpfProgram, "ABSTRACTION_PROLOGUES");
+        if (prologuesField == null) return Map.of();
+        var raw = (String) ((LiteralTree) prologuesField.getInitializer()).getValue();
+        if (raw.isBlank()) return Map.of();
+        var result = new java.util.LinkedHashMap<String, List<String>>();
+        for (var line : raw.split("\n")) {
+            int tab = line.indexOf('\t');
+            if (tab < 0) continue;
+            var method = line.substring(0, tab);
+            var stmt = line.substring(tab + 1);
+            result.computeIfAbsent(method, k -> new ArrayList<>()).add(stmt);
         }
         return result;
     }
@@ -1053,6 +1131,16 @@ public class CompilerPlugin implements Plugin {
                 .filter(m -> m.getName().contentEquals(name))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(name + " field not found in " + klass.getSimpleName()));
+    }
+
+    @Nullable
+    VariableTree getMemberOptional(ClassTree klass, String name) {
+        return klass.getMembers().stream()
+                .filter(m -> m instanceof VariableTree)
+                .map(m -> (VariableTree) m)
+                .filter(m -> m.getName().contentEquals(name))
+                .findFirst()
+                .orElse(null);
     }
 
     record FuncDecl(FunctionDeclarationStatement decl, boolean addDefine) {
@@ -1107,9 +1195,26 @@ public class CompilerPlugin implements Plugin {
 
     public static String moveIncludesToTheFront(String code) {
         Predicate<String> isInclude = s -> s.startsWith("#include ");
+        // Also hoist SEC(".data") global variable declarations so they precede any
+        // injected function bodies that reference them (e.g. _exitCode from SchedulerBase).
+        // Only hoist primitive-typed globals: globals that reference a user-defined
+        // struct/union type must stay below the type declarations (they need the
+        // struct definition to be visible first — see testUsingInterfaceWithStruct2).
+        Predicate<String> isSecData = s -> s.matches(".*SEC\\s*\\(\".data\"\\)\\s*;.*") && !s.strip().startsWith("//");
+        Predicate<String> isPrimitiveSecData = isSecData.and(s -> {
+            var t = s.strip();
+            return !t.startsWith("struct ") && !t.startsWith("union ");
+        });
         var includes = code.lines().filter(isInclude).toList();
-        var rest = code.lines().filter(isInclude.negate()).collect(Collectors.joining("\n")).strip();
-        return String.join("\n", includes) + "\n\n" + rest;
+        var secDataLines = code.lines().filter(isPrimitiveSecData).toList();
+        var rest = code.lines().filter(isInclude.negate()).filter(isPrimitiveSecData.negate())
+                .collect(Collectors.joining("\n")).strip();
+        var preamble = new ArrayList<String>(includes);
+        if (!secDataLines.isEmpty()) {
+            preamble.add("");
+            preamble.addAll(secDataLines);
+        }
+        return String.join("\n", preamble) + "\n\n" + rest;
     }
 
     private List<String> prettyPrint(List<? extends CAST> statements) {

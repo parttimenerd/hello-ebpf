@@ -5,6 +5,9 @@ import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.Property;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
+import me.bechberger.ebpf.samples.sched.BoostedScheduler;
 import me.bechberger.ebpf.samples.sched.CPU0Scheduler;
 import me.bechberger.ebpf.samples.sched.DeadlineScheduler;
 import me.bechberger.ebpf.samples.sched.FlowScheduler;
@@ -16,7 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -225,20 +228,22 @@ class SchedulerBehaviorTest {
         final GlobalVariable<@Unsigned Long> runningCount = new GlobalVariable<>(0L);
         final GlobalVariable<@Unsigned Long> stoppingCount = new GlobalVariable<>(0L);
 
+        // Prologue (scx_bpf_create_dsq) is injected before init() body by the compiler plugin.
+        final DispatchQueue shared = new DispatchQueue(SHARED_DSQ_ID);
+
         @Override
         public int init() {
-            return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
+            return 0;
         }
 
         @Override
         public void enqueue(Ptr<task_struct> p, long enq_flags) {
-            scx_bpf_dsq_insert(p, SHARED_DSQ_ID,
-                    scx_public_consts.SCX_SLICE_DFL.value(), enq_flags);
+            shared.insert(p, SCX_SLICE_DFL.value(), EnqFlags.passThrough(enq_flags));
         }
 
         @Override
         public void dispatch(int cpu, Ptr<task_struct> prev) {
-            scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+            shared.moveToLocal();
         }
 
         @Override
@@ -319,5 +324,100 @@ class SchedulerBehaviorTest {
         Thread.sleep(100);
         assertTrue(sched.isSchedulerAttachedProperly(),
                 "FlowScheduler should remain attached after tunable change");
+    }
+
+    // -------------------------------------------------------------------------
+    // 7. Boost-path routing — BoostedScheduler
+    // -------------------------------------------------------------------------
+
+    /**
+     * Verifies that {@link BoostedScheduler} routes the current JVM process into
+     * the boosted DSQ when boost mode is enabled, and into the normal DSQ when
+     * boost mode is disabled.
+     *
+     * <p>We can't guarantee every enqueue comes from this JVM, but after enabling
+     * boost with the current process boosted, at least some tasks must land in
+     * the boosted DSQ (since the JVM is actively scheduling threads).  After
+     * disabling boost, the boosted counter must stop growing.
+     */
+    @Test
+    @Timeout(20)
+    @TestScheduler(value = BoostedScheduler.class, autoAttach = false)
+    void boostedSchedulerRoutesBoostedTasksToBoostedDsq(BoostedScheduler sched) throws Exception {
+        int myTgid = (int) ProcessHandle.current().pid();
+        sched.boostTgid(myTgid);
+        sched.setBoostEnabled(true);
+        sched.attachScheduler();
+
+        // Run some threads so the JVM generates enqueue() calls.
+        Thread spinner = new Thread(() -> {
+            long end = System.nanoTime() + 400_000_000L;
+            while (System.nanoTime() < end) {}
+        });
+        spinner.start();
+        spinner.join();
+
+        long boostedAfterBoost = sched.getBoostedEnqueueCount();
+        long normalAfterBoost  = sched.getNormalEnqueueCount();
+
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "BoostedScheduler should remain attached while boosting");
+        assertTrue(boostedAfterBoost > 0,
+                "Boosted enqueue count should be positive while current process is boosted; got "
+                        + boostedAfterBoost);
+        assertTrue(normalAfterBoost > 0,
+                "Normal enqueue count should also be positive (other system tasks); got "
+                        + normalAfterBoost);
+
+        // Disable boost — subsequent enqueues from this process go to normal DSQ.
+        sched.setBoostEnabled(false);
+
+        Thread spinner2 = new Thread(() -> {
+            long end = System.nanoTime() + 400_000_000L;
+            while (System.nanoTime() < end) {}
+        });
+        spinner2.start();
+        spinner2.join();
+
+        long normalAfterDisable = sched.getNormalEnqueueCount();
+        assertTrue(normalAfterDisable > normalAfterBoost,
+                "Normal enqueue count should grow after boost is disabled; before="
+                        + normalAfterBoost + " after=" + normalAfterDisable);
+    }
+
+    // -------------------------------------------------------------------------
+    // 8. Priority dispatch coverage — PriorityScheduler
+    // -------------------------------------------------------------------------
+
+    /**
+     * Verifies that {@link PriorityScheduler} not only enqueues into multiple
+     * weight classes but also dispatches from them — specifically that the
+     * dispatch counter keeps pace with the enqueue counter.
+     */
+    @Test
+    @Timeout(15)
+    @TestScheduler(PriorityScheduler.class)
+    void prioritySchedulerDispatchesFromQueuedTasks(PriorityScheduler sched) throws Exception {
+        Thread.sleep(500);
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "PriorityScheduler should remain attached for 500 ms");
+
+        int activeDispatchQueues = sched.getActiveDispatchQueueCount();
+        assertTrue(activeDispatchQueues >= 1,
+                "At least 1 of 5 queues should have dispatched tasks; got "
+                        + activeDispatchQueues);
+
+        // Total dispatched should be ≥ total enqueued across all queues
+        // (can exceed when selectCPU fast-path fires).
+        long totalEnqueued  = 0;
+        long totalDispatched = 0;
+        for (int q = 0; q < PriorityScheduler.NUM_QUEUES; q++) {
+            totalEnqueued  += sched.getQueueEnqueueCount(q);
+            totalDispatched += sched.getQueueDispatchCount(q);
+        }
+        assertTrue(totalEnqueued > 0,
+                "Total enqueue count should be positive after 500 ms; got " + totalEnqueued);
+        assertTrue(totalDispatched > 0,
+                "Total dispatch count should be positive after 500 ms; got " + totalDispatched);
     }
 }

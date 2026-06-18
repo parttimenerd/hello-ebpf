@@ -40,6 +40,8 @@ import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.bpf.map.BPFLRUHashMap;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.type.Ptr;
 import picocli.CommandLine;
 
@@ -52,7 +54,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_get_smp_processor_id;
@@ -75,6 +76,9 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
      * just use SCX_DSQ_GLOBAL.
      */
     static final long SHARED_DSQ_ID = 0;
+
+    // Prologue (scx_bpf_create_dsq) is injected before init() body below.
+    final DispatchQueue shared = new DispatchQueue(SHARED_DSQ_ID);
 
     @Type
     static class Stats {
@@ -123,7 +127,7 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
         int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
         if (is_idle) {
             incrementStats(true);
-            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL.value(), SCX_SLICE_DFL.value(),0);
+            DispatchQueue.local().insert(p, SCX_SLICE_DFL.value(), EnqFlags.empty());
         }
         return cpu;
     }
@@ -132,7 +136,7 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
         incrementStats(false);
         if (fifo_sched.get()) {
-            scx_bpf_dsq_insert(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), enq_flags);
+            shared.insert(p, SCX_SLICE_DFL.value(), EnqFlags.passThrough(enq_flags));
         } else {
 
             @Unsigned long vtime = p.val().scx.dsq_vtime;
@@ -146,7 +150,7 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
             } else {
                 recordEnqueue(p);
             }
-            scx_bpf_dsq_insert_vtime(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), vtime, enq_flags);
+            shared.insertVtime(p, SCX_SLICE_DFL.value(), vtime, EnqFlags.passThrough(enq_flags));
         }
     }
 
@@ -164,7 +168,7 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
 
     @Override
     public void dispatch(int cpu, Ptr<task_struct> prev) {
-        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        shared.moveToLocal();
     }
 
     @Override
@@ -208,7 +212,9 @@ public abstract class SampleScheduler extends BPFProgram implements Scheduler, R
 
     @Override
     public int init() {
-        return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
+        // scx_bpf_create_dsq(SHARED_DSQ_ID, -1) is injected before this line
+        // by the compiler plugin (from the DispatchQueue field initializer above).
+        return 0;
     }
 
     @Option(names = "--verbose")

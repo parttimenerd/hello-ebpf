@@ -62,6 +62,74 @@ Quick reference for every mapping the hello-ebpf compiler plugin understands.
 
 All maps are annotated with `@BPFMapDefinition(maxEntries = N)`.
 
+## Scheduler abstractions (sched_ext)
+
+### DispatchQueue
+
+| Java | Meaning |
+|------|---------|
+| `new DispatchQueue(id)` | Create a custom DSQ; `scx_bpf_create_dsq(id,-1)` lifted to `init()` |
+| `DispatchQueue.attach(id)` | Wrap an already-existing DSQ — no create emitted |
+| `DispatchQueue.local()` | `SCX_DSQ_LOCAL` — current CPU's local queue |
+| `DispatchQueue.localOn(cpu)` | `SCX_DSQ_LOCAL_ON \| cpu` |
+| `DispatchQueue.global()` | `SCX_DSQ_GLOBAL` |
+| `dsq.insert(p, slice, flags)` | FIFO insert with explicit slice |
+| `dsq.insertScaled(p, flags)` | FIFO insert; slice scaled by queue depth |
+| `dsq.insertVtime(p, slice, vtime, flags)` | Vtime-ordered insert |
+| `dsq.insertVtimeClamped(p, vtimeNow, flags)` | Vtime insert with idle-budget clamping (WFQ) |
+| `DispatchQueue.insertToLocalIfIdle(p, isIdle, slice)` | Fast-path from `selectCPU` |
+| `dsq.moveToLocal()` | Move one task to the local CPU queue; returns `true` if moved |
+| `dsq.nonEmpty()` | `true` when tasks are waiting |
+| `dsq.nrQueued()` | Count of waiting tasks |
+| `DispatchQueue.now()` | Monotonic time in ns (`scx_bpf_now()`) |
+| `DispatchQueue.kickCpu(cpu, flags)` | Wake a remote CPU |
+| `DispatchQueue.yieldNow(p)` | Zero the running task's slice — immediate reschedule |
+| `dsq.destroy()` | Destroy a custom DSQ |
+
+### EnqFlags
+
+| Java | Meaning |
+|------|---------|
+| `EnqFlags.passThrough(enq_flags)` | Wrap the raw `enq_flags` parameter from `enqueue()` |
+| `EnqFlags.empty()` | No flags |
+| `EnqFlags.of(flag, ...)` | Compose `scx_enq_flags` constants |
+| `f.isWakeup()` | `SCX_ENQ_WAKEUP` set? |
+| `f.isLast()` | Last runnable task on this CPU? |
+| `f.or(other)` | Combine two EnqFlags |
+
+### KickFlags
+
+| Java | Meaning |
+|------|---------|
+| `KickFlags.idle()` | `SCX_KICK_IDLE` — wake only if the CPU is idle |
+| `KickFlags.preempt()` | `SCX_KICK_PREEMPT` — preempt whatever is running |
+| `KickFlags.waitForKick()` | `SCX_KICK_WAIT` — wait for the kick to be processed |
+| `KickFlags.none()` | No flags |
+| `f.or(other)` | Combine two KickFlags |
+
+### CpuMask
+
+`CpuMask` wraps a read-only `const struct cpumask *`. Must be used as a local variable
+inside a `@BPFFunction` (never as a field). Always release borrowed masks.
+
+| Java | Meaning |
+|------|---------|
+| `CpuMask.idle()` | Borrow the global idle CPU mask; release with `releaseIdle()` |
+| `CpuMask.idleSmt()` | Idle mask, one logical CPU per physical core |
+| `CpuMask.idleOnNode(n)` | Idle mask restricted to NUMA node `n` |
+| `CpuMask.online()` | Online CPU mask; release with `release()` |
+| `CpuMask.possible()` | Possible CPU mask; release with `release()` |
+| `CpuMask.ofTask(p)` | Read-only view of `p->cpus_ptr`; no release needed |
+| `mask.test(cpu)` | `true` if `cpu` is set |
+| `mask.weight()` | Number of CPUs set |
+| `mask.first()` | Lowest-numbered CPU set (or `>= nr_cpu_ids` if empty) |
+| `mask.isEmpty()` | `true` if no CPUs set |
+| `mask.intersects(other)` | `true` if the two masks share at least one CPU |
+| `mask.pickIdle(0)` | Pick and claim an idle CPU; returns CPU or `-EBUSY` |
+| `mask.pickAny(0)` | Pick any CPU, preferring idle ones |
+| `mask.releaseIdle()` | Release masks from `idle()` / `idleSmt()` / `idleOnNode()` |
+| `mask.release()` | Release masks from `online()` / `possible()` |
+
 ## Hook interfaces
 
 | Java | BPF hook |

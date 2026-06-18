@@ -4,10 +4,11 @@ import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.Scheduler;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.runtime.TaskDefinitions;
 import me.bechberger.ebpf.type.Ptr;
 
-import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_get_prandom_u32;
 
 /**
@@ -23,11 +24,16 @@ import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_get_prandom_u32;
 @Property(name = "sched_name", value = "lottery_scheduler")
 public abstract class LotteryScheduler extends BPFProgram implements Scheduler {
 
-    private static final int SHARED_DSQ_ID = 0;
+    private static final long SHARED_DSQ_ID = 0;
+
+    // scx_bpf_create_dsq(SHARED_DSQ_ID, -1) is lifted into init() by the compiler plugin.
+    final DispatchQueue shared = new DispatchQueue(SHARED_DSQ_ID);
 
     @Override
     public int init() {
-        return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
+        // scx_bpf_create_dsq(SHARED_DSQ_ID, -1) is injected before this line
+        // by the compiler plugin (from the DispatchQueue field initializer above).
+        return 0;
     }
 
     /**
@@ -37,7 +43,7 @@ public abstract class LotteryScheduler extends BPFProgram implements Scheduler {
      */
     @Override
     public void enqueue(Ptr<TaskDefinitions.task_struct> p, long enq_flags) {
-        int nr = scx_bpf_dsq_nr_queued(SHARED_DSQ_ID);
+        int nr = shared.nrQueued();
         // Random slice: up to 10ms, scaled down if queue is large to avoid starvation.
         int maxSlice = 10_000_000;
         int sliceLength = nr > 0 ? ((@Unsigned int) (bpf_get_prandom_u32() % maxSlice)) / nr
@@ -45,7 +51,7 @@ public abstract class LotteryScheduler extends BPFProgram implements Scheduler {
         if (sliceLength == 0) {
             sliceLength = 1_000_000;
         }
-        scx_bpf_dsq_insert(p, SHARED_DSQ_ID, sliceLength, enq_flags);
+        shared.insert(p, sliceLength, EnqFlags.passThrough(enq_flags));
     }
 
     /**
@@ -55,7 +61,7 @@ public abstract class LotteryScheduler extends BPFProgram implements Scheduler {
      */
     @Override
     public void dispatch(int cpu, Ptr<TaskDefinitions.task_struct> prev) {
-        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        shared.moveToLocal();
     }
 
     public static void main(String[] args) throws Exception {

@@ -11,11 +11,10 @@ import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.SchedulerBase;
 import me.bechberger.ebpf.bpf.SchedulerStats;
 import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.type.Ptr;
 
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_create_dsq;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_dsq_move_to_local;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 /**
@@ -49,10 +48,8 @@ public abstract class SimpleScheduler extends SchedulerBase implements Scheduler
     @BPFMapDefinition(maxEntries = 1)
     BPFPerCpuArray<Long> dispatchedCounts;
 
-    @Override
-    public int init() {
-        return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
-    }
+    // SchedulerBase.init() creates SHARED_DSQ_ID — attach without re-creating it.
+    final DispatchQueue shared = DispatchQueue.attach(SHARED_DSQ_ID);
 
     @Override
     public int selectCPU(Ptr<task_struct> p, int prev_cpu, long wake_flags) {
@@ -61,10 +58,11 @@ public abstract class SimpleScheduler extends SchedulerBase implements Scheduler
 
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
+        EnqFlags f = EnqFlags.passThrough(enq_flags);
         if (fifoMode.get()) {
-            dsqInsert(p, enq_flags);
+            shared.insertScaled(p, f);
         } else {
-            vtimeEnqueue(p, enq_flags, vtimeNow.get());
+            shared.insertVtimeClamped(p, vtimeNow.get(), f);
         }
         SchedulerStats.incrementEnqueued(enqueuedCounts);
     }
@@ -97,7 +95,7 @@ public abstract class SimpleScheduler extends SchedulerBase implements Scheduler
 
     @Override
     public void dispatch(int cpu, Ptr<task_struct> prev) {
-        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        shared.moveToLocal();
         SchedulerStats.incrementDispatched(dispatchedCounts);
     }
 

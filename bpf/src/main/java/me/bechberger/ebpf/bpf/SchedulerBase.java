@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.runtime.ScxDefinitions;
 import me.bechberger.ebpf.type.Ptr;
 
@@ -52,14 +53,17 @@ public abstract class SchedulerBase extends BPFProgram implements Scheduler {
     public static final long SHARED_DSQ_ID = 0;
 
 
-    /** Raw {@code exit_code} from {@link ScxDefinitions#scx_exit_info}; populated by {@link #exit(Ptr)}. */
-    final GlobalVariable<Long> _exitCode = new GlobalVariable<>(0L);
+    /** Raw {@code exit_code} from {@link ScxDefinitions#scx_exit_info}; populated by {@link #exit(Ptr)}.
+     *  Prefixed with {@code _} to avoid name clash with the {@code exitCode} parameter in
+     *  {@link #onSchedulerExit(long)}. */
+    protected final GlobalVariable<Long> _exitCode = new GlobalVariable<>(0L);
 
     /**
      * Creates the shared DSQ on the local NUMA node.
      * Override to create additional DSQs or pin to a specific node.
      */
     @Override
+    @BPFFunction(headerTemplate = "s32 BPF_STRUCT_OPS_SLEEPABLE(sched_init)", addDefinition = false)
     public int init() {
         return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
     }
@@ -69,6 +73,7 @@ public abstract class SchedulerBase extends BPFProgram implements Scheduler {
      * scheduler unloads.  Override and call {@code super.exit(ei)} to add custom cleanup.
      */
     @Override
+    @BPFFunction(headerTemplate = "void BPF_STRUCT_OPS(sched_exit, struct scx_exit_info *ei)", addDefinition = false)
     public void exit(Ptr<ScxDefinitions.scx_exit_info> ei) {
         _exitCode.set(ei.val().exit_code);
     }
@@ -78,6 +83,7 @@ public abstract class SchedulerBase extends BPFProgram implements Scheduler {
      * local dispatch queue.
      */
     @Override
+    @BPFFunction(headerTemplate = "void BPF_STRUCT_OPS(sched_dispatch, s32 cpu, struct task_struct *prev)", addDefinition = false)
     public void dispatch(int cpu, Ptr<task_struct> prev) {
         scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
     }

@@ -3,6 +3,10 @@ package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.BoundedBy;
 import me.bechberger.ebpf.annotations.Unsigned;
+import me.bechberger.ebpf.annotations.bpf.BPFFunction;
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.type.Ptr;
 
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
@@ -56,6 +60,7 @@ public abstract class PerCpuSchedulerBase extends SchedulerBase {
      * Creates the shared DSQ and one per-CPU DSQ for each logical CPU.
      */
     @Override
+    @BPFFunction(headerTemplate = "s32 BPF_STRUCT_OPS_SLEEPABLE(sched_init)", addDefinition = false)
     public int init() {
         int ret = scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
         if (ret < 0) return ret;
@@ -68,12 +73,15 @@ public abstract class PerCpuSchedulerBase extends SchedulerBase {
     }
 
     /**
-     * Drains the per-CPU DSQ for {@code cpu}, then the shared fallback DSQ.
+     * Drains the per-CPU DSQ for {@code cpu} first; if that DSQ is empty,
+     * falls back to the shared {@link #SHARED_DSQ_ID} DSQ.  Safe to return
+     * without dispatching anything — the kernel will call again.
      */
     @Override
+    @BPFFunction(headerTemplate = "void BPF_STRUCT_OPS(sched_dispatch, s32 cpu, struct task_struct *prev)", addDefinition = false)
     public void dispatch(int cpu, Ptr<task_struct> prev) {
-        if (!scx_bpf_dsq_move_to_local(PER_CPU_DSQ_BASE + cpu)) {
-            scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        if (!DispatchQueue.attach(PER_CPU_DSQ_BASE + cpu).moveToLocal()) {
+            DispatchQueue.attach(SHARED_DSQ_ID).moveToLocal();
         }
     }
 
@@ -84,8 +92,12 @@ public abstract class PerCpuSchedulerBase extends SchedulerBase {
      * @param p         task to enqueue
      * @param enq_flags {@code SCX_ENQ_*} flags from the kernel
      */
+    // The literal 1 below mirrors PER_CPU_DSQ_BASE; @BuiltinBPFFunction templates
+    // only accept $-placeholders, so the constant cannot be referenced symbolically.
+    @BuiltinBPFFunction("scx_bpf_dsq_insert($arg1, 1 + scx_bpf_task_cpu($arg1), SCX_SLICE_DFL, $arg2)")
     public void dsqInsertLocal(Ptr<task_struct> p, long enq_flags) {
         int cpu = scx_bpf_task_cpu(p);
-        scx_bpf_dsq_insert(p, PER_CPU_DSQ_BASE + cpu, scx_public_consts.SCX_SLICE_DFL.value(), enq_flags);
+        DispatchQueue.attach(PER_CPU_DSQ_BASE + cpu).insert(p, scx_public_consts.SCX_SLICE_DFL.value(),
+                EnqFlags.passThrough(enq_flags));
     }
 }

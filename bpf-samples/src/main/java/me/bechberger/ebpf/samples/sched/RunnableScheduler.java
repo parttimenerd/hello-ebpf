@@ -8,20 +8,20 @@ import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.SchedulerBase;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.type.Ptr;
 
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_create_dsq;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_dsq_move_to_local;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 /**
- * Exercises Items 1 (configurable {@code sched_ops.flags} via {@code @Property("extra_flags")})
- * and 2 (the {@code runnable()} sched_ops callback) of the recent framework feature campaign.
+ * FIFO scheduler demonstrating two framework features: configurable {@code sched_ext_ops.flags}
+ * via {@code @Property("extra_flags")}, and the {@link #runnable(Ptr, long)} callback for
+ * per-task wakeup tracking.
  *
- * <p>FIFO scheduler that increments a {@link GlobalVariable} every time the kernel calls
- * {@link #runnable(Ptr, long)}. The scheduler also opts into
- * {@code SCX_OPS_ENQ_MIGRATION_DISABLED} via the {@code extra_flags} property to verify the
- * macro substitution path.
+ * <p>Opts into {@code SCX_OPS_ENQ_MIGRATION_DISABLED} via {@code extra_flags}.
+ * Increments a {@link GlobalVariable} counter on every {@link #runnable} call;
+ * readable from Java via {@link #getRunnableCalls()}.
  *
  * <p>Run with:
  * <pre>
@@ -35,19 +35,11 @@ public abstract class RunnableScheduler extends SchedulerBase implements Schedul
 
     final GlobalVariable<@Unsigned Long> runnableCalls = new GlobalVariable<>(0L);
 
-    @Override
-    public int init() {
-        return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
-    }
+    final DispatchQueue shared = DispatchQueue.attach(SHARED_DSQ_ID);
 
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
-        dsqInsert(p, enq_flags);
-    }
-
-    @Override
-    public void dispatch(int cpu, Ptr<task_struct> prev) {
-        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        shared.insertScaled(p, EnqFlags.passThrough(enq_flags));
     }
 
     @Override

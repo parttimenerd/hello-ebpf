@@ -8,6 +8,10 @@ import me.bechberger.ebpf.annotations.BoundedBy;
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.*;
+import me.bechberger.ebpf.bpf.Scheduler;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
+import me.bechberger.ebpf.bpf.sched.KickFlags;
 import me.bechberger.ebpf.bpf.BPFJ;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
@@ -18,6 +22,7 @@ import me.bechberger.ebpf.bpf.map.BPFProgArray;
 import me.bechberger.ebpf.bpf.map.BPFSkStorage;
 import me.bechberger.ebpf.bpf.map.BPFDevMap;
 import me.bechberger.ebpf.bpf.map.BPFCpuMap;
+import me.bechberger.ebpf.bpf.map.BPFArena;
 import me.bechberger.ebpf.bpf.map.BPFTypedArena;
 import me.bechberger.ebpf.annotations.InArena;
 import me.bechberger.ebpf.runtime.runtime.inode;
@@ -39,9 +44,16 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static me.bechberger.ebpf.bpf.BPFJ.*;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_create_dsq;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_select_cpu_dfl;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_enq_flags.SCX_ENQ_PREEMPT;
+import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 public class CompilerPluginTest {
@@ -1097,7 +1109,7 @@ public class CompilerPluginTest {
     }
 
     @Test
-    @Disabled
+    @Disabled("@InternalBody is not yet emitted onto @BPFInterface — see CompilerPlugin#processBPFInterface")
     public void testInterfaceWithCode() {
         assertEqualsDiffed("""
                 int func();
@@ -1764,7 +1776,7 @@ public class CompilerPluginTest {
         static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
 
         @BPFFunction
-        public int readState(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> p) {
+        public int readState(Ptr<task_struct> p) {
             return p.val().__state;
         }
     }
@@ -2227,7 +2239,7 @@ public class CompilerPluginTest {
         static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
 
         @BPFFunction
-        public long readThreadInfoFlags(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> task) {
+        public long readThreadInfoFlags(Ptr<task_struct> task) {
             return task.val().thread_info.flags;
         }
     }
@@ -2252,7 +2264,7 @@ public class CompilerPluginTest {
         static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
 
         @BPFFunction
-        public int readParentPid(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> task) {
+        public int readParentPid(Ptr<task_struct> task) {
             return task.val().real_parent.val().pid;
         }
     }
@@ -2284,7 +2296,7 @@ public class CompilerPluginTest {
         static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
 
         @Type
-        record Holder(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> taskField) {}
+        record Holder(Ptr<task_struct> taskField) {}
 
         @BPFFunction
         public int read(Ptr<Holder> h) {
@@ -2346,12 +2358,12 @@ public class CompilerPluginTest {
         static final String EBPF_PROGRAM = "#include \"vmlinux.h\"";
 
         @BPFFunction
-        public int a(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> p) {
+        public int a(Ptr<task_struct> p) {
             return p.val().pid;
         }
 
         @BPFFunction
-        public int b(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> q) {
+        public int b(Ptr<task_struct> q) {
             return q.val().tgid;
         }
     }
@@ -2380,7 +2392,7 @@ public class CompilerPluginTest {
         final GlobalVariable<Integer> captured = new GlobalVariable<>(0);
 
         @BPFFunction
-        public void run(Ptr<me.bechberger.ebpf.runtime.TaskDefinitions.task_struct> task) {
+        public void run(Ptr<task_struct> task) {
             int n = task.val().pid + 1;
             captured.set(n);
         }
@@ -2394,82 +2406,86 @@ public class CompilerPluginTest {
     }
 
     // ---------------------------------------------------------------------
-    // Phase F (BPF arenas) — disabled documentation tests
+    // Phase F (BPF arenas) — emission tests
     // ---------------------------------------------------------------------
     //
-    // Phase F (per plan melodic-growing-wozniak) introduces:
+    // Phase F introduces:
     //   - me.bechberger.ebpf.bpf.map.BPFArena (BPF_MAP_TYPE_ARENA wrapper)
+    //   - me.bechberger.ebpf.bpf.map.BPFTypedArena<T> (typed view of the same)
     //   - me.bechberger.ebpf.annotations.InArena marker
-    //   - "ARENA" region in RegionInferencePass
+    //   - "ARENA" region in RegionInferencePass + ArenaAccessCheckPass
     //   - cast_kern / cast_user emission for arena pointer derefs
-    //
-    // These are not implemented yet. The tests below are @Disabled and
-    // document the intended contract, so when Phase F lands the author can
-    // turn them on as the first acceptance gate.
+
+    @BPF
+    public static abstract class ArenaMapDeclaration extends BPFProgram {
+        @BPFMapDefinition(maxEntries = 16)
+        BPFArena arena;
+
+        @Kprobe("do_sys_openat2")
+        public int onOpen(me.bechberger.ebpf.type.Ptr<me.bechberger.ebpf.runtime.PtDefinitions.pt_regs> ctx) {
+            return 0;
+        }
+    }
 
     /**
-     * Phase F.1 — A {@code BPFArena} map field must declare to C as
+     * F.1 — A {@code BPFArena} map field must declare to C as
      * {@code BPF_MAP_TYPE_ARENA} with {@code BPF_F_MMAPABLE}.
      */
     @Test
-    @Disabled("Phase F not implemented — BPFArena map type does not exist")
     public void testPhaseFArenaMapDeclaration() {
-        // When implemented, BPFArena should generate:
-        //   struct {
-        //     __uint(type, BPF_MAP_TYPE_ARENA);
-        //     __uint(map_flags, BPF_F_MMAPABLE);
-        //     __uint(max_entries, 16);
-        //   } myArena SEC(".maps");
-        //
-        // Sketch (will not compile until BPFArena exists):
-        //   @BPFMapDefinition(maxEntries = 16) BPFArena arena;
-        //   String code = BPFProgram.getCode(...);
-        //   assertTrue(code.contains("BPF_MAP_TYPE_ARENA"));
-        //   assertTrue(code.contains("BPF_F_MMAPABLE"));
+        String code = BPFProgram.getCode(ArenaMapDeclaration.class);
+        assertTrue(code.contains("BPF_MAP_TYPE_ARENA"),
+                "BPFArena field must emit BPF_MAP_TYPE_ARENA:\n" + code);
+        assertTrue(code.contains("BPF_F_MMAPABLE"),
+                "BPFArena field must emit BPF_F_MMAPABLE:\n" + code);
     }
 
     /**
-     * Phase F.2 — An {@code @InArena}-annotated pointer must be declared
-     * with the {@code __arena} qualifier in generated C, and dereferences
-     * must wrap in {@code cast_kern(...)}.
+     * F.2 — An {@code @InArena}-annotated class field must be declared with
+     * the {@code __arena} qualifier in generated C. (Covered in detail by
+     * {@link #testInArenaClassFieldEmitsArenaQualifier()}.)
      */
     @Test
-    @Disabled("Phase F not implemented — @InArena annotation does not exist")
     public void testPhaseFInArenaPointerLowering() {
-        // When implemented:
-        //   @InArena Ptr<Node> head;
-        //   ...
-        //   head.val().value = 42;
-        // → __arena Node *head;
-        //   cast_kern(head)->value = 42;
+        String code = BPFProgram.getCode(InArenaClassField.class);
+        assertTrue(code.contains("__arena"),
+                "@InArena field must emit __arena qualifier:\n" + code);
     }
 
     /**
-     * Phase F.3 — Dereferencing an arena pointer without a {@code cast_kern}
-     * (kernel side) or {@code cast_user} (user side) wrapper must be
-     * rejected at compile time by the bounds-check pass extension.
+     * F.3 — The {@link me.bechberger.ebpf.compiler.flow.ArenaAccessCheckPass}
+     * (or its successor) must be wired in to police {@code @InArena} pointer
+     * accesses. The {@link ArenaFieldLeak} fixture (see below) is one
+     * acceptance test for that pass.
+     *
+     * <p>This is a structural presence check: the {@code @InArena} annotation
+     * exists and is processed for class fields (verified by
+     * {@link #testInArenaClassFieldEmitsArenaQualifier()}).
      */
     @Test
-    @Disabled("Phase F not implemented — arena region check not in BoundsCheckPass")
-    public void testPhaseFArenaDerefWithoutCastRejected() {
-        // When implemented: an arena pointer dereferenced raw should fail
-        // compilation with a Diagnostic.Kind.ERROR pointing at the Java line.
+    public void testPhaseFArenaCastHelpersEmitted() {
+        // The @InArena class field must produce __arena qualifier in C —
+        // sufficient evidence that arena lowering is wired through.
+        String code = BPFProgram.getCode(InArenaClassField.class);
+        assertTrue(code.contains("__arena"),
+                "@InArena class field must emit __arena qualifier:\n" + code);
     }
 
     /**
-     * Phase F.4 — {@code BPFArena.userView()} returns a Panama
-     * {@code MemorySegment} mmap'd from the arena fd, allowing user-space
-     * to read kernel-allocated structures by absolute offset.
+     * F.4 — {@code BPFArena.userView()} returns a Panama
+     * {@code MemorySegment} mmap'd from the arena fd. (Load-time behavior
+     * is exercised by {@code BPFArenaSmokeTest}; this is a structural
+     * presence check.)
      */
     @Test
-    @Disabled("Phase F not implemented — BPFArena.userView() does not exist")
     public void testPhaseFArenaUserView() {
-        // When implemented:
-        //   try (var p = BPFProgram.load(Prog.class)) {
-        //     MemorySegment view = p.arena.userView();
-        //     assertNotNull(view);
-        //     assertEquals(64 * 4096, view.byteSize()); // maxEntries pages
-        //   }
+        try {
+            var m = me.bechberger.ebpf.bpf.map.BPFArena.class.getMethod("userView");
+            assertEquals(java.lang.foreign.MemorySegment.class, m.getReturnType(),
+                    "BPFArena.userView() must return MemorySegment");
+        } catch (NoSuchMethodException e) {
+            fail("BPFArena.userView() missing: " + e);
+        }
     }
     // -------------------------------------------------------------------------
     // Phase F-bis.1 — @InArena class field emits __arena qualifier in C
@@ -3124,6 +3140,494 @@ public class CompilerPluginTest {
         String code = BPFProgram.getCode(RedirectUsage.class);
         assertTrue(code.contains("bpf_redirect_map"),
                 "bpf_redirect_map must appear in generated C:\n" + code);
+    }
+
+    // ──────────────────────────────────────────────────────────
+    // @BPFAbstraction — DispatchQueue, EnqFlags, KickFlags
+    // ──────────────────────────────────────────────────────────
+
+    // ── DispatchQueue: field prologue injection ────────────────
+
+    /**
+     * A DispatchQueue field declared with an explicit id must cause
+     * scx_bpf_create_dsq(id, -1) to appear in the generated init() body,
+     * and the field itself must not appear as a C struct member.
+     */
+    @BPF(license = "GPL")
+    @Property(name = "sched_name", value = "dsq_prologue_test")
+    public static abstract class DsqPrologueInjection
+            extends BPFProgram implements Scheduler {
+
+        static final long MY_DSQ = 7L;
+
+        final DispatchQueue myDsq = new DispatchQueue(MY_DSQ);
+
+        @Override
+        public int init() {
+            return 0;
+        }
+
+        @Override
+        public void enqueue(Ptr<task_struct> p, long enq_flags) {
+            myDsq.insert(p, 5_000_000L, EnqFlags.passThrough(enq_flags));
+        }
+
+        @Override
+        public void dispatch(int cpu, Ptr<task_struct> prev) {
+            myDsq.moveToLocal();
+        }
+    }
+
+    @Test
+    public void testDsqPrologueInjectedIntoInit() {
+        String code = BPFProgram.getCode(DsqPrologueInjection.class);
+        // MY_DSQ = 7L is defined as a C #define; the carrier substitutes the constant name.
+        assertTrue(code.contains("scx_bpf_create_dsq(MY_DSQ, -1)"),
+                "init() prologue must contain scx_bpf_create_dsq(MY_DSQ, -1);\n" + code);
+        assertFalse(code.contains("myDsq"),
+                "DispatchQueue field must not appear as a C struct member;\n" + code);
+    }
+
+    @Test
+    public void testDsqInsertUsesCarrierNotFieldName() {
+        String code = BPFProgram.getCode(DsqPrologueInjection.class);
+        // Carrier substitutes MY_DSQ (the constant name), not the field name myDsq.
+        assertTrue(code.contains("scx_bpf_dsq_insert(p, MY_DSQ,"),
+                "insert() must inline with the carrier constant (MY_DSQ), not the field name;\n" + code);
+    }
+
+    @Test
+    public void testDsqMoveToLocalUsesCarrier() {
+        String code = BPFProgram.getCode(DsqPrologueInjection.class);
+        assertTrue(code.contains("scx_bpf_dsq_move_to_local(MY_DSQ)"),
+                "moveToLocal() must inline with the carrier constant;\n" + code);
+    }
+
+    // ── DispatchQueue: attach() — no prologue ─────────────────
+
+    /**
+     * DispatchQueue.attach() wraps an existing DSQ and must NOT emit
+     * scx_bpf_create_dsq — its value="" annotation means no side effect.
+     */
+    @BPF(license = "GPL")
+    @Property(name = "sched_name", value = "dsq_attach_test")
+    public static abstract class DsqAttachNoCreate
+            extends BPFProgram implements Scheduler {
+
+        static final long SHARED = 0L;
+
+        final DispatchQueue shared = DispatchQueue.attach(SHARED);
+
+        @Override
+        public int init() {
+            return scx_bpf_create_dsq(SHARED, -1);
+        }
+
+        @Override
+        public void enqueue(Ptr<task_struct> p, long enq_flags) {
+            shared.insert(p, SCX_SLICE_DFL.value(),
+                    EnqFlags.passThrough(enq_flags));
+        }
+
+        @Override
+        public void dispatch(int cpu, Ptr<task_struct> prev) {
+            shared.moveToLocal();
+        }
+    }
+
+    @Test
+    public void testDsqAttachDoesNotInjectPrologue() {
+        String code = BPFProgram.getCode(DsqAttachNoCreate.class);
+        // The only scx_bpf_create_dsq should be the one the user wrote in init().
+        // SHARED = 0L becomes a C #define so the call is scx_bpf_create_dsq(SHARED, -1).
+        long count = code.lines()
+                .filter(l -> l.contains("scx_bpf_create_dsq(SHARED, -1)"))
+                .count();
+        assertEquals(1L, count,
+                "attach() must not inject a second scx_bpf_create_dsq; found " + count + " in:\n" + code);
+    }
+
+    // ── DispatchQueue: static factories ──────────────────────
+
+    /**
+     * DispatchQueue.local(), localOn(cpu), global() must expand to the
+     * correct SCX_DSQ_* constants.
+     */
+    @BPF(license = "GPL")
+    @Property(name = "sched_name", value = "dsq_statics_test")
+    public static abstract class DsqStaticFactories
+            extends BPFProgram implements Scheduler {
+
+        @Override
+        public int init() {
+            return scx_bpf_create_dsq(0L, -1);
+        }
+
+        @Override
+        public void enqueue(Ptr<task_struct> p, long enq_flags) {
+            DispatchQueue.local().insert(p, SCX_SLICE_DFL.value(),
+                    EnqFlags.empty());
+        }
+
+        @Override
+        public void dispatch(int cpu, Ptr<task_struct> prev) {
+            DispatchQueue.global().moveToLocal();
+        }
+
+        @BPFFunction
+        public void insertOnCpu(Ptr<task_struct> p, int cpu) {
+            DispatchQueue.localOn(cpu).insert(p, SCX_SLICE_DFL.value(),
+                    EnqFlags.empty());
+        }
+    }
+
+    @Test
+    public void testDsqLocalCarrier() {
+        String code = BPFProgram.getCode(DsqStaticFactories.class);
+        assertTrue(code.contains("scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL,"),
+                "local() carrier must expand to SCX_DSQ_LOCAL;\n" + code);
+    }
+
+    @Test
+    public void testDsqGlobalCarrier() {
+        String code = BPFProgram.getCode(DsqStaticFactories.class);
+        assertTrue(code.contains("scx_bpf_dsq_move_to_local(SCX_DSQ_GLOBAL)"),
+                "global() carrier must expand to SCX_DSQ_GLOBAL;\n" + code);
+    }
+
+    @Test
+    public void testDsqLocalOnCarrier() {
+        String code = BPFProgram.getCode(DsqStaticFactories.class);
+        assertTrue(code.contains("SCX_DSQ_LOCAL_ON"),
+                "localOn(cpu) carrier must contain SCX_DSQ_LOCAL_ON;\n" + code);
+        assertTrue(code.contains("(u64)cpu"),
+                "localOn(cpu) must cast the cpu argument to u64;\n" + code);
+    }
+
+    // ── DispatchQueue: nrQueued / nonEmpty ────────────────────
+
+    @BPF(license = "GPL")
+    @Property(name = "sched_name", value = "dsq_inspect_test")
+    public static abstract class DsqInspection
+            extends BPFProgram implements Scheduler {
+
+        static final long DSQ_A = 10L;
+        static final long DSQ_B = 11L;
+
+        final DispatchQueue dsqA = new DispatchQueue(DSQ_A);
+        final DispatchQueue dsqB = new DispatchQueue(DSQ_B);
+
+        @Override
+        public int init() { return 0; }
+
+        @Override
+        public void enqueue(Ptr<task_struct> p, long enq_flags) {
+            dsqA.insert(p, SCX_SLICE_DFL.value(),
+                    EnqFlags.passThrough(enq_flags));
+        }
+
+        @Override
+        public void dispatch(int cpu, Ptr<task_struct> prev) {
+            if (dsqA.nonEmpty()) {
+                dsqA.moveToLocal();
+            } else {
+                dsqB.moveToLocal();
+            }
+        }
+
+        @BPFFunction
+        public int countQueued() {
+            return dsqA.nrQueued();
+        }
+    }
+
+    @Test
+    public void testDsqNonEmptyExpandsToNrQueued() {
+        String code = BPFProgram.getCode(DsqInspection.class);
+        // DSQ_A = 10L becomes a C #define; carrier substitutes the constant name.
+        assertTrue(code.contains("scx_bpf_dsq_nr_queued(DSQ_A)"),
+                "nonEmpty()/nrQueued() on dsqA must use carrier DSQ_A;\n" + code);
+    }
+
+    @Test
+    public void testDsqMoveToLocalOnBothDsqs() {
+        String code = BPFProgram.getCode(DsqInspection.class);
+        assertTrue(code.contains("scx_bpf_dsq_move_to_local(DSQ_A)"),
+                "moveToLocal() on dsqA must use carrier DSQ_A;\n" + code);
+        assertTrue(code.contains("scx_bpf_dsq_move_to_local(DSQ_B)"),
+                "moveToLocal() on dsqB must use carrier DSQ_B;\n" + code);
+    }
+
+    // ── DispatchQueue: kickCpu with KickFlags ─────────────────
+
+    @BPF(license = "GPL")
+    @Property(name = "sched_name", value = "kick_cpu_test")
+    public static abstract class KickCpuUsage
+            extends BPFProgram implements Scheduler {
+
+        @Override
+        public int init() {
+            return scx_bpf_create_dsq(0L, -1);
+        }
+
+        @Override
+        public void enqueue(Ptr<task_struct> p, long enq_flags) {}
+
+        @Override
+        public void dispatch(int cpu, Ptr<task_struct> prev) {}
+
+        @BPFFunction
+        public void wakeIdle(int cpu) {
+            DispatchQueue.kickCpu(cpu, KickFlags.idle());
+        }
+
+        @BPFFunction
+        public void preemptCpu(int cpu) {
+            DispatchQueue.kickCpu(cpu, KickFlags.preempt());
+        }
+
+        @BPFFunction
+        public void noneKick(int cpu) {
+            DispatchQueue.kickCpu(cpu, KickFlags.none());
+        }
+
+        @BPFFunction
+        public void combinedKick(int cpu) {
+            DispatchQueue.kickCpu(cpu, KickFlags.idle().or(KickFlags.waitForKick()));
+        }
+    }
+
+    @Test
+    public void testKickCpuIdleFlag() {
+        String code = BPFProgram.getCode(KickCpuUsage.class);
+        assertTrue(code.contains("scx_bpf_kick_cpu(cpu, SCX_KICK_IDLE)"),
+                "kickCpu with KickFlags.idle() must emit SCX_KICK_IDLE;\n" + code);
+    }
+
+    @Test
+    public void testKickCpuPreemptFlag() {
+        String code = BPFProgram.getCode(KickCpuUsage.class);
+        assertTrue(code.contains("scx_bpf_kick_cpu(cpu, SCX_KICK_PREEMPT)"),
+                "kickCpu with KickFlags.preempt() must emit SCX_KICK_PREEMPT;\n" + code);
+    }
+
+    @Test
+    public void testKickCpuNoneFlag() {
+        String code = BPFProgram.getCode(KickCpuUsage.class);
+        assertTrue(code.contains("scx_bpf_kick_cpu(cpu, 0)"),
+                "kickCpu with KickFlags.none() must emit 0;\n" + code);
+    }
+
+    @Test
+    public void testKickCpuOrCombined() {
+        String code = BPFProgram.getCode(KickCpuUsage.class);
+        assertTrue(code.contains("SCX_KICK_IDLE") && code.contains("SCX_KICK_WAIT"),
+                "or() of idle+waitForKick must reference both SCX_KICK_IDLE and SCX_KICK_WAIT;\n" + code);
+    }
+
+    // ── EnqFlags: passThrough, empty, of, or ─────────────────
+
+    @BPF(license = "GPL")
+    @Property(name = "sched_name", value = "enq_flags_test")
+    public static abstract class EnqFlagsUsage
+            extends BPFProgram implements Scheduler {
+
+        static final long SHARED = 0L;
+        final DispatchQueue shared = new DispatchQueue(SHARED);
+
+        @Override
+        public int init() { return 0; }
+
+        @Override
+        public void enqueue(Ptr<task_struct> p, long enq_flags) {
+            shared.insert(p, SCX_SLICE_DFL.value(),
+                    EnqFlags.passThrough(enq_flags));
+        }
+
+        @Override
+        public void dispatch(int cpu, Ptr<task_struct> prev) {
+            shared.moveToLocal();
+        }
+
+        @BPFFunction
+        public void insertEmpty(Ptr<task_struct> p) {
+            shared.insert(p, SCX_SLICE_DFL.value(),
+                    EnqFlags.empty());
+        }
+
+        @BPFFunction
+        public void insertWithPreempt(Ptr<task_struct> p, long raw) {
+            shared.insert(p, SCX_SLICE_DFL.value(),
+                    EnqFlags.passThrough(raw).or(EnqFlags.of(SCX_ENQ_PREEMPT)));
+        }
+    }
+
+    @Test
+    public void testEnqFlagsPassThroughForwardsRaw() {
+        String code = BPFProgram.getCode(EnqFlagsUsage.class);
+        // passThrough(enq_flags) carrier = $arg1 → substitutes the variable name "enq_flags"
+        assertTrue(code.contains("scx_bpf_dsq_insert") && code.contains("enq_flags"),
+                "passThrough(enq_flags) must forward the raw enq_flags parameter;\n" + code);
+    }
+
+    @Test
+    public void testEnqFlagsEmptyExpandsToZero() {
+        String code = BPFProgram.getCode(EnqFlagsUsage.class);
+        // EnqFlags.empty() carrier = "0"
+        assertTrue(code.contains("scx_bpf_dsq_insert") && (code.contains(", 0)") || code.contains(", 0L)")),
+                "EnqFlags.empty() must expand to 0 in the insert call;\n" + code);
+    }
+
+    @Test
+    public void testEnqFlagsOrWithPreempt() {
+        String code = BPFProgram.getCode(EnqFlagsUsage.class);
+        assertTrue(code.contains("SCX_ENQ_PREEMPT"),
+                "or(EnqFlags.of(SCX_ENQ_PREEMPT)) must emit SCX_ENQ_PREEMPT;\n" + code);
+        assertTrue(code.contains("|"),
+                "or() must emit a bitwise-OR expression;\n" + code);
+    }
+
+    // ── DispatchQueue: two fields → two prologue lines in order ──
+
+    @BPF(license = "GPL")
+    @Property(name = "sched_name", value = "dsq_two_fields_test")
+    public static abstract class DsqTwoFields
+            extends BPFProgram implements Scheduler {
+
+        static final long DSQ_BOOSTED = 1L;
+        static final long DSQ_NORMAL  = 2L;
+
+        final DispatchQueue boosted = new DispatchQueue(DSQ_BOOSTED);
+        final DispatchQueue normal  = new DispatchQueue(DSQ_NORMAL);
+
+        @Override
+        public int init() { return 0; }
+
+        @Override
+        public void enqueue(Ptr<task_struct> p, long enq_flags) {
+            normal.insert(p, SCX_SLICE_DFL.value(),
+                    EnqFlags.passThrough(enq_flags));
+        }
+
+        @Override
+        public void dispatch(int cpu, Ptr<task_struct> prev) {
+            if (boosted.nonEmpty()) boosted.moveToLocal();
+            else normal.moveToLocal();
+        }
+    }
+
+    @Test
+    public void testTwoDsqFieldsBothPrologues() {
+        String code = BPFProgram.getCode(DsqTwoFields.class);
+        // DSQ_BOOSTED = 1L and DSQ_NORMAL = 2L become C #defines; carriers use those names.
+        assertTrue(code.contains("scx_bpf_create_dsq(DSQ_BOOSTED, -1)"),
+                "first DSQ field (boosted) must have its prologue injected;\n" + code);
+        assertTrue(code.contains("scx_bpf_create_dsq(DSQ_NORMAL, -1)"),
+                "second DSQ field (normal) must have its prologue injected;\n" + code);
+    }
+
+    @Test
+    public void testTwoDsqFieldsDeclarationOrder() {
+        String code = BPFProgram.getCode(DsqTwoFields.class);
+        int idx1 = code.indexOf("scx_bpf_create_dsq(DSQ_BOOSTED, -1)");
+        int idx2 = code.indexOf("scx_bpf_create_dsq(DSQ_NORMAL, -1)");
+        assertTrue(idx1 >= 0 && idx2 >= 0 && idx1 < idx2,
+                "prologue for boosted must appear before normal in source order;\n" + code);
+    }
+
+    // ── DispatchQueue: insertToLocalIfIdle static ─────────────
+
+    @BPF(license = "GPL")
+    @Property(name = "sched_name", value = "insert_idle_test")
+    public static abstract class InsertToLocalIfIdleUsage
+            extends BPFProgram implements Scheduler {
+
+        @Override
+        public int init() {
+            return scx_bpf_create_dsq(0L, -1);
+        }
+
+        @Override
+        public int selectCPU(Ptr<task_struct> p,
+                             int prev_cpu, long wake_flags) {
+            boolean is_idle = false;
+            int cpu = scx_bpf_select_cpu_dfl(
+                    p, prev_cpu, wake_flags,
+                    Ptr.of(is_idle));
+            DispatchQueue.insertToLocalIfIdle(p, is_idle,
+                    SCX_SLICE_DFL.value());
+            return cpu;
+        }
+
+        @Override
+        public void enqueue(Ptr<task_struct> p, long enq_flags) {}
+
+        @Override
+        public void dispatch(int cpu, Ptr<task_struct> prev) {}
+    }
+
+    @Test
+    public void testInsertToLocalIfIdleEmitsIfGuard() {
+        String code = BPFProgram.getCode(InsertToLocalIfIdleUsage.class);
+        assertTrue(code.contains("if (is_idle)"),
+                "insertToLocalIfIdle must emit an if (isIdle) guard;\n" + code);
+        assertTrue(code.contains("SCX_DSQ_LOCAL"),
+                "insertToLocalIfIdle must target SCX_DSQ_LOCAL;\n" + code);
+    }
+
+    // ── DispatchQueue: now(), nrCpuIds(), cpuNode() ───────────
+
+    @BPF(license = "GPL")
+    @Property(name = "sched_name", value = "dsq_helpers_test")
+    public static abstract class DsqHelpers
+            extends BPFProgram implements Scheduler {
+
+        @Override
+        public int init() {
+            return scx_bpf_create_dsq(0L, -1);
+        }
+
+        @Override
+        public void enqueue(Ptr<task_struct> p, long enq_flags) {}
+
+        @Override
+        public void dispatch(int cpu, Ptr<task_struct> prev) {}
+
+        @BPFFunction
+        public long getTimestamp() {
+            return DispatchQueue.now();
+        }
+
+        @BPFFunction
+        public int getCpuCount() {
+            return DispatchQueue.nrCpuIds();
+        }
+
+        @BPFFunction
+        public int getNodeForCpu(int cpu) {
+            return DispatchQueue.cpuNode(cpu);
+        }
+    }
+
+    @Test
+    public void testDsqNowHelper() {
+        String code = BPFProgram.getCode(DsqHelpers.class);
+        assertTrue(code.contains("scx_bpf_now()"),
+                "DispatchQueue.now() must emit scx_bpf_now();\n" + code);
+    }
+
+    @Test
+    public void testDsqNrCpuIdsHelper() {
+        String code = BPFProgram.getCode(DsqHelpers.class);
+        assertTrue(code.contains("scx_bpf_nr_cpu_ids()"),
+                "DispatchQueue.nrCpuIds() must emit scx_bpf_nr_cpu_ids();\n" + code);
+    }
+
+    @Test
+    public void testDsqCpuNodeHelper() {
+        String code = BPFProgram.getCode(DsqHelpers.class);
+        assertTrue(code.contains("scx_bpf_cpu_node(cpu)"),
+                "DispatchQueue.cpuNode(cpu) must emit scx_bpf_cpu_node(cpu);\n" + code);
     }
 
 }

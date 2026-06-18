@@ -8,10 +8,11 @@ import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.SchedulerStats;
 import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.type.Ptr;
 
-import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_task_cpu;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
@@ -45,9 +46,14 @@ public abstract class CPU0Scheduler extends BPFProgram implements Scheduler {
     @BPFMapDefinition(maxEntries = 1)
     BPFPerCpuArray<Long> dispatchedCounts;
 
+    // scx_bpf_create_dsq(CPU0_DSQ_ID, -1) is lifted into init() by the compiler plugin.
+    final DispatchQueue cpu0 = new DispatchQueue(CPU0_DSQ_ID);
+
     @Override
     public int init() {
-        return scx_bpf_create_dsq(CPU0_DSQ_ID, -1);
+        // scx_bpf_create_dsq(CPU0_DSQ_ID, -1) is injected before this line
+        // by the compiler plugin (from the DispatchQueue field initializer above).
+        return 0;
     }
 
     @Override
@@ -60,16 +66,16 @@ public abstract class CPU0Scheduler extends BPFProgram implements Scheduler {
         if (scx_bpf_task_cpu(p) != 0) {
             // Task is on a non-CPU-0 core: let it run locally to avoid deadlock.
             // It will eventually migrate to CPU 0 via selectCPU.
-            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL.value(), SCX_SLICE_DFL.value(), 0);
+            DispatchQueue.local().insert(p, SCX_SLICE_DFL.value(), EnqFlags.empty());
         } else {
-            scx_bpf_dsq_insert(p, CPU0_DSQ_ID, SCX_SLICE_DFL.value(), enq_flags);
+            cpu0.insert(p, SCX_SLICE_DFL.value(), EnqFlags.passThrough(enq_flags));
         }
     }
 
     @Override
     public void dispatch(int cpu, Ptr<task_struct> prev) {
         if (cpu == 0) {
-            scx_bpf_dsq_move_to_local(CPU0_DSQ_ID);
+            cpu0.moveToLocal();
             SchedulerStats.incrementDispatched(dispatchedCounts);
         }
     }

@@ -13,6 +13,7 @@ import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.runtime.BpfDefinitions;
 import me.bechberger.ebpf.runtime.ScxDefinitions;
 import me.bechberger.ebpf.runtime.TaskDefinitions;
+import me.bechberger.ebpf.runtime.runtime;
 import me.bechberger.ebpf.runtime.runtime.cpumask;
 import me.bechberger.ebpf.type.Ptr;
 
@@ -33,6 +34,24 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  * A sched-ext based scheduler.
  *
  * <p>Specify the scheduler name with {@code @Property(name = "sched_name", value = "...")}.
+ *
+ * <h2>Properties</h2>
+ * <ul>
+ *   <li>{@code sched_name} — name registered with the kernel (visible in
+ *       {@code /sys/kernel/sched_ext/root/ops}).  Must match {@code [a-zA-Z0-9_]+}.
+ *       Default: {@code "hello"}.</li>
+ *   <li>{@code timeout_ms} — kernel watchdog interval in milliseconds.  If the
+ *       scheduler does not dispatch any task for this long, the kernel force-unloads
+ *       it with {@code SCX_EXIT_ERROR_STALL}.  Default: {@code 30000} (30 s).
+ *       Set to a large value (e.g. {@code 60000}) for production; for interactive
+ *       debugging a short value (e.g. {@code 5000}) is safer so a stuck scheduler
+ *       does not freeze the system.  There is no way to disable the watchdog
+ *       entirely.</li>
+ *   <li>{@code extra_flags} — additional {@code SCX_OPS_*} flags OR-ed into
+ *       {@code sched_ext_ops.flags}.  Default: {@code 0}.  Example:
+ *       {@code @Property(name = "extra_flags", value = "SCX_OPS_ENQ_MIGRATION_DISABLED")}.
+ *   </li>
+ * </ul>
  *
  * <p><b>cpumask import note:</b> Methods that deal with {@code cpumask} (e.g.
  * {@link #scx_bpf_get_possible_cpumask()}, {@link #scx_bpf_pick_idle_cpu}) return
@@ -156,12 +175,26 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
                 	       .stopping        = (void *)simple_stopping,
                 	       .dequeue         = (void *)simple_dequeue,
                 	       .tick            = (void *)simple_tick,
+                	       .quiescent       = (void *)sched_quiescent,
                 	       .cpu_acquire     = (void *)sched_cpu_acquire,
                 	       .cpu_release     = (void *)sched_cpu_release,
+                	       .cpu_online      = (void *)sched_cpu_online,
+                	       .cpu_offline     = (void *)sched_cpu_offline,
+                	       .core_sched_before = (void *)sched_core_sched_before,
                 	       .yield           = (void *)sched_yield,
                 	       .set_weight      = (void *)sched_set_weight,
                 	       .set_cpumask     = (void *)sched_set_cpumask,
                 	       .exit_task       = (void *)sched_exit_task,
+                	       .dump            = (void *)sched_dump,
+                	       .dump_cpu        = (void *)sched_dump_cpu,
+                	       .dump_task       = (void *)sched_dump_task,
+                	       .cgroup_init     = (void *)sched_cgroup_init,
+                	       .cgroup_exit     = (void *)sched_cgroup_exit,
+                	       .cgroup_prep_move = (void *)sched_cgroup_prep_move,
+                	       .cgroup_cancel_move = (void *)sched_cgroup_cancel_move,
+                	       .cgroup_move     = (void *)sched_cgroup_move,
+                	       .cgroup_set_weight = (void *)sched_cgroup_set_weight,
+                	       .cgroup_set_bandwidth = (void *)sched_cgroup_set_bandwidth,
                 	       .flags			= SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE | (__property_extra_flags),
                 	       .timeout_ms      = __property_timeout_ms,
                 	       .name			= "__property_sched_name");
@@ -254,13 +287,25 @@ public interface Scheduler {
     /**
      * Selects the target CPU for a task being woken up.
      *
-     * @param p          Pointer to the task being woken up.
-     * @param prev_cpu   CPU the task was on before sleeping.
-     * @param wake_flags Flags indicating wake-up conditions (e.g., SCX_WAKE_*).
-     * @return           Target CPU for dispatching the task.
+     * <p>Called before the task is enqueued.  Returning an idle CPU causes the kernel
+     * to attempt a fast-path dispatch directly to {@code SCX_DSQ_LOCAL} of that CPU —
+     * use {@link #selectCpuDefault} or {@link #selectCpuFifoIdleOrFallback} to take
+     * advantage of this.  If you pre-insert the task into a DSQ here, {@link #enqueue}
+     * will <em>not</em> be called.
      *
-     * This decision isn't final; tasks may be reassigned CPUs during dispatch.
-     * If an idle CPU is returned, it will attempt to dispatch tasks.
+     * <p>This decision is <b>not final</b>: the kernel may move the task to a different
+     * CPU at dispatch time if affinity constraints require it.  Use the result as a hint,
+     * not a guarantee.
+     *
+     * <p>The default implementation always returns 0 (CPU 0), which is safe but
+     * suboptimal.  Most schedulers should delegate to {@link #selectCpuDefault} or
+     * {@link #selectCpuFifoIdleOrFallback}.
+     *
+     * @param p          task being woken up
+     * @param prev_cpu   CPU the task was running on before sleeping
+     * @param wake_flags {@code SCX_WAKE_*} flags describing the wake-up reason
+     * @return           preferred target CPU; will be passed back as {@code prev_cpu}
+     *                   in the next {@code selectCPU} call if the task doesn't migrate
      */
     @BPFFunction(
             headerTemplate = "s32 BPF_STRUCT_OPS(sched_select_cpu, struct task_struct *p, s32 prev_cpu, u64 wake_flags)",
@@ -271,14 +316,20 @@ public interface Scheduler {
     }
 
     /**
-     * Enqueues a task in the BPF scheduler.
+     * Enqueues a task into the BPF scheduler.
      *
-     * @param p          Pointer to the task being enqueued.
-     * @param enq_flags  Flags related to enqueue operations (e.g., SCX_ENQ_*).
+     * <p><b>Ownership:</b> when this is called, the scheduler <em>owns</em> the task.
+     * It <em>must</em> be placed into a DSQ before returning — either by calling
+     * {@link #dsqInsert}, {@link #vtimeEnqueue}, {@code scx_bpf_dsq_insert}, or
+     * {@code scx_bpf_dsq_insert_vtime}.  Failing to enqueue leaves the task orphaned
+     * and will trigger a watchdog stall.
      *
-     * Tasks may be inserted directly into a Dispatch Queue (DSQ).
-     * If not inserted directly, the scheduler owns the task and is responsible
-     * for dispatching it.
+     * <p>This is the <b>only mandatory callback</b>.  All other callbacks have
+     * no-op defaults.
+     *
+     * @param p          task being handed to the scheduler
+     * @param enq_flags  {@code SCX_ENQ_*} flags; check {@code SCX_ENQ_WAKEUP} to
+     *                   distinguish fresh wakeups from re-enqueues after preemption
      */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(sched_enqueue, struct task_struct *p, u64 enq_flags)",
@@ -287,13 +338,23 @@ public interface Scheduler {
     void enqueue(Ptr<TaskDefinitions.task_struct> p, long enq_flags);
 
     /**
-     * Dispatches tasks from the BPF scheduler.
+     * Dispatches tasks from DSQs to the CPU's local run queue.
      *
-     * @param cpu   CPU to dispatch tasks for.
-     * @param prev  Pointer to the previous task being switched out.
+     * <p>Called when a CPU's local run queue is empty and needs more work.  The
+     * implementation should call {@link ScxDefinitions#scx_bpf_dsq_move_to_local} one or
+     * more times to pull tasks from a DSQ into the CPU's local queue.
      *
-     * Called when a CPU's dispatch queue is empty. This method may dispatch
-     * tasks from the scheduler or move them from user queues to the local queue.
+     * <p>It is <b>safe to return without dispatching anything</b> — the kernel will
+     * keep calling {@code dispatch} until either a task is found or the CPU goes idle.
+     * This means you can implement round-robin, rate-limiting, or priority gating here
+     * without fear of stalling the CPU.
+     *
+     * <p>{@link SchedulerBase} provides a default implementation that drains
+     * {@code SHARED_DSQ_ID} to the local queue.  {@link PerCpuSchedulerBase} drains the
+     * per-CPU DSQ first, then falls back to the shared DSQ.
+     *
+     * @param cpu   the CPU requesting more work
+     * @param prev  the task that was just descheduled (may be {@code null})
      */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(sched_dispatch, s32 cpu, struct task_struct *prev)",
@@ -306,10 +367,17 @@ public interface Scheduler {
     /**
      * Updates the idle state of a CPU.
      *
-     * @param cpu   The CPU being updated.
-     * @param idle  Whether the CPU is entering or exiting idle state.
+     * <p><b>Warning:</b> implementing this op disables the built-in idle CPU tracking
+     * ({@code SCX_OPS_KEEP_BUILTIN_IDLE} is set by default in the {@code flags} field,
+     * but explicit tracking here overrides that bookkeeping for this CPU).  If you
+     * implement {@code updateIdle} you are responsible for tracking which CPUs are idle
+     * and for making them available to {@code scx_bpf_pick_idle_cpu}.
      *
-     * Implementing this disables built-in idle CPU tracking by default.
+     * <p>Most schedulers do <b>not</b> need this — the default no-op inherits the
+     * kernel's built-in idle tracking.
+     *
+     * @param cpu   CPU whose idle state changed
+     * @param idle  {@code true} = entering idle; {@code false} = leaving idle
      */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(sched_update_idle, s32 cpu, bool idle)",
@@ -320,13 +388,20 @@ public interface Scheduler {
     }
 
     /**
-     * Initializes a task for scheduling by the BPF scheduler.
+     * Initializes per-task scheduler state when a task first enters SCX.
      *
-     * @param p    Pointer to the task being initialized.
-     * @param args Initialization arguments for the task.
-     * @return     0 on success, negative errno on failure.
+     * <p>Called either when the scheduler is loaded (for all existing tasks) or when
+     * a new task is forked.  Use this to allocate or initialise any per-task data
+     * you store in a {@link me.bechberger.ebpf.bpf.map.BPFTaskStorage} map.
      *
-     * Called either when a BPF scheduler is loaded or a new task is forked.
+     * <p>Always paired with a matching {@link #exitTask} call.  If you return a
+     * negative errno here, the task is not admitted to the scheduler and
+     * {@link #exitTask} will still be called (with {@code args.cancelled == true}).
+     *
+     * @param p    task entering the scheduler
+     * @param args {@code args.fork} is {@code true} when this is a newly forked task,
+     *             {@code false} when the scheduler was just loaded
+     * @return     0 on success, negative errno on failure
      */
     @BPFFunction(
             headerTemplate = "s32 BPF_STRUCT_OPS(sched_init_task, struct task_struct *p, struct scx_init_task_args *args)",
@@ -339,9 +414,15 @@ public interface Scheduler {
     /**
      * Initializes the BPF scheduler.
      *
-     * @return 0 on success.
+     * <p>Called once during scheduler attachment, before any tasks are admitted.
+     * This is the right place to create DSQs via {@code scx_bpf_create_dsq}.
      *
-     * This is called during scheduler initialization.
+     * <p>{@link SchedulerBase} provides a default that creates {@code SHARED_DSQ_ID}.
+     * {@link PerCpuSchedulerBase} overrides this to also create one DSQ per CPU.
+     * Override this method (calling {@code super.init()} if needed) to create additional
+     * custom DSQs.
+     *
+     * @return 0 on success, negative errno on failure (causes scheduler load to abort)
      */
     @BPFFunction(
             headerTemplate = "s32 BPF_STRUCT_OPS_SLEEPABLE(sched_init)",
@@ -352,11 +433,18 @@ public interface Scheduler {
     }
 
     /**
-     * Handles cleanup when a task exits.
+     * Called when the scheduler is about to be unloaded.
      *
-     * @param ei Pointer to the task exit information.
+     * <p>Receives an {@link ScxDefinitions.scx_exit_info} struct that describes why
+     * the scheduler is exiting ({@code ei.exit_code}, {@code ei.kind}).  Use it to log
+     * a final message or capture state before the BPF program is torn down.
      *
-     * Called when a task is exiting or when the BPF scheduler is unloaded.
+     * <p>{@link SchedulerBase} overrides this to capture {@code ei.exit_code} into
+     * a {@link GlobalVariable} so it can be read from Java after detach via
+     * {@link SchedulerBase#getExitCode()}.  Override and call {@code super.exit(ei)}
+     * to add custom cleanup without losing the exit-code capture.
+     *
+     * @param ei scheduler exit information from the kernel
      */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(sched_exit, struct scx_exit_info *ei)",
@@ -367,14 +455,18 @@ public interface Scheduler {
     }
 
     /**
-     * A task is becoming runnable.
+     * Notifies that a task has entered the runnable state but is not yet on a CPU.
+     *
+     * <p>Called <em>before</em> {@link #enqueue}.  Use for per-task bookkeeping such
+     * as recording wakeup timestamps for latency tracking or incrementing wakeup
+     * counters.  The task is <b>not yet owned</b> by the scheduler here — do not insert
+     * it into a DSQ from this callback.
+     *
+     * <p>Contrast with {@link #running}: {@code runnable} fires when the task becomes
+     * eligible to run; {@code running} fires when it actually starts executing on a CPU.
      *
      * @param p          task transitioning to runnable
      * @param enq_flags  {@code SCX_ENQ_*} flags describing the wakeup reason
-     *
-     * Called when {@code p} enters runnable state, before any {@link #enqueue(Ptr, long)}.
-     * Useful for per-task bookkeeping (e.g. recording wakeup time for latency tracking)
-     * without taking on full enqueue responsibility.
      */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(sched_runnable, struct task_struct *p, u64 enq_flags)",
@@ -385,9 +477,17 @@ public interface Scheduler {
     }
 
     /**
-     * Notifies that a task is starting to run on its CPU.
+     * Notifies that a task has started executing on a CPU.
      *
-     * @param p Pointer to the task starting to run.
+     * <p>Paired with {@link #stopping}: {@code running} fires when the task is
+     * context-switched <em>in</em>; {@code stopping} fires when it is context-switched
+     * <em>out</em>.  Use together to measure per-task on-CPU time or to charge budget.
+     *
+     * <p>Contrast with {@link #runnable}: {@code runnable} fires when the task becomes
+     * eligible to run (may be long before it actually gets a CPU); {@code running} fires
+     * at the exact moment it starts executing.
+     *
+     * @param p task that started running
      */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(simple_running, struct task_struct *p)",
@@ -400,10 +500,10 @@ public interface Scheduler {
     /**
      * Enables scheduling for a task.
      *
-     * @param p Pointer to the task to enable scheduling for.
+     * <p>Called on {@code p} any time it enters SCX.  Always paired with a matching
+     * {@link #disable(Ptr)} call.
      *
-     * Enable {@param p} for BPF scheduling. {@link #enable(Ptr)} is called on @p any time it
-     * enters SCX, and is always paired with a matching {@link #disable(Ptr)}.
+     * @param p task entering SCX scheduling
      */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(simple_enable, struct task_struct *p)",
@@ -414,12 +514,12 @@ public interface Scheduler {
     }
     
     /**
-     * Disable BPF scheduling for a task.
-     * @param p task to disable BPF scheduling for
+     * Disables BPF scheduling for a task.
      *
-     * {@code p} is exiting, leaving SCX or the BPF scheduler is being unloaded.
-     * Disable BPF scheduling for {@code p}. A {@link #disable(Ptr)} call is always matched
-     * with a prior {@link #enable(Ptr)} call.
+     * <p>Called when {@code p} is exiting, leaving SCX, or the scheduler is being unloaded.
+     * Always paired with a prior {@link #enable(Ptr)} call.
+     *
+     * @param p task leaving SCX scheduling
      */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(simple_disable, struct task_struct *p)",
@@ -430,10 +530,24 @@ public interface Scheduler {
     }
 
     /**
-     * Notifies that a task is stopping execution.
+     * Notifies that a task is being descheduled from its CPU.
      *
-     * @param p        Pointer to the task stopping execution.
-     * @param runnable Indicates whether the task is still runnable.
+     * <p>Paired with {@link #running}: called when the task is context-switched out.
+     * {@code runnable} indicates whether the task is still runnable (it will be
+     * re-enqueued) or has blocked (it will not appear in {@link #enqueue} again until
+     * it next wakes up).
+     *
+     * <p>The typical use case is updating vtime:
+     * <pre>{@code
+     * \@Override
+     * public void stopping(Ptr<task_struct> p, boolean runnable) {
+     *     vtimeCharge(p);  // charge elapsed CPU time to p's vtime
+     * }
+     * }</pre>
+     *
+     * @param p        task being descheduled
+     * @param runnable {@code true} if the task will be re-enqueued (preempted);
+     *                 {@code false} if it is blocking (going to sleep)
      */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(simple_stopping, struct task_struct *p, bool runnable)",
@@ -444,18 +558,21 @@ public interface Scheduler {
     }
 
     /**
-     * Remove a task from the BPF scheduler
-     * @param p task being dequeued
-     * @param deq_flags {@code SCX_DEQ_*}
+     * Removes a task from the BPF scheduler before it has been dispatched.
      *
-     * Remove {@code p} from the BPF scheduler. This is usually called to isolate
-     * the task while updating its scheduling properties (e.g. priority).
+     * <p>Called when the kernel wants to take back ownership of {@code p} — typically
+     * to update its scheduling properties (priority, affinity) or because it is being
+     * migrated.  The task will be re-enqueued via {@link #enqueue} after the update.
      *
-     * The ext core keeps track of whether the BPF side owns a given task or
-     * not and can gracefully ignore spurious dispatches from BPF side,
-     * which makes it safe to not implement this method. However, depending
-     * on the scheduling logic, this can lead to confusing behaviors - e.g.
-     * scheduling position not being updated across a priority change.
+     * <p><b>Implementation note:</b> The kernel gracefully ignores spurious dispatches
+     * from the BPF side, so it is safe to leave this as a no-op.  However, if the
+     * scheduler has cached the task's position (e.g. in a vtime DSQ), not implementing
+     * {@code dequeue} means the task may run at its old priority after the update —
+     * which can cause confusing behaviour such as a priority-raised task that still runs
+     * slowly.
+     *
+     * @param p         task being removed
+     * @param deq_flags {@code SCX_DEQ_*} flags describing why the task is being removed
      */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(simple_dequeue, struct task_struct *p, u64 deq_flags)",
@@ -466,12 +583,23 @@ public interface Scheduler {
     }
 
     /**
-     * Periodic tick
-     * @param p task running currently
+     * Periodic tick fired on each CPU that is running an SCX task.
      *
-     * This operation is called every 1/HZ seconds on CPUs which are
-     * executing an SCX task. Setting {@code p->scx.slice} to 0 will trigger an
-     * immediate dispatch cycle on the CPU.
+     * <p>Called approximately once per Hz (typically 250–1000 Hz depending on kernel
+     * config).  A common use is to implement time-slice expiry: if the current task has
+     * exceeded its budget, set {@code p.val().scx.slice = 0} to force an immediate
+     * dispatch cycle on this CPU.
+     *
+     * <pre>{@code
+     * \@Override
+     * public void tick(Ptr<task_struct> p) {
+     *     if (p.val().scx.slice > myBudget) {
+     *         p.val().scx.slice = 0;  // trigger immediate reschedule
+     *     }
+     * }
+     * }</pre>
+     *
+     * @param p task currently running on this CPU
      */
     @BPFFunction(
             headerTemplate = "int BPF_STRUCT_OPS(simple_tick, struct task_struct *p)",
@@ -481,14 +609,253 @@ public interface Scheduler {
     }
 
     /**
+     * A task has transitioned from runnable to blocked (quiescent).
+     *
+     * <p>The counterpart to {@link #runnable}: called when {@code p} stops being
+     * runnable without being dispatched (e.g. it called {@code sleep()}, waited on a
+     * mutex, or was killed).  Use to clean up any per-task state that was set up in
+     * {@link #runnable}.
+     *
+     * @param p          task transitioning to blocked/quiescent
+     * @param enq_flags  {@code SCX_ENQ_*} flags (same flags that were passed to
+     *                   {@link #runnable} when the task last became runnable)
+     */
+    @BPFFunction(
+            headerTemplate = "void BPF_STRUCT_OPS(sched_quiescent, struct task_struct *p, u64 enq_flags)",
+            addDefinition = false
+    )
+    default void quiescent(Ptr<TaskDefinitions.task_struct> p, @Unsigned long enq_flags) {
+    }
+
+    /**
+     * A CPU has come online and is now available for scheduling.
+     *
+     * <p>Called when a CPU is hot-plugged in or brought out of an offline state.
+     * Use to initialise any per-CPU data structures that were torn down in
+     * {@link #cpuOffline}.
+     *
+     * @param cpu the CPU that just came online
+     */
+    @BPFFunction(
+            headerTemplate = "void BPF_STRUCT_OPS(sched_cpu_online, s32 cpu)",
+            addDefinition = false
+    )
+    default void cpuOnline(int cpu) {
+    }
+
+    /**
+     * A CPU is going offline and will no longer be available for scheduling.
+     *
+     * <p>Called when a CPU is hot-plugged out or about to enter an offline state.
+     * Use to drain any per-CPU DSQs or release per-CPU state before the CPU
+     * disappears.
+     *
+     * @param cpu the CPU that is going offline
+     */
+    @BPFFunction(
+            headerTemplate = "void BPF_STRUCT_OPS(sched_cpu_offline, s32 cpu)",
+            addDefinition = false
+    )
+    default void cpuOffline(int cpu) {
+    }
+
+    /**
+     * Determines whether task {@code a} should run before task {@code b} under
+     * <a href="https://docs.kernel.org/scheduler/sched-ext.html">core scheduling</a>.
+     *
+     * <p>Core scheduling groups tasks into "cookies"; two tasks with the same cookie
+     * can share a hyperthreaded core, while tasks with different cookies cannot.
+     * This op is only called when {@code CONFIG_SCHED_CORE} is enabled and the two
+     * tasks are in the same scheduling class.
+     *
+     * <p>Return {@code true} if {@code a} should run before {@code b}.  The default
+     * (returning {@code false}) defers to the kernel's built-in ordering.
+     *
+     * @param a first candidate task
+     * @param b second candidate task
+     * @return  {@code true} if {@code a} has scheduling priority over {@code b}
+     */
+    @BPFFunction(
+            headerTemplate = "bool BPF_STRUCT_OPS(sched_core_sched_before, struct task_struct *a, struct task_struct *b)",
+            addDefinition = false
+    )
+    default boolean coreSchedBefore(Ptr<TaskDefinitions.task_struct> a, Ptr<TaskDefinitions.task_struct> b) {
+        return false;
+    }
+
+    /**
+     * Emits a global scheduler-state dump line to the sched-ext debug interface.
+     *
+     * <p>Called when the kernel's sched-ext debug dump is triggered (e.g. via
+     * {@code /sys/kernel/debug/sched/sched_debug}).  Use {@code scx_bpf_dump_bstr}
+     * to write formatted output.
+     *
+     * @param dump_ctx dump context — pass to {@code scx_bpf_dump_bstr} for structured output
+     */
+    @BPFFunction(
+            headerTemplate = "void BPF_STRUCT_OPS(sched_dump, struct scx_dump_ctx *dump_ctx)",
+            addDefinition = false
+    )
+    default void dump(Ptr<ScxDefinitions.scx_dump_ctx> dump_ctx) {
+    }
+
+    /**
+     * Emits per-CPU state to the sched-ext debug dump.
+     *
+     * <p>Called once per CPU during a debug dump.
+     *
+     * @param dump_ctx dump context
+     * @param cpu      CPU being reported
+     * @param idle     {@code true} if the CPU is currently idle
+     */
+    @BPFFunction(
+            headerTemplate = "void BPF_STRUCT_OPS(sched_dump_cpu, struct scx_dump_ctx *dump_ctx, s32 cpu, bool idle)",
+            addDefinition = false
+    )
+    default void dumpCpu(Ptr<ScxDefinitions.scx_dump_ctx> dump_ctx, int cpu, boolean idle) {
+    }
+
+    /**
+     * Emits per-task state to the sched-ext debug dump.
+     *
+     * <p>Called once per task queued in the scheduler during a debug dump.
+     *
+     * @param dump_ctx dump context
+     * @param p        task being reported
+     */
+    @BPFFunction(
+            headerTemplate = "void BPF_STRUCT_OPS(sched_dump_task, struct scx_dump_ctx *dump_ctx, struct task_struct *p)",
+            addDefinition = false
+    )
+    default void dumpTask(Ptr<ScxDefinitions.scx_dump_ctx> dump_ctx, Ptr<TaskDefinitions.task_struct> p) {
+    }
+
+    /**
+     * Initialises scheduler state for a newly created cgroup.
+     *
+     * <p>Only relevant if the scheduler uses cgroup-based scheduling hierarchies.
+     * Called once when a cgroup is created.
+     *
+     * @param cgrp the new cgroup
+     * @param args initialisation arguments
+     * @return     0 on success, negative errno on failure
+     */
+    @BPFFunction(
+            headerTemplate = "s32 BPF_STRUCT_OPS(sched_cgroup_init, struct cgroup *cgrp, struct scx_cgroup_init_args *args)",
+            addDefinition = false
+    )
+    default int cgroupInit(Ptr<runtime.cgroup> cgrp, Ptr<ScxDefinitions.scx_cgroup_init_args> args) {
+        return 0;
+    }
+
+    /**
+     * Tears down scheduler state for a cgroup that is being destroyed.
+     *
+     * @param cgrp the cgroup being destroyed
+     */
+    @BPFFunction(
+            headerTemplate = "void BPF_STRUCT_OPS(sched_cgroup_exit, struct cgroup *cgrp)",
+            addDefinition = false
+    )
+    default void cgroupExit(Ptr<runtime.cgroup> cgrp) {
+    }
+
+    /**
+     * Prepares to move task {@code p} from cgroup {@code from} to cgroup {@code to}.
+     *
+     * <p>Called before the move takes effect.  A matching {@link #cgroupMove} (on
+     * success) or {@link #cgroupCancelMove} (on failure) will always follow.
+     *
+     * @param p    task being moved
+     * @param from source cgroup
+     * @param to   destination cgroup
+     * @return     0 to allow the move, negative errno to reject it
+     */
+    @BPFFunction(
+            headerTemplate = "s32 BPF_STRUCT_OPS(sched_cgroup_prep_move, struct task_struct *p, struct cgroup *from, struct cgroup *to)",
+            addDefinition = false
+    )
+    default int cgroupPrepMove(Ptr<TaskDefinitions.task_struct> p,
+                               Ptr<runtime.cgroup> from, Ptr<runtime.cgroup> to) {
+        return 0;
+    }
+
+    /**
+     * Cancels a pending cgroup move that was prepared by {@link #cgroupPrepMove}.
+     *
+     * <p>Called if the move was rejected after {@link #cgroupPrepMove} returned 0,
+     * allowing the scheduler to undo any state allocated during prep.
+     *
+     * @param p task whose cgroup move was cancelled
+     */
+    @BPFFunction(
+            headerTemplate = "void BPF_STRUCT_OPS(sched_cgroup_cancel_move, struct task_struct *p)",
+            addDefinition = false
+    )
+    default void cgroupCancelMove(Ptr<TaskDefinitions.task_struct> p) {
+    }
+
+    /**
+     * Completes the cgroup move that was prepared by {@link #cgroupPrepMove}.
+     *
+     * <p>Called after the move has been committed.  Update per-task cgroup references
+     * here.
+     *
+     * @param p task that was moved to a new cgroup
+     */
+    @BPFFunction(
+            headerTemplate = "void BPF_STRUCT_OPS(sched_cgroup_move, struct task_struct *p)",
+            addDefinition = false
+    )
+    default void cgroupMove(Ptr<TaskDefinitions.task_struct> p) {
+    }
+
+    /**
+     * Notifies that a cgroup's CPU weight has changed.
+     *
+     * <p>Called when the cgroup's {@code cpu.weight} is written.  Schedulers that
+     * implement cgroup-proportional scheduling should refresh their weight caches here.
+     *
+     * @param cgrp   the cgroup whose weight changed
+     * @param weight new CPU weight (proportional to priority, default 100)
+     */
+    @BPFFunction(
+            headerTemplate = "void BPF_STRUCT_OPS(sched_cgroup_set_weight, struct cgroup *cgrp, u32 weight)",
+            addDefinition = false
+    )
+    default void cgroupSetWeight(Ptr<runtime.cgroup> cgrp, @Unsigned int weight) {
+    }
+
+    /**
+     * Notifies that a cgroup's CPU bandwidth limit has changed.
+     *
+     * <p>Called when the cgroup's {@code cpu.max} is written.  Relevant only for
+     * schedulers that enforce bandwidth limits per cgroup.
+     *
+     * @param cgrp       the cgroup whose bandwidth changed
+     * @param period_us  bandwidth period in microseconds
+     * @param quota_us   maximum CPU time allowed per period, in microseconds
+     * @param burst_us   maximum burst above quota, in microseconds
+     */
+    @BPFFunction(
+            headerTemplate = "void BPF_STRUCT_OPS(sched_cgroup_set_bandwidth, struct cgroup *cgrp, u64 period_us, u64 quota_us, u64 burst_us)",
+            addDefinition = false
+    )
+    default void cgroupSetBandwidth(Ptr<runtime.cgroup> cgrp,
+                                    @Unsigned long period_us,
+                                    @Unsigned long quota_us,
+                                    @Unsigned long burst_us) {
+    }
+
+    /**
      * A CPU is being acquired by the scheduler after being released.
      *
-     * @param cpu  CPU being acquired.
-     * @param args acquire arguments (currently empty, reserved for future use).
+     * <p>Called when a CPU transitions back to SCX control after being preempted by an
+     * RT or deadline task.  Paired with {@link #cpuRelease}.  Use to restore per-CPU
+     * state (e.g. reset credit counters) or kick the CPU to resume dispatching.
      *
-     * Called when a CPU transitions back to SCX control after being released
-     * (e.g. after an RT or deadline task finishes).  Useful for resetting
-     * per-CPU state after a preemption.
+     * @param cpu  CPU being acquired back
+     * @param args acquire arguments (currently empty, reserved for future use)
      */
     @BPFFunction(
             headerTemplate = "void BPF_STRUCT_OPS(sched_cpu_acquire, s32 cpu, struct scx_cpu_acquire_args *args)",
@@ -817,7 +1184,10 @@ public interface Scheduler {
      *
      * <p><b>Only safe for FIFO DSQs.</b>  Do not mix with
      * {@code scx_bpf_dsq_insert_vtime} on the same DSQ.
+     *
+     * @deprecated Prefer {@link me.bechberger.ebpf.bpf.sched.DispatchQueue#insertScaled} for new code.
      */
+    @Deprecated
     @BPFFunction
     default void dsqInsert(Ptr<task_struct> p, long enq_flags) {
         @Unsigned int queued = scx_bpf_dsq_nr_queued(0L);
@@ -900,7 +1270,9 @@ public interface Scheduler {
      * more than one {@code SCX_SLICE_DFL} of budget ahead of the global vtime.
      *
      * @param vtimeNow current global virtual time
+     * @deprecated Prefer {@link me.bechberger.ebpf.bpf.sched.DispatchQueue#insertVtimeClamped} for new code.
      */
+    @Deprecated
     @BPFFunction
     default void vtimeEnqueue(Ptr<task_struct> p, long enq_flags, @Unsigned long vtimeNow) {
         @Unsigned long vtime = p.val().scx.dsq_vtime;

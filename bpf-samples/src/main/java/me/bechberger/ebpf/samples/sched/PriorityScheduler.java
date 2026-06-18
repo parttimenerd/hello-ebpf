@@ -10,9 +10,12 @@ import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.SchedulerStats;
 import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.type.Ptr;
 
-import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_create_dsq;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_select_cpu_dfl;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
@@ -46,7 +49,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 @Property(name = "sched_name", value = "priority_scheduler")
 public abstract class PriorityScheduler extends BPFProgram implements Scheduler {
 
-    static final int NUM_QUEUES = 5;
+    public static final int NUM_QUEUES = 5;
 
     /** Per-CPU enqueue counter per queue — 5 entries, one per priority DSQ. */
     @BPFMapDefinition(maxEntries = NUM_QUEUES)
@@ -68,6 +71,7 @@ public abstract class PriorityScheduler extends BPFProgram implements Scheduler 
 
     @Override
     public int init() {
+        // DSQs 0-4 are created in a loop; DispatchQueue.attach() wraps them for insert/dispatch.
         for (int i = 0; i < NUM_QUEUES; i++) {
             int ret = scx_bpf_create_dsq(i, -1);
             if (ret < 0) {
@@ -83,7 +87,7 @@ public abstract class PriorityScheduler extends BPFProgram implements Scheduler 
         int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
         if (is_idle) {
             int q = weightToQueue(p.val().scx.weight);
-            scx_bpf_dsq_insert(p, q, SCX_SLICE_DFL.value(), 0);
+            DispatchQueue.attach(q).insert(p, SCX_SLICE_DFL.value(), EnqFlags.empty());
         }
         return cpu;
     }
@@ -91,7 +95,7 @@ public abstract class PriorityScheduler extends BPFProgram implements Scheduler 
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
         int q = weightToQueue(p.val().scx.weight);
-        scx_bpf_dsq_insert(p, q, SCX_SLICE_DFL.value(), enq_flags);
+        DispatchQueue.attach(q).insert(p, SCX_SLICE_DFL.value(), EnqFlags.passThrough(enq_flags));
         SchedulerStats.incrementEnqueuedAt(queueEnqueueCounts, q);
     }
 
@@ -99,8 +103,8 @@ public abstract class PriorityScheduler extends BPFProgram implements Scheduler 
     public void dispatch(int cpu, Ptr<task_struct> prev) {
         // Greedy: drain the highest-priority non-empty queue first.
         for (int q = NUM_QUEUES - 1; q >= 0; q--) {
-            if (scx_bpf_dsq_nr_queued(q) > 0) {
-                scx_bpf_dsq_move_to_local(q);
+            if (DispatchQueue.attach(q).nrQueued() > 0) {
+                DispatchQueue.attach(q).moveToLocal();
                 SchedulerStats.incrementDispatchedAt(queueDispatchCounts, q);
                 return;
             }

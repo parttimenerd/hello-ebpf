@@ -1,6 +1,7 @@
 package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.samples.SampleScheduler;
+import me.bechberger.ebpf.samples.sched.BoostedScheduler;
 import me.bechberger.ebpf.samples.sched.ChaosScheduler;
 import me.bechberger.ebpf.samples.sched.CPU0Scheduler;
 import me.bechberger.ebpf.samples.sched.FlowScheduler;
@@ -10,6 +11,7 @@ import me.bechberger.ebpf.samples.sched.FCFSScheduler;
 import me.bechberger.ebpf.samples.sched.LotteryScheduler;
 import me.bechberger.ebpf.samples.sched.MinimalScheduler;
 import me.bechberger.ebpf.samples.sched.NestScheduler;
+import me.bechberger.ebpf.samples.sched.PerCpuSchedulerSample;
 import me.bechberger.ebpf.samples.sched.PrevCpuScheduler;
 import me.bechberger.ebpf.samples.sched.PriorityScheduler;
 import me.bechberger.ebpf.samples.sched.RunnableScheduler;
@@ -212,6 +214,31 @@ class SchedulerSmokeTest {
         Thread.sleep(300);
         assertTrue(sched.isSchedulerAttachedProperly(),
                 "FlowScheduler should remain attached 300 ms after start");
+    }
+
+    @Test
+    @Timeout(15)
+    @TestScheduler(PerCpuSchedulerSample.class)
+    void perCpuSchedulerSampleAttachesAndRuns(PerCpuSchedulerSample sched) throws Exception {
+        Thread.sleep(300);
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "PerCpuSchedulerSample should remain attached 300 ms after start");
+    }
+
+    /**
+     * Verifies that {@link BoostedScheduler} attaches and stays attached in boost mode.
+     * Boosts the current JVM process tree so enqueue() takes the boosted path.
+     */
+    @Test
+    @Timeout(15)
+    @TestScheduler(value = BoostedScheduler.class, autoAttach = false)
+    void boostedSchedulerAttachesAndRuns(BoostedScheduler sched) throws Exception {
+        sched.boostTgid((int) ProcessHandle.current().pid());
+        sched.setBoostEnabled(true);
+        sched.attachScheduler();
+        Thread.sleep(300);
+        assertTrue(sched.isSchedulerAttachedProperly(),
+                "BoostedScheduler should remain attached 300 ms after start");
     }
 }
 

@@ -376,14 +376,24 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     public void attachLSMHooks() {
-        for (var method : getClass().getSuperclass().getDeclaredMethods()) {
-            var annotation = findParentAnnotation(getClass().getSuperclass(), method, BPFFunction.class);
-            boolean isLsmSection = annotation != null && annotation.section().startsWith("lsm/");
-            boolean hasLsmAnnotation = findParentAnnotation(getClass().getSuperclass(), method,
-                    me.bechberger.ebpf.annotations.bpf.LSM.class) != null;
-            if (isLsmSection || hasLsmAnnotation) {
-                attachLSMHook(getProgramByName(getBPFFunctionName(method)));
+        // Walk the full superclass chain so @LSM hooks declared on intermediate
+        // base classes (e.g. user-defined SchedulerBase-style helpers) are picked
+        // up, not only those on the immediate parent of the generated impl.
+        Class<?> c = getClass().getSuperclass();
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        while (c != null && c != Object.class && c != BPFProgram.class) {
+            for (var method : c.getDeclaredMethods()) {
+                String key = method.getName() + "(" + java.util.Arrays.toString(method.getParameterTypes()) + ")";
+                if (!seen.add(key)) continue;
+                var annotation = findParentAnnotation(c, method, BPFFunction.class);
+                boolean isLsmSection = annotation != null && annotation.section().startsWith("lsm/");
+                boolean hasLsmAnnotation = findParentAnnotation(c, method,
+                        me.bechberger.ebpf.annotations.bpf.LSM.class) != null;
+                if (isLsmSection || hasLsmAnnotation) {
+                    attachLSMHook(getProgramByName(getBPFFunctionName(method)));
+                }
             }
+            c = c.getSuperclass();
         }
     }
 
@@ -449,15 +459,41 @@ public abstract class BPFProgram implements AutoCloseable {
             var ret = BPF_PROGRAM__ATTACH_KPROBE.call(
                     prog.prog(), retprobe, arena.allocateFrom(symbol));
             if (ret.result() == MemorySegment.NULL) {
-                throw new BPFAttachError(prog.name, ret.err());
+                throw kprobeAttachError(prog.name, symbol, ret.err());
             }
             var link = new BPFLink(ret.result());
             if (link.segment.address() == 0) {
-                throw new BPFAttachError(prog.name, ret.err());
+                throw kprobeAttachError(prog.name, symbol, ret.err());
             }
             attachedPrograms.add(link);
             return link;
         }
+    }
+
+    /**
+     * Build a {@link BPFAttachError} with a hint when the kernel symbol could
+     * not be resolved (libbpf returns ENOENT / EINVAL in that case). The hint
+     * checks {@code /proc/kallsyms} so the user immediately sees a typo or a
+     * symbol that was renamed/inlined.
+     */
+    private static BPFAttachError kprobeAttachError(String progName, String symbol, int errno) {
+        String hint = "";
+        if (errno == 2 /* ENOENT */ || errno == 22 /* EINVAL */) {
+            try {
+                boolean found = false;
+                try (var lines = Files.lines(Path.of("/proc/kallsyms"))) {
+                    found = lines.anyMatch(l -> l.endsWith(" " + symbol)
+                            || l.contains(" " + symbol + "\t")
+                            || l.contains(" " + symbol + " "));
+                }
+                if (!found) {
+                    hint = " (kernel symbol '" + symbol + "' not found in /proc/kallsyms — typo, inlined, or unexported?)";
+                }
+            } catch (IOException ignored) {
+                // /proc/kallsyms not readable (likely kptr_restrict>0 without CAP_SYSLOG)
+            }
+        }
+        return new BPFAttachError(progName + " for symbol '" + symbol + "'" + hint, errno);
     }
 
     /**
@@ -716,8 +752,10 @@ public abstract class BPFProgram implements AutoCloseable {
      * Invoke a {@code SEC("syscall")} BPF program from userspace via {@code BPF_PROG_TEST_RUN}.
      *
      * <p>The program must be declared with {@code @BPFFunction(section = "syscall",
-     * headerTemplate = "int BPF_PROG($name, struct ctx *ctx)", autoAttach = false)}. The Java
+     * headerTemplate = "int BPF_PROG($name, struct ctx *arg)", autoAttach = false)}. The Java
      * {@code ctx} class must be a {@code @Type} struct registered with this BPFProgram.
+     * (The parameter name must NOT be {@code ctx} — {@code BPF_PROG} synthesizes its own
+     * {@code unsigned long long *ctx}, causing a redefinition.)
      *
      * <p>The ctx struct is serialized into a flat buffer, handed to the kernel as
      * {@code bpf_test_run_opts.ctx_in}, and the buffer (with any kernel-side writes) is parsed

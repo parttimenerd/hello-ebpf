@@ -11,11 +11,13 @@ import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.map.BPFArray;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
+import me.bechberger.ebpf.bpf.sched.KickFlags;
 import me.bechberger.ebpf.type.Ptr;
 
-import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.*;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_kick_flags.SCX_KICK_PREEMPT;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_select_cpu_dfl;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_task_cpu;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
@@ -98,9 +100,14 @@ public abstract class SMTPairScheduler extends BPFProgram implements Scheduler {
     @BPFMapDefinition(maxEntries = MAX_CPUS)
     BPFArray<Integer> cpuOwner;
 
+    // scx_bpf_create_dsq(SHARED_DSQ_ID, -1) is lifted into init() by the compiler plugin.
+    final DispatchQueue shared = new DispatchQueue(SHARED_DSQ_ID);
+
     @Override
     public int init() {
-        return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
+        // scx_bpf_create_dsq(SHARED_DSQ_ID, -1) is injected before this line
+        // by the compiler plugin (from the DispatchQueue field initializer above).
+        return 0;
     }
 
     @Override
@@ -130,7 +137,7 @@ public abstract class SMTPairScheduler extends BPFProgram implements Scheduler {
             boolean is_idle = false;
             int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
             if (is_idle) {
-                scx_bpf_dsq_insert(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), 0);
+                shared.insert(p, SCX_SLICE_DFL.value(), EnqFlags.empty());
             }
             return cpu;
         }
@@ -157,19 +164,19 @@ public abstract class SMTPairScheduler extends BPFProgram implements Scheduler {
         boolean is_idle = false;
         int cpu = scx_bpf_select_cpu_dfl(p, best, wake_flags, Ptr.of(is_idle));
         if (is_idle) {
-            scx_bpf_dsq_insert(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), 0);
+            shared.insert(p, SCX_SLICE_DFL.value(), EnqFlags.empty());
         }
         return cpu;
     }
 
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
-        scx_bpf_dsq_insert(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), enq_flags);
+        shared.insert(p, SCX_SLICE_DFL.value(), EnqFlags.passThrough(enq_flags));
     }
 
     @Override
     public void dispatch(int cpu, Ptr<task_struct> prev) {
-        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        shared.moveToLocal();
     }
 
     @Override
@@ -188,7 +195,7 @@ public abstract class SMTPairScheduler extends BPFProgram implements Scheduler {
         @Unsigned int ncpus2 = nrCpus.get();
         if (ncpus2 > 0) {
             @Unsigned int sibling = (cpu + str2) % ncpus2;
-            scx_bpf_kick_cpu(sibling, SCX_KICK_PREEMPT.value());
+            DispatchQueue.kickCpu(sibling, KickFlags.preempt());
         }
     }
 

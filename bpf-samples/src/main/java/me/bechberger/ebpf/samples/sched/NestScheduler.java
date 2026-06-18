@@ -11,13 +11,14 @@ import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.map.BPFArray;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
+import me.bechberger.ebpf.bpf.sched.KickFlags;
 import me.bechberger.ebpf.runtime.runtime.cpumask;
 import me.bechberger.ebpf.type.Ptr;
 
 import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask_test_cpu;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL_ON;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_kick_flags.SCX_KICK_IDLE;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
@@ -71,6 +72,9 @@ public abstract class NestScheduler extends BPFProgram implements Scheduler {
     /** Maximum number of CPUs supported. */
     static final int MAX_CPUS = 512;
 
+    // scx_bpf_create_dsq(SHARED_DSQ_ID, -1) is lifted into init() by the compiler plugin.
+    final DispatchQueue shared = new DispatchQueue(SHARED_DSQ_ID);
+
     /**
      * Number of CPUs in the primary nest (CPUs 0..nestSize-1).
      * Set from Java before attaching.
@@ -89,7 +93,9 @@ public abstract class NestScheduler extends BPFProgram implements Scheduler {
 
     @Override
     public int init() {
-        return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
+        // scx_bpf_create_dsq(SHARED_DSQ_ID, -1) is injected before this line
+        // by the compiler plugin (from the DispatchQueue field initializer above).
+        return 0;
     }
 
     @Override
@@ -100,8 +106,7 @@ public abstract class NestScheduler extends BPFProgram implements Scheduler {
         scx_bpf_put_idle_cpumask(idle);
 
         if (nestCpu >= 0) {
-            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL_ON.value() | nestCpu,
-                    SCX_SLICE_DFL.value(), 0);
+            DispatchQueue.localOn(nestCpu).insert(p, SCX_SLICE_DFL.value(), EnqFlags.empty());
             return nestCpu;
         }
 
@@ -112,12 +117,12 @@ public abstract class NestScheduler extends BPFProgram implements Scheduler {
 
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
-        scx_bpf_dsq_insert(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), enq_flags);
+        shared.insert(p, SCX_SLICE_DFL.value(), EnqFlags.passThrough(enq_flags));
     }
 
     @Override
     public void dispatch(int cpu, Ptr<task_struct> prev) {
-        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        shared.moveToLocal();
 
         // Secondary CPUs: wake an idle nest CPU so it can steal the work we just dispatched.
         Ptr<Integer> nestFlag = inNest.bpf_get(cpu);
@@ -126,7 +131,7 @@ public abstract class NestScheduler extends BPFProgram implements Scheduler {
             int nestCpu = findIdleNestCpu(idle);
             scx_bpf_put_idle_cpumask(idle);
             if (nestCpu >= 0) {
-                scx_bpf_kick_cpu(nestCpu, SCX_KICK_IDLE.value());
+                DispatchQueue.kickCpu(nestCpu, KickFlags.idle());
             }
         }
     }
@@ -142,7 +147,7 @@ public abstract class NestScheduler extends BPFProgram implements Scheduler {
             int nestCpu = findIdleNestCpu(idle);
             scx_bpf_put_idle_cpumask(idle);
             if (nestCpu >= 0) {
-                p.val().scx.slice = 0;
+                DispatchQueue.yieldNow(p);
             }
         }
     }

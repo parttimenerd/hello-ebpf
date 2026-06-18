@@ -2,14 +2,18 @@
 package me.bechberger.ebpf.samples.sched;
 
 import me.bechberger.ebpf.annotations.bpf.BPF;
+import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.Property;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.Scheduler;
-import me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags;
+import me.bechberger.ebpf.bpf.SchedulerStats;
+import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
+import me.bechberger.ebpf.bpf.sched.KickFlags;
 import me.bechberger.ebpf.type.Ptr;
 
-import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
@@ -47,9 +51,14 @@ public abstract class CentralScheduler extends BPFProgram implements Scheduler {
      */
     final GlobalVariable<Integer> centralCpu = new GlobalVariable<>(0);
 
+    // scx_bpf_create_dsq(CENTRAL_DSQ_ID, -1) is lifted into init() by the compiler plugin.
+    final DispatchQueue central = new DispatchQueue(CENTRAL_DSQ_ID);
+
     @Override
     public int init() {
-        return scx_bpf_create_dsq(CENTRAL_DSQ_ID, -1);
+        // scx_bpf_create_dsq(CENTRAL_DSQ_ID, -1) is injected before this line
+        // by the compiler plugin (from the DispatchQueue field initializer above).
+        return 0;
     }
 
     @Override
@@ -61,13 +70,13 @@ public abstract class CentralScheduler extends BPFProgram implements Scheduler {
 
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
+        EnqFlags f = EnqFlags.passThrough(enq_flags);
         if ((p.val().flags & PerProcessFlags.PF_KTHREAD) != 0) {
             // Kernel threads get dispatched directly to the local queue so
             // they are never delayed by the central dispatch round-trip.
-            scx_bpf_dsq_insert(p, scx_dsq_id_flags.SCX_DSQ_LOCAL.value(),
-                    SCX_SLICE_DFL.value(), enq_flags);
+            DispatchQueue.local().insert(p, SCX_SLICE_DFL.value(), f);
         } else {
-            scx_bpf_dsq_insert(p, CENTRAL_DSQ_ID, SCX_SLICE_DFL.value(), enq_flags);
+            central.insert(p, SCX_SLICE_DFL.value(), f);
         }
     }
 
@@ -75,10 +84,10 @@ public abstract class CentralScheduler extends BPFProgram implements Scheduler {
     public void dispatch(int cpu, Ptr<task_struct> prev) {
         if (cpu == centralCpu.get()) {
             // Central CPU: drain the shared queue into the local queue.
-            scx_bpf_dsq_move_to_local(CENTRAL_DSQ_ID);
+            central.moveToLocal();
         } else {
             // Non-central CPU: wake the central CPU so it dispatches a task for us.
-            scx_bpf_kick_cpu(centralCpu.get(), 0);
+            DispatchQueue.kickCpu(centralCpu.get(), KickFlags.none());
         }
     }
 

@@ -8,7 +8,10 @@ import me.bechberger.ebpf.annotations.bpf.Property;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.Scheduler;
+import me.bechberger.ebpf.bpf.SchedulerBase;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.type.Ptr;
 
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
@@ -50,9 +53,8 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  */
 @BPF(license = "GPL")
 @Property(name = "sched_name", value = "deadline_scheduler")
-public abstract class DeadlineScheduler extends BPFProgram implements Scheduler {
-
-    static final long SHARED_DSQ_ID = 0;
+@Property(name = "timeout_ms", value = "10000")
+public abstract class DeadlineScheduler extends SchedulerBase implements Scheduler {
 
     /** Default task period in nanoseconds (10 ms). */
     static final long DEFAULT_PERIOD_NS = 10_000_000L;
@@ -70,22 +72,19 @@ public abstract class DeadlineScheduler extends BPFProgram implements Scheduler 
     @BPFMapDefinition(maxEntries = 65536)
     BPFHashMap<Integer, @Unsigned Long> deadlines;
 
-    @Override
-    public int init() {
-        return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
-    }
+    final DispatchQueue shared = DispatchQueue.attach(SHARED_DSQ_ID);
 
     @Override
     public int selectCPU(Ptr<task_struct> p, int prev_cpu, long wake_flags) {
-        // All task insertions happen in enqueue() via scx_bpf_dsq_insert_vtime to ensure
-        // the vtime-ordered DSQ is not mixed with FIFO insertions.
+        // Don't insert into local DSQ here — all insertions go through insertVtime in enqueue()
+        // so the vtime-ordered DSQ is never mixed with FIFO insertions.
         boolean is_idle = false;
         return scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
     }
 
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
-        @Unsigned long now = scx_bpf_now();
+        @Unsigned long now = DispatchQueue.now();
         @Unsigned long period = periodNs.get();
         @Unsigned int weight = p.val().scx.weight;
 
@@ -105,12 +104,7 @@ public abstract class DeadlineScheduler extends BPFProgram implements Scheduler 
         }
         deadlines.put(pid, deadline);
 
-        scx_bpf_dsq_insert_vtime(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), deadline, enq_flags);
-    }
-
-    @Override
-    public void dispatch(int cpu, Ptr<task_struct> prev) {
-        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        shared.insertVtime(p, SCX_SLICE_DFL.value(), deadline, EnqFlags.passThrough(enq_flags));
     }
 
     @Override

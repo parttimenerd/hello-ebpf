@@ -20,7 +20,10 @@ import me.bechberger.cast.CAST.Statement.*;
 import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.CustomType;
 import me.bechberger.ebpf.annotations.InArena;
+import me.bechberger.ebpf.annotations.bpf.BPFAbstraction;
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
+import me.bechberger.ebpf.annotations.bpf.BPFJavaInline;
 import me.bechberger.ebpf.annotations.bpf.BPFInline;
 import me.bechberger.ebpf.annotations.bpf.BPFTimer;
 import me.bechberger.ebpf.annotations.EnumMember;
@@ -41,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
@@ -69,6 +73,11 @@ class Translator {
     private final List<FunctionDeclarationStatement> syntheticFunctions = new ArrayList<>();
     /** Per-method counter for synthetic-function naming. */
     private int syntheticLambdaCounter = 0;
+    /**
+     * Local carrier map for {@code @BPFAbstraction} variables.
+     * Maps Java local variable name → C carrier expression that {@code $this} resolves to.
+     */
+    private final java.util.Map<String, String> localCarrierMap = new java.util.HashMap<>();
 
     Translator(CompilerPlugin compilerPlugin, TypedTreePath<MethodTree> methodPath) {
         this(compilerPlugin, methodPath, new me.bechberger.ebpf.bpf.compiler.flow.AnalysisContext());
@@ -196,8 +205,11 @@ class Translator {
         // Entry-point functions (section != "") do not inline by default.
         // Timer callbacks (@BPFTimer) must be static (kernel requirement) and never __always_inline
         // (libbpf needs a BTF entry for them to resolve the callback pointer).
+        // Functions with a custom headerTemplate (e.g. BPF_STRUCT_OPS, BPF_PROG) are macro-wrapped
+        // entry points; prepending __always_inline corrupts the macro syntax.
         boolean isEntryPoint = !annotation.section().isBlank();
-        boolean shouldInline = bpfTimer == null
+        boolean hasCustomHeaderTemplate = !annotation.headerTemplate().equals("$name");
+        boolean shouldInline = bpfTimer == null && !hasCustomHeaderTemplate
                 && ((alwaysInline != null || bpfInline != null)
                     || (!isEntryPoint && annotation.inline()));
         String prefix = bpfTimer != null ? "static " : (shouldInline ? "__always_inline " : "");
@@ -324,6 +336,54 @@ class Translator {
             }
             case VariableTree variableTree -> {
                 var typeMirror = compilerPlugin.trees.getElement(methodPath.path(variableTree)).asType();
+                var varElement = compilerPlugin.trees.getElement(methodPath.path(variableTree));
+                var name = variableTree.getName().toString();
+
+                // @BPFAbstraction local variable: emit optional side effect, record carrier, no C var
+                if (typeMirror instanceof javax.lang.model.type.DeclaredType declaredTypeMirror) {
+                    var typeElem = (TypeElement) declaredTypeMirror.asElement();
+                    var abstractionAnn = typeElem.getAnnotation(BPFAbstraction.class);
+                    if (abstractionAnn != null) {
+                        var initTree = variableTree.getInitializer();
+                        if (initTree instanceof JCNewClass newClass || initTree instanceof JCMethodInvocation) {
+                            // Resolve the constructor/factory's @BuiltinBPFFunction
+                            MethodSymbol methodSym = null;
+                            List<JCExpression> callArgs = new ArrayList<>();
+                            if (initTree instanceof JCNewClass newClass2) {
+                                if (newClass2.constructor instanceof MethodSymbol ms) methodSym = ms;
+                                for (var arg : newClass2.getArguments()) callArgs.add((JCExpression) arg);
+                            } else if (initTree instanceof JCMethodInvocation mi) {
+                                if (mi.meth instanceof JCFieldAccess fa && fa.sym instanceof MethodSymbol ms) methodSym = ms;
+                                else if (mi.meth instanceof JCIdent id && id.sym instanceof MethodSymbol ms) methodSym = ms;
+                                for (var arg : mi.getArguments()) callArgs.add((JCExpression) arg);
+                            }
+                            if (methodSym != null) {
+                                var builtinAnn = methodSym.getAnnotation(BuiltinBPFFunction.class);
+                                if (builtinAnn != null) {
+                                    var carrier = builtinAnn.carrier();
+                                    var sideEffect = builtinAnn.value();
+                                    // Resolve $argN placeholders in carrier and sideEffect
+                                    carrier = resolveAbstractionPlaceholders(carrier, callArgs);
+                                    sideEffect = resolveAbstractionPlaceholders(sideEffect, callArgs);
+                                    // Register the carrier for this local variable name
+                                    localCarrierMap.put(name, carrier);
+                                    // Emit side effect as a statement if non-empty
+                                    if (!sideEffect.isBlank()) {
+                                        var stmt = sideEffect.trim();
+                                        if (!stmt.endsWith(";")) stmt = stmt + ";";
+                                        yield CAST.Statement.verbatim(stmt);
+                                    }
+                                    yield CAST.Statement.verbatim(""); // no side effect, no C variable
+                                }
+                            }
+                        } else if (initTree == null) {
+                            // uninitialized abstraction local — register empty carrier
+                            localCarrierMap.put(name, name);
+                            yield CAST.Statement.verbatim("");
+                        }
+                    }
+                }
+
                 CAST.Expression initializer = null;
                 List<Integer> sizes = List.of();
                 var initTree = variableTree.getInitializer();
@@ -343,10 +403,8 @@ class Translator {
                         }
                     }
                 }
-                var varElement = compilerPlugin.trees.getElement(methodPath.path(variableTree));
                 var type = wrapArenaIfMarked(varElement,
                         translateType(varElement, typeMirror, sizes));
-                var name = variableTree.getName().toString();
                 // new VerbatimExpression("{}")
                 if (initializer instanceof OperatorExpression exp && exp.operator() == Operator.CAST) {
                     if (exp.expressions()[1] instanceof VerbatimExpression valExpr && valExpr.code().equals("{}")) {
@@ -537,6 +595,11 @@ class Translator {
                 if (identifierTree.getName().contentEquals("this") || identifierTree.getName().contentEquals("super")) {
                     yield defaultReturn;
                 }
+                // @BPFAbstraction local variable: substitute the carrier expression
+                var localName = identifierTree.getName().toString();
+                if (localCarrierMap.containsKey(localName)) {
+                    yield new VerbatimExpression(localCarrierMap.get(localName));
+                }
                 if (!(element.getEnclosingElement() instanceof ClassSymbol classElement)) {
                     yield defaultReturn;
                 }
@@ -549,6 +612,18 @@ class Translator {
                     yield null;
                 }
                 var memberSymbol = (VariableElement) memberSymbolOpt.get();
+                // @BPFAbstraction field: substitute the carrier expression instead of emitting the field name
+                var memberTypeMirror = memberSymbol.asType();
+                if (memberTypeMirror instanceof javax.lang.model.type.DeclaredType memberDeclaredType) {
+                    var memberTypeElem = (TypeElement) memberDeclaredType.asElement();
+                    if (memberTypeElem.getAnnotation(BPFAbstraction.class) != null) {
+                        var carrier = resolveFieldCarrier(memberSymbol);
+                        if (carrier != null) {
+                            yield new VerbatimExpression(carrier);
+                        }
+                        // No carrier found; fall through to default (will produce a C identifier)
+                    }
+                }
                 var define =
                         new TypeProcessor(compilerPlugin.createProcessingEnvironment(), true).processField(memberSymbol);
                 if (define == null) {
@@ -1080,6 +1155,31 @@ class Translator {
         }
         if (hasError) {
             return null;
+        }
+        // @BPFAbstraction factory/constructor used as an expression: yield the carrier.
+        // E.g. KickFlags.idle() → "SCX_KICK_IDLE"; EnqFlags.passThrough(raw) → "raw".
+        // This path fires when the call's @BuiltinBPFFunction has a non-empty carrier and
+        // the value template is empty (no C side-effect — pure expression form).
+        if (symbol.getEnclosingElement() instanceof com.sun.tools.javac.code.Symbol.ClassSymbol abstractionClass
+                && abstractionClass.getAnnotation(BPFAbstraction.class) != null) {
+            var builtinAnn = symbol.getAnnotation(BuiltinBPFFunction.class);
+            if (builtinAnn != null && !builtinAnn.carrier().isBlank()) {
+                // Resolve $argN in the carrier template using the translated C args
+                var carrier = builtinAnn.carrier();
+                var callJavacArgs = ((JCMethodInvocation) methodInvocationTree).getArguments();
+                for (int i = 0; i < callJavacArgs.size(); i++) {
+                    var translated = translate((ExpressionTree) callJavacArgs.get(i));
+                    var rendered = translated != null ? translated.toPrettyString() : callJavacArgs.get(i).toString();
+                    carrier = carrier.replace("$arg" + (i + 1), rendered);
+                }
+                return new VerbatimExpression(carrier);
+            }
+        }
+        // @BPFAbstraction + @BPFJavaInline: inline the Java method body at the call site.
+        // This is the "write the abstraction in Java" path — no @BuiltinBPFFunction template string needed.
+        var inlined = tryInlineAbstractionMethod(symbol, thisJavacExpression, methodInvocationTree, arguments);
+        if (inlined != null) {
+            return inlined;
         }
         try {
             var res = compilerPlugin.methodTemplateCache.render(methodPath, methodInvocationTree, symbol,
@@ -2030,5 +2130,173 @@ class Translator {
             return null;
         }
         return new VerbatimExpression(target.getSimpleName().toString());
+    }
+
+    /**
+     * If {@code symbol} is a {@code @BPFFunction} method on a {@code @BPFAbstraction} class
+     * (not covered by {@code @BuiltinBPFFunction}), translates the method body inline at the
+     * call site and returns it as a GNU statement expression {@code ({ ... })}.
+     *
+     * <p>The translation context binds:
+     * <ul>
+     *   <li>Each instance field of the abstraction class → the caller's carrier expression
+     *       (i.e. the receiver translated as a C expression).</li>
+     *   <li>Each parameter name → the corresponding call argument's C expression.</li>
+     * </ul>
+     *
+     * <p>Returns {@code null} if the method is not eligible for inlining (e.g. it has
+     * a {@code @BuiltinBPFFunction} annotation, the class is not {@code @BPFAbstraction},
+     * or the method source is unavailable).
+     */
+    @Nullable
+    private CAST.Expression tryInlineAbstractionMethod(MethodSymbol symbol,
+                                                       @Nullable JCExpression receiverExpr,
+                                                       MethodInvocationTree callSite,
+                                                       List<Argument> translatedArgs) {
+        // Only instance methods on @BPFAbstraction classes with @BPFJavaInline
+        if (symbol.isStatic()) return null;
+        if (!(symbol.getEnclosingElement() instanceof com.sun.tools.javac.code.Symbol.ClassSymbol enclosingClass)) return null;
+        if (enclosingClass.getAnnotation(BPFAbstraction.class) == null) return null;
+        var javaInlineAnn = symbol.getAnnotation(BPFJavaInline.class);
+        if (javaInlineAnn == null) return null;
+
+        // Get the method's source tree
+        var methodTree = compilerPlugin.trees.getTree(symbol);
+        if (!(methodTree instanceof MethodTree mt)) {
+            // Source not available (cross-module use). Fall back to @BuiltinBPFFunction template if present.
+            return null;
+        }
+        var methodPath = compilerPlugin.trees.getPath(symbol);
+        if (methodPath == null) return null;
+
+        // Determine the carrier expression: the receiver translated to C
+        String carrierExpr = null;
+        if (receiverExpr != null) {
+            var translated = translate(receiverExpr);
+            if (translated != null) {
+                carrierExpr = translated.toPrettyString();
+            }
+        }
+
+        // Collect the instance fields of the abstraction class (these are the carrier fields)
+        var carrierFields = new ArrayList<String>();
+        for (var enc : enclosingClass.getEnclosedElements()) {
+            if (enc instanceof javax.lang.model.element.VariableElement ve
+                    && enc.getKind() == ElementKind.FIELD
+                    && !enc.getModifiers().contains(Modifier.STATIC)) {
+                carrierFields.add(ve.getSimpleName().toString());
+            }
+        }
+
+        // Build the carrier map for the inner translator
+        var innerCarrierMap = new java.util.HashMap<String, String>();
+
+        // Map each carrier field to the receiver carrier expression
+        // For a single-field abstraction, that field = $this = the carrier expression
+        if (carrierExpr != null) {
+            for (var fieldName : carrierFields) {
+                innerCarrierMap.put(fieldName, carrierExpr);
+            }
+        }
+
+        // Map parameter names to their translated call arguments
+        var params = mt.getParameters();
+        var callArgs = callSite.getArguments();
+        for (int i = 0; i < params.size() && i < callArgs.size(); i++) {
+            var paramName = params.get(i).getName().toString();
+            var callArg = callArgs.get(i);
+            var translated = translate((ExpressionTree) callArg);
+            if (translated != null) {
+                innerCarrierMap.put(paramName, translated.toPrettyString());
+            } else {
+                // Argument translation failed; can't inline
+                return null;
+            }
+        }
+
+        // Create a new Translator for the method body with the carrier bindings
+        var innerTranslator = new Translator(compilerPlugin,
+                new CompilerPlugin.TypedTreePath<>(methodPath), ctx);
+        innerTranslator.localCarrierMap.putAll(innerCarrierMap);
+
+        // Translate the method body
+        var body = mt.getBody();
+        if (body == null) return null;
+        var translatedBody = innerTranslator.translate(body, false);
+        if (translatedBody == null) return null;
+
+        // Build a GNU statement expression: ({ stmt1; stmt2; ... })
+        var statements = translatedBody.statements();
+        if (statements.isEmpty()) {
+            return new VerbatimExpression("({ })");
+        }
+
+        var sb = new StringBuilder("({ ");
+        for (var stmt : statements) {
+            var s = stmt.toPrettyString();
+            if (!s.isBlank()) {
+                sb.append(s.trim());
+                if (!s.trim().endsWith(";") && !s.trim().endsWith("}")) sb.append(";");
+                sb.append(" ");
+            }
+        }
+        sb.append("})");
+        return new VerbatimExpression(sb.toString());
+    }
+
+    /**
+     * Replace {@code $arg1}, {@code $arg2}, … placeholders in a {@code @BPFAbstraction}
+     * constructor's {@code carrier} or {@code value} template with the C representation
+     * of the corresponding call arguments.
+     */
+    private String resolveAbstractionPlaceholders(String template, List<JCExpression> args) {
+        if (template == null || template.isBlank()) return template == null ? "" : template;
+        var result = template;
+        for (int i = 0; i < args.size(); i++) {
+            var rendered = args.get(i).toString();
+            result = result.replace("$arg" + (i + 1), rendered);
+        }
+        return result;
+    }
+
+    /**
+     * Resolves the C carrier expression for a {@code @BPFAbstraction} field by
+     * inspecting its initializer in the AST.
+     *
+     * <p>Looks for {@code new DispatchQueue(expr)} or {@code DispatchQueue.attach(expr)}
+     * style initializers, finds the {@code @BuiltinBPFFunction(carrier=...)} on the
+     * constructor/factory, and resolves {@code $argN} placeholders against the
+     * constructor arguments.
+     *
+     * @return the resolved carrier expression, or {@code null} if unavailable
+     */
+    @Nullable
+    private String resolveFieldCarrier(VariableElement field) {
+        // Get the field's variable tree to inspect its initializer
+        var javacProcEnv = (com.sun.tools.javac.processing.JavacProcessingEnvironment)
+                compilerPlugin.createProcessingEnvironment();
+        var tree = javacProcEnv.getElementUtils().getTree(field);
+        if (!(tree instanceof JCVariableDecl varDecl)) return null;
+        var init = varDecl.init;
+        if (init == null) return null;
+
+        MethodSymbol ctorSym = null;
+        List<JCExpression> ctorArgs = new ArrayList<>();
+
+        if (init instanceof JCNewClass newClass) {
+            if (newClass.constructor instanceof MethodSymbol ms) ctorSym = ms;
+            ctorArgs = new ArrayList<>(newClass.getArguments());
+        } else if (init instanceof JCMethodInvocation mi) {
+            if (mi.meth instanceof JCFieldAccess fa && fa.sym instanceof MethodSymbol ms) ctorSym = ms;
+            else if (mi.meth instanceof JCIdent id && id.sym instanceof MethodSymbol ms) ctorSym = ms;
+            ctorArgs = new ArrayList<>(mi.getArguments());
+        }
+
+        if (ctorSym == null) return null;
+        var builtinAnn = ctorSym.getAnnotation(BuiltinBPFFunction.class);
+        if (builtinAnn == null || builtinAnn.carrier().isBlank()) return null;
+
+        // Resolve $argN placeholders in carrier template
+        return resolveAbstractionPlaceholders(builtinAnn.carrier(), ctorArgs);
     }
 }

@@ -44,12 +44,12 @@ import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
 import me.bechberger.ebpf.bpf.map.BPFTaskStorage;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.runtime.ScxDefinitions;
 import me.bechberger.ebpf.type.Ptr;
 
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL_ON;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_enq_flags.*;
 // SCX_CPUPERF_ONE = 1024 (full CPU performance)
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
@@ -119,6 +119,12 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
     static final long TIER_NORMAL_DSQ   = 3001L;
     static final long TIER_LOW_DSQ      = 3002L;
     static final long TIER_DEFICIT_DSQ  = 3003L;
+
+    // Tier DSQs are created by the init() loop below; attach() wraps them without re-creating.
+    final DispatchQueue tierPriority = DispatchQueue.attach(TIER_PRIORITY_DSQ);
+    final DispatchQueue tierNormal   = DispatchQueue.attach(TIER_NORMAL_DSQ);
+    final DispatchQueue tierLow      = DispatchQueue.attach(TIER_LOW_DSQ);
+    final DispatchQueue tierDeficit  = DispatchQueue.attach(TIER_DEFICIT_DSQ);
 
     /** Budget thresholds for tier classification */
     static final long BUDGET_TIER_PRIORITY_NS = 1_500_000L;  // 1500 µs
@@ -398,7 +404,7 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
         // Pinned kernel threads go straight to the local DSQ
         if ((p.val().flags & PerProcessFlags.PF_KTHREAD) != 0 && p.val().nr_cpus_allowed == 1) {
             clearWakeTarget(tctx);
-            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL.value(), SLICE_MIN_NS, enq_flags);
+            DispatchQueue.local().insert(p, SLICE_MIN_NS, EnqFlags.passThrough(enq_flags));
             return;
         }
 
@@ -406,7 +412,7 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
         if (!isWakeup && tctx != null && isMigrationDisabled(p)) {
             if (taskCpu >= 0 && validSchedCpu(taskCpu, nrCpuIds)) {
                 clearWakeTarget(tctx);
-                scx_bpf_dsq_insert(p, PINNED_DSQ_BASE + taskCpu, taskSliceNs(tctx), enq_flags);
+                DispatchQueue.attach(PINNED_DSQ_BASE + taskCpu).insert(p, taskSliceNs(tctx), EnqFlags.passThrough(enq_flags));
                 pinnedDispatches.addAndGet(1L);
                 return;
             }
@@ -420,7 +426,7 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
                 wakeEnqFlags |= SCX_ENQ_PREEMPT.value();
             }
             scx_bpf_cpuperf_set(targetCpu, 1024); // SCX_CPUPERF_ONE
-            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL_ON.value() | targetCpu, SLICE_MIN_NS, wakeEnqFlags);
+            DispatchQueue.localOn(targetCpu).insert(p, SLICE_MIN_NS, EnqFlags.passThrough(wakeEnqFlags));
             prioDispatches.addAndGet(1L);
             clearWakeTarget(tctx);
             return;
@@ -428,14 +434,15 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
 
         // Tier classification by budget
         long budget = tctx != null ? tctx.val().budgetNs : 0L;
+        EnqFlags f = EnqFlags.passThrough(enq_flags);
         if (budget >= BUDGET_TIER_PRIORITY_NS) {
-            scx_bpf_dsq_insert(p, TIER_PRIORITY_DSQ, sliceNs, enq_flags);
+            tierPriority.insert(p, sliceNs, f);
         } else if (budget >= BUDGET_TIER_NORMAL_NS) {
-            scx_bpf_dsq_insert(p, TIER_NORMAL_DSQ, sliceNs, enq_flags);
+            tierNormal.insert(p, sliceNs, f);
         } else if (budget >= BUDGET_TIER_LOW_NS) {
-            scx_bpf_dsq_insert(p, TIER_LOW_DSQ, sliceNs, enq_flags);
+            tierLow.insert(p, sliceNs, f);
         } else {
-            scx_bpf_dsq_insert(p, TIER_DEFICIT_DSQ, sliceNs, enq_flags);
+            tierDeficit.insert(p, sliceNs, f);
         }
         clearWakeTarget(tctx);
     }
@@ -446,8 +453,8 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
         long gen = dispatchGen.addAndGet(1L) - 1L;
 
         // Pinned DSQ always first (non-migratable tasks, latency-sensitive)
-        long pinnedDsq = PINNED_DSQ_BASE + cpu;
-        if (scx_bpf_dsq_nr_queued(pinnedDsq) > 0 && scx_bpf_dsq_move_to_local(pinnedDsq)) {
+        if (DispatchQueue.attach(PINNED_DSQ_BASE + cpu).nonEmpty() &&
+                DispatchQueue.attach(PINNED_DSQ_BASE + cpu).moveToLocal()) {
             pinnedDispatches.addAndGet(1L);
             return;
         }
@@ -486,7 +493,7 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
     @BPFFunction
     @AlwaysInline
     boolean dispatchTierPriority() {
-        if (scx_bpf_dsq_nr_queued(TIER_PRIORITY_DSQ) > 0 && scx_bpf_dsq_move_to_local(TIER_PRIORITY_DSQ)) {
+        if (tierPriority.nonEmpty() && tierPriority.moveToLocal()) {
             tierPriorityDispatches.addAndGet(1L);
             return true;
         }
@@ -496,7 +503,7 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
     @BPFFunction
     @AlwaysInline
     boolean dispatchTierNormal() {
-        if (scx_bpf_dsq_nr_queued(TIER_NORMAL_DSQ) > 0 && scx_bpf_dsq_move_to_local(TIER_NORMAL_DSQ)) {
+        if (tierNormal.nonEmpty() && tierNormal.moveToLocal()) {
             tierNormalDispatches.addAndGet(1L);
             return true;
         }
@@ -506,7 +513,7 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
     @BPFFunction
     @AlwaysInline
     boolean dispatchTierLow() {
-        if (scx_bpf_dsq_nr_queued(TIER_LOW_DSQ) > 0 && scx_bpf_dsq_move_to_local(TIER_LOW_DSQ)) {
+        if (tierLow.nonEmpty() && tierLow.moveToLocal()) {
             tierLowDispatches.addAndGet(1L);
             return true;
         }
@@ -516,7 +523,7 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
     @BPFFunction
     @AlwaysInline
     boolean dispatchTierDeficit() {
-        if (scx_bpf_dsq_nr_queued(TIER_DEFICIT_DSQ) > 0 && scx_bpf_dsq_move_to_local(TIER_DEFICIT_DSQ)) {
+        if (tierDeficit.nonEmpty() && tierDeficit.moveToLocal()) {
             tierDeficitDispatches.addAndGet(1L);
             return true;
         }
