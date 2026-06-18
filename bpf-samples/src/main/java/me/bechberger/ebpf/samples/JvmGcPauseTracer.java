@@ -147,7 +147,6 @@ public abstract class JvmGcPauseTracer extends BPFProgram {
     private static final String LIBJVM_GLOB = "lib/server/libjvm.so";
 
     /** Returns {@code true} while {@code /proc/<pid>} exists (process is alive). */
-    @JavaOnly
     static boolean processAlive(int pid) {
         return Files.exists(Path.of("/proc/" + pid));
     }
