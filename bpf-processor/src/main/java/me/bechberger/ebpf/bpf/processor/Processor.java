@@ -99,12 +99,9 @@ public class Processor extends AbstractProcessor {
         if (combinedCode == null) {
             return;
         }
-        // TODO make configurable or throw out
-        byte[] bytes = new byte[0];//compile(combinedCode, Path.of(this.processingEnv.getElementUtils().getFileObjectOf(typeElement).toUri().getPath()));
-        if (bytes == null) {
-            return;
-        }
-        this.processingEnv.getMessager().printMessage(Diagnostic.Kind.OTHER, "Compiled eBPF program", typeElement);
+        // BYTE_CODE is overwritten by the CompilerPlugin (after C compilation), so seed
+        // it with an empty array here.
+        byte[] bytes = new byte[0];
 
         ImplName implName = typeToImplName(typeElement);
 

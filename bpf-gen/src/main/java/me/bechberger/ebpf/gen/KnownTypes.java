@@ -80,8 +80,8 @@ public class KnownTypes {
      * Get the known int type for the given C name.
      *
      * @param cName    the C name
-     * @param bits     the number of bytes, to check for compatibility
-     * @param encoding the encoding, to check for compatibility
+     * @param bits     ignored — kept for call-site compatibility
+     * @param encoding ignored — kept for call-site compatibility
      * @return the known int type, if it exists
      */
     static Optional<KnownInt> getKnownInt(String cName, int bits, String encoding) {
@@ -91,16 +91,7 @@ public class KnownTypes {
         if (cName.equals("signed char")) {
             return getKnownInt("u8", bits, encoding);
         }
-        if (cNameToKnownInt.containsKey(cName)) {
-            var knownInt = cNameToKnownInt.get(cName);
-            //if (knownInt.bits() == bits && knownInt.encoding().equals(encoding)) { // TODO: fix
-                return Optional.of(knownInt);
-            //} else {
-                // log differing properties
-            //    logger.warning("Known int type " + cName + " has differing properties: " + knownInt.bits() + " bits " + "and " + knownInt.encoding() + " encoding, not " + bits + " bits and " + encoding + " " + "encoding");
-            //}
-        }
-        return Optional.empty();
+        return Optional.ofNullable(cNameToKnownInt.get(cName));
     }
 
     static Optional<KnownInt> getKnownInt(int bits, boolean signed) {
