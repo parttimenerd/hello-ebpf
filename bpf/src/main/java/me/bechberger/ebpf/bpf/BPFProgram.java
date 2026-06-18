@@ -311,7 +311,12 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public BPFProgram() {
         this.ebpf_object = openProgram();
-        Runtime.getRuntime().addShutdownHook(new Thread(this::close));
+        // Shutdown hook bypasses the dependent-tracking guard: at JVM shutdown
+        // the producer's and consumer's hooks run concurrently, so the producer
+        // can't reliably observe the consumer disappearing first. The guard is
+        // there to catch programmer errors during normal use; on shutdown we
+        // just want the kernel state torn down.
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> closeUnchecked()));
     }
 
     protected void initGlobals() {
@@ -1335,15 +1340,37 @@ public abstract class BPFProgram implements AutoCloseable {
         if (closed) {
             return;
         }
-        if (!dependents.isEmpty()) {
-            var names = dependents.stream()
+        // Snapshot under the synchronized set's monitor — shutdown hooks for
+        // cooperating programs run concurrently, so dependents may change
+        // between the emptiness check and the error-message construction.
+        List<BPFProgram> liveDependents;
+        synchronized (dependents) {
+            liveDependents = dependents.isEmpty() ? List.of() : new ArrayList<>(dependents);
+        }
+        if (!liveDependents.isEmpty()) {
+            var names = liveDependents.stream()
                     .map(d -> d.getClass().getSimpleName())
                     .sorted()
                     .toList();
             throw new IllegalStateException(
                     "Cannot close " + getClass().getSimpleName() + ": "
-                    + dependents.size() + " consumer(s) still alive: " + names
+                    + liveDependents.size() + " consumer(s) still alive: " + names
                     + ". Close consumers first.");
+        }
+        closeUnchecked();
+    }
+
+    /**
+     * Close without checking for live dependents. Used by the JVM-shutdown hook
+     * registered in the constructor: at shutdown the producer's and consumer's
+     * hooks run concurrently and there's no reliable way to enforce ordering, so
+     * we tear down kernel state regardless. End-of-program teardown is what we
+     * want; the dependent-check is only useful during normal application
+     * lifetime to catch programmer errors.
+     */
+    private void closeUnchecked() {
+        if (closed) {
+            return;
         }
         closed = true;
         for (var producer : new HashSet<>(producers)) {
@@ -1541,8 +1568,11 @@ public abstract class BPFProgram implements AutoCloseable {
      * Programs that depend on this one (i.e., were loaded with this program as
      * a producer via {@link #load(Class, BPFProgram...)}). Closing this program
      * while {@code dependents} is non-empty throws {@link IllegalStateException}.
+     * <p>
+     * Uses a synchronized set because shutdown hooks for cooperating programs run
+     * concurrently — the producer's close races with the consumer's `removeDependent`.
      */
-    private final Set<BPFProgram> dependents = new HashSet<>();
+    private final Set<BPFProgram> dependents = java.util.Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Producers this program was loaded against. Used to deregister this
