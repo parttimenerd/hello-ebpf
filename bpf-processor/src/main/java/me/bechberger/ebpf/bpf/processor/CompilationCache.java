@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -16,8 +17,8 @@ import java.util.List;
 public class CompilationCache {
 
     private static final String CACHE_FOLDER_NAME = ".bpf.compile.cache";
-    private static final int MAX_DAYS_TO_KEEP_CACHE = 7;
-    private static final int MAX_CACHE_SIZE_IN_BYTES = 10_000_000;
+    private static final int MAX_DAYS_TO_KEEP_CACHE = 30;
+    private static final long MAX_CACHE_SIZE_IN_BYTES = 200_000_000L;
     private static boolean cleaned = false;
 
     private final Path cacheFolder;
@@ -52,8 +53,11 @@ public class CompilationCache {
     private void cleanOldFiles() {
         try (var list = Files.list(cacheFolder)) {
             list.forEach(p -> {
+                // never delete vmlinux.h — it's expensive to regenerate and not an .o
+                if (p.getFileName().toString().equals("vmlinux.h")) return;
                 try {
-                    if (Files.getLastModifiedTime(p).toMillis() < System.currentTimeMillis() - MAX_DAYS_TO_KEEP_CACHE * 24 * 60 * 60 * 1000) {
+                    long ageMs = System.currentTimeMillis() - Files.getLastModifiedTime(p).toMillis();
+                    if (ageMs > (long) MAX_DAYS_TO_KEEP_CACHE * 24 * 60 * 60 * 1000) {
                         Files.delete(p);
                     }
                 } catch (IOException e) {
@@ -66,14 +70,12 @@ public class CompilationCache {
     }
 
     private Path fileName(String cProgram) {
-        // compute hash of cProgram
-        MessageDigest digest = null;
+        MessageDigest digest;
         try {
             digest = MessageDigest.getInstance("SHA-512");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        // encode in base 64
         byte[] hash = digest.digest(cProgram.getBytes());
         return cacheFolder.resolve(Base64.getEncoder().encodeToString(hash).replaceAll("[^A-Za-z0-9_]", "") + ".o");
     }
@@ -82,26 +84,39 @@ public class CompilationCache {
         Path file = fileName(cProgram);
         removeFilesTill(objectFile.length);
         try {
-            Files.createFile(file);
-            Files.write(file, objectFile);
+            // Write atomically via a temp file so a partial write or a pre-existing
+            // file owned by another user (e.g. from a prior sudo build) never leaves
+            // a corrupt or inaccessible cache entry.
+            Path tmp = Files.createTempFile(cacheFolder, "ebpf-cache-", ".tmp");
+            try {
+                Files.write(tmp, objectFile);
+                Files.move(tmp, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            } catch (IOException e) {
+                Files.deleteIfExists(tmp);
+                throw e;
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void removeFilesTill(int emptySpace) {
-        int currentSize = size();
-        long toRemove =  currentSize + emptySpace - MAX_CACHE_SIZE_IN_BYTES;
+    private void removeFilesTill(long emptySpace) {
+        long currentSize = size();
+        long toRemove = currentSize + emptySpace - MAX_CACHE_SIZE_IN_BYTES;
         if (toRemove <= 0) {
             return;
         }
-        var files = cachedFiles().stream().sorted((p1, p2) -> {
-            try {
-                return Long.compare(Files.getLastModifiedTime(p1).toMillis(), Files.getLastModifiedTime(p2).toMillis());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }).toList();
+        // evict only .o files (never vmlinux.h) ordered oldest-first
+        var files = cachedFiles().stream()
+                .filter(p -> p.getFileName().toString().endsWith(".o"))
+                .sorted((p1, p2) -> {
+                    try {
+                        return Long.compare(Files.getLastModifiedTime(p1).toMillis(),
+                                            Files.getLastModifiedTime(p2).toMillis());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).toList();
         try {
             for (var file : files) {
                 toRemove -= Files.size(file);
@@ -115,10 +130,10 @@ public class CompilationCache {
         }
     }
 
-    private int size() {
-        return cachedFiles().stream().mapToInt(p -> {
+    private long size() {
+        return cachedFiles().stream().mapToLong(p -> {
             try {
-                return (int) Files.size(p);
+                return Files.size(p);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
