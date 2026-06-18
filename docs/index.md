@@ -120,6 +120,7 @@ samples/         — runnable sample programs
 | [Cheatsheet](cheatsheet.md) | Quick reference for annotations, maps, and helpers |
 | [Feature Matrix](feature-matrix.md) | Minimum kernel versions per feature |
 | [Maps](maps.md) | BPF map types and Java API |
+| [Shared maps](shared-maps.md) | Sharing maps across cooperating BPF programs (`@SharedFrom`) |
 | [Helpers](helpers.md) | BPF helper functions |
 | [Global Variables](global-variables.md) | `GlobalVariable` API |
 | [Tracepoints](tracepoints.md) | `SEC("tp/...")` programs |

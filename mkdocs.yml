@@ -18,6 +18,7 @@ nav:
   - Cheat Sheet: cheatsheet.md
   - Guides:
     - Maps: maps.md
+    - Shared maps: shared-maps.md
     - XDP: xdp.md
     - TC: tc.md
     - Tracepoints: tracepoints.md
