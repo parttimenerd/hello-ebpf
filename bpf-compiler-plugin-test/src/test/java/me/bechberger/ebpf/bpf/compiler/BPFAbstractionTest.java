@@ -5,9 +5,13 @@ import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.SchedulerBase;
+import me.bechberger.ebpf.bpf.map.BPFStackTraceMap;
+import me.bechberger.ebpf.bpf.perf.PerfEvent;
 import me.bechberger.ebpf.bpf.sched.DispatchQueue;
 import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.bpf.sched.KickFlags;
+import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_perf_event_data;
+import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_perf_event_value;
 import me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
@@ -15,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import java.util.stream.Collectors;
 
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_create_dsq;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_dsq_move_to_local;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -485,5 +490,140 @@ public class BPFAbstractionTest {
         assertTrue(code.contains("77"), "carrier id 77 must appear\n" + code);
         // The clamping branch must be present
         assertTrue(code.contains("dsq_vtime"), "dsq_vtime access must appear for clamping\n" + code);
+    }
+
+    // ── Test 12: @BPFJavaInline with return value — return converted to expression ──
+
+    @BPFAbstraction(constructorPrependTo = "")
+    public static final class Counter {
+
+        @NotUsableInJava
+        private final int count = 0;
+
+        @BuiltinBPFFunction(value = "", carrier = "$arg1")
+        @NotUsableInJava
+        public static Counter of(int count) { throw new MethodIsBPFRelatedFunction(); }
+
+        /** Returns the carrier value doubled. Uses @BPFJavaInline to test return-value inlining. */
+        @BPFJavaInline
+        @NotUsableInJava
+        public int doubled() { return count * 2; }
+    }
+
+    @BPF(license = "GPL")
+    @Property(name = "sched_name", value = "abstr_retval")
+    public static abstract class ReturnValueTest extends SchedulerBase implements Scheduler {
+
+        @Override
+        public int init() {
+            return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
+        }
+
+        @Override
+        public void enqueue(Ptr<task_struct> p, long enq_flags) {
+            dsqInsert(p, enq_flags);
+        }
+
+        @Override
+        public void dispatch(int cpu, Ptr<task_struct> prev) {
+            scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        }
+
+        @BPFFunction
+        public int getDoubled(int n) {
+            Counter c = Counter.of(n);
+            return c.doubled();
+        }
+    }
+
+    @Test
+    void testBPFJavaInlineReturnConvertedToExpression() {
+        String code = stripped(codeOf(ReturnValueTest.class));
+        // doubled() body is "return count * 2;" where count=carrier=n
+        // The GNU statement expression must NOT contain "return " — it must be bare "n * 2"
+        long returnInGnuStmt = code.lines()
+                .filter(l -> l.contains("({") && l.contains("return "))
+                .count();
+        assertTrue(returnInGnuStmt == 0,
+                "GNU statement expression must not contain 'return'; got\n" + code);
+        // The expression itself must appear
+        assertTrue(code.contains("* 2"), "doubled() expression 'n * 2' or similar must appear\n" + code);
+    }
+
+    // ── Test 13: PerfEvent — carrier = ctx, field access inlining ─────────────
+
+    @BPF(license = "GPL")
+    public static abstract class PerfEventTest extends BPFProgram {
+
+        @BPFMapDefinition(maxEntries = 8192)
+        BPFStackTraceMap stackTraces;
+
+        @BPFFunction
+        public void onSample(Ptr<bpf_perf_event_data> ctx) {
+            PerfEvent pe = PerfEvent.of(ctx);
+            long period = pe.samplePeriod();
+            long addr   = pe.addr();
+        }
+
+        @BPFFunction
+        public void stackCapture(Ptr<bpf_perf_event_data> ctx) {
+            PerfEvent pe = PerfEvent.of(ctx);
+            long sid = pe.getStackId(stackTraces, PerfEvent.STACK_USER | PerfEvent.STACK_REUSE);
+        }
+
+        @BPFFunction
+        public void readRegs(Ptr<bpf_perf_event_data> ctx) {
+            PerfEvent pe = PerfEvent.of(ctx);
+            Ptr<?> r = pe.regs();
+        }
+
+        @BPFFunction
+        public void counterRead(Ptr<bpf_perf_event_data> ctx, Ptr<bpf_perf_event_value> buf) {
+            PerfEvent pe = PerfEvent.of(ctx);
+            long rc = pe.readValue(buf);
+        }
+    }
+
+    @Test
+    void testPerfEventSamplePeriodInlined() {
+        String code = stripped(codeOf(PerfEventTest.class));
+        // pe.samplePeriod() → ctx->sample_period
+        assertTrue(code.contains("sample_period"), "samplePeriod() must inline to ->sample_period\n" + code);
+    }
+
+    @Test
+    void testPerfEventAddrInlined() {
+        String code = stripped(codeOf(PerfEventTest.class));
+        // pe.addr() → ctx->addr
+        assertTrue(code.contains("->addr"), "addr() must inline to ->addr\n" + code);
+    }
+
+    @Test
+    void testPerfEventGetStackIdInlined() {
+        String code = stripped(codeOf(PerfEventTest.class));
+        // pe.getStackId(stackTraces, flags) → bpf_get_stackid(ctx, &stackTraces, flags)
+        assertTrue(code.contains("bpf_get_stackid"), "getStackId must inline to bpf_get_stackid\n" + code);
+    }
+
+    @Test
+    void testPerfEventRegsInlined() {
+        String code = stripped(codeOf(PerfEventTest.class));
+        // pe.regs() → (&ctx->regs)
+        assertTrue(code.contains("->regs"), "regs() must inline to ->regs\n" + code);
+    }
+
+    @Test
+    void testPerfEventReadValueInlined() {
+        String code = stripped(codeOf(PerfEventTest.class));
+        // pe.readValue(buf) → bpf_perf_prog_read_value(ctx, buf, sizeof(*buf))
+        assertTrue(code.contains("bpf_perf_prog_read_value"), "readValue must inline to bpf_perf_prog_read_value\n" + code);
+        assertTrue(code.contains("sizeof"), "sizeof must appear in readValue expansion\n" + code);
+    }
+
+    @Test
+    void testPerfEventNoCType() {
+        String code = stripped(codeOf(PerfEventTest.class));
+        // PerfEvent is a @BPFAbstraction — must not appear as a C type
+        assertFalse(code.contains("PerfEvent"), "PerfEvent must not appear as a C type\n" + code);
     }
 }
