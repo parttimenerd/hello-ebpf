@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.1.5 (in development)
+
+### New features
+
+#### `@SharedFrom` — sharing maps across cooperating BPF programs
+A new annotation lets one BPF program import a kernel-side map that another
+program owns, wired up via libbpf pin reuse. Eliminates the need for
+hand-managed pin path strings.
+
+- Producer/consumer split: the consumer annotates a `@BPFMapDefinition` field
+  with `@SharedFrom(Producer.class)` and the framework wires both ELFs to the
+  same kernel map at load time.
+- Compile-time structural type checking: producer field existence,
+  map-type equality, key/value-type equivalence (including walking `@Type`
+  members), and `maxEntries` parity. Mismatches produce diagnostics naming
+  the offending field and recommending the producer's `@Type` import path.
+- Pin lifecycle: fresh-on-each-run by default — producers wipe their pin
+  directory before opening, avoiding stale-pin reuse from crashed processes.
+- Dependent tracking: closing a producer while a consumer is still alive
+  throws `IllegalStateException` naming the live consumer.
+- New API: `BPFProgram.load(Class, BPFProgram...)`, `BPFProgram.getPinPath`,
+  `BPFProgram.getPinnedMapNames`, `BPFProgram.unpinAllForClass`,
+  `BPFProgram.unpin`. The two-phase load (`openProgram` + `finalizeLoad`)
+  exposes a `preLoad()` hook for setting pin paths before
+  `bpf_object__load`.
+- `BPFProgramGroup` helper for closing cooperating programs in
+  reverse-dependency order.
+- See [Shared maps](shared-maps.md) for the full guide.
+
+#### `LockHolderBoostScheduler` sample
+A sched_ext scheduler that boosts JVM threads holding contended `synchronized`
+monitors, demonstrating cross-program map sharing end-to-end.
+
+- Split into a uprobe **producer** (`LockHolderBoostUprobes`, watches
+  `ObjectMonitor::enter_internal` / `::exit` in libjvm.so) and a sched_ext
+  **consumer** (`LockHolderBoostScheduler`, routes boosted holders onto a
+  priority DSQ). The two halves share a `BPFHashMap<Long, BoostState>` via
+  `@SharedFrom`.
+- Required because the BPF verifier rejects mixed uprobe + struct_ops
+  programs that share kfuncs.
+- Targets `enter_internal`, not `enter()`: in JDK 21+ HotSpot the public
+  `enter()` symbol is dead code on contended workloads — threads reach the
+  slow path via `try_enter → enter_with_contention_mark → enter_internal`.
+- CLI via femtocli: `--pid` (required), `--libjvm`, `--enter-symbol`,
+  `--exit-symbol`, `--stats-interval`, `--top-n`.
+
 ## 0.1.4
 
 ### New features
