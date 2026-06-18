@@ -185,6 +185,88 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     /**
+     * Load a BPF program that depends on already-loaded producer programs.
+     *
+     * <p>Used with {@code @SharedFrom}: the consumer's generated impl class has a
+     * constructor taking the producers it shares maps with. This method picks the
+     * matching constructor by parameter assignability and registers the consumer
+     * as a dependent on each producer (so producer close fails fast while the
+     * consumer is alive).
+     *
+     * <p>Usage:
+     * <pre>{@code
+     * try (var producer = BPFProgram.load(Producer.class);
+     *      var consumer = BPFProgram.load(Consumer.class, producer)) { ... }
+     * // try-with-resources closes consumer first (LIFO), then producer.
+     * }</pre>
+     *
+     * @param clazz     the consumer @BPF class
+     * @param producers producer instances the consumer's @SharedFrom fields reference
+     * @return the loaded consumer program
+     */
+    public static <T extends BPFProgram, S extends T> S load(Class<T> clazz, BPFProgram... producers) {
+        if (producers == null || producers.length == 0) {
+            return load(clazz);
+        }
+        try {
+            if ("1".equals(System.getenv("BPF_PRINT_CODE"))) {
+                printCode(clazz);
+            }
+            KernelFeatures.requireMinimumKernel();
+            KernelFeatures.checkRequirements("Loading BPF program", clazz);
+            long t0 = System.currentTimeMillis();
+            Class<S> implClass = BPFProgram.<T, S>getImplClass(clazz);
+            // Find a constructor whose parameter list is assignable from the supplied
+            // producers (in order). If multiple match, prefer the one whose parameter
+            // count equals the number of producers.
+            java.lang.reflect.Constructor<?> chosen = null;
+            for (var ctor : implClass.getDeclaredConstructors()) {
+                var pTypes = ctor.getParameterTypes();
+                if (pTypes.length != producers.length) continue;
+                boolean ok = true;
+                for (int i = 0; i < pTypes.length; i++) {
+                    if (!pTypes[i].isInstance(producers[i])) { ok = false; break; }
+                }
+                if (ok) { chosen = ctor; break; }
+            }
+            if (chosen == null) {
+                var supplied = new StringBuilder();
+                for (int i = 0; i < producers.length; i++) {
+                    if (i > 0) supplied.append(", ");
+                    supplied.append(producers[i].getClass().getSimpleName());
+                }
+                throw new BPFLoadError("No constructor on " + implClass.getSimpleName()
+                        + " matches the supplied producers (" + supplied + "). "
+                        + "Ensure the consumer declares @SharedFrom for each producer "
+                        + "and that the producer order matches the generated constructor signature.");
+            }
+            @SuppressWarnings("unchecked")
+            S program = (S) chosen.newInstance((Object[]) producers);
+            for (var producer : producers) {
+                producer.addDependent(program);
+            }
+            program.initGlobals();
+            var evt = new BPFEvents.ProgramLoad();
+            if (evt.isEnabled()) {
+                evt.programClass = clazz.getName();
+                evt.durationMs = System.currentTimeMillis() - t0;
+                evt.commit();
+            }
+            return program;
+        } catch (BPFError e) {
+            throw e;
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof BPFError be) throw be;
+            throw new RuntimeException(cause != null ? cause : e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    /**
      * The eBPF object, struct bpf_object *ebpf_object
      */
     private final MemorySegment ebpf_object;
@@ -213,10 +295,22 @@ public abstract class BPFProgram implements AutoCloseable {
     /**
      * Load the eBPF program from the byte code
      * <p>
-     * You have to call {@link #initGlobals()} to initialize the global variables
+     * You have to call {@link #initGlobals()} to initialize the global variables.
+     *
+     * <h3>Two-phase load (open / finalize split)</h3>
+     * The base constructor only <em>opens</em> the BPF object via
+     * {@link #openProgram()}; it does <strong>not</strong> call
+     * {@code bpf_object__load}. The annotation-processor-generated impl-class
+     * constructor calls {@link #finalizeLoad()} after registering any pin
+     * paths via {@link #setMapPinPath(String, String)}, so cross-program map
+     * sharing (see {@code @SharedFrom}) can wire up before load.
+     *
+     * <p>For programs without {@code @SharedFrom}, the generated constructor
+     * simply calls {@code finalizeLoad()} immediately after {@code super()},
+     * preserving the historical "open + load in constructor" behavior.
      */
     public BPFProgram() {
-        this.ebpf_object = loadProgram();
+        this.ebpf_object = openProgram();
         Runtime.getRuntime().addShutdownHook(new Thread(this::close));
     }
 
@@ -274,12 +368,16 @@ public abstract class BPFProgram implements AutoCloseable {
             new HandlerWithErrno<>("bpf_object__open_file",
                     FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
     /**
-     * Load the eBPF program from the byte code
+     * Open the eBPF object file (phase 1 of the two-phase load).
      *
-     * @return the eBPF object
-     * @throws BPFLoadError if the whole program could not be loaded
+     * <p>Calls {@code bpf_object__open_file} but does <strong>not</strong>
+     * load the program into the kernel — that is deferred to
+     * {@link #finalizeLoad()} so map pin paths can be registered first.
+     *
+     * @return the opened {@code struct bpf_object *}
+     * @throws BPFLoadError if the object file cannot be opened
      */
-    private MemorySegment loadProgram() {
+    private MemorySegment openProgram() {
         VerifierLogCapture.install();
         Path objFile = getTmpObjectFile();
         try (Arena arena = Arena.ofConfined()) {
@@ -289,21 +387,62 @@ public abstract class BPFProgram implements AutoCloseable {
             if (ebpf_object.result() == MemorySegment.NULL) {
                 throw new BPFLoadError("Failed to open eBPF file: " + Util.errnoString(ebpf_object.err()));
             }
-
-            // discard any prior libbpf chatter so the captured log only contains
-            // messages emitted during this bpf_object__load call
-            VerifierLogCapture.drainAndReset();
-            var ret = BPF_OBJECT__LOAD.call(ebpf_object.result());
-            if (ret.hasError() && ret.result() != 0) {
-                String shortMsg = "Failed to load eBPF object: " + Util.errnoString(ret.err());
-                String log = VerifierLogCapture.drainAndReset();
-                if (log.isEmpty()) {
-                    throw new BPFLoadError(shortMsg);
-                }
-                throw new BPFVerifierException(shortMsg, log);
-            }
             return ebpf_object.result();
         }
+    }
+
+    /**
+     * Track whether {@link #finalizeLoad()} has been called for this instance.
+     * Used to make the call idempotent and to reject post-load operations
+     * that require the program to be loaded.
+     */
+    private boolean loaded = false;
+
+    /**
+     * Hook invoked between {@link #openProgram()} and {@link #finalizeLoad()}.
+     * Override to register cross-program pin paths via
+     * {@link #setMapPinPath(String, String)} before the BPF object is loaded.
+     *
+     * <p>Default implementation does nothing. The annotation-processor-generated
+     * impl-class constructor calls this between {@code super()} and
+     * {@code finalizeLoad()}.
+     */
+    protected void preLoad() {
+    }
+
+    /**
+     * Finalize the load (phase 2 of the two-phase load): calls
+     * {@code bpf_object__load}. Idempotent — calling it twice is a no-op.
+     *
+     * <p>The annotation-processor-generated impl-class constructor calls this
+     * after registering any cross-program pin paths via
+     * {@link #setMapPinPath(String, String)}.
+     *
+     * @throws BPFLoadError if loading fails
+     * @throws BPFVerifierException if the BPF verifier rejects the program
+     */
+    protected final void finalizeLoad() {
+        if (loaded) return;
+        // discard any prior libbpf chatter so the captured log only contains
+        // messages emitted during this bpf_object__load call
+        VerifierLogCapture.drainAndReset();
+        var ret = BPF_OBJECT__LOAD.call(this.ebpf_object);
+        if (ret.hasError() && ret.result() != 0) {
+            String shortMsg = "Failed to load eBPF object: " + Util.errnoString(ret.err());
+            String log = VerifierLogCapture.drainAndReset();
+            if (log.isEmpty()) {
+                throw new BPFLoadError(shortMsg);
+            }
+            throw new BPFVerifierException(shortMsg, log);
+        }
+        loaded = true;
+    }
+
+    /**
+     * @return {@code true} once {@link #finalizeLoad()} has succeeded.
+     */
+    public final boolean isLoaded() {
+        return loaded;
     }
 
     /**
@@ -1196,7 +1335,21 @@ public abstract class BPFProgram implements AutoCloseable {
         if (closed) {
             return;
         }
+        if (!dependents.isEmpty()) {
+            var names = dependents.stream()
+                    .map(d -> d.getClass().getSimpleName())
+                    .sorted()
+                    .toList();
+            throw new IllegalStateException(
+                    "Cannot close " + getClass().getSimpleName() + ": "
+                    + dependents.size() + " consumer(s) still alive: " + names
+                    + ". Close consumers first.");
+        }
         closed = true;
+        for (var producer : new HashSet<>(producers)) {
+            producer.removeDependent(this);
+        }
+        producers.clear();
         for (var structOps : attachedStructOps) {
             Lib.bpf_link__destroy(structOps);
         }
@@ -1370,6 +1523,152 @@ public abstract class BPFProgram implements AutoCloseable {
             var fileFd = new FileDescriptor(path, MemorySegment.NULL, fd);
             return recordMap(mapCreator.apply(fileFd));
         }
+    }
+
+    // ── Pre-load map pin paths (cross-program sharing) ────────────────────────
+
+    /** Root of the BPF filesystem. Pin paths must live under this. */
+    public static final String BPF_FS_ROOT = "/sys/fs/bpf";
+
+    /**
+     * Pin paths registered for this program, indexed by map name.
+     * Populated by {@link #setMapPinPath(String, String)} between {@code super()}
+     * and {@link #finalizeLoad()} in the generated impl-class constructor.
+     */
+    private final Map<String, String> pinPaths = new LinkedHashMap<>();
+
+    /**
+     * Programs that depend on this one (i.e., were loaded with this program as
+     * a producer via {@link #load(Class, BPFProgram...)}). Closing this program
+     * while {@code dependents} is non-empty throws {@link IllegalStateException}.
+     */
+    private final Set<BPFProgram> dependents = new HashSet<>();
+
+    /**
+     * Producers this program was loaded against. Used to deregister this
+     * program as a dependent on close.
+     */
+    private final Set<BPFProgram> producers = new HashSet<>();
+
+    /**
+     * Register a pin path for a BPF map by name <em>before</em>
+     * {@link #finalizeLoad()} is called.
+     *
+     * <p>Must be called from a generated impl-class constructor between
+     * {@code super()} (which opens the BPF object) and {@code finalizeLoad()}
+     * (which loads it). Calling after load throws {@link IllegalStateException}.
+     *
+     * <p>If the path already exists in the BPF filesystem and references a
+     * compatible map, libbpf reuses it instead of creating a new map — this is
+     * the mechanism behind {@code @SharedFrom} cross-program map sharing.
+     *
+     * @param mapName name of an {@code @BPFMapDefinition} field
+     * @param path    absolute path under {@link #BPF_FS_ROOT}
+     * @throws IllegalStateException if called after {@link #finalizeLoad()}
+     * @throws BPFError              if the map cannot be found, the path is invalid,
+     *                               or libbpf rejects the pin path
+     */
+    protected final void setMapPinPath(String mapName, String path) {
+        if (loaded) {
+            throw new IllegalStateException(
+                    "setMapPinPath('" + mapName + "', '" + path + "') called after finalizeLoad();" +
+                    " pin paths must be registered between super() and finalizeLoad()");
+        }
+        if (path == null || path.isEmpty()) {
+            throw new BPFError("Pin path must be a non-empty absolute path under " + BPF_FS_ROOT);
+        }
+        if (!path.startsWith(BPF_FS_ROOT + "/")) {
+            throw new BPFError("Pin path must live under " + BPF_FS_ROOT + "/, got: " + path);
+        }
+        // Ensure the parent directory exists so libbpf doesn't fail with ENOENT.
+        Path parent = Path.of(path).getParent();
+        if (parent != null) {
+            try {
+                Files.createDirectories(parent);
+            } catch (IOException e) {
+                throw new BPFError("Failed to create pin parent directory " + parent + ": " + e.getMessage());
+            }
+        }
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment map = Lib.bpf_object__find_map_by_name(this.ebpf_object, arena.allocateFrom(mapName));
+            if (map == MemorySegment.NULL || map.address() == 0) {
+                throw new BPFMapNotFoundError(mapName);
+            }
+            int ret = Lib_2.bpf_map__set_pin_path(map, arena.allocateFrom(path));
+            if (ret != 0) {
+                throw new BPFError("bpf_map__set_pin_path failed for '" + mapName + "' -> "
+                        + path + ": " + Util.errnoString(-ret));
+            }
+        }
+        pinPaths.put(mapName, path);
+    }
+
+    /**
+     * @return the registered pin path for {@code mapName}, or {@code null} if
+     *         this program does not pin a map of that name.
+     */
+    public String getPinPath(String mapName) {
+        return pinPaths.get(mapName);
+    }
+
+    /** @return names of all maps this program pins. */
+    public Set<String> getPinnedMapNames() {
+        return Collections.unmodifiableSet(pinPaths.keySet());
+    }
+
+    /** Default pin directory for a class — {@link #BPF_FS_ROOT}/{mangled-fqn}. */
+    public static String defaultPinDir(Class<? extends BPFProgram> clazz) {
+        return BPF_FS_ROOT + "/" + clazz.getName().replace('.', '_').replace('$', '_');
+    }
+
+    /** Default pin path for a map of the given name on the given producer class. */
+    public static String defaultPinPath(Class<? extends BPFProgram> clazz, String mapName) {
+        return defaultPinDir(clazz) + "/" + mapName;
+    }
+
+    /**
+     * Remove a single pin file at {@code path}. Idempotent — does nothing if the
+     * file does not exist.
+     */
+    public static void unpin(String path) {
+        try {
+            Files.deleteIfExists(Path.of(path));
+        } catch (IOException e) {
+            throw new BPFError("Failed to unpin " + path + ": " + e.getMessage());
+        }
+    }
+
+    /**
+     * Remove all pin files (and the pin directory itself) for the given producer
+     * class. Idempotent — does nothing if the directory does not exist.
+     *
+     * <p>Called automatically by the producer's generated constructor before
+     * {@code openProgram()} so each run starts fresh — pinning persists past
+     * process death and we don't want stale state silently reused across runs.
+     */
+    public static void unpinAllForClass(Class<? extends BPFProgram> clazz) {
+        Path dir = Path.of(defaultPinDir(clazz));
+        if (!Files.exists(dir)) return;
+        try (var stream = Files.walk(dir)) {
+            stream.sorted(Comparator.reverseOrder()).forEach(p -> {
+                try { Files.deleteIfExists(p); } catch (IOException ignore) { /* best-effort */ }
+            });
+        } catch (IOException e) {
+            throw new BPFError("Failed to wipe pin dir " + dir + ": " + e.getMessage());
+        }
+    }
+
+    /**
+     * Register {@code dependent} as depending on this program. Closing this
+     * program while a dependent is alive throws {@link IllegalStateException}.
+     */
+    final void addDependent(BPFProgram dependent) {
+        dependents.add(dependent);
+        dependent.producers.add(this);
+    }
+
+    final void removeDependent(BPFProgram dependent) {
+        dependents.remove(dependent);
     }
 
     /**

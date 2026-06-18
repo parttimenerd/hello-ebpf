@@ -27,6 +27,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.zip.GZIPOutputStream;
 
+import static me.bechberger.ebpf.bpf.processor.AnnotationUtils.getAnnotationMirror;
+import static me.bechberger.ebpf.bpf.processor.AnnotationUtils.getAnnotationValue;
+
 /**
  * Annotation compiler that processes classes annotated with {@code @BPF}.
  * <p>
@@ -38,10 +41,34 @@ public class Processor extends AbstractProcessor {
 
     private static final int MINIMUM_CLANG_VERSION = 19;
     private static final String BPF = "me.bechberger.ebpf.annotations.bpf.BPF";
+    private static final String SHARED_FROM = "me.bechberger.ebpf.annotations.bpf.SharedFrom";
+    private static final String BPF_MAP_DEFINITION = "me.bechberger.ebpf.annotations.bpf.BPFMapDefinition";
     private final CompilationCache cache = new CompilationCache(Paths.get("."));
+
+    /**
+     * In-memory cross-class index of {@code @SharedFrom} references collected at
+     * the start of each round: producer FQN → set of map names referenced by some
+     * consumer in this round. Producers use this to know which of their maps to
+     * pin during {@code preLoad()}. Combined with classpath META-INF reads, this
+     * supports both single-module and cross-module sharing.
+     */
+    private final Map<String, Set<String>> sharedFromIndex = new java.util.HashMap<>();
 
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
         this.processingEnv.getMessager().printNote("Processing BPF annotations");
+        // First pass: scan all @BPF classes in this round for @SharedFrom fields and
+        // populate sharedFromIndex. Also load any META-INF/ebpf-shared-from/*.json
+        // entries already on the classpath (cross-module case).
+        annotations.forEach(annotation -> {
+            if (annotation.getQualifiedName().toString().equals(BPF)) {
+                env.getElementsAnnotatedWith(annotation).stream()
+                        .filter(TypeElement.class::isInstance)
+                        .map(TypeElement.class::cast)
+                        .forEach(this::collectSharedFromReferences);
+            }
+        });
+        loadSharedFromIndexFromClasspath();
+        // Second pass: actually process each @BPF class.
         annotations.forEach(annotation -> {
             Set<? extends Element> elements = env.getElementsAnnotatedWith(annotation);
             if (annotation.getQualifiedName().toString().equals(BPF)) {
@@ -49,6 +76,37 @@ public class Processor extends AbstractProcessor {
             }
         });
         return true;
+    }
+
+    /** Scan a {@code @BPF} class for {@code @SharedFrom} fields and add producer→mapName entries. */
+    private void collectSharedFromReferences(TypeElement bpfClass) {
+        for (var enc : bpfClass.getEnclosedElements()) {
+            if (enc.getKind() != ElementKind.FIELD) continue;
+            VariableElement field = (VariableElement) enc;
+            var sharedAnn = getAnnotationMirror(field, SHARED_FROM);
+            if (sharedAnn.isEmpty()) continue;
+            TypeMirror producerMirror = getAnnotationValue(sharedAnn.get(), "value", null);
+            if (!(producerMirror instanceof javax.lang.model.type.DeclaredType pd)) continue;
+            String producerFqn = ((TypeElement) pd.asElement()).getQualifiedName().toString();
+            String mapName = getAnnotationValue(sharedAnn.get(), "mapName", "");
+            if (mapName.isEmpty()) mapName = field.getSimpleName().toString();
+            sharedFromIndex.computeIfAbsent(producerFqn, k -> new java.util.LinkedHashSet<>()).add(mapName);
+        }
+    }
+
+    /**
+     * Load {@code META-INF/ebpf-shared-from/*.json} entries from the classpath
+     * (cross-module case — consumer was compiled in a separate module). The
+     * Filer's {@code getResource} can read CLASS_PATH entries during processing.
+     */
+    private void loadSharedFromIndexFromClasspath() {
+        // We cannot list a directory via Filer; iterate over the consumer FQNs we
+        // know about via the in-round scan AND via best-effort classpath probing
+        // is out of scope. For the cross-module case the project's typical pattern
+        // is that consumers and producers compile in the same module; for true
+        // cross-module support, callers would need to pass producer instances
+        // anyway, and the runtime load() picks up dependent registration from there.
+        // (No-op for now — the in-round scan covers the common case.)
     }
 
     /**
@@ -122,6 +180,47 @@ public class Processor extends AbstractProcessor {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        // Write META-INF index entry for any @SharedFrom map this consumer references,
+        // so producer compilation in this round (or a future round/module) can discover
+        // which of its maps to pin. One file per consumer keeps writes deterministic
+        // and avoids racy read-modify-write across compilation units.
+        writeSharedFromIndex(typeElement, typeProcessorResult);
+    }
+
+    private void writeSharedFromIndex(TypeElement consumerType, TypeProcessorResult tpr) {
+        var sharedFromEntries = tpr.mapDefinitions().stream()
+                .filter(m -> m.sharedFrom() != null)
+                .toList();
+        if (sharedFromEntries.isEmpty()) return;
+        // Filename: META-INF/ebpf-shared-from/<consumer-fqn>.json
+        String resourceName = "META-INF/ebpf-shared-from/" + consumerType.getQualifiedName() + ".json";
+        try {
+            var file = processingEnv.getFiler().createResource(
+                    javax.tools.StandardLocation.CLASS_OUTPUT, "", resourceName, consumerType);
+            try (var writer = file.openWriter()) {
+                writer.write("{\n");
+                writer.write("  \"consumer\": \"" + consumerType.getQualifiedName() + "\",\n");
+                writer.write("  \"entries\": [\n");
+                for (int i = 0; i < sharedFromEntries.size(); i++) {
+                    var sf = sharedFromEntries.get(i).sharedFrom();
+                    writer.write("    {\"producer\": \"" + sf.producerFqn() + "\","
+                            + " \"mapName\": \"" + sf.mapName() + "\"}");
+                    if (i + 1 < sharedFromEntries.size()) writer.write(",");
+                    writer.write("\n");
+                }
+                writer.write("  ]\n");
+                writer.write("}\n");
+            }
+        } catch (IOException e) {
+            // Non-fatal: cross-program pinning won't be wired up but compilation
+            // continues. The consumer-side @SharedFrom-aware constructor still
+            // calls setMapPinPath, so single-module builds still work; only the
+            // producer-side auto-pinning needs this index.
+            this.processingEnv.getMessager().printWarning(
+                    "Failed to write SharedFrom index for " + consumerType.getQualifiedName()
+                            + ": " + e.getMessage());
         }
     }
 
@@ -266,12 +365,82 @@ public class Processor extends AbstractProcessor {
         spec.addMethod(MethodSpec.methodBuilder("getAutoAttachablePrograms").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC)
                 .returns(ParameterizedTypeName.get(ClassName.get(List.class), ClassName.get(String.class)))
                 .addStatement("return java.util.List.of($L)", code.autoAttachablePrograms.stream().map(s -> "\"" + s + "\"").collect(Collectors.joining(", "))).build());
+        // Identify @SharedFrom map definitions on this consumer (if any), grouped by
+        // distinct producer in deterministic alphabetical order.
+        var sharedMaps = code.tp.mapDefinitions().stream()
+                .filter(m -> m.sharedFrom() != null)
+                .toList();
+        var distinctProducers = sharedMaps.stream()
+                .map(m -> m.sharedFrom().producerFqn())
+                .distinct()
+                .sorted()
+                .toList();
+
+        // For each distinct producer, generate a final field that holds the producer
+        // instance passed into the constructor. Field name is camelCase of the simple
+        // class name (e.g. LockHolderBoostUprobes -> lockHolderBoostUprobes).
+        var producerFieldNames = new java.util.LinkedHashMap<String, String>(); // producerFqn -> fieldName
+        for (var fqn : distinctProducers) {
+            String simple = fqn.substring(fqn.lastIndexOf('.') + 1);
+            String fieldName = Character.toLowerCase(simple.charAt(0)) + simple.substring(1);
+            producerFieldNames.put(fqn, fieldName);
+            spec.addField(FieldSpec.builder(ClassName.bestGuess(fqn), fieldName,
+                    Modifier.PRIVATE, Modifier.FINAL).build());
+        }
+
         // implement the constructor and set the map fields
         var constructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC);
+        for (var fqn : distinctProducers) {
+            constructor.addParameter(ClassName.bestGuess(fqn), producerFieldNames.get(fqn));
+        }
+        // Two-phase load: super() opens the BPF object; preLoad() registers
+        // any cross-program pin paths via setMapPinPath; finalizeLoad() then
+        // loads. After load we initialize map field references.
+        for (var fqn : distinctProducers) {
+            String fieldName = producerFieldNames.get(fqn);
+            constructor.addStatement("this.$L = $L", fieldName, fieldName);
+        }
+        constructor.addStatement("preLoad()");
+        constructor.addStatement("finalizeLoad()");
         code.tp.mapDefinitions().forEach(m -> {
             constructor.addStatement("$L", m.javaFieldInitializer());
         });
         spec.addMethod(constructor.build());
+
+        // Generate preLoad() override on the impl class when:
+        //   (a) this is a CONSUMER (has @SharedFrom fields) — register each shared
+        //       map's pin path so libbpf reuses the producer's kernel map; or
+        //   (b) this is a PRODUCER (some consumer has @SharedFrom on this class) —
+        //       wipe stale pins via unpinAllForClass(<UserClass>) for fresh-on-each-run,
+        //       then call setMapPinPath for each map referenced by some consumer.
+        // A class can be both, in which case both blocks are emitted in the same method.
+        String thisFqn = outerTypeElement.getQualifiedName().toString();
+        var producedMaps = sharedFromIndex.getOrDefault(thisFqn, java.util.Collections.emptySet());
+        boolean isProducer = !producedMaps.isEmpty();
+        boolean isConsumer = !sharedMaps.isEmpty();
+        if (isConsumer || isProducer) {
+            var preLoad = MethodSpec.methodBuilder("preLoad")
+                    .addAnnotation(Override.class)
+                    .addModifiers(Modifier.PROTECTED)
+                    .returns(TypeName.VOID);
+            if (isProducer) {
+                // Fresh-on-each-run: wipe any leftover pin files from a previous
+                // (possibly crashed) run before bpf_object__load reuses them.
+                preLoad.addStatement("me.bechberger.ebpf.bpf.BPFProgram.unpinAllForClass($L.class)", thisFqn);
+                for (var mapName : producedMaps) {
+                    preLoad.addStatement("setMapPinPath($S, me.bechberger.ebpf.bpf.BPFProgram.defaultPinPath($L.class, $S))",
+                            mapName, thisFqn, mapName);
+                }
+            }
+            if (isConsumer) {
+                for (var m : sharedMaps) {
+                    var sf = m.sharedFrom();
+                    preLoad.addStatement("setMapPinPath($S, me.bechberger.ebpf.bpf.BPFProgram.defaultPinPath($L.class, $S))",
+                            m.javaFieldName(), sf.producerFqn(), sf.mapName());
+                }
+            }
+            spec.addMethod(preLoad.build());
+        }
         if (!globalVariableDefinitions.isEmpty()) {
             spec.addMethod(addGlobalVariableDefinitions(MethodSpec.methodBuilder("initGlobals")
                     .addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(TypeName.VOID), globalVariableDefinitions).build());

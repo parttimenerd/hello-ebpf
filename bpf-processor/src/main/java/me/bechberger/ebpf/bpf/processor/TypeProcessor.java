@@ -55,6 +55,7 @@ public class TypeProcessor {
     public final static String BPF_PACKAGE = "me.bechberger.ebpf.type";
     public final static String BPF_TYPE = "me.bechberger.ebpf.type.BPFType";
     public final static String BPF_MAP_DEFINITION = "me.bechberger.ebpf.annotations.bpf.BPFMapDefinition";
+    public final static String SHARED_FROM_ANNOTATION = "me.bechberger.ebpf.annotations.bpf.SharedFrom";
     public final static String BPF_MAP_CLASS = "me.bechberger.ebpf.annotations.bpf.BPFMapClass";
 
     private final ProcessingEnvironment processingEnv;
@@ -1375,11 +1376,27 @@ public class TypeProcessor {
     }
 
     /**
+     * Information attached to a map field annotated with
+     * {@link me.bechberger.ebpf.annotations.bpf.SharedFrom @SharedFrom}.
+     *
+     * @param producerFqn        fully-qualified name of the producer {@code @BPF} class
+     * @param producerSimpleName simple class name of the producer (used to name the
+     *                           generated impl-class constructor parameter)
+     * @param mapName            name of the map field on the producer
+     */
+    public record SharedFromInfo(String producerFqn, String producerSimpleName, String mapName) {}
+
+    /**
      * Combines the C and the Java code to construct a map
      * @param javaFieldInitializer code that initializes a map field in the constructor of the BPFProgram implementation
      * @param structDefinition the C struct definition of the map
+     * @param sharedFrom non-null when the field is annotated with {@code @SharedFrom}
      */
-    public record MapDefinition(String javaFieldName, String javaFieldInitializer, Statement structDefinition) {
+    public record MapDefinition(String javaFieldName, String javaFieldInitializer, Statement structDefinition,
+                                @Nullable SharedFromInfo sharedFrom) {
+        public MapDefinition(String javaFieldName, String javaFieldInitializer, Statement structDefinition) {
+            this(javaFieldName, javaFieldInitializer, structDefinition, null);
+        }
     }
 
     List<MapDefinition> processDefinedMaps(TypeElement outerElement, Function<SpecFieldName, BPFTypeLike<?>> fieldToType,
@@ -1445,10 +1462,236 @@ public class TypeProcessor {
         var fieldName = field.getSimpleName().toString();
         var className = mapType.toString();
 
+        SharedFromInfo sharedFrom = processSharedFromIfPresent(field, fieldName, declaredType, mapType, maxEntries);
+
         return new MapDefinition(field.getSimpleName().toString(),
                 processBPFClassJavaTemplate(field, javaTemplate, typeParameters, maxEntries, fieldName, className, typeToSpecFieldName),
-                processBPFClassCTemplate(field, cTemplate, typeParameters, maxEntries, fieldName, className, typeToSpecFieldName));
+                processBPFClassCTemplate(field, cTemplate, typeParameters, maxEntries, fieldName, className, typeToSpecFieldName),
+                sharedFrom);
     }
+
+    /**
+     * If {@code field} is annotated with {@code @SharedFrom}, validate that the
+     * producer declares a compatible map and return a {@link SharedFromInfo}
+     * describing it. Otherwise return {@code null}.
+     *
+     * <p>Compatibility checks (each emits a printError on the field with a
+     * helpful message; first failure returns {@code null} so the caller treats
+     * the map as unshared):
+     * <ol>
+     *   <li>The producer class is loadable and is a {@code @BPF} class.</li>
+     *   <li>The producer declares a {@code @BPFMapDefinition} field with the
+     *       requested map name.</li>
+     *   <li>The producer's map class (e.g. {@code BPFHashMap}) matches the
+     *       consumer's.</li>
+     *   <li>Each generic type parameter is structurally compatible with the
+     *       producer's: same {@link TypeElement}, or both framework-known
+     *       primitives with the same BPF name, or two distinct {@code @Type}
+     *       classes with byte-identical layout (walked field-by-field).</li>
+     *   <li>{@code maxEntries} matches.</li>
+     * </ol>
+     */
+    private @Nullable SharedFromInfo processSharedFromIfPresent(VariableElement field, String fieldName,
+                                                                DeclaredType consumerMapType, Element consumerMapClass,
+                                                                int consumerMaxEntries) {
+        var sharedAnn = getAnnotationMirror(field, SHARED_FROM_ANNOTATION);
+        if (sharedAnn.isEmpty()) return null;
+
+        // 1) Resolve the producer class.
+        TypeMirror producerMirror = getAnnotationValue(sharedAnn.get(), "value", null);
+        if (producerMirror == null || !(producerMirror instanceof DeclaredType producerDecl)) {
+            this.processingEnv.getMessager().printError(
+                    "@SharedFrom: 'value' must reference a @BPF class", field);
+            return null;
+        }
+        TypeElement producerType = (TypeElement) producerDecl.asElement();
+        if (!hasAnnotation(producerType, "me.bechberger.ebpf.annotations.bpf.BPF")) {
+            this.processingEnv.getMessager().printError(
+                    "@SharedFrom: " + producerType.getQualifiedName()
+                            + " is not annotated with @BPF — only @BPF classes can be referenced", field);
+            return null;
+        }
+
+        // 2) Resolve the producer's map field.
+        String requestedMapName = getAnnotationValue(sharedAnn.get(), "mapName", "");
+        if (requestedMapName.isEmpty()) requestedMapName = fieldName;
+
+        VariableElement producerField = null;
+        var producerMapFields = new java.util.ArrayList<String>();
+        for (var enc : producerType.getEnclosedElements()) {
+            if (enc.getKind() != ElementKind.FIELD) continue;
+            VariableElement vf = (VariableElement) enc;
+            // @BPFMapDefinition is @Target(TYPE_USE) — sits on the field's type.
+            if (!hasAnnotation(vf.asType(), BPF_MAP_DEFINITION)) continue;
+            producerMapFields.add(vf.getSimpleName().toString());
+            if (vf.getSimpleName().toString().equals(requestedMapName)) {
+                producerField = vf;
+            }
+        }
+        if (producerField == null) {
+            this.processingEnv.getMessager().printError(
+                    "@SharedFrom: producer class " + producerType.getQualifiedName()
+                            + " has no @BPFMapDefinition field '" + requestedMapName + "'."
+                            + " Producer fields: " + producerMapFields, field);
+            return null;
+        }
+
+        // 3) Compare raw map class (BPFHashMap vs BPFLRUHashMap, etc.).
+        TypeMirror producerFieldType = producerField.asType();
+        if (!(producerFieldType instanceof DeclaredType producerMapDecl)) {
+            this.processingEnv.getMessager().printError(
+                    "@SharedFrom: producer's '" + requestedMapName + "' field has unexpected type", field);
+            return null;
+        }
+        Element producerMapClass = producerMapDecl.asElement();
+        if (!consumerMapClass.toString().equals(producerMapClass.toString())) {
+            this.processingEnv.getMessager().printError(
+                    "@SharedFrom: field " + fieldName + " is " + consumerMapClass
+                            + " but producer's '" + requestedMapName + "' is " + producerMapClass + ".", field);
+            return null;
+        }
+
+        // 4) Walk type parameters.
+        var consumerArgs = consumerMapType.getTypeArguments();
+        var producerArgs = producerMapDecl.getTypeArguments();
+        if (consumerArgs.size() != producerArgs.size()) {
+            this.processingEnv.getMessager().printError(
+                    "@SharedFrom: type parameter count differs between consumer (" + consumerArgs.size()
+                            + ") and producer (" + producerArgs.size() + ")", field);
+            return null;
+        }
+        for (int i = 0; i < consumerArgs.size(); i++) {
+            if (!sharedFromTypesCompatible(field, requestedMapName, i,
+                    consumerArgs.get(i), producerArgs.get(i),
+                    producerType.getQualifiedName().toString())) {
+                return null;
+            }
+        }
+
+        // 5) Compare maxEntries.
+        var producerMapAnn = getAnnotationMirror(producerField.asType(), BPF_MAP_DEFINITION).orElse(null);
+        if (producerMapAnn != null) {
+            int producerMaxEntries = getAnnotationValue(producerMapAnn, "maxEntries", 0);
+            if (producerMaxEntries != consumerMaxEntries) {
+                this.processingEnv.getMessager().printError(
+                        "@SharedFrom: maxEntries mismatch on '" + requestedMapName
+                                + "': consumer declares " + consumerMaxEntries
+                                + ", producer " + producerType.getQualifiedName()
+                                + " declares " + producerMaxEntries
+                                + ". Pinned reuse requires identical sizing.", field);
+                return null;
+            }
+        }
+
+        return new SharedFromInfo(
+                producerType.getQualifiedName().toString(),
+                producerType.getSimpleName().toString(),
+                requestedMapName);
+    }
+
+    /**
+     * Compare two type-parameter mirrors for {@code @SharedFrom} compatibility.
+     * Returns {@code true} if compatible; otherwise emits a printError and returns
+     * {@code false}.
+     */
+    private boolean sharedFromTypesCompatible(VariableElement field, String mapName, int paramIndex,
+                                              TypeMirror consumerArg, TypeMirror producerArg,
+                                              String producerFqn) {
+        // Same TypeElement? Trivially OK (consumer used producer's @Type directly).
+        if (processingEnv.getTypeUtils().isSameType(consumerArg, producerArg)) {
+            return true;
+        }
+        // Try framework type comparison via toString.
+        // (Both Long/Integer/etc. and @Type classes have stable toString forms.)
+        String c = consumerArg.toString();
+        String p = producerArg.toString();
+        if (c.equals(p)) return true;
+
+        // Distinct @Type classes — check structural equivalence.
+        Element ce = processingEnv.getTypeUtils().asElement(consumerArg);
+        Element pe = processingEnv.getTypeUtils().asElement(producerArg);
+        if (ce instanceof TypeElement consumerTE
+                && pe instanceof TypeElement producerTE
+                && hasAnnotation(consumerTE, TYPE_ANNOTATION)
+                && hasAnnotation(producerTE, TYPE_ANNOTATION)) {
+            return checkStructuralEquivalence(field, mapName, paramIndex, consumerTE, producerTE, producerFqn);
+        }
+
+        this.processingEnv.getMessager().printError(
+                "@SharedFrom: type-parameter " + paramIndex + " on '" + mapName
+                        + "' differs: consumer is " + c + ", producer " + producerFqn + " is " + p
+                        + ". Use the producer's @Type directly to share the definition "
+                        + "(e.g. " + producerFqn + "." + simpleName(p) + ").", field);
+        return false;
+    }
+
+    private static String simpleName(String fqn) {
+        int dot = fqn.lastIndexOf('.');
+        return dot < 0 ? fqn : fqn.substring(dot + 1);
+    }
+
+    /**
+     * Walk fields of two {@code @Type} classes and verify byte-identical layout.
+     * Reports the first offending field and returns {@code false}.
+     */
+    private boolean checkStructuralEquivalence(VariableElement field, String mapName, int paramIndex,
+                                               TypeElement consumerType, TypeElement producerType,
+                                               String producerFqn) {
+        Map<String, TypeMirror> producerFields = new LinkedHashMap<>();
+        for (var enc : producerType.getEnclosedElements()) {
+            if (enc.getKind() != ElementKind.FIELD) continue;
+            VariableElement v = (VariableElement) enc;
+            if (v.getModifiers().contains(Modifier.STATIC)) continue;
+            producerFields.put(v.getSimpleName().toString(), v.asType());
+        }
+        Map<String, TypeMirror> consumerFields = new LinkedHashMap<>();
+        for (var enc : consumerType.getEnclosedElements()) {
+            if (enc.getKind() != ElementKind.FIELD) continue;
+            VariableElement v = (VariableElement) enc;
+            if (v.getModifiers().contains(Modifier.STATIC)) continue;
+            consumerFields.put(v.getSimpleName().toString(), v.asType());
+        }
+        // Missing on producer side?
+        for (var fn : consumerFields.keySet()) {
+            if (!producerFields.containsKey(fn)) {
+                this.processingEnv.getMessager().printError(
+                        "@SharedFrom: type " + consumerType.getSimpleName() + " on '" + mapName
+                                + "' has field '" + fn + "' but producer " + producerFqn + "'s "
+                                + producerType.getSimpleName() + " does not."
+                                + " Use " + producerFqn + "." + producerType.getSimpleName()
+                                + " directly to share the definition.", field);
+                return false;
+            }
+        }
+        // Extra on producer side?
+        for (var fn : producerFields.keySet()) {
+            if (!consumerFields.containsKey(fn)) {
+                this.processingEnv.getMessager().printError(
+                        "@SharedFrom: producer " + producerFqn + "'s " + producerType.getSimpleName()
+                                + " on '" + mapName + "' has field '" + fn
+                                + "' but consumer " + consumerType.getSimpleName() + " is missing it."
+                                + " Use " + producerFqn + "." + producerType.getSimpleName()
+                                + " directly to share the definition.", field);
+                return false;
+            }
+        }
+        // Field types differ?
+        for (var entry : consumerFields.entrySet()) {
+            TypeMirror ct = entry.getValue();
+            TypeMirror pt = producerFields.get(entry.getKey());
+            if (!ct.toString().equals(pt.toString())) {
+                this.processingEnv.getMessager().printError(
+                        "@SharedFrom: type-parameter " + paramIndex + " on '" + mapName
+                                + "' — field '" + entry.getKey() + "' has type '" + ct + "' here but '"
+                                + pt + "' in " + producerFqn + "." + producerType.getSimpleName() + "."
+                                + " Use BPFHashMap with " + producerFqn + "." + producerType.getSimpleName()
+                                + " to share the definition.", field);
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     String processBPFClassJavaTemplate(VariableElement field, String javaTemplate,
                                        List<BPFTypeLike<?>> typeParams, Integer maxEntries,
