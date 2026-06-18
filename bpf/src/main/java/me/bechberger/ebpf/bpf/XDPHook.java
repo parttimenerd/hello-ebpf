@@ -30,13 +30,36 @@ public interface XDPHook {
     short ETH_P_ARP = (short)0x0806;
 
     /**
-     * XDP hook function that get's passed all incoming packets
-     * @param ctx XDP context which includes the network packet
+     * XDP hook — override this method to handle incoming packets.
+     *
+     * <p>The {@link XDPContext} parameter provides ergonomic access to packet data:
+     * {@link XDPContext#length()}, {@link XDPContext#boundsOk(int, int)},
+     * {@link XDPContext#byteAt(int)}, etc.
+     *
+     * <p>The compiler plugin lowers {@code XDPContext} to {@code struct xdp_md *} in the
+     * generated C, so this method compiles to a proper {@code SEC("xdp")} entry point.
+     *
+     * @param ctx XDP context wrapping the incoming packet
      * @return what to do with the packet ({@link xdp_action#XDP_PASS}, ...)
      */
     @BPFFunction(section = "xdp")
     @NotUsableInJava
-    xdp_action xdpHandlePacket(Ptr<xdp_md> ctx);
+    default xdp_action xdpHandlePacket(XDPContext ctx) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Legacy XDP hook using a raw {@code Ptr<xdp_md>}.
+     *
+     * @deprecated Override {@link #xdpHandlePacket(XDPContext)} instead — it provides
+     *             the same functionality with an ergonomic context object.
+     */
+    @Deprecated
+    @BPFFunction(section = "xdp")
+    @NotUsableInJava
+    default xdp_action xdpHandlePacket(Ptr<xdp_md> ctx) {
+        throw new MethodIsBPFRelatedFunction();
+    }
 
     /**
      * Attach this program to a network interfaces

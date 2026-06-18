@@ -398,6 +398,18 @@ hello-ebpf.iml
 *.zst
 *.c
 kprobe*
+!kprobe*.java
 vmlinux*
 **/jextract-*
 .bpf.compile.cache
+
+# Local-only planning notes (not committed; see SYNC_WORKFLOW.md)
+IMPLEMENTATION_PLAN.md
+TODO.md
+TESTING_PLAN.md
+SYNC_WORKFLOW.md
+.plans/
+
+# Sync daemon runtime state
+scripts/.sync-watch.pid
+scripts/.sync-watch.log.vng-test-logs/

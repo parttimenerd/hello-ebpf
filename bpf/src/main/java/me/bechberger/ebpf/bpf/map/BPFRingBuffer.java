@@ -16,6 +16,7 @@ import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.lang.foreign.ValueLayout.JAVA_INT;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_ringbuf_reserve;
@@ -229,7 +230,7 @@ public class BPFRingBuffer<E> extends BPFMap {
                 if (ret.err() == ERRNO_EINVAL) {
                     return res; // don't know why this happens, but it does
                 }
-                if (ret.err() == 2) {
+                if (ret.err() == ERRNO_ENOENT) {
                     return res;
                 }
                 throw new BPFRingBufferError("Failed to consume events", ret.err());
@@ -252,11 +253,49 @@ public class BPFRingBuffer<E> extends BPFMap {
         return res.consumed();
     }
 
+    /**
+     * Drains all currently available events from the ring buffer into a list.
+     * <p>
+     * This method temporarily replaces the ring buffer's callback with a
+     * list-collecting callback, calls {@link #consume()}, then restores the
+     * original callback.  It is therefore only compatible with ring buffers
+     * constructed via {@link #BPFRingBuffer(FileDescriptor, BPFType)} (the
+     * deferred-callback constructor) — using it on a ring buffer whose
+     * callback was baked into {@link #initRingBuffer} will silently return an
+     * empty list because the native callback bypasses {@code this.callback}.
+     *
+     * @return snapshot list of events drained in this call
+     * @throws BPFRingBufferError if the underlying consume fails
+     */
+    public List<E> drainToList() {
+        List<E> collected = new ArrayList<>();
+        EventCallback<E> saved = this.callback;
+        this.callback = (_, event) -> collected.add(event);
+        try {
+            consumeAndThrow();
+        } finally {
+            this.callback = saved;
+        }
+        return collected;
+    }
+
+    /**
+     * Returns a {@link Stream} of all events currently available in the ring buffer.
+     * <p>
+     * Internally delegates to {@link #drainToList()}; see that method for
+     * compatibility notes.
+     *
+     * @return stream of drained events
+     */
+    public Stream<E> stream() {
+        return drainToList().stream();
+    }
+
     @Override
     public void close() {
+        Lib.ring_buffer__free(rb);
+        ringArena.close();
         super.close();
-        // Lib.ring_buffer__free(rb); // TODO: why?
-        //ringArena.close();
     }
 
     /**

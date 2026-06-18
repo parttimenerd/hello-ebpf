@@ -9,7 +9,7 @@
 
   <name>bpf-compiler-plugin-test</name>
   <url>https://github.com/parttimenerd/hello-ebpf</url>
-  <version>0.1.1-scx-enabled-SNAPSHOT</version>
+  <version>0.1.4</version>
 
   <licenses>
     <license>
@@ -55,6 +55,7 @@
           <compilerArgs>
             <arg>-Xplugin:BPFCompilerPlugin</arg>
           </compilerArgs>
+          <showWarnings>true</showWarnings>
         </configuration>
       </plugin>
       <plugin>
@@ -119,6 +120,6 @@
   <parent>
     <groupId>me.bechberger</groupId>
     <artifactId>hello-ebpf</artifactId>
-    <version>0.1.1-scx-enabled-SNAPSHOT</version>
+    <version>0.1.4</version>
   </parent>
 </project>

@@ -1,0 +1,3086 @@
+/** Auto-generated */
+package me.bechberger.ebpf.runtime;
+
+import me.bechberger.ebpf.annotations.EnumMember;
+import me.bechberger.ebpf.annotations.InlineUnion;
+import me.bechberger.ebpf.annotations.Offset;
+import me.bechberger.ebpf.annotations.OriginalName;
+import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.Type;
+import me.bechberger.ebpf.annotations.Unsigned;
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
+import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
+import me.bechberger.ebpf.type.Enum;
+import me.bechberger.ebpf.type.Ptr;
+import me.bechberger.ebpf.type.Struct;
+import me.bechberger.ebpf.type.TypedEnum;
+import me.bechberger.ebpf.type.TypedefBase;
+import me.bechberger.ebpf.type.Union;
+import org.jetbrains.annotations.Nullable;
+import static me.bechberger.ebpf.runtime.AaDefinitions.*;
+import static me.bechberger.ebpf.runtime.AafsDefinitions.*;
+import static me.bechberger.ebpf.runtime.Aat2870Definitions.*;
+import static me.bechberger.ebpf.runtime.AccountDefinitions.*;
+import static me.bechberger.ebpf.runtime.AcctDefinitions.*;
+import static me.bechberger.ebpf.runtime.AcompDefinitions.*;
+import static me.bechberger.ebpf.runtime.AcpiDefinitions.*;
+import static me.bechberger.ebpf.runtime.AcpiphpDefinitions.*;
+import static me.bechberger.ebpf.runtime.ActionDefinitions.*;
+import static me.bechberger.ebpf.runtime.ActiveDefinitions.*;
+import static me.bechberger.ebpf.runtime.AddDefinitions.*;
+import static me.bechberger.ebpf.runtime.AddrDefinitions.*;
+import static me.bechberger.ebpf.runtime.AddrconfDefinitions.*;
+import static me.bechberger.ebpf.runtime.AdjustDefinitions.*;
+import static me.bechberger.ebpf.runtime.AdlDefinitions.*;
+import static me.bechberger.ebpf.runtime.Adp5520Definitions.*;
+import static me.bechberger.ebpf.runtime.AdvisorDefinitions.*;
+import static me.bechberger.ebpf.runtime.AeadDefinitions.*;
+import static me.bechberger.ebpf.runtime.AerDefinitions.*;
+import static me.bechberger.ebpf.runtime.AgpDefinitions.*;
+import static me.bechberger.ebpf.runtime.AhashDefinitions.*;
+import static me.bechberger.ebpf.runtime.AioDefinitions.*;
+import static me.bechberger.ebpf.runtime.AlarmDefinitions.*;
+import static me.bechberger.ebpf.runtime.AllocDefinitions.*;
+import static me.bechberger.ebpf.runtime.AllocateDefinitions.*;
+import static me.bechberger.ebpf.runtime.AmdDefinitions.*;
+import static me.bechberger.ebpf.runtime.AmlDefinitions.*;
+import static me.bechberger.ebpf.runtime.AnonDefinitions.*;
+import static me.bechberger.ebpf.runtime.ApeiDefinitions.*;
+import static me.bechberger.ebpf.runtime.ApicDefinitions.*;
+import static me.bechberger.ebpf.runtime.ApparmorDefinitions.*;
+import static me.bechberger.ebpf.runtime.AppendDefinitions.*;
+import static me.bechberger.ebpf.runtime.ApplyDefinitions.*;
+import static me.bechberger.ebpf.runtime.ArchDefinitions.*;
+import static me.bechberger.ebpf.runtime.ArenaDefinitions.*;
+import static me.bechberger.ebpf.runtime.ArpDefinitions.*;
+import static me.bechberger.ebpf.runtime.ArrayDefinitions.*;
+import static me.bechberger.ebpf.runtime.Asn1Definitions.*;
+import static me.bechberger.ebpf.runtime.AssocDefinitions.*;
+import static me.bechberger.ebpf.runtime.AsymmetricDefinitions.*;
+import static me.bechberger.ebpf.runtime.AsyncDefinitions.*;
+import static me.bechberger.ebpf.runtime.AtaDefinitions.*;
+import static me.bechberger.ebpf.runtime.AtkbdDefinitions.*;
+import static me.bechberger.ebpf.runtime.AtomicDefinitions.*;
+import static me.bechberger.ebpf.runtime.AttachDefinitions.*;
+import static me.bechberger.ebpf.runtime.AttributeDefinitions.*;
+import static me.bechberger.ebpf.runtime.AuditDefinitions.*;
+import static me.bechberger.ebpf.runtime.AuxiliaryDefinitions.*;
+import static me.bechberger.ebpf.runtime.AvailableDefinitions.*;
+import static me.bechberger.ebpf.runtime.AvcDefinitions.*;
+import static me.bechberger.ebpf.runtime.AvtabDefinitions.*;
+import static me.bechberger.ebpf.runtime.BackingDefinitions.*;
+import static me.bechberger.ebpf.runtime.BacklightDefinitions.*;
+import static me.bechberger.ebpf.runtime.BadDefinitions.*;
+import static me.bechberger.ebpf.runtime.BadblocksDefinitions.*;
+import static me.bechberger.ebpf.runtime.BalanceDefinitions.*;
+import static me.bechberger.ebpf.runtime.BalloonDefinitions.*;
+import static me.bechberger.ebpf.runtime.BdevDefinitions.*;
+import static me.bechberger.ebpf.runtime.BdiDefinitions.*;
+import static me.bechberger.ebpf.runtime.BgpioDefinitions.*;
+import static me.bechberger.ebpf.runtime.BhDefinitions.*;
+import static me.bechberger.ebpf.runtime.BindDefinitions.*;
+import static me.bechberger.ebpf.runtime.BioDefinitions.*;
+import static me.bechberger.ebpf.runtime.BitmapDefinitions.*;
+import static me.bechberger.ebpf.runtime.Blake2sDefinitions.*;
+import static me.bechberger.ebpf.runtime.BlkDefinitions.*;
+import static me.bechberger.ebpf.runtime.BlkcgDefinitions.*;
+import static me.bechberger.ebpf.runtime.BlkdevDefinitions.*;
+import static me.bechberger.ebpf.runtime.BlkgDefinitions.*;
+import static me.bechberger.ebpf.runtime.BlkifDefinitions.*;
+import static me.bechberger.ebpf.runtime.BlockDefinitions.*;
+import static me.bechberger.ebpf.runtime.BloomDefinitions.*;
+import static me.bechberger.ebpf.runtime.BootDefinitions.*;
+import static me.bechberger.ebpf.runtime.BpfDefinitions.*;
+import static me.bechberger.ebpf.runtime.BqlDefinitions.*;
+import static me.bechberger.ebpf.runtime.BsgDefinitions.*;
+import static me.bechberger.ebpf.runtime.BtfDefinitions.*;
+import static me.bechberger.ebpf.runtime.BtreeDefinitions.*;
+import static me.bechberger.ebpf.runtime.BtsDefinitions.*;
+import static me.bechberger.ebpf.runtime.BufferDefinitions.*;
+import static me.bechberger.ebpf.runtime.BuildDefinitions.*;
+import static me.bechberger.ebpf.runtime.BusDefinitions.*;
+import static me.bechberger.ebpf.runtime.BytDefinitions.*;
+import static me.bechberger.ebpf.runtime.CacheDefinitions.*;
+import static me.bechberger.ebpf.runtime.CalcDefinitions.*;
+import static me.bechberger.ebpf.runtime.CalculateDefinitions.*;
+import static me.bechberger.ebpf.runtime.CalipsoDefinitions.*;
+import static me.bechberger.ebpf.runtime.CallDefinitions.*;
+import static me.bechberger.ebpf.runtime.CanDefinitions.*;
+import static me.bechberger.ebpf.runtime.CapDefinitions.*;
+import static me.bechberger.ebpf.runtime.CcDefinitions.*;
+import static me.bechberger.ebpf.runtime.CdevDefinitions.*;
+import static me.bechberger.ebpf.runtime.CdromDefinitions.*;
+import static me.bechberger.ebpf.runtime.CeaDefinitions.*;
+import static me.bechberger.ebpf.runtime.Cfg80211Definitions.*;
+import static me.bechberger.ebpf.runtime.Cgroup1Definitions.*;
+import static me.bechberger.ebpf.runtime.CgroupDefinitions.*;
+import static me.bechberger.ebpf.runtime.ChangeDefinitions.*;
+import static me.bechberger.ebpf.runtime.ChargerDefinitions.*;
+import static me.bechberger.ebpf.runtime.CheckDefinitions.*;
+import static me.bechberger.ebpf.runtime.ChvDefinitions.*;
+import static me.bechberger.ebpf.runtime.CipsoDefinitions.*;
+import static me.bechberger.ebpf.runtime.ClassDefinitions.*;
+import static me.bechberger.ebpf.runtime.CleanDefinitions.*;
+import static me.bechberger.ebpf.runtime.CleanupDefinitions.*;
+import static me.bechberger.ebpf.runtime.ClearDefinitions.*;
+import static me.bechberger.ebpf.runtime.ClkDefinitions.*;
+import static me.bechberger.ebpf.runtime.ClockeventsDefinitions.*;
+import static me.bechberger.ebpf.runtime.ClocksourceDefinitions.*;
+import static me.bechberger.ebpf.runtime.ClosureDefinitions.*;
+import static me.bechberger.ebpf.runtime.CmaDefinitions.*;
+import static me.bechberger.ebpf.runtime.CmciDefinitions.*;
+import static me.bechberger.ebpf.runtime.CmdlineDefinitions.*;
+import static me.bechberger.ebpf.runtime.CmisDefinitions.*;
+import static me.bechberger.ebpf.runtime.CmosDefinitions.*;
+import static me.bechberger.ebpf.runtime.CmpDefinitions.*;
+import static me.bechberger.ebpf.runtime.CnDefinitions.*;
+import static me.bechberger.ebpf.runtime.CollapseDefinitions.*;
+import static me.bechberger.ebpf.runtime.CollectDefinitions.*;
+import static me.bechberger.ebpf.runtime.CommonDefinitions.*;
+import static me.bechberger.ebpf.runtime.CompactionDefinitions.*;
+import static me.bechberger.ebpf.runtime.CompatDefinitions.*;
+import static me.bechberger.ebpf.runtime.ComponentDefinitions.*;
+import static me.bechberger.ebpf.runtime.ComputeDefinitions.*;
+import static me.bechberger.ebpf.runtime.ConDefinitions.*;
+import static me.bechberger.ebpf.runtime.CondDefinitions.*;
+import static me.bechberger.ebpf.runtime.ConfigDefinitions.*;
+import static me.bechberger.ebpf.runtime.ConfigfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.ConsoleDefinitions.*;
+import static me.bechberger.ebpf.runtime.ContextDefinitions.*;
+import static me.bechberger.ebpf.runtime.ConvertDefinitions.*;
+import static me.bechberger.ebpf.runtime.CookieDefinitions.*;
+import static me.bechberger.ebpf.runtime.CopyDefinitions.*;
+import static me.bechberger.ebpf.runtime.CoreDefinitions.*;
+import static me.bechberger.ebpf.runtime.CoredumpDefinitions.*;
+import static me.bechberger.ebpf.runtime.CountDefinitions.*;
+import static me.bechberger.ebpf.runtime.CpciDefinitions.*;
+import static me.bechberger.ebpf.runtime.CperDefinitions.*;
+import static me.bechberger.ebpf.runtime.CppcDefinitions.*;
+import static me.bechberger.ebpf.runtime.CpuDefinitions.*;
+import static me.bechberger.ebpf.runtime.CpuacctDefinitions.*;
+import static me.bechberger.ebpf.runtime.CpufreqDefinitions.*;
+import static me.bechberger.ebpf.runtime.CpuhpDefinitions.*;
+import static me.bechberger.ebpf.runtime.CpuidleDefinitions.*;
+import static me.bechberger.ebpf.runtime.CpumaskDefinitions.*;
+import static me.bechberger.ebpf.runtime.CpusDefinitions.*;
+import static me.bechberger.ebpf.runtime.CpusetDefinitions.*;
+import static me.bechberger.ebpf.runtime.CrashDefinitions.*;
+import static me.bechberger.ebpf.runtime.CrbDefinitions.*;
+import static me.bechberger.ebpf.runtime.Crc64Definitions.*;
+import static me.bechberger.ebpf.runtime.CreateDefinitions.*;
+import static me.bechberger.ebpf.runtime.CryptoDefinitions.*;
+import static me.bechberger.ebpf.runtime.CrystalcoveDefinitions.*;
+import static me.bechberger.ebpf.runtime.CssDefinitions.*;
+import static me.bechberger.ebpf.runtime.CsumDefinitions.*;
+import static me.bechberger.ebpf.runtime.CtDefinitions.*;
+import static me.bechberger.ebpf.runtime.CtrlDefinitions.*;
+import static me.bechberger.ebpf.runtime.CtxDefinitions.*;
+import static me.bechberger.ebpf.runtime.CurrentDefinitions.*;
+import static me.bechberger.ebpf.runtime.CxlDefinitions.*;
+import static me.bechberger.ebpf.runtime.DDefinitions.*;
+import static me.bechberger.ebpf.runtime.Da903xDefinitions.*;
+import static me.bechberger.ebpf.runtime.Da9052Definitions.*;
+import static me.bechberger.ebpf.runtime.Da9063Definitions.*;
+import static me.bechberger.ebpf.runtime.DataDefinitions.*;
+import static me.bechberger.ebpf.runtime.DaxDefinitions.*;
+import static me.bechberger.ebpf.runtime.DbcDefinitions.*;
+import static me.bechberger.ebpf.runtime.DbgDefinitions.*;
+import static me.bechberger.ebpf.runtime.DcbDefinitions.*;
+import static me.bechberger.ebpf.runtime.DcbnlDefinitions.*;
+import static me.bechberger.ebpf.runtime.DdDefinitions.*;
+import static me.bechberger.ebpf.runtime.DdebugDefinitions.*;
+import static me.bechberger.ebpf.runtime.DeadlineDefinitions.*;
+import static me.bechberger.ebpf.runtime.DebugDefinitions.*;
+import static me.bechberger.ebpf.runtime.DebugfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.DecDefinitions.*;
+import static me.bechberger.ebpf.runtime.DefaultDefinitions.*;
+import static me.bechberger.ebpf.runtime.DeferredDefinitions.*;
+import static me.bechberger.ebpf.runtime.DeflateDefinitions.*;
+import static me.bechberger.ebpf.runtime.DelayacctDefinitions.*;
+import static me.bechberger.ebpf.runtime.DelayedDefinitions.*;
+import static me.bechberger.ebpf.runtime.DeleteDefinitions.*;
+import static me.bechberger.ebpf.runtime.DentryDefinitions.*;
+import static me.bechberger.ebpf.runtime.DequeueDefinitions.*;
+import static me.bechberger.ebpf.runtime.DescDefinitions.*;
+import static me.bechberger.ebpf.runtime.DestroyDefinitions.*;
+import static me.bechberger.ebpf.runtime.DetachDefinitions.*;
+import static me.bechberger.ebpf.runtime.DevDefinitions.*;
+import static me.bechberger.ebpf.runtime.DevcdDefinitions.*;
+import static me.bechberger.ebpf.runtime.DevfreqDefinitions.*;
+import static me.bechberger.ebpf.runtime.DeviceDefinitions.*;
+import static me.bechberger.ebpf.runtime.DevlDefinitions.*;
+import static me.bechberger.ebpf.runtime.DevlinkDefinitions.*;
+import static me.bechberger.ebpf.runtime.DevmDefinitions.*;
+import static me.bechberger.ebpf.runtime.DevptsDefinitions.*;
+import static me.bechberger.ebpf.runtime.DevresDefinitions.*;
+import static me.bechberger.ebpf.runtime.DhDefinitions.*;
+import static me.bechberger.ebpf.runtime.DimDefinitions.*;
+import static me.bechberger.ebpf.runtime.DisableDefinitions.*;
+import static me.bechberger.ebpf.runtime.DiskDefinitions.*;
+import static me.bechberger.ebpf.runtime.DispatchDefinitions.*;
+import static me.bechberger.ebpf.runtime.DisplayidDefinitions.*;
+import static me.bechberger.ebpf.runtime.DlDefinitions.*;
+import static me.bechberger.ebpf.runtime.DmDefinitions.*;
+import static me.bechberger.ebpf.runtime.DmaDefinitions.*;
+import static me.bechberger.ebpf.runtime.DmabufDefinitions.*;
+import static me.bechberger.ebpf.runtime.DmaengineDefinitions.*;
+import static me.bechberger.ebpf.runtime.DmarDefinitions.*;
+import static me.bechberger.ebpf.runtime.DmemDefinitions.*;
+import static me.bechberger.ebpf.runtime.DmiDefinitions.*;
+import static me.bechberger.ebpf.runtime.DnsDefinitions.*;
+import static me.bechberger.ebpf.runtime.DoDefinitions.*;
+import static me.bechberger.ebpf.runtime.DomainDefinitions.*;
+import static me.bechberger.ebpf.runtime.DownDefinitions.*;
+import static me.bechberger.ebpf.runtime.DpcDefinitions.*;
+import static me.bechberger.ebpf.runtime.DpllDefinitions.*;
+import static me.bechberger.ebpf.runtime.DpmDefinitions.*;
+import static me.bechberger.ebpf.runtime.DquotDefinitions.*;
+import static me.bechberger.ebpf.runtime.DrainDefinitions.*;
+import static me.bechberger.ebpf.runtime.DrbgDefinitions.*;
+import static me.bechberger.ebpf.runtime.DriverDefinitions.*;
+import static me.bechberger.ebpf.runtime.DrmDefinitions.*;
+import static me.bechberger.ebpf.runtime.DrmmDefinitions.*;
+import static me.bechberger.ebpf.runtime.DropDefinitions.*;
+import static me.bechberger.ebpf.runtime.DsaDefinitions.*;
+import static me.bechberger.ebpf.runtime.DstDefinitions.*;
+import static me.bechberger.ebpf.runtime.DummyDefinitions.*;
+import static me.bechberger.ebpf.runtime.DummyconDefinitions.*;
+import static me.bechberger.ebpf.runtime.DumpDefinitions.*;
+import static me.bechberger.ebpf.runtime.DupDefinitions.*;
+import static me.bechberger.ebpf.runtime.DvdDefinitions.*;
+import static me.bechberger.ebpf.runtime.DwDefinitions.*;
+import static me.bechberger.ebpf.runtime.Dwc2Definitions.*;
+import static me.bechberger.ebpf.runtime.DxDefinitions.*;
+import static me.bechberger.ebpf.runtime.DynDefinitions.*;
+import static me.bechberger.ebpf.runtime.DyneventDefinitions.*;
+import static me.bechberger.ebpf.runtime.EafnosupportDefinitions.*;
+import static me.bechberger.ebpf.runtime.EarlyDefinitions.*;
+import static me.bechberger.ebpf.runtime.EbitmapDefinitions.*;
+import static me.bechberger.ebpf.runtime.EcDefinitions.*;
+import static me.bechberger.ebpf.runtime.EccDefinitions.*;
+import static me.bechberger.ebpf.runtime.EcryptfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.EdacDefinitions.*;
+import static me.bechberger.ebpf.runtime.EddDefinitions.*;
+import static me.bechberger.ebpf.runtime.EdidDefinitions.*;
+import static me.bechberger.ebpf.runtime.EfiDefinitions.*;
+import static me.bechberger.ebpf.runtime.EfivarDefinitions.*;
+import static me.bechberger.ebpf.runtime.EfivarfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.EhciDefinitions.*;
+import static me.bechberger.ebpf.runtime.ElantsDefinitions.*;
+import static me.bechberger.ebpf.runtime.ElevatorDefinitions.*;
+import static me.bechberger.ebpf.runtime.ElfDefinitions.*;
+import static me.bechberger.ebpf.runtime.ElvDefinitions.*;
+import static me.bechberger.ebpf.runtime.EmDefinitions.*;
+import static me.bechberger.ebpf.runtime.EmitDefinitions.*;
+import static me.bechberger.ebpf.runtime.EnableDefinitions.*;
+import static me.bechberger.ebpf.runtime.EndDefinitions.*;
+import static me.bechberger.ebpf.runtime.EnqueueDefinitions.*;
+import static me.bechberger.ebpf.runtime.EpDefinitions.*;
+import static me.bechberger.ebpf.runtime.EprobeDefinitions.*;
+import static me.bechberger.ebpf.runtime.ErstDefinitions.*;
+import static me.bechberger.ebpf.runtime.EspintcpDefinitions.*;
+import static me.bechberger.ebpf.runtime.EthDefinitions.*;
+import static me.bechberger.ebpf.runtime.EthnlDefinitions.*;
+import static me.bechberger.ebpf.runtime.EthtoolDefinitions.*;
+import static me.bechberger.ebpf.runtime.EvdevDefinitions.*;
+import static me.bechberger.ebpf.runtime.EventDefinitions.*;
+import static me.bechberger.ebpf.runtime.EventfdDefinitions.*;
+import static me.bechberger.ebpf.runtime.EventfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.EvmDefinitions.*;
+import static me.bechberger.ebpf.runtime.EvtchnDefinitions.*;
+import static me.bechberger.ebpf.runtime.ExcDefinitions.*;
+import static me.bechberger.ebpf.runtime.ExecmemDefinitions.*;
+import static me.bechberger.ebpf.runtime.ExitDefinitions.*;
+import static me.bechberger.ebpf.runtime.Ext4Definitions.*;
+import static me.bechberger.ebpf.runtime.ExtconDefinitions.*;
+import static me.bechberger.ebpf.runtime.FDefinitions.*;
+import static me.bechberger.ebpf.runtime.FanotifyDefinitions.*;
+import static me.bechberger.ebpf.runtime.FatDefinitions.*;
+import static me.bechberger.ebpf.runtime.FaultDefinitions.*;
+import static me.bechberger.ebpf.runtime.FauxDefinitions.*;
+import static me.bechberger.ebpf.runtime.FbDefinitions.*;
+import static me.bechberger.ebpf.runtime.FbconDefinitions.*;
+import static me.bechberger.ebpf.runtime.FdtDefinitions.*;
+import static me.bechberger.ebpf.runtime.FfDefinitions.*;
+import static me.bechberger.ebpf.runtime.FgraphDefinitions.*;
+import static me.bechberger.ebpf.runtime.Fib4Definitions.*;
+import static me.bechberger.ebpf.runtime.Fib6Definitions.*;
+import static me.bechberger.ebpf.runtime.FibDefinitions.*;
+import static me.bechberger.ebpf.runtime.FifoDefinitions.*;
+import static me.bechberger.ebpf.runtime.FileDefinitions.*;
+import static me.bechberger.ebpf.runtime.FilemapDefinitions.*;
+import static me.bechberger.ebpf.runtime.FilenameDefinitions.*;
+import static me.bechberger.ebpf.runtime.FillDefinitions.*;
+import static me.bechberger.ebpf.runtime.FilterDefinitions.*;
+import static me.bechberger.ebpf.runtime.FindDefinitions.*;
+import static me.bechberger.ebpf.runtime.FinishDefinitions.*;
+import static me.bechberger.ebpf.runtime.FirmwareDefinitions.*;
+import static me.bechberger.ebpf.runtime.FixedDefinitions.*;
+import static me.bechberger.ebpf.runtime.FixupDefinitions.*;
+import static me.bechberger.ebpf.runtime.FlowDefinitions.*;
+import static me.bechberger.ebpf.runtime.FlushDefinitions.*;
+import static me.bechberger.ebpf.runtime.FnDefinitions.*;
+import static me.bechberger.ebpf.runtime.FolioDefinitions.*;
+import static me.bechberger.ebpf.runtime.FollowDefinitions.*;
+import static me.bechberger.ebpf.runtime.FopsDefinitions.*;
+import static me.bechberger.ebpf.runtime.ForDefinitions.*;
+import static me.bechberger.ebpf.runtime.ForceDefinitions.*;
+import static me.bechberger.ebpf.runtime.FprobeDefinitions.*;
+import static me.bechberger.ebpf.runtime.FpuDefinitions.*;
+import static me.bechberger.ebpf.runtime.FredDefinitions.*;
+import static me.bechberger.ebpf.runtime.FreeDefinitions.*;
+import static me.bechberger.ebpf.runtime.FreezeDefinitions.*;
+import static me.bechberger.ebpf.runtime.FreezerDefinitions.*;
+import static me.bechberger.ebpf.runtime.FreqDefinitions.*;
+import static me.bechberger.ebpf.runtime.FromDefinitions.*;
+import static me.bechberger.ebpf.runtime.FsDefinitions.*;
+import static me.bechberger.ebpf.runtime.FscryptDefinitions.*;
+import static me.bechberger.ebpf.runtime.FseDefinitions.*;
+import static me.bechberger.ebpf.runtime.FsnotifyDefinitions.*;
+import static me.bechberger.ebpf.runtime.FsverityDefinitions.*;
+import static me.bechberger.ebpf.runtime.FtraceDefinitions.*;
+import static me.bechberger.ebpf.runtime.FullDefinitions.*;
+import static me.bechberger.ebpf.runtime.FunctionDefinitions.*;
+import static me.bechberger.ebpf.runtime.FuseDefinitions.*;
+import static me.bechberger.ebpf.runtime.FutexDefinitions.*;
+import static me.bechberger.ebpf.runtime.FwDefinitions.*;
+import static me.bechberger.ebpf.runtime.FwnodeDefinitions.*;
+import static me.bechberger.ebpf.runtime.GartDefinitions.*;
+import static me.bechberger.ebpf.runtime.GcmDefinitions.*;
+import static me.bechberger.ebpf.runtime.GenDefinitions.*;
+import static me.bechberger.ebpf.runtime.GenericDefinitions.*;
+import static me.bechberger.ebpf.runtime.GenlDefinitions.*;
+import static me.bechberger.ebpf.runtime.GenpdDefinitions.*;
+import static me.bechberger.ebpf.runtime.GenphyDefinitions.*;
+import static me.bechberger.ebpf.runtime.GetDefinitions.*;
+import static me.bechberger.ebpf.runtime.GhesDefinitions.*;
+import static me.bechberger.ebpf.runtime.GnetDefinitions.*;
+import static me.bechberger.ebpf.runtime.GnttabDefinitions.*;
+import static me.bechberger.ebpf.runtime.GpioDefinitions.*;
+import static me.bechberger.ebpf.runtime.GpiochipDefinitions.*;
+import static me.bechberger.ebpf.runtime.GpiodDefinitions.*;
+import static me.bechberger.ebpf.runtime.GpiolibDefinitions.*;
+import static me.bechberger.ebpf.runtime.GroDefinitions.*;
+import static me.bechberger.ebpf.runtime.GroupDefinitions.*;
+import static me.bechberger.ebpf.runtime.GupDefinitions.*;
+import static me.bechberger.ebpf.runtime.HandleDefinitions.*;
+import static me.bechberger.ebpf.runtime.HandshakeDefinitions.*;
+import static me.bechberger.ebpf.runtime.HasDefinitions.*;
+import static me.bechberger.ebpf.runtime.HashDefinitions.*;
+import static me.bechberger.ebpf.runtime.HcdDefinitions.*;
+import static me.bechberger.ebpf.runtime.HctxDefinitions.*;
+import static me.bechberger.ebpf.runtime.HdmiDefinitions.*;
+import static me.bechberger.ebpf.runtime.HfiDefinitions.*;
+import static me.bechberger.ebpf.runtime.HidDefinitions.*;
+import static me.bechberger.ebpf.runtime.HistDefinitions.*;
+import static me.bechberger.ebpf.runtime.HmacDefinitions.*;
+import static me.bechberger.ebpf.runtime.HmatDefinitions.*;
+import static me.bechberger.ebpf.runtime.HmmDefinitions.*;
+import static me.bechberger.ebpf.runtime.HookDefinitions.*;
+import static me.bechberger.ebpf.runtime.HpetDefinitions.*;
+import static me.bechberger.ebpf.runtime.HrtimerDefinitions.*;
+import static me.bechberger.ebpf.runtime.HsuDefinitions.*;
+import static me.bechberger.ebpf.runtime.HswepDefinitions.*;
+import static me.bechberger.ebpf.runtime.HtabDefinitions.*;
+import static me.bechberger.ebpf.runtime.HteDefinitions.*;
+import static me.bechberger.ebpf.runtime.HubDefinitions.*;
+import static me.bechberger.ebpf.runtime.HufDefinitions.*;
+import static me.bechberger.ebpf.runtime.HugepageDefinitions.*;
+import static me.bechberger.ebpf.runtime.HugetlbDefinitions.*;
+import static me.bechberger.ebpf.runtime.HugetlbfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.HvDefinitions.*;
+import static me.bechberger.ebpf.runtime.HvcDefinitions.*;
+import static me.bechberger.ebpf.runtime.HwDefinitions.*;
+import static me.bechberger.ebpf.runtime.HwlatDefinitions.*;
+import static me.bechberger.ebpf.runtime.HwmonDefinitions.*;
+import static me.bechberger.ebpf.runtime.HybridDefinitions.*;
+import static me.bechberger.ebpf.runtime.HypervDefinitions.*;
+import static me.bechberger.ebpf.runtime.HypervisorDefinitions.*;
+import static me.bechberger.ebpf.runtime.I2cDefinitions.*;
+import static me.bechberger.ebpf.runtime.I2cdevDefinitions.*;
+import static me.bechberger.ebpf.runtime.I8042Definitions.*;
+import static me.bechberger.ebpf.runtime.Ia32Definitions.*;
+import static me.bechberger.ebpf.runtime.IbDefinitions.*;
+import static me.bechberger.ebpf.runtime.IccDefinitions.*;
+import static me.bechberger.ebpf.runtime.IcmpDefinitions.*;
+import static me.bechberger.ebpf.runtime.Icmpv6Definitions.*;
+import static me.bechberger.ebpf.runtime.IcxDefinitions.*;
+import static me.bechberger.ebpf.runtime.IdleDefinitions.*;
+import static me.bechberger.ebpf.runtime.IdrDefinitions.*;
+import static me.bechberger.ebpf.runtime.Ieee80211Definitions.*;
+import static me.bechberger.ebpf.runtime.IflaDefinitions.*;
+import static me.bechberger.ebpf.runtime.Igmp6Definitions.*;
+import static me.bechberger.ebpf.runtime.IgmpDefinitions.*;
+import static me.bechberger.ebpf.runtime.ImaDefinitions.*;
+import static me.bechberger.ebpf.runtime.ImsttfbDefinitions.*;
+import static me.bechberger.ebpf.runtime.In6Definitions.*;
+import static me.bechberger.ebpf.runtime.InDefinitions.*;
+import static me.bechberger.ebpf.runtime.IncDefinitions.*;
+import static me.bechberger.ebpf.runtime.Inet6Definitions.*;
+import static me.bechberger.ebpf.runtime.InetDefinitions.*;
+import static me.bechberger.ebpf.runtime.InitDefinitions.*;
+import static me.bechberger.ebpf.runtime.InodeDefinitions.*;
+import static me.bechberger.ebpf.runtime.InotifyDefinitions.*;
+import static me.bechberger.ebpf.runtime.InputDefinitions.*;
+import static me.bechberger.ebpf.runtime.InsertDefinitions.*;
+import static me.bechberger.ebpf.runtime.InsnDefinitions.*;
+import static me.bechberger.ebpf.runtime.IntDefinitions.*;
+import static me.bechberger.ebpf.runtime.IntegrityDefinitions.*;
+import static me.bechberger.ebpf.runtime.IntelDefinitions.*;
+import static me.bechberger.ebpf.runtime.IntervalDefinitions.*;
+import static me.bechberger.ebpf.runtime.InvalidateDefinitions.*;
+import static me.bechberger.ebpf.runtime.IoDefinitions.*;
+import static me.bechberger.ebpf.runtime.Ioam6Definitions.*;
+import static me.bechberger.ebpf.runtime.IoapicDefinitions.*;
+import static me.bechberger.ebpf.runtime.IocDefinitions.*;
+import static me.bechberger.ebpf.runtime.IocgDefinitions.*;
+import static me.bechberger.ebpf.runtime.IoctlDefinitions.*;
+import static me.bechberger.ebpf.runtime.IomapDefinitions.*;
+import static me.bechberger.ebpf.runtime.IommuDefinitions.*;
+import static me.bechberger.ebpf.runtime.IommufdDefinitions.*;
+import static me.bechberger.ebpf.runtime.IopfDefinitions.*;
+import static me.bechberger.ebpf.runtime.IoremapDefinitions.*;
+import static me.bechberger.ebpf.runtime.IosfDefinitions.*;
+import static me.bechberger.ebpf.runtime.IovDefinitions.*;
+import static me.bechberger.ebpf.runtime.IovaDefinitions.*;
+import static me.bechberger.ebpf.runtime.Ip4Definitions.*;
+import static me.bechberger.ebpf.runtime.Ip6Definitions.*;
+import static me.bechberger.ebpf.runtime.Ip6addrlblDefinitions.*;
+import static me.bechberger.ebpf.runtime.Ip6mrDefinitions.*;
+import static me.bechberger.ebpf.runtime.IpDefinitions.*;
+import static me.bechberger.ebpf.runtime.IpcDefinitions.*;
+import static me.bechberger.ebpf.runtime.IpeDefinitions.*;
+import static me.bechberger.ebpf.runtime.IpmrDefinitions.*;
+import static me.bechberger.ebpf.runtime.Ipv4Definitions.*;
+import static me.bechberger.ebpf.runtime.Ipv6Definitions.*;
+import static me.bechberger.ebpf.runtime.IrqDefinitions.*;
+import static me.bechberger.ebpf.runtime.IrteDefinitions.*;
+import static me.bechberger.ebpf.runtime.IsDefinitions.*;
+import static me.bechberger.ebpf.runtime.IsaDefinitions.*;
+import static me.bechberger.ebpf.runtime.IsolateDefinitions.*;
+import static me.bechberger.ebpf.runtime.IterDefinitions.*;
+import static me.bechberger.ebpf.runtime.IvbepDefinitions.*;
+import static me.bechberger.ebpf.runtime.IwDefinitions.*;
+import static me.bechberger.ebpf.runtime.JailhouseDefinitions.*;
+import static me.bechberger.ebpf.runtime.Jbd2Definitions.*;
+import static me.bechberger.ebpf.runtime.JentDefinitions.*;
+import static me.bechberger.ebpf.runtime.JournalDefinitions.*;
+import static me.bechberger.ebpf.runtime.JumpDefinitions.*;
+import static me.bechberger.ebpf.runtime.KDefinitions.*;
+import static me.bechberger.ebpf.runtime.KallsymsDefinitions.*;
+import static me.bechberger.ebpf.runtime.KbdDefinitions.*;
+import static me.bechberger.ebpf.runtime.KdbDefinitions.*;
+import static me.bechberger.ebpf.runtime.KernDefinitions.*;
+import static me.bechberger.ebpf.runtime.KernelDefinitions.*;
+import static me.bechberger.ebpf.runtime.KernfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.KexecDefinitions.*;
+import static me.bechberger.ebpf.runtime.KeyDefinitions.*;
+import static me.bechberger.ebpf.runtime.KeyctlDefinitions.*;
+import static me.bechberger.ebpf.runtime.KeyringDefinitions.*;
+import static me.bechberger.ebpf.runtime.KfenceDefinitions.*;
+import static me.bechberger.ebpf.runtime.KfifoDefinitions.*;
+import static me.bechberger.ebpf.runtime.KfreeDefinitions.*;
+import static me.bechberger.ebpf.runtime.KgdbDefinitions.*;
+import static me.bechberger.ebpf.runtime.KgdbocDefinitions.*;
+import static me.bechberger.ebpf.runtime.KhoDefinitions.*;
+import static me.bechberger.ebpf.runtime.KillDefinitions.*;
+import static me.bechberger.ebpf.runtime.KimageDefinitions.*;
+import static me.bechberger.ebpf.runtime.KlistDefinitions.*;
+import static me.bechberger.ebpf.runtime.KlpDefinitions.*;
+import static me.bechberger.ebpf.runtime.KmallocDefinitions.*;
+import static me.bechberger.ebpf.runtime.KmemDefinitions.*;
+import static me.bechberger.ebpf.runtime.KmsgDefinitions.*;
+import static me.bechberger.ebpf.runtime.KobjDefinitions.*;
+import static me.bechberger.ebpf.runtime.KobjectDefinitions.*;
+import static me.bechberger.ebpf.runtime.KprobeDefinitions.*;
+import static me.bechberger.ebpf.runtime.KsmDefinitions.*;
+import static me.bechberger.ebpf.runtime.KsysDefinitions.*;
+import static me.bechberger.ebpf.runtime.KthreadDefinitions.*;
+import static me.bechberger.ebpf.runtime.KtimeDefinitions.*;
+import static me.bechberger.ebpf.runtime.KvmDefinitions.*;
+import static me.bechberger.ebpf.runtime.L3mdevDefinitions.*;
+import static me.bechberger.ebpf.runtime.LabelDefinitions.*;
+import static me.bechberger.ebpf.runtime.LandlockDefinitions.*;
+import static me.bechberger.ebpf.runtime.LapicDefinitions.*;
+import static me.bechberger.ebpf.runtime.LdmDefinitions.*;
+import static me.bechberger.ebpf.runtime.LdmaDefinitions.*;
+import static me.bechberger.ebpf.runtime.LedDefinitions.*;
+import static me.bechberger.ebpf.runtime.LedtrigDefinitions.*;
+import static me.bechberger.ebpf.runtime.LegacyDefinitions.*;
+import static me.bechberger.ebpf.runtime.LinearDefinitions.*;
+import static me.bechberger.ebpf.runtime.LineeventDefinitions.*;
+import static me.bechberger.ebpf.runtime.LinereqDefinitions.*;
+import static me.bechberger.ebpf.runtime.LinkDefinitions.*;
+import static me.bechberger.ebpf.runtime.LinuxDefinitions.*;
+import static me.bechberger.ebpf.runtime.ListDefinitions.*;
+import static me.bechberger.ebpf.runtime.LoadDefinitions.*;
+import static me.bechberger.ebpf.runtime.LocalDefinitions.*;
+import static me.bechberger.ebpf.runtime.LockDefinitions.*;
+import static me.bechberger.ebpf.runtime.LocksDefinitions.*;
+import static me.bechberger.ebpf.runtime.LockupDefinitions.*;
+import static me.bechberger.ebpf.runtime.LogDefinitions.*;
+import static me.bechberger.ebpf.runtime.LookupDefinitions.*;
+import static me.bechberger.ebpf.runtime.LoopDefinitions.*;
+import static me.bechberger.ebpf.runtime.Lp8788Definitions.*;
+import static me.bechberger.ebpf.runtime.LpssDefinitions.*;
+import static me.bechberger.ebpf.runtime.LruDefinitions.*;
+import static me.bechberger.ebpf.runtime.LskcipherDefinitions.*;
+import static me.bechberger.ebpf.runtime.LsmDefinitions.*;
+import static me.bechberger.ebpf.runtime.LwtunnelDefinitions.*;
+import static me.bechberger.ebpf.runtime.Lz4Definitions.*;
+import static me.bechberger.ebpf.runtime.MachineDefinitions.*;
+import static me.bechberger.ebpf.runtime.MacsecDefinitions.*;
+import static me.bechberger.ebpf.runtime.MadviseDefinitions.*;
+import static me.bechberger.ebpf.runtime.MakeDefinitions.*;
+import static me.bechberger.ebpf.runtime.MapDefinitions.*;
+import static me.bechberger.ebpf.runtime.MapleDefinitions.*;
+import static me.bechberger.ebpf.runtime.MarkDefinitions.*;
+import static me.bechberger.ebpf.runtime.MasDefinitions.*;
+import static me.bechberger.ebpf.runtime.MatchDefinitions.*;
+import static me.bechberger.ebpf.runtime.Max310xDefinitions.*;
+import static me.bechberger.ebpf.runtime.Max77693Definitions.*;
+import static me.bechberger.ebpf.runtime.Max8925Definitions.*;
+import static me.bechberger.ebpf.runtime.Max8997Definitions.*;
+import static me.bechberger.ebpf.runtime.Max8998Definitions.*;
+import static me.bechberger.ebpf.runtime.MaxDefinitions.*;
+import static me.bechberger.ebpf.runtime.MayDefinitions.*;
+import static me.bechberger.ebpf.runtime.MaybeDefinitions.*;
+import static me.bechberger.ebpf.runtime.MbDefinitions.*;
+import static me.bechberger.ebpf.runtime.MbmDefinitions.*;
+import static me.bechberger.ebpf.runtime.MboxDefinitions.*;
+import static me.bechberger.ebpf.runtime.MceDefinitions.*;
+import static me.bechberger.ebpf.runtime.McheckDefinitions.*;
+import static me.bechberger.ebpf.runtime.MciDefinitions.*;
+import static me.bechberger.ebpf.runtime.MctpDefinitions.*;
+import static me.bechberger.ebpf.runtime.MctrlDefinitions.*;
+import static me.bechberger.ebpf.runtime.MdDefinitions.*;
+import static me.bechberger.ebpf.runtime.MddevDefinitions.*;
+import static me.bechberger.ebpf.runtime.MdioDefinitions.*;
+import static me.bechberger.ebpf.runtime.MdiobusDefinitions.*;
+import static me.bechberger.ebpf.runtime.MemDefinitions.*;
+import static me.bechberger.ebpf.runtime.MemblockDefinitions.*;
+import static me.bechberger.ebpf.runtime.MemcgDefinitions.*;
+import static me.bechberger.ebpf.runtime.MemcpyDefinitions.*;
+import static me.bechberger.ebpf.runtime.MemmapDefinitions.*;
+import static me.bechberger.ebpf.runtime.MemoryDefinitions.*;
+import static me.bechberger.ebpf.runtime.MempoolDefinitions.*;
+import static me.bechberger.ebpf.runtime.MemtypeDefinitions.*;
+import static me.bechberger.ebpf.runtime.MigrateDefinitions.*;
+import static me.bechberger.ebpf.runtime.MinDefinitions.*;
+import static me.bechberger.ebpf.runtime.MipiDefinitions.*;
+import static me.bechberger.ebpf.runtime.MiscDefinitions.*;
+import static me.bechberger.ebpf.runtime.MldDefinitions.*;
+import static me.bechberger.ebpf.runtime.MlsDefinitions.*;
+import static me.bechberger.ebpf.runtime.MmDefinitions.*;
+import static me.bechberger.ebpf.runtime.MmapDefinitions.*;
+import static me.bechberger.ebpf.runtime.MmcDefinitions.*;
+import static me.bechberger.ebpf.runtime.MmioDefinitions.*;
+import static me.bechberger.ebpf.runtime.MmuDefinitions.*;
+import static me.bechberger.ebpf.runtime.MntDefinitions.*;
+import static me.bechberger.ebpf.runtime.ModDefinitions.*;
+import static me.bechberger.ebpf.runtime.ModuleDefinitions.*;
+import static me.bechberger.ebpf.runtime.MountDefinitions.*;
+import static me.bechberger.ebpf.runtime.MousedevDefinitions.*;
+import static me.bechberger.ebpf.runtime.MoveDefinitions.*;
+import static me.bechberger.ebpf.runtime.MpDefinitions.*;
+import static me.bechberger.ebpf.runtime.MpageDefinitions.*;
+import static me.bechberger.ebpf.runtime.MpiDefinitions.*;
+import static me.bechberger.ebpf.runtime.MpihelpDefinitions.*;
+import static me.bechberger.ebpf.runtime.MpolDefinitions.*;
+import static me.bechberger.ebpf.runtime.MptcpDefinitions.*;
+import static me.bechberger.ebpf.runtime.MqDefinitions.*;
+import static me.bechberger.ebpf.runtime.MqueueDefinitions.*;
+import static me.bechberger.ebpf.runtime.MrDefinitions.*;
+import static me.bechberger.ebpf.runtime.MsgDefinitions.*;
+import static me.bechberger.ebpf.runtime.MsiDefinitions.*;
+import static me.bechberger.ebpf.runtime.MsrDefinitions.*;
+import static me.bechberger.ebpf.runtime.MtDefinitions.*;
+import static me.bechberger.ebpf.runtime.MtreeDefinitions.*;
+import static me.bechberger.ebpf.runtime.MtrrDefinitions.*;
+import static me.bechberger.ebpf.runtime.MutexDefinitions.*;
+import static me.bechberger.ebpf.runtime.NDefinitions.*;
+import static me.bechberger.ebpf.runtime.NapiDefinitions.*;
+import static me.bechberger.ebpf.runtime.NativeDefinitions.*;
+import static me.bechberger.ebpf.runtime.NbconDefinitions.*;
+import static me.bechberger.ebpf.runtime.NcsiDefinitions.*;
+import static me.bechberger.ebpf.runtime.NdDefinitions.*;
+import static me.bechberger.ebpf.runtime.NdiscDefinitions.*;
+import static me.bechberger.ebpf.runtime.NeighDefinitions.*;
+import static me.bechberger.ebpf.runtime.NetDefinitions.*;
+import static me.bechberger.ebpf.runtime.NetdevDefinitions.*;
+import static me.bechberger.ebpf.runtime.NetifDefinitions.*;
+import static me.bechberger.ebpf.runtime.NetkitDefinitions.*;
+import static me.bechberger.ebpf.runtime.NetlblDefinitions.*;
+import static me.bechberger.ebpf.runtime.NetlinkDefinitions.*;
+import static me.bechberger.ebpf.runtime.NetnsDefinitions.*;
+import static me.bechberger.ebpf.runtime.NetpollDefinitions.*;
+import static me.bechberger.ebpf.runtime.NewDefinitions.*;
+import static me.bechberger.ebpf.runtime.NextDefinitions.*;
+import static me.bechberger.ebpf.runtime.NexthopDefinitions.*;
+import static me.bechberger.ebpf.runtime.NfDefinitions.*;
+import static me.bechberger.ebpf.runtime.Nfs4Definitions.*;
+import static me.bechberger.ebpf.runtime.NfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.NhDefinitions.*;
+import static me.bechberger.ebpf.runtime.NhmexDefinitions.*;
+import static me.bechberger.ebpf.runtime.Nl80211Definitions.*;
+import static me.bechberger.ebpf.runtime.NlaDefinitions.*;
+import static me.bechberger.ebpf.runtime.NmiDefinitions.*;
+import static me.bechberger.ebpf.runtime.NoDefinitions.*;
+import static me.bechberger.ebpf.runtime.NodeDefinitions.*;
+import static me.bechberger.ebpf.runtime.NoopDefinitions.*;
+import static me.bechberger.ebpf.runtime.NotifyDefinitions.*;
+import static me.bechberger.ebpf.runtime.NrDefinitions.*;
+import static me.bechberger.ebpf.runtime.NsDefinitions.*;
+import static me.bechberger.ebpf.runtime.NullDefinitions.*;
+import static me.bechberger.ebpf.runtime.NumaDefinitions.*;
+import static me.bechberger.ebpf.runtime.NumachipDefinitions.*;
+import static me.bechberger.ebpf.runtime.NvdimmDefinitions.*;
+import static me.bechberger.ebpf.runtime.NvmemDefinitions.*;
+import static me.bechberger.ebpf.runtime.ObjDefinitions.*;
+import static me.bechberger.ebpf.runtime.OctepDefinitions.*;
+import static me.bechberger.ebpf.runtime.OdDefinitions.*;
+import static me.bechberger.ebpf.runtime.OfDefinitions.*;
+import static me.bechberger.ebpf.runtime.OhciDefinitions.*;
+import static me.bechberger.ebpf.runtime.OldDefinitions.*;
+import static me.bechberger.ebpf.runtime.OomDefinitions.*;
+import static me.bechberger.ebpf.runtime.OpalDefinitions.*;
+import static me.bechberger.ebpf.runtime.OpenDefinitions.*;
+import static me.bechberger.ebpf.runtime.OppDefinitions.*;
+import static me.bechberger.ebpf.runtime.OsnoiseDefinitions.*;
+import static me.bechberger.ebpf.runtime.P4Definitions.*;
+import static me.bechberger.ebpf.runtime.PacketDefinitions.*;
+import static me.bechberger.ebpf.runtime.PadataDefinitions.*;
+import static me.bechberger.ebpf.runtime.PageDefinitions.*;
+import static me.bechberger.ebpf.runtime.PagemapDefinitions.*;
+import static me.bechberger.ebpf.runtime.PagesDefinitions.*;
+import static me.bechberger.ebpf.runtime.PalmasDefinitions.*;
+import static me.bechberger.ebpf.runtime.PanelDefinitions.*;
+import static me.bechberger.ebpf.runtime.ParamDefinitions.*;
+import static me.bechberger.ebpf.runtime.ParseDefinitions.*;
+import static me.bechberger.ebpf.runtime.PartDefinitions.*;
+import static me.bechberger.ebpf.runtime.PathDefinitions.*;
+import static me.bechberger.ebpf.runtime.PcapDefinitions.*;
+import static me.bechberger.ebpf.runtime.PccDefinitions.*;
+import static me.bechberger.ebpf.runtime.PciDefinitions.*;
+import static me.bechberger.ebpf.runtime.PcibiosDefinitions.*;
+import static me.bechberger.ebpf.runtime.PcieDefinitions.*;
+import static me.bechberger.ebpf.runtime.PciehpDefinitions.*;
+import static me.bechberger.ebpf.runtime.PcimDefinitions.*;
+import static me.bechberger.ebpf.runtime.PcpuDefinitions.*;
+import static me.bechberger.ebpf.runtime.PercpuDefinitions.*;
+import static me.bechberger.ebpf.runtime.PerfDefinitions.*;
+import static me.bechberger.ebpf.runtime.PfifoDefinitions.*;
+import static me.bechberger.ebpf.runtime.PfnDefinitions.*;
+import static me.bechberger.ebpf.runtime.PhyDefinitions.*;
+import static me.bechberger.ebpf.runtime.PhysDefinitions.*;
+import static me.bechberger.ebpf.runtime.PhysdevDefinitions.*;
+import static me.bechberger.ebpf.runtime.PickDefinitions.*;
+import static me.bechberger.ebpf.runtime.PidDefinitions.*;
+import static me.bechberger.ebpf.runtime.PidfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.PidsDefinitions.*;
+import static me.bechberger.ebpf.runtime.PiixDefinitions.*;
+import static me.bechberger.ebpf.runtime.PinDefinitions.*;
+import static me.bechberger.ebpf.runtime.PinconfDefinitions.*;
+import static me.bechberger.ebpf.runtime.PinctrlDefinitions.*;
+import static me.bechberger.ebpf.runtime.PingDefinitions.*;
+import static me.bechberger.ebpf.runtime.PinmuxDefinitions.*;
+import static me.bechberger.ebpf.runtime.PipeDefinitions.*;
+import static me.bechberger.ebpf.runtime.PirqDefinitions.*;
+import static me.bechberger.ebpf.runtime.Pkcs1padDefinitions.*;
+import static me.bechberger.ebpf.runtime.Pkcs7Definitions.*;
+import static me.bechberger.ebpf.runtime.PlatformDefinitions.*;
+import static me.bechberger.ebpf.runtime.PldmfwDefinitions.*;
+import static me.bechberger.ebpf.runtime.Pm860xDefinitions.*;
+import static me.bechberger.ebpf.runtime.PmDefinitions.*;
+import static me.bechberger.ebpf.runtime.PmcDefinitions.*;
+import static me.bechberger.ebpf.runtime.PmdDefinitions.*;
+import static me.bechberger.ebpf.runtime.PmuDefinitions.*;
+import static me.bechberger.ebpf.runtime.PnpDefinitions.*;
+import static me.bechberger.ebpf.runtime.PnpacpiDefinitions.*;
+import static me.bechberger.ebpf.runtime.PolicyDefinitions.*;
+import static me.bechberger.ebpf.runtime.PolicydbDefinitions.*;
+import static me.bechberger.ebpf.runtime.PollDefinitions.*;
+import static me.bechberger.ebpf.runtime.Poly1305Definitions.*;
+import static me.bechberger.ebpf.runtime.PopulateDefinitions.*;
+import static me.bechberger.ebpf.runtime.PortDefinitions.*;
+import static me.bechberger.ebpf.runtime.PosixDefinitions.*;
+import static me.bechberger.ebpf.runtime.PowerDefinitions.*;
+import static me.bechberger.ebpf.runtime.PowercapDefinitions.*;
+import static me.bechberger.ebpf.runtime.PppDefinitions.*;
+import static me.bechberger.ebpf.runtime.PpsDefinitions.*;
+import static me.bechberger.ebpf.runtime.PrDefinitions.*;
+import static me.bechberger.ebpf.runtime.PrbDefinitions.*;
+import static me.bechberger.ebpf.runtime.PreemptDefinitions.*;
+import static me.bechberger.ebpf.runtime.PrepareDefinitions.*;
+import static me.bechberger.ebpf.runtime.PrintDefinitions.*;
+import static me.bechberger.ebpf.runtime.PrintkDefinitions.*;
+import static me.bechberger.ebpf.runtime.ProbeDefinitions.*;
+import static me.bechberger.ebpf.runtime.ProbestubDefinitions.*;
+import static me.bechberger.ebpf.runtime.ProcDefinitions.*;
+import static me.bechberger.ebpf.runtime.ProcessDefinitions.*;
+import static me.bechberger.ebpf.runtime.ProfileDefinitions.*;
+import static me.bechberger.ebpf.runtime.ProgDefinitions.*;
+import static me.bechberger.ebpf.runtime.PropagateDefinitions.*;
+import static me.bechberger.ebpf.runtime.ProtoDefinitions.*;
+import static me.bechberger.ebpf.runtime.Ps2Definitions.*;
+import static me.bechberger.ebpf.runtime.PseDefinitions.*;
+import static me.bechberger.ebpf.runtime.PseudoDefinitions.*;
+import static me.bechberger.ebpf.runtime.PsiDefinitions.*;
+import static me.bechberger.ebpf.runtime.PskbDefinitions.*;
+import static me.bechberger.ebpf.runtime.PstoreDefinitions.*;
+import static me.bechberger.ebpf.runtime.PtDefinitions.*;
+import static me.bechberger.ebpf.runtime.PtdumpDefinitions.*;
+import static me.bechberger.ebpf.runtime.PteDefinitions.*;
+import static me.bechberger.ebpf.runtime.PtiDefinitions.*;
+import static me.bechberger.ebpf.runtime.PtpDefinitions.*;
+import static me.bechberger.ebpf.runtime.PtraceDefinitions.*;
+import static me.bechberger.ebpf.runtime.PtyDefinitions.*;
+import static me.bechberger.ebpf.runtime.PushDefinitions.*;
+import static me.bechberger.ebpf.runtime.PutDefinitions.*;
+import static me.bechberger.ebpf.runtime.PvDefinitions.*;
+import static me.bechberger.ebpf.runtime.PvclockDefinitions.*;
+import static me.bechberger.ebpf.runtime.PwmDefinitions.*;
+import static me.bechberger.ebpf.runtime.QdiscDefinitions.*;
+import static me.bechberger.ebpf.runtime.QhDefinitions.*;
+import static me.bechberger.ebpf.runtime.QiDefinitions.*;
+import static me.bechberger.ebpf.runtime.QueueDefinitions.*;
+import static me.bechberger.ebpf.runtime.QuirkDefinitions.*;
+import static me.bechberger.ebpf.runtime.QuotaDefinitions.*;
+import static me.bechberger.ebpf.runtime.RadixDefinitions.*;
+import static me.bechberger.ebpf.runtime.RamfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.RandomDefinitions.*;
+import static me.bechberger.ebpf.runtime.RangeDefinitions.*;
+import static me.bechberger.ebpf.runtime.Raw6Definitions.*;
+import static me.bechberger.ebpf.runtime.RawDefinitions.*;
+import static me.bechberger.ebpf.runtime.Rawv6Definitions.*;
+import static me.bechberger.ebpf.runtime.RbDefinitions.*;
+import static me.bechberger.ebpf.runtime.Rc5t583Definitions.*;
+import static me.bechberger.ebpf.runtime.RcuDefinitions.*;
+import static me.bechberger.ebpf.runtime.RdevDefinitions.*;
+import static me.bechberger.ebpf.runtime.RdmaDefinitions.*;
+import static me.bechberger.ebpf.runtime.RdmacgDefinitions.*;
+import static me.bechberger.ebpf.runtime.RdtDefinitions.*;
+import static me.bechberger.ebpf.runtime.RdtgroupDefinitions.*;
+import static me.bechberger.ebpf.runtime.ReadDefinitions.*;
+import static me.bechberger.ebpf.runtime.ReclaimDefinitions.*;
+import static me.bechberger.ebpf.runtime.RegDefinitions.*;
+import static me.bechberger.ebpf.runtime.RegcacheDefinitions.*;
+import static me.bechberger.ebpf.runtime.RegisterDefinitions.*;
+import static me.bechberger.ebpf.runtime.RegmapDefinitions.*;
+import static me.bechberger.ebpf.runtime.RegulatorDefinitions.*;
+import static me.bechberger.ebpf.runtime.RelayDefinitions.*;
+import static me.bechberger.ebpf.runtime.ReleaseDefinitions.*;
+import static me.bechberger.ebpf.runtime.RemapDefinitions.*;
+import static me.bechberger.ebpf.runtime.RemoveDefinitions.*;
+import static me.bechberger.ebpf.runtime.ReplaceDefinitions.*;
+import static me.bechberger.ebpf.runtime.ReportDefinitions.*;
+import static me.bechberger.ebpf.runtime.RequestDefinitions.*;
+import static me.bechberger.ebpf.runtime.ResctrlDefinitions.*;
+import static me.bechberger.ebpf.runtime.ReserveDefinitions.*;
+import static me.bechberger.ebpf.runtime.ResetDefinitions.*;
+import static me.bechberger.ebpf.runtime.ResourceDefinitions.*;
+import static me.bechberger.ebpf.runtime.RestoreDefinitions.*;
+import static me.bechberger.ebpf.runtime.RestrictDefinitions.*;
+import static me.bechberger.ebpf.runtime.ResumeDefinitions.*;
+import static me.bechberger.ebpf.runtime.RethookDefinitions.*;
+import static me.bechberger.ebpf.runtime.ReuseportDefinitions.*;
+import static me.bechberger.ebpf.runtime.RfkillDefinitions.*;
+import static me.bechberger.ebpf.runtime.RhashtableDefinitions.*;
+import static me.bechberger.ebpf.runtime.RingDefinitions.*;
+import static me.bechberger.ebpf.runtime.RingbufDefinitions.*;
+import static me.bechberger.ebpf.runtime.RioDefinitions.*;
+import static me.bechberger.ebpf.runtime.RngDefinitions.*;
+import static me.bechberger.ebpf.runtime.RoleDefinitions.*;
+import static me.bechberger.ebpf.runtime.RpcDefinitions.*;
+import static me.bechberger.ebpf.runtime.RpmDefinitions.*;
+import static me.bechberger.ebpf.runtime.RprocDefinitions.*;
+import static me.bechberger.ebpf.runtime.RqDefinitions.*;
+import static me.bechberger.ebpf.runtime.RsaDefinitions.*;
+import static me.bechberger.ebpf.runtime.RsassaDefinitions.*;
+import static me.bechberger.ebpf.runtime.RseqDefinitions.*;
+import static me.bechberger.ebpf.runtime.RssDefinitions.*;
+import static me.bechberger.ebpf.runtime.Rt6Definitions.*;
+import static me.bechberger.ebpf.runtime.RtDefinitions.*;
+import static me.bechberger.ebpf.runtime.RtcDefinitions.*;
+import static me.bechberger.ebpf.runtime.RtmDefinitions.*;
+import static me.bechberger.ebpf.runtime.RtnetlinkDefinitions.*;
+import static me.bechberger.ebpf.runtime.RtnlDefinitions.*;
+import static me.bechberger.ebpf.runtime.RunDefinitions.*;
+import static me.bechberger.ebpf.runtime.RustDefinitions.*;
+import static me.bechberger.ebpf.runtime.RvDefinitions.*;
+import static me.bechberger.ebpf.runtime.RxDefinitions.*;
+import static me.bechberger.ebpf.runtime.SDefinitions.*;
+import static me.bechberger.ebpf.runtime.SataDefinitions.*;
+import static me.bechberger.ebpf.runtime.SaveDefinitions.*;
+import static me.bechberger.ebpf.runtime.SavedDefinitions.*;
+import static me.bechberger.ebpf.runtime.SbitmapDefinitions.*;
+import static me.bechberger.ebpf.runtime.ScanDefinitions.*;
+import static me.bechberger.ebpf.runtime.SccnxpDefinitions.*;
+import static me.bechberger.ebpf.runtime.SchedDefinitions.*;
+import static me.bechberger.ebpf.runtime.ScheduleDefinitions.*;
+import static me.bechberger.ebpf.runtime.ScmDefinitions.*;
+import static me.bechberger.ebpf.runtime.ScsiDefinitions.*;
+import static me.bechberger.ebpf.runtime.SctpDefinitions.*;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
+import static me.bechberger.ebpf.runtime.SdDefinitions.*;
+import static me.bechberger.ebpf.runtime.SdevDefinitions.*;
+import static me.bechberger.ebpf.runtime.SdioDefinitions.*;
+import static me.bechberger.ebpf.runtime.SeccompDefinitions.*;
+import static me.bechberger.ebpf.runtime.SecurityDefinitions.*;
+import static me.bechberger.ebpf.runtime.Seg6Definitions.*;
+import static me.bechberger.ebpf.runtime.SelDefinitions.*;
+import static me.bechberger.ebpf.runtime.SelectDefinitions.*;
+import static me.bechberger.ebpf.runtime.SendDefinitions.*;
+import static me.bechberger.ebpf.runtime.SeqDefinitions.*;
+import static me.bechberger.ebpf.runtime.SerdevDefinitions.*;
+import static me.bechberger.ebpf.runtime.Serial8250Definitions.*;
+import static me.bechberger.ebpf.runtime.SerialDefinitions.*;
+import static me.bechberger.ebpf.runtime.SerioDefinitions.*;
+import static me.bechberger.ebpf.runtime.SetDefinitions.*;
+import static me.bechberger.ebpf.runtime.SetupDefinitions.*;
+import static me.bechberger.ebpf.runtime.SevDefinitions.*;
+import static me.bechberger.ebpf.runtime.SfpDefinitions.*;
+import static me.bechberger.ebpf.runtime.SgDefinitions.*;
+import static me.bechberger.ebpf.runtime.SgxDefinitions.*;
+import static me.bechberger.ebpf.runtime.Sha1Definitions.*;
+import static me.bechberger.ebpf.runtime.Sha256Definitions.*;
+import static me.bechberger.ebpf.runtime.Sha512Definitions.*;
+import static me.bechberger.ebpf.runtime.ShashDefinitions.*;
+import static me.bechberger.ebpf.runtime.ShmDefinitions.*;
+import static me.bechberger.ebpf.runtime.ShmemDefinitions.*;
+import static me.bechberger.ebpf.runtime.ShouldDefinitions.*;
+import static me.bechberger.ebpf.runtime.ShowDefinitions.*;
+import static me.bechberger.ebpf.runtime.ShpchpDefinitions.*;
+import static me.bechberger.ebpf.runtime.ShrinkDefinitions.*;
+import static me.bechberger.ebpf.runtime.SidtabDefinitions.*;
+import static me.bechberger.ebpf.runtime.SimpleDefinitions.*;
+import static me.bechberger.ebpf.runtime.SingleDefinitions.*;
+import static me.bechberger.ebpf.runtime.SisDefinitions.*;
+import static me.bechberger.ebpf.runtime.SkDefinitions.*;
+import static me.bechberger.ebpf.runtime.SkbDefinitions.*;
+import static me.bechberger.ebpf.runtime.SkcipherDefinitions.*;
+import static me.bechberger.ebpf.runtime.SkxDefinitions.*;
+import static me.bechberger.ebpf.runtime.SlabDefinitions.*;
+import static me.bechberger.ebpf.runtime.SmackDefinitions.*;
+import static me.bechberger.ebpf.runtime.SmeDefinitions.*;
+import static me.bechberger.ebpf.runtime.SmkDefinitions.*;
+import static me.bechberger.ebpf.runtime.SmpDefinitions.*;
+import static me.bechberger.ebpf.runtime.SnapshotDefinitions.*;
+import static me.bechberger.ebpf.runtime.SnbDefinitions.*;
+import static me.bechberger.ebpf.runtime.SnbepDefinitions.*;
+import static me.bechberger.ebpf.runtime.SnpDefinitions.*;
+import static me.bechberger.ebpf.runtime.SnrDefinitions.*;
+import static me.bechberger.ebpf.runtime.SocDefinitions.*;
+import static me.bechberger.ebpf.runtime.SockDefinitions.*;
+import static me.bechberger.ebpf.runtime.SoftwareDefinitions.*;
+import static me.bechberger.ebpf.runtime.SparseDefinitions.*;
+import static me.bechberger.ebpf.runtime.SpiDefinitions.*;
+import static me.bechberger.ebpf.runtime.SpliceDefinitions.*;
+import static me.bechberger.ebpf.runtime.SplitDefinitions.*;
+import static me.bechberger.ebpf.runtime.SprDefinitions.*;
+import static me.bechberger.ebpf.runtime.SquashfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.SrDefinitions.*;
+import static me.bechberger.ebpf.runtime.SramDefinitions.*;
+import static me.bechberger.ebpf.runtime.SrcuDefinitions.*;
+import static me.bechberger.ebpf.runtime.SriovDefinitions.*;
+import static me.bechberger.ebpf.runtime.StackDefinitions.*;
+import static me.bechberger.ebpf.runtime.StartDefinitions.*;
+import static me.bechberger.ebpf.runtime.StatDefinitions.*;
+import static me.bechberger.ebpf.runtime.StaticDefinitions.*;
+import static me.bechberger.ebpf.runtime.StatsDefinitions.*;
+import static me.bechberger.ebpf.runtime.StopDefinitions.*;
+import static me.bechberger.ebpf.runtime.StoreDefinitions.*;
+import static me.bechberger.ebpf.runtime.StripeDefinitions.*;
+import static me.bechberger.ebpf.runtime.StrpDefinitions.*;
+import static me.bechberger.ebpf.runtime.SubflowDefinitions.*;
+import static me.bechberger.ebpf.runtime.SubmitDefinitions.*;
+import static me.bechberger.ebpf.runtime.SugovDefinitions.*;
+import static me.bechberger.ebpf.runtime.SuperDefinitions.*;
+import static me.bechberger.ebpf.runtime.SuspendDefinitions.*;
+import static me.bechberger.ebpf.runtime.SvcDefinitions.*;
+import static me.bechberger.ebpf.runtime.SvsmDefinitions.*;
+import static me.bechberger.ebpf.runtime.SwDefinitions.*;
+import static me.bechberger.ebpf.runtime.SwapDefinitions.*;
+import static me.bechberger.ebpf.runtime.SwiotlbDefinitions.*;
+import static me.bechberger.ebpf.runtime.SwitchDefinitions.*;
+import static me.bechberger.ebpf.runtime.SwitchdevDefinitions.*;
+import static me.bechberger.ebpf.runtime.SwsuspDefinitions.*;
+import static me.bechberger.ebpf.runtime.Sx150xDefinitions.*;
+import static me.bechberger.ebpf.runtime.SyncDefinitions.*;
+import static me.bechberger.ebpf.runtime.SynchronizeDefinitions.*;
+import static me.bechberger.ebpf.runtime.SynthDefinitions.*;
+import static me.bechberger.ebpf.runtime.SysDefinitions.*;
+import static me.bechberger.ebpf.runtime.SyscallDefinitions.*;
+import static me.bechberger.ebpf.runtime.SysctlDefinitions.*;
+import static me.bechberger.ebpf.runtime.SysfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.SysrqDefinitions.*;
+import static me.bechberger.ebpf.runtime.SystemDefinitions.*;
+import static me.bechberger.ebpf.runtime.SysvecDefinitions.*;
+import static me.bechberger.ebpf.runtime.TargetDefinitions.*;
+import static me.bechberger.ebpf.runtime.TaskDefinitions.*;
+import static me.bechberger.ebpf.runtime.TaskletDefinitions.*;
+import static me.bechberger.ebpf.runtime.TbootDefinitions.*;
+import static me.bechberger.ebpf.runtime.TcDefinitions.*;
+import static me.bechberger.ebpf.runtime.TcfDefinitions.*;
+import static me.bechberger.ebpf.runtime.TcpDefinitions.*;
+import static me.bechberger.ebpf.runtime.TcxDefinitions.*;
+import static me.bechberger.ebpf.runtime.TdhDefinitions.*;
+import static me.bechberger.ebpf.runtime.TdxDefinitions.*;
+import static me.bechberger.ebpf.runtime.TestDefinitions.*;
+import static me.bechberger.ebpf.runtime.TextDefinitions.*;
+import static me.bechberger.ebpf.runtime.TgDefinitions.*;
+import static me.bechberger.ebpf.runtime.ThermalDefinitions.*;
+import static me.bechberger.ebpf.runtime.ThreadDefinitions.*;
+import static me.bechberger.ebpf.runtime.ThrotlDefinitions.*;
+import static me.bechberger.ebpf.runtime.TickDefinitions.*;
+import static me.bechberger.ebpf.runtime.TimekeepingDefinitions.*;
+import static me.bechberger.ebpf.runtime.TimensDefinitions.*;
+import static me.bechberger.ebpf.runtime.TimerDefinitions.*;
+import static me.bechberger.ebpf.runtime.TimerfdDefinitions.*;
+import static me.bechberger.ebpf.runtime.TimerlatDefinitions.*;
+import static me.bechberger.ebpf.runtime.TkDefinitions.*;
+import static me.bechberger.ebpf.runtime.TlbDefinitions.*;
+import static me.bechberger.ebpf.runtime.TlsDefinitions.*;
+import static me.bechberger.ebpf.runtime.TmigrDefinitions.*;
+import static me.bechberger.ebpf.runtime.TnumDefinitions.*;
+import static me.bechberger.ebpf.runtime.ToDefinitions.*;
+import static me.bechberger.ebpf.runtime.TomoyoDefinitions.*;
+import static me.bechberger.ebpf.runtime.TopologyDefinitions.*;
+import static me.bechberger.ebpf.runtime.TouchDefinitions.*;
+import static me.bechberger.ebpf.runtime.TpacketDefinitions.*;
+import static me.bechberger.ebpf.runtime.Tpm1Definitions.*;
+import static me.bechberger.ebpf.runtime.Tpm2Definitions.*;
+import static me.bechberger.ebpf.runtime.TpmDefinitions.*;
+import static me.bechberger.ebpf.runtime.Tps6586xDefinitions.*;
+import static me.bechberger.ebpf.runtime.Tps65910Definitions.*;
+import static me.bechberger.ebpf.runtime.TraceDefinitions.*;
+import static me.bechberger.ebpf.runtime.TracefsDefinitions.*;
+import static me.bechberger.ebpf.runtime.TraceiterDefinitions.*;
+import static me.bechberger.ebpf.runtime.TracepointDefinitions.*;
+import static me.bechberger.ebpf.runtime.TraceprobeDefinitions.*;
+import static me.bechberger.ebpf.runtime.TracerDefinitions.*;
+import static me.bechberger.ebpf.runtime.TracingDefinitions.*;
+import static me.bechberger.ebpf.runtime.TransportDefinitions.*;
+import static me.bechberger.ebpf.runtime.TrieDefinitions.*;
+import static me.bechberger.ebpf.runtime.TruncateDefinitions.*;
+import static me.bechberger.ebpf.runtime.TrustedDefinitions.*;
+import static me.bechberger.ebpf.runtime.TryDefinitions.*;
+import static me.bechberger.ebpf.runtime.TscDefinitions.*;
+import static me.bechberger.ebpf.runtime.TtyDefinitions.*;
+import static me.bechberger.ebpf.runtime.TtyportDefinitions.*;
+import static me.bechberger.ebpf.runtime.TunDefinitions.*;
+import static me.bechberger.ebpf.runtime.Twl4030Definitions.*;
+import static me.bechberger.ebpf.runtime.Twl6040Definitions.*;
+import static me.bechberger.ebpf.runtime.TwlDefinitions.*;
+import static me.bechberger.ebpf.runtime.TxDefinitions.*;
+import static me.bechberger.ebpf.runtime.TypeDefinitions.*;
+import static me.bechberger.ebpf.runtime.UDefinitions.*;
+import static me.bechberger.ebpf.runtime.UartDefinitions.*;
+import static me.bechberger.ebpf.runtime.UbsanDefinitions.*;
+import static me.bechberger.ebpf.runtime.Udp4Definitions.*;
+import static me.bechberger.ebpf.runtime.Udp6Definitions.*;
+import static me.bechberger.ebpf.runtime.UdpDefinitions.*;
+import static me.bechberger.ebpf.runtime.Udpv6Definitions.*;
+import static me.bechberger.ebpf.runtime.UhciDefinitions.*;
+import static me.bechberger.ebpf.runtime.UinputDefinitions.*;
+import static me.bechberger.ebpf.runtime.UncoreDefinitions.*;
+import static me.bechberger.ebpf.runtime.Univ8250Definitions.*;
+import static me.bechberger.ebpf.runtime.UnixDefinitions.*;
+import static me.bechberger.ebpf.runtime.UnlockDefinitions.*;
+import static me.bechberger.ebpf.runtime.UnmapDefinitions.*;
+import static me.bechberger.ebpf.runtime.UnregisterDefinitions.*;
+import static me.bechberger.ebpf.runtime.UpdateDefinitions.*;
+import static me.bechberger.ebpf.runtime.UprobeDefinitions.*;
+import static me.bechberger.ebpf.runtime.UsbDefinitions.*;
+import static me.bechberger.ebpf.runtime.UsbdevfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.UserDefinitions.*;
+import static me.bechberger.ebpf.runtime.UserfaultfdDefinitions.*;
+import static me.bechberger.ebpf.runtime.Utf8Definitions.*;
+import static me.bechberger.ebpf.runtime.UvDefinitions.*;
+import static me.bechberger.ebpf.runtime.UvhDefinitions.*;
+import static me.bechberger.ebpf.runtime.ValidateDefinitions.*;
+import static me.bechberger.ebpf.runtime.VcDefinitions.*;
+import static me.bechberger.ebpf.runtime.VcapDefinitions.*;
+import static me.bechberger.ebpf.runtime.VcpuDefinitions.*;
+import static me.bechberger.ebpf.runtime.VcsDefinitions.*;
+import static me.bechberger.ebpf.runtime.VdsoDefinitions.*;
+import static me.bechberger.ebpf.runtime.VerifyDefinitions.*;
+import static me.bechberger.ebpf.runtime.VfatDefinitions.*;
+import static me.bechberger.ebpf.runtime.VfsDefinitions.*;
+import static me.bechberger.ebpf.runtime.VgaDefinitions.*;
+import static me.bechberger.ebpf.runtime.VgaconDefinitions.*;
+import static me.bechberger.ebpf.runtime.ViaDefinitions.*;
+import static me.bechberger.ebpf.runtime.ViommuDefinitions.*;
+import static me.bechberger.ebpf.runtime.VirtDefinitions.*;
+import static me.bechberger.ebpf.runtime.VirtblkDefinitions.*;
+import static me.bechberger.ebpf.runtime.VirtioDefinitions.*;
+import static me.bechberger.ebpf.runtime.VirtnetDefinitions.*;
+import static me.bechberger.ebpf.runtime.VirtqueueDefinitions.*;
+import static me.bechberger.ebpf.runtime.VirtscsiDefinitions.*;
+import static me.bechberger.ebpf.runtime.VlanDefinitions.*;
+import static me.bechberger.ebpf.runtime.VliDefinitions.*;
+import static me.bechberger.ebpf.runtime.VmDefinitions.*;
+import static me.bechberger.ebpf.runtime.VmaDefinitions.*;
+import static me.bechberger.ebpf.runtime.VmallocDefinitions.*;
+import static me.bechberger.ebpf.runtime.VmapDefinitions.*;
+import static me.bechberger.ebpf.runtime.VmeDefinitions.*;
+import static me.bechberger.ebpf.runtime.VmemmapDefinitions.*;
+import static me.bechberger.ebpf.runtime.VmpressureDefinitions.*;
+import static me.bechberger.ebpf.runtime.VmstatDefinitions.*;
+import static me.bechberger.ebpf.runtime.VmwareDefinitions.*;
+import static me.bechberger.ebpf.runtime.VpDefinitions.*;
+import static me.bechberger.ebpf.runtime.VringDefinitions.*;
+import static me.bechberger.ebpf.runtime.VtDefinitions.*;
+import static me.bechberger.ebpf.runtime.WaitDefinitions.*;
+import static me.bechberger.ebpf.runtime.WakeDefinitions.*;
+import static me.bechberger.ebpf.runtime.WakeupDefinitions.*;
+import static me.bechberger.ebpf.runtime.WalkDefinitions.*;
+import static me.bechberger.ebpf.runtime.WarnDefinitions.*;
+import static me.bechberger.ebpf.runtime.WatchDefinitions.*;
+import static me.bechberger.ebpf.runtime.WatchdogDefinitions.*;
+import static me.bechberger.ebpf.runtime.WbDefinitions.*;
+import static me.bechberger.ebpf.runtime.WbtDefinitions.*;
+import static me.bechberger.ebpf.runtime.WiphyDefinitions.*;
+import static me.bechberger.ebpf.runtime.WirelessDefinitions.*;
+import static me.bechberger.ebpf.runtime.Wm831xDefinitions.*;
+import static me.bechberger.ebpf.runtime.Wm8350Definitions.*;
+import static me.bechberger.ebpf.runtime.WorkqueueDefinitions.*;
+import static me.bechberger.ebpf.runtime.WpDefinitions.*;
+import static me.bechberger.ebpf.runtime.WqDefinitions.*;
+import static me.bechberger.ebpf.runtime.WriteDefinitions.*;
+import static me.bechberger.ebpf.runtime.WritebackDefinitions.*;
+import static me.bechberger.ebpf.runtime.WwDefinitions.*;
+import static me.bechberger.ebpf.runtime.X2apicDefinitions.*;
+import static me.bechberger.ebpf.runtime.X509Definitions.*;
+import static me.bechberger.ebpf.runtime.X64Definitions.*;
+import static me.bechberger.ebpf.runtime.X86Definitions.*;
+import static me.bechberger.ebpf.runtime.XaDefinitions.*;
+import static me.bechberger.ebpf.runtime.XasDefinitions.*;
+import static me.bechberger.ebpf.runtime.XattrDefinitions.*;
+import static me.bechberger.ebpf.runtime.XbcDefinitions.*;
+import static me.bechberger.ebpf.runtime.XdbcDefinitions.*;
+import static me.bechberger.ebpf.runtime.XdpDefinitions.*;
+import static me.bechberger.ebpf.runtime.XenDefinitions.*;
+import static me.bechberger.ebpf.runtime.XenbusDefinitions.*;
+import static me.bechberger.ebpf.runtime.XennetDefinitions.*;
+import static me.bechberger.ebpf.runtime.XenpfDefinitions.*;
+import static me.bechberger.ebpf.runtime.Xfrm4Definitions.*;
+import static me.bechberger.ebpf.runtime.Xfrm6Definitions.*;
+import static me.bechberger.ebpf.runtime.XfrmDefinitions.*;
+import static me.bechberger.ebpf.runtime.XhciDefinitions.*;
+import static me.bechberger.ebpf.runtime.XpDefinitions.*;
+import static me.bechberger.ebpf.runtime.XsDefinitions.*;
+import static me.bechberger.ebpf.runtime.XskDefinitions.*;
+import static me.bechberger.ebpf.runtime.XtsDefinitions.*;
+import static me.bechberger.ebpf.runtime.XzDefinitions.*;
+import static me.bechberger.ebpf.runtime.ZapDefinitions.*;
+import static me.bechberger.ebpf.runtime.ZlibDefinitions.*;
+import static me.bechberger.ebpf.runtime.ZoneDefinitions.*;
+import static me.bechberger.ebpf.runtime.ZpoolDefinitions.*;
+import static me.bechberger.ebpf.runtime.ZsDefinitions.*;
+import static me.bechberger.ebpf.runtime.ZstdDefinitions.*;
+import static me.bechberger.ebpf.runtime.ZswapDefinitions.*;
+import static me.bechberger.ebpf.runtime.misc.*;
+import static me.bechberger.ebpf.runtime.runtime.*;
+
+/**
+ * Generated class for BPF runtime types that start with selinux
+ */
+@java.lang.SuppressWarnings("unused")
+public final class SelinuxDefinitions {
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_add_opt($arg1, (const u8*)$arg2, $arg3)")
+  public static int selinux_add_opt(int token, String s, Ptr<Ptr<?>> mnt_opts) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_audit_rule_free(Ptr<?> vrule) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_audit_rule_init(@Unsigned int field, @Unsigned int op, String rulestr,
+      Ptr<Ptr<?>> vrule, @Unsigned @OriginalName("gfp_t") int gfp) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_audit_rule_known(Ptr<audit_krule> rule) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_audit_rule_match(Ptr<lsm_prop> prop, @Unsigned int field,
+      @Unsigned int op, Ptr<?> vrule) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_avc_init() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_binder_set_context_mgr((const struct cred*)$arg1)")
+  public static int selinux_binder_set_context_mgr(Ptr<cred> mgr) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_binder_transaction((const struct cred*)$arg1, (const struct cred*)$arg2)")
+  public static int selinux_binder_transaction(Ptr<cred> from, Ptr<cred> to) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_binder_transfer_binder((const struct cred*)$arg1, (const struct cred*)$arg2)")
+  public static int selinux_binder_transfer_binder(Ptr<cred> from, Ptr<cred> to) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_binder_transfer_file((const struct cred*)$arg1, (const struct cred*)$arg2, (const struct file*)$arg3)")
+  public static int selinux_binder_transfer_file(Ptr<cred> from, Ptr<cred> to, Ptr<file> file) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_bpf(int cmd, Ptr<bpf_attr> attr, @Unsigned int size, boolean kernel) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_bpf_map(Ptr<bpf_map> map,
+      @Unsigned @OriginalName("fmode_t") int fmode) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_bpf_map_create(Ptr<bpf_map> map, Ptr<bpf_attr> attr,
+      Ptr<bpf_token> token, boolean kernel) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_bpf_map_free(Ptr<bpf_map> map) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_bpf_prog(Ptr<bpf_prog> prog) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_bpf_prog_free(Ptr<bpf_prog> prog) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_bpf_prog_load(Ptr<bpf_prog> prog, Ptr<bpf_attr> attr,
+      Ptr<bpf_token> token, boolean kernel) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_bpf_token_create($arg1, $arg2, (const struct path*)$arg3)")
+  public static int selinux_bpf_token_create(Ptr<bpf_token> token, Ptr<bpf_attr> attr,
+      Ptr<path> path) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_bpf_token_free(Ptr<bpf_token> token) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_bprm_committed_creds((const struct linux_binprm*)$arg1)")
+  public static void selinux_bprm_committed_creds(Ptr<linux_binprm> bprm) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_bprm_committing_creds((const struct linux_binprm*)$arg1)")
+  public static void selinux_bprm_committing_creds(Ptr<linux_binprm> bprm) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_bprm_creds_for_exec(Ptr<linux_binprm> bprm) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_capable((const struct cred*)$arg1, $arg2, $arg3, $arg4)")
+  public static int selinux_capable(Ptr<cred> cred, Ptr<user_namespace> ns, int cap,
+      @Unsigned int opts) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_capget((const struct task_struct*)$arg1, $arg2, $arg3, $arg4)")
+  public static int selinux_capget(Ptr<task_struct> target, Ptr<kernel_cap_t> effective,
+      Ptr<kernel_cap_t> inheritable, Ptr<kernel_cap_t> permitted) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_capset($arg1, (const struct cred*)$arg2, (const struct {\n"
+          + "  long long unsigned int val;\n"
+          + "}*)$arg3, (const struct {\n"
+          + "  long long unsigned int val;\n"
+          + "}*)$arg4, (const struct {\n"
+          + "  long long unsigned int val;\n"
+          + "}*)$arg5)")
+  public static int selinux_capset(Ptr<cred> _new, Ptr<cred> old, Ptr<kernel_cap_t> effective,
+      Ptr<kernel_cap_t> inheritable, Ptr<kernel_cap_t> permitted) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_complete_init() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_cred_getlsmprop((const struct cred*)$arg1, $arg2)")
+  public static void selinux_cred_getlsmprop(Ptr<cred> c, Ptr<lsm_prop> prop) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_cred_getsecid((const struct cred*)$arg1, $arg2)")
+  public static void selinux_cred_getsecid(Ptr<cred> c, Ptr<java.lang. @Unsigned Integer> secid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_cred_prepare($arg1, (const struct cred*)$arg2, $arg3)")
+  public static int selinux_cred_prepare(Ptr<cred> _new, Ptr<cred> old,
+      @Unsigned @OriginalName("gfp_t") int gfp) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_cred_transfer($arg1, (const struct cred*)$arg2)")
+  public static void selinux_cred_transfer(Ptr<cred> _new, Ptr<cred> old) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_current_getlsmprop_subj(Ptr<lsm_prop> prop) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_d_instantiate(Ptr<dentry> dentry, Ptr<inode> inode) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_dentry_create_files_as($arg1, $arg2, $arg3, (const struct cred*)$arg4, $arg5)")
+  public static int selinux_dentry_create_files_as(Ptr<dentry> dentry, int mode, Ptr<qstr> name,
+      Ptr<cred> old, Ptr<cred> _new) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_dentry_init_security($arg1, $arg2, (const struct qstr*)$arg3, (const u8**)$arg4, $arg5)")
+  public static int selinux_dentry_init_security(Ptr<dentry> dentry, int mode, Ptr<qstr> name,
+      Ptr<String> xattr_name, Ptr<lsm_context> cp) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_determine_inode_label((const struct cred_security_struct*)$arg1, $arg2, (const struct qstr*)$arg3, $arg4, $arg5)")
+  public static int selinux_determine_inode_label(Ptr<cred_security_struct> tsec, Ptr<inode> dir,
+      Ptr<qstr> name, @Unsigned short tclass, Ptr<java.lang. @Unsigned Integer> _new_isid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_enabled_setup(String str) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_file_alloc_security(Ptr<file> file) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_file_fcntl(Ptr<file> file, @Unsigned int cmd, @Unsigned long arg) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_file_ioctl(Ptr<file> file, @Unsigned int cmd, @Unsigned long arg) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_file_ioctl_compat(Ptr<file> file, @Unsigned int cmd,
+      @Unsigned long arg) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_file_lock(Ptr<file> file, @Unsigned int cmd) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_file_mprotect(Ptr<vm_area_struct> vma, @Unsigned long reqprot,
+      @Unsigned long prot) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_file_open(Ptr<file> file) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_file_permission(Ptr<file> file, int mask) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_file_receive(Ptr<file> file) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_file_send_sigiotask(Ptr<task_struct> tsk, Ptr<fown_struct> fown,
+      int signum) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_file_set_fowner(Ptr<file> file) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_free_mnt_opts(Ptr<?> mnt_opts) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_fs_context_dup(Ptr<fs_context> fc, Ptr<fs_context> src_fc) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_fs_context_parse_param(Ptr<fs_context> fc, Ptr<fs_parameter> param) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_fs_context_submount(Ptr<fs_context> fc, Ptr<super_block> reference) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_getprocattr($arg1, (const u8*)$arg2, $arg3)")
+  public static int selinux_getprocattr(Ptr<task_struct> p, String name, Ptr<String> value) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_getselfattr(@Unsigned int attr, Ptr<lsm_ctx> ctx,
+      Ptr<java.lang. @Unsigned Integer> size, @Unsigned int flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_ib_alloc_security(Ptr<?> ib_sec) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_ib_endport_manage_subnet($arg1, (const u8*)$arg2, $arg3)")
+  public static int selinux_ib_endport_manage_subnet(Ptr<?> ib_sec, String dev_name,
+      char port_num) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_ib_pkey_access(Ptr<?> ib_sec, @Unsigned long subnet_prefix,
+      @Unsigned short pkey_val) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static String selinux_ima_collect_state() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_ima_measure_state() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_ima_measure_state_locked() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_inet_conn_established(Ptr<sock> sk, Ptr<sk_buff> skb) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inet_conn_request((const struct sock*)$arg1, $arg2, $arg3)")
+  public static int selinux_inet_conn_request(Ptr<sock> sk, Ptr<sk_buff> skb,
+      Ptr<request_sock> req) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inet_csk_clone($arg1, (const struct request_sock*)$arg2)")
+  public static void selinux_inet_csk_clone(Ptr<sock> newsk, Ptr<request_sock> req) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inet_sys_rcv_skb(Ptr<net> ns, int ifindex, String addrp,
+      @Unsigned short family, @Unsigned int peer_sid, Ptr<common_audit_data> ad) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_init() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_alloc_security(Ptr<inode> inode) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_copy_up(Ptr<dentry> src, Ptr<Ptr<cred>> _new) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_copy_up_xattr($arg1, (const u8*)$arg2)")
+  public static int selinux_inode_copy_up_xattr(Ptr<dentry> dentry, String name) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_create(Ptr<inode> dir, Ptr<dentry> dentry,
+      @Unsigned @OriginalName("umode_t") short mode) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_file_getattr(Ptr<dentry> dentry, Ptr<file_kattr> fa) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_file_setattr(Ptr<dentry> dentry, Ptr<file_kattr> fa) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_follow_link(Ptr<dentry> dentry, Ptr<inode> inode, boolean rcu) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_inode_free_security(Ptr<inode> inode) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_get_acl($arg1, $arg2, (const u8*)$arg3)")
+  public static int selinux_inode_get_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
+      String acl_name) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_getattr((const struct path*)$arg1)")
+  public static int selinux_inode_getattr(Ptr<path> path) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_inode_getlsmprop(Ptr<inode> inode, Ptr<lsm_prop> prop) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_getsecctx(Ptr<inode> inode, Ptr<lsm_context> cp) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_getsecurity($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  public static int selinux_inode_getsecurity(Ptr<mnt_idmap> idmap, Ptr<inode> inode, String name,
+      Ptr<Ptr<?>> buffer, boolean alloc) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_getxattr($arg1, (const u8*)$arg2)")
+  public static int selinux_inode_getxattr(Ptr<dentry> dentry, String name) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_init_security($arg1, $arg2, (const struct qstr*)$arg3, $arg4, $arg5)")
+  public static int selinux_inode_init_security(Ptr<inode> inode, Ptr<inode> dir, Ptr<qstr> qstr,
+      Ptr<xattr> xattrs, Ptr<java.lang.Integer> xattr_count) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_init_security_anon($arg1, (const struct qstr*)$arg2, (const struct inode*)$arg3)")
+  public static int selinux_inode_init_security_anon(Ptr<inode> inode, Ptr<qstr> name,
+      Ptr<inode> context_inode) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_inode_invalidate_secctx(Ptr<inode> inode) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_link(Ptr<dentry> old_dentry, Ptr<inode> dir,
+      Ptr<dentry> new_dentry) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_listsecurity(Ptr<inode> inode, String buffer,
+      @Unsigned long buffer_size) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_listxattr(Ptr<dentry> dentry) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_mkdir(Ptr<inode> dir, Ptr<dentry> dentry,
+      @Unsigned @OriginalName("umode_t") short mask) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_mknod(Ptr<inode> dir, Ptr<dentry> dentry,
+      @Unsigned @OriginalName("umode_t") short mode, @Unsigned @OriginalName("dev_t") int dev) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_notifysecctx(Ptr<inode> inode, Ptr<?> ctx, @Unsigned int ctxlen) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_permission(Ptr<inode> inode, int requested) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_post_setxattr($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  public static void selinux_inode_post_setxattr(Ptr<dentry> dentry, String name, Ptr<?> value,
+      @Unsigned long size, int flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_readlink(Ptr<dentry> dentry) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_remove_acl($arg1, $arg2, (const u8*)$arg3)")
+  public static int selinux_inode_remove_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
+      String acl_name) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_removexattr($arg1, $arg2, (const u8*)$arg3)")
+  public static int selinux_inode_removexattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
+      String name) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_rename(Ptr<inode> old_inode, Ptr<dentry> old_dentry,
+      Ptr<inode> new_inode, Ptr<dentry> new_dentry) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_rmdir(Ptr<inode> dir, Ptr<dentry> dentry) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_set_acl($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  public static int selinux_inode_set_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String acl_name,
+      Ptr<posix_acl> kacl) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_setattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
+      Ptr<iattr> iattr) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_setsecctx(Ptr<dentry> dentry, Ptr<?> ctx, @Unsigned int ctxlen) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_setsecurity($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  public static int selinux_inode_setsecurity(Ptr<inode> inode, String name, Ptr<?> value,
+      @Unsigned long size, int flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_setxattr($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6)")
+  public static int selinux_inode_setxattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name,
+      Ptr<?> value, @Unsigned long size, int flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_symlink($arg1, $arg2, (const u8*)$arg3)")
+  public static int selinux_inode_symlink(Ptr<inode> dir, Ptr<dentry> dentry, String name) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_inode_unlink(Ptr<inode> dir, Ptr<dentry> dentry) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_inode_xattr_skipcap((const u8*)$arg1)")
+  public static int selinux_inode_xattr_skipcap(String name) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_ip_forward($arg1, $arg2, (const struct nf_hook_state*)$arg3)")
+  public static @Unsigned int selinux_ip_forward(Ptr<?> priv, Ptr<sk_buff> skb,
+      Ptr<nf_hook_state> state) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_ip_output($arg1, $arg2, (const struct nf_hook_state*)$arg3)")
+  public static @Unsigned int selinux_ip_output(Ptr<?> priv, Ptr<sk_buff> skb,
+      Ptr<nf_hook_state> state) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_ip_postroute($arg1, $arg2, (const struct nf_hook_state*)$arg3)")
+  public static @Unsigned int selinux_ip_postroute(Ptr<?> priv, Ptr<sk_buff> skb,
+      Ptr<nf_hook_state> state) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_ip_postroute_compat($arg1, (const struct nf_hook_state*)$arg2)")
+  public static @Unsigned int selinux_ip_postroute_compat(Ptr<sk_buff> skb,
+      Ptr<nf_hook_state> state) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_ipc_getlsmprop(Ptr<kern_ipc_perm> ipcp, Ptr<lsm_prop> prop) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_ipc_permission(Ptr<kern_ipc_perm> ipcp, short flag) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_ismaclabel((const u8*)$arg1)")
+  public static int selinux_ismaclabel(String name) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_kernel_act_as(Ptr<cred> _new, @Unsigned int secid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_kernel_create_files_as(Ptr<cred> _new, Ptr<inode> inode) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_kernel_load_data(kernel_load_data_id id, boolean contents) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_kernel_load_from_file(Ptr<file> file, @Unsigned int requested) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_kernel_module_request(String kmod_name) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_kernel_read_file(Ptr<file> file, kernel_read_file_id id,
+      boolean contents) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static Ptr<page> selinux_kernel_status_page() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_kernfs_init_security(Ptr<kernfs_node> kn_dir, Ptr<kernfs_node> kn) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_key_alloc($arg1, (const struct cred*)$arg2, $arg3)")
+  public static int selinux_key_alloc(Ptr<key> k, Ptr<cred> cred, @Unsigned long flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_key_getsecurity(Ptr<key> key, Ptr<String> _buffer) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_key_permission($arg1, (const struct cred*)$arg2, $arg3)")
+  public static int selinux_key_permission(
+      @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> key_ref,
+      Ptr<cred> cred, key_need_perm need_perm) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_lsm_getattr(@Unsigned int attr, Ptr<task_struct> p, Ptr<String> value) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_lsm_notifier_avc_callback(@Unsigned int event) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_lsm_setattr(@Unsigned long attr, Ptr<?> value, @Unsigned long size) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_lsmprop_to_secctx(Ptr<lsm_prop> prop, Ptr<lsm_context> cp) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_mmap_addr(@Unsigned long addr) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_mmap_file(Ptr<file> file, @Unsigned long reqprot, @Unsigned long prot,
+      @Unsigned long flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_mount((const u8*)$arg1, (const struct path*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  public static int selinux_mount(String dev_name, Ptr<path> path, String type,
+      @Unsigned long flags, Ptr<?> data) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_move_mount((const struct path*)$arg1, (const struct path*)$arg2)")
+  public static int selinux_move_mount(Ptr<path> from_path, Ptr<path> to_path) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_mptcp_add_subflow(Ptr<sock> sk, Ptr<sock> ssk) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_msg_msg_alloc_security(Ptr<msg_msg> msg) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_msg_queue_alloc_security(Ptr<kern_ipc_perm> msq) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_msg_queue_associate(Ptr<kern_ipc_perm> msq, int msqflg) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_msg_queue_msgctl(Ptr<kern_ipc_perm> msq, int cmd) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_msg_queue_msgrcv(Ptr<kern_ipc_perm> msq, Ptr<msg_msg> msg,
+      Ptr<task_struct> target, long type, int mode) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_msg_queue_msgsnd(Ptr<kern_ipc_perm> msq, Ptr<msg_msg> msg, int msqflg) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_netcache_avc_callback(@Unsigned int event) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_netlbl_cache_invalidate() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_netlbl_err(Ptr<sk_buff> skb, @Unsigned short family, int error,
+      int gateway) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_netlbl_inet_conn_request(Ptr<request_sock> req,
+      @Unsigned short family) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_netlbl_inet_csk_clone(Ptr<sock> sk, @Unsigned short family) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_netlbl_sctp_assoc_request(Ptr<sctp_association> asoc,
+      Ptr<sk_buff> skb) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_netlbl_sctp_sk_clone(Ptr<sock> sk, Ptr<sock> newsk) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_netlbl_sk_security_free(Ptr<sk_security_struct> sksec) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_netlbl_sk_security_reset(Ptr<sk_security_struct> sksec) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_netlbl_skbuff_getsid(Ptr<sk_buff> skb, @Unsigned short family,
+      Ptr<java.lang. @Unsigned Integer> type, Ptr<java.lang. @Unsigned Integer> sid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_netlbl_skbuff_setsid(Ptr<sk_buff> skb, @Unsigned short family,
+      @Unsigned int sid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static Ptr<netlbl_lsm_secattr> selinux_netlbl_sock_genattr(Ptr<sock> sk) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_netlbl_sock_rcv_skb(Ptr<sk_security_struct> sksec, Ptr<sk_buff> skb,
+      @Unsigned short family, Ptr<common_audit_data> ad) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_netlbl_socket_connect(Ptr<sock> sk, Ptr<sockaddr> addr) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_netlbl_socket_connect_locked(Ptr<sock> sk, Ptr<sockaddr> addr) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_netlbl_socket_post_create(Ptr<sock> sk, @Unsigned short family) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_netlbl_socket_setsockopt(Ptr<socket> sock, int level, int optname) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_netlink_send(Ptr<sock> sk, Ptr<sk_buff> skb) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_nf_ip_init() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_nf_register(Ptr<net> net) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_nf_unregister(Ptr<net> net) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_nlmsg_lookup(@Unsigned short sclass, @Unsigned short nlmsg_type,
+      Ptr<java.lang. @Unsigned Integer> perm) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_notify_policy_change(@Unsigned int seqno) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_parse_skb(Ptr<sk_buff> skb, Ptr<common_audit_data> ad,
+      Ptr<String> _addrp, int src, Ptr<java.lang.Character> proto) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_parse_skb_ipv4(Ptr<sk_buff> skb, Ptr<common_audit_data> ad,
+      Ptr<java.lang.Character> proto) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_parse_skb_ipv6(Ptr<sk_buff> skb, Ptr<common_audit_data> ad,
+      Ptr<java.lang.Character> proto) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_path_notify((const struct path*)$arg1, $arg2, $arg3)")
+  public static int selinux_path_notify(Ptr<path> path, @Unsigned long mask,
+      @Unsigned int obj_type) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_perf_event_alloc(Ptr<perf_event> event) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_perf_event_open(int type) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_perf_event_read(Ptr<perf_event> event) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_perf_event_write(Ptr<perf_event> event) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_policy_cancel(Ptr<selinux_load_state> load_state) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_policy_commit(Ptr<selinux_load_state> load_state) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_policy_genfs_sid($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  public static int selinux_policy_genfs_sid(Ptr<selinux_policy> policy, String fstype, String path,
+      @Unsigned short orig_sclass, Ptr<java.lang. @Unsigned Integer> sid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_ptrace_access_check(Ptr<task_struct> child, @Unsigned int mode) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_ptrace_traceme(Ptr<task_struct> parent) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_quota_on(Ptr<dentry> dentry) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_quotactl($arg1, $arg2, $arg3, (const struct super_block*)$arg4)")
+  public static int selinux_quotactl(int cmds, int type, int id, Ptr<super_block> sb) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_release_secctx(Ptr<lsm_context> cp) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_req_classify_flow((const struct request_sock*)$arg1, $arg2)")
+  public static void selinux_req_classify_flow(Ptr<request_sock> req, Ptr<flowi_common> flic) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sb_alloc_security(Ptr<super_block> sb) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_sb_clone_mnt_opts((const struct super_block*)$arg1, $arg2, $arg3, $arg4)")
+  public static int selinux_sb_clone_mnt_opts(Ptr<super_block> oldsb, Ptr<super_block> newsb,
+      @Unsigned long kern_flags, Ptr<java.lang. @Unsigned Long> set_kern_flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sb_eat_lsm_opts(String options, Ptr<Ptr<?>> mnt_opts) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_sb_kern_mount((const struct super_block*)$arg1)")
+  public static int selinux_sb_kern_mount(Ptr<super_block> sb) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sb_mnt_opts_compat(Ptr<super_block> sb, Ptr<?> mnt_opts) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sb_remount(Ptr<super_block> sb, Ptr<?> mnt_opts) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sb_show_options(Ptr<seq_file> m, Ptr<super_block> sb) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sb_statfs(Ptr<dentry> dentry) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sctp_assoc_established(Ptr<sctp_association> asoc, Ptr<sk_buff> skb) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sctp_assoc_request(Ptr<sctp_association> asoc, Ptr<sk_buff> skb) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sctp_bind_connect(Ptr<sock> sk, int optname, Ptr<sockaddr> address,
+      int addrlen) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sctp_process_new_assoc(Ptr<sctp_association> asoc, Ptr<sk_buff> skb) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_sctp_sk_clone(Ptr<sctp_association> asoc, Ptr<sock> sk,
+      Ptr<sock> newsk) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_secctx_to_secid((const u8*)$arg1, $arg2, $arg3)")
+  public static int selinux_secctx_to_secid(String secdata, @Unsigned int seclen,
+      Ptr<java.lang. @Unsigned Integer> secid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_secid_to_secctx(@Unsigned int secid, Ptr<lsm_context> cp) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_secmark_enabled() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_secmark_refcount_dec() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_secmark_refcount_inc() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_secmark_relabel_packet(@Unsigned int sid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sem_alloc_security(Ptr<kern_ipc_perm> sma) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sem_associate(Ptr<kern_ipc_perm> sma, int semflg) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sem_semctl(Ptr<kern_ipc_perm> sma, int cmd) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sem_semop(Ptr<kern_ipc_perm> sma, Ptr<sembuf> sops, @Unsigned int nsops,
+      int alter) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_set_mnt_opts(Ptr<super_block> sb, Ptr<?> mnt_opts,
+      @Unsigned long kern_flags, Ptr<java.lang. @Unsigned Long> set_kern_flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_setprocattr((const u8*)$arg1, $arg2, $arg3)")
+  public static int selinux_setprocattr(String name, Ptr<?> value, @Unsigned long size) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_setselfattr(@Unsigned int attr, Ptr<lsm_ctx> ctx, @Unsigned int size,
+      @Unsigned int flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_shm_alloc_security(Ptr<kern_ipc_perm> shp) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_shm_associate(Ptr<kern_ipc_perm> shp, int shmflg) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_shm_shmat(Ptr<kern_ipc_perm> shp, String shmaddr, int shmflg) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_shm_shmctl(Ptr<kern_ipc_perm> shp, int cmd) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sk_alloc_security(Ptr<sock> sk, int family,
+      @Unsigned @OriginalName("gfp_t") int priority) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_sk_clone_security((const struct sock*)$arg1, $arg2)")
+  public static void selinux_sk_clone_security(Ptr<sock> sk, Ptr<sock> newsk) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_sk_free_security(Ptr<sock> sk) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_sk_getsecid((const struct sock*)$arg1, $arg2)")
+  public static void selinux_sk_getsecid(Ptr<sock> sk, Ptr<java.lang. @Unsigned Integer> secid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_skb_peerlbl_sid(Ptr<sk_buff> skb, @Unsigned short family,
+      Ptr<java.lang. @Unsigned Integer> sid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_sock_graft(Ptr<sock> sk, Ptr<socket> parent) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_sock_rcv_skb_compat(Ptr<sock> sk, Ptr<sk_buff> skb,
+      @Unsigned short family) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_accept(Ptr<socket> sock, Ptr<socket> newsock) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_bind(Ptr<socket> sock, Ptr<sockaddr> address, int addrlen) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_connect(Ptr<socket> sock, Ptr<sockaddr> address, int addrlen) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_create(int family, int type, int protocol, int kern) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_getpeername(Ptr<socket> sock) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_getpeersec_dgram(Ptr<socket> sock, Ptr<sk_buff> skb,
+      Ptr<java.lang. @Unsigned Integer> secid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_getpeersec_stream(Ptr<socket> sock, sockptr_t optval,
+      sockptr_t optlen, @Unsigned int len) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_getsockname(Ptr<socket> sock) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_getsockopt(Ptr<socket> sock, int level, int optname) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_listen(Ptr<socket> sock, int backlog) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_post_create(Ptr<socket> sock, int family, int type, int protocol,
+      int kern) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_recvmsg(Ptr<socket> sock, Ptr<msghdr> msg, int size, int flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_sendmsg(Ptr<socket> sock, Ptr<msghdr> msg, int size) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_setsockopt(Ptr<socket> sock, int level, int optname) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_shutdown(Ptr<socket> sock, int how) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_sock_rcv_skb(Ptr<sock> sk, Ptr<sk_buff> skb) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_socketpair(Ptr<socket> socka, Ptr<socket> sockb) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_unix_may_send(Ptr<socket> sock, Ptr<socket> other) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_socket_unix_stream_connect(Ptr<sock> sock, Ptr<sock> other,
+      Ptr<sock> newsk) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_status_update_policyload(@Unsigned int seqno) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_status_update_setenforce(boolean enforcing) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_syslog(int type) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_task_alloc(Ptr<task_struct> task, @Unsigned long clone_flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_task_getioprio(Ptr<task_struct> p) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_task_getlsmprop_obj(Ptr<task_struct> p, Ptr<lsm_prop> prop) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_task_getpgid(Ptr<task_struct> p) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_task_getscheduler(Ptr<task_struct> p) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_task_getsid(Ptr<task_struct> p) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_task_kill($arg1, $arg2, $arg3, (const struct cred*)$arg4)")
+  public static int selinux_task_kill(Ptr<task_struct> p, Ptr<kernel_siginfo> info, int sig,
+      Ptr<cred> cred) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_task_movememory(Ptr<task_struct> p) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_task_prlimit((const struct cred*)$arg1, (const struct cred*)$arg2, $arg3)")
+  public static int selinux_task_prlimit(Ptr<cred> cred, Ptr<cred> tcred, @Unsigned int flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_task_setioprio(Ptr<task_struct> p, int ioprio) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_task_setnice(Ptr<task_struct> p, int nice) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_task_setpgid(Ptr<task_struct> p, @OriginalName("pid_t") int pgid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_task_setrlimit(Ptr<task_struct> p, @Unsigned int resource,
+      Ptr<rlimit> new_rlim) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_task_setscheduler(Ptr<task_struct> p) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_task_to_inode(Ptr<task_struct> p, Ptr<inode> inode) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_transaction_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  public static @OriginalName("ssize_t") long selinux_transaction_write(Ptr<file> file, String buf,
+      @Unsigned long size, Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_tun_dev_alloc_security(Ptr<?> security) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_tun_dev_attach(Ptr<sock> sk, Ptr<?> security) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_tun_dev_attach_queue(Ptr<?> security) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_tun_dev_create() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_tun_dev_open(Ptr<?> security) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_umount(Ptr<vfsmount> mnt, int flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_uring_allowed() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_uring_cmd(Ptr<io_uring_cmd> ioucmd) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_uring_override_creds((const struct cred*)$arg1)")
+  public static int selinux_uring_override_creds(Ptr<cred> _new) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_uring_sqpoll() {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_userns_create((const struct cred*)$arg1)")
+  public static int selinux_userns_create(Ptr<cred> cred) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_vm_enough_memory(Ptr<mm_struct> mm, long pages) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_watch_key(Ptr<key> key) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_xfrm_alloc_user(Ptr<Ptr<xfrm_sec_ctx>> ctxp,
+      Ptr<xfrm_user_sec_ctx> uctx, @Unsigned @OriginalName("gfp_t") int gfp) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_xfrm_decode_session(Ptr<sk_buff> skb,
+      Ptr<java.lang. @Unsigned Integer> sid, int ckall) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_xfrm_policy_alloc(Ptr<Ptr<xfrm_sec_ctx>> ctxp,
+      Ptr<xfrm_user_sec_ctx> uctx, @Unsigned @OriginalName("gfp_t") int gfp) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_xfrm_policy_clone(Ptr<xfrm_sec_ctx> old_ctx,
+      Ptr<Ptr<xfrm_sec_ctx>> new_ctxp) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_xfrm_policy_delete(Ptr<xfrm_sec_ctx> ctx) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_xfrm_policy_free(Ptr<xfrm_sec_ctx> ctx) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_xfrm_policy_lookup(Ptr<xfrm_sec_ctx> ctx, @Unsigned int fl_secid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_xfrm_postroute_last(@Unsigned int sk_sid, Ptr<sk_buff> skb,
+      Ptr<common_audit_data> ad, char proto) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_xfrm_skb_sid(Ptr<sk_buff> skb, Ptr<java.lang. @Unsigned Integer> sid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_xfrm_skb_sid_ingress(Ptr<sk_buff> skb,
+      Ptr<java.lang. @Unsigned Integer> sid, int ckall) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_xfrm_sock_rcv_skb(@Unsigned int sk_sid, Ptr<sk_buff> skb,
+      Ptr<common_audit_data> ad) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_xfrm_state_alloc(Ptr<xfrm_state> x, Ptr<xfrm_user_sec_ctx> uctx) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_xfrm_state_alloc_acquire(Ptr<xfrm_state> x, Ptr<xfrm_sec_ctx> polsec,
+      @Unsigned int secid) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static int selinux_xfrm_state_delete(Ptr<xfrm_state> x) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction
+  public static void selinux_xfrm_state_free(Ptr<xfrm_state> x) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("selinux_xfrm_state_pol_flow_match($arg1, $arg2, (const struct flowi_common*)$arg3)")
+  public static int selinux_xfrm_state_pol_flow_match(Ptr<xfrm_state> x, Ptr<xfrm_policy> xp,
+      Ptr<flowi_common> flic) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct selinux_audit_data"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class selinux_audit_data extends Struct {
+    public @Unsigned int ssid;
+
+    public @Unsigned int tsid;
+
+    public @Unsigned short tclass;
+
+    public @Unsigned int requested;
+
+    public @Unsigned int audited;
+
+    public @Unsigned int denied;
+
+    public int result;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct selinux_state"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class selinux_state extends Struct {
+    public boolean enforcing;
+
+    public boolean initialized;
+
+    public boolean @Size(12) [] policycap;
+
+    public Ptr<page> status_page;
+
+    public mutex status_lock;
+
+    public Ptr<selinux_policy> policy;
+
+    public mutex policy_mutex;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct selinux_avc"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class selinux_avc extends Struct {
+    public @Unsigned int avc_cache_threshold;
+
+    public avc_cache avc_cache;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct selinux_mnt_opts"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class selinux_mnt_opts extends Struct {
+    public @Unsigned int fscontext_sid;
+
+    public @Unsigned int context_sid;
+
+    public @Unsigned int rootcontext_sid;
+
+    public @Unsigned int defcontext_sid;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct selinux_load_state"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class selinux_load_state extends Struct {
+    public Ptr<selinux_policy> policy;
+
+    public Ptr<selinux_policy_convert_data> convert_data;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct selinux_fs_info"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class selinux_fs_info extends Struct {
+    public Ptr<dentry> bool_dir;
+
+    public @Unsigned int bool_num;
+
+    public Ptr<String> bool_pending_names;
+
+    public Ptr<java.lang.Integer> bool_pending_values;
+
+    public Ptr<dentry> class_dir;
+
+    public @Unsigned long last_class_ino;
+
+    public boolean policy_opened;
+
+    public Ptr<dentry> policycap_dir;
+
+    public @Unsigned long last_ino;
+
+    public Ptr<super_block> sb;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "enum selinux_nlgroups"
+  )
+  public enum selinux_nlgroups implements Enum<selinux_nlgroups>, TypedEnum<selinux_nlgroups, java.lang. @Unsigned Integer> {
+    /**
+     * {@code SELNLGRP_NONE = 0}
+     */
+    @EnumMember(
+        value = 0L,
+        name = "SELNLGRP_NONE"
+    )
+    SELNLGRP_NONE,
+
+    /**
+     * {@code SELNLGRP_AVC = 1}
+     */
+    @EnumMember(
+        value = 1L,
+        name = "SELNLGRP_AVC"
+    )
+    SELNLGRP_AVC,
+
+    /**
+     * {@code __SELNLGRP_MAX = 2}
+     */
+    @EnumMember(
+        value = 2L,
+        name = "__SELNLGRP_MAX"
+    )
+    __SELNLGRP_MAX
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct selinux_kernel_status"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class selinux_kernel_status extends Struct {
+    public @Unsigned int version;
+
+    public @Unsigned int sequence;
+
+    public @Unsigned int enforcing;
+
+    public @Unsigned int policyload;
+
+    public @Unsigned int deny_unknown;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct selinux_policy"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class selinux_policy extends Struct {
+    public Ptr<sidtab> sidtab;
+
+    public policydb policydb;
+
+    public selinux_map map;
+
+    public @Unsigned int latest_granting;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct selinux_policy_convert_data"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class selinux_policy_convert_data extends Struct {
+    public convert_context_args args;
+
+    public sidtab_convert_params sidtab_params;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct selinux_mapping"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class selinux_mapping extends Struct {
+    public @Unsigned short value;
+
+    public @Unsigned short num_perms;
+
+    public @Unsigned int @Size(32) [] perms;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct selinux_map"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class selinux_map extends Struct {
+    public Ptr<selinux_mapping> mapping;
+
+    public @Unsigned short size;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct selinux_audit_rule"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class selinux_audit_rule extends Struct {
+    public @Unsigned int au_seqno;
+
+    public context au_ctxt;
+  }
+}

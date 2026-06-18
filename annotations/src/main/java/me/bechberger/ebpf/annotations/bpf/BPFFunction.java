@@ -59,6 +59,19 @@ public @interface BPFFunction {
     String section() default "";
 
     /**
+     * Whether to emit {@code __always_inline} on the generated C function.
+     *
+     * <p>Defaults to {@code true} for helper functions (no {@link #section()}) and
+     * {@code false} for entry-point functions (with a {@link #section()}).
+     *
+     * <p>Set explicitly to override the default in either direction.
+     *
+     * <p>Also honoured: {@link AlwaysInline} and {@link BPFInline} force inline regardless of
+     * this attribute.
+     */
+    boolean inline() default true;
+
+    /**
      * Whether the function should be automatically attached to a program when
      * using {@code BPPProgram::autoAttachPrograms}.
      * <p>
@@ -76,5 +89,5 @@ public @interface BPFFunction {
 
     boolean addDefinition() default true;
 
-    Set<String> autoAttachableSections = Set.of("fentry", "fexit", "kprobe", "kretprobe", "ksyscall", "tp");
+    Set<String> autoAttachableSections = Set.of("fentry", "fexit", "kprobe", "kretprobe", "ksyscall", "tp", "lsm");
 }

@@ -1,9 +1,9 @@
 package me.bechberger.ebpf.samples;
 
+import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.bpf.BPFJ;
 import me.bechberger.ebpf.bpf.BPFProgram;
-import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.runtime.OpenDefinitions.open_how;
 import me.bechberger.ebpf.runtime.interfaces.SystemCallHooks;
 import me.bechberger.ebpf.type.Ptr;
@@ -20,7 +20,10 @@ public abstract class LogOpenAt2Calls extends BPFProgram implements SystemCallHo
     public void enterOpenat2(int dfd, String filename, Ptr<open_how> how) {
         open_how copy = new open_how();
         BPFJ.bpf_probe_read_kernel(copy, how);
+        @Size(16) char[] comm = BPFJ.charBuf(16);
+        BPFJ.getCurrentComm(comm);
         bpf_trace_printk("Accessed file %s: flags=%d, mode=%d", filename, copy.flags, copy.mode);
+        bpf_trace_printk(" (comm=%s)", comm);
     }
 
     public static void main(String[] args) {

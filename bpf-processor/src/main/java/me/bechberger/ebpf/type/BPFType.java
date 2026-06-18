@@ -661,14 +661,32 @@ public sealed interface BPFType<T> {
      * @param getter function that takes the struct and returns the member
      */
     record BPFStructMember<P, T>(String name, BPFType<T> type, int offset, Function<P, T> getter,
-                                 @Nullable String ebpfSize) {
+                                 @Nullable String ebpfSize, boolean kptr) {
+
+        public BPFStructMember(String name, BPFType<T> type, int offset, Function<P, T> getter,
+                               @Nullable String ebpfSize) {
+            this(name, type, offset, getter, ebpfSize, false);
+        }
 
         public BPFStructMember(String name, BPFType<T> type, int offset, Function<P, T> getter) {
-            this(name, type, offset, getter, null);
+            this(name, type, offset, getter, null, false);
         }
 
         CAST.Declarator.StructMember toCStructMember() {
-            return CAST.Declarator.structMember(type.toCUse(), CAST.Expression.variable(name),
+            CAST.Declarator decl = type.toCUse();
+            if (kptr) {
+                // bpf_cpumask kptr fields lower to `struct bpf_cpumask __kptr *name;`.
+                // The Ptr<T> Java type already produces a PointerDeclarator wrapping
+                // the pointee declarator; inject a TaggedDeclarator one level inside
+                // the pointer so the qualifier prints between the struct name and `*`.
+                if (decl instanceof CAST.Declarator.PointerDeclarator p) {
+                    decl = new CAST.Declarator.PointerDeclarator(
+                            new CAST.Declarator.TaggedDeclarator("__kptr", p.declarator()));
+                } else {
+                    decl = new CAST.Declarator.TaggedDeclarator("__kptr", decl);
+                }
+            }
+            return CAST.Declarator.structMember(decl, CAST.Expression.variable(name),
                     ebpfSize == null ? null : CAST.Expression.verbatim(ebpfSize));
         }
 
@@ -686,10 +704,15 @@ public sealed interface BPFType<T> {
      * @param getter function that takes the struct and returns the member
      */
     record UBPFStructMember<P, T>(String name, BPFType<T> type, Function<P, T> getter, @Nullable String ebpfSize,
-                                  Optional<Integer> offset) {
+                                  Optional<Integer> offset, boolean kptr) {
+
+        public UBPFStructMember(String name, BPFType<T> type, Function<P, T> getter, @Nullable String ebpfSize,
+                                Optional<Integer> offset) {
+            this(name, type, getter, ebpfSize, offset, false);
+        }
 
         public UBPFStructMember(String name, BPFType<T> type, Function<P, T> getter, @Nullable String ebpfSize) {
-            this(name, type, getter, ebpfSize, Optional.empty());
+            this(name, type, getter, ebpfSize, Optional.empty(), false);
         }
 
         public UBPFStructMember(String name, BPFType<T> type, Function<P, T> getter) {
@@ -702,7 +725,7 @@ public sealed interface BPFType<T> {
                     throw new IllegalArgumentException("Offset " + offset + " is greater than byte offset " + this.offset.get());
                 }
             }
-            return new BPFStructMember<>(name, type, this.offset.orElse(offset), getter, ebpfSize);
+            return new BPFStructMember<>(name, type, this.offset.orElse(offset), getter, ebpfSize, kptr);
         }
     }
 
@@ -984,6 +1007,7 @@ public sealed interface BPFType<T> {
                 String memberExpression =
                         members.stream().map(m -> "new " + BPF_TYPE + ".UBPFStructMember<" + className + ", " + m.type().toJavaUseInGenerics() + ">(" + "\"" + m.name() + "\"," +
                                 " " + typeToSpecName.apply(m.type()) + ", " + accessor.apply(m) + ", null," + (m.offset == 0 ? "java.util.Optional.empty()" : "java.util.Optional.of(" + m.offset + ")") +
+                                ", " + m.kptr +
                                 ")").collect(Collectors.joining(", "));
 
                 ClassName bpfType = ClassName.get(BPF_PACKAGE, "BPFType");

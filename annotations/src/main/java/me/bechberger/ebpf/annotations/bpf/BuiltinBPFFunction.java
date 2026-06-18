@@ -81,4 +81,25 @@ public @interface BuiltinBPFFunction {
      * }
      */
     String value() default "$name($args)";
+
+    /**
+     * For constructors and static factory methods of {@link BPFAbstraction} classes: the C expression
+     * that becomes {@code $this} at every subsequent call on the resulting variable or field.
+     * {@code $argN} placeholders are resolved against the constructor's own argument list when the
+     * carrier is stored.  Empty string (default) means "no carrier" — used on all non-abstraction methods.
+     *
+     * <p>Example — explicit-id DSQ:
+     * <pre>{@code
+     * @BuiltinBPFFunction(value = "scx_bpf_create_dsq($arg1, -1)", carrier = "$arg1")
+     * public DispatchQueue(@Unsigned long id) { throw new MethodIsBPFRelatedFunction(); }
+     * // new DispatchQueue(7L) → carrier = "7L"; any call site resolves $this to 7L
+     * }</pre>
+     *
+     * <p>Example — no side effect, pointer carrier:
+     * <pre>{@code
+     * @BuiltinBPFFunction(value = "", carrier = "scx_bpf_get_idle_cpumask()")
+     * public static CpuMask idle() { throw new MethodIsBPFRelatedFunction(); }
+     * }</pre>
+     */
+    String carrier() default "";
 }

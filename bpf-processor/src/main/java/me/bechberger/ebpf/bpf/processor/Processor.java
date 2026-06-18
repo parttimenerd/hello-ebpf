@@ -5,6 +5,7 @@ import me.bechberger.cast.CAST;
 import me.bechberger.cast.CAST.Statement.Define;
 import me.bechberger.cast.CAST.Statement.Include;
 import me.bechberger.ebpf.annotations.bpf.BPFImpl;
+import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.bpf.processor.TypeProcessor.GlobalVariableDefinition;
 import me.bechberger.ebpf.bpf.processor.TypeProcessor.TypeProcessorResult;
 import org.jetbrains.annotations.Nullable;
@@ -61,9 +62,20 @@ public class Processor extends AbstractProcessor {
      *     <li>Can contain {@code @Type} annotated inner records</li>
      * </ul>
      */
+    /** Returns true if {@code typeElement} extends (directly or indirectly) the class with the given binary name. */
+    private boolean extendsClass(TypeElement typeElement, String binaryName) {
+        TypeMirror superMirror = typeElement.getSuperclass();
+        while (superMirror != null && superMirror.getKind() != javax.lang.model.type.TypeKind.NONE) {
+            var superEl = (TypeElement) processingEnv.getTypeUtils().asElement(superMirror);
+            if (superEl == null) break;
+            if (superEl.getQualifiedName().contentEquals(binaryName)) return true;
+            superMirror = superEl.getSuperclass();
+        }
+        return false;
+    }
+
     public void processBPFProgram(TypeElement typeElement) {
-        if (typeElement.getSuperclass() == null || !typeElement.getSuperclass().toString().equals("me.bechberger" +
-                ".ebpf" + ".bpf.BPFProgram")) {
+        if (!extendsClass(typeElement, "me.bechberger.ebpf.bpf.BPFProgram")) {
             this.processingEnv.getMessager().printError("Class " + typeElement.getSimpleName() + " is annotated with "
                     + "BPF but does not extend BPFProgram", typeElement);
             return;
@@ -98,7 +110,9 @@ public class Processor extends AbstractProcessor {
 
         TypeSpec typeSpec = createType(implName.className, typeElement.asType(), bytes,
                 typeProcessorResult.fields(), combinedCode, typeProcessorResult.globalVariableDefinitions(),
-                typeProcessorResult.additions());
+                typeProcessorResult.additions(), typeElement,
+                typeProcessorResult.abstractionFieldPrologues(),
+                typeProcessorResult.abstractionFieldCarriers());
         try {
             var file = processingEnv.getFiler().createSourceFile(implName.fullyQualifiedClassName, typeElement);
             // delete file if it exists
@@ -199,8 +213,20 @@ public class Processor extends AbstractProcessor {
      */
     private TypeSpec createType(String name, TypeMirror baseType, byte[] byteCode, List<FieldSpec> bpfTypeFields,
                                 CombinedCode code, List<GlobalVariableDefinition> globalVariableDefinitions,
-                                TypeProcessor.InterfaceAdditions additions) {
+                                TypeProcessor.InterfaceAdditions additions, TypeElement outerTypeElement,
+                                Map<String, List<String>> abstractionFieldPrologues,
+                                Map<String, String> abstractionFieldCarriers) {
         var suppressWarnings = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "{\"unchecked\", \"rawtypes\"}").build();
+
+        // Serialize prologues as tab-delimited lines: "methodName\tstatement"
+        var prologuesSerialized = abstractionFieldPrologues.entrySet().stream()
+                .flatMap(e -> e.getValue().stream().map(s -> e.getKey() + "\t" + s))
+                .collect(Collectors.joining("\n"));
+
+        // Serialize carriers as tab-delimited lines: "fieldName\tcarrierExpr"
+        var carriersSerialized = abstractionFieldCarriers.entrySet().stream()
+                .map(e -> e.getKey() + "\t" + e.getValue())
+                .collect(Collectors.joining("\n"));
 
         var spec =
                 TypeSpec.classBuilder(name)
@@ -213,7 +239,11 @@ public class Processor extends AbstractProcessor {
                                 .addJavadoc("Base64 encoded and gzipped eBPF byte-code of the program\n{@snippet : \n" + sanitizeCodeForJavadoc(code.ebpfProgram) + "\n}")
                                 .initializer("$L", createStringExpression(gzipBase64Encode(byteCode))).build())
                         .addField(FieldSpec.builder(String.class, "CODE", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                                .initializer("$S", code.ebpfProgram).build());
+                                .initializer("$S", code.ebpfProgram).build())
+                        .addField(FieldSpec.builder(String.class, "ABSTRACTION_PROLOGUES", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                                .initializer("$S", prologuesSerialized).build())
+                        .addField(FieldSpec.builder(String.class, "ABSTRACTION_CARRIERS", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                                .initializer("$S", carriersSerialized).build());
         bpfTypeFields.forEach(spec::addField);
         spec.addMethod(MethodSpec.methodBuilder("getByteCodeBytesStatic")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(String.class)
@@ -248,6 +278,7 @@ public class Processor extends AbstractProcessor {
             spec.addMethod(addGlobalVariableDefinitions(MethodSpec.methodBuilder("initGlobals")
                     .addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(TypeName.VOID), globalVariableDefinitions).build());
         }
+        generateWithBuilders(outerTypeElement, spec);
         return spec.build();
     }
 
@@ -282,6 +313,71 @@ public class Processor extends AbstractProcessor {
 
     private String createGlobalVariableInitInfoExpression(GlobalVariableDefinition g) {
         return "new me.bechberger.ebpf.bpf.GlobalVariable.GlobalVariableInitInfo<>(this." + g.name() + ", \"" + g.name() + "\", " + g.typeField() + ")";
+    }
+
+    /**
+     * For each {@code @Type}-annotated record inner class in {@code outerTypeElement}, generates a
+     * static nested {@code <RecordName>Withs} class inside the {@code ProgramImpl} that provides
+     * per-component {@code withFoo(record, foo)} static methods.
+     *
+     * <p>Example — given:
+     * <pre>{@code
+     * @Type record Point(int x, int y) {}
+     * }</pre>
+     * The generated class looks like:
+     * <pre>{@code
+     * public static final class PointWiths {
+     *     public static OuterClass.Point withX(OuterClass.Point record, int x) {
+     *         return new OuterClass.Point(x, record.y());
+     *     }
+     *     public static OuterClass.Point withY(OuterClass.Point record, int y) {
+     *         return new OuterClass.Point(record.x(), y);
+     *     }
+     * }
+     * }</pre>
+     */
+    private void generateWithBuilders(TypeElement outerTypeElement, TypeSpec.Builder spec) {
+        for (var enclosed : outerTypeElement.getEnclosedElements()) {
+            if (enclosed.getKind() != ElementKind.RECORD) continue;
+            var recordElement = (TypeElement) enclosed;
+            if (recordElement.getAnnotation(Type.class) == null) continue;
+
+            var fields = recordElement.getEnclosedElements().stream()
+                    .filter(e -> e.getKind() == ElementKind.FIELD)
+                    .map(e -> (VariableElement) e)
+                    .toList();
+            if (fields.isEmpty()) continue;
+
+            var recordTypeName = ClassName.get(outerTypeElement.getQualifiedName().toString(),
+                    recordElement.getSimpleName().toString());
+
+            var withsClass = TypeSpec.classBuilder(recordElement.getSimpleName() + "Withs")
+                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL);
+
+            for (var field : fields) {
+                var fieldName = field.getSimpleName().toString();
+                var fieldTypeName = TypeName.get(field.asType());
+                var capitalizedName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+
+                // Build the constructor argument list: for the changed field use the parameter, for others use record.<field>()
+                var ctorArgs = fields.stream()
+                        .map(f -> {
+                            var fn = f.getSimpleName().toString();
+                            return fn.equals(fieldName) ? fieldName : "record." + fn + "()";
+                        })
+                        .collect(Collectors.joining(", "));
+
+                var withMethod = MethodSpec.methodBuilder("with" + capitalizedName)
+                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                        .returns(recordTypeName)
+                        .addParameter(recordTypeName, "record")
+                        .addParameter(fieldTypeName, fieldName)
+                        .addStatement("return new $T($L)", recordTypeName, ctorArgs)
+                        .build();
+                withsClass.addMethod(withMethod);
+            }
+            spec.addType(withsClass.build());
+        }
     }
 
     private String sanitizeCodeForJavadoc(String code) {
@@ -518,11 +614,30 @@ public class Processor extends AbstractProcessor {
 
     private static Path includePath;
 
+    /**
+     * Map Java's `os.arch` to the multiarch directory name used under
+     * `/usr/include/<arch>-linux-gnu`. Java reports `amd64` on x86_64
+     * Linux, but the multiarch dir is `x86_64-linux-gnu` — without this
+     * normalization, `findIncludePath()` falls through to
+     * `/usr/include/linux`, which doesn't have `asm/unistd.h`.
+     */
+    static String multiarchName(String osArch) {
+        return switch (osArch) {
+            case "amd64", "x86_64" -> "x86_64";
+            case "aarch64", "arm64" -> "aarch64";
+            case "arm" -> "arm";
+            case "ppc64le" -> "powerpc64le";
+            case "s390x" -> "s390x";
+            case "riscv64" -> "riscv64";
+            default -> osArch;
+        };
+    }
+
     /** Find the library include path */
-    private static Path findIncludePath() {
+    static Path findIncludePath() {
         if (includePath == null) {
             // like /usr/include/aarch64-linux-gnu
-            includePath = Path.of("/usr/include").resolve(System.getProperty("os.arch") + "-linux-gnu");
+            includePath = Path.of("/usr/include").resolve(multiarchName(System.getProperty("os.arch")) + "-linux-gnu");
             if (!Files.exists(includePath)) {
                 includePath = Path.of("/usr/include/linux");
                 if (!Files.exists(includePath)) {

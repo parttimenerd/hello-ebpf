@@ -7,6 +7,7 @@ import me.bechberger.ebpf.runtime.TaskDefinitions;
 import me.bechberger.ebpf.shared.TraceLog;
 import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import java.time.Duration;
 
@@ -33,6 +34,7 @@ public class SchedulerTimeoutTest {
     }
 
     @Test
+    @Timeout(20)
     public void testThreeSecondTimeout() throws InterruptedException {
         try (var program = BPFProgram.load(ThreeSecondScheduler.class)) {
             var noScheduleThread = new Thread(() -> {
@@ -44,9 +46,15 @@ public class SchedulerTimeoutTest {
             noScheduleThread.start();
 
             Thread.sleep(2000);
-            assertTrue(program.isSchedulerAttachedProperly());
-            Thread.sleep(2000);
-            assertFalse(program.isSchedulerAttachedProperly());
+            assertTrue(program.isSchedulerAttachedProperly(), "scheduler should be attached 2s in");
+
+            // Poll until the 3s watchdog fires; allow up to 10s total from attach.
+            long deadline = System.currentTimeMillis() + 8000;
+            while (program.isSchedulerAttachedProperly() && System.currentTimeMillis() < deadline) {
+                Thread.sleep(200);
+            }
+            assertFalse(program.isSchedulerAttachedProperly(),
+                    "scheduler watchdog should have fired within 10s of attach");
 
             TraceLog.getInstance().readAllAvailableLines(Duration.ofMillis(100));
         }

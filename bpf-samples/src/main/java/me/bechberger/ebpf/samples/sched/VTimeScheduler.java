@@ -2,94 +2,85 @@
 
 package me.bechberger.ebpf.samples.sched;
 
-import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
-import me.bechberger.ebpf.annotations.bpf.BPFFunction;
+import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.Property;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.Scheduler;
+import me.bechberger.ebpf.bpf.SchedulerBase;
+import me.bechberger.ebpf.bpf.SchedulerStats;
+import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.type.Ptr;
 
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 /**
- * A vtime scheduler that tries to schedule fairly.
+ * A weighted virtual-time fair scheduler.
+ *
+ * <p>Tasks are dispatched from a vtime-ordered DSQ; the task with the smallest
+ * virtual time runs first.  After a task finishes a scheduling slice its vtime
+ * is advanced by {@code elapsed_ns * 100 / weight}, so heavier (higher-priority)
+ * tasks accumulate vtime more slowly and are therefore preferred.
+ *
+ * <p>Sleeping tasks can accumulate at most one slice of budget so that a task
+ * returning from a long sleep cannot monopolise the CPU.
+ *
+ * <p>Based on
+ * <a href="https://github.com/torvalds/linux/blob/6712c4fefca0422851b71d1a58a32ea03f69310f/tools/sched_ext/scx_simple.bpf.c">
+ * {@code scx_simple.bpf.c}</a> (vtime mode) from the Linux kernel.
+ *
+ * <p>Run with:
+ * <pre>
+ *   sudo ./run.sh VTimeScheduler
+ * </pre>
  */
 @BPF(license = "GPL")
 @Property(name = "sched_name", value = "vtime_scheduler")
-public abstract class VTimeScheduler extends BPFProgram
-        implements Scheduler {
+@Property(name = "timeout_ms", value = "10000")
+public abstract class VTimeScheduler extends SchedulerBase implements Scheduler {
 
     // current vtime
     final GlobalVariable<@Unsigned Long> vtime_now =
             new GlobalVariable<>(0L);
 
+    @BPFMapDefinition(maxEntries = 1)
+    BPFPerCpuArray<Long> enqueuedCounts;
+
+    @BPFMapDefinition(maxEntries = 1)
+    BPFPerCpuArray<Long> dispatchedCounts;
+
     /*
-     * Built-in DSQs such as SCX_DSQ_GLOBAL cannot be used as
-     * priority queues (meaning, cannot be dispatched to with
-     * scx_bpf_dispatch_vtime()). We therefore create a
-     * separate DSQ with ID 0 that we dispatch to and consume
-     * from. If scx_simple only supported global FIFO scheduling,
-     * then we could just use SCX_DSQ_GLOBAL.
+     * SchedulerBase.init() already creates SHARED_DSQ_ID — attach without a
+     * second scx_bpf_create_dsq call.
      */
-    static final long SHARED_DSQ_ID = 0;
-
-    @BPFFunction
-    @AlwaysInline
-    boolean isSmaller(@Unsigned long a, @Unsigned long b) {
-        return (long)(a - b) < 0;
-    }
-
-    @Override
-    public int init() {
-        return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
-    }
+    final DispatchQueue shared = DispatchQueue.attach(SHARED_DSQ_ID);
 
     @Override
     public int selectCPU(Ptr<task_struct> p, int prev_cpu,
                          long wake_flags) {
-        // same as before
         boolean is_idle = false;
         int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu,
                 wake_flags, Ptr.of(is_idle));
-        if (is_idle) {
-            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL.value(),
-                    SCX_SLICE_DFL.value(),0);
-        }
+        DispatchQueue.insertToLocalIfIdle(p, is_idle, SCX_SLICE_DFL.value());
         return cpu;
     }
 
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
-        // get the weighted vtime, specified in the stopping
-        // method
-        @Unsigned long vtime = p.val().scx.dsq_vtime;
-
-        /*
-         * Limit the amount of budget that an idling task can
-         * accumulate to one slice.
-         */
-        if (isSmaller(vtime,
-                vtime_now.get() - SCX_SLICE_DFL.value())) {
-            vtime = vtime_now.get() - SCX_SLICE_DFL.value();
-        }
-        /*
-         * Dispatch the task to dsq_vtime-ordered priority
-         * queue, which prioritizes tasks with smaller vtime
-         */
-        scx_bpf_dsq_insert_vtime(p, SHARED_DSQ_ID,
-                SCX_SLICE_DFL.value(), vtime,
-                enq_flags);
+        shared.insertVtimeClamped(p, vtime_now.get(), EnqFlags.passThrough(enq_flags));
+        SchedulerStats.incrementEnqueued(enqueuedCounts);
     }
 
     @Override
     public void dispatch(int cpu, Ptr<task_struct> prev) {
-        scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        shared.moveToLocal();
+        SchedulerStats.incrementDispatched(dispatchedCounts);
     }
 
     @Override
@@ -135,11 +126,18 @@ public abstract class VTimeScheduler extends BPFProgram
         p.val().scx.dsq_vtime = vtime_now.get();
     }
 
+    public long getTotalEnqueued() {
+        return SchedulerStats.totalEnqueued(enqueuedCounts);
+    }
+
+    public long getTotalDispatched() {
+        return SchedulerStats.totalDispatched(dispatchedCounts);
+    }
+
     public static void main(String[] args) {
         try (var program =
                      BPFProgram.load(VTimeScheduler.class)) {
-            program.attachScheduler();
-            program.waitWhileSchedulerIsAttachedProperly();
+            program.runSchedulerLoop();
         }
     }
 

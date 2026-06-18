@@ -1,6 +1,7 @@
 package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
+import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.type.Ptr;
 
@@ -14,43 +15,57 @@ import static me.bechberger.ebpf.runtime.SkDefinitions.*;
  * More information at
  * <a href="https://ebpf-docs.dylanreimerink.nl/linux/program-type/BPF_PROG_TYPE_SCHED_CLS/">ebpf-docs.dylanreimerink.nl</a>
  * <p>
- * Don't to attach the handlers to the network interfaces.
- * <p>
- * Be aware that network fields might have a different byte order than
- * your host machine, so use {@link XDPHook#bpf_ntohl(int)} to convert from network
- * to host byte order and {@link XDPHook#bpf_htonl(int)} to convert from host to network byte order
- * in the eBPF program (other methods for other integer data types are available).
+ * Override {@link #tcHandleIngress(TCContext)} / {@link #tcHandleEgress(TCContext)} for
+ * ergonomic packet access, or the legacy {@code Ptr<__sk_buff>} overloads if needed.
  */
 public interface TCHook {
 
     /**
      * Handle incoming packets.
-     * <p>
-     * Important: Not all fields of the sk_buff are available in the TC hook, see
-     * <a href="https://ebpf-docs.dylanreimerink.nl/linux/program-type/BPF_PROG_TYPE_SCHED_CLS/">ebpf-docs.dylanreimerink.nl</a>
-     * <p>
-     * See <a href="https://ebpf-docs.dylanreimerink.nl/linux/program-context/__sk_buff/">ebpf-docs.dylanreimerink.nl</a>
-     * for more info on the passed parameter
+     *
+     * <p>The {@link TCContext} parameter provides ergonomic packet access:
+     * {@link TCContext#length()}, {@link TCContext#boundsOk(int, int)}, {@link TCContext#byteAt(int)}, etc.
      */
     @BPFFunction(section = "tc")
     @NotUsableInJava
-    default __sk_action tcHandleIngress(Ptr<__sk_buff> packet) {
-        return __sk_action.__SK_PASS;
+    default __sk_action tcHandleIngress(TCContext skb) {
+        throw new MethodIsBPFRelatedFunction();
     }
 
     /**
      * Handle outgoing packets.
-     * <p>
-     * Important: Not all fields of the sk_buff are available in the TC hook, see
-     * <a href="https://ebpf-docs.dylanreimerink.nl/linux/program-type/BPF_PROG_TYPE_SCHED_CLS/">ebpf-docs.dylanreimerink.nl</a>
-     * <p>
-     * See <a href="https://ebpf-docs.dylanreimerink.nl/linux/program-context/__sk_buff/">ebpf-docs.dylanreimerink.nl</a>
-     * for more info on the passed parameter
+     *
+     * <p>The {@link TCContext} parameter provides ergonomic packet access:
+     * {@link TCContext#length()}, {@link TCContext#boundsOk(int, int)}, {@link TCContext#byteAt(int)}, etc.
      */
     @BPFFunction(section = "tc")
     @NotUsableInJava
+    default __sk_action tcHandleEgress(TCContext skb) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Handle incoming packets using a raw {@code Ptr<__sk_buff>}.
+     *
+     * @deprecated Override {@link #tcHandleIngress(TCContext)} instead.
+     */
+    @Deprecated
+    @BPFFunction(section = "tc")
+    @NotUsableInJava
+    default __sk_action tcHandleIngress(Ptr<__sk_buff> packet) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Handle outgoing packets using a raw {@code Ptr<__sk_buff>}.
+     *
+     * @deprecated Override {@link #tcHandleEgress(TCContext)} instead.
+     */
+    @Deprecated
+    @BPFFunction(section = "tc")
+    @NotUsableInJava
     default __sk_action tcHandleEgress(Ptr<__sk_buff> packet) {
-        return __sk_action.__SK_PASS;
+        throw new MethodIsBPFRelatedFunction();
     }
 
     default void tcAttachIngress(int ifindex) {
@@ -87,3 +102,4 @@ public interface TCHook {
         tcAttachEgress(NetworkUtil.getNetworkInterfaceIndexes());
     }
 }
+

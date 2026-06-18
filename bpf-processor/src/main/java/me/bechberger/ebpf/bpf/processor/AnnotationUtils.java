@@ -14,6 +14,7 @@ public class AnnotationUtils {
     public final static String SIZES_ANNOTATION = "me.bechberger.ebpf.annotations.Sizes";
     public final static String UNSIGNED_ANNOTATION = "me.bechberger.ebpf.annotations.Unsigned";
     public final static String OFFSET_ANNOTATION = "me.bechberger.ebpf.annotations.Offset";
+    public final static String KPTR_ANNOTATION = "me.bechberger.ebpf.annotations.Kptr";
 
     /**
      * Get a specific annotation which is present on the element (if not present returns {@code Optional.empty()})
@@ -49,12 +50,15 @@ public class AnnotationUtils {
         return getAnnotationMirror(element, annotationName).isPresent();
     }
 
-    public record AnnotationValues(boolean unsigned, List<Integer> size, Optional<Integer> offset) {
+    public record AnnotationValues(boolean unsigned, List<Integer> size, Optional<Integer> offset, boolean kptr) {
+        public AnnotationValues(boolean unsigned, List<Integer> size, Optional<Integer> offset) {
+            this(unsigned, size, offset, false);
+        }
         AnnotationValues dropSize() {
-            return new AnnotationValues(unsigned, size.subList(1, size.size()), offset);
+            return new AnnotationValues(unsigned, size.subList(1, size.size()), offset, kptr);
         }
         AnnotationValues dropOffset() {
-            return new AnnotationValues(unsigned, size, Optional.empty());
+            return new AnnotationValues(unsigned, size, Optional.empty(), kptr);
         }
 
         enum AnnotationKind {
@@ -92,7 +96,7 @@ public class AnnotationUtils {
         public AnnotationValues addSizes(List<Integer> sizes) {
             var newSizes = new ArrayList<>(size);
             newSizes.addAll(sizes);
-            return new AnnotationValues(unsigned, newSizes, offset);
+            return new AnnotationValues(unsigned, newSizes, offset, kptr);
         }
     }
 
@@ -122,6 +126,7 @@ public class AnnotationUtils {
             element = ((ArrayType) element).getComponentType();
         }
         Optional<Integer> offset = getAnnotationMirror(element, OFFSET_ANNOTATION).map(a -> getAnnotationValue(a, "value", 0));
-        return new AnnotationValues(unsigned, sizes, offset);
+        boolean kptr = hasAnnotation(element, KPTR_ANNOTATION);
+        return new AnnotationValues(unsigned, sizes, offset, kptr);
     }
 }

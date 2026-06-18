@@ -40,6 +40,12 @@ public class Generator {
     private static final Logger logger = Logger.getLogger(Generator.class.getName());
 
     private final String basePackage;
+    /**
+     * FUNC type-IDs whose {@code DECL_TAG} is {@code "bpf_kfunc"} — i.e. kernel
+     * BPF kfuncs requiring an {@code __ksym} forward declaration in emitted C.
+     * Populated by a pre-pass over rawTypes; consumed by {@link FuncType#toMethodSpec}.
+     */
+    private final java.util.Set<Integer> kfuncFuncIds = new java.util.HashSet<>();
     private static final boolean markAllCombinedTypesAsNotUsableInJava = true;
     private static final boolean dontEmitTypeDefs = true;
     private static final boolean ignoreBitOffset = true;
@@ -330,6 +336,16 @@ public class Generator {
                 builder.addMember("cType", "$S", declarator.toPrettyString().replaceAll("\\s+", " "));
             }
             return builder.build();
+        }
+
+        /**
+         * Marker emitted on every kernel-BTF struct / union / typedef so the
+         * compiler plugin can switch field access to {@code BPF_CORE_READ}
+         * (CO-RE relocation against the target kernel's BTF). Never attach
+         * this to user-written {@code @Type} records.
+         */
+        static AnnotationSpec createKernelBtfAnnotation() {
+            return AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.KernelBTF.class)).build();
         }
 
         sealed interface NamedType extends Type {
@@ -757,7 +773,7 @@ public class Generator {
                 var typeName = type.toTypeName(gen);
                 assert typeName instanceof ClassName;
                 var builder = TypeSpec.classBuilder(((ClassName) typeName).simpleName()).addModifiers(Modifier.PUBLIC
-                        , Modifier.STATIC).addAnnotation(createAnnotations(typedefed, type.toCType(typedefed))).superclass(cts(superClass));
+                        , Modifier.STATIC).addAnnotation(createAnnotations(typedefed, type.toCType(typedefed))).addAnnotation(createKernelBtfAnnotation()).superclass(cts(superClass));
                 if (markAllCombinedTypesAsNotUsableInJava) {
                     builder.addAnnotation(cts(NotUsableInJava.class));
                 }
@@ -1235,7 +1251,7 @@ public class Generator {
                 if (t instanceof StructType || t instanceof UnionType || t instanceof EnumType) {
                     return t.toTypeSpec(gen, true);
                 }
-                return TypeSpec.classBuilder(name).addModifiers(Modifier.PUBLIC, Modifier.STATIC).addAnnotation(createAnnotations(typedefed, toCType(typedefed))).superclass(ParameterizedTypeName.get(cts(TypedefBase.class), t.toGenericTypeName(gen))).addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(Objects.requireNonNullElse(t.toGenericTypeName(gen), ClassName.get(Object.class)), "val").addStatement("super(val)").build()).build();
+                return TypeSpec.classBuilder(name).addModifiers(Modifier.PUBLIC, Modifier.STATIC).addAnnotation(createAnnotations(typedefed, toCType(typedefed))).addAnnotation(createKernelBtfAnnotation()).superclass(ParameterizedTypeName.get(cts(TypedefBase.class), t.toGenericTypeName(gen))).addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).addParameter(Objects.requireNonNullElse(t.toGenericTypeName(gen), ClassName.get(Object.class)), "val").addStatement("super(val)").build()).build();
             }
 
             private TypeName findUnderlyingTypeName(Generator gen) {
@@ -1372,18 +1388,18 @@ public class Generator {
             }
         }
 
-        record FuncType(int id, String name, FuncProtoType impl, @Nullable String javaDoc) implements NamedType {
+        record FuncType(int id, String name, FuncProtoType impl, @Nullable String javaDoc, boolean deprecated) implements NamedType {
 
             public FuncType(String name, FuncProtoType impl, @Nullable String javaDoc) {
-                this(-1, name, impl, null);
+                this(-1, name, impl, null, false);
             }
 
             public FuncType(int id, String name, FuncProtoType impl) {
-                this(id, name, impl, null);
+                this(id, name, impl, null, false);
             }
 
             public FuncType(String name, FuncProtoType impl) {
-                this(-1, name, impl, null);
+                this(-1, name, impl, null, false);
             }
 
             @Override
@@ -1398,7 +1414,23 @@ public class Generator {
 
             @Override
             public MethodSpec toMethodSpec(Generator gen) {
-                return impl.toMethodSpec(gen, name, javaDoc);
+                var spec = impl.toMethodSpec(gen, name, javaDoc);
+                if (spec != null && gen.kfuncFuncIds.contains(id)) {
+                    String signature;
+                    try {
+                        var stmt = impl.toCType(name).toStatement().toPrettyString();
+                        signature = stmt.endsWith(";") ? stmt.substring(0, stmt.length() - 1).strip() : stmt.strip();
+                    } catch (Exception e) {
+                        signature = "";
+                    }
+                    var kfuncAnn = AnnotationSpec.builder(cts(me.bechberger.ebpf.annotations.bpf.KFunc.class))
+                            .addMember("signature", "$S", signature).build();
+                    spec = spec.toBuilder().addAnnotation(kfuncAnn).build();
+                }
+                if (deprecated && spec != null) {
+                    spec = spec.toBuilder().addAnnotation(Deprecated.class).build();
+                }
+                return spec;
             }
 
             @Override
@@ -1412,7 +1444,11 @@ public class Generator {
             }
 
             public FuncType setJavaDoc(String javaDoc) {
-                return new FuncType(id, name, impl, javaDoc);
+                return new FuncType(id, name, impl, javaDoc, deprecated);
+            }
+
+            public FuncType asDeprecated() {
+                return new FuncType(id, name, impl, javaDoc, true);
             }
 
             @Override
@@ -1809,6 +1845,7 @@ public class Generator {
     private final ArrayList<@Nullable Type> types = new ArrayList<>(List.of((Type) new VoidType()));
     private final Map<String, NamedType> namedTypes = new HashMap<>();
     private final List<Type> additionalTypes = new ArrayList<>();
+    private boolean aliasesApplied = false;
 
     void put(Type type) {
         if (type.id() == -1) {
@@ -1852,6 +1889,18 @@ public class Generator {
     }
 
     private void process(List<JSONObjectWithType> rawTypes) {
+        // Pre-pass: collect FUNC type-IDs tagged "bpf_kfunc" so we can emit
+        // @KFunc on the generated method stubs. The DECL_TAG record points
+        // at its target via type_id and carries the tag string in name.
+        for (var rawType : rawTypes) {
+            if (rawType.kind == Kind.DECL_TAG && "bpf_kfunc".equals(rawType.getName())) {
+                try {
+                    kfuncFuncIds.add(rawType.getInteger("type_id"));
+                } catch (Exception ignored) {
+                    // malformed DECL_TAG, skip
+                }
+            }
+        }
         for (var rawType : rawTypes) {
             processRawType(rawType);
         }
@@ -2536,8 +2585,75 @@ public class Generator {
         };
     }
 
+    /**
+     * Loads aliases from {@code bpf-gen/src/main/resources/aliases.json} on the classpath and adds
+     * deprecated forwarding {@link Type.FuncType} entries for any old names whose new counterpart is
+     * already present in {@code types}. Call before {@link #generateBPFRuntimeJavaFiles()}.
+     */
+    private void applyAliases() {
+        if (aliasesApplied) return;
+        aliasesApplied = true;
+        var resource = Generator.class.getResourceAsStream("/aliases.json");
+        if (resource == null) return;
+        try {
+            var json = com.alibaba.fastjson.JSON.parseObject(new String(resource.readAllBytes()));
+            var aliasArray = json.getJSONArray("aliases");
+            if (aliasArray == null) return;
+            var existingFuncs = new HashMap<String, Type.FuncType>();
+            for (var t : types) {
+                if (t instanceof Type.FuncType ft) {
+                    existingFuncs.put(ft.name(), ft);
+                }
+            }
+            for (int i = 0; i < aliasArray.size(); i++) {
+                var alias = aliasArray.getJSONObject(i);
+                var oldName = alias.getString("oldName");
+                var newName = alias.getString("newName");
+                var since = alias.getString("since");
+                var note = alias.getString("note");
+                if (existingFuncs.containsKey(newName) && !existingFuncs.containsKey(oldName)) {
+                    var newFunc = existingFuncs.get(newName);
+                    var javaDoc = "@deprecated Renamed to {@link #" + newName + "()} in kernel "
+                            + (since != null ? since : "unknown") + ". " + (note != null ? note : "");
+                    var deprecatedFunc = new Type.FuncType(newFunc.id(), oldName, newFunc.impl(), javaDoc, true);
+                    additionalTypes.add(deprecatedFunc);
+                }
+            }
+        } catch (Exception e) {
+            logger.warning("Failed to load aliases.json: " + e.getMessage());
+        }
+    }
+
     public TypeJavaFiles generateBPFRuntimeJavaFiles() {
+        applyAliases();
         return generateJavaFiles(createBPFRuntimeConfig());
+    }
+
+    /**
+     * Returns a sorted, deduplicated list of "ClassName.methodName" strings for every BPF kernel
+     * helper method in the generated bpf-runtime Java files. Used by the snapshot test to detect
+     * renames/removals.
+     *
+     * <p>Includes only methods whose names start with {@code bpf_} or {@code scx_} — the standard
+     * kernel BPF helper and sched_ext function naming conventions. This avoids noise from
+     * annotation types and inner-class methods that are also emitted as public static MethodSpecs
+     * but are not BPF helpers.
+     */
+    public List<String> publicBPFHelperSignatures() {
+        applyAliases();
+        var config = createBPFRuntimeConfig();
+        var groups = groupTypes(config.baseClassName, config);
+        var resultSet = new java.util.TreeSet<String>();
+        for (var group : groups) {
+            var typeSpec = group.computeType();
+            for (var method : typeSpec.methodSpecs) {
+                var n = method.name;
+                if (n.startsWith("bpf_") || n.startsWith("scx_")) {
+                    resultSet.add(group.className() + "." + n);
+                }
+            }
+        }
+        return new ArrayList<>(resultSet);
     }
 
     public void addAdditionalType(Type type) {

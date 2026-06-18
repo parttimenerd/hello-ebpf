@@ -46,6 +46,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -74,6 +75,20 @@ public class CompilerPlugin implements Plugin {
 
     private final Map<MethodType, FuncDeclStatementResult> methodElementToCode = new HashMap<>();
     private final Map<Type.ClassType, Integer> classToMethodCountToImplement = new HashMap<>();
+
+    /**
+     * Field-name → resolved C carrier expression for {@code @BPFAbstraction} fields whose
+     * carrier was auto-allocated ({@code <auto>}) or otherwise needed processor-time resolution.
+     * Key: {@code "qualifiedClassName.fieldName"}.
+     * Populated lazily from the impl class's {@code ABSTRACTION_CARRIERS} field.
+     */
+    Map<String, String> abstractionFieldCarrierOverrides = new HashMap<>();
+
+    /**
+     * dumpC option from {@code -Xplugin:"BPFCompilerPlugin dumpC=true|false|<path>"}.
+     * Default "true" (write .c file next to source). Set to "false" to suppress.
+     */
+    private String dumpCArg = "true";
 
     @Override
     public String getName() {
@@ -203,6 +218,12 @@ public class CompilerPlugin implements Plugin {
         this.names = Names.instance(context);
         this.methodTemplateCache = new MethodTemplateCache(this);
         this.types = Types.instance(context);
+        // Parse plugin args: dumpC=true|false|<path>
+        for (String arg : args) {
+            if (arg.startsWith("dumpC=")) {
+                this.dumpCArg = arg.substring("dumpC=".length());
+            }
+        }
         var types = task.getTypes();
         List<CompilerPlugin.TypedTreePath<MethodTree>> funcs = new ArrayList<>();
         task.addTaskListener(new TaskListener() {
@@ -247,7 +268,7 @@ public class CompilerPlugin implements Plugin {
     }
 
     private boolean shouldProcessMethod(CompilerPlugin.TypedTreePath<MethodTree> path) {
-        var ann = getAnnotationOfMethodOrSuper((MethodSymbol) trees.getElement(path.path()), BPFFunction.class);
+        var ann = getEffectiveBPFFunction((MethodSymbol) trees.getElement(path.path()));
         return ann != null &&
                 !path.leaf().getModifiers().getFlags().contains(Modifier.ABSTRACT) &&
                 path.leaf().getBody() != null &&
@@ -267,14 +288,112 @@ public class CompilerPlugin implements Plugin {
         return parentMethod.getAnnotation(annotation);
     }
 
+    /**
+     * Returns the effective {@link BPFFunction} for a method, synthesizing one from
+     * shorthand attach annotations ({@link Kprobe}, {@link Kretprobe}, {@link Fentry},
+     * {@link Fexit}, {@link RawTracepoint}, {@link Tracepoint}, {@link Ksyscall}) when
+     * {@link BPFFunction} itself is absent.
+     */
+    @Nullable
+    BPFFunction getEffectiveBPFFunction(MethodSymbol method) {
+        var direct = getAnnotationOfMethodOrSuper(method, BPFFunction.class);
+        if (direct != null) return direct;
+        return synthesizeBPFFunction(method);
+    }
+
+    /** Synthesises a {@link BPFFunction} proxy from a shorthand attach annotation, or null. */
+    @Nullable
+    private BPFFunction synthesizeBPFFunction(MethodSymbol method) {
+        String section = null;
+        String headerTemplate = "$name";
+        String lastStatement = "";
+
+        var kprobe = getAnnotationOfMethodOrSuper(method, Kprobe.class);
+        if (kprobe != null) { section = "kprobe/" + kprobe.value(); }
+
+        var kretprobe = getAnnotationOfMethodOrSuper(method, Kretprobe.class);
+        if (kretprobe != null) { section = "kretprobe/" + kretprobe.value(); }
+
+        var fentry = getAnnotationOfMethodOrSuper(method, Fentry.class);
+        if (fentry != null) { section = "fentry/" + fentry.value(); }
+
+        var fexit = getAnnotationOfMethodOrSuper(method, Fexit.class);
+        if (fexit != null) { section = "fexit/" + fexit.value(); }
+
+        var rawTp = getAnnotationOfMethodOrSuper(method, RawTracepoint.class);
+        if (rawTp != null) {
+            section = "raw_tracepoint/" + rawTp.value();
+            headerTemplate = "int BPF_PROG($name, $params)";
+            lastStatement = "return 0;";
+        }
+
+        var tp = getAnnotationOfMethodOrSuper(method, Tracepoint.class);
+        if (tp != null) {
+            section = "tp/" + tp.category() + "/" + tp.name();
+            headerTemplate = "int $name($params)";
+        }
+
+        var ksyscall = getAnnotationOfMethodOrSuper(method, Ksyscall.class);
+        if (ksyscall != null) { section = "ksyscall/" + ksyscall.value(); }
+
+        var uprobe = getAnnotationOfMethodOrSuper(method, Uprobe.class);
+        if (uprobe != null) {
+            var ref = uprobe.symbol().isEmpty()
+                    ? uprobe.path() + ":" + uprobe.offset()
+                    : uprobe.path() + ":" + uprobe.symbol();
+            section = "uprobe/" + ref;
+        }
+
+        var uretprobe = getAnnotationOfMethodOrSuper(method, Uretprobe.class);
+        if (uretprobe != null) {
+            var ref = uretprobe.symbol().isEmpty()
+                    ? uretprobe.path() + ":" + uretprobe.offset()
+                    : uretprobe.path() + ":" + uretprobe.symbol();
+            section = "uretprobe/" + ref;
+        }
+
+        var lsm = getAnnotationOfMethodOrSuper(method, LSM.class);
+        if (lsm != null) {
+            section = "lsm/" + lsm.value();
+            headerTemplate = "int BPF_PROG($name, $params)";
+            // Do NOT set lastStatement: LSM hooks use their return value as the security
+            // decision; replacing explicit returns with "return 0;" would silently eat denials.
+        }
+
+        if (section == null) return null;
+
+        final String finalSection = section;
+        final String finalHeaderTemplate = headerTemplate;
+        final String finalLastStatement = lastStatement;
+        return (BPFFunction) Proxy.newProxyInstance(
+                BPFFunction.class.getClassLoader(),
+                new Class[]{BPFFunction.class},
+                (proxy, m, args) -> switch (m.getName()) {
+                    case "callTemplate" -> "$name";
+                    case "headerTemplate" -> finalHeaderTemplate;
+                    case "lastStatement" -> finalLastStatement;
+                    case "section" -> finalSection;
+                    case "autoAttach" -> true;
+                    case "name" -> "";
+                    case "addDefinition" -> true;
+                    case "inline" -> false; // entry points are not inlined
+                    case "annotationType" -> BPFFunction.class;
+                    default -> m.getDefaultValue();
+                });
+    }
+
     void logError(TypedTreePath<?> path, Tree element, String message) {
-        createProcessingEnvironment().getMessager().printMessage(Diagnostic.Kind.ERROR, message,
-                trees.getElement(path.path(element)));
+        var elPath = path.path(element);
+        var el = elPath == null ? null : trees.getElement(elPath);
+        if (el == null) el = trees.getElement(path.path()); // fall back to enclosing method
+        createProcessingEnvironment().getMessager().printMessage(Diagnostic.Kind.ERROR, message, el);
     }
 
     void logWarning(TypedTreePath<?> path, Tree element, String message) {
-        createProcessingEnvironment().getMessager().printMessage(Diagnostic.Kind.WARNING, message,
-                trees.getElement(path.path(element)));
+        var elPath = path.path(element);
+        var el = elPath == null ? null : trees.getElement(elPath);
+        if (el == null) el = trees.getElement(path.path()); // fall back to enclosing method
+        createProcessingEnvironment().getMessager().printMessage(Diagnostic.Kind.WARNING, message, el);
     }
 
     /**
@@ -285,7 +404,7 @@ public class CompilerPlugin implements Plugin {
     private boolean processBPFFunction(CompilerPlugin.TypedTreePath<MethodTree> path) {
         var function = path.leaf();
         assert shouldProcessMethod(path);
-        logger.printRawLines("Processing BPFFunction " + function);
+        logger.printRawLines("Processing BPFFunction " + function.getName());
         // we could have two cases:
         // 1. the method body only consists of String assignment followed by a throw;
         //    then we can just use the string
@@ -304,7 +423,41 @@ public class CompilerPlugin implements Plugin {
             return false;
         }
         methodElementToCode.put(method, code);
+        // Persist code to @InternalMethodDefinition on the method symbol so that downstream
+        // compilations (e.g. bpf-samples compiling a subclass of SchedulerBase) can inject
+        // these inherited implementations without needing the source in the current unit.
+        var methodSymbol = (MethodSymbol) trees.getElement(path.path());
+        if (methodSymbol != null && !(methodSymbol.owner instanceof Symbol.ClassSymbol ownerClass && ownerClass.isInterface())) {
+            // Prepend any required #define lines so the injected snippet is self-contained.
+            var definesPrefix = code.requiredDefines().stream()
+                    .map(d -> d.toPrettyString())
+                    .collect(java.util.stream.Collectors.joining("\n"));
+            var codeStr = definesPrefix.isBlank()
+                    ? code.decl.toPrettyString()
+                    : definesPrefix + "\n" + code.decl.toPrettyString();
+            storeInternalMethodDefinition(methodSymbol, codeStr);
+        }
         return true;
+    }
+
+    private void storeInternalMethodDefinition(MethodSymbol methodSymbol, String codeStr) {
+        try {
+            var internalMethodValueSymbol = (Symbol.MethodSymbol) ((Type.ClassType) typeUtils.getTypeMirror(InternalMethodDefinition.class))
+                    .asElement().getEnclosedElements().stream()
+                    .filter(e -> e instanceof MethodSymbol m && m.getSimpleName().toString().equals("value"))
+                    .findFirst().orElseThrow();
+            var methodMeta = methodSymbol.getMetadata();
+            var methodAttributesField = methodMeta.getClass().getDeclaredField("attributes");
+            methodAttributesField.setAccessible(true);
+            var methodAttributes = (com.sun.tools.javac.util.List<Attribute>) methodAttributesField.get(methodMeta);
+            methodAttributes = methodAttributes.append(new Attribute.Compound(
+                    (Type.ClassType) typeUtils.getTypeMirror(InternalMethodDefinition.class),
+                    com.sun.tools.javac.util.List.of(new Pair<>(internalMethodValueSymbol,
+                            new Attribute.Constant((Type.ClassType) typeUtils.getTypeMirror(String.class), codeStr)))));
+            methodAttributesField.set(methodMeta, methodAttributes);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private TypeMirror getTypeMirror(CompilerPlugin.TypedTreePath<?> path, Tree typeTree) {
@@ -362,14 +515,43 @@ public class CompilerPlugin implements Plugin {
                         decl.annotations()), Set.of(), translator.addDefinition());
     }
 
-    record FuncDeclStatementResult(FunctionDeclarationStatement decl, Set<Define> requiredDefines, boolean addDefine) {
+    record FuncDeclStatementResult(FunctionDeclarationStatement decl, Set<Define> requiredDefines, boolean addDefine,
+                                   List<FunctionDeclarationStatement> syntheticFunctions,
+                                   Map<String, String> calledKFuncs) {
+        FuncDeclStatementResult(FunctionDeclarationStatement decl, Set<Define> requiredDefines, boolean addDefine) {
+            this(decl, requiredDefines, addDefine, List.of(), Map.of());
+        }
+        FuncDeclStatementResult(FunctionDeclarationStatement decl, Set<Define> requiredDefines, boolean addDefine,
+                                List<FunctionDeclarationStatement> syntheticFunctions) {
+            this(decl, requiredDefines, addDefine, syntheticFunctions, Map.of());
+        }
     }
 
     private @Nullable FuncDeclStatementResult processBPFFunctionWithCode(TypedTreePath<MethodTree> methodPath) {
-        var translator = new Translator(this, methodPath);
+        // Shared per-method analysis context — populated by each pass, consumed by Translator.
+        var ctx = new me.bechberger.ebpf.bpf.compiler.flow.AnalysisContext();
+        new SuppressionScan(ctx).scan(methodPath.leaf());
+        new JavaIsmsRejectPass(this, methodPath, ctx).analyze();
+        new MapIdiomLintPass(this, methodPath, ctx).analyze();
+        new UnboundedLoopPass(this, methodPath, ctx).analyze();
+        new ProbeReadSizeZeroPass(this, methodPath, ctx).analyze();
+        new MissingCoreReadPass(this, methodPath, ctx).analyze();
+        new ConstantPropagator(methodPath, ctx).analyze();
+        new RegionAnalyzer(this, methodPath, ctx).analyze();
+        new PtrCoercionInference(this, methodPath, ctx).analyze();
+        new CaptureAnalyzer(this, methodPath, ctx).analyze();
+        new NullabilityAnalyzer(this, methodPath, ctx).analyze();
+        new BoundsCheckPass(this, methodPath, ctx).analyze();
+        new MapValueIndexBoundsPass(this, methodPath, ctx).analyze();
+        new StackBudgetPass(this, methodPath, ctx).analyze();
+        new HelperContextPass(this, methodPath, ctx).analyze();
+        new ArenaAccessCheckPass(this, methodPath, ctx).analyze();
+        var calledKFuncs = new KFuncCollectPass(this, methodPath).analyze();
+        var translator = new Translator(this, methodPath, ctx);
         return callIfNonNull(translator.translate(), decl -> {
             var requiredDefines = translator.getRequiredDefines();
-            return new FuncDeclStatementResult(decl, requiredDefines, translator.addDefinition());
+            return new FuncDeclStatementResult(decl, requiredDefines, translator.addDefinition(),
+                    List.copyOf(translator.getSyntheticFunctions()), calledKFuncs);
         });
     }
 
@@ -402,6 +584,12 @@ public class CompilerPlugin implements Plugin {
         var defines = declsWithDefines.stream().flatMap(e -> e.getValue().requiredDefines().stream()).collect(Collectors.toSet());
         var functionHeaders = declsWithDefines.stream().map(Map.Entry::getValue).filter(d -> d.addDefine).map(d -> d.decl.declarator()).toList();
         var functionImplementations = declsWithDefines.stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().decl.toPrettyString()));
+        // Synthetic lambdas lifted via $funcN belong with the interface body so they're
+        // visible to consumers that paste the interface body into their own C code.
+        var syntheticFnsCode = declsWithDefines.stream()
+                .flatMap(e -> e.getValue().syntheticFunctions().stream())
+                .map(CAST::toPrettyString)
+                .collect(Collectors.joining("\n\n"));
 
         var result = new TypeProcessor(this.createProcessingEnvironment()).processBPFTypeRecords(bpfInterfaceTypeElement);
         if (result == null) {
@@ -414,6 +602,9 @@ public class CompilerPlugin implements Plugin {
 
         var combinedCode = combineCode("", functionHeaders, List.of(), defines, result.definingStatements(), result.mapDefinitions(),
                 result.globalVariableDefinitions(), new TypeProcessor.InterfaceAdditions(List.of(), List.of(), List.of()));
+        if (!syntheticFnsCode.isBlank()) {
+            combinedCode = combinedCode.isBlank() ? syntheticFnsCode : combinedCode + "\n\n" + syntheticFnsCode;
+        }
 
         if (combinedCode.isBlank() && functionImplementations.isEmpty()) {
             return; // nothing changed
@@ -479,6 +670,7 @@ public class CompilerPlugin implements Plugin {
                                                                boolean breadthFirst) {
         List<T> annotations = new ArrayList<>();
         ArrayDeque<TypeElement> toVisit = new ArrayDeque<>(List.of(klass));
+        Set<TypeElement> visited = new HashSet<>();
 
         Method multiAnnMethod = null;
         if (multiAnnotationClass != null) {
@@ -512,23 +704,27 @@ public class CompilerPlugin implements Plugin {
             }
         };
         add.accept(klass);
+        visited.add(klass);
         while (!toVisit.isEmpty()) {
             var current = toVisit.poll();
             List<TypeElement> otherClasses = current.getInterfaces().stream().map(i -> (TypeElement) ((Type.ClassType)i).asElement())
                     .filter(Objects::nonNull)
+                    .filter(e -> !visited.contains(e))
                     .collect(Collectors.toList());
             if (current.getSuperclass() != null) {
                 var s = (TypeElement) ((Type) current.getSuperclass()).asElement();
-                if (s != null) {
+                if (s != null && !visited.contains(s)) {
                     otherClasses.add(s);
                 }
             }
             if (breadthFirst) {
                 otherClasses.forEach(add);
+                otherClasses.forEach(visited::add);
                 toVisit.addAll(otherClasses);
             } else {
                 add.accept(current);
-                toVisit.addAll(otherClasses);
+                visited.add(current);
+                toVisit.addAll(otherClasses.stream().filter(e -> !visited.contains(e)).toList());
             }
         }
         return annotations;
@@ -625,16 +821,38 @@ public class CompilerPlugin implements Plugin {
 
         var toImplement = classToMethodCountToImplement.getOrDefault((Type.ClassType) superClassType, 0);
 
-        var declsWithDefines =
-                methods.stream().map(m -> task.getTypes().asMemberOf((DeclaredType) superClassElement.asType(), m))
-                .filter(m -> m instanceof MethodType)
-                .map(m -> (MethodType) m)
-                .map(methodElementToCode::get)
-                .filter(Objects::nonNull)
-                .toList();
+        // Build declsWithDefines while tracking each method's Java name for prologue injection.
+        var declsWithDefines = new ArrayList<FuncDeclStatementResult>();
+        // Parallel list: declJavaNames[i] is the Java method simple-name for declsWithDefines[i].
+        var declJavaNames = new ArrayList<String>();
+        for (var m : methods) {
+            var mt = task.getTypes().asMemberOf((DeclaredType) superClassElement.asType(), m);
+            if (!(mt instanceof MethodType methodType)) continue;
+            var result = methodElementToCode.get(methodType);
+            if (result == null) continue;
+            declsWithDefines.add(result);
+            declJavaNames.add(m.getSimpleName().toString());
+        }
 
         var defines = declsWithDefines.stream().flatMap(r -> r.requiredDefines().stream()).collect(Collectors.toSet());
         var decls = declsWithDefines.stream().map(d -> new FuncDecl(d.decl, d.addDefine)).toList();
+
+        // Collect @BPFAbstraction field prologues from the @BPF super-class and prepend
+        // them to the target methods (typically init()) in the decls list.
+        // Load carrier overrides into the plugin-level map keyed by "superClassName.fieldName".
+        var carriers = readAbstractionCarriers((JCClassDecl) bpfProgram);
+        var superClassName = superClassElement.getQualifiedName().toString();
+        carriers.forEach((fieldName, carrier) ->
+                abstractionFieldCarrierOverrides.put(superClassName + "." + fieldName, carrier));
+        // Emit #define NAME value for any auto-id carriers so field references that were
+        decls = injectAbstractionPrologues(decls, declJavaNames, (JCClassDecl) bpfProgram);
+        // Synthetic top-level functions (e.g. lambdas lifted for bpf_loop / bpf_for_each_map_elem).
+        // These come BEFORE the main function decls in declarator-emission order so that the
+        // helper that takes their address has a forward declaration in scope.
+        var syntheticDecls = declsWithDefines.stream()
+                .flatMap(d -> d.syntheticFunctions().stream())
+                .map(s -> new FuncDecl(s, true))
+                .toList();
 
         if (decls.size() < toImplement) {
             logError(programPath, bpfProgram, "Not all methods have been processed");
@@ -643,7 +861,16 @@ public class CompilerPlugin implements Plugin {
 
         // get value of CODE field in the bpfProgram
         var codeField = getMember(bpfProgram, "CODE");
-        var code = (String) ((LiteralTree) codeField.getInitializer()).getValue();
+        var code = evalStringTree(codeField.getInitializer());
+
+        // Emit #define NAME value for any auto-id carriers so field references that were
+        // translated before the carrier map was populated (fallback placeholder = fieldName_DSQ_ID).
+        if (!carriers.isEmpty()) {
+            var autoDefines = carriers.entrySet().stream()
+                    .map(e -> "#define " + e.getKey() + "_DSQ_ID " + e.getValue())
+                    .collect(java.util.stream.Collectors.joining("\n"));
+            code = autoDefines + "\n" + code;
+        }
 
         // now get the "body" value of all BPFInterface annotations of all interfaces of the super class
         var bpfInterfaceBodies = superClassElement.getInterfaces().stream()
@@ -666,12 +893,20 @@ public class CompilerPlugin implements Plugin {
 
         Map<MethodSymbol, String> defaultCodeForMethod = getInterfaceMethodsWithDefaultCode((Symbol.ClassSymbol) superClassElement);
 
-        // second: take all methods that are not implemented and add the default code
+        // second: take all methods that are not implemented (or not available in this compilation)
+        // and add the default code
 
-        var methodStrings = methods.stream().map(Object::toString).collect(Collectors.toSet());
+        // Methods whose source IS available in this compilation run (their code is in methodElementToCode)
+        var implementedMethodStrings = methods.stream()
+                .filter(m -> {
+                    var t = task.getTypes().asMemberOf((DeclaredType) superClassElement.asType(), m);
+                    return t instanceof MethodType && methodElementToCode.containsKey((MethodType) t);
+                })
+                .map(Object::toString)
+                .collect(Collectors.toSet());
 
         var defaultCode = defaultCodeForMethod.entrySet().stream()
-                .filter(e -> !methodStrings.contains(e.getKey().toString()))
+                .filter(e -> !implementedMethodStrings.contains(e.getKey().toString()))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.joining("\n\n"));
 
@@ -694,17 +929,70 @@ public class CompilerPlugin implements Plugin {
 
         code = implAnn.before() + code;
 
+        // Aggregate __ksym forward decls for all kfuncs called transitively from
+        // any @BPFFunction in this program. Each kfunc's C signature comes from
+        // the @KFunc annotation on its Java stub (emitted by bpf-gen from BTF
+        // DECL_TAG "bpf_kfunc"). Deduped by kfunc name; insertion-ordered.
+        // Skip kfuncs already declared in the program's `before=` block (or any
+        // earlier interface code) — duplicate decls with mismatched type names
+        // (BTF produces `_Bool`/`long long unsigned int`, hand-written decls
+        // use `bool`/`u64`) cause libbpf to reject the load with EINVAL.
+        var kfuncDecls = new java.util.LinkedHashMap<String, String>();
+        for (var d : declsWithDefines) {
+            kfuncDecls.putAll(d.calledKFuncs());
+        }
+        if (!kfuncDecls.isEmpty()) {
+            var existing = code;
+            var kfuncProlog = kfuncDecls.entrySet().stream()
+                    .filter(e -> !existing.contains(e.getValue() + " __ksym;"))
+                    .map(e -> e.getValue() + " __ksym;")
+                    .collect(Collectors.joining("\n"));
+            if (!kfuncProlog.isEmpty()) {
+                code = kfuncProlog + "\n\n" + code;
+            }
+        }
+
         var properties = getAllPropertyValues(programPath, superClassElement);
 
-        var newCode = replaceProperties(combineCode(code, decls, defines) + "\n\n" + implAnn.after(), properties);
+        var newCode = replaceProperties(combineCode(code, syntheticDecls, decls, defines) + "\n\n" + implAnn.after(), properties);
 
-        // write the C code in a file close to the source file
+        // Define __arena (clang AS1 qualifier) when the program references
+        // it but no header has supplied the define. Kernel selftests provide
+        // this via bpf_arena_common.h; we inline the same definition so
+        // generated programs compile without an external dependency.
+        StringBuilder arenaPrelude = new StringBuilder();
+        if (newCode.contains("__arena") && !newCode.contains("#define __arena")) {
+            arenaPrelude.append("#ifndef __arena\n#define __arena __attribute__((address_space(1)))\n#endif\n");
+        }
+        if (arenaPrelude.length() > 0) {
+            int insertAt = 0;
+            String[] lines = newCode.split("\n", -1);
+            int offset = 0;
+            for (String line : lines) {
+                String trimmed = line.trim();
+                if (trimmed.startsWith("#include") || trimmed.isEmpty()) {
+                    offset += line.length() + 1;
+                    insertAt = offset;
+                } else {
+                    break;
+                }
+            }
+            newCode = newCode.substring(0, insertAt) + arenaPrelude + newCode.substring(insertAt);
+        }
+
+        // write the C code in a file close to the source file (controlled by dumpC plugin arg)
         var cFile =
                 Path.of(programPath.root().getSourceFile().toUri().getPath()).getParent().resolve(bpfProgram.getSimpleName() + ".c");
-        try {
-            Files.writeString(cFile, newCode);
-        } catch (IOException e) {
-            logError(programPath, bpfProgram, "Could not write C code to " + cFile);
+        if (!"false".equalsIgnoreCase(dumpCArg)) {
+            Path dumpTarget = "true".equalsIgnoreCase(dumpCArg)
+                    ? cFile
+                    : Path.of(dumpCArg).resolve(bpfProgram.getSimpleName() + ".c");
+            try {
+                if (!dumpTarget.equals(cFile)) Files.createDirectories(dumpTarget.getParent());
+                Files.writeString(dumpTarget, newCode);
+            } catch (IOException e) {
+                logError(programPath, bpfProgram, "Could not write C code to " + dumpTarget);
+            }
         }
 
         var compiledCode = compile(newCode, cFile);
@@ -756,13 +1044,123 @@ public class CompilerPlugin implements Plugin {
     }
 
     private Map<MethodSymbol, String> getInterfaceMethodsWithDefaultCode(Symbol.ClassSymbol superClassElement) {
-        return getInterfaceMethods(superClassElement).stream().map(m -> {
-            var ann = m.getAnnotation(InternalMethodDefinition.class);
-            if (ann == null) {
-                return null;
+        var result = new HashMap<MethodSymbol, String>();
+        // Collect @BPFFunction implementations from concrete superclasses first (highest priority).
+        // These are stored via @InternalMethodDefinition on the class method by processBPFFunction.
+        // Walk from the most-derived class upward; the first (most-derived) definition wins.
+        var current = superClassElement;
+        while (current != null && !current.getQualifiedName().toString().equals("java.lang.Object")) {
+            for (var e : current.getEnclosedElements()) {
+                if (!(e instanceof MethodSymbol ms)) continue;
+                var ann = ms.getAnnotation(InternalMethodDefinition.class);
+                if (ann == null) continue;
+                // Only add if not already covered by a more-derived class entry.
+                var alreadyPresent = result.keySet().stream()
+                        .anyMatch(existing -> existing.getSimpleName().equals(ms.getSimpleName())
+                                && existing.asType().toString().equals(ms.asType().toString()));
+                if (!alreadyPresent) {
+                    result.put(ms, ann.value());
+                }
             }
-            return Map.entry(m, ann.value());
-        }).filter(Objects::nonNull).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            var sc = current.getSuperclass();
+            current = (sc instanceof Type.ClassType ct) ? (Symbol.ClassSymbol) ct.asElement() : null;
+        }
+        // Collect default implementations from interfaces (@InternalMethodDefinition on interface methods)
+        // as fallback — only when no concrete superclass provided an implementation.
+        for (var m : getInterfaceMethods(superClassElement)) {
+            var ann = m.getAnnotation(InternalMethodDefinition.class);
+            if (ann == null) continue;
+            var alreadyPresent = result.keySet().stream()
+                    .anyMatch(existing -> existing.getSimpleName().equals(m.getSimpleName())
+                            && existing.asType().toString().equals(m.asType().toString()));
+            if (!alreadyPresent) {
+                result.put(m, ann.value());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Prepends {@code @BPFAbstraction} constructor side-effects to the matching BPF function.
+     * Prologues are read from the {@code ABSTRACTION_PROLOGUES} field of the generated impl class.
+     *
+     * @param javaMethodNames parallel list of Java method simple-names for {@code decls} (same indices)
+     * @param bpfProgram the generated impl class (JCClassDecl) being compiled
+     */
+    private List<FuncDecl> injectAbstractionPrologues(List<FuncDecl> decls,
+                                                      List<String> javaMethodNames,
+                                                      JCClassDecl bpfProgram) {
+        var prologues = readAbstractionPrologues(bpfProgram);
+        if (prologues.isEmpty()) {
+            return decls;
+        }
+        var modified = new ArrayList<>(decls);
+        for (int i = 0; i < modified.size(); i++) {
+            // Match by Java method name (constructorPrependTo refers to Java names, not C names).
+            var javaName = i < javaMethodNames.size() ? javaMethodNames.get(i) : null;
+            if (javaName == null) continue;
+            var stmts = prologues.get(javaName);
+            if (stmts == null || stmts.isEmpty()) continue;
+            var fd = modified.get(i);
+            // Prepend prologue statements to the body
+            var existingStatements = new ArrayList<>(fd.decl().body().statements());
+            var prologueStatements = stmts.stream()
+                    .map(s -> (CAST.Statement) CAST.Statement.verbatim(s))
+                    .toList();
+            var newStatements = new ArrayList<>(prologueStatements);
+            newStatements.addAll(existingStatements);
+            var newBody = new CAST.Statement.CompoundStatement(newStatements);
+            var newDecl = new FunctionDeclarationStatement(fd.decl().declarator(), newBody,
+                    fd.decl().annotations());
+            modified.set(i, new FuncDecl(newDecl, fd.addDefine()));
+        }
+        return modified;
+    }
+
+    /** Evaluate a compile-time string constant tree (handles single literals and + concatenations). */
+    private static String evalStringTree(ExpressionTree tree) {
+        if (tree instanceof LiteralTree lit) return (String) lit.getValue();
+        if (tree instanceof BinaryTree bin && bin.getKind() == Tree.Kind.PLUS)
+            return evalStringTree(bin.getLeftOperand()) + evalStringTree(bin.getRightOperand());
+        throw new IllegalArgumentException("Cannot evaluate string tree: " + tree.getKind());
+    }
+
+    /**
+     * Parses the {@code ABSTRACTION_PROLOGUES} field from the generated impl class.
+     * Format: each line is {@code "methodName\tstatement"}.
+     */
+    private Map<String, List<String>> readAbstractionPrologues(JCClassDecl bpfProgram) {
+        var prologuesField = getMemberOptional(bpfProgram, "ABSTRACTION_PROLOGUES");
+        if (prologuesField == null) return Map.of();
+        var raw = evalStringTree(prologuesField.getInitializer());
+        if (raw.isBlank()) return Map.of();
+        var result = new java.util.LinkedHashMap<String, List<String>>();
+        for (var line : raw.split("\n")) {
+            int tab = line.indexOf('\t');
+            if (tab < 0) continue;
+            var method = line.substring(0, tab);
+            var stmt = line.substring(tab + 1);
+            result.computeIfAbsent(method, k -> new ArrayList<>()).add(stmt);
+        }
+        return result;
+    }
+
+    /**
+     * Parses the {@code ABSTRACTION_CARRIERS} field from the generated impl class.
+     * Format: each line is {@code "fieldName\tcarrierExpr"}.
+     */
+    private Map<String, String> readAbstractionCarriers(JCClassDecl bpfProgram) {
+        var carriersField = getMemberOptional(bpfProgram, "ABSTRACTION_CARRIERS");
+        if (carriersField == null) return Map.of();
+        var raw = evalStringTree(carriersField.getInitializer());
+        if (raw.isBlank()) return Map.of();
+        var result = new java.util.LinkedHashMap<String, String>();
+        for (var line : raw.split("\n")) {
+            int tab = line.indexOf('\t');
+            if (tab < 0) continue;
+            result.put(line.substring(0, tab), line.substring(tab + 1));
+        }
+        return result;
     }
 
     private List<MethodSymbol> getInterfaceMethods(Symbol.ClassSymbol element) {
@@ -784,6 +1182,16 @@ public class CompilerPlugin implements Plugin {
                 .orElseThrow(() -> new IllegalStateException(name + " field not found in " + klass.getSimpleName()));
     }
 
+    @Nullable
+    VariableTree getMemberOptional(ClassTree klass, String name) {
+        return klass.getMembers().stream()
+                .filter(m -> m instanceof VariableTree)
+                .map(m -> (VariableTree) m)
+                .filter(m -> m.getName().contentEquals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
     record FuncDecl(FunctionDeclarationStatement decl, boolean addDefine) {
     }
 
@@ -792,7 +1200,19 @@ public class CompilerPlugin implements Plugin {
     }
 
     String combineCode(String code, List<FuncDecl> decls, Set<Define> defines) {
-        return combineCode(code, List.of(), decls, defines, List.of(), List.of(), List.of(),
+        return combineCode(code, List.of(), decls, defines);
+    }
+
+    /**
+     * Variant that accepts {@code syntheticDecls} — top-level functions lifted from
+     * {@code $funcN} lambda placeholders (see {@code Translator#promoteLambda}). These
+     * are emitted alongside the main declarations and (forward-declared) before all
+     * other functions so callers like {@code bpf_loop(__bpf_lambda_..., ...)} resolve.
+     */
+    String combineCode(String code, List<FuncDecl> syntheticDecls, List<FuncDecl> decls, Set<Define> defines) {
+        var allDecls = new ArrayList<>(syntheticDecls);
+        allDecls.addAll(decls);
+        return combineCode(code, List.of(), allDecls, defines, List.of(), List.of(), List.of(),
                 new TypeProcessor.InterfaceAdditions(List.of(), List.of(), List.of()));
     }
 
@@ -824,9 +1244,26 @@ public class CompilerPlugin implements Plugin {
 
     public static String moveIncludesToTheFront(String code) {
         Predicate<String> isInclude = s -> s.startsWith("#include ");
+        // Also hoist SEC(".data") global variable declarations so they precede any
+        // injected function bodies that reference them (e.g. _exitCode from SchedulerBase).
+        // Only hoist primitive-typed globals: globals that reference a user-defined
+        // struct/union type must stay below the type declarations (they need the
+        // struct definition to be visible first — see testUsingInterfaceWithStruct2).
+        Predicate<String> isSecData = s -> s.matches(".*SEC\\s*\\(\".data\"\\)\\s*;.*") && !s.strip().startsWith("//");
+        Predicate<String> isPrimitiveSecData = isSecData.and(s -> {
+            var t = s.strip();
+            return !t.startsWith("struct ") && !t.startsWith("union ");
+        });
         var includes = code.lines().filter(isInclude).toList();
-        var rest = code.lines().filter(isInclude.negate()).collect(Collectors.joining("\n")).strip();
-        return String.join("\n", includes) + "\n\n" + rest;
+        var secDataLines = code.lines().filter(isPrimitiveSecData).toList();
+        var rest = code.lines().filter(isInclude.negate()).filter(isPrimitiveSecData.negate())
+                .collect(Collectors.joining("\n")).strip();
+        var preamble = new ArrayList<String>(includes);
+        if (!secDataLines.isEmpty()) {
+            preamble.add("");
+            preamble.addAll(secDataLines);
+        }
+        return String.join("\n", preamble) + "\n\n" + rest;
     }
 
     private List<String> prettyPrint(List<? extends CAST> statements) {

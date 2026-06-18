@@ -5,6 +5,7 @@ import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
+import me.bechberger.ebpf.annotations.bpf.Kprobe;
 import me.bechberger.ebpf.bpf.map.BPFArray;
 import me.bechberger.ebpf.runtime.PtDefinitions;
 import me.bechberger.ebpf.shared.TraceLog;
@@ -117,6 +118,30 @@ public class DataTypeTest {
             while (program.result.get() == RecordArrayProgram.Result.UNKNOWN) {
             }
             assertEquals(RecordArrayProgram.Result.CORRECT, program.result.get());
+        }
+    }
+
+    // Verify that new String() compiles as a zero-initialiser for @Size(N) String buffers.
+    @BPF(license = "GPL")
+    public static abstract class NewStringInitProgram extends BPFProgram {
+        final GlobalVariable<Boolean> triggered = new GlobalVariable<>(false);
+
+        @Kprobe("do_sys_openat2")
+        int probe(Ptr<PtDefinitions.pt_regs> ctx) {
+            @Size(16) String comm = new String();
+            BPFJ.getCurrentComm(comm);
+            triggered.set(true);
+            return 0;
+        }
+    }
+
+    @Test
+    @Timeout(5)
+    public void testNewStringInit() {
+        try (var program = BPFProgram.load(NewStringInitProgram.class)) {
+            program.autoAttachPrograms();
+            TestUtil.triggerOpenAt();
+            while (!program.triggered.get()) {}
         }
     }
 }

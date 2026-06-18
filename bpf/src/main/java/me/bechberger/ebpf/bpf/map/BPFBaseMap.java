@@ -1,11 +1,13 @@
 package me.bechberger.ebpf.bpf.map;
 
+import me.bechberger.ebpf.annotations.BPFNullable;
 import me.bechberger.ebpf.annotations.EnumMember;
 import me.bechberger.ebpf.annotations.bpf.BPFFunctionAlternative;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.bpf.BPFError;
+import me.bechberger.ebpf.bpf.BPFEvents;
 import me.bechberger.ebpf.bpf.raw.Lib;
 import me.bechberger.ebpf.runtime.runtime;
 import me.bechberger.ebpf.runtime.runtime.key;
@@ -20,6 +22,8 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * A base map based on <a href="https://docs.kernel.org/bpf/map_hash.html">BPF hash map</a>
@@ -97,6 +101,12 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
             var keySegment = keyType.allocate(arena, Objects.requireNonNull(key));
             var valueSegment = valueType.allocate(arena, Objects.requireNonNull(value));
             var ret = Lib.bpf_map_update_elem(fd.fd(), keySegment, valueSegment, mode.mode);
+            var evt = new BPFEvents.MapPut();
+            if (evt.isEnabled()) {
+                evt.mapName = fd.name();
+                evt.key = String.valueOf(key);
+                evt.commit();
+            }
             return ret == 0;
         }
     }
@@ -126,7 +136,15 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
             var keySegment = keyType.allocate(arena, Objects.requireNonNull(key));
             var valueSegment = valueType.allocate(arena);
             var ret = Lib.bpf_map_lookup_elem(fd.fd(), keySegment, valueSegment);
-            if (ret != 0) {
+            boolean found = ret == 0;
+            var evt = new BPFEvents.MapGet();
+            if (evt.isEnabled()) {
+                evt.mapName = fd.name();
+                evt.key = String.valueOf(key);
+                evt.found = found;
+                evt.commit();
+            }
+            if (!found) {
                 return null;
             }
             return valueType.parseMemory(valueSegment);
@@ -236,25 +254,29 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
 
 
     /**
-     * Get all values in the map
-     * @return set of values
+     * Get all values in the map.
+     * Entries deleted between key enumeration and value lookup are silently skipped.
+     * @return set of values (never contains null)
      */
     public Set<V> values() {
         Set<V> values = new HashSet<>();
         for (K key : keySet()) {
-            values.add(get(key));
+            V v = get(key);
+            if (v != null) values.add(v);
         }
         return values;
     }
 
     /**
-     * Get all entries in the map
-     * @return set of entries
+     * Get all entries in the map.
+     * Entries deleted between key enumeration and value lookup are silently skipped.
+     * @return set of entries (never contains entries with null values)
      */
     public Set<Map.Entry<K, V>> entrySet() {
         Set<Map.Entry<K, V>> entries = new HashSet<>();
         for (K key : keySet()) {
-            entries.add(new AbstractMap.SimpleEntry<>(key, get(key)));
+            V v = get(key);
+            if (v != null) entries.add(new AbstractMap.SimpleEntry<>(key, v));
         }
         return entries;
     }
@@ -266,10 +288,20 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
     /** Obtains the number of entries by iterating over all keys */
     public int slowSize() {
         try (var arena = Arena.ofConfined()) {
-            var keySegment = keyType.allocate(arena);
+            var cursorSegment = keyType.allocate(arena);
+            var nextSegment = keyType.allocate(arena);
             int size = 0;
-            while (Lib.bpf_map_get_next_key(fd.fd(), keySegment, keySegment) == 0) {
+            // Pass NULL cursor to get the first key, then advance.
+            // Separate cursor/next segments so the kernel reads prev_key
+            // before writing next_key (required for correctness on ARM).
+            int res = Lib.bpf_map_get_next_key(fd.fd(), MemorySegment.NULL, nextSegment);
+            while (res == 0) {
                 size++;
+                // swap: nextSegment becomes the new cursor
+                var tmp = cursorSegment;
+                cursorSegment = nextSegment;
+                nextSegment = tmp;
+                res = Lib.bpf_map_get_next_key(fd.fd(), cursorSegment, nextSegment);
             }
             return size;
         }
@@ -292,6 +324,7 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
      */
     @BuiltinBPFFunction("bpf_map_lookup_elem(&$this, $pointery$arg1)")
     @NotUsableInJava
+    @BPFNullable
     public Ptr<V> bpf_get(K key) {
         throw new MethodIsBPFRelatedFunction();
     }
@@ -306,11 +339,119 @@ public class BPFBaseMap<K, V> extends BPFMap implements Iterable<Map.Entry<K, V>
     }
 
     /**
+     * BPF-side: insert or update the value at {@code key} (equivalent to {@link #put(Object, Object)}).
+     *
+     * <p>Lowers to {@code bpf_map_update_elem(&map, &key, &value, BPF_ANY)}.
+     * Use this in BPF context where the {@code put()} name is ambiguous with Java-side overloads.
+     *
+     * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_map_update_elem(Ptr, Ptr, Ptr, long)
+     */
+    @BuiltinBPFFunction("bpf_map_update_elem(&$this, $pointery$arg1, $pointery$arg2, BPF_ANY)")
+    @NotUsableInJava
+    public void bpf_put(K key, V value) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
      * Clear the map
      */
     public void clear() {
         for (K key : keySet()) {
             delete(key);
         }
+    }
+
+    /**
+     * Returns the value for the key, or {@code defaultValue} if not present.
+     */
+    public V getOrDefault(K key, V defaultValue) {
+        V value = get(key);
+        return value != null ? value : defaultValue;
+    }
+
+    /**
+     * If the key is not present, computes and stores a value using {@code mappingFunction}, then returns it.
+     * If the key is already present, returns the existing value.
+     */
+    public V computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction) {
+        V value = get(key);
+        if (value != null) {
+            return value;
+        }
+        V newValue = mappingFunction.apply(key);
+        if (newValue != null) {
+            put(key, newValue);
+        }
+        return newValue;
+    }
+
+    /**
+     * Applies {@code remappingFunction} to the current value (or {@code null} if absent) and stores the result.
+     * If the function returns {@code null}, the entry is deleted.
+     * Returns the new value (or {@code null} if deleted).
+     */
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+        V oldValue = get(key);
+        V newValue = remappingFunction.apply(key, oldValue);
+        if (newValue == null) {
+            if (oldValue != null) {
+                delete(key);
+            }
+        } else {
+            put(key, newValue);
+        }
+        return newValue;
+    }
+
+    /**
+     * Increments the numeric value stored at {@code key} by {@code delta}, treating a missing entry as 0.
+     * V must be a {@link Number} subtype ({@code Long}, {@code Integer}, etc.).
+     *
+     * @throws ClassCastException if V is not a numeric BPF type
+     */
+    @SuppressWarnings("unchecked")
+    public void increment(K key, long delta) {
+        V current = get(key);
+        long newVal = (current == null ? 0L : ((Number) current).longValue()) + delta;
+        String vClass = valueType.javaClass().klass();
+        V newValue = switch (vClass) {
+            case "java.lang.Long", "long" -> (V) Long.valueOf(newVal);
+            case "java.lang.Integer", "int" -> (V) Integer.valueOf((int) newVal);
+            case "java.lang.Short", "short" -> (V) Short.valueOf((short) newVal);
+            case "java.lang.Byte", "byte" -> (V) Byte.valueOf((byte) newVal);
+            default -> throw new ClassCastException("increment requires a numeric value type, got " + vClass);
+        };
+        put(key, newValue);
+    }
+
+    /** Increments the value at {@code key} by 1. */
+    public void increment(K key) {
+        increment(key, 1L);
+    }
+
+    /**
+     * BPF-side: atomically add {@code delta} to the value at {@code key} if present.
+     *
+     * <p>Lowers to: look up key via {@code bpf_map_lookup_elem}, then
+     * {@code __sync_fetch_and_add} on the value pointer if non-null.
+     * If the key is absent nothing happens. Safe under concurrent BPF runs.
+     *
+     * <p>Requires a numeric value type (int, long, etc.).
+     */
+    @BuiltinBPFFunction("({ __typeof__($arg2) *___v = bpf_map_lookup_elem(&$this, $pointery$arg1); if (___v) __sync_fetch_and_add(___v, $arg2); })")
+    @NotUsableInJava
+    public void bpf_increment(K key, V delta) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * BPF-side: return the value at {@code key}, or {@code defaultValue} if not present.
+     *
+     * <p>Lowers to: {@code bpf_map_lookup_elem} and a ternary dereference.
+     */
+    @BuiltinBPFFunction("({ __typeof__($arg2) *___v = bpf_map_lookup_elem(&$this, $pointery$arg1); ___v ? *___v : $arg2; })")
+    @NotUsableInJava
+    public V bpf_getOrDefault(K key, V defaultValue) {
+        throw new MethodIsBPFRelatedFunction();
     }
 }

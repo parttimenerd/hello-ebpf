@@ -1,7 +1,13 @@
 package me.bechberger.ebpf.bpf.map;
 
 import me.bechberger.ebpf.annotations.bpf.BPFMapClass;
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
+import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
+import me.bechberger.ebpf.bpf.TriFunction;
 import me.bechberger.ebpf.type.BPFType;
+
+import java.util.function.BiFunction;
 
 /**
  * A base map based on <a href="https://docs.kernel.org/bpf/map_hash.html">BPF hash map</a>
@@ -16,8 +22,9 @@ import me.bechberger.ebpf.type.BPFType;
         cTemplate = """
         struct {
             __uint (type, BPF_MAP_TYPE_HASH);
-            __uint (key_size, sizeof($c1));
-            __uint (value_size, sizeof($c2));
+            __uint (map_flags, BPF_F_NO_PREALLOC);
+            __type (key, $c1);
+            __type (value, $c2);
             __uint (max_entries, $maxEntries);
         } $field SEC(".maps");
         """,
@@ -39,5 +46,54 @@ public class BPFHashMap<K, V> extends BPFBaseMap<K, V> {
 
     public boolean usesLRU() {
         return typeId == MapTypeId.LRU_HASH;
+    }
+
+    /**
+     * Iterate over every entry of this map via {@code bpf_for_each_map_elem}, calling
+     * {@code body} for each (key, value) pair.
+     * <p>
+     * Lowers to {@code bpf_for_each_map_elem(&map, &__bpf_lambda_..., ctx, 0)} where
+     * the lambda is lifted to a top-level static {@code __always_inline} C function
+     * with the kernel ABI
+     * {@code int (struct bpf_map *map, const void *key, void *value, void *ctx)}.
+     * The lifted function dereferences the {@code key}/{@code value} pointers so
+     * the user-written body sees plain {@code k} and {@code v} of types {@code K}
+     * and {@code V}. The lambda body must NOT capture locals from the enclosing
+     * method — pass state through {@code ctx} instead.
+     * <p>
+     * Return {@code 0} from {@code body} to continue, {@code 1} to break.
+     * <p>
+     * Requires kernel ≥5.13.
+     */
+    @BuiltinBPFFunction("bpf_for_each_map_elem(&$this, $func1:mapelem, $arg2, 0)")
+    @NotUsableInJava
+    public void forEach(BiFunction<K, V, Integer> body, Object ctx) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Typed-ctx variant of {@link #forEach(BiFunction, Object)}.
+     * <p>
+     * The lambda receives {@code (key, value, ctx)} where the type of {@code ctx}
+     * follows the explicit type witness on the call site:
+     * <pre>{@code
+     *   map.<Ptr<State>>forEach((k, v, st) -> {
+     *       st.val().count++;
+     *       return 0;
+     *   }, Ptr.of(state));
+     * }</pre>
+     * Lowers to {@code bpf_for_each_map_elem(&map, &__bpf_lambda_..., ctx, 0)}.
+     * The lifted C function casts the libbpf {@code void *ctx} back to the user
+     * type at function entry, so the body can use {@code st} directly without
+     * touching {@code (Type *)} casts. Without an explicit type witness the
+     * legacy 2-arg overload is the better fit.
+     * <p>
+     * Same capture rules as the 2-arg overload: the body must NOT capture locals
+     * from the enclosing method — pass state through {@code ctx}.
+     */
+    @BuiltinBPFFunction("bpf_for_each_map_elem(&$this, $func1:mapelem, $arg2, 0)")
+    @NotUsableInJava
+    public <C> void forEach(TriFunction<K, V, C, Integer> body, C ctx) {
+        throw new MethodIsBPFRelatedFunction();
     }
 }

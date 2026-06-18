@@ -70,6 +70,32 @@ class MethodTemplateTest {
     }
 
     @Test
+    public void testTypeof() {
+        assertRendered("$typeof$arg1 *x = $arg1", "__typeof__(1) *x = 1", List.of(1));
+        assertRendered("$typeof$arg2", "__typeof__(2)", List.of(1, 2));
+    }
+
+    @Test
+    public void testSizeof() {
+        assertRendered("$sizeof$arg1", "sizeof(1)", List.of(1));
+        assertRendered("buf_len = $sizeof$arg2", "buf_len = sizeof(2)", List.of(1, 2));
+    }
+
+    @Test
+    public void testDeref() {
+        assertRendered("$deref$arg1", "*(1)", List.of(1));
+        assertRendered("$deref$arg1 + $deref$arg2", "*(1) + *(2)", List.of(1, 2));
+    }
+
+    @Test
+    public void testTypeofInGnuStatement() {
+        // Simulates the pattern used in bpf_increment / bpf_getOrDefault templates
+        assertRendered("({ $typeof$arg2 *___v = $arg1; ___v ? *___v : $arg2; })",
+                "({ __typeof__(2) *___v = 1; ___v ? *___v : 2; })",
+                List.of(1, 2));
+    }
+
+    @Test
     public void testLambda() {
         assertRendered("$arg2 $lambda1:param1 $lambda1:param1:type $lambda1:param1:name1 $lambda1:code",
                         "1 T a T a1 x = a;",

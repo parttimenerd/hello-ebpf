@@ -13,7 +13,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
 
@@ -26,11 +26,33 @@ jobs:
       - name: Cache Maven
         uses: actions/cache@v4
         with:
-          path: ~/.m2/repository
+          path: |
+            ~/.m2/repository
+            rawbpf/bin/jextract-22
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang-19 libbpf-dev linux-tools-common linux-tools-$(uname -r) gcc-multilib
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang-19 libbpf-dev linux-tools-common linux-tools-$(uname -r) linux-tools-generic gcc-multilib || true
+      - name: Install bpftool from GitHub releases
+        run: |
+          BPFTOOL_VER=$(curl -s https://api.github.com/repos/libbpf/bpftool/releases/latest | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
+          curl -sL "https://github.com/libbpf/bpftool/releases/download/v${BPFTOOL_VER}/bpftool-v${BPFTOOL_VER}-amd64.tar.gz" | sudo tar -xz -C /usr/local/bin/ bpftool
+          sudo chmod +x /usr/local/bin/bpftool
+          echo "/usr/local/bin/bpftool" > .bpftool.path
+
+      - name: Install reactor prerequisites (annotations + bpf-processor)
+        run: ./mvnw -ntp -B install -DskipTests -N && ./mvnw -ntp -B install -DskipTests -pl annotations,shared,bpf-processor
+
+      - name: Install bpf-runtime
+        # bpf-runtime has ~1000 generated files; JDK 22 javac hits OOM/StackOverflow.
+        # Disable annotation processing since sources are pre-generated and
+        # pass extra heap/stack via MAVEN_OPTS for the in-process compiler.
+        run: ./mvnw -ntp -B install -DskipTests -f bpf-runtime/pom.xml -Dmaven.compiler.proc=none
+        env:
+          MAVEN_OPTS: "-Xss16m -Xmx5g"
+
+      - name: Install rawbpf
+        run: ./mvnw -ntp -B install -DskipTests -f rawbpf/pom.xml
 
       - name: mvn package
         run: ./mvnw -ntp -B package -DskipTests
@@ -41,36 +63,92 @@ jobs:
           name: bpf.jar
           path: bpf/target/bpf.jar
 
-  vm-test:
-    if: false
-    name: Run tests on pre-built kernel
-    runs-on: ubuntu-24.04
+  docs:
+    name: Deploy docs
+    runs-on: ubuntu-latest
     needs: build
-    timeout-minutes: 10
-    strategy:
-      matrix:
-        version: ["6.14"]
-    env:
-      HBT_KERNEL_VERSION: "${{ matrix.version }}"
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # needed for git-based versioning in mkdocs
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install mkdocs-material
+        run: pip install -r docs-requirements.txt
+
+      - name: Deploy to GitHub Pages
+        run: mkdocs gh-deploy --force
+
+  hosted-test:
+    name: Run tests on ubuntu-26.04 (hosted)
+    runs-on: ubuntu-26.04
+    needs: build
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Setup Java 22
         uses: actions/setup-java@v4
         with:
           java-version: '22'
           distribution: 'adopt'
 
-      - run: sudo pip3 install https://github.com/amluto/virtme/archive/beb85146cd91de37ae455eccb6ab67c393e6e290.zip
-      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends qemu-system-x86 linux-headers-$(uname -r) linux-cloud-tools-generic gcc-multilib
+      - name: Cache Maven
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository
+            rawbpf/bin/jextract-22
+          key: ${{ runner.os }}-26-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-26-m2
 
-      - name: Test
+      - name: Show kernel info
         run: |
-          ./mvnw -ntp -B test -Djvm=testutil/bin/java
+          uname -r
+          grep -E 'CONFIG_SCHED_CLASS_EXT|CONFIG_BPF_LSM|CONFIG_BPF_JIT' /boot/config-$(uname -r) 2>/dev/null || \
+            zcat /proc/config.gz 2>/dev/null | grep -E 'CONFIG_SCHED_CLASS_EXT|CONFIG_BPF_LSM|CONFIG_BPF_JIT' || \
+            echo "kernel config not available"
+          ls /sys/kernel/btf/vmlinux && echo "BTF present" || echo "BTF missing"
+
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang libbpf-dev linux-tools-common linux-tools-$(uname -r) linux-tools-generic gcc-multilib || true
+      - name: Install bpftool from GitHub releases
+        run: |
+          BPFTOOL_VER=$(curl -s https://api.github.com/repos/libbpf/bpftool/releases/latest | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
+          curl -sL "https://github.com/libbpf/bpftool/releases/download/v${BPFTOOL_VER}/bpftool-v${BPFTOOL_VER}-amd64.tar.gz" | sudo tar -xz -C /usr/local/bin/ bpftool
+          sudo chmod +x /usr/local/bin/bpftool
+          echo "/usr/local/bin/bpftool" > .bpftool.path
+
+      - name: Install reactor prerequisites (annotations + bpf-processor)
+        run: ./mvnw -ntp -B install -DskipTests -N && ./mvnw -ntp -B install -DskipTests -pl annotations,shared,bpf-processor
+
+      - name: Install bpf-runtime
+        run: ./mvnw -ntp -B install -DskipTests -f bpf-runtime/pom.xml -Dmaven.compiler.proc=none
+        env:
+          MAVEN_OPTS: "-Xss16m -Xmx5g"
+
+      - name: Install rawbpf
+        run: ./mvnw -ntp -B install -DskipTests -f rawbpf/pom.xml
+
+      - name: Install full reactor (bpf-compiler-plugin, bpf, bpf-samples)
+        run: ./mvnw -ntp -B install -DskipTests
+
+      - name: Run BPF tests (as root)
+        run: |
+          USER_M2=$HOME/.m2/repository
+          sudo -E env HOME=$HOME JAVA_HOME=$JAVA_HOME PATH=$JAVA_HOME/bin:$PATH \
+            ./mvnw -ntp -B test -pl bpf,bpf-samples \
+            -Dmaven.test.skip=false -DskipTests=false \
+            -Dmaven.repo.local=$USER_M2
 
       - name: Publish Test Report
         uses: mikepenz/action-junit-report@v4
         if: always()
         with:
-          check_name: 'Test Report (Kernel ${{ matrix.KERNEL_VERSION }})'
-          report_paths: '**/build/test-results/test/TEST-*.xml'
+          check_name: 'Test Report (ubuntu-26.04)'
+          report_paths: '**/target/surefire-reports/TEST-*.xml'

@@ -59,7 +59,11 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
     }
 
     public sealed interface Argument {
-        record Lambda(List<FunctionParameter> parameters, CAST.Statement.CompoundStatement code) implements Argument {
+        record Lambda(List<FunctionParameter> parameters, CAST.Statement.CompoundStatement code,
+                      @Nullable Object source) implements Argument {
+            public Lambda(List<FunctionParameter> parameters, CAST.Statement.CompoundStatement code) {
+                this(parameters, code, null);
+            }
             @Override
             public String toPrettyString() {
                 return String.format("(%s) { %s }", parameters.stream().map(FunctionParameter::toPrettyString).collect(Collectors.joining(", ")),
@@ -76,14 +80,77 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
         String toPrettyString();
     }
 
+    /**
+     * Callback the renderer invokes for {@code $funcN} placeholders to lift a lambda
+     * argument into a top-level synthetic C function and obtain the function's name.
+     * Returning {@code null} signals an error already reported by the callback (e.g.
+     * illegal capture); the renderer will throw a {@link TemplateRenderException}.
+     */
+    /**
+     * Shape of the lifted C function generated for a {@code $funcN} placeholder.
+     * <ul>
+     *   <li>{@link #PLAIN} — append the lambda parameters verbatim plus a trailing
+     *       {@code void *ctx}. Suitable for {@code bpf_loop} and similar
+     *       {@code (index, ctx)} callbacks.</li>
+     *   <li>{@link #MAPELEM} — emit the libbpf {@code bpf_for_each_map_elem}
+     *       callback ABI: {@code (struct bpf_map *map, K *key, V *value, void *ctx)},
+     *       and dereference key/value at the start of the lifted body so the user
+     *       lambda body sees plain {@code k}/{@code v} variables of type {@code K}
+     *       and {@code V}.</li>
+     * </ul>
+     */
+    public enum FuncShape {
+        PLAIN, MAPELEM
+    }
+
+    /**
+     * Callback the renderer invokes for {@code $funcN} placeholders to lift a lambda
+     * argument into a top-level synthetic C function and obtain the function's name.
+     * Returning {@code null} signals an error already reported by the callback (e.g.
+     * illegal capture); the renderer will throw a {@link TemplateRenderException}.
+     */
+    @FunctionalInterface
+    public interface LambdaPromoter {
+        @Nullable String promote(int argIndex, Lambda lambda, FuncShape shape,
+                                 List<CAST.Declarator> typeArguments);
+    }
+
     public record CallArgs(@Nullable CAST.Expression thisExpression,
                            List<? extends Argument> arguments,
                            List<CAST.Declarator> typeArguments,
-                           List<CAST.Declarator> classTypeArguments) {
+                           List<CAST.Declarator> classTypeArguments,
+                           @Nullable LambdaPromoter lambdaPromoter,
+                           @Nullable SizeResolver sizeResolver) {
         public CallArgs(@Nullable CAST.Expression thisExpression,
                         List<? extends Argument> arguments, List<CAST.Declarator> typeArguments) {
-            this(thisExpression, arguments, typeArguments, List.of());
+            this(thisExpression, arguments, typeArguments, List.of(), null, null);
         }
+        public CallArgs(@Nullable CAST.Expression thisExpression,
+                        List<? extends Argument> arguments,
+                        List<CAST.Declarator> typeArguments,
+                        List<CAST.Declarator> classTypeArguments) {
+            this(thisExpression, arguments, typeArguments, classTypeArguments, null, null);
+        }
+        public CallArgs(@Nullable CAST.Expression thisExpression,
+                        List<? extends Argument> arguments,
+                        List<CAST.Declarator> typeArguments,
+                        List<CAST.Declarator> classTypeArguments,
+                        @Nullable LambdaPromoter lambdaPromoter) {
+            this(thisExpression, arguments, typeArguments, classTypeArguments, lambdaPromoter, null);
+        }
+    }
+
+    /**
+     * Callback the renderer invokes for {@code $autosize$argN} placeholders. Given the (zero-based)
+     * argument index, return the {@code @Size(N)} value declared on that argument's type chain
+     * (e.g. on the local variable, the field, or the array type), or {@code null} if no
+     * {@code @Size} annotation is reachable. Returning {@code null} causes the renderer to throw a
+     * {@link MethodTemplateCache.TemplateRenderException} with a helpful "add @Size(N) or pass the
+     * size explicitly" message.
+     */
+    @FunctionalInterface
+    public interface SizeResolver {
+        @Nullable Integer resolveAt(int argIndex);
     }
 
     public record CallProps(String methodName, CallArgs args) {
@@ -233,6 +300,69 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
             }
         }
 
+        /** {@code $typeof$argN} — emits {@code __typeof__(argN)}, useful for type-inference in GNU statement exprs. */
+        record TypeofArg(int n) implements TemplatePart {
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                if (n >= props.args.arguments.size()) {
+                    throw new TemplateRenderException("Argument " + (n + 1) + " not given for $typeof$arg" + (n + 1));
+                }
+                return "__typeof__(" + props.args.arguments.get(n).toPrettyString() + ")";
+            }
+        }
+
+        /** {@code $sizeof$argN} — emits {@code sizeof(argN)}. */
+        record SizeofArg(int n) implements TemplatePart {
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                if (n >= props.args.arguments.size()) {
+                    throw new TemplateRenderException("Argument " + (n + 1) + " not given for $sizeof$arg" + (n + 1));
+                }
+                return "sizeof(" + props.args.arguments.get(n).toPrettyString() + ")";
+            }
+        }
+
+        /**
+         * {@code $autosize$argN} — emits the integer literal {@code N} pulled from the
+         * argument's {@code @Size(N)} type annotation. Differs from {@code $sizeof$argN}: the
+         * latter delegates to the C {@code sizeof} operator (computed by the C compiler over the
+         * C type), while {@code $autosize$argN} resolves the value at Java compile time, so it
+         * works even when the C type loses the size (e.g. a {@code Ptr<?> buf} parameter that
+         * was a sized buffer at the Java call site).
+         */
+        record AutoSizeArg(int n) implements TemplatePart {
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                if (n >= props.args.arguments.size()) {
+                    throw new TemplateRenderException(
+                            "Argument " + (n + 1) + " not given for $autosize$arg" + (n + 1));
+                }
+                if (props.args.sizeResolver == null) {
+                    throw new TemplateRenderException(
+                            "$autosize$arg" + (n + 1) + " used but no size resolver wired up");
+                }
+                Integer size = props.args.sizeResolver.resolveAt(n);
+                if (size == null) {
+                    throw new TemplateRenderException(
+                            "Cannot auto-derive size for argument " + (n + 1) + " of "
+                                    + props.methodName
+                                    + ". Add @Size(N) to the buffer's type, or pass the size explicitly.");
+                }
+                return Integer.toString(size);
+            }
+        }
+
+        /** {@code $deref$argN} — emits {@code *(argN)} (pointer dereference). */
+        record DerefArg(int n) implements TemplatePart {
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                if (n >= props.args.arguments.size()) {
+                    throw new TemplateRenderException("Argument " + (n + 1) + " not given for $deref$arg" + (n + 1));
+                }
+                return "*(" + props.args.arguments.get(n).toPrettyString() + ")";
+            }
+        }
+
         private static Lambda getLambdaParam(CallProps props, int n, String text) {
             if (n >= props.args.arguments.size()) {
                 throw new TemplateRenderException("Argument " + (n + 1) + " not given for " + text);
@@ -283,6 +413,31 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                 return code.toPrettyStringWithoutBraces();
             }
         }
+
+        /**
+         * {@code $funcN} — promote the lambda at argument N to a top-level static
+         * synthetic C function (via {@link LambdaPromoter}) and emit the bare
+         * function-name identifier. Used for kfuncs that take real C function
+         * pointers (e.g. {@code bpf_loop}, {@code bpf_for_each_map_elem}).
+         */
+        record FuncRef(int n, FuncShape shape) implements TemplatePart {
+            public FuncRef(int n) { this(n, FuncShape.PLAIN); }
+            @Override
+            public String render(CallProps props, @Nullable NewVariableContext context) {
+                String text = String.format("$func%d", n + 1);
+                var lambda = TemplatePart.getLambdaParam(props, n, text);
+                if (props.args.lambdaPromoter == null) {
+                    throw new TemplateRenderException("$func" + (n + 1) + " requires a LambdaPromoter to be set "
+                            + "on CallArgs (only the Translator can lift lambdas to top-level functions)");
+                }
+                var name = props.args.lambdaPromoter.promote(n, lambda, shape, props.args.typeArguments);
+                if (name == null) {
+                    throw new TemplateRenderException("Failed to lift lambda at argument " + (n + 1)
+                            + " to a top-level function (see preceding diagnostics)");
+                }
+                return name;
+            }
+        }
     }
 
     static MethodTemplate parse(String methodName, String template) {
@@ -307,6 +462,10 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
             boolean hadStrLenBefore = false;
             boolean hadStrBefore = false;
             boolean hadPointeryBefore = false;
+            boolean hadTypeofBefore = false;
+            boolean hadSizeofBefore = false;
+            boolean hadAutosizeBefore = false;
+            boolean hadDerefBefore = false;
             if (part.startsWith("strlen")) {
                 if (part.equals("strlen")) {
                     hadStrLenBefore = true;
@@ -323,6 +482,51 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                 hadPointeryBefore = true;
                 i++;
                 part = parts[i];
+            } else if (part.equals("typeof")) {
+                hadTypeofBefore = true;
+                i++;
+                part = parts[i];
+            } else if (part.equals("sizeof")) {
+                hadSizeofBefore = true;
+                i++;
+                part = parts[i];
+            } else if (part.equals("autosize")) {
+                hadAutosizeBefore = true;
+                i++;
+                if (i >= parts.length) {
+                    throw new TemplateRenderException("autosize must be followed by $argN");
+                }
+                part = parts[i];
+            } else if (part.equals("deref")) {
+                hadDerefBefore = true;
+                i++;
+                part = parts[i];
+            } else if (part.startsWith("func") && !part.startsWith("func_")
+                    && part.length() > 4 && Character.isDigit(part.charAt(4))) {
+                // $funcN[:mapelem] — lift the lambda at argument N to a synthetic
+                // top-level C function and emit the function name.
+                int end = 4;
+                while (end < part.length() && Character.isDigit(part.charAt(end))) {
+                    end++;
+                }
+                int funcNum;
+                try {
+                    funcNum = Integer.parseInt(part.substring(4, end));
+                } catch (NumberFormatException e) {
+                    throw new TemplateRenderException("Invalid func number: $" + part);
+                }
+                FuncShape shape = FuncShape.PLAIN;
+                String rest = part.substring(end);
+                if (rest.startsWith(":mapelem")) {
+                    shape = FuncShape.MAPELEM;
+                    rest = rest.substring(":mapelem".length());
+                }
+                templateParts.add(new FuncRef(funcNum - 1, shape));
+                part = rest;
+                if (!part.isEmpty()) {
+                    templateParts.add(new Verbatim(part));
+                }
+                continue;
             } else if (part.startsWith("lambda")) {
                 // we're in $Lambda...
                 /*
@@ -446,6 +650,14 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                                 } else {
                                     templateParts.add(new PointeryArg(num));
                                 }
+                            } else if (hadTypeofBefore) {
+                                templateParts.add(new TypeofArg(num));
+                            } else if (hadSizeofBefore) {
+                                templateParts.add(new SizeofArg(num));
+                            } else if (hadAutosizeBefore) {
+                                templateParts.add(new AutoSizeArg(num));
+                            } else if (hadDerefBefore) {
+                                templateParts.add(new DerefArg(num));
                             } else {
                                 templateParts.add(new Arg(num));
                             }
@@ -474,6 +686,18 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
             }
             if (hadStrBefore && !(templateParts.getLast() instanceof StrArg)) {
                 throw new TemplateRenderException("str can only be used with a $argN argument");
+            }
+            if (hadTypeofBefore && !(templateParts.getLast() instanceof TypeofArg)) {
+                throw new TemplateRenderException("typeof can only be used with a $argN argument");
+            }
+            if (hadSizeofBefore && !(templateParts.getLast() instanceof SizeofArg)) {
+                throw new TemplateRenderException("sizeof can only be used with a $argN argument");
+            }
+            if (hadAutosizeBefore && !(templateParts.getLast() instanceof AutoSizeArg)) {
+                throw new TemplateRenderException("autosize can only be used with a $argN argument");
+            }
+            if (hadDerefBefore && !(templateParts.getLast() instanceof DerefArg)) {
+                throw new TemplateRenderException("deref can only be used with a $argN argument");
             }
             if (!part.isEmpty()) {
                 templateParts.add(new Verbatim(part));

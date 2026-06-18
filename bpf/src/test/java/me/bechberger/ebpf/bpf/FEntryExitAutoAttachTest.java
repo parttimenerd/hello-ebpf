@@ -2,14 +2,17 @@ package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.bpf.BPF;
+import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
+import me.bechberger.ebpf.annotations.bpf.Kprobe;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
 import me.bechberger.ebpf.runtime.OpenDefinitions;
+import me.bechberger.ebpf.runtime.PtDefinitions;
 import me.bechberger.ebpf.runtime.interfaces.SystemCallHooks;
 import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,49 +46,48 @@ public class FEntryExitAutoAttachTest {
             }
         }
 
-        static final String EBPF_PROGRAM = """
-                #include "vmlinux.h"
-                #include <bpf/bpf_helpers.h>
-                #include <bpf/bpf_tracing.h>
-                
-                SEC("fexit/do_sys_openat2")
-                int BPF_PROG(do_openat2_exit, long dfd, const char *name, struct open_how *how, long ret)
-                {
-                	return 0;
-                }
-                
-                SEC ("kprobe/do_sys_openat2")
-                int kprobe__do_sys_openat2 (struct pt_regs *ctx)
-                {
-                  return 0;
-                }
-                """;
+        @BPFFunction(section = "fexit/do_sys_openat2", autoAttach = true, name = "do_openat2_exit")
+        int doOpenat2Exit(Ptr<PtDefinitions.pt_regs> ctx) {
+            return 0;
+        }
+
+        @Kprobe("do_sys_openat2")
+        int kprobe__do_sys_openat2(Ptr<PtDefinitions.pt_regs> ctx) {
+            return 0;
+        }
     }
 
     @Test
-    public void testOpenAt() throws IOException {
+    @Timeout(15)
+    public void testOpenAt() throws Exception {
         Path testFile = Path.of("");
         List<String> files = new ArrayList<>();
         try (var program = BPFProgram.load(OpenAt.class)) {
             program.autoAttachPrograms();
             program.targetPid.set((int) ProcessHandle.current().pid());
-            program.pathBuffer.setCallback(path -> {
-                files.add(path);
-            });
+            program.pathBuffer.setCallback(path -> files.add(path));
             testFile = TestUtil.triggerOpenAt();
-            try {
-                program.pathBuffer.consume();
-            } catch (Exception e) {
-                // Ignore
+            final Path expected = testFile;
+            long deadline = System.currentTimeMillis() + 5000;
+            while (!files.contains(expected.toString()) && System.currentTimeMillis() < deadline) {
+                try {
+                    program.pathBuffer.consume();
+                } catch (Exception e) {
+                    // ring buffer consume may throw if no events — ignore
+                }
+                if (!files.contains(expected.toString())) {
+                    Thread.sleep(50);
+                }
             }
-            assertTrue(files.contains(testFile.toString()));
+            assertTrue(files.contains(testFile.toString()),
+                    "Expected '" + testFile + "' in captured paths; got: " + files);
         }
     }
 
     @Test
     public void testAutoAttachAll() {
         try (var program = BPFProgram.load(OpenAt.class)) {
-            assertEquals(Stream.of("do_openat2_exit", "kprobe__do_sys_openat2").sorted().toList(), program.getAutoAttachablePrograms().stream().sorted().toList());
+            assertEquals(Stream.of("do_openat2_exit", "enterOpenat2", "kprobe__do_sys_openat2").sorted().toList(), program.getAllAutoAttachablePrograms().stream().sorted().toList());
         }
     }
 }

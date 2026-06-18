@@ -1,0 +1,20 @@
+{
+  "name": "hello-ebpf",
+  "image": "mcr.microsoft.com/devcontainers/java:1-22-bookworm",
+  "runArgs": ["--privileged", "--pid=host"],
+  "onCreateCommand": "sudo apt-get update && sudo apt-get install -y --no-install-recommends clang-19 libbpf-dev linux-tools-common linux-headers-$(uname -r) linux-tools-$(uname -r) gcc-multilib bpftool && ./mvnw -ntp -B package -DskipTests",
+  "postCreateCommand": "./scripts/doctor.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "redhat.java"
+      ],
+      "settings": {
+        "java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current"
+      }
+    }
+  },
+  "forwardPorts": [],
+  "_comment_sched_ext": "Note: Codespaces host kernels (typically 6.x) may not expose sched_ext. XDP and tracepoints work and cover the README examples. sched_ext samples require a local Linux box or thinkstation workflow (see SYNC_WORKFLOW.md)."
+}

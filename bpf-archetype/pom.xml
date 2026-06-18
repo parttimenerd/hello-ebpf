@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>me.bechberger</groupId>
+  <artifactId>hello-ebpf-archetype</artifactId>
+  <version>0.1.4</version>
+  <packaging>maven-archetype</packaging>
+
+  <name>hello-ebpf-archetype</name>
+  <description>Maven archetype for hello-ebpf BPF programs</description>
+  <url>https://github.com/parttimenerd/hello-ebpf</url>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>parttimenerd</id>
+      <name>Johannes Bechberger</name>
+      <email>me@mostlynerdless.de</email>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/parttimenerd/hello-ebpf.git</connection>
+    <developerConnection>scm:git:https://github.com/parttimenerd/hello-ebpf.git</developerConnection>
+    <url>https://github.com/parttimenerd/hello-ebpf</url>
+  </scm>
+
+  <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.archetype</groupId>
+        <artifactId>archetype-packaging</artifactId>
+        <version>3.2.1</version>
+      </extension>
+    </extensions>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-archetype-plugin</artifactId>
+          <version>3.2.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <parent>
+    <groupId>me.bechberger</groupId>
+    <artifactId>hello-ebpf</artifactId>
+    <version>0.1.4</version>
+  </parent>
+</project>

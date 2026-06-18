@@ -102,6 +102,7 @@ class GeneratorTest {
                     noCCodeGeneration = true,
                     cType = "struct foo"
                 )
+                @me.bechberger.ebpf.annotations.KernelBTF
                 @NotUsableInJava
                 public static class foo extends Struct {
                   public @Unsigned int a;
@@ -118,6 +119,7 @@ class GeneratorTest {
                     noCCodeGeneration = true,
                     cType = "union foo"
                 )
+                @me.bechberger.ebpf.annotations.KernelBTF
                 @NotUsableInJava
                 public static class foo extends Union {
                   public @Unsigned int a;
@@ -209,6 +211,7 @@ class GeneratorTest {
                     noCCodeGeneration = true,
                     cType = "struct foo"
                 )
+                @me.bechberger.ebpf.annotations.KernelBTF
                 @NotUsableInJava
                 public static class foo extends Struct {
                   @InlineUnion(-1)

@@ -18,20 +18,32 @@ import me.bechberger.ebpf.type.BPFType.BPFUnionType;
 import me.bechberger.ebpf.type.Union;
 import org.jetbrains.annotations.Nullable;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.foreign.Arena;
+import java.net.InetSocketAddress;
 import java.lang.foreign.FunctionDescriptor;
+import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
+import java.lang.foreign.StructLayout;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
+import static java.lang.foreign.ValueLayout.JAVA_BOOLEAN;
 import static java.lang.foreign.ValueLayout.JAVA_INT;
+import static java.lang.foreign.ValueLayout.JAVA_LONG;
 import static me.bechberger.ebpf.NameUtil.toConstantCase;
 import static me.bechberger.ebpf.bpf.raw.Lib.*;
 
@@ -107,6 +119,23 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     /**
+     * Prints the generated C code for {@code clazz} to stdout and returns without loading.
+     *
+     * <p>Useful for inspecting what the compiler plugin generated without running as root.
+     * Equivalent to setting the environment variable {@code BPF_PRINT_CODE=1} before calling
+     * {@link #load(Class)}.
+     *
+     * <pre>{@code
+     * // From your IDE / unit test — no root required:
+     * BPFProgram.printCode(MinimalScheduler.class);
+     * }</pre>
+     */
+    public static <T extends BPFProgram> void printCode(Class<T> clazz) {
+        System.out.println("=== BPF C code for " + clazz.getSimpleName() + " ===");
+        System.out.println(getCode(clazz));
+    }
+
+    /**
      * Loads the implementation class of the given abstract BPFProgram subclass
      * <p>
      * Example: {@snippet :
@@ -120,12 +149,36 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public static <T extends BPFProgram, S extends T> S load(Class<T> clazz) {
         try {
+            if ("1".equals(System.getenv("BPF_PRINT_CODE"))) {
+                printCode(clazz);
+            }
+            KernelFeatures.requireMinimumKernel();
             KernelFeatures.checkRequirements("Loading BPF program", clazz);
+            long t0 = System.currentTimeMillis();
             var program = BPFProgram.<T, S>getImplClass(clazz).getConstructor().newInstance();
             program.initGlobals();
+            var evt = new BPFEvents.ProgramLoad();
+            if (evt.isEnabled()) {
+                evt.programClass = clazz.getName();
+                evt.durationMs = System.currentTimeMillis() - t0;
+                evt.commit();
+            }
+            System.Logger logger = System.getLogger(BPFProgram.class.getName());
+            if (logger.isLoggable(System.Logger.Level.DEBUG)) {
+                logger.log(System.Logger.Level.DEBUG,
+                        "Loaded {0}: byteCodeHash={1}", clazz.getSimpleName(), program.byteCodeHash());
+            }
             return program;
         } catch (BPFError e) {
             throw e;
+        } catch (InvocationTargetException e) {
+            // Constructor.newInstance() wraps user-thrown exceptions; unwrap so
+            // BPFLoadError / BPFVerifierException propagate to the caller as-is.
+            Throwable cause = e.getCause();
+            if (cause instanceof BPFError be) {
+                throw be;
+            }
+            throw new RuntimeException(cause != null ? cause : e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -152,7 +205,7 @@ public abstract class BPFProgram implements AutoCloseable {
 
     private final Set<AttachedXDPIfIndex> attachedXDPIfIndexes = new HashSet<>();
 
-    record AttachedTCIfIndex(ProgramHandle handle, int ifindex, boolean ingress, int priority) {}
+    record AttachedTCIfIndex(ProgramHandle handle, int ifindex, boolean ingress, int priority, int tcHandle) {}
     private final Set<AttachedTCIfIndex> attachedTCIfIndices = new HashSet<>();
 
     private volatile boolean closed = false;
@@ -227,6 +280,7 @@ public abstract class BPFProgram implements AutoCloseable {
      * @throws BPFLoadError if the whole program could not be loaded
      */
     private MemorySegment loadProgram() {
+        VerifierLogCapture.install();
         Path objFile = getTmpObjectFile();
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment fileName = arena.allocateFrom(objFile.toString());
@@ -236,9 +290,17 @@ public abstract class BPFProgram implements AutoCloseable {
                 throw new BPFLoadError("Failed to open eBPF file: " + Util.errnoString(ebpf_object.err()));
             }
 
+            // discard any prior libbpf chatter so the captured log only contains
+            // messages emitted during this bpf_object__load call
+            VerifierLogCapture.drainAndReset();
             var ret = BPF_OBJECT__LOAD.call(ebpf_object.result());
             if (ret.hasError() && ret.result() != 0) {
-                throw new BPFLoadError("Failed to load eBPF object: " + Util.errnoString(ret.err()));
+                String shortMsg = "Failed to load eBPF object: " + Util.errnoString(ret.err());
+                String log = VerifierLogCapture.drainAndReset();
+                if (log.isEmpty()) {
+                    throw new BPFLoadError(shortMsg);
+                }
+                throw new BPFVerifierException(shortMsg, log);
             }
             return ebpf_object.result();
         }
@@ -272,6 +334,11 @@ public abstract class BPFProgram implements AutoCloseable {
                 }
                 names.add(annotation.name().isEmpty() ? method.getName() : annotation.name());
             }
+            // Also handle shorthand attach annotations
+            var shorthandName = getShorthandAttachName(programClass, method);
+            if (shorthandName != null && !names.contains(shorthandName)) {
+                names.add(shorthandName);
+            }
         }
         if (!erroneous.isEmpty()) {
             throw new BPFError("Auto-attachable sections are: " + BPFFunction.autoAttachableSections +
@@ -280,12 +347,53 @@ public abstract class BPFProgram implements AutoCloseable {
         return names;
     }
 
-    public void attachLSMHooks() {
-        for (var method : getClass().getSuperclass().getDeclaredMethods()) {
-            var annotation = findParentAnnotation(getClass().getSuperclass(), method, BPFFunction.class);
-            if (annotation != null && annotation.section().startsWith("lsm/")) {
-                attachLSMHook(getProgramByName(getBPFFunctionName(method)));
+    /**
+     * Returns the C function name for a method annotated with a shorthand attach annotation
+     * ({@code @Kprobe}, {@code @Fentry}, etc.), or {@code null} if none is present.
+     */
+    private @Nullable String getShorthandAttachName(Class<?> programClass, Method method) {
+        for (var annClass : List.of(
+                me.bechberger.ebpf.annotations.bpf.Kprobe.class,
+                me.bechberger.ebpf.annotations.bpf.Kretprobe.class,
+                me.bechberger.ebpf.annotations.bpf.Fentry.class,
+                me.bechberger.ebpf.annotations.bpf.Fexit.class,
+                me.bechberger.ebpf.annotations.bpf.RawTracepoint.class,
+                me.bechberger.ebpf.annotations.bpf.Ksyscall.class,
+                me.bechberger.ebpf.annotations.bpf.Uprobe.class,
+                me.bechberger.ebpf.annotations.bpf.Uretprobe.class,
+                me.bechberger.ebpf.annotations.bpf.LSM.class)) {
+            var ann = findParentAnnotation(programClass, method, annClass);
+            if (ann != null) {
+                return method.getName();
             }
+        }
+        // @Tracepoint with two elements
+        var tp = findParentAnnotation(programClass, method, me.bechberger.ebpf.annotations.bpf.Tracepoint.class);
+        if (tp != null) {
+            return method.getName();
+        }
+        return null;
+    }
+
+    public void attachLSMHooks() {
+        // Walk the full superclass chain so @LSM hooks declared on intermediate
+        // base classes (e.g. user-defined SchedulerBase-style helpers) are picked
+        // up, not only those on the immediate parent of the generated impl.
+        Class<?> c = getClass().getSuperclass();
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        while (c != null && c != Object.class && c != BPFProgram.class) {
+            for (var method : c.getDeclaredMethods()) {
+                String key = method.getName() + "(" + java.util.Arrays.toString(method.getParameterTypes()) + ")";
+                if (!seen.add(key)) continue;
+                var annotation = findParentAnnotation(c, method, BPFFunction.class);
+                boolean isLsmSection = annotation != null && annotation.section().startsWith("lsm/");
+                boolean hasLsmAnnotation = findParentAnnotation(c, method,
+                        me.bechberger.ebpf.annotations.bpf.LSM.class) != null;
+                if (isLsmSection || hasLsmAnnotation) {
+                    attachLSMHook(getProgramByName(getBPFFunctionName(method)));
+                }
+            }
+            c = c.getSuperclass();
         }
     }
 
@@ -303,6 +411,198 @@ public abstract class BPFProgram implements AutoCloseable {
             throw new BPFAttachError(prog.name, ret.err());
         }
         attachedPrograms.add(link);
+    }
+
+    /**
+     * Returns {@code true} if BPF LSM is active on this kernel.
+     *
+     * <p>Reads {@code /sys/kernel/security/lsm} and checks whether {@code bpf}
+     * appears in the comma-separated list. Returns {@code false} if the file
+     * cannot be read (e.g. securityfs not mounted) or {@code bpf} is absent.
+     */
+    public static boolean isLSMEnabled() {
+        try {
+            var lsmList = Files.readString(Path.of("/sys/kernel/security/lsm")).strip();
+            for (var module : lsmList.split(",")) {
+                if (module.strip().equals("bpf")) return true;
+            }
+        } catch (IOException ignored) {
+        }
+        return false;
+    }
+
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_KPROBE =
+            new HandlerWithErrno<>("bpf_program__attach_kprobe",
+                    FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER,
+                            JAVA_BOOLEAN, PanamaUtil.POINTER));
+
+    /**
+     * Dynamically attach a kprobe (or kretprobe) to a kernel symbol by name.
+     *
+     * <p>Unlike the declarative {@code @Kprobe} annotation (which resolves the
+     * symbol at compile / annotation-processing time), this method accepts a
+     * runtime string — useful when the target symbol is configurable by the
+     * user at startup.
+     *
+     * <p>The returned {@link BPFLink} is managed by this program's lifetime:
+     * it is automatically destroyed when the program is closed.  To detach
+     * early, call {@link #detachProgram(BPFLink)}.
+     *
+     * @param prog      the BPF program to attach (must have prog_type KPROBE)
+     * @param symbol    kernel function name, e.g. {@code "do_sys_openat2"}
+     * @param retprobe  {@code true} to attach on function return (kretprobe)
+     * @return the link representing the attachment
+     * @throws BPFAttachError if libbpf reports an error
+     */
+    public BPFLink attachKProbe(ProgramHandle prog, String symbol, boolean retprobe) {
+        try (Arena arena = Arena.ofConfined()) {
+            var ret = BPF_PROGRAM__ATTACH_KPROBE.call(
+                    prog.prog(), retprobe, arena.allocateFrom(symbol));
+            if (ret.result() == MemorySegment.NULL) {
+                throw kprobeAttachError(prog.name, symbol, ret.err());
+            }
+            var link = new BPFLink(ret.result());
+            if (link.segment.address() == 0) {
+                throw kprobeAttachError(prog.name, symbol, ret.err());
+            }
+            attachedPrograms.add(link);
+            return link;
+        }
+    }
+
+    /**
+     * Build a {@link BPFAttachError} with a hint when the kernel symbol could
+     * not be resolved (libbpf returns ENOENT / EINVAL in that case). The hint
+     * checks {@code /proc/kallsyms} so the user immediately sees a typo or a
+     * symbol that was renamed/inlined.
+     */
+    private static BPFAttachError kprobeAttachError(String progName, String symbol, int errno) {
+        String hint = "";
+        if (errno == 2 /* ENOENT */ || errno == 22 /* EINVAL */) {
+            try {
+                boolean found = false;
+                try (var lines = Files.lines(Path.of("/proc/kallsyms"))) {
+                    found = lines.anyMatch(l -> l.endsWith(" " + symbol)
+                            || l.contains(" " + symbol + "\t")
+                            || l.contains(" " + symbol + " "));
+                }
+                if (!found) {
+                    hint = " (kernel symbol '" + symbol + "' not found in /proc/kallsyms — typo, inlined, or unexported?)";
+                }
+            } catch (IOException ignored) {
+                // /proc/kallsyms not readable (likely kptr_restrict>0 without CAP_SYSLOG)
+            }
+        }
+        return new BPFAttachError(progName + " for symbol '" + symbol + "'" + hint, errno);
+    }
+
+    /**
+     * Dynamically attach a kprobe to a kernel symbol by name (entry point).
+     *
+     * <p>Convenience overload of {@link #attachKProbe(ProgramHandle, String, boolean)}
+     * with {@code retprobe = false}.
+     */
+    public BPFLink attachKProbe(ProgramHandle prog, String symbol) {
+        return attachKProbe(prog, symbol, false);
+    }
+
+    // -----------------------------------------------------------------------
+    // uprobe / uretprobe — dynamic attachment to user-space function symbols
+    // -----------------------------------------------------------------------
+
+    // bpf_program__attach_uprobe_opts layout (x86-64 LP64):
+    //   offset 0  : size_t sz              (8 bytes)
+    //   offset 8  : size_t ref_ctr_offset  (8 bytes)
+    //   offset 16 : u64    bpf_cookie      (8 bytes)
+    //   offset 24 : bool   retprobe        (1 byte, padded to 8 with align)
+    //   offset 32 : char * func_name       (8 bytes pointer)
+    //   offset 40 : int    attach_mode     (4 bytes)
+    //   total padded to 48 bytes (align to 8)
+    private static final StructLayout UPROBE_OPTS_LAYOUT = MemoryLayout.structLayout(
+            JAVA_LONG.withName("sz"),
+            JAVA_LONG.withName("ref_ctr_offset"),
+            JAVA_LONG.withName("bpf_cookie"),
+            JAVA_BOOLEAN.withName("retprobe"),
+            MemoryLayout.paddingLayout(7),
+            PanamaUtil.POINTER.withName("func_name"),
+            JAVA_INT.withName("attach_mode"),
+            MemoryLayout.paddingLayout(4)
+    );
+
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_UPROBE_OPTS =
+            new HandlerWithErrno<>("bpf_program__attach_uprobe_opts",
+                    FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER, JAVA_INT,
+                            PanamaUtil.POINTER, JAVA_LONG, PanamaUtil.POINTER));
+
+    /**
+     * Dynamically attach a uprobe (or uretprobe) to a user-space function by symbol name.
+     *
+     * <p>Resolves the symbol within {@code binaryPath} via libbpf's
+     * {@code bpf_program__attach_uprobe_opts}, so no manual ELF parsing is required.
+     * Pass {@code pid = -1} to trace all processes, or a specific PID to trace only
+     * that process.
+     *
+     * <p>The returned {@link BPFLink} is managed by this program's lifetime and is
+     * automatically destroyed when the program is closed.
+     *
+     * @param prog       the BPF program to attach (must have prog_type KPROBE)
+     * @param retprobe   {@code true} to attach on function return (uretprobe)
+     * @param pid        process ID to trace ({@code -1} = all processes)
+     * @param binaryPath path to the ELF binary, e.g. {@code "/usr/lib/libc.so.6"}
+     * @param funcName   function symbol name, e.g. {@code "malloc"}
+     * @return the link representing the attachment
+     * @throws BPFAttachError if libbpf reports an error
+     */
+    public BPFLink attachUprobe(ProgramHandle prog, boolean retprobe, int pid,
+                                String binaryPath, String funcName) {
+        try (Arena arena = Arena.ofConfined()) {
+            var opts = arena.allocate(UPROBE_OPTS_LAYOUT);
+            opts.set(JAVA_LONG, 0, UPROBE_OPTS_LAYOUT.byteSize());    // sz
+            opts.set(JAVA_LONG, 8, 0L);                                // ref_ctr_offset
+            opts.set(JAVA_LONG, 16, 0L);                               // bpf_cookie
+            opts.set(JAVA_BOOLEAN, 24, retprobe);                      // retprobe
+            opts.set(PanamaUtil.POINTER, 32, arena.allocateFrom(funcName)); // func_name
+            opts.set(JAVA_INT, 40, 0);                                 // attach_mode = default
+
+            var ret = BPF_PROGRAM__ATTACH_UPROBE_OPTS.call(
+                    prog.prog(),
+                    pid,
+                    arena.allocateFrom(binaryPath),
+                    0L,    // func_offset = 0 (resolved via func_name)
+                    opts);
+            if (ret.result() == MemorySegment.NULL) {
+                throw new BPFAttachError(prog.name, ret.err());
+            }
+            var link = new BPFLink(ret.result());
+            if (link.segment.address() == 0) {
+                throw new BPFAttachError(prog.name, ret.err());
+            }
+            attachedPrograms.add(link);
+            return link;
+        }
+    }
+
+    /**
+     * Attach a uprobe to the given symbol in {@code binaryPath} for all processes.
+     *
+     * <p>Convenience overload of
+     * {@link #attachUprobe(ProgramHandle, boolean, int, String, String)}
+     * with {@code pid = -1} (all processes) and {@code retprobe = false}.
+     */
+    public BPFLink attachUprobe(ProgramHandle prog, String binaryPath, String funcName) {
+        return attachUprobe(prog, false, -1, binaryPath, funcName);
+    }
+
+    /**
+     * Attach a uretprobe (return probe) to the given symbol in {@code binaryPath}
+     * for all processes.
+     *
+     * <p>Convenience overload of
+     * {@link #attachUprobe(ProgramHandle, boolean, int, String, String)}
+     * with {@code pid = -1} and {@code retprobe = true}.
+     */
+    public BPFLink attachUretprobe(ProgramHandle prog, String binaryPath, String funcName) {
+        return attachUprobe(prog, true, -1, binaryPath, funcName);
     }
 
     private <T extends Annotation> @Nullable T findParentAnnotation(Class<?> programClass, Method method, Class<T> annotationClass) {
@@ -388,6 +688,24 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public abstract String getCode();
 
+    /**
+     * Returns the SHA-256 hex digest of the compiled BPF object bytes.
+     *
+     * <p>Two builds producing the same source should produce the same hash if the toolchain
+     * is deterministic. Log this value to detect unintentional toolchain-version drift.
+     */
+    public String byteCodeHash() {
+        try {
+            var digest = MessageDigest.getInstance("SHA-256");
+            var bytes = digest.digest(getByteCode());
+            var sb = new StringBuilder(bytes.length * 2);
+            for (byte b : bytes) sb.append(String.format("%02x", b));
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private Path getTmpObjectFile() {
         try {
             Path tmp = Files.createTempFile("bpf", ".o");
@@ -429,6 +747,58 @@ public abstract class BPFProgram implements AutoCloseable {
             return new ProgramHandle(name, prog);
         }
     }
+
+    /**
+     * Invoke a {@code SEC("syscall")} BPF program from userspace via {@code BPF_PROG_TEST_RUN}.
+     *
+     * <p>The program must be declared with {@code @BPFFunction(section = "syscall",
+     * headerTemplate = "int BPF_PROG($name, struct ctx *arg)", autoAttach = false)}. The Java
+     * {@code ctx} class must be a {@code @Type} struct registered with this BPFProgram.
+     * (The parameter name must NOT be {@code ctx} — {@code BPF_PROG} synthesizes its own
+     * {@code unsigned long long *ctx}, causing a redefinition.)
+     *
+     * <p>The ctx struct is serialized into a flat buffer, handed to the kernel as
+     * {@code bpf_test_run_opts.ctx_in}, and the buffer (with any kernel-side writes) is parsed
+     * back into a fresh {@code T} on success.
+     *
+     * @param programName the name of the {@code @BPFFunction} (must match the Java method name)
+     * @param ctx         the input context
+     * @param <T>         the {@code @Type} class of the context struct
+     * @return a {@link SyscallResult} carrying the program's {@code int} return value and the
+     *         post-call ctx state
+     * @throws BPFError if the program is not found, the ctx type is unknown, or the kernel call fails
+     */
+    public <T> SyscallResult<T> runSyscallProgram(String programName, T ctx) {
+        @SuppressWarnings("unchecked")
+        Class<T> ctxClass = (Class<T>) ctx.getClass();
+        BPFStructType<T> type = getStructTypeForClass(ctxClass);
+        ProgramHandle prog = getProgramByName(programName);
+        int progFd = Lib_2.bpf_program__fd(prog.prog());
+        if (progFd < 0) {
+            throw new BPFError("Failed to get fd for syscall program '" + programName + "'", -progFd);
+        }
+        try (Arena arena = Arena.ofConfined()) {
+            long ctxSize = type.size();
+            MemorySegment ctxBuf = arena.allocate(ctxSize);
+            type.setMemory(ctxBuf, ctx);
+            MemorySegment opts = bpf_test_run_opts.allocate(arena);
+            bpf_test_run_opts.sz(opts, bpf_test_run_opts.sizeof());
+            bpf_test_run_opts.ctx_in(opts, ctxBuf);
+            bpf_test_run_opts.ctx_size_in(opts, (int) ctxSize);
+            int ret = Lib_2.bpf_prog_test_run_opts(progFd, opts);
+            if (ret != 0) {
+                throw new BPFError("bpf_prog_test_run_opts failed for '" + programName + "'", -ret);
+            }
+            T updated = type.parseMemory(ctxBuf);
+            return new SyscallResult<>(bpf_test_run_opts.retval(opts), updated);
+        }
+    }
+
+    /**
+     * Result of {@link #runSyscallProgram(String, Object)}: the program's return value and the
+     * post-call ctx state.
+     */
+    public record SyscallResult<T>(int retval, T ctx) {}
 
     /**
      * Thrown when attaching a specific program / entry function fails
@@ -473,6 +843,12 @@ public abstract class BPFProgram implements AutoCloseable {
             throw new BPFAttachError(prog.name, ret.err());
         }
         attachedPrograms.add(link);
+        var evt = new BPFEvents.ProgramAttach();
+        if (evt.isEnabled()) {
+            evt.programName = prog.name;
+            evt.section = prog.name;
+            evt.commit();
+        }
         return link;
     }
 
@@ -502,10 +878,63 @@ public abstract class BPFProgram implements AutoCloseable {
      * @return
      */
     public BPFProgram autoAttachPrograms() {
+        var lsmNames = getLSMProgramNames();
         for (var name : getAllAutoAttachablePrograms()) {
-            autoAttachProgram(name);
+            if (lsmNames.contains(name)) {
+                attachLSMHook(getProgramByName(name));
+            } else {
+                autoAttachProgram(name);
+            }
         }
         return this;
+    }
+
+    /** Returns the C function names of all methods annotated with {@code @LSM} or having an lsm/ section. */
+    private java.util.Set<String> getLSMProgramNames() {
+        var names = new java.util.HashSet<String>();
+        var programClass = getClass().getSuperclass();
+        for (var method : programClass.getDeclaredMethods()) {
+            var annotation = findParentAnnotation(programClass, method, BPFFunction.class);
+            boolean isLsmSection = annotation != null && annotation.section().startsWith("lsm/");
+            boolean hasLsmAnnotation = findParentAnnotation(programClass, method,
+                    me.bechberger.ebpf.annotations.bpf.LSM.class) != null;
+            if (isLsmSection || hasLsmAnnotation) {
+                names.add(getBPFFunctionName(method));
+            }
+        }
+        return names;
+    }
+
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_PERF_EVENT =
+            new HandlerWithErrno<>("bpf_program__attach_perf_event",
+                    FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER, JAVA_INT));
+
+    /**
+     * Attach a {@code SEC("perf_event")} BPF program to an already-open perf event
+     * file descriptor ({@code pfd}).
+     *
+     * <p>The {@code pfd} is obtained by calling the {@code perf_event_open(2)} syscall.
+     * The BPF program fires every time the perf event is triggered (e.g. on each
+     * CPU-cycles overflow).  The returned {@link BPFLink} is tracked by this program's
+     * lifetime and automatically destroyed when {@link #close()} is called.
+     *
+     * @param prog the BPF program to attach (must have prog_type PERF_EVENT)
+     * @param pfd  an open perf event file descriptor
+     * @return the link representing the attachment
+     * @throws BPFAttachError if libbpf reports an error
+     */
+    public BPFLink attachPerfEvent(ProgramHandle prog, int pfd) {
+        var ret = BPF_PROGRAM__ATTACH_PERF_EVENT.call(prog.prog(), pfd);
+        if (ret.result() == null || MemorySegment.NULL.equals(ret.result()) || ret.result().address() == 0) {
+            throw new BPFAttachError(prog.name, ret.err());
+        }
+        var link = new BPFLink(ret.result());
+        attachedPrograms.add(link);
+        return link;
+    }
+
+    public BPFLink attachPerfEvent(String programName, int pfd) {
+        return attachPerfEvent(getProgramByName(programName), pfd);
     }
 
     private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_RAW_TRACEPOINT =
@@ -564,7 +993,7 @@ public abstract class BPFProgram implements AutoCloseable {
         int fd = Lib.bpf_program__fd(prog.prog());
         int flags = NetworkUtil.XDP_FLAGS_UPDATE_IF_NOEXIST;
         int err = Lib.bpf_xdp_attach(ifindex, fd, flags, MemorySegment.NULL);
-        if (err > 0) {
+        if (err != 0) {
             throw new BPFAttachError(prog.name, err);
         }
         attachedXDPIfIndexes.add(new AttachedXDPIfIndex(ifindex, flags));
@@ -577,7 +1006,7 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     public void tcAttach(ProgramHandle prog, int ifindex, boolean ingress) {
-        var tcIfIndex = new AttachedTCIfIndex(prog, ifindex, ingress, 0);
+        var tcIfIndex = new AttachedTCIfIndex(prog, ifindex, ingress, 0, 0);
         try (var arena = Arena.ofConfined()) {
             MemorySegment hook = allocateTCHookObject(arena, tcIfIndex);
             // run tc qdisc del dev $DEVICE clsact on the command line
@@ -589,14 +1018,17 @@ public abstract class BPFProgram implements AutoCloseable {
             hook = allocateTCHookObject(arena, tcIfIndex);
             MemorySegment opts = allocateTCOptsObject(arena, tcIfIndex);
             int err = Lib.bpf_tc_hook_create(hook);
-            if (err > 0) {
+            if (err != 0) {
                 throw new BPFAttachError(prog.name, err);
             }
             err = Lib.bpf_tc_attach(hook, opts);
-            if (err > 0) {
+            if (err != 0) {
                 throw new BPFAttachError(prog.name, err);
             }
-            attachedTCIfIndices.add(tcIfIndex);
+            // bpf_tc_attach writes back the kernel-assigned handle and priority into opts.
+            int assignedHandle   = bpf_tc_opts.handle(opts);
+            int assignedPriority = bpf_tc_opts.priority(opts);
+            attachedTCIfIndices.add(new AttachedTCIfIndex(prog, ifindex, ingress, assignedPriority, assignedHandle));
         }
     }
 
@@ -673,7 +1105,7 @@ public abstract class BPFProgram implements AutoCloseable {
         }
         opts.fill((byte) 0);
         bpf_tc_opts.sz(opts, bpf_tc_opts.sizeof());
-        bpf_tc_opts.handle(opts, 1);
+        bpf_tc_opts.handle(opts, tcIfIndex.tcHandle);
         bpf_tc_opts.prog_fd(opts, progFd);
         bpf_tc_opts.prog_id(opts, 0);
         bpf_tc_opts.priority(opts, tcIfIndex.priority);
@@ -684,10 +1116,11 @@ public abstract class BPFProgram implements AutoCloseable {
         try (var arena = Arena.ofConfined()) {
             MemorySegment hook = allocateTCHookObject(arena, tcIfIndex);
             MemorySegment opts = allocateTCOptsObject(arena, tcIfIndex);
-            /*bpf_tc_opts.prog_fd(opts, 0);
-            bpf_tc_opts.prog_id(opts, 0);*/
+            // bpf_tc_detach identifies the filter by handle+priority; prog_fd must be 0.
+            bpf_tc_opts.prog_fd(opts, 0);
+            bpf_tc_opts.prog_id(opts, 0);
             int err = Lib.bpf_tc_detach(hook, opts);
-            if (err > 0) {
+            if (err != 0) {
                 throw new BPFError("Detaching " + tcIfIndex.handle.name, err);
             }
         }
@@ -702,6 +1135,11 @@ public abstract class BPFProgram implements AutoCloseable {
         }
         Lib.bpf_link__destroy(link.segment);
         attachedPrograms.remove(link);
+        var evt = new BPFEvents.ProgramDetach();
+        if (evt.isEnabled()) {
+            evt.programName = "link@" + Long.toHexString(link.segment.address());
+            evt.commit();
+        }
     }
 
     /**
@@ -730,6 +1168,7 @@ public abstract class BPFProgram implements AutoCloseable {
         }
         Lib.bpf_object__close(this.ebpf_object);
         openedFDs.forEach(LibC::close);
+        stopStatusServer();
     }
 
     /**
@@ -818,6 +1257,75 @@ public abstract class BPFProgram implements AutoCloseable {
         return recordMap(mapCreator.apply(getMapDescriptorByName(name)));
     }
 
+    // ──────────────────────────────────────────────────────────
+    // BPF object pinning
+    // ──────────────────────────────────────────────────────────
+
+    /**
+     * Pins the named BPF map to the BPF filesystem at the given path.
+     *
+     * <p>After pinning, the map survives the Java process exit and can be
+     * re-opened by another process using {@link #openPinnedMap}.
+     *
+     * @param mapName the map field name as declared in the {@code @BPF} class
+     * @param path    absolute path under the BPF filesystem (e.g. {@code /sys/fs/bpf/mymap})
+     * @throws BPFError if pinning fails
+     */
+    public void pinMap(String mapName, String path) {
+        try (Arena arena = Arena.ofConfined()) {
+            var fd = getMapDescriptorByName(mapName);
+            int ret = Lib_2.bpf_map__pin(fd.map(), arena.allocateFrom(path));
+            if (ret != 0) {
+                throw new BPFError("Failed to pin map '" + mapName + "' to " + path + ": " + ret);
+            }
+        }
+    }
+
+    /**
+     * Pins a {@link BPFLink} (an attached kprobe/uprobe/tracepoint/…) to the BPF
+     * filesystem at the given path so it survives the Java process exit.
+     *
+     * @param link the link returned by one of the {@code attach*} methods
+     * @param path absolute path under the BPF filesystem
+     * @throws BPFError if pinning fails
+     */
+    public void pinLink(BPFLink link, String path) {
+        try (Arena arena = Arena.ofConfined()) {
+            int ret = Lib_2.bpf_link__pin(link.segment(), arena.allocateFrom(path));
+            if (ret != 0) {
+                throw new BPFError("Failed to pin link to " + path + ": " + ret);
+            }
+        }
+    }
+
+    /**
+     * Opens a previously pinned BPF map from the BPF filesystem and wraps it
+     * with the supplied creator function.
+     *
+     * <pre>{@code
+     * BPFHashMap<Integer, Long> map = program.openPinnedMap(
+     *     "/sys/fs/bpf/mymap",
+     *     fd -> new BPFHashMap<>(fd, BPFType.INT32, BPFType.INT64));
+     * }</pre>
+     *
+     * @param path       absolute path to the pinned object
+     * @param mapCreator function that wraps the opened FD in a typed map
+     * @param <M>        map type
+     * @return the opened map
+     * @throws BPFError if the path cannot be opened
+     */
+    public <M extends BPFMap> M openPinnedMap(String path, Function<FileDescriptor, M> mapCreator) {
+        try (Arena arena = Arena.ofConfined()) {
+            int fd = Lib_2.bpf_obj_get(arena.allocateFrom(path));
+            if (fd < 0) {
+                throw new BPFError("Failed to open pinned map at " + path + ": " + fd);
+            }
+            openedFDs.add(fd);
+            var fileFd = new FileDescriptor(path, MemorySegment.NULL, fd);
+            return recordMap(mapCreator.apply(fileFd));
+        }
+    }
+
     /**
      * Get a ring buffer by name
      * <p>
@@ -873,6 +1381,294 @@ public abstract class BPFProgram implements AutoCloseable {
                 ((BPFRingBuffer<?>)map).consumeAndThrow();
             }
         }
+    }
+
+    /**
+     * Runs a drain-and-sleep loop until SIGINT (Ctrl-C) or the given wall-clock
+     * {@code timeout} elapses, whichever comes first.
+     *
+     * <p>On each iteration all ring buffers are drained via
+     * {@link #consumeAndThrow()}, then the thread sleeps for {@code pollInterval}
+     * before the next drain.  When the loop exits (for either reason) the ring
+     * buffers are drained one final time so no trailing events are lost.
+     *
+     * <p>Typical usage in a {@code main} method:
+     * <pre>{@code
+     *   try (var prog = BPFProgram.load(MyProgram.class)) {
+     *       prog.autoAttachPrograms();
+     *       prog.runUntilInterrupted(Duration.ofMinutes(5));
+     *   }
+     * }</pre>
+     *
+     * @param timeout      maximum wall-clock time to run; {@link Duration#ZERO} or
+     *                     negative means run until interrupted only
+     * @param pollInterval how long to sleep between ring-buffer drains; defaults
+     *                     to 100 ms if null
+     */
+    public void runUntilInterrupted(Duration timeout, Duration pollInterval) {
+        if (pollInterval == null) pollInterval = Duration.ofMillis(100);
+        final long deadlineNanos = (timeout == null || timeout.isNegative() || timeout.isZero())
+                ? Long.MAX_VALUE
+                : System.nanoTime() + timeout.toNanos();
+
+        AtomicBoolean interrupted = new AtomicBoolean(false);
+        Thread shutdownHook = new Thread(() -> interrupted.set(true));
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
+        try {
+            final long sleepMs = pollInterval.toMillis();
+            while (!interrupted.get() && System.nanoTime() < deadlineNanos) {
+                consumeAndThrow();
+                try {
+                    Thread.sleep(sleepMs);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        } finally {
+            try { Runtime.getRuntime().removeShutdownHook(shutdownHook); } catch (IllegalStateException ignored) {}
+            consumeAndThrow();
+        }
+    }
+
+    /**
+     * Runs until SIGINT (Ctrl-C).
+     * @see #runUntilInterrupted(Duration, Duration)
+     */
+    public void runUntilInterrupted() {
+        runUntilInterrupted(Duration.ZERO, null);
+    }
+
+    /**
+     * Runs until SIGINT (Ctrl-C) or {@code timeout} elapses.
+     * @see #runUntilInterrupted(Duration, Duration)
+     */
+    public void runUntilInterrupted(Duration timeout) {
+        runUntilInterrupted(timeout, null);
+    }
+
+    /**
+     * Information about a single BPF program entry point loaded into the kernel.
+     *
+     * @param name      program name (from SEC or function name)
+     * @param fd        kernel file descriptor of the program
+     * @param id        kernel-assigned program id (stable as long as the program is loaded)
+     * @param mapIds    ids of all maps referenced by this program
+     * @param runTimeNs total nanoseconds spent executing this program across all CPUs
+     * @param runCount  total number of times this program has been invoked
+     */
+    public record LoadedProgramInfo(
+            String name,
+            int fd,
+            int id,
+            List<Integer> mapIds,
+            long runTimeNs,
+            long runCount
+    ) {}
+
+    /**
+     * Returns info about every BPF program entry point in this object as reported
+     * by the kernel via {@code bpf_prog_get_info_by_fd}.
+     *
+     * <p>The returned list is ordered by the order the programs appear in the BPF
+     * object (i.e. the order they were declared).
+     */
+    public List<LoadedProgramInfo> loaded() {
+        List<LoadedProgramInfo> result = new ArrayList<>();
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment prog = MemorySegment.NULL;
+            while (true) {
+                prog = Lib_2.bpf_object__next_program(ebpf_object, prog);
+                if (prog == null || MemorySegment.NULL.equals(prog)) break;
+
+                int fd = Lib_2.bpf_program__fd(prog);
+                if (fd < 0) continue;
+
+                // Name from libbpf (doesn't need a kernel call)
+                String name = PanamaUtil.toString(Lib_2.bpf_program__name(prog));
+
+                // Query kernel for full info
+                var info = bpf_prog_info.allocate(arena);
+                var infoLen = PanamaUtil.allocateIntRef(arena, (int) info.byteSize());
+                int ret = Lib_2.bpf_prog_get_info_by_fd(fd, info, infoLen);
+                if (ret < 0) continue;
+
+                int id = bpf_prog_info.id(info);
+                long runTimeNs = bpf_prog_info.run_time_ns(info);
+                long runCount = bpf_prog_info.run_cnt(info);
+
+                // Collect map IDs: nr_map_ids tells us how many there are, but to retrieve
+                // them we need to pass a buffer.  Do a second call with a map_ids buffer.
+                int nrMapIds = bpf_prog_info.nr_map_ids(info);
+                List<Integer> mapIds = new ArrayList<>(nrMapIds);
+                if (nrMapIds > 0) {
+                    MemorySegment info2 = bpf_prog_info.allocate(arena);
+                    MemorySegment mapIdsBuf = arena.allocate((long) nrMapIds * 4);
+                    bpf_prog_info.nr_map_ids(info2, nrMapIds);
+                    bpf_prog_info.map_ids(info2, mapIdsBuf.address());
+                    MemorySegment infoLen2 = PanamaUtil.allocateIntRef(arena, (int) info2.byteSize());
+                    if (Lib_2.bpf_prog_get_info_by_fd(fd, info2, infoLen2) >= 0) {
+                        int actual = bpf_prog_info.nr_map_ids(info2);
+                        for (int i = 0; i < actual; i++) {
+                            mapIds.add(mapIdsBuf.get(JAVA_INT, (long) i * 4));
+                        }
+                    }
+                }
+
+                result.add(new LoadedProgramInfo(name != null ? name : "", fd, id, mapIds, runTimeNs, runCount));
+            }
+        }
+        return result;
+    }
+
+    private @Nullable HttpServer statusServer;
+
+    /**
+     * Starts an embedded HTTP status server on the given port.
+     *
+     * <p>Endpoints:
+     * <ul>
+     *   <li>{@code GET /status} — JSON object with program info and map contents</li>
+     *   <li>{@code GET /}       — Simple HTML page rendering the same data</li>
+     * </ul>
+     *
+     * <p>Call {@link #stopStatusServer()} or close the program to stop it.
+     *
+     * @param port TCP port to listen on
+     * @throws IOException if the server could not be started
+     */
+    public void startStatusServer(int port) throws IOException {
+        if (statusServer != null) {
+            statusServer.stop(0);
+        }
+        statusServer = HttpServer.create(new InetSocketAddress(port), 0);
+        statusServer.setExecutor(Executors.newSingleThreadExecutor(r -> {
+            var t = new Thread(r, "bpf-status-server");
+            t.setDaemon(true);
+            return t;
+        }));
+        statusServer.createContext("/status", exchange -> {
+            var json = buildStatusJson();
+            var bytes = json.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", "application/json; charset=utf-8");
+            exchange.sendResponseHeaders(200, bytes.length);
+            try (OutputStream out = exchange.getResponseBody()) {
+                out.write(bytes);
+            }
+        });
+        statusServer.createContext("/", exchange -> {
+            var html = buildStatusHtml();
+            var bytes = html.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+            exchange.getResponseHeaders().set("Content-Type", "text/html; charset=utf-8");
+            exchange.sendResponseHeaders(200, bytes.length);
+            try (OutputStream out = exchange.getResponseBody()) {
+                out.write(bytes);
+            }
+        });
+        statusServer.start();
+    }
+
+    /** Stops the status server started by {@link #startStatusServer(int)}. */
+    public void stopStatusServer() {
+        if (statusServer != null) {
+            statusServer.stop(0);
+            statusServer = null;
+        }
+    }
+
+    private String buildStatusJson() {
+        var sb = new StringBuilder();
+        sb.append("{");
+
+        // Programs
+        sb.append("\"byteCodeHash\":").append(jsonString(byteCodeHash())).append(",");
+        sb.append("\"programs\":[");
+        var programs = loaded();
+        for (int i = 0; i < programs.size(); i++) {
+            if (i > 0) sb.append(",");
+            var p = programs.get(i);
+            sb.append("{");
+            sb.append("\"name\":").append(jsonString(p.name())).append(",");
+            sb.append("\"id\":").append(p.id()).append(",");
+            sb.append("\"fd\":").append(p.fd()).append(",");
+            sb.append("\"runTimeNs\":").append(p.runTimeNs()).append(",");
+            sb.append("\"runCount\":").append(p.runCount()).append(",");
+            sb.append("\"mapIds\":[");
+            var mapIds = p.mapIds();
+            for (int j = 0; j < mapIds.size(); j++) {
+                if (j > 0) sb.append(",");
+                sb.append(mapIds.get(j));
+            }
+            sb.append("]");
+            sb.append("}");
+        }
+        sb.append("],");
+
+        // Maps
+        sb.append("\"maps\":[");
+        var mapsArr = new ArrayList<>(attachedMaps);
+        for (int i = 0; i < mapsArr.size(); i++) {
+            if (i > 0) sb.append(",");
+            var map = mapsArr.get(i);
+            var info = map.getInfo();
+            sb.append("{");
+            sb.append("\"name\":").append(jsonString(map.getFd().name())).append(",");
+            sb.append("\"type\":").append(jsonString(info.type().name())).append(",");
+            sb.append("\"maxEntries\":").append(info.maxEntries()).append(",");
+            sb.append("\"entries\":");
+            if (map instanceof BPFBaseMap<?, ?> baseMap) {
+                sb.append("[");
+                var entries = new ArrayList<>(baseMap.entrySet());
+                for (int j = 0; j < entries.size(); j++) {
+                    if (j > 0) sb.append(",");
+                    var entry = entries.get(j);
+                    sb.append("{\"key\":").append(jsonString(String.valueOf(entry.getKey())));
+                    sb.append(",\"value\":").append(jsonString(String.valueOf(entry.getValue())));
+                    sb.append("}");
+                }
+                sb.append("]");
+            } else {
+                sb.append("null");
+            }
+            sb.append("}");
+        }
+        sb.append("]");
+
+        sb.append("}");
+        return sb.toString();
+    }
+
+    private String buildStatusHtml() {
+        var json = buildStatusJson();
+        return "<!DOCTYPE html><html><head><title>BPF Status</title>"
+                + "<style>body{font-family:monospace;padding:1em}"
+                + "table{border-collapse:collapse;margin-bottom:1em}"
+                + "td,th{border:1px solid #ccc;padding:4px 8px;text-align:left}"
+                + "th{background:#eee}</style></head><body>"
+                + "<h1>BPF Program Status</h1>"
+                + "<pre id='json'>" + htmlEscape(json) + "</pre>"
+                + "<script>var d=JSON.parse(document.getElementById('json').textContent);"
+                + "document.body.innerHTML='<h1>BPF Program Status</h1>';"
+                + "document.body.innerHTML+='<h2>Programs</h2><table><tr><th>Name</th><th>ID</th>"
+                + "<th>Run Count</th><th>Run Time (ms)</th></tr>';"
+                + "d.programs.forEach(p=>document.body.innerHTML+='<tr><td>'+p.name+'</td><td>'"
+                + "+p.id+'</td><td>'+p.runCount+'</td><td>'+(p.runTimeNs/1e6).toFixed(2)+'</td></tr>');"
+                + "document.body.innerHTML+='</table><h2>Maps</h2>';"
+                + "d.maps.forEach(m=>{document.body.innerHTML+='<h3>'+m.name+' ('+m.type+')'+'</h3>';"
+                + "if(m.entries){document.body.innerHTML+='<table><tr><th>Key</th><th>Value</th></tr>';"
+                + "m.entries.forEach(e=>document.body.innerHTML+='<tr><td>'+e.key+'</td><td>'+e.value+'</td></tr>');"
+                + "document.body.innerHTML+='</table>';}});"
+                + "</script></body></html>";
+    }
+
+    private static String jsonString(String s) {
+        if (s == null) return "null";
+        return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"")
+                .replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t") + "\"";
+    }
+
+    private static String htmlEscape(String s) {
+        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 
     private @Nullable String getDefaultPropertyValue(String name) {

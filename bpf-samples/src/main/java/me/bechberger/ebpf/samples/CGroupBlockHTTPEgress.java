@@ -12,7 +12,7 @@ import static me.bechberger.ebpf.bpf.XDPHook.*;
 import static me.bechberger.ebpf.runtime.SkDefinitions.*;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_skb_load_bytes;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_skb_load_bytes_relative;
-import static me.bechberger.ebpf.samples.BasePacketParser.HTTP_PORT;
+import static me.bechberger.ebpf.bpf.BasePacketParser.HTTP_PORT;
 
 import me.bechberger.ebpf.bpf.raw.Lib_3;
 import me.bechberger.ebpf.runtime.runtime;

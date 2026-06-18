@@ -2,7 +2,10 @@ package me.bechberger.ebpf.bpf.processor;
 
 import com.squareup.javapoet.FieldSpec;
 import com.sun.tools.javac.code.Attribute.Constant;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type.ClassType;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
@@ -91,8 +94,6 @@ public class TypeProcessor {
     }
 
     private List<TypeElement> getInnerBPFTypeElements(TypeElement typeElement) {
-        record Pair(Optional<? extends AnnotationMirror> a, Element e) {
-        }
         return typeElement.getEnclosedElements().stream().filter(this::isTypeAnnotatedRecord).map(e -> (TypeElement) e).toList();
     }
 
@@ -141,6 +142,18 @@ public class TypeProcessor {
             if (((TypeElement) element).getSuperclass().getKind() != TypeKind.NONE && !((TypeElement) element).getSuperclass().toString().equals("java.lang.Record")){
                 if (log) {
                     this.processingEnv.getMessager().printError("Class " + element.getSimpleName() + " is a record but has a super class", element);
+                }
+                return DataTypeKind.NONE;
+            }
+            // check that it has no generic type parameters
+            if (!((TypeElement) element).getTypeParameters().isEmpty()) {
+                if (log) {
+                    var params = ((TypeElement) element).getTypeParameters().stream()
+                            .map(tp -> tp.getSimpleName().toString())
+                            .collect(Collectors.joining(", "));
+                    this.processingEnv.getMessager().printError(
+                            "@Type record " + element.getSimpleName() + " must not declare generic type parameters " +
+                            "(BPF/C cannot represent type variables). Found: <" + params + ">", element);
                 }
                 return DataTypeKind.NONE;
             }
@@ -200,9 +213,32 @@ public class TypeProcessor {
         }).toList();
     }
 
+    /**
+     * Per-method prologue statements collected from {@code @BPFAbstraction} field initialisers.
+     * Key = target method name (from {@code @BPFAbstraction#constructorPrependTo}),
+     * value = ordered list of C side-effect statements to prepend to that method's body.
+     * {@code abstractionFieldCarriers}: field name → resolved C carrier expression (for {@code <auto>} DSQ ids).
+     */
     public record TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements,
                                @Nullable Statement licenseDefinition, List<MapDefinition> mapDefinitions,
-                               List<GlobalVariableDefinition> globalVariableDefinitions, InterfaceAdditions additions) {
+                               List<GlobalVariableDefinition> globalVariableDefinitions, InterfaceAdditions additions,
+                               Map<String, List<String>> abstractionFieldPrologues,
+                               Map<String, String> abstractionFieldCarriers) {
+        /** Back-compat constructor for call-sites that don't supply abstractionFieldPrologues/Carriers. */
+        public TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements,
+                                   @Nullable Statement licenseDefinition, List<MapDefinition> mapDefinitions,
+                                   List<GlobalVariableDefinition> globalVariableDefinitions, InterfaceAdditions additions) {
+            this(fields, defines, definingStatements, licenseDefinition, mapDefinitions, globalVariableDefinitions,
+                    additions, Map.of(), Map.of());
+        }
+        /** Back-compat constructor without carriers. */
+        public TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements,
+                                   @Nullable Statement licenseDefinition, List<MapDefinition> mapDefinitions,
+                                   List<GlobalVariableDefinition> globalVariableDefinitions, InterfaceAdditions additions,
+                                   Map<String, List<String>> abstractionFieldPrologues) {
+            this(fields, defines, definingStatements, licenseDefinition, mapDefinitions, globalVariableDefinitions,
+                    additions, abstractionFieldPrologues, Map.of());
+        }
     }
 
     boolean shouldGenerateCCode(TypeElement innerElement) {
@@ -283,23 +319,234 @@ public class TypeProcessor {
                 actualType.toCDeclarationStatement().ifPresent(definingStatements::add);
             }
         }
+        // Emit C global-variable declarations for @InArena class fields.
+        processInArenaFields(outerTypeElement, definingStatements);
         var additions = getInterfaceAdditions(outerTypeElement.asType());
         if (additions == null) {
             return null;
         }
+        var abstractionResult = collectAbstractionFieldPrologues(outerTypeElement);
         return new TypeProcessorResult(fields, defines, definingStatements,
                 getLicenseDefinitionStatement(outerTypeElement), mapDefinitions,
                 globals,
-                additions);
+                additions,
+                abstractionResult.prologues(),
+                abstractionResult.carriers());
     }
+
+    private static final String IN_ARENA_ANNOTATION = "me.bechberger.ebpf.annotations.InArena";
+    private static final String PTR_CLASS = "me.bechberger.ebpf.type.Ptr";
+
+    /**
+     * Scans {@code outerTypeElement}'s fields for {@code @InArena Ptr<T>} declarations
+     * and appends a {@code __arena T *fieldName;} C global-variable statement for each.
+     *
+     * <p>These globals must appear after the struct/type declarations (which the caller
+     * has already added) so clang can resolve the pointed-to type.
+     */
+    private void processInArenaFields(TypeElement outerTypeElement, List<CAST.Statement> definingStatements) {
+        for (var enclosed : outerTypeElement.getEnclosedElements()) {
+            if (enclosed.getKind() != ElementKind.FIELD) continue;
+            var field = (VariableElement) enclosed;
+            // Check @InArena annotation (SOURCE retention — visible to processors)
+            if (!hasAnnotation(field, IN_ARENA_ANNOTATION)) continue;
+            var fieldType = field.asType();
+            if (!(fieldType instanceof DeclaredType declaredType)) continue;
+            // Must be Ptr<T>
+            var erasure = processingEnv.getTypeUtils().erasure(fieldType);
+            if (!erasure.toString().equals(PTR_CLASS)) continue;
+            var typeArgs = declaredType.getTypeArguments();
+            if (typeArgs.isEmpty()) continue;
+            var pointedTo = typeArgs.get(0);
+            // Resolve the pointed-to type's BPF/C name
+            String cTypeName = resolveCNameForArenaPointee(pointedTo);
+            if (cTypeName == null) {
+                processingEnv.getMessager().printWarning(
+                        "@InArena field '" + field.getSimpleName() + "': could not resolve C type for "
+                                + pointedTo + "; skipping global declaration", field);
+                continue;
+            }
+            var fieldName = field.getSimpleName().toString();
+            definingStatements.add(CAST.Statement.verbatim("__arena " + cTypeName + " *" + fieldName + ";"));
+        }
+    }
+
+    /**
+     * Given the {@code TypeMirror} of the pointee type in an {@code @InArena Ptr<T>}
+     * field, returns the C type name (the BPF struct name), or {@code null} if unknown.
+     */
+    private @Nullable String resolveCNameForArenaPointee(TypeMirror pointedTo) {
+        if (!(pointedTo instanceof DeclaredType declaredPointee)) return null;
+        var element = (TypeElement) declaredPointee.asElement();
+        var javaName = new JavaName(element);
+        var found = alreadyDefinedTypes.get(javaName);
+        if (found != null) {
+            return found.getBPFNameWithStructPrefixIfNeeded();
+        }
+        // Fall back to simple name (covers @Type records whose name equals simpleClass name)
+        return element.getSimpleName().toString();
+    }
+
+    private static final String BPF_ABSTRACTION_ANNOTATION = "me.bechberger.ebpf.annotations.bpf.BPFAbstraction";
+    private static final String BUILTIN_BPF_FUNCTION_ANNOTATION = "me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction";
 
     public record GlobalVariableDefinition(Statement globalVariable, String name, String typeField, String initializer) {}
 
-    private List<GlobalVariableDefinition> createGlobalVariableDefinitions(TypeElement outerTypeElement, Function<BPFTypeLike<?>, SpecFieldName> typeToSpecField) {
-        return outerTypeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e)
-                .filter(e -> typeUtils.hasClassIgnoringTypeParameters(e, "me.bechberger.ebpf.bpf.GlobalVariable"))
-                .map(e -> processGlobalVariable(e, typeToSpecField)).filter(Objects::nonNull).toList();
+    /**
+     * Scans {@code outerTypeElement}'s fields for those whose declared type is annotated
+     * with {@code @BPFAbstraction}.  For each such field whose constructor carries a
+     * non-empty {@code @BuiltinBPFFunction#value()} side-effect, records that statement
+     * (with {@code $arg1…} placeholders resolved against the constructor arguments) keyed
+     * by the abstraction's {@code constructorPrependTo} method name.
+     *
+     * @return map from target-method-name → ordered list of prologue C statements
+     */
+    /** Base value for auto-allocated DSQ ids: 0x1_0000_0000 (above user-id range). */
+    private static final long AUTO_DSQ_ID_BASE = 0x1_0000_0000L;
+
+    private record AbstractionPrologueResult(Map<String, List<String>> prologues, Map<String, String> carriers) {}
+
+    private AbstractionPrologueResult collectAbstractionFieldPrologues(TypeElement outerTypeElement) {
+        var prologues = new LinkedHashMap<String, List<String>>();
+        var carriers = new LinkedHashMap<String, String>();
+        int autoIdCounter = 0;
+        for (var enclosed : outerTypeElement.getEnclosedElements()) {
+            if (enclosed.getKind() != ElementKind.FIELD) continue;
+            var field = (VariableElement) enclosed;
+            if (field.getModifiers().contains(Modifier.STATIC)) continue;
+            var fieldType = field.asType();
+            if (!(fieldType instanceof DeclaredType declaredType)) continue;
+            var typeElem = (TypeElement) declaredType.asElement();
+            var abstractionMirror = getAnnotationMirror(typeElem, BPF_ABSTRACTION_ANNOTATION);
+            if (abstractionMirror.isEmpty()) continue;
+
+            // @BPFAbstraction(constructorPrependTo = ?) — default "init"
+            var prependTo = getAnnotationValue(abstractionMirror.get(), "constructorPrependTo", "init");
+
+            // field must be final
+            if (!field.getModifiers().contains(Modifier.FINAL)) {
+                processingEnv.getMessager().printError(
+                        "@BPFAbstraction field '" + field.getSimpleName() + "' must be final", field);
+                continue;
+            }
+
+            // inspect the field initializer in the AST
+            var classTree = javacProcessingEnv.getElementUtils().getTree(outerTypeElement);
+            JCVariableDecl varDecl = null;
+            if (classTree instanceof JCTree.JCClassDecl classDecl) {
+                for (var member : classDecl.getMembers()) {
+                    if (member instanceof JCVariableDecl vd
+                            && vd.getName().contentEquals(field.getSimpleName())) {
+                        varDecl = vd;
+                        break;
+                    }
+                }
+            }
+            if (varDecl == null || !(varDecl.init instanceof JCNewClass newClass)) {
+                continue;
+            }
+
+            // find the matching constructor on the abstraction class
+            MethodSymbol ctor = findMatchingConstructor(typeElem, newClass);
+            if (ctor == null) continue;
+
+            var builtinAnn = getAnnotationMirror(ctor, BUILTIN_BPF_FUNCTION_ANNOTATION);
+            if (builtinAnn.isEmpty()) continue;
+
+            // Resolve the carrier (needed for <auto> substitution)
+            var carrierTemplate = AnnotationUtils.getAnnotationValue(builtinAnn.get(), "carrier", "");
+            var fieldName = field.getSimpleName().toString();
+            String resolvedCarrier = null;
+            if (carrierTemplate.contains("<auto>")) {
+                // Mint a unique u64 id for this field, stable within the class.
+                var autoId = "0x" + Long.toHexString(AUTO_DSQ_ID_BASE + autoIdCounter++) + "ULL";
+                resolvedCarrier = autoId;
+                carriers.put(fieldName, resolvedCarrier);
+            } else if (!carrierTemplate.isBlank()) {
+                resolvedCarrier = resolvePlaceholders(carrierTemplate, newClass.getArguments());
+                carriers.put(fieldName, resolvedCarrier);
+            }
+
+            var sideEffect = AnnotationUtils.getAnnotationValue(builtinAnn.get(), "value", "");
+            if (sideEffect.isBlank() || prependTo.isBlank()) continue; // no side effect or disabled
+
+            // resolve $arg1, $arg2, … and <auto> in the side-effect template
+            String resolved;
+            if (sideEffect.contains("<auto>") && resolvedCarrier != null) {
+                resolved = resolvePlaceholders(sideEffect, newClass.getArguments())
+                        .replace("<auto>", resolvedCarrier);
+            } else {
+                resolved = resolvePlaceholders(sideEffect, newClass.getArguments());
+            }
+            if (!resolved.endsWith(";")) resolved = resolved + ";";
+            prologues.computeIfAbsent(prependTo, k -> new ArrayList<>()).add(resolved);
+        }
+        return new AbstractionPrologueResult(prologues, carriers);
     }
+
+    /** Return the resolved constructor from the javac-typed {@code newClass} node. */
+    @Nullable
+    private MethodSymbol findMatchingConstructor(TypeElement abstractionClass, JCNewClass newClass) {
+        // javac has already resolved the constructor; use the resolved symbol directly.
+        if (newClass.constructor instanceof com.sun.tools.javac.code.Symbol.MethodSymbol ms) {
+            return ms;
+        }
+        // Fallback: match by arity, preferring constructors where the parameter type matches the arg's type.
+        int arity = newClass.getArguments().size();
+        MethodSymbol firstMatch = null;
+        for (var enc : abstractionClass.getEnclosedElements()) {
+            if (enc.getKind() != ElementKind.CONSTRUCTOR) continue;
+            var ctor = (javax.lang.model.element.ExecutableElement) enc;
+            if (ctor.getParameters().size() != arity) continue;
+            if (firstMatch == null) firstMatch = (MethodSymbol) enc;
+            if (arity == 1) {
+                var paramType = ctor.getParameters().get(0).asType().toString();
+                // Prefer long param over int param
+                if (paramType.equals("long") || paramType.contains("long")) {
+                    return (MethodSymbol) enc;
+                }
+            }
+        }
+        return firstMatch;
+    }
+
+    /**
+     * Replace {@code $arg1}, {@code $arg2}, … in {@code template} with the string
+     * representation of the corresponding constructor call arguments.
+     */
+    private String resolvePlaceholders(String template, com.sun.tools.javac.util.List<JCExpression> args) {
+        var result = template;
+        for (int i = 0; i < args.size(); i++) {
+            result = result.replace("$arg" + (i + 1), renderArg(args.get(i)));
+        }
+        return result;
+    }
+
+    private String renderArg(JCExpression arg) {
+        return arg.toString();
+    }
+
+    private List<GlobalVariableDefinition> createGlobalVariableDefinitions(TypeElement outerTypeElement, Function<BPFTypeLike<?>, SpecFieldName> typeToSpecField) {
+        var result = new ArrayList<GlobalVariableDefinition>();
+        var seenNames = new java.util.HashSet<String>();
+        TypeElement current = outerTypeElement;
+        while (current != null && !current.getQualifiedName().toString().equals("java.lang.Object")) {
+            for (var e : current.getEnclosedElements()) {
+                if (e.getKind() != ElementKind.FIELD) continue;
+                var field = (VariableElement) e;
+                if (!typeUtils.hasClassIgnoringTypeParameters(field, "me.bechberger.ebpf.bpf.GlobalVariable")) continue;
+                if (!seenNames.add(field.getSimpleName().toString())) continue;
+                var def = processGlobalVariable(field, typeToSpecField);
+                if (def != null) result.add(def);
+            }
+            var superMirror = current.getSuperclass();
+            var superElem = (superMirror != null && superMirror.getKind() != javax.lang.model.type.TypeKind.NONE)
+                    ? processingEnv.getTypeUtils().asElement(superMirror) : null;
+            current = (superElem instanceof TypeElement te) ? te : null;
+        }
+        return result;
+    }
+
 
     private @Nullable GlobalVariableDefinition processGlobalVariable(VariableElement field, Function<BPFTypeLike<?>, SpecFieldName> typeToSpecField) {
         // check that the field is final
@@ -325,20 +572,24 @@ public class TypeProcessor {
         var bpfType = bpfTypeMirror.get().toBPFType(this::getBPFTypeForJavaName);
         var typeField = bpfType.toCustomType().toJavaFieldSpecUse(t -> typeToSpecField.apply(BPFTypeLike.of(t)).name());
 
+        String initializer = "";
         var tree = javacProcessingEnv.getElementUtils().getTree(field);
-        assert tree instanceof JCVariableDecl;
-        var init = ((JCVariableDecl) tree).init;
-        if (init == null) {
-            this.processingEnv.getMessager().printError("Global variable field " + field.getSimpleName() + " must have an initializer", field);
-            return null;
+        if (tree instanceof JCVariableDecl varDecl) {
+            var init = varDecl.init;
+            if (init == null) {
+                this.processingEnv.getMessager().printError("Global variable field " + field.getSimpleName() + " must have an initializer", field);
+                return null;
+            }
+            if (!(init instanceof JCNewClass) || !((JCTypeApply) ((JCNewClass) init).clazz).getType().toString().equals("GlobalVariable")) {
+                this.processingEnv.getMessager().printError("Global variable field " + field.getSimpleName() + " must be initialized with a new GlobalVariable", field);
+                return null;
+            }
+            var args = ((JCNewClass) init).getArguments();
+            assert args.size() == 1;
+            initializer = args.getFirst().toString();
         }
-        if (!(init instanceof JCNewClass newClass) || !((JCTypeApply) ((JCNewClass) init).clazz).getType().toString().equals("GlobalVariable")) {
-            this.processingEnv.getMessager().printError("Global variable field " + field.getSimpleName() + " must be initialized with a new GlobalVariable", field);
-            return null;
-        }
-        var args = ((JCNewClass) init).getArguments();
-        assert args.size() == 1;
-        String initializer = args.getFirst().toString();
+        // If tree is null (field from a compiled superclass jar), we emit the C declaration
+        // and leave the initializer empty — initGlobals() only needs g.name() and g.typeField().
         var definition = variableDefinition(bpfType.toCustomType().cUse().get(),
                 variable(field.getSimpleName().toString(),
                         CAnnotation.sec(".data")));
@@ -448,6 +699,9 @@ public class TypeProcessor {
         // create a #define statement for the field
         // return the #define statement
         if (!field.getModifiers().contains(Modifier.STATIC) || !field.getModifiers().contains(Modifier.FINAL) || field.getSimpleName().toString().equals("EBPF_PROGRAM")) {
+            return null;
+        }
+        if (getAnnotationMirror(field, "me.bechberger.ebpf.annotations.bpf.JavaOnly").isPresent()) {
             return null;
         }
         TypeMirror type = field.asType();
@@ -739,6 +993,16 @@ public class TypeProcessor {
         Optional<Integer> inlineUnionId = Optional.ofNullable(getAnnotationMirror(element.asType(), "me.bechberger.ebpf.annotations.InlineUnion")
                 .map(a -> AnnotationUtils.<Integer>getAnnotationValue(a, "value", null)).orElse(null));
         TypeMirror type = element.asType();
+        if (annotations.kptr()) {
+            boolean isPtr = type instanceof DeclaredType
+                    && processingEnv.getTypeUtils().erasure(type).toString().equals(PTR_CLASS);
+            if (!isPtr) {
+                processingEnv.getMessager().printError(
+                        "@Kptr can only be applied to fields of type Ptr<T> (got " + type + ")",
+                        element);
+                return Optional.empty();
+            }
+        }
         var bpfType = processBPFTypeRecordMemberType(element, annotations.dropOffset(), type);
         return bpfType.map(t -> {
 
@@ -748,7 +1012,7 @@ public class TypeProcessor {
                 return null;
             }
             return new UBPFStructMemberPotentiallyInlineUnion(new BPFType.UBPFStructMember<>(element.getSimpleName().toString(),
-                    bt.toCustomType(), null, null, annotations.offset()), inlineUnionId);
+                    bt.toCustomType(), null, null, annotations.offset(), annotations.kptr()), inlineUnionId);
         });
     }
 
@@ -846,7 +1110,6 @@ public class TypeProcessor {
             return processPointerType(element, annotations, type);
         }
 
-        System.out.println("Type " + typeElement.getSimpleName());
         if (isCustomTypeAnnotatedRecord(typeElement)) {
             return processCustomType(element, annotations, type);
         }
@@ -872,6 +1135,55 @@ public class TypeProcessor {
             return Optional.empty();
         }
         var genericType = genericTypes.getFirst();
+        // Pointers to @KernelBTF types are opaque to user-space layout: the
+        // kernel struct's offsets are relocated by libbpf at load time via
+        // CO-RE, so descending into the kernel type's fields here is both
+        // unnecessary and dangerous (kernel structs often hold self-referential
+        // helpers like llist_node that trip the recursion guard). The C side
+        // still needs the proper kernel struct name (e.g. `struct task_struct`),
+        // which we render via VerbatimBPFOnlyType.
+        if (genericType instanceof DeclaredType dt) {
+            var elem = dt.asElement();
+            if (elem != null && elem.getAnnotation(me.bechberger.ebpf.annotations.KernelBTF.class) != null) {
+                var typeAnn = elem.getAnnotation(Type.class);
+                String cType = typeAnn != null && !typeAnn.cType().isEmpty()
+                        ? typeAnn.cType()
+                        : ("struct " + elem.getSimpleName());
+                String bareName = cType.startsWith("struct ")
+                        ? cType.substring("struct ".length())
+                        : cType.startsWith("union ")
+                                ? cType.substring("union ".length())
+                                : cType;
+                PrefixKind kind = cType.startsWith("struct ")
+                        ? PrefixKind.STRUCT
+                        : cType.startsWith("union ")
+                                ? PrefixKind.UNION
+                                : PrefixKind.NORMAL;
+                // Build an inner CustomBPFType that:
+                //   - emits the proper kernel struct name in C (cUse + bpfName),
+                //   - uses the actual kernel struct's Java name in generics, so
+                //     Ptr<task_struct> in user code matches the generated spec
+                //     (UBPFStructMember accessor compatibility),
+                //   - emits "null" as its Java spec value, so the wrapping
+                //     BPFPointerType.toJavaFieldSpecUse renders as
+                //     `new BPFPointerType<task_struct>(null)` — opaque user-space
+                //     pointer; CO-RE handles offsets at load time.
+                String javaUseInGenerics = elem instanceof TypeElement te
+                        ? te.getQualifiedName().toString()
+                        : elem.getSimpleName().toString();
+                final var inner = new VerbatimBPFOnlyType<>(bareName, kind).toCustomType();
+                final var innerWithSpec = new BPFType.CustomBPFType<>(
+                        javaUseInGenerics,
+                        javaUseInGenerics,
+                        javaUseInGenerics,
+                        inner.bpfName(),
+                        inner.cUse(),
+                        typeToSpec -> "null",
+                        () -> Optional.empty());
+                return Optional.of(nameToCustomType -> new TypeBackedBPFTypeLike<>(
+                        new BPFType.BPFPointerType<>(innerWithSpec)));
+            }
+        }
         var innerType = processBPFTypeRecordMemberType(element, getAnnotationValuesForRecordMember(genericType), genericType);
         if (innerType.isEmpty()) {
             return Optional.empty();
@@ -881,7 +1193,6 @@ public class TypeProcessor {
     }
 
     private Optional<BPFTypeMirror> processArrayType(Element element, AnnotationValues annotations, ArrayType type) {
-        System.out.println("Array type " + type);
         if (annotations.size().isEmpty()) {
             this.processingEnv.getMessager().printError("Size annotation required for array types", element);
             if (type.getComponentType().getKind() == TypeKind.ARRAY) {

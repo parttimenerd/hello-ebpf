@@ -253,7 +253,16 @@ public interface CAST {
             record CharConstant(Character value) implements Constant<Character> {
                 @Override
                 public String toPrettyString(String indent, String increment) {
-                    return indent + "'" + (value == '\'' ? "\\'" : value) + "'";
+                    String escaped = switch (value) {
+                        case '\'' -> "\\'";
+                        case '\\' -> "\\\\";
+                        case '\0' -> "\\0";
+                        case '\n' -> "\\n";
+                        case '\r' -> "\\r";
+                        case '\t' -> "\\t";
+                        default -> String.valueOf(value);
+                    };
+                    return indent + "'" + escaped + "'";
                 }
             }
 
@@ -330,7 +339,7 @@ public interface CAST {
      */
     enum Operator {
         SUFFIX_INCREMENT("++", 2), SUFFIX_DECREMENT("--", 2), FUNCTION_CALL("()", 2), SUBSCRIPT("[]", 2),
-        PTR_MEMBER_ACCESS("->", 2), MEMBER_ACCESS(".", 2), POSTFIX_INCREMENT("++", 3), POSTFIX_DECREMENT("--", 3), UNARY_PLUS("+", 3),
+        PTR_MEMBER_ACCESS("->", 2), MEMBER_ACCESS(".", 2), POSTFIX_INCREMENT("++", 3), POSTFIX_DECREMENT("--", 3), PREFIX_INCREMENT("++", 3), PREFIX_DECREMENT("--", 3), UNARY_PLUS("+", 3),
         UNARY_MINUS("-", 3), LOGICAL_NOT("!", 3), BITWISE_NOT("~", 3), DEREFERENCE("*", 3), ADDRESS_OF("&", 3),
         SIZEOF("sizeof", 3), CAST("cast", 3), MULTIPLICATION("*", 5), DIVISION("/", 5), MODULUS("%", 5), ADDITION("+"
                 , 6), SUBTRACTION("-", 6), SHIFT_LEFT("<<", 7), SHIFT_RIGHT(">>", 7), LESS_THAN("<", 9),
@@ -672,7 +681,12 @@ public interface CAST {
                         var combinedTag = tag == null ? tagged.tag : tag + " " + tagged.tag;
                         return pointery.toPrettyVariableDefinition(name, combinedTag, indent) + (pointery instanceof FunctionDeclarator ? "" : "*");
                     }
-                    return tagged.toPrettyString() + "*";
+                    // Tagged wraps a plain (non-Pointery) declarator — emit
+                    // "<tag> <inner> *<name>". Without this branch the name would
+                    // be dropped (`__arena struct Node*` with no variable name).
+                    var combinedTag = tag == null ? tagged.tag : tag + " " + tagged.tag;
+                    return indent + combinedTag + " " + tagged.declarator.toPrettyString()
+                            + " *" + (name == null ? "" : name.toPrettyString());
                 }
                 if (declarator instanceof FunctionDeclarator fun) {
                     return fun.toPrettyVariableDefinition(name, tag, indent);
