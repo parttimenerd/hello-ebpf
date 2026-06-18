@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.lang.foreign.ValueLayout.JAVA_INT;
+import static java.lang.foreign.ValueLayout.JAVA_LONG;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_ringbuf_reserve;
 import static me.bechberger.ebpf.shared.PanamaUtil.*;
 
@@ -206,6 +207,12 @@ public class BPFRingBuffer<E> extends BPFMap {
     private static final HandlerWithErrno<Integer> ring_buffer__consume = new HandlerWithErrno<>(
             "ring_buffer__consume", FunctionDescriptor.of(ValueLayout.JAVA_INT, POINTER));
 
+    private static final HandlerWithErrno<Integer> RING_BUFFER_POLL = new HandlerWithErrno<>(
+            "ring_buffer__poll", FunctionDescriptor.of(ValueLayout.JAVA_INT, POINTER, JAVA_INT));
+
+    private static final HandlerWithErrno<Long> RING_BUFFER_LOST_COUNT = new HandlerWithErrno<>(
+            "ring_buffer__lost_count", FunctionDescriptor.of(JAVA_LONG, POINTER));
+
     /**
      * Result of calling the {@link BPFRingBuffer#consume() consume} method
      * @param consumed number of events consumed
@@ -258,6 +265,53 @@ public class BPFRingBuffer<E> extends BPFMap {
             throw new BPFRingBufferError("Caught errors while consuming events", res.caughtErrorsInCallBack);
         }
         return res.consumed();
+    }
+
+    /**
+     * Blocks until at least one event is available or {@code timeoutMs} elapses, then
+     * consumes all currently available events.
+     *
+     * <p>Unlike {@link #consume()}, which returns immediately when no events are ready,
+     * {@code poll} waits up to {@code timeoutMs} milliseconds for the kernel to wake the
+     * listener.  A timeout of {@code 0} makes it equivalent to {@link #consume()}.
+     *
+     * @param timeoutMs maximum milliseconds to wait; {@code -1} to wait indefinitely
+     * @return the number of events consumed and any errors caught in callbacks
+     * @throws BPFRingBufferError if the underlying {@code ring_buffer__poll} call fails
+     */
+    public ConsumeResult poll(int timeoutMs) {
+        try (Arena arena = Arena.ofConfined()) {
+            var ret = RING_BUFFER_POLL.call(arena, rb, timeoutMs);
+            ConsumeResult res;
+            synchronized (caughtErrorsInCallBack) {
+                res = new ConsumeResult(ret.result(), new ArrayList<>(caughtErrorsInCallBack));
+                caughtErrorsInCallBack.clear();
+            }
+            if ((int) ret.result() < 0) {
+                int err = ret.err();
+                if (err == ERRNO_EAGAIN || err == ERRNO_EINVAL || err == ERRNO_ENOENT) {
+                    return res;
+                }
+                throw new BPFRingBufferError("Failed to poll ring buffer", err);
+            }
+            return res;
+        }
+    }
+
+    /**
+     * Returns the number of events that were dropped because the ring buffer was full
+     * when the BPF program tried to reserve space.
+     *
+     * <p>The counter is maintained by the kernel per ring buffer map fd and is never
+     * reset; callers that want a delta should record the previous value themselves.
+     *
+     * @return cumulative count of lost events since the ring buffer was created
+     */
+    public long lostCount() {
+        try (Arena arena = Arena.ofConfined()) {
+            var ret = RING_BUFFER_LOST_COUNT.call(arena, rb);
+            return ret.result();
+        }
     }
 
     /**

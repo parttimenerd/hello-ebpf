@@ -605,6 +605,52 @@ public abstract class BPFProgram implements AutoCloseable {
         return attachUprobe(prog, true, -1, binaryPath, funcName);
     }
 
+    /**
+     * Attach all {@code uprobe} and {@code uretprobe} BPF programs declared on this class
+     * to the given binary, optionally scoped to a single process.
+     *
+     * <p>Scans every method annotated with {@link BPFFunction} whose
+     * {@link BPFFunction#section()} starts with {@code "uprobe/"} or
+     * {@code "uretprobe/"}.  The symbol name is taken as the part of the section
+     * string that follows the prefix (e.g. section {@code "uprobe/malloc"} ↦ symbol
+     * {@code "malloc"}).
+     *
+     * <p>This removes the per-symbol boilerplate from programs that trace many
+     * functions in the same binary:
+     * <pre>{@code
+     * // Instead of:
+     * program.attachUprobe(program.getProgramByName("onAlloc"), false, pid, lib, "malloc");
+     * program.attachUprobe(program.getProgramByName("onFree"),  false, pid, lib, "free");
+     *
+     * // Just write:
+     * program.attachAllUprobes(pid, "/usr/lib/libc.so.6");
+     * }</pre>
+     *
+     * <p>Methods that use a {@link BPFFunction#name()} override have that name used
+     * to look up the {@link ProgramHandle} instead of the Java method name.
+     *
+     * @param pid        process ID to scope the probes to, or {@code -1} for all processes
+     * @param binaryPath path to the ELF binary containing the target symbols
+     * @return list of created {@link BPFLink}s (one per matched program)
+     * @throws BPFAttachError if any individual symbol attachment fails
+     */
+    public List<BPFLink> attachAllUprobes(int pid, String binaryPath) {
+        List<BPFLink> links = new ArrayList<>();
+        for (Method method : getClass().getMethods()) {
+            BPFFunction ann = getAnnotationOfSelfOrOverriden(method, BPFFunction.class);
+            if (ann == null) continue;
+            String section = ann.section();
+            boolean isUprobe    = section.startsWith("uprobe/");
+            boolean isUretprobe = section.startsWith("uretprobe/");
+            if (!isUprobe && !isUretprobe) continue;
+            String symbol  = section.substring(section.indexOf('/') + 1);
+            String progName = ann.name().isEmpty() ? method.getName() : ann.name();
+            ProgramHandle handle = getProgramByName(progName);
+            links.add(attachUprobe(handle, isUretprobe, pid, binaryPath, symbol));
+        }
+        return links;
+    }
+
     private <T extends Annotation> @Nullable T findParentAnnotation(Class<?> programClass, Method method, Class<T> annotationClass) {
         var annotation = method.getAnnotation(annotationClass);
         if (annotation != null) {
