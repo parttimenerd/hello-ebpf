@@ -45,7 +45,7 @@ jobs:
 
   release:
     needs: [ precheck ]
-    if: endsWith(${{ needs.precheck.outputs.VERSION }}, '-SNAPSHOT')
+    if: ${{ endsWith(needs.precheck.outputs.VERSION, '-SNAPSHOT') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
