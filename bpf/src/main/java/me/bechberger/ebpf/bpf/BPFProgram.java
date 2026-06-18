@@ -905,6 +905,38 @@ public abstract class BPFProgram implements AutoCloseable {
         return names;
     }
 
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_PERF_EVENT =
+            new HandlerWithErrno<>("bpf_program__attach_perf_event",
+                    FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER, JAVA_INT));
+
+    /**
+     * Attach a {@code SEC("perf_event")} BPF program to an already-open perf event
+     * file descriptor ({@code pfd}).
+     *
+     * <p>The {@code pfd} is obtained by calling the {@code perf_event_open(2)} syscall.
+     * The BPF program fires every time the perf event is triggered (e.g. on each
+     * CPU-cycles overflow).  The returned {@link BPFLink} is tracked by this program's
+     * lifetime and automatically destroyed when {@link #close()} is called.
+     *
+     * @param prog the BPF program to attach (must have prog_type PERF_EVENT)
+     * @param pfd  an open perf event file descriptor
+     * @return the link representing the attachment
+     * @throws BPFAttachError if libbpf reports an error
+     */
+    public BPFLink attachPerfEvent(ProgramHandle prog, int pfd) {
+        var ret = BPF_PROGRAM__ATTACH_PERF_EVENT.call(prog.prog(), pfd);
+        if (ret.result() == null || MemorySegment.NULL.equals(ret.result()) || ret.result().address() == 0) {
+            throw new BPFAttachError(prog.name, ret.err());
+        }
+        var link = new BPFLink(ret.result());
+        attachedPrograms.add(link);
+        return link;
+    }
+
+    public BPFLink attachPerfEvent(String programName, int pfd) {
+        return attachPerfEvent(getProgramByName(programName), pfd);
+    }
+
     private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_RAW_TRACEPOINT =
             new HandlerWithErrno<>("bpf_program__attach_raw_tracepoint",
                     FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
