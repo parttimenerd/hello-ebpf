@@ -1043,11 +1043,6 @@ class Translator {
      */
     @Nullable
     Expression translate(MethodInvocationTree methodInvocationTree) {
-        var _dbgMeth = methodInvocationTree.getMethodSelect();
-        if (_dbgMeth instanceof MemberSelectTree mst && mst.getIdentifier().contentEquals("doubled"))
-            System.err.println("[DEBUG3] translate(MethodInvocationTree) called for doubled()");
-        System.err.println("[DEBUG4] translate(MIT): " + methodInvocationTree.getClass().getSimpleName() + " sel=" + _dbgMeth.getClass().getSimpleName() + " str=" + _dbgMeth);
-        System.out.println("[DEBUG4OUT] translate(MIT): " + _dbgMeth);
         // lives in USER or KERNEL_UNTRACKED memory. Skip for KERNEL_TRACKED / MAP_VALUE / ARENA /
         // STACK / PACKET — those allow direct deref and the existing template handles them.
         if (isPtrVal(methodInvocationTree)
@@ -1164,13 +1159,9 @@ class Translator {
         // E.g. KickFlags.idle() → "SCX_KICK_IDLE"; EnqFlags.passThrough(raw) → "raw".
         // This path fires when the call's @BuiltinBPFFunction has a non-empty carrier and
         // the value template is empty (no C side-effect — pure expression form).
-        if (symbol.getSimpleName().toString().equals("doubled"))
-            System.err.println("[DEBUG3] pre-abstraction check for doubled: enclosing=" + symbol.getEnclosingElement().getQualifiedName() + " hasAnn=" + (symbol.getEnclosingElement() instanceof com.sun.tools.javac.code.Symbol.ClassSymbol cs && cs.getAnnotation(BPFAbstraction.class) != null));
         if (symbol.getEnclosingElement() instanceof com.sun.tools.javac.code.Symbol.ClassSymbol abstractionClass
                 && abstractionClass.getAnnotation(BPFAbstraction.class) != null) {
             var builtinAnn = symbol.getAnnotation(BuiltinBPFFunction.class);
-            if (symbol.getSimpleName().toString().equals("doubled"))
-                System.err.println("[DEBUG3] in abstraction block for doubled: builtinAnn=" + builtinAnn);
             if (builtinAnn != null && !builtinAnn.carrier().isBlank()) {
                 // Resolve $argN in the carrier template using the translated C args
                 var carrier = builtinAnn.carrier();
@@ -1185,8 +1176,6 @@ class Translator {
         }
         // @BPFAbstraction + @BPFJavaInline: inline the Java method body at the call site.
         // This is the "write the abstraction in Java" path — no @BuiltinBPFFunction template string needed.
-        if (symbol.getSimpleName().toString().equals("doubled"))
-            System.err.println("[DEBUG3] about to call tryInline for doubled, thisJavacExpr=" + thisJavacExpression + " enclosing=" + symbol.getEnclosingElement().getQualifiedName());
         var inlined = tryInlineAbstractionMethod(symbol, thisJavacExpression, methodInvocationTree, arguments);
         if (inlined != null) {
             return inlined;
@@ -2166,31 +2155,24 @@ class Translator {
         // Only instance methods on @BPFAbstraction classes with @BPFJavaInline
         if (symbol.isStatic()) return null;
         if (!(symbol.getEnclosingElement() instanceof com.sun.tools.javac.code.Symbol.ClassSymbol enclosingClass)) {
-            System.err.println("[DEBUG2] tryInline: not ClassSymbol for " + symbol.getSimpleName());
             return null;
         }
         if (enclosingClass.getAnnotation(BPFAbstraction.class) == null) {
-            if (symbol.getSimpleName().toString().equals("doubled"))
-                System.err.println("[DEBUG2] tryInline: no @BPFAbstraction on " + enclosingClass.getQualifiedName());
             return null;
         }
         var javaInlineAnn = symbol.getAnnotation(BPFJavaInline.class);
         if (javaInlineAnn == null) {
-            System.err.println("[DEBUG2] tryInline: no @BPFJavaInline on " + symbol.getSimpleName() + " in " + enclosingClass.getQualifiedName());
             return null;
         }
-        System.err.println("[DEBUG2] tryInline: ENTERING for " + symbol.getSimpleName() + " in " + enclosingClass.getQualifiedName());
 
         // Get the method's source tree
         var methodTree = compilerPlugin.trees.getTree(symbol);
         if (!(methodTree instanceof MethodTree mt)) {
             // Source not available (cross-module use). Fall back to @BuiltinBPFFunction template if present.
-            System.err.println("[DEBUG2] tryInline: no source tree for " + symbol.getSimpleName());
             return null;
         }
         var methodPath = compilerPlugin.trees.getPath(symbol);
         if (methodPath == null) {
-            System.err.println("[DEBUG2] tryInline: no path for " + symbol.getSimpleName());
             return null;
         }
 
