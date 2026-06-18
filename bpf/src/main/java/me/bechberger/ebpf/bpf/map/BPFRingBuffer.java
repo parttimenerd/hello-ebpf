@@ -123,7 +123,7 @@ public class BPFRingBuffer<E> extends BPFMap {
      */
     public BPFRingBuffer(FileDescriptor fd, BPFType<E> eventType, EventCallback<E> callback) {
         super(MapTypeId.RINGBUF, fd);
-        this.ringArena = Arena.ofConfined();
+        this.ringArena = Arena.ofShared();
         this.eventType = eventType;
         this.callback = callback;
         this.rb = initRingBuffer(fd, eventType, callback);
@@ -131,7 +131,7 @@ public class BPFRingBuffer<E> extends BPFMap {
 
     public BPFRingBuffer(FileDescriptor fd, BPFType<E> eventType) {
         super(MapTypeId.RINGBUF, fd);
-        this.ringArena = Arena.ofConfined();
+        this.ringArena = Arena.ofShared();
         this.eventType = eventType;
         this.rb = initRingBuffer(fd, eventType, (buffer, event) -> {
             if (callback != null) {
@@ -222,18 +222,16 @@ public class BPFRingBuffer<E> extends BPFMap {
                 res = new ConsumeResult(ret.result(), new ArrayList<>(caughtErrorsInCallBack));
                 caughtErrorsInCallBack.clear();
             }
-            if (ret.err() != 0) {
-                if (ret.err() == ERRNO_EAGAIN) {
-                    // this is not an error, just no events available
+            // ring_buffer__consume returns -errno on error, >=0 on success.
+            // errno is only meaningful when the return value is negative; a stale errno
+            // from a prior syscall (e.g. a failed BPF_LINK_CREATE) must not be mistaken
+            // for a consume error.
+            if ((int) ret.result() < 0) {
+                int err = ret.err();
+                if (err == ERRNO_EAGAIN || err == ERRNO_EINVAL || err == ERRNO_ENOENT) {
                     return res;
                 }
-                if (ret.err() == ERRNO_EINVAL) {
-                    return res; // don't know why this happens, but it does
-                }
-                if (ret.err() == ERRNO_ENOENT) {
-                    return res;
-                }
-                throw new BPFRingBufferError("Failed to consume events", ret.err());
+                throw new BPFRingBufferError("Failed to consume events", err);
             }
             return res;
         }

@@ -193,7 +193,8 @@ public class Processor extends AbstractProcessor {
     public static CompileResult compileAndEncode(ProcessingEnvironment env, String code, Path file) {
         var processor = new Processor();
         processor.processingEnv = env;
-        return new CompileResult(processor.compile(new CombinedCode(code, null, null, List.of()), file));
+        var result = processor.compile(new CombinedCode(code, null, null, List.of()), file);
+        return new CompileResult(result);
     }
 
     /**
@@ -232,7 +233,7 @@ public class Processor extends AbstractProcessor {
                                 .addMember("before", "\"\"\"\n" + String.join("\n", additions.before()).replace("\\", "\\\\") + "\n\"\"\"")
                                 .addMember("after", "\"\"\"\n" + String.join("\n", additions.after()).replace("\\", "\\\\") + "\n\"\"\"").build())
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                        .addField(FieldSpec.builder(String.class, "BYTE_CODE", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+                        .addField(FieldSpec.builder(String.class, "BYTE_CODE", Modifier.PRIVATE, Modifier.STATIC)
                                 .addJavadoc("Base64 encoded and gzipped eBPF byte-code of the program\n{@snippet : \n" + sanitizeCodeForJavadoc(code.ebpfProgram) + "\n}")
                                 .initializer("$L", createStringExpression(gzipBase64Encode(byteCode))).build())
                         .addField(FieldSpec.builder(String.class, "CODE", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
