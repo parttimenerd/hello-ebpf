@@ -197,9 +197,12 @@ public final class DispatchQueue {
      * @param p     task to insert
      * @param flags pass {@link EnqFlags#passThrough(long)} from {@code enqueue()}
      */
+    // Cast nr_queued to (u64): scx_bpf_dsq_nr_queued returns s32 and BPF
+    // forbids signed division, so without the cast clang rejects the program
+    // with "unsupported signed division".
     @BuiltinBPFFunction("scx_bpf_dsq_insert($arg1, $this, " +
         "scx_bpf_dsq_nr_queued($this) > 0 " +
-        "  ? SCX_SLICE_DFL / scx_bpf_dsq_nr_queued($this) " +
+        "  ? SCX_SLICE_DFL / (u64)scx_bpf_dsq_nr_queued($this) " +
         "  : SCX_SLICE_DFL, " +
         "$arg2)")
     @NotUsableInJava
