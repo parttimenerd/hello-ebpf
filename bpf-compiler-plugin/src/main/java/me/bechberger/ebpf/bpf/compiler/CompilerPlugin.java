@@ -233,16 +233,6 @@ public class CompilerPlugin implements Plugin {
                 if (e.getKind() != TaskEvent.Kind.ANALYZE) { // we do need all information
                     return;
                 }
-                e.getCompilationUnit().accept(new TreeScanner<Void, Void>() {
-                    @Override
-                    public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
-                        // This is the original lambda
-                        System.out.println("Found lambda: " + node);
-                        System.out.println("Body: " + node.getBody());
-                        System.out.println("Parameters: " + node.getParameters());
-                        return super.visitLambdaExpression(node, unused);
-                    }
-                }, null);
                 funcs.addAll(getBPFFunctionsForClass(e.getCompilationUnit()));
                 var impls = getBPFProgramImpls(e.getCompilationUnit());
                 var interfaces = getBPFInterfaces(e.getCompilationUnit());

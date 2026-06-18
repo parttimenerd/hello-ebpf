@@ -2231,13 +2231,11 @@ class Translator {
         if (body == null) return null;
         var translatedBody = innerTranslator.translate(body, false);
         if (translatedBody == null) {
-            System.err.println("[DEBUG] tryInlineAbstractionMethod: translation returned null for " + symbol.getSimpleName());
             return null;
         }
 
         // Build a GNU statement expression: ({ stmt1; stmt2; ... })
         var statements = translatedBody.statements();
-        System.err.println("[DEBUG] tryInlineAbstractionMethod: " + symbol.getSimpleName() + " statements=" + statements.size() + ": " + statements.stream().map(s -> s.toPrettyString().trim()).toList());
         if (statements.isEmpty()) {
             return new VerbatimExpression("({ })");
         }
