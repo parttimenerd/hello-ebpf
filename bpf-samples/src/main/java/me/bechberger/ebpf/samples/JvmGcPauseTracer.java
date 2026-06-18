@@ -9,6 +9,7 @@ import me.bechberger.ebpf.annotations.bpf.JavaOnly;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
+import me.bechberger.ebpf.bpf.probe.ProbeContext;
 import me.bechberger.ebpf.runtime.PtDefinitions.pt_regs;
 import me.bechberger.ebpf.type.Ptr;
 import me.bechberger.femtocli.FemtoCli;
@@ -99,8 +100,8 @@ public abstract class JvmGcPauseTracer extends BPFProgram {
     public void onGcBegin(Ptr<pt_regs> ctx) {
         @Unsigned long now  = bpf_ktime_get_ns();
         @Unsigned int  cpu  = (int) bpf_get_smp_processor_id();
-        // arg0 = bool full (x86-64 first argument register = di)
-        @Unsigned int  full = (int) ctx.val().di;
+        // arg0 = bool full (portable via PT_REGS_PARM1)
+        @Unsigned int  full = (int) ProbeContext.of(ctx).arg0();
         GcStart s = new GcStart();
         s.startNs = now;
         s.full = full;
