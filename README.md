@@ -12,7 +12,7 @@ and more coming in the future.
 
 ![Overview images](img/overview.svg)
 
-_Based on the overview from [ebpf.io](https://ebpf.io/what-is-ebpf/), 
+_Based on the overview from [ebpf.io](https://ebpf.io/what-is-ebpf/),
 duke image from [OpenJDK](https://wiki.openjdk.org/display/duke/Gallery)._
 
 Let's discover eBPF together. Join me on the journey and learn a lot about eBPF and Java along the way.
@@ -142,7 +142,31 @@ you can use them as a starting point for your own eBPF programs.
 |             | [demo.ForbiddenFile](bpf-samples/src/main/java/me/bechberger/ebpf/samples/demo/ForbiddenFile.java)                         | Block access to a specific file via openat2                                |
 |             | [Firewall](bpf-samples/src/main/java/me/bechberger/ebpf/samples/Firewall.java)                                             | A simple firewall that blocks all incoming packets                         |
 |             | [FirewallSpring](bpf-samples/src/main/java/me/bechberger/ebpf/samples/FirewallSpring.java)                                 | A spring boot based web front-end for the Firewall                         |
-|             | [MinimalScheduler](bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/MinimalScheduler.java)                       | A minimal Linux scheduler                                                  | 
+|             | [MinimalScheduler](bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/MinimalScheduler.java)                       | A minimal Linux scheduler                                                  |
+|             | [CPUProfiler](bpf-samples/src/main/java/me/bechberger/ebpf/samples/CPUProfiler.java)                                       | CPU profiler using perf_event; outputs an interactive HTML flamegraph      |
+|             | [JvmGcPauseTracer](bpf-samples/src/main/java/me/bechberger/ebpf/samples/JvmGcPauseTracer.java)                             | Traces JVM stop-the-world GC pauses via uprobes on libjvm.so               |
+
+Profiling
+---------
+
+hello-ebpf ships two profiling tools built on `perf_event` and uprobes:
+
+**CPU Profiler** — samples call stacks across all CPUs and renders an interactive
+flamegraph HTML file:
+
+```shell
+sudo ./run.sh CPUProfiler --duration=30 --output=flame.html
+# then open flame.html in any browser
+```
+
+**JVM GC Pause Tracer** — attaches uprobes to `libjvm.so` to measure
+stop-the-world GC pauses in a running JVM:
+
+```shell
+sudo ./run.sh JvmGcPauseTracer --pid=$(pgrep -f MyApp) --histogram
+```
+
+See [docs/profiling.md](docs/profiling.md) for full usage and API reference.
 
 Running the Examples
 --------------------
@@ -189,7 +213,7 @@ The library is available as a maven package:
 <dependency>
     <groupId>me.bechberger</groupId>
     <artifactId>bpf</artifactId>
-    <version>0.1.1-scx-enabled-SNAPSHOT</version>
+    <version>0.1.4</version>
 </dependency>
 ```
 
@@ -215,7 +239,7 @@ Also available (but possibly less up to date):
 <dependency>
     <groupId>me.bechberger</groupId>
     <artifactId>bpf</artifactId>
-    <version>0.1.3</version>
+    <version>0.1.4</version>
 </dependency>
 ```
 
@@ -254,10 +278,10 @@ Plans
 
 A look ahead into the future, so you know what to expect:
 
-- Implement more features related to libbpf and eBPF
-  - cgroups support
-- More documentation
-- Support for macros
+- Java profiling: resolve JIT-compiled frames in `CPUProfiler` via JVMTI perf-map
+- Off-CPU profiler: measure time threads spend blocked (I/O wait, lock contention)
+- More documentation and guides
+- Support for BPF macros
 
 These plans might change, but I'll try to keep this up to date.
 I'm open to suggestions, contributions, and ideas.

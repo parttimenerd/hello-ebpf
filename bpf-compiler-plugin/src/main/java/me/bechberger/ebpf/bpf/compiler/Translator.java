@@ -1043,7 +1043,11 @@ class Translator {
      */
     @Nullable
     Expression translate(MethodInvocationTree methodInvocationTree) {
-        // Stage 2: auto-emit bpf_probe_read_user/kernel for `p.val()` when the receiver pointer
+        var _dbgMeth = methodInvocationTree.getMethodSelect();
+        if (_dbgMeth instanceof MemberSelectTree mst && mst.getIdentifier().contentEquals("doubled"))
+            System.err.println("[DEBUG3] translate(MethodInvocationTree) called for doubled()");
+        System.err.println("[DEBUG4] translate(MIT): " + methodInvocationTree.getClass().getSimpleName() + " sel=" + _dbgMeth.getClass().getSimpleName() + " str=" + _dbgMeth);
+        System.out.println("[DEBUG4OUT] translate(MIT): " + _dbgMeth);
         // lives in USER or KERNEL_UNTRACKED memory. Skip for KERNEL_TRACKED / MAP_VALUE / ARENA /
         // STACK / PACKET — those allow direct deref and the existing template handles them.
         if (isPtrVal(methodInvocationTree)
@@ -1160,9 +1164,13 @@ class Translator {
         // E.g. KickFlags.idle() → "SCX_KICK_IDLE"; EnqFlags.passThrough(raw) → "raw".
         // This path fires when the call's @BuiltinBPFFunction has a non-empty carrier and
         // the value template is empty (no C side-effect — pure expression form).
+        if (symbol.getSimpleName().toString().equals("doubled"))
+            System.err.println("[DEBUG3] pre-abstraction check for doubled: enclosing=" + symbol.getEnclosingElement().getQualifiedName() + " hasAnn=" + (symbol.getEnclosingElement() instanceof com.sun.tools.javac.code.Symbol.ClassSymbol cs && cs.getAnnotation(BPFAbstraction.class) != null));
         if (symbol.getEnclosingElement() instanceof com.sun.tools.javac.code.Symbol.ClassSymbol abstractionClass
                 && abstractionClass.getAnnotation(BPFAbstraction.class) != null) {
             var builtinAnn = symbol.getAnnotation(BuiltinBPFFunction.class);
+            if (symbol.getSimpleName().toString().equals("doubled"))
+                System.err.println("[DEBUG3] in abstraction block for doubled: builtinAnn=" + builtinAnn);
             if (builtinAnn != null && !builtinAnn.carrier().isBlank()) {
                 // Resolve $argN in the carrier template using the translated C args
                 var carrier = builtinAnn.carrier();
@@ -1177,6 +1185,8 @@ class Translator {
         }
         // @BPFAbstraction + @BPFJavaInline: inline the Java method body at the call site.
         // This is the "write the abstraction in Java" path — no @BuiltinBPFFunction template string needed.
+        if (symbol.getSimpleName().toString().equals("doubled"))
+            System.err.println("[DEBUG3] about to call tryInline for doubled, thisJavacExpr=" + thisJavacExpression + " enclosing=" + symbol.getEnclosingElement().getQualifiedName());
         var inlined = tryInlineAbstractionMethod(symbol, thisJavacExpression, methodInvocationTree, arguments);
         if (inlined != null) {
             return inlined;
@@ -2155,19 +2165,34 @@ class Translator {
                                                        List<Argument> translatedArgs) {
         // Only instance methods on @BPFAbstraction classes with @BPFJavaInline
         if (symbol.isStatic()) return null;
-        if (!(symbol.getEnclosingElement() instanceof com.sun.tools.javac.code.Symbol.ClassSymbol enclosingClass)) return null;
-        if (enclosingClass.getAnnotation(BPFAbstraction.class) == null) return null;
+        if (!(symbol.getEnclosingElement() instanceof com.sun.tools.javac.code.Symbol.ClassSymbol enclosingClass)) {
+            System.err.println("[DEBUG2] tryInline: not ClassSymbol for " + symbol.getSimpleName());
+            return null;
+        }
+        if (enclosingClass.getAnnotation(BPFAbstraction.class) == null) {
+            if (symbol.getSimpleName().toString().equals("doubled"))
+                System.err.println("[DEBUG2] tryInline: no @BPFAbstraction on " + enclosingClass.getQualifiedName());
+            return null;
+        }
         var javaInlineAnn = symbol.getAnnotation(BPFJavaInline.class);
-        if (javaInlineAnn == null) return null;
+        if (javaInlineAnn == null) {
+            System.err.println("[DEBUG2] tryInline: no @BPFJavaInline on " + symbol.getSimpleName() + " in " + enclosingClass.getQualifiedName());
+            return null;
+        }
+        System.err.println("[DEBUG2] tryInline: ENTERING for " + symbol.getSimpleName() + " in " + enclosingClass.getQualifiedName());
 
         // Get the method's source tree
         var methodTree = compilerPlugin.trees.getTree(symbol);
         if (!(methodTree instanceof MethodTree mt)) {
             // Source not available (cross-module use). Fall back to @BuiltinBPFFunction template if present.
+            System.err.println("[DEBUG2] tryInline: no source tree for " + symbol.getSimpleName());
             return null;
         }
         var methodPath = compilerPlugin.trees.getPath(symbol);
-        if (methodPath == null) return null;
+        if (methodPath == null) {
+            System.err.println("[DEBUG2] tryInline: no path for " + symbol.getSimpleName());
+            return null;
+        }
 
         // Determine the carrier expression: the receiver translated to C
         String carrierExpr = null;
@@ -2223,23 +2248,32 @@ class Translator {
         var body = mt.getBody();
         if (body == null) return null;
         var translatedBody = innerTranslator.translate(body, false);
-        if (translatedBody == null) return null;
+        if (translatedBody == null) {
+            System.err.println("[DEBUG] tryInlineAbstractionMethod: translation returned null for " + symbol.getSimpleName());
+            return null;
+        }
 
         // Build a GNU statement expression: ({ stmt1; stmt2; ... })
         var statements = translatedBody.statements();
+        System.err.println("[DEBUG] tryInlineAbstractionMethod: " + symbol.getSimpleName() + " statements=" + statements.size() + ": " + statements.stream().map(s -> s.toPrettyString().trim()).toList());
         if (statements.isEmpty()) {
             return new VerbatimExpression("({ })");
         }
 
-        // Collect non-blank statements, stripping "return " from the last one.
+        // Collect non-blank statements, then strip "return " from the last one.
         var nonBlank = new ArrayList<String>();
-        for (int i = 0; i < statements.size(); i++) {
-            var s = statements.get(i).toPrettyString().trim();
+        for (var stmt : statements) {
+            var s = stmt.toPrettyString().trim();
             if (!s.isBlank()) {
-                if (i == statements.size() - 1 && s.startsWith("return ") && s.endsWith(";")) {
-                    s = s.substring("return ".length(), s.length() - 1);
-                }
                 nonBlank.add(s);
+            }
+        }
+        if (!nonBlank.isEmpty()) {
+            var last = nonBlank.get(nonBlank.size() - 1);
+            // Strip "return <expr>;" -> "<expr>" from the last statement (for GNU statement expression)
+            var RETURN_PREFIX = "return "; // 7 chars: r-e-t-u-r-n-SPACE
+            if (last.length() > RETURN_PREFIX.length() && last.startsWith(RETURN_PREFIX) && last.endsWith(";")) {
+                nonBlank.set(nonBlank.size() - 1, last.substring(RETURN_PREFIX.length(), last.length() - 1));
             }
         }
 
@@ -2319,11 +2353,67 @@ class Translator {
         if (carrier.contains("<auto>")) {
             var enclosingClass = field.getEnclosingElement();
             var qualifiedKey = enclosingClass.toString() + "." + field.getSimpleName();
+            // First try the plugin's runtime map (populated by processBPFProgramImpl).
             var resolved = compilerPlugin.abstractionFieldCarrierOverrides.get(qualifiedKey);
             if (resolved != null) return resolved;
-            // Fallback: use field name as a stable placeholder (produces broken C, but avoids crash)
+            // Fall back: look up ABSTRACTION_CARRIERS from the generated impl class directly.
+            resolved = lookupCarrierFromImplClass(enclosingClass, field.getSimpleName().toString(), javacProcEnv);
+            if (resolved != null) return resolved;
+            // Last resort: stable but broken C placeholder (keeps the build moving).
             return carrier.replace("<auto>", field.getSimpleName().toString() + "_DSQ_ID");
         }
         return carrier;
+    }
+
+    /**
+     * Looks up the carrier for {@code fieldName} in the generated impl class's
+     * {@code ABSTRACTION_CARRIERS} field. The impl class is {@code <enclosingClass>Impl}.
+     */
+    @Nullable
+    private String lookupCarrierFromImplClass(javax.lang.model.element.Element enclosingClass,
+                                               String fieldName,
+                                               com.sun.tools.javac.processing.JavacProcessingEnvironment procEnv) {
+        // The impl class name mirrors what Processor.typeToImplName() generates:
+        // nested classes use '$' separator (binary form), e.g.
+        //   BPFAbstractionTest.AutoIdTest -> BPFAbstractionTest$AutoIdTestImpl
+        // Build this by walking up the nesting hierarchy.
+        String implName;
+        if (enclosingClass instanceof javax.lang.model.element.TypeElement te) {
+            var nameParts = new java.util.ArrayDeque<String>();
+            var cur = te;
+            nameParts.addFirst(cur.getSimpleName().toString());
+            while (cur.getNestingKind() == javax.lang.model.element.NestingKind.MEMBER) {
+                if (cur.getEnclosingElement() instanceof javax.lang.model.element.TypeElement parent) {
+                    cur = parent;
+                    nameParts.addFirst(cur.getSimpleName().toString());
+                } else break;
+            }
+            // cur is now the top-level class; its qualified name gives us the package
+            String qualifiedTop = cur.getQualifiedName().toString();
+            String pkg = qualifiedTop.contains(".")
+                    ? qualifiedTop.substring(0, qualifiedTop.lastIndexOf('.'))
+                    : "";
+            String simpleName = String.join("$", nameParts) + "Impl";
+            implName = pkg.isEmpty() ? simpleName : pkg + "." + simpleName;
+        } else {
+            implName = enclosingClass.toString() + "Impl";
+        }
+        var implElem = procEnv.getElementUtils().getTypeElement(implName);
+        if (implElem == null) return null;
+        for (var enc : implElem.getEnclosedElements()) {
+            if (enc.getKind() != javax.lang.model.element.ElementKind.FIELD) continue;
+            if (!enc.getSimpleName().contentEquals("ABSTRACTION_CARRIERS")) continue;
+            var implTree = procEnv.getElementUtils().getTree(enc);
+            if (!(implTree instanceof JCVariableDecl vd)) continue;
+            if (!(vd.init instanceof com.sun.tools.javac.tree.JCTree.JCLiteral lit)) continue;
+            var raw = (String) lit.getValue();
+            if (raw == null || raw.isBlank()) return null;
+            for (var line : raw.split("\n")) {
+                int tab = line.indexOf('\t');
+                if (tab < 0) continue;
+                if (line.substring(0, tab).equals(fieldName)) return line.substring(tab + 1);
+            }
+        }
+        return null;
     }
 }

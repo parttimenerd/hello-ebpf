@@ -113,6 +113,26 @@ annotations/     — @BPF, @BPFFunction, @Type, @Size, …
 samples/         — runnable sample programs
 ```
 
+## Documentation
+
+| Page | Description |
+|------|-------------|
+| [Cheatsheet](cheatsheet.md) | Quick reference for annotations, maps, and helpers |
+| [Feature Matrix](feature-matrix.md) | Minimum kernel versions per feature |
+| [Maps](maps.md) | BPF map types and Java API |
+| [Helpers](helpers.md) | BPF helper functions |
+| [Global Variables](global-variables.md) | `GlobalVariable` API |
+| [Tracepoints](tracepoints.md) | `SEC("tp/...")` programs |
+| [kprobes](kprobes.md) | `SEC("kprobe/...")` and `SEC("kretprobe/...")` programs |
+| [Uprobes](uprobes.md) | `SEC("uprobe/...")` and `SEC("uretprobe/...")` programs, `ProbeContext` |
+| [Profiling](profiling.md) | CPU profiler (`CPUProfiler`) and JVM GC pause tracer (`JvmGcPauseTracer`) |
+| [TC](tc.md) | Traffic Control hook |
+| [XDP](xdp.md) | XDP hook |
+| [LSM](lsm.md) | BPF LSM hooks |
+| [sched_ext](sched_ext.md) | Custom Linux schedulers |
+| [Diagnostics](diagnostics.md) | Debugging and troubleshooting |
+| [Changelog](changelog.md) | Release notes |
+
 ## License
 
 Apache 2.0 (Java side) / GPL 2.0 (generated BPF C code when license = "GPL").

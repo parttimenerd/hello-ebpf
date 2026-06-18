@@ -23,6 +23,9 @@ against this table before using a feature.
 | Tracepoints | 4.7 | |
 | Raw tracepoints | 4.17 | |
 | ksyscall | 5.11 | Arch-portable syscall probes |
+| perf_event | 4.9 | `SEC("perf_event")`; attach via `perf_event_open(2)` |
+| uprobes | 4.1 | `SEC("uprobe/...")` — user-space function entry probe |
+| uretprobes | 4.1 | `SEC("uretprobe/...")` — user-space function return probe |
 | BPF LSM | 5.7 | CONFIG_BPF_LSM=y; lsm=bpf kernel param |
 | sched_ext | 6.11 | CONFIG_SCHED_CLASS_EXT=y |
 | cgroup ingress/egress | 4.10 | cgroup v2 required |

@@ -701,6 +701,9 @@ public class TypeProcessor {
         if (!field.getModifiers().contains(Modifier.STATIC) || !field.getModifiers().contains(Modifier.FINAL) || field.getSimpleName().toString().equals("EBPF_PROGRAM")) {
             return null;
         }
+        if (getAnnotationMirror(field, "me.bechberger.ebpf.annotations.bpf.JavaOnly").isPresent()) {
+            return null;
+        }
         TypeMirror type = field.asType();
         return switch (type.toString()) {
             case "boolean" ->
