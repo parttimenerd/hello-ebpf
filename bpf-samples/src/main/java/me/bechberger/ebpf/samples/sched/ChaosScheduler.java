@@ -11,9 +11,13 @@ import me.bechberger.ebpf.bpf.GlobalVariable;
 import me.bechberger.ebpf.bpf.Scheduler;
 import me.bechberger.ebpf.bpf.SchedulerBase;
 import me.bechberger.ebpf.bpf.map.BPFTaskStorage;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.type.Ptr;
 
-import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_cpuperf_set;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_create_dsq;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_task_cpu;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
@@ -85,6 +89,9 @@ public abstract class ChaosScheduler extends SchedulerBase implements Scheduler 
      */
     final GlobalVariable<Integer> sliceDivisor = new GlobalVariable<>(4);
 
+    /** Global virtual time clock; advances as tasks run so random delays stay wall-clock relative. */
+    final GlobalVariable<@Unsigned Long> vtimeNow = new GlobalVariable<>(0L);
+
     // -------------------------------------------------------------------------
     // Per-task storage
     // -------------------------------------------------------------------------
@@ -97,6 +104,21 @@ public abstract class ChaosScheduler extends SchedulerBase implements Scheduler 
 
     @BPFMapDefinition(maxEntries = 1)
     BPFTaskStorage<TaskState> taskState;
+
+    // -------------------------------------------------------------------------
+    // DSQs
+    // -------------------------------------------------------------------------
+
+    // Vtime DSQ for chaos-delayed tasks. scx_bpf_create_dsq is lifted to init().
+    static final long CHAOS_DSQ_ID = 1L;
+    final DispatchQueue shared = DispatchQueue.attach(SHARED_DSQ_ID);
+    final DispatchQueue chaos  = new DispatchQueue(CHAOS_DSQ_ID);
+
+    @Override
+    public int init() {
+        // chaos DSQ create is injected before this line by the compiler plugin.
+        return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
+    }
 
     // -------------------------------------------------------------------------
     // BPF-side helpers
@@ -121,14 +143,6 @@ public abstract class ChaosScheduler extends SchedulerBase implements Scheduler 
     // -------------------------------------------------------------------------
 
     @Override
-    public int init() {
-        int ret = scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
-        if (ret != 0) return ret;
-        // Create a separate vtime DSQ for delayed tasks (ID 1)
-        return scx_bpf_create_dsq(1L, -1);
-    }
-
-    @Override
     public void runnable(Ptr<task_struct> p, @Unsigned long enq_flags) {
         Ptr<TaskState> state = taskState.bpf_getOrCreate(p);
         if (state != null) {
@@ -138,8 +152,10 @@ public abstract class ChaosScheduler extends SchedulerBase implements Scheduler 
 
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
+        EnqFlags f = EnqFlags.passThrough(enq_flags);
+
         if (!isChaosTarget(p)) {
-            scx_bpf_dsq_insert(p, SHARED_DSQ_ID, SCX_SLICE_DFL.value(), enq_flags);
+            shared.insert(p, SCX_SLICE_DFL.value(), f);
             return;
         }
 
@@ -161,36 +177,42 @@ public abstract class ChaosScheduler extends SchedulerBase implements Scheduler 
         @Unsigned long delay = maxDelayNs.get();
         if (delay > 0) {
             @Unsigned long randomDelay = BPFJ.bpfRandBounded(delay);
-            @Unsigned long vtime = p.val().scx.dsq_vtime + randomDelay;
-            scx_bpf_dsq_insert_vtime(p, 1L, slice, vtime, enq_flags);
+            @Unsigned long vtime = vtimeNow.get() + randomDelay;
+            chaos.insertVtime(p, slice, vtime, f);
         } else {
-            scx_bpf_dsq_insert(p, SHARED_DSQ_ID, slice, enq_flags);
+            shared.insert(p, slice, f);
         }
     }
 
     @Override
     public void dispatch(int cpu, Ptr<task_struct> prev) {
         // Drain the vtime chaos DSQ first (delayed tasks), then FIFO fallback
-        if (!scx_bpf_dsq_move_to_local(1L)) {
-            scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
+        if (!chaos.moveToLocal()) {
+            shared.moveToLocal();
         }
     }
 
     @Override
     public void running(Ptr<task_struct> p) {
-        // Advance the shared vtime reference so that the vtime-delay window
-        // is always relative to the current point in time (mirrors VTimeScheduler).
+        // Advance global vtime so that random delays in enqueue() are relative to
+        // the current point in time rather than piling up from 0.
         @Unsigned long vtime = p.val().scx.dsq_vtime;
-        // No CAS needed: small drift is acceptable for chaos fuzzing
-        p.val().scx.dsq_vtime = vtime;
+        if (isSmaller(vtimeNow.get(), vtime)) {
+            vtimeNow.set(vtime);
+        }
     }
 
     @Override
     public void enable(Ptr<task_struct> p) {
-        // Intentionally start at vtime=0, not vtimeNow: chaos tasks begin at the
-        // front of the vtime window so the random delay in enqueue() is the only
-        // thing that separates them — no inherited lag from global vtime drift.
-        p.val().scx.dsq_vtime = 0;
+        // Start new tasks at the current global vtime so the random delay in
+        // enqueue() is relative to now, not to an ancient zero epoch.
+        p.val().scx.dsq_vtime = vtimeNow.get();
+    }
+
+    @Override
+    public void stopping(Ptr<task_struct> p, boolean runnable) {
+        // Charge execution time so that dsq_vtime advances and running() can track it.
+        vtimeCharge(p);
     }
 
     /** Trait 2: randomise CPU performance on each scheduling tick. */

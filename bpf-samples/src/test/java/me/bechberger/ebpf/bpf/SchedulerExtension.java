@@ -76,11 +76,16 @@ public class SchedulerExtension implements ParameterResolver, AfterEachCallback 
 
         @SuppressWarnings("unchecked")
         Class<BPFProgram> progClass = (Class<BPFProgram>) ann.value();
-        BPFProgram program = BPFProgram.load(progClass);
+        BPFProgram program;
+        try {
+            program = BPFProgram.load(progClass);
+        } catch (Exception e) {
+            throw new ParameterResolutionException("Failed to load scheduler " + progClass.getName(), e);
+        }
+        store.put(KEY, program);
         if (ann.autoAttach()) {
             ((Scheduler) program).attachScheduler();
         }
-        store.put(KEY, program);
         return program;
     }
 

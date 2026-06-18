@@ -230,7 +230,7 @@ public class BPFRingBuffer<E> extends BPFMap {
                 if (ret.err() == ERRNO_EINVAL) {
                     return res; // don't know why this happens, but it does
                 }
-                if (ret.err() == 2) {
+                if (ret.err() == ERRNO_ENOENT) {
                     return res;
                 }
                 throw new BPFRingBufferError("Failed to consume events", ret.err());
@@ -293,9 +293,9 @@ public class BPFRingBuffer<E> extends BPFMap {
 
     @Override
     public void close() {
+        Lib.ring_buffer__free(rb);
+        ringArena.close();
         super.close();
-        // Lib.ring_buffer__free(rb); // TODO: why?
-        //ringArena.close();
     }
 
     /**
