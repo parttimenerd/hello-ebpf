@@ -368,4 +368,65 @@ public class SharedFromTest {
             Thread.sleep(150);
         }
     }
+
+    // ── #37 testStalePinFromCrashedRunIsCleaned ──────────────────────────────
+
+    /**
+     * Pre-create a bogus directory inside the producer's default pin dir
+     * (simulating a crashed earlier run that left state behind), then load the
+     * producer. The generated constructor runs {@code unpinAllForClass} before
+     * {@code openProgram}, so the stale leftover must be gone and the load
+     * must succeed normally.
+     *
+     * <p>Note: {@code /sys/fs/bpf} only accepts pin files created via libbpf,
+     * so we simulate the stale state by leaving an empty subdirectory at the
+     * pin dir — the check is that {@code unpinAllForClass} removes it before
+     * {@code openProgram} re-creates the dir.
+     */
+    @Test
+    @Timeout(20)
+    public void testStalePinFromCrashedRunIsCleaned() throws Exception {
+        Path pinDir = Path.of(BPFProgram.defaultPinDir(SimpleProducer.class));
+        BPFProgram.unpinAllForClass(SimpleProducer.class);
+        Files.createDirectories(pinDir);
+        Path leftover = pinDir.resolve("leftover_subdir");
+        Files.createDirectories(leftover);
+        assertTrue(Files.exists(leftover), "Stale dir set up");
+
+        try (var producer = BPFProgram.load(SimpleProducer.class)) {
+            assertFalse(Files.exists(leftover),
+                    "Producer load must wipe stale pin contents (fresh-on-each-run)");
+            assertTrue(Files.exists(Path.of(producer.getPinPath("counter"))),
+                    "Producer must re-pin the shared map after wipe");
+        }
+    }
+
+    // ── #38 testCloseProducerWhileSharedFromConsumerAliveThrows ─────────────
+
+    /**
+     * Same intent as
+     * {@code CrossProgramPinTest#testCloseProducerWhileConsumerAliveThrows} but
+     * exercising the natural {@code @SharedFrom} flow: dependent registration
+     * happens in {@code BPFProgram.load(Class, BPFProgram...)}, so closing the
+     * producer first must throw with the consumer's class name in the message.
+     */
+    @Test
+    @Timeout(20)
+    public void testCloseProducerWhileSharedFromConsumerAliveThrows() throws Exception {
+        var producer = BPFProgram.load(SimpleProducer.class);
+        BPFProgram consumer = null;
+        try {
+            consumer = BPFProgram.load(SimpleConsumer.class, producer);
+
+            BPFProgram producerRef = producer;
+            IllegalStateException ex = assertThrows(IllegalStateException.class,
+                    producerRef::close,
+                    "Closing producer while @SharedFrom consumer is alive must throw");
+            assertTrue(ex.getMessage().contains("SimpleConsumer"),
+                    "Message must name the consumer class: " + ex.getMessage());
+        } finally {
+            if (consumer != null) consumer.close();
+            producer.close();
+        }
+    }
 }
