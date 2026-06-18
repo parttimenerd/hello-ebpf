@@ -3630,4 +3630,34 @@ public class CompilerPluginTest {
                 "DispatchQueue.cpuNode(cpu) must emit scx_bpf_cpu_node(cpu);\n" + code);
     }
 
+    /**
+     * Regression test for the BYTE_CODE constant-folding bug.
+     *
+     * <p>When BYTE_CODE was declared {@code private static final String}, javac
+     * constant-folded the {@code return BYTE_CODE + ""} expression in
+     * {@code getByteCodeBytesStatic()} during the ANALYZE phase — before the
+     * compiler plugin had a chance to replace it with the real base64 payload.
+     * The result was that {@code getByteCode()} always returned an empty gzip
+     * (≤ 30 decoded bytes), making every BPF load fail at runtime.
+     *
+     * <p>The fix was to remove {@code Modifier.FINAL} from the BYTE_CODE field
+     * in {@link me.bechberger.ebpf.bpf.processor.Processor}, which prevents
+     * constant-folding and allows the compiler plugin's AST surgery to persist
+     * into the class file.
+     */
+    @Test
+    public void testByteCodeIsNonEmpty() throws Exception {
+        // SimpleProgram has @BPFFunction bodies — the compiler plugin must compile
+        // them to a real ELF and inject the result via getByteCodeBytesStatic().
+        // A real BPF ELF is at least several hundred bytes; the empty-gzip placeholder
+        // decodes to 0 bytes.
+        var implClass = BPFProgram.getImplClass(SimpleProgram.class);
+        String encoded = (String) implClass.getMethod("getByteCodeBytesStatic").invoke(null);
+        byte[] decoded = me.bechberger.ebpf.bpf.Util.decodeGzippedBase64(encoded);
+        assertTrue(decoded.length > 100,
+                "getByteCode() returned only " + decoded.length + " bytes — "
+                + "likely the BYTE_CODE constant-folding bug regressed. "
+                + "Check that BYTE_CODE is not declared 'final' in Processor.java.");
+    }
+
 }

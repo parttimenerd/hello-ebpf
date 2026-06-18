@@ -68,6 +68,13 @@ public class PanamaUtil {
     public static final int ERRNO_EINVAL = 22;
 
     /**
+     * errno value for "Operation not supported" (EOPNOTSUPP).
+     * Returned by ring_buffer__consume on kernels that don't support
+     * epoll-based BPF ring buffer consumption.
+     */
+    public static final int ERRNO_EOPNOTSUPP = 95;
+
+    /**
      * Allocate a string or NULL in the given arena
      */
     public static MemorySegment allocateNullOrString(Arena arena, @Nullable String string) {

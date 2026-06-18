@@ -146,6 +146,12 @@ public abstract class JvmGcPauseTracer extends BPFProgram {
     @JavaOnly
     private static final String LIBJVM_GLOB = "lib/server/libjvm.so";
 
+    /** Returns {@code true} while {@code /proc/<pid>} exists (process is alive). */
+    @JavaOnly
+    static boolean processAlive(int pid) {
+        return Files.exists(Path.of("/proc/" + pid));
+    }
+
     /**
      * Resolves the path to {@code libjvm.so} for the given JVM process.
      *
@@ -209,8 +215,15 @@ public abstract class JvmGcPauseTracer extends BPFProgram {
                 var endHandle   = program.getProgramByName("onGcEnd");
 
                 // Attach to the specific pid so we don't capture other JVMs.
-                program.attachUprobe(beginHandle,  false, pid, lib, "_ZN15VM_GC_Operation15notify_gc_beginEb");
-                program.attachUprobe(endHandle,    true,  pid, lib, "_ZN15VM_GC_Operation13notify_gc_endEv");
+                try {
+                    program.attachUprobe(beginHandle,  false, pid, lib, "_ZN15VM_GC_Operation15notify_gc_beginEb");
+                    program.attachUprobe(endHandle,    true,  pid, lib, "_ZN15VM_GC_Operation13notify_gc_endEv");
+                } catch (Exception e) {
+                    throw new RuntimeException(
+                            "Failed to attach uprobes to " + lib + " — "
+                            + "make sure the JVM was compiled with debug symbols "
+                            + "and the target is a HotSpot JVM: " + e.getMessage(), e);
+                }
 
                 System.err.printf("%-6s  %-8s  %-8s  %s%n", "TYPE", "PID", "TID", "DURATION");
 
@@ -229,7 +242,11 @@ public abstract class JvmGcPauseTracer extends BPFProgram {
                     if (histogram) printHistogram(youngBuckets, totals[0], fullBuckets, totals[1]);
                 }));
 
-                while (true) program.consumeAndThrow();
+                while (processAlive(pid)) {
+                    program.consumeAndThrow();
+                    Thread.sleep(10);
+                }
+                System.err.println("Target process " + pid + " exited; stopping tracer.");
             }
         }
 

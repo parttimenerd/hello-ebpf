@@ -51,6 +51,15 @@ public class BPFRingBuffer<E> extends BPFMap {
         private BPFRingBufferError(String message, List<CaughtBPFRingBufferError> caughtErrorsInCallBack) {
             super(message + ": " + caughtErrorsInCallBack.toString(), caughtErrorsInCallBack.getFirst().exception());
         }
+
+        /**
+         * Returns {@code true} when the kernel does not support BPF ring buffer consumption
+         * (errno {@code EOPNOTSUPP = 95}).  This can happen on older kernels; callers that
+         * want to skip the test or degrade gracefully should check this flag.
+         */
+        public boolean isUnsupported() {
+            return getErrorCode() == ERRNO_EOPNOTSUPP;
+        }
     }
 
     /**
