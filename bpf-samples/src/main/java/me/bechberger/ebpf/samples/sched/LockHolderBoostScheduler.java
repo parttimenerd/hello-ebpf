@@ -290,12 +290,25 @@ public abstract class LockHolderBoostScheduler extends SchedulerBase implements 
                 defaultValue = "10")
         int topN;
 
-        /** HotSpot 21+ x86-64 fallback if symbol auto-detection fails. */
-        private static final String FALLBACK_ENTER = "_ZN13ObjectMonitor5enterEP10JavaThread";
-        private static final String FALLBACK_EXIT  = "_ZN13ObjectMonitor4exitEP10JavaThread";
+        /**
+         * HotSpot fallbacks (JDK 25 mangling).
+         *
+         * <p>We probe {@code ObjectMonitor::enter_internal(JavaThread*)}, not the public
+         * {@code enter()}. On JDK 21+ HotSpot reaches the slow path via {@code try_enter}
+         * → {@code enter_with_contention_mark} → {@code enter_internal} and the
+         * public {@code enter()} symbol is effectively dead on contended workloads
+         * (verified empirically with bpftrace). {@code enter_internal} runs exactly
+         * when a thread is about to block — the moment a "waiter arrived" event
+         * becomes true.
+         */
+        private static final String FALLBACK_ENTER = "_ZN13ObjectMonitor14enter_internalEP10JavaThread";
+        private static final String FALLBACK_EXIT  = "_ZN13ObjectMonitor4exitEP10JavaThreadb";
 
-        private static final String ENTER_REGEX = "ObjectMonitor.*5enterEP10JavaThread";
-        private static final String EXIT_REGEX  = "ObjectMonitor.*4exitEP10JavaThread";
+        // Anchored to reject overloads (e.g. reenter_internal, exit's .part.0 clone).
+        // The trailing `b?` on EXIT_REGEX accommodates JDK 21 (`exit(JavaThread*)`)
+        // and JDK 25+ (`exit(JavaThread*, bool)`).
+        private static final String ENTER_REGEX = "^_ZN13ObjectMonitor14enter_internalEP10JavaThread$";
+        private static final String EXIT_REGEX  = "^_ZN13ObjectMonitor4exitEP10JavaThreadb?$";
 
         /** Gather (monitor, count) snapshot from the producer's contention map. */
         private static List<MonitorContention> topContendedMonitors(LockHolderBoostUprobes uprobes, int n) {
