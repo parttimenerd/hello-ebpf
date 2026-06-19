@@ -429,4 +429,111 @@ public class SharedFromTest {
             producer.close();
         }
     }
+
+    // ── #16 testSharedFromCustomMapName ──────────────────────────────────────
+
+    @BPF(license = "GPL")
+    public static abstract class CustomNameConsumer extends BPFProgram {
+        // Producer field is "counter"; consumer renames it locally to "myView"
+        // and uses mapName="counter" to bind to the producer's map.
+        @SharedFrom(value = SimpleProducer.class, mapName = "counter")
+        @BPFMapDefinition(maxEntries = 16)
+        BPFHashMap<Integer, Long> myView;
+
+        @BPFFunction(section = "kprobe/do_sys_openat2", autoAttach = false)
+        int neverAttached(Ptr<PtDefinitions.pt_regs> ctx) {
+            return 0;
+        }
+    }
+
+    @Test
+    @Timeout(20)
+    public void testSharedFromCustomMapName() throws Exception {
+        try (var producer = BPFProgram.load(SimpleProducer.class)) {
+            producer.autoAttachPrograms();
+            for (int i = 0; i < 5; i++) TestUtil.triggerOpenAt();
+            Thread.sleep(200);
+
+            try (var consumer = BPFProgram.load(CustomNameConsumer.class, producer)) {
+                long total = consumer.myView.keySet().stream()
+                        .mapToLong(k -> {
+                            Long v = consumer.myView.get(k);
+                            return v == null ? 0 : v;
+                        })
+                        .sum();
+                assertTrue(total >= 5,
+                        "Consumer.myView should see producer's counter writes through mapName override: " + total);
+            }
+        }
+    }
+
+    // ── #18 testSharedFromConsumerRedefinesMatchingType ──────────────────────
+
+    /**
+     * Producer's {@code Stats} type is byte-identical to the consumer's local
+     * copy (same field names, same orderings). The compile-time structural
+     * check accepts this; libbpf's pin reuse succeeds; and the consumer reads
+     * the producer's writes correctly.
+     *
+     * <p>Idiomatically users should reference the producer's {@code @Type}
+     * directly; this test pins down that the alternative path also works.
+     */
+    @BPF(license = "GPL")
+    public static abstract class RedefinedTypeConsumer extends BPFProgram {
+        /** Local redefinition with byte-identical layout to InnerTypeProducer.Stats. */
+        @Type
+        public static class Stats {
+            @Unsigned int hits;
+            @Unsigned long lastNs;
+        }
+
+        @SharedFrom(InnerTypeProducer.class)
+        @BPFMapDefinition(maxEntries = 8)
+        BPFHashMap<Integer, Stats> stats;
+
+        @BPFFunction(section = "kprobe/do_sys_openat2", autoAttach = false)
+        int neverAttached(Ptr<PtDefinitions.pt_regs> ctx) { return 0; }
+    }
+
+    @Test
+    @Timeout(20)
+    public void testSharedFromConsumerRedefinesMatchingType() throws Exception {
+        try (var producer = BPFProgram.load(InnerTypeProducer.class)) {
+            producer.autoAttachPrograms();
+            for (int i = 0; i < 5; i++) TestUtil.triggerOpenAt();
+            Thread.sleep(200);
+
+            try (var consumer = BPFProgram.load(RedefinedTypeConsumer.class, producer)) {
+                int seen = 0;
+                for (var k : consumer.stats.keySet()) {
+                    var v = consumer.stats.get(k);
+                    if (v != null && v.hits > 0) seen++;
+                }
+                assertTrue(seen > 0,
+                        "Consumer with byte-identical local Stats must read producer's writes");
+            }
+        }
+    }
+
+    // ── #19 testSharedFromConsumerWithoutProducerFails ───────────────────────
+
+    /**
+     * Calling {@code BPFProgram.load(Consumer.class)} with no producer for a
+     * consumer that declares {@code @SharedFrom} fields must fail fast — the
+     * generated impl class has no no-arg constructor, so reflection raises a
+     * deterministic error rather than silently loading without the pin path.
+     */
+    @Test
+    @Timeout(20)
+    public void testSharedFromConsumerWithoutProducerFails() {
+        // load(Class) takes the no-arg path; the generated impl class only has
+        // the parameterized constructor, so getConstructor() throws.
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> BPFProgram.load(SimpleConsumer.class),
+                "Loading a @SharedFrom consumer without its producer must fail");
+        Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
+        assertTrue(cause instanceof NoSuchMethodException
+                        || cause.getMessage() != null && cause.getMessage().toLowerCase().contains("constructor"),
+                "Failure must surface a missing-constructor error, was: " + cause);
+    }
 }

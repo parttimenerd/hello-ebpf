@@ -1464,8 +1464,15 @@ public class TypeProcessor {
 
         SharedFromInfo sharedFrom = processSharedFromIfPresent(field, fieldName, declaredType, mapType, maxEntries);
 
+        // For @SharedFrom fields with a custom mapName, libbpf renames the local map
+        // to the producer's name during pin reuse, so post-load lookups must use the
+        // producer's map name. The C ELF still declares the map under the consumer's
+        // local name.
+        String javaLookupName = (sharedFrom != null && !sharedFrom.mapName().equals(fieldName))
+                ? sharedFrom.mapName() : fieldName;
+
         return new MapDefinition(field.getSimpleName().toString(),
-                processBPFClassJavaTemplate(field, javaTemplate, typeParameters, maxEntries, fieldName, className, typeToSpecFieldName),
+                processBPFClassJavaTemplate(field, javaTemplate, typeParameters, maxEntries, fieldName, javaLookupName, className, typeToSpecFieldName),
                 processBPFClassCTemplate(field, cTemplate, typeParameters, maxEntries, fieldName, className, typeToSpecFieldName),
                 sharedFrom);
     }
@@ -1695,10 +1702,10 @@ public class TypeProcessor {
 
     String processBPFClassJavaTemplate(VariableElement field, String javaTemplate,
                                        List<BPFTypeLike<?>> typeParams, Integer maxEntries,
-                                       String fieldName, String className,
+                                       String fieldName, String lookupName, String className,
                                        Function<BPFTypeLike<?>, SpecFieldName> typeToSpecFieldName) {
         return "this." + field.getSimpleName() + " = recordMap(" + processBPFClassTemplate(javaTemplate, typeParams,
-                 maxEntries, fieldName, className, typeToSpecFieldName).strip() + ")";
+                 maxEntries, fieldName, lookupName, className, typeToSpecFieldName).strip() + ")";
     }
 
 
@@ -1707,12 +1714,12 @@ public class TypeProcessor {
                                        Integer maxEntries, String fieldName, String className,
                                        Function<BPFTypeLike<?>, SpecFieldName> typeToSpecFieldName) {
         String raw = processBPFClassTemplate(cTemplate, typeParameters,
-                maxEntries, fieldName, className, typeToSpecFieldName);
+                maxEntries, fieldName, fieldName, className, typeToSpecFieldName);
         return new VerbatimStatement(raw);
     }
 
     String processBPFClassTemplate(String template, List<BPFTypeLike<?>> typeParams, int maxEntries, String fieldName,
-                                   String className, Function<BPFTypeLike<?>, SpecFieldName> typeToSpecFieldName) {
+                                   String lookupName, String className, Function<BPFTypeLike<?>, SpecFieldName> typeToSpecFieldName) {
         var classNames = typeParams.stream().map(BPFTypeLike::getJavaName).map(JavaName::toString).toList();
         var cTypeNames = typeParams.stream().map(BPFTypeLike::getBPFNameWithStructPrefixIfNeeded).toList();
         var bFields = typeParams.stream().map(t -> t.toJavaFieldSpecUse(tm -> typeToSpecFieldName.apply(BPFTypeLike.of(tm)).name())).toList();
@@ -1725,6 +1732,6 @@ public class TypeProcessor {
         return res.replace("$maxEntries", Integer.toString(maxEntries))
                 .replace("$field", fieldName)
                 .replace("$class", className)
-                .replace("$fd", "getMapDescriptorByName(" + CAST.toStringLiteral(fieldName) + ")");
+                .replace("$fd", "getMapDescriptorByName(" + CAST.toStringLiteral(lookupName) + ")");
     }
 }

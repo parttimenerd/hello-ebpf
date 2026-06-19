@@ -1458,7 +1458,22 @@ public abstract class BPFProgram implements AutoCloseable {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment map = Lib.bpf_object__find_map_by_name(this.ebpf_object, arena.allocateFrom(name));
             if (map == MemorySegment.NULL || map.address() == 0) {
-                throw new BPFMapNotFoundError(name);
+                // Helpful diagnostic: enumerate the maps actually present in the loaded ELF.
+                java.util.List<String> available = new java.util.ArrayList<>();
+                MemorySegment iter = MemorySegment.NULL;
+                try {
+                    while (true) {
+                        iter = Lib_2.bpf_object__next_map(this.ebpf_object, iter);
+                        if (iter == MemorySegment.NULL || iter.address() == 0) break;
+                        MemorySegment nameSeg = Lib.bpf_map__name(iter);
+                        if (nameSeg != MemorySegment.NULL && nameSeg.address() != 0) {
+                            available.add(nameSeg.reinterpret(Long.MAX_VALUE).getString(0));
+                        }
+                    }
+                } catch (Throwable ignored) {
+                    // If iteration helpers aren't bound, fall through with empty list.
+                }
+                throw new BPFMapNotFoundError(name + " (available: " + available + ")");
             }
             return new FileDescriptor(name, map, Lib.bpf_map__fd(map));
         }
