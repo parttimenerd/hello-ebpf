@@ -855,11 +855,18 @@ public class CompilerPlugin implements Plugin {
 
         // Emit #define NAME value for any auto-id carriers so field references that were
         // translated before the carrier map was populated (fallback placeholder = fieldName_DSQ_ID).
+        // Only emit the define when the placeholder actually appears in the translated body —
+        // otherwise the field name leaks into the C output as a stray macro and confuses tests
+        // that check the field is fully erased from C.
         if (!carriers.isEmpty()) {
+            String body = code;
             var autoDefines = carriers.entrySet().stream()
+                    .filter(e -> body.contains(e.getKey() + "_DSQ_ID"))
                     .map(e -> "#define " + e.getKey() + "_DSQ_ID " + e.getValue())
                     .collect(java.util.stream.Collectors.joining("\n"));
-            code = autoDefines + "\n" + code;
+            if (!autoDefines.isEmpty()) {
+                code = autoDefines + "\n" + code;
+            }
         }
 
         // now get the "body" value of all BPFInterface annotations of all interfaces of the super class
