@@ -2,70 +2,70 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/changelog/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/cheatsheet/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/diagnostics/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/feature-matrix/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/global-variables/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/helpers/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/lsm/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/maps/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/profiling/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/sched_ext/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/scheduler-article/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/shared-maps/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/tc/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/tracepoints/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/uprobes/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/xdp/</loc>
-         <lastmod>2026-06-18</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
 </urlset>

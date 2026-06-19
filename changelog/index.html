@@ -897,6 +897,62 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#015-in-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1.5 (in development)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.5 (in development)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="New features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sharedfrom-sharing-maps-across-cooperating-bpf-programs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @SharedFrom — sharing maps across cooperating BPF programs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lockholderboostscheduler-sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LockHolderBoostScheduler sample
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#014" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -909,7 +965,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#new-features" class="md-nav__link">
+  <a href="#new-features_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         New features
@@ -1105,6 +1161,62 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#015-in-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.1.5 (in development)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.5 (in development)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New features
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="New features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sharedfrom-sharing-maps-across-cooperating-bpf-programs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @SharedFrom — sharing maps across cooperating BPF programs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lockholderboostscheduler-sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LockHolderBoostScheduler sample
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#014" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1117,7 +1229,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#new-features" class="md-nav__link">
+  <a href="#new-features_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         New features
@@ -1291,8 +1403,52 @@
 
 
 <h1 id="changelog">Changelog<a class="headerlink" href="#changelog" title="Permanent link">&para;</a></h1>
-<h2 id="014">0.1.4<a class="headerlink" href="#014" title="Permanent link">&para;</a></h2>
+<h2 id="015-in-development">0.1.5 (in development)<a class="headerlink" href="#015-in-development" title="Permanent link">&para;</a></h2>
 <h3 id="new-features">New features<a class="headerlink" href="#new-features" title="Permanent link">&para;</a></h3>
+<h4 id="sharedfrom-sharing-maps-across-cooperating-bpf-programs"><code>@SharedFrom</code> — sharing maps across cooperating BPF programs<a class="headerlink" href="#sharedfrom-sharing-maps-across-cooperating-bpf-programs" title="Permanent link">&para;</a></h4>
+<p>A new annotation lets one BPF program import a kernel-side map that another
+program owns, wired up via libbpf pin reuse. Eliminates the need for
+hand-managed pin path strings.</p>
+<ul>
+<li>Producer/consumer split: the consumer annotates a <code>@BPFMapDefinition</code> field
+  with <code>@SharedFrom(Producer.class)</code> and the framework wires both ELFs to the
+  same kernel map at load time.</li>
+<li>Compile-time structural type checking: producer field existence,
+  map-type equality, key/value-type equivalence (including walking <code>@Type</code>
+  members), and <code>maxEntries</code> parity. Mismatches produce diagnostics naming
+  the offending field and recommending the producer's <code>@Type</code> import path.</li>
+<li>Pin lifecycle: fresh-on-each-run by default — producers wipe their pin
+  directory before opening, avoiding stale-pin reuse from crashed processes.</li>
+<li>Dependent tracking: closing a producer while a consumer is still alive
+  throws <code>IllegalStateException</code> naming the live consumer.</li>
+<li>New API: <code>BPFProgram.load(Class, BPFProgram...)</code>, <code>BPFProgram.getPinPath</code>,
+  <code>BPFProgram.getPinnedMapNames</code>, <code>BPFProgram.unpinAllForClass</code>,
+  <code>BPFProgram.unpin</code>. The two-phase load (<code>openProgram</code> + <code>finalizeLoad</code>)
+  exposes a <code>preLoad()</code> hook for setting pin paths before
+  <code>bpf_object__load</code>.</li>
+<li><code>BPFProgramGroup</code> helper for closing cooperating programs in
+  reverse-dependency order.</li>
+<li>See <a href="../shared-maps/">Shared maps</a> for the full guide.</li>
+</ul>
+<h4 id="lockholderboostscheduler-sample"><code>LockHolderBoostScheduler</code> sample<a class="headerlink" href="#lockholderboostscheduler-sample" title="Permanent link">&para;</a></h4>
+<p>A sched_ext scheduler that boosts JVM threads holding contended <code>synchronized</code>
+monitors, demonstrating cross-program map sharing end-to-end.</p>
+<ul>
+<li>Split into a uprobe <strong>producer</strong> (<code>LockHolderBoostUprobes</code>, watches
+  <code>ObjectMonitor::enter_internal</code> / <code>::exit</code> in libjvm.so) and a sched_ext
+  <strong>consumer</strong> (<code>LockHolderBoostScheduler</code>, routes boosted holders onto a
+  priority DSQ). The two halves share a <code>BPFHashMap&lt;Long, BoostState&gt;</code> via
+  <code>@SharedFrom</code>.</li>
+<li>Required because the BPF verifier rejects mixed uprobe + struct_ops
+  programs that share kfuncs.</li>
+<li>Targets <code>enter_internal</code>, not <code>enter()</code>: in JDK 21+ HotSpot the public
+  <code>enter()</code> symbol is dead code on contended workloads — threads reach the
+  slow path via <code>try_enter → enter_with_contention_mark → enter_internal</code>.</li>
+<li>CLI via femtocli: <code>--pid</code> (required), <code>--libjvm</code>, <code>--enter-symbol</code>,
+  <code>--exit-symbol</code>, <code>--stats-interval</code>, <code>--top-n</code>.</li>
+</ul>
+<h2 id="014">0.1.4<a class="headerlink" href="#014" title="Permanent link">&para;</a></h2>
+<h3 id="new-features_1">New features<a class="headerlink" href="#new-features_1" title="Permanent link">&para;</a></h3>
 <h4 id="cpu-profiler-cpuprofiler">CPU profiler (<code>CPUProfiler</code>)<a class="headerlink" href="#cpu-profiler-cpuprofiler" title="Permanent link">&para;</a></h4>
 <p>A full-featured CPU profiler that samples call stacks across all CPUs using
 <code>SEC("perf_event")</code> BPF programs and renders results as an interactive HTML
