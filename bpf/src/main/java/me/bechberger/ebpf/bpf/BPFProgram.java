@@ -441,6 +441,9 @@ public abstract class BPFProgram implements AutoCloseable {
             throw new BPFVerifierException(shortMsg, log);
         }
         loaded = true;
+        // Successful load — pinned maps are now installed; release the producer
+        // advisory lock so other waiters can proceed.
+        releaseProducerLock();
     }
 
     /**
@@ -1373,6 +1376,10 @@ public abstract class BPFProgram implements AutoCloseable {
             return;
         }
         closed = true;
+        // Release any held producer advisory lock — finalizeLoad() releases on
+        // success, but a load that fails between preLoad and finalizeLoad would
+        // otherwise leave the lock dangling.
+        releaseProducerLock();
         for (var producer : new HashSet<>(producers)) {
             producer.removeDependent(this);
         }
@@ -1580,6 +1587,15 @@ public abstract class BPFProgram implements AutoCloseable {
     private final Map<String, String> pinPaths = new LinkedHashMap<>();
 
     /**
+     * Advisory file lock held during a producer's {@code preLoad → finalizeLoad}
+     * sequence so two JVMs racing to load the same producer serialize on the
+     * unpin/load critical section. Held in {@link #producerLockChannel}; released
+     * in {@link #finalizeLoad()} on success or in {@link #close()} on failure.
+     */
+    private @Nullable java.nio.channels.FileLock producerLock;
+    private @Nullable java.nio.channels.FileChannel producerLockChannel;
+
+    /**
      * Programs that depend on this one (i.e., were loaded with this program as
      * a producer via {@link #load(Class, BPFProgram...)}). Closing this program
      * while {@code dependents} is non-empty throws {@link IllegalStateException}.
@@ -1681,6 +1697,56 @@ public abstract class BPFProgram implements AutoCloseable {
         } catch (IOException e) {
             throw new BPFError("Failed to unpin " + path + ": " + e.getMessage());
         }
+    }
+
+    /**
+     * Lock-file directory for producer advisory locks. Lives outside
+     * {@code /sys/fs/bpf} (which is a special filesystem) so we can take a
+     * regular {@link java.nio.channels.FileLock} on it.
+     */
+    private static final String PRODUCER_LOCK_DIR = "/tmp/hello-ebpf-locks";
+
+    /**
+     * Acquire an advisory lock for the producer's {@code unpin → open →
+     * setMapPinPath → finalizeLoad} sequence so two JVMs racing the same
+     * producer serialize on the critical section. The lock is released in
+     * {@link #finalizeLoad()} or {@link #close()}.
+     *
+     * <p>Called by the processor-generated {@code preLoad()} on producers
+     * (i.e. classes that some consumer references via {@code @SharedFrom}).
+     * Best-effort — if the lock file cannot be created (read-only fs, etc.)
+     * we skip locking rather than fail the load.
+     */
+    public final void acquireProducerLock(Class<? extends BPFProgram> clazz) {
+        if (producerLock != null) return;
+        try {
+            Path dir = Path.of(PRODUCER_LOCK_DIR);
+            Files.createDirectories(dir);
+            String mangled = clazz.getName().replace('.', '_').replace('$', '_');
+            Path lockFile = dir.resolve(mangled + ".lock");
+            var ch = java.nio.channels.FileChannel.open(lockFile,
+                    java.nio.file.StandardOpenOption.CREATE,
+                    java.nio.file.StandardOpenOption.WRITE);
+            this.producerLockChannel = ch;
+            this.producerLock = ch.lock();   // blocks until acquired
+        } catch (IOException e) {
+            // Best-effort: lockless path is still functional, just racy across JVMs.
+            try { if (producerLockChannel != null) producerLockChannel.close(); } catch (IOException ignore) {}
+            producerLockChannel = null;
+            producerLock = null;
+        }
+    }
+
+    /** Release the producer advisory lock (if held). Safe to call multiple times. */
+    private void releaseProducerLock() {
+        try {
+            if (producerLock != null) producerLock.release();
+        } catch (IOException ignore) { /* best-effort */ }
+        try {
+            if (producerLockChannel != null) producerLockChannel.close();
+        } catch (IOException ignore) { /* best-effort */ }
+        producerLock = null;
+        producerLockChannel = null;
     }
 
     /**

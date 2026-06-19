@@ -424,6 +424,9 @@ public class Processor extends AbstractProcessor {
                     .addModifiers(Modifier.PROTECTED)
                     .returns(TypeName.VOID);
             if (isProducer) {
+                // Acquire an advisory lock so two JVMs racing the same producer
+                // serialize on the unpin → setMapPinPath → finalizeLoad sequence.
+                preLoad.addStatement("acquireProducerLock($L.class)", thisFqn);
                 // Fresh-on-each-run: wipe any leftover pin files from a previous
                 // (possibly crashed) run before bpf_object__load reuses them.
                 preLoad.addStatement("me.bechberger.ebpf.bpf.BPFProgram.unpinAllForClass($L.class)", thisFqn);

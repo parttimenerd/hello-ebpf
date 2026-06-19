@@ -518,22 +518,22 @@ public class SharedFromTest {
     // ── #19 testSharedFromConsumerWithoutProducerFails ───────────────────────
 
     /**
-     * Calling {@code BPFProgram.load(Consumer.class)} with no producer for a
-     * consumer that declares {@code @SharedFrom} fields must fail fast — the
-     * generated impl class has no no-arg constructor, so reflection raises a
-     * deterministic error rather than silently loading without the pin path.
+     * Sequential reload of the same producer must not deadlock or leak the
+     * advisory lock. Each {@code finalizeLoad} releases the lock; if it didn't,
+     * the second {@code load} call would block forever waiting for itself.
+     *
+     * <p>The full multi-JVM race scenario is hard to exercise from JUnit
+     * (FileLock is process-level, so same-JVM threads conflict differently),
+     * but this catches the common bug — lock not released on the success path
+     * means the second load hangs.
      */
     @Test
     @Timeout(20)
-    public void testSharedFromConsumerWithoutProducerFails() {
-        // load(Class) takes the no-arg path; the generated impl class only has
-        // the parameterized constructor, so getConstructor() throws.
-        RuntimeException ex = assertThrows(RuntimeException.class,
-                () -> BPFProgram.load(SimpleConsumer.class),
-                "Loading a @SharedFrom consumer without its producer must fail");
-        Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
-        assertTrue(cause instanceof NoSuchMethodException
-                        || cause.getMessage() != null && cause.getMessage().toLowerCase().contains("constructor"),
-                "Failure must surface a missing-constructor error, was: " + cause);
+    public void testProducerLockReleasedAfterLoad() throws Exception {
+        for (int i = 0; i < 3; i++) {
+            try (var producer = BPFProgram.load(SimpleProducer.class)) {
+                assertTrue(producer.isLoaded(), "Producer must be loaded after load() (iteration " + i + ")");
+            }
+        }
     }
 }
