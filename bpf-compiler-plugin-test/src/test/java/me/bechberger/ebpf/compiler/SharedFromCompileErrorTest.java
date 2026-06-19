@@ -238,6 +238,49 @@ public class SharedFromCompileErrorTest {
                 "BoostState", "share", PKG + ".P33");
     }
 
+    // ── #29 nested struct field type drift ────────────────────────────────
+
+    @Test
+    public void testErrorWhenNestedStructFieldDiffers() {
+        // Outer @Type embeds Inner @Type; Inner's leaf field type drifts on the
+        // consumer side. The diagnostic must point at the leaf field.
+        var producer = bpfClass("P29",
+                "@Type public static class Inner { @Unsigned int cpu; @Unsigned long ts; }\n"
+                        + "@Type public static class Outer { Inner first; @Unsigned long count; }\n"
+                        + "@BPFMapDefinition(maxEntries = 8) BPFHashMap<Integer, Outer> m;");
+        var consumer = new Source(PKG + ".C29",
+                "package " + PKG + ";\n"
+                        + "import me.bechberger.ebpf.annotations.*;\n"
+                        + "import me.bechberger.ebpf.annotations.bpf.*;\n"
+                        + "import me.bechberger.ebpf.bpf.BPFProgram;\n"
+                        + "import me.bechberger.ebpf.bpf.map.*;\n"
+                        + "@BPF(license = \"GPL\")\n"
+                        + "public abstract class C29 extends BPFProgram {\n"
+                        + "  @Type public static class Inner { @Unsigned long cpu; @Unsigned long ts; }\n"
+                        + "  @Type public static class Outer { Inner first; @Unsigned long count; }\n"
+                        + "  @SharedFrom(P29.class)\n"
+                        + "  @BPFMapDefinition(maxEntries = 8) BPFHashMap<Integer, Outer> m;\n"
+                        + "}\n");
+        var res = InMemoryJavaCompiler.compile(List.of(producer, consumer), newProcessor())
+                .requireFailure("nested type drift must fail");
+        DiagnosticAssert.assertContainsAll(res.diagnostics(),
+                "@SharedFrom", "Inner");
+    }
+
+    // ── #31 @SharedFrom on a field without @BPFMapDefinition ──────────────
+
+    @Test
+    public void testErrorWhenSharedFromOnNonMapField() {
+        var producer = bpfClass("P31",
+                "@BPFMapDefinition(maxEntries = 8) BPFHashMap<Integer, Long> m;");
+        var consumer = bpfClass("C31",
+                "@SharedFrom(P31.class) int notAMap;");
+        var res = InMemoryJavaCompiler.compile(List.of(producer, consumer), newProcessor())
+                .requireFailure("@SharedFrom requires @BPFMapDefinition on the same field");
+        DiagnosticAssert.assertContainsAll(res.diagnostics(),
+                "@SharedFrom", "@BPFMapDefinition");
+    }
+
     // ── #34 correct use compiles ──────────────────────────────────────────
 
     @Test

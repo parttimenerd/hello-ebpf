@@ -1401,6 +1401,20 @@ public class TypeProcessor {
 
     List<MapDefinition> processDefinedMaps(TypeElement outerElement, Function<SpecFieldName, BPFTypeLike<?>> fieldToType,
                                            Function<BPFTypeLike<?>, SpecFieldName> typeToSpecFieldName) {
+        // Sanity check: @SharedFrom on a field without @BPFMapDefinition is meaningless —
+        // pin reuse only applies to maps. Flag it so the user doesn't silently lose the
+        // sharing they thought they declared.
+        for (var enc : outerElement.getEnclosedElements()) {
+            if (enc.getKind() != ElementKind.FIELD) continue;
+            VariableElement vf = (VariableElement) enc;
+            boolean hasShared = getAnnotationMirror(vf, SHARED_FROM_ANNOTATION).isPresent();
+            boolean hasMapDef = getAnnotationMirror(vf.asType(), BPF_MAP_DEFINITION).isPresent();
+            if (hasShared && !hasMapDef) {
+                this.processingEnv.getMessager().printError(
+                        "@SharedFrom requires @BPFMapDefinition on the same field — "
+                                + "the annotation only applies to BPF map fields.", vf);
+            }
+        }
         // take all @BPFMapDefinition annotated fields
         return outerElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e)
                 .filter(e -> getAnnotationMirror(e.asType(), BPF_MAP_DEFINITION).isPresent())
