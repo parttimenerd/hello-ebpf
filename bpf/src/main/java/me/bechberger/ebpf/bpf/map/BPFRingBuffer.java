@@ -575,4 +575,17 @@ public class BPFRingBuffer<E> extends BPFMap {
     public void submit(Ptr<E> event) {
         throw new MethodIsBPFRelatedFunction();
     }
+
+    /**
+     * Submit a reserved element with {@code BPF_RB_NO_WAKEUP} — the kernel does
+     * not signal user-space consumers. Used to suppress the extra syscall when
+     * user space is already known to be busy processing the previous batch.
+     *
+     * @see me.bechberger.ebpf.runtime.helpers.BPFHelpers#bpf_ringbuf_submit(Ptr, long)
+     */
+    @BuiltinBPFFunction("bpf_ringbuf_submit($arg1, BPF_RB_NO_WAKEUP)")
+    @NotUsableInJava
+    public void submitNoWakeup(Ptr<E> event) {
+        throw new MethodIsBPFRelatedFunction();
+    }
 }
