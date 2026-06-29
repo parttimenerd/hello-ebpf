@@ -64,6 +64,8 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     static final long FRAMEWORK_DSQ     = 1;
     /** Stall-fallback threshold: if Java hasn't dispatched for this long, promote from SHARED_DSQ. */
     static final long STALL_FALLBACK_NS = 50_000_000L;  // 50 ms
+    /** Default slice when the Java side submits sliceNs == 0. */
+    static final long DEFAULT_SLICE_NS  =  5_000_000L;  // 5 ms
     /** Wire-compatible with rustland's RL_CPU_ANY sentinel. */
     static final int  ANY_CPU           = -1;
     /** Hardcoded CPU bitmap cap. Hosts with more CPUs need a recompile. */
@@ -150,6 +152,8 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      *
      * <p>Declared as a {@code class} (not {@code record}) so that BPF code can
      * mutate individual fields via {@code ptr.val().field = x}.
+     *
+     * @see QueuedTaskDispatchedTaskMarshallingTest for the bit-for-bit wire-format contract
      */
     @Type
     static class QueuedTaskCtx {
@@ -169,16 +173,22 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     /**
      * User→kernel ring-buf record. Wire-layout-equivalent to rustland's
      * dispatched-task record. The Java side fills this via {@link DispatchedTask}.
+     *
+     * <p>Declared as a {@code class} (not {@code record}) for symmetry with
+     * {@link QueuedTaskCtx} and to allow Task 6+ to stamp fields back
+     * (e.g., enqCnt cancellation feedback, wake-suppress flags).
+     *
+     * @see QueuedTaskDispatchedTaskMarshallingTest for the bit-for-bit wire-format contract
      */
     @Type
-    record DispatchedTaskCtx(
-        int pid,
-        int targetCpu,
-        @Unsigned long flags,
-        @Unsigned long sliceNs,
-        @Unsigned long vtime,
-        @Unsigned long enqCnt
-    ) {}
+    static class DispatchedTaskCtx {
+        public int pid;
+        public int targetCpu;
+        public @Unsigned long flags;
+        public @Unsigned long sliceNs;
+        public @Unsigned long vtime;
+        public @Unsigned long enqCnt;
+    }
 
     /**
      * Shared stats arena, mmap'd from Java. 12 counters; slot numbering is
@@ -414,7 +424,10 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * Populate a ring-buf record from the task and its per-task storage.
      *
      * <p>Copies timing counters from {@link TaskCtx} if available, then fills
-     * weight, vtime and comm directly from {@code task_struct}.
+     * weight, vtime and comm directly from {@code task_struct}. When {@code tctx}
+     * is null (first observation of this task), the timing fields ({@code startTs},
+     * {@code stopTs}, {@code execRuntime}, {@code enqCnt}) are left zero-initialised
+     * by the BPF verifier.
      */
     @BPFFunction
     void fillQueuedCtx(Ptr<QueuedTaskCtx> evt, Ptr<task_struct> p, long enq_flags) {
@@ -449,6 +462,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         Ptr<Integer> budget = dispatchBudget.bpf_get(0);
         if (budget == null) return;
         budget.set(scx_bpf_dispatch_nr_slots());
+        // Routed via ctx: BPF lambdas lower to free C functions and cannot capture locals.
         int drained = dispatched.drain((d, ctx) -> dispatchOne(d, ctx), budget);
         if (drained > 0) {
             lastUserDispatchNs.set(currentNs());
@@ -468,7 +482,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         Ptr<task_struct> p = bpf_task_from_pid(d.val().pid);
         if (p == null) { incStat(STAT_BOUNCED_DISPATCHES, 1); return 0; }
         // TODO Task 6: enqCnt cancellation — re-add the tctx check + scx_bpf_dispatch_cancel
-        long slice = d.val().sliceNs == 0 ? 5_000_000L : d.val().sliceNs;
+        long slice = d.val().sliceNs == 0 ? DEFAULT_SLICE_NS : d.val().sliceNs;
         int targetCpu = d.val().targetCpu;
         if (targetCpu < 0) {                                // ANY_CPU sentinel
             scx_bpf_dsq_insert(p, SHARED_DSQ_ID, slice, d.val().flags);
