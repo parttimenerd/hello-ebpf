@@ -115,7 +115,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     // Tasks 6/7/8+ will reference the remaining slots; suppress until then.
     @SuppressWarnings("unused") private static final int STAT_ONLINE_CPUS         = Stats.ONLINE_CPUS;
     @SuppressWarnings("unused") private static final int STAT_NR_SCHEDULED         = Stats.NR_SCHEDULED;
-    @SuppressWarnings("unused") private static final int STAT_KERNEL_DISPATCHES    = Stats.KERNEL_DISPATCHES;
+    private static final int STAT_KERNEL_DISPATCHES    = Stats.KERNEL_DISPATCHES;
     @SuppressWarnings("unused") private static final int STAT_CANCELLED_DISPATCHES = Stats.CANCELLED_DISPATCHES;
     @SuppressWarnings("unused") private static final int STAT_POLICY_EXCEPTIONS    = Stats.POLICY_EXCEPTIONS;
     // Active aliases — no suppression needed:
@@ -416,7 +416,8 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
             return;
         }
         fillQueuedCtx(evt, p, enq_flags);     // copies enqCnt from tctx
-        queued.submit(evt);   // TODO Task 6: wake-suppress: if (nrUserPending.get() > 0) queued.submitNoWakeup(evt)
+        if (nrUserPending.get() > 0) queued.submitNoWakeup(evt);
+        else                         queued.submit(evt);
         incStat(STAT_NR_QUEUED, 1);
     }
 
@@ -468,20 +469,35 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
             lastUserDispatchNs.set(currentNs());
             return;
         }
-        // TODO Task 6: stall fallback — promote from SHARED_DSQ if lastEnqueueNs > lastUserDispatchNs by STALL_FALLBACK_NS
+        long now = currentNs();
+        if (lastEnqueueNs.get() > lastUserDispatchNs.get() &&
+            now - lastUserDispatchNs.get() > STALL_FALLBACK_NS) {
+            if (shared.moveToLocal()) {
+                incStat(STAT_KERNEL_DISPATCHES, 1);
+                return;
+            }
+        }
     }
 
     /**
      * Drain callback: dispatch one record from the user→kernel ring-buf.
      *
      * <p>Returns 0 to continue draining, 1 to stop (budget exhausted).
-     * The enqCnt-cancellation arm that detects stale dispatches is deferred to Task 6.
+     * Stale dispatches (enqCnt mismatch) are cancelled early: the task ref is
+     * released, STAT_BOUNCED_DISPATCHES is incremented, and budget is decremented.
      */
     @BPFFunction
     int dispatchOne(Ptr<DispatchedTaskCtx> d, Ptr<Integer> budget) {
         Ptr<task_struct> p = bpf_task_from_pid(d.val().pid);
         if (p == null) { incStat(STAT_BOUNCED_DISPATCHES, 1); return 0; }
-        // TODO Task 6: enqCnt cancellation — re-add the tctx check + scx_bpf_dispatch_cancel
+        Ptr<TaskCtx> tctx = taskCtx.bpf_get(p);
+        if (tctx != null && tctx.val().enqCnt != d.val().enqCnt) {
+            bpf_task_release(p);
+            incStat(STAT_BOUNCED_DISPATCHES, 1);
+            int remaining0 = budget.val() - 1;
+            budget.set(remaining0);
+            return remaining0 <= 0 ? 1 : 0;
+        }
         long slice = d.val().sliceNs == 0 ? DEFAULT_SLICE_NS : d.val().sliceNs;
         int targetCpu = d.val().targetCpu;
         if (targetCpu < 0) {                                // ANY_CPU sentinel
