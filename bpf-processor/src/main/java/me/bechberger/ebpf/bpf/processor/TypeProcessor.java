@@ -373,8 +373,32 @@ public class TypeProcessor {
     }
 
     /**
+     * Mapping from Java primitive type name (after unboxing) to the corresponding
+     * BPF C integer type name used in generated C globals.
+     */
+    private static final Map<String, String> JAVA_PRIM_TO_BPF_CTYPE = Map.of(
+            "boolean", "bool",
+            "byte",    "s8",
+            "short",   "s16",
+            "int",     "s32",
+            "long",    "s64",
+            "char",    "s16",
+            "float",   "float",
+            "double",  "double"
+    );
+
+    /**
      * Given the {@code TypeMirror} of the pointee type in an {@code @InArena Ptr<T>}
      * field, returns the C type name (the BPF struct name), or {@code null} if unknown.
+     * <p>
+     * Resolution order:
+     * <ol>
+     *   <li>Already-processed {@code @Type} or {@code @CustomType} record → use its BPF name.</li>
+     *   <li>Boxed Java integer type ({@code Long}, {@code Integer}, …) → map to the corresponding
+     *       BPF C integer name ({@code s64}, {@code s32}, …).</li>
+     *   <li>Fall back to the simple class name (covers {@code @Type} records whose BPF name
+     *       equals their simple Java name and that were not yet processed when this is called).</li>
+     * </ol>
      */
     private @Nullable String resolveCNameForArenaPointee(TypeMirror pointedTo) {
         if (!(pointedTo instanceof DeclaredType declaredPointee)) return null;
@@ -383,6 +407,13 @@ public class TypeProcessor {
         var found = alreadyDefinedTypes.get(javaName);
         if (found != null) {
             return found.getBPFNameWithStructPrefixIfNeeded();
+        }
+        // Map boxed integer types to their BPF C equivalents (e.g. Long → s64).
+        var fqn = element.getQualifiedName().toString();
+        var unboxed = boxedToUnboxedIntegerType.get(fqn);
+        if (unboxed != null) {
+            var cType = JAVA_PRIM_TO_BPF_CTYPE.get(unboxed);
+            if (cType != null) return cType;
         }
         // Fall back to simple name (covers @Type records whose name equals simpleClass name)
         return element.getSimpleName().toString();

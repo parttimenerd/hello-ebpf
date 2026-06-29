@@ -1,14 +1,9 @@
 package me.bechberger.ebpf.bpf.map;
 
 import me.bechberger.ebpf.annotations.bpf.BPFMapClass;
-import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
-import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
-import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.bpf.BPFError;
 import me.bechberger.ebpf.shared.LibC;
 import me.bechberger.ebpf.shared.PanamaUtil.ResultAndErr;
-import me.bechberger.ebpf.type.Ptr;
-
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
@@ -104,36 +99,6 @@ public class BPFArena extends BPFMap {
             LibC.munmap(seg, size);
         });
         return userView;
-    }
-
-    /**
-     * Pointer to the {@code idx}-th 8-byte word of this arena's first page.
-     *
-     * <p><strong>KNOWN BUG (load-bearing for {@link me.bechberger.ebpf.bpf.UserspaceSchedulerBase#updateIdle}):</strong>
-     * The current template lowers {@code $this} to the BTF map struct symbol,
-     * not the arena VA base at {@code map_extra} (typically {@code 0x1ull << 44}).
-     * Writes therefore target the BTF struct memory instead of the mmap'd arena
-     * pages, and the userspace {@code userView()} mmap sees no updates. The
-     * zero-syscall {@code pickIdleCpu} contract documented in
-     * {@code docs/superpowers/specs/2026-06-29-userspace-scheduler-design.md}
-     * line 686 cannot be honoured until this is fixed.
-     *
-     * <p>Correct paths (any one suffices): pre-allocate the arena base once via
-     * {@code bpf_arena_alloc_pages(&map, NULL, ...)} and cache the pointer; use a
-     * fixed-VA macro {@code (unsigned long __arena *)(0x1ull << 44)} after
-     * {@code __BPF_FEATURE_ADDR_SPACE_CAST}; or expose a per-arena base helper.
-     *
-     * <p>Task 12 ({@code selectCpu}) is the first consumer that depends on this
-     * being correct. Until then {@code setBit} is a silent no-op for the mmap
-     * reader.
-     *
-     * @param idx 0-based word index; word 0 covers CPUs 0–63, word 1 covers 64–127, etc.
-     * @return pointer to the 8-byte word at the given index
-     */
-    @BuiltinBPFFunction("(unsigned long *)((char *)(uintptr_t)((__u64)&$this) + 8 * $arg1)")
-    @NotUsableInJava
-    public Ptr<Long> bpf_arena_word_at(long idx) {
-        throw new MethodIsBPFRelatedFunction();
     }
 
     @Override

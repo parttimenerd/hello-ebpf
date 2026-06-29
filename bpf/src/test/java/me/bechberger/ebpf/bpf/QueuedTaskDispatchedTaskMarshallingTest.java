@@ -113,4 +113,49 @@ public class QueuedTaskDispatchedTaskMarshallingTest {
         assertEquals(16, full.commStr().length());
         assertFalse(full.commEquals("aaaaaaaaaaaaaaa"));  // 15 'a's, but byte[15] != 0
     }
+
+    /**
+     * Round-trip test for {@link QueuedTask#fillFromSegment}: write known values
+     * into a raw {@link java.lang.foreign.MemorySegment} using wire-format offsets,
+     * then call {@code fillFromSegment} and assert every field was read correctly.
+     *
+     * <p>Locks the deserialization contract so future wire-format changes break
+     * this test rather than silently breaking the production drain path.
+     */
+    @Test
+    public void testFillFromSegmentRoundTrip() {
+        try (Arena a = Arena.ofConfined()) {
+            MemorySegment seg = a.allocate(QT_SIZEOF);
+
+            // Populate via wire offsets.
+            seg.set(ValueLayout.JAVA_INT,  QT_PID,           7777);
+            seg.set(ValueLayout.JAVA_INT,  QT_PREV_CPU,      12);
+            seg.set(ValueLayout.JAVA_LONG, QT_NR_CPUS_ALLOW, 16L);
+            seg.set(ValueLayout.JAVA_LONG, QT_FLAGS,         0xDEADBEEFL);
+            seg.set(ValueLayout.JAVA_LONG, QT_START_TS,      100_000L);
+            seg.set(ValueLayout.JAVA_LONG, QT_STOP_TS,       200_000L);
+            seg.set(ValueLayout.JAVA_LONG, QT_EXEC_RUNTIME,  50_000L);
+            seg.set(ValueLayout.JAVA_LONG, QT_WEIGHT,        300L);
+            seg.set(ValueLayout.JAVA_LONG, QT_VTIME,         99_999L);
+            seg.set(ValueLayout.JAVA_LONG, QT_ENQ_CNT,       42L);
+            byte[] comm = "sched\0".getBytes(java.nio.charset.StandardCharsets.UTF_8);
+            MemorySegment.copy(comm, 0, seg, ValueLayout.JAVA_BYTE, QT_COMM, comm.length);
+
+            QueuedTask out = new QueuedTask();
+            QueuedTask.fillFromSegment(seg, out);
+
+            assertEquals(7777,        out.pid,          "pid mismatch");
+            assertEquals(12,          out.prevCpu,      "prevCpu mismatch");
+            assertEquals(16L,         out.nrCpusAllowed,"nrCpusAllowed mismatch");
+            assertEquals(0xDEADBEEFL, out.flags,        "flags mismatch");
+            assertEquals(100_000L,    out.startTs,      "startTs mismatch");
+            assertEquals(200_000L,    out.stopTs,       "stopTs mismatch");
+            assertEquals(50_000L,     out.execRuntime,  "execRuntime mismatch");
+            assertEquals(300L,        out.weight,       "weight mismatch");
+            assertEquals(99_999L,     out.vtime,        "vtime mismatch");
+            assertEquals(42L,         out.enqCnt,       "enqCnt mismatch");
+            assertEquals("sched",     out.commStr(),    "comm string mismatch");
+            assertTrue(out.commEquals("sched"),         "commEquals mismatch");
+        }
+    }
 }

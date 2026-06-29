@@ -7,22 +7,28 @@ import me.bechberger.ebpf.bpf.map.BPFArena;
 import me.bechberger.ebpf.bpf.map.MapTypeId;
 import me.bechberger.ebpf.runtime.PtDefinitions;
 import me.bechberger.ebpf.type.Ptr;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
+import java.lang.foreign.ValueLayout;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Smoke test for {@link BPFArena}: loads a program containing an arena map,
- * verifies the kernel reports it as {@link MapTypeId#ARENA}, and that
- * {@code userView()} returns a {@link java.lang.foreign.MemorySegment}
- * sized to the requested page count.
- * <p>
- * This is a load-side test only — it does not yet exercise the in-BPF
- * arena allocation/access path (covered by later Phase F items once
- * {@code @InArena} and the {@code bpf_arena_alloc_pages} BPFJ helpers land).
+ * Smoke tests for {@link BPFArena}.
+ *
+ * <p>Test ({@code arenaLoadsAndExposesUserView}): verifies the kernel reports the map as
+ * {@link MapTypeId#ARENA} and that {@code userView()} returns a correctly-sized
+ * {@link java.lang.foreign.MemorySegment}. Includes a user-space write+read round-trip.
+ *
+ * <p>BPF→Java arena write visibility (the round-trip where BPF writes via a
+ * verifier-tracked arena pointer and Java reads it through the mmap) is exercised
+ * indirectly via {@link me.bechberger.ebpf.bpf.UserspaceSchedulerBase#setBit}, which
+ * runs from the sleepable {@code struct_ops/init} callback (the only context where
+ * {@code bpf_arena_alloc_pages} may be called). A standalone kprobe cannot call that
+ * kfunc, so no isolated smoke test of BPF arena writes is included here.
  */
 public class BPFArenaSmokeTest {
 
@@ -32,8 +38,7 @@ public class BPFArenaSmokeTest {
         @BPFMapDefinition(maxEntries = 2)
         BPFArena arena;
 
-        // A trivial kprobe so the program is loadable. We don't touch the
-        // arena from BPF yet; this test only verifies map creation.
+        // A trivial kprobe so the program is loadable.
         @Kprobe("do_sys_openat2")
         int onOpen(Ptr<PtDefinitions.pt_regs> ctx) {
             return 0;
@@ -58,8 +63,30 @@ public class BPFArenaSmokeTest {
                     "userView segment must span the whole arena");
             // Sanity: can write+read user-side. Even before any BPF write, the
             // kernel zero-initialises arena pages on first fault.
-            view.set(java.lang.foreign.ValueLayout.JAVA_INT, 0, 0xCAFEBABE);
-            assertEquals(0xCAFEBABE, view.get(java.lang.foreign.ValueLayout.JAVA_INT, 0));
+            view.set(ValueLayout.JAVA_INT, 0, 0xCAFEBABE);
+            assertEquals(0xCAFEBABE, view.get(ValueLayout.JAVA_INT, 0));
         }
+    }
+
+    /**
+     * BPF→Java arena write visibility contract.
+     *
+     * <p>This test would verify that a BPF program can write into the arena via a
+     * verifier-tracked pointer obtained from {@code bpf_arena_alloc_pages}, and that
+     * the written bytes are visible to Java via {@code userView()} without any syscall.
+     *
+     * <p>A standalone kprobe cannot call {@code bpf_arena_alloc_pages} (it is only
+     * permitted in sleepable contexts such as {@code struct_ops/init}). Exercising
+     * this contract therefore requires the full sched_ext scheduler init path, which
+     * is wired in {@code UserspaceSchedulerBase.init()}.
+     *
+     * <p>TODO: this contract is exercised end-to-end by Task 18
+     * (RustlandFifoSampleSmokeTest); enable when sched_ext kernel testing is wired up.
+     */
+    @Disabled("requires sched_ext kernel — covered in Task 18 (RustlandFifoSampleSmokeTest)")
+    @Test
+    @Timeout(10)
+    public void bpfToJavaArenaWriteIsVisible() {
+        // Placeholder — implementation in Task 18.
     }
 }

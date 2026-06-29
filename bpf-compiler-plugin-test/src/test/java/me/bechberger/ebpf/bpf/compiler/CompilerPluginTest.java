@@ -2516,6 +2516,43 @@ public class CompilerPluginTest {
     }
 
     // -------------------------------------------------------------------------
+    // Phase F-bis.2 — @InArena Ptr<Long> maps to s64, not "Long"
+    // -------------------------------------------------------------------------
+
+    @BPF
+    public static abstract class InArenaLongPtrField extends BPFProgram {
+        @InArena
+        me.bechberger.ebpf.type.Ptr<Long> arenaLong;
+
+        @Kprobe("do_sys_openat2")
+        public int onOpen(me.bechberger.ebpf.type.Ptr<me.bechberger.ebpf.runtime.PtDefinitions.pt_regs> ctx) {
+            return 0;
+        }
+    }
+
+    /**
+     * F-bis.2 — {@code @InArena Ptr<Long>} class field must emit
+     * {@code __arena s64 *arenaLong;} in C, not {@code __arena Long *arenaLong;}.
+     *
+     * <p>Regression guard for the {@code TypeProcessor.JAVA_PRIM_TO_BPF_CTYPE}
+     * map which maps unboxed {@code "long"} to {@code "s64"}. Without the
+     * boxed→unboxed→C-type lookup the emitted C would contain {@code Long *}
+     * which is undefined in BPF C.
+     */
+    @Test
+    public void testInArenaLongPtrEmitsS64NotLong() {
+        String code = BPFProgram.getCode(InArenaLongPtrField.class);
+        assertTrue(code.contains("__arena"),
+                "@InArena Ptr<Long> field must emit __arena qualifier:\n" + code);
+        assertTrue(code.contains("arenaLong"),
+                "@InArena Ptr<Long> field name must appear in C:\n" + code);
+        assertTrue(code.contains("s64"),
+                "@InArena Ptr<Long> must emit 's64' (not 'Long') in C:\n" + code);
+        assertFalse(code.contains("__arena Long"),
+                "@InArena Ptr<Long> must NOT emit '__arena Long' (unresolved Java type):\n" + code);
+    }
+
+    // -------------------------------------------------------------------------
     // Phase F-bis.3 — ArenaAccessCheckPass seeded by @InArena class field
     // -------------------------------------------------------------------------
 

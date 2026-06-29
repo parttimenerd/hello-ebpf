@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0
 package me.bechberger.ebpf.bpf;
 
+import me.bechberger.ebpf.annotations.InArena;
 import me.bechberger.ebpf.annotations.Size;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
@@ -20,10 +21,15 @@ import me.bechberger.ebpf.bpf.sched.DispatchQueue;
 import me.bechberger.ebpf.bpf.sched.EnqFlags;
 import me.bechberger.ebpf.bpf.sched.KickFlags;
 import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_timer;
+import me.bechberger.ebpf.runtime.MmConstants;
 import me.bechberger.ebpf.runtime.ScxDefinitions.scx_init_task_args;
 import me.bechberger.ebpf.type.Ptr;
 
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.ValueLayout;
+
 import static me.bechberger.ebpf.bpf.BPFJ.bpf_probe_read_kernel_str;
+import static me.bechberger.ebpf.bpf.BPFJ.bpfArenaAllocPages;
 import static me.bechberger.ebpf.bpf.BPFJ.currentNs;
 import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_add;
 import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_and;
@@ -73,7 +79,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     /** Wire-compatible with rustland's RL_CPU_ANY sentinel. */
     static final int  ANY_CPU           = -1;
     /** Hardcoded CPU bitmap cap. Hosts with more CPUs need a recompile. */
-    static final int  MAX_CPUS          = 1024;
+    public static final int  MAX_CPUS          = 1024;
     /** Number of 64-bit words in the idle-CPU bitmap ({@code MAX_CPUS / 64}). */
     static final int  BITMAP_WORDS      = MAX_CPUS / 64;  // 16
     /** Heartbeat timer period — matches rustland's bpf_timer period. */
@@ -111,6 +117,8 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         public static final int POLICY_EXCEPTIONS    = 11;
         /** Slot 12: {@code selectCPU} short-circuited to LOCAL on idle hint. */
         public static final int IDLE_FAST_PATH       = 12;
+        /** Slot 13: heartbeat timer ticks (incremented in {@code heartbeatTick}). */
+        public static final int HEARTBEAT_KICKS      = 13;
 
         private Stats() {}
     }
@@ -122,6 +130,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     private static final int STAT_KERNEL_DISPATCHES    = Stats.KERNEL_DISPATCHES;
     @SuppressWarnings("unused") private static final int STAT_CANCELLED_DISPATCHES = Stats.CANCELLED_DISPATCHES;
     @SuppressWarnings("unused") private static final int STAT_POLICY_EXCEPTIONS    = Stats.POLICY_EXCEPTIONS;
+    @SuppressWarnings("unused") private static final int STAT_HEARTBEAT_KICKS      = Stats.HEARTBEAT_KICKS;
     // Active aliases — no suppression needed:
     private static final int STAT_RUNNING_TASKS        = Stats.RUNNING_TASKS;
     private static final int STAT_NR_QUEUED            = Stats.NR_QUEUED;
@@ -195,7 +204,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     }
 
     /**
-     * Shared stats arena, mmap'd from Java. 12 counters; slot numbering is
+     * Shared stats arena, mmap'd from Java. 13 counters; slot numbering is
      * part of the BPF↔Java ABI — see {@link Stats}. BPF increments via
      * {@code __sync_fetch_and_add}; Java reads via {@code VarHandle.getOpaque()}.
      */
@@ -212,7 +221,8 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         @Unsigned long congestionEvents,
         @Unsigned long frameworkEnqueues,
         @Unsigned long policyExceptions,
-        @Unsigned long idleFastPath
+        @Unsigned long idleFastPath,
+        @Unsigned long heartbeatKicks
     ) {}
 
     // ─── Per-task storage ─────────────────────────────────────────
@@ -230,11 +240,11 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     // fork-storm scenarios without back-pressuring into SHARED_DSQ.
     /** Kernel→user ring buffer: BPF enqueues; Java drains. */
     @BPFMapDefinition(maxEntries = 4 * 1024 * 1024)
-    BPFRingBuffer<QueuedTaskCtx> queued;
+    public BPFRingBuffer<QueuedTaskCtx> queued;
 
     /** User→kernel ring buffer: Java submits dispatch decisions; BPF drains. */
     @BPFMapDefinition(maxEntries = 4 * 1024 * 1024)
-    BPFUserRingBuffer<DispatchedTaskCtx> dispatched;
+    public BPFUserRingBuffer<DispatchedTaskCtx> dispatched;
 
     // ─── Arena maps ───────────────────────────────────────────────
     /**
@@ -251,12 +261,23 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     BPFArena idleMask;
 
     /**
+     * Pre-allocated arena base pointer — obtained in {@link #init()} via
+     * {@code bpf_arena_alloc_pages}, which gives the BPF verifier the
+     * provenance required to accept atomic operations on the memory.
+     *
+     * <p>BPF code in {@link #setBit} uses this pointer for arithmetic rather
+     * than the raw-VA cast previously used by {@code bpf_arena_word_at}. The
+     * {@code @InArena} annotation causes the compiler plugin to emit the
+     * {@code __arena} address-space qualifier so clang's type checker is
+     * satisfied.
+     */
+    @InArena
+    Ptr<Long> idleMaskBase;
+
+    /**
      * Scheduler stats array. Single entry of type {@link SchedStats} at index 0.
      * BPF writes counters atomically via {@link #incStat}/{@link #decStat};
      * Java reads via {@code bpf_map_lookup_elem} syscall (acceptable: cold path).
-     * <p>
-     * TODO Task 8: replace with mmap'd BPFTypedArena once the second-arena
-     * cTemplate collision is solved (or once Task 4's stats path is the only arena).
      */
     @BPFMapDefinition(maxEntries = 1)   // single SchedStats slot
     BPFArray<SchedStats> stats;
@@ -278,10 +299,8 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
 
     /**
      * Single-entry array holding a {@code bpf_timer} for the heartbeat.
-     * Declared here so Task 7 can call {@code bpf_timer_init}/{@code bpf_timer_start}
-     * from {@code initHeartbeat()} in {@link #init()}.
-     *
-     * TODO Task 7: wire heartbeat init + tick callback.
+     * Declared here so the {@code bpf_timer_init}/{@code bpf_timer_start}
+     * calls in {@code initHeartbeat()} can reference it from {@link #init()}.
      */
     @BPFMapDefinition(maxEntries = 1)
     BPFArray<bpf_timer> heartbeat;
@@ -360,6 +379,12 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         if (rc != 0) return rc;
         rc = scx_bpf_create_dsq(FRAMEWORK_DSQ, -1);
         if (rc != 0) return rc;
+        // Pre-allocate the idle-mask arena page so the verifier tracks the
+        // resulting pointer as a valid arena pointer (not a scalar cast).
+        idleMaskBase = bpfArenaAllocPages(idleMask, null, 1, MmConstants.NUMA_NO_NODE, 0);
+        if (idleMaskBase == null) {
+            return -12;  // -ENOMEM — refuse to attach without idle bitmap
+        }
         return initHeartbeat();
     }
 
@@ -603,6 +628,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     @BPFFunction
     int heartbeatTick(Ptr<?> map, Ptr<Integer> key, Ptr<bpf_timer> val) {
         DispatchQueue.kickCpu(schedulerCpu.get(), KickFlags.idle());
+        incStat(Stats.HEARTBEAT_KICKS, 1);
         bpf_timer_start(val, HEARTBEAT_NS, 0);
         return 0;
     }
@@ -724,21 +750,110 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * {@link #updateIdle} calls from different CPUs.
      *
      * <p>The bitmap is stored in {@link #idleMask}, a {@code BPFArena} mmap'd
-     * from Java (zero-syscall reads via {@link BPFArena#bpf_arena_word_at}).
+     * from Java (zero-syscall reads via {@link me.bechberger.ebpf.bpf.map.BPFArena#userView()}).
+     * The {@link #idleMaskBase} pointer is pre-allocated in {@link #init()} via
+     * {@code bpf_arena_alloc_pages} so the BPF verifier tracks it as a valid
+     * arena pointer (not a scalar).
      *
      * @param cpu   CPU number (must be in [0, {@link #MAX_CPUS}))
      * @param idle  {@code true} to mark idle (set bit), {@code false} to mark busy (clear bit)
      */
-    // TODO Task 12: setBit currently no-ops for the mmap'd Java reader — see
-    // BPFArena.bpf_arena_word_at javadoc for the underlying address-space bug.
-    // pickIdleCpu must not be exposed to user code until this is fixed.
     @BPFFunction
     void setBit(int cpu, boolean idle) {
         if (cpu >= MAX_CPUS) return;             // bounded write
+        if (idleMaskBase == null) return;        // init() not yet completed
         long wordIdx = cpu / 64;
-        Ptr<Long> word = idleMask.bpf_arena_word_at(wordIdx);
         long mask = 1L << (cpu & 63);
-        if (idle) sync_fetch_and_or(word, mask);
-        else      sync_fetch_and_and(word, ~mask);
+        // Inline the add() call to avoid an address-space mismatch: idleMaskBase
+        // is __arena s64 * (AS1) and a local Ptr<Long> would be s64 * (AS0).
+        if (idle) sync_fetch_and_or(idleMaskBase.add(wordIdx), mask);
+        else      sync_fetch_and_and(idleMaskBase.add(wordIdx), ~mask);
+    }
+
+    // ─── Wire offsets for DispatchedTaskCtx (Java→BPF) ────────────
+    // Layout: int pid(0), int targetCpu(4), long flags(8), long sliceNs(16),
+    //         long vtime(24), long enqCnt(32) — total 40 bytes.
+    private static final long DTC_PID        = 0;
+    private static final long DTC_TARGET_CPU = 4;
+    private static final long DTC_FLAGS      = 8;
+    private static final long DTC_SLICE_NS   = 16;
+    private static final long DTC_VTIME      = 24;
+    private static final long DTC_ENQ_CNT    = 32;
+
+    /**
+     * Reserve a slot in the {@link #dispatched} user→kernel ring buffer, write a
+     * {@link DispatchedTaskCtx} record, and submit it.
+     *
+     * <p>Called from the Java run loop after {@link me.bechberger.ebpf.bpf.userspace.UserspaceScheduler#policy}
+     * returns a decision. The BPF {@link #dispatchOne} drain callback reads this record.
+     *
+     * @param targetCpu target CPU, or {@link #ANY_CPU} ({@code -1}) for SHARED_DSQ
+     * @param pid       task PID
+     * @param enqCnt    enqueue-counter copied from the task; enables stale-dispatch detection
+     * @param sliceNs   time-slice in nanoseconds; 0 means "use framework default"
+     * @param vtime     virtual time; 0 means "monotonic order"
+     * @return 0 on success, {@code -1} if the ring buffer is full (reserve returned null)
+     */
+    public int submitDispatchDecision(int targetCpu, int pid, long enqCnt, long sliceNs, long vtime) {
+        MemorySegment slot = dispatched.reserve();
+        if (slot == null) return -1;
+        slot.set(ValueLayout.JAVA_INT,  DTC_PID,        pid);
+        slot.set(ValueLayout.JAVA_INT,  DTC_TARGET_CPU, targetCpu);
+        slot.set(ValueLayout.JAVA_LONG, DTC_FLAGS,      0L);
+        slot.set(ValueLayout.JAVA_LONG, DTC_SLICE_NS,   sliceNs);
+        slot.set(ValueLayout.JAVA_LONG, DTC_VTIME,      vtime);
+        slot.set(ValueLayout.JAVA_LONG, DTC_ENQ_CNT,    enqCnt);
+        dispatched.submit(slot);
+        return 0;
+    }
+
+    // ─── Java-side stat readers ───────────────────────────────────
+
+    /**
+     * Read a single {@link SchedStats} counter by 1-based slot index.
+     * Performs a {@code bpf_map_lookup_elem} syscall — acceptable on the cold path only.
+     *
+     * @param statSlot 1-based slot index (see {@link Stats})
+     * @return counter value, or 0 if the stats array is unavailable
+     */
+    public long readStat(int statSlot) {
+        SchedStats s = stats.get(0);
+        if (s == null) return 0L;
+        return switch (statSlot) {
+            case Stats.ONLINE_CPUS          -> s.onlineCpus();
+            case Stats.RUNNING_TASKS        -> s.runningTasks();
+            case Stats.NR_QUEUED            -> s.nrQueued();
+            case Stats.NR_SCHEDULED         -> s.nrScheduled();
+            case Stats.USER_DISPATCHES      -> s.userDispatches();
+            case Stats.KERNEL_DISPATCHES    -> s.kernelDispatches();
+            case Stats.BOUNCED_DISPATCHES   -> s.bouncedDispatches();
+            case Stats.CANCELLED_DISPATCHES -> s.cancelledDispatches();
+            case Stats.CONGESTION_EVENTS    -> s.congestionEvents();
+            case Stats.FRAMEWORK_ENQUEUES   -> s.frameworkEnqueues();
+            case Stats.POLICY_EXCEPTIONS    -> s.policyExceptions();
+            case Stats.IDLE_FAST_PATH       -> s.idleFastPath();
+            case Stats.HEARTBEAT_KICKS      -> s.heartbeatKicks();
+            default -> 0L;
+        };
+    }
+
+    /** Cumulative tasks enqueued by BPF into the kernel→user ring buffer. */
+    public long readRingEnqueued()   { return readStat(Stats.NR_QUEUED); }
+    /** Cumulative times BPF saw the ring buffer full and fell back to SHARED_DSQ. */
+    public long readRingDropped()    { return readStat(Stats.CONGESTION_EVENTS); }
+    /** Cumulative dispatch records discarded due to stale {@code enqCnt}. */
+    public long readRingCanceled()   { return readStat(Stats.CANCELLED_DISPATCHES); }
+    /** Cumulative tasks rescued by the 50 ms stall-fallback path. */
+    public long readStallFallbacks() { return readStat(Stats.KERNEL_DISPATCHES); }
+    /** Cumulative heartbeat timer ticks that issued a CPU kick. */
+    public long readHeartbeatKicks() { return readStat(Stats.HEARTBEAT_KICKS); }
+
+    /**
+     * Return a read-only view of the idle-CPU bitmap mmap'd from the {@link #idleMask} arena.
+     * Word {@code i} covers CPUs {@code [64*i .. 64*i+63]}; bit {@code cpu & 63} is set when
+     * the CPU is idle. This is a zero-syscall read path after the first {@code userView()} call.
+     */
+    public MemorySegment idleMaskView() {
+        return idleMask.userView();
     }
 }

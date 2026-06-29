@@ -4,8 +4,12 @@ package me.bechberger.ebpf.bpf.userspace;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.QueuedTask;
 import me.bechberger.ebpf.bpf.UserspaceSchedulerBase;
+import me.bechberger.ebpf.bpf.map.SegmentCallback;
 
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.ValueLayout;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Base class for user-defined sched_ext schedulers whose policy lives in Java.
@@ -30,8 +34,32 @@ public abstract class UserspaceScheduler {
 
     private final AtomicBoolean exitRequested = new AtomicBoolean(false);
     private final AtomicBoolean hasExited     = new AtomicBoolean(false);
-    @SuppressWarnings("unused")
     private Opts opts;
+
+    private long sRingDrained;     // tasks successfully consumed from kernel→user ringbuf
+    private long sDispatched;
+    private long sDispatchFailed;
+
+    private QueuedTask[] taskPool;
+
+    private final BatchCtx batchCtx = new BatchCtx();
+
+    private static final class BatchCtx {
+        int count;
+    }
+
+    private final AtomicInteger cpuCursor = new AtomicInteger(0);
+    /** CPU count cached once at construction; avoids per-call syscall in {@link #pickIdleCpu}. */
+    private final int nrCpus = Runtime.getRuntime().availableProcessors();
+
+    // ── hoisted drain callback (avoids lambda allocation on hot path) ─────────
+    private final SegmentCallback drainCallback = (seg, size, ctx) -> {
+        BatchCtx bc = (BatchCtx) ctx;
+        if (bc.count >= opts.batchSize) return 1; // stop — budget exhausted
+        QueuedTask.fillFromSegment(seg, taskPool[bc.count++]);
+        sRingDrained++;
+        return 0;
+    };
 
     // ── user overrides ───────────────────────────────────────────────────────
 
@@ -71,6 +99,9 @@ public abstract class UserspaceScheduler {
     public final void runUntilExit(Opts opts) {
         this.opts = opts;
         loadAndAttachBpf();
+        // Allocate the task pool after BPF load so the handle is available.
+        taskPool = new QueuedTask[opts.batchSize];
+        for (int i = 0; i < taskPool.length; i++) taskPool[i] = new QueuedTask();
         try {
             runLoop();
         } finally {
@@ -87,6 +118,24 @@ public abstract class UserspaceScheduler {
     /** True once {@link #runUntilExit} has returned. */
     public final boolean exited() {
         return hasExited.get();
+    }
+
+    /**
+     * Snapshot of counters accumulated since {@link #runUntilExit} was called.
+     * Java-side counters ({@code ringDrained}, {@code dispatched}, {@code dispatchFailed})
+     * are always populated. BPF-side counters are zero when {@code bpfHandle} is
+     * {@code null} (e.g. before {@code runUntilExit} is called, in tests that inject
+     * only the dispatch seam, or after the run loop returns).
+     */
+    public SchedStatsSnapshot stats() {
+        long ringEnqueued    = bpfHandle != null ? bpfHandle.readRingEnqueued()    : 0;
+        long ringDropped     = bpfHandle != null ? bpfHandle.readRingDropped()     : 0;
+        long ringCanceled    = bpfHandle != null ? bpfHandle.readRingCanceled()    : 0;
+        long stallFallbacks  = bpfHandle != null ? bpfHandle.readStallFallbacks()  : 0;
+        long heartbeatKicks  = bpfHandle != null ? bpfHandle.readHeartbeatKicks()  : 0;
+        return new SchedStatsSnapshot(
+            ringEnqueued, ringDropped, sRingDrained, ringCanceled,
+            sDispatched, sDispatchFailed, stallFallbacks, heartbeatKicks);
     }
 
     // ── hooks (overridable for testing) ──────────────────────────────────────
@@ -141,13 +190,12 @@ public abstract class UserspaceScheduler {
     // ── internal ─────────────────────────────────────────────────────────────
 
     /** BPF transport — set by {@link #loadAndAttachBpf}, cleared by {@link #cleanupBpf}. */
-    private UserspaceSchedulerBase bpfHandle;
+    UserspaceSchedulerBase bpfHandle;
 
     private void runLoop() {
         long lastTickNs   = System.nanoTime();
         long tickPeriodNs = 1_000_000_000L;
         while (!exitRequested.get() && isAttached()) {
-            // Drain one batch (replaced in Task 11 with real ring-buffer work).
             drainBatchOnce();
             long now = System.nanoTime();
             if (now - lastTickNs >= tickPeriodNs) {
@@ -162,16 +210,99 @@ public abstract class UserspaceScheduler {
     }
 
     /**
-     * Drain one batch of tasks from the ring buffer.
+     * Drain one batch of tasks from the kernel→user ring buffer ({@code queued}),
+     * call {@link #policy} for each, and submit dispatch decisions back to the
+     * kernel via the user→kernel ring buffer ({@code dispatched}).
      *
-     * <p>Stub — Task 11 replaces this with real ring-buffer + arena work. Until then,
-     * sleeps 10 ms to yield the CPU so the loop doesn't spin at 100%.
+     * <p>If the ring buffer is empty, returns without blocking (zero-copy fast path).
+     * The method is a package-private testability hook to allow unit tests to call
+     * it directly on a fake/mocked handle without spinning up the full run loop.
      */
     protected void drainBatchOnce() {
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        if (bpfHandle == null) {
+            // No BPF handle — sleep briefly to avoid a busy spin in the lifecycle test.
+            try { Thread.sleep(10); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+            return;
         }
+        batchCtx.count = 0;
+        int drained = bpfHandle.queued.consumeRaw(drainCallback, batchCtx);
+        if (drained <= 0) return;
+        for (int i = 0; i < batchCtx.count; i++) {
+            QueuedTask t = taskPool[i];
+            int cpu;
+            try {
+                cpu = policy(t);
+            } catch (Throwable th) {
+                onPolicyException(t, th);
+                continue;          // skip — do NOT fall through to dispatchInternal
+            }
+            dispatchInternal(t, cpu);
+        }
+    }
+
+    /**
+     * Route one dispatch decision to the kernel.
+     *
+     * <p>If {@code cpu == ANY_CPU}, scans the idle-CPU bitmap via
+     * {@link #pickIdleCpu()} for a locality hint before delegating to SHARED_DSQ.
+     *
+     * @param t   task to dispatch
+     * @param cpu policy-provided CPU, or {@link #ANY_CPU}
+     */
+    void dispatchInternal(QueuedTask t, int cpu) {
+        int target = (cpu == ANY_CPU) ? pickIdleCpu() : cpu;
+        int rc = submitDispatch(target, t.pid, t.enqCnt, 0L, t.vtime);
+        if (rc == 0) sDispatched++;
+        else         sDispatchFailed++;
+    }
+
+    /**
+     * Submit one dispatch decision to the BPF transport.
+     *
+     * <p>Delegates to {@link UserspaceSchedulerBase#submitDispatchDecision}.
+     * Overridable for tests that want to intercept submits without a real BPF handle.
+     *
+     * @return 0 on success, non-zero on error
+     */
+    protected int submitDispatch(int targetCpu, int pid, long enqCnt, long sliceNs, long vtime) {
+        return bpfHandle.submitDispatchDecision(targetCpu, pid, enqCnt, sliceNs, vtime);
+    }
+
+    /**
+     * Round-robin scan of the idle-CPU bitmap.
+     *
+     * <p>Advances an {@link AtomicInteger} cursor so successive calls spread
+     * dispatches evenly across idle CPUs rather than always picking the lowest-
+     * numbered idle CPU. The cursor wraps at {@code nrCpus} so no CPU is
+     * permanently preferred.
+     *
+     * <p>The bitmap is mmap'd via {@link UserspaceSchedulerBase#idleMask} —
+     * zero-syscall after the first {@code userView()} call. Each 64-bit word
+     * covers 64 CPUs.
+     *
+     * @return an idle CPU number, or {@link #ANY_CPU} if none is currently idle
+     */
+    protected final int pickIdleCpu() {
+        MemorySegment view = idleMaskView();
+        if (view == null) return ANY_CPU;
+        int start = cpuCursor.getAndIncrement() & 0x7FFFFFFF;
+        for (int i = 0; i < nrCpus; i++) {
+            int cpu = (start + i) % nrCpus;
+            long word = view.get(ValueLayout.JAVA_LONG, (long)(cpu / 64) * 8L);
+            if ((word & (1L << (cpu & 63))) != 0) return cpu;
+        }
+        return ANY_CPU;
+    }
+
+    /**
+     * Returns the mmap'd idle-CPU bitmap segment, or {@code null} if unavailable.
+     *
+     * <p>Overridable for tests: a test subclass can return a heap-allocated
+     * {@link MemorySegment} to exercise {@link #pickIdleCpu()} without a BPF
+     * file descriptor.
+     */
+    protected MemorySegment idleMaskView() {
+        if (bpfHandle == null) return null;
+        return bpfHandle.idleMaskView();
     }
 }
