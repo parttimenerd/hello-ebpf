@@ -178,6 +178,19 @@ public class BPFJ {
     }
 
     /**
+     * Read the source string from the kernel and write it to a byte-array destination.
+     * In BPF C, {@code char} and {@code uint8_t} are both 1-byte types, so this is
+     * wire-compatible with the {@code char[] dest} overload.
+     *
+     * @see BPFHelpers#bpf_probe_read_kernel_str(Ptr, int, Ptr)
+     */
+    @BuiltinBPFFunction("bpf_probe_read_kernel_str($arg1, sizeof($arg1), $arg2)")
+    @NotUsableInJava
+    public static long bpf_probe_read_kernel_str(byte[] dest, char[] source) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
      * Read the source string from the kernel and write it to the destination
      * @see BPFHelpers#bpf_probe_read_kernel_str(Ptr, int, Ptr)
      */

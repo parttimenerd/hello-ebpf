@@ -16,16 +16,22 @@ import me.bechberger.ebpf.bpf.map.BPFTaskStorage;
 import me.bechberger.ebpf.bpf.map.BPFUserRingBuffer;
 import me.bechberger.ebpf.bpf.sched.DispatchQueue;
 import me.bechberger.ebpf.bpf.sched.EnqFlags;
+import me.bechberger.ebpf.bpf.sched.KickFlags;
 import me.bechberger.ebpf.runtime.BpfDefinitions.bpf_timer;
 import me.bechberger.ebpf.runtime.ScxDefinitions.scx_init_task_args;
 import me.bechberger.ebpf.type.Ptr;
 
+import static me.bechberger.ebpf.bpf.BPFJ.bpf_probe_read_kernel_str;
 import static me.bechberger.ebpf.bpf.BPFJ.currentNs;
 import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_add;
 import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_and;
 import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_or;
+import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask_test_cpu;
+import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_task_from_pid;
+import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_task_release;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL_ON;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
@@ -104,18 +110,18 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     }
 
     // Keep shorter aliases for use in method bodies below.
-    // Tasks 5/6/7/8 will reference the remaining slots; suppress until then.
+    // Tasks 6/7/8+ will reference the remaining slots; suppress until then.
     @SuppressWarnings("unused") private static final int STAT_ONLINE_CPUS         = Stats.ONLINE_CPUS;
-    @SuppressWarnings("unused") private static final int STAT_NR_QUEUED            = Stats.NR_QUEUED;
     @SuppressWarnings("unused") private static final int STAT_NR_SCHEDULED         = Stats.NR_SCHEDULED;
-    @SuppressWarnings("unused") private static final int STAT_USER_DISPATCHES      = Stats.USER_DISPATCHES;
     @SuppressWarnings("unused") private static final int STAT_KERNEL_DISPATCHES    = Stats.KERNEL_DISPATCHES;
-    @SuppressWarnings("unused") private static final int STAT_BOUNCED_DISPATCHES   = Stats.BOUNCED_DISPATCHES;
     @SuppressWarnings("unused") private static final int STAT_CANCELLED_DISPATCHES = Stats.CANCELLED_DISPATCHES;
-    @SuppressWarnings("unused") private static final int STAT_CONGESTION_EVENTS    = Stats.CONGESTION_EVENTS;
     @SuppressWarnings("unused") private static final int STAT_POLICY_EXCEPTIONS    = Stats.POLICY_EXCEPTIONS;
     // Active aliases — no suppression needed:
     private static final int STAT_RUNNING_TASKS        = Stats.RUNNING_TASKS;
+    private static final int STAT_NR_QUEUED            = Stats.NR_QUEUED;
+    private static final int STAT_USER_DISPATCHES      = Stats.USER_DISPATCHES;
+    private static final int STAT_BOUNCED_DISPATCHES   = Stats.BOUNCED_DISPATCHES;
+    private static final int STAT_CONGESTION_EVENTS    = Stats.CONGESTION_EVENTS;
     private static final int STAT_FRAMEWORK_ENQUEUES   = Stats.FRAMEWORK_ENQUEUES;
     private static final int STAT_IDLE_FAST_PATH        = Stats.IDLE_FAST_PATH;
 
@@ -141,21 +147,24 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * Kernel→user ring-buf record. Wire-layout-equivalent to
      * {@code scx_rustland_core}'s {@code queued_task_ctx}. The Java side surfaces
      * these fields via {@link QueuedTask}.
+     *
+     * <p>Declared as a {@code class} (not {@code record}) so that BPF code can
+     * mutate individual fields via {@code ptr.val().field = x}.
      */
     @Type
-    record QueuedTaskCtx(
-        int pid,
-        int prevCpu,
-        @Unsigned long nrCpusAllowed,
-        @Unsigned long flags,
-        @Unsigned long startTs,
-        @Unsigned long stopTs,
-        @Unsigned long execRuntime,
-        @Unsigned long weight,
-        @Unsigned long vtime,
-        @Unsigned long enqCnt,
-        @Size(16) byte[] comm
-    ) {}
+    static class QueuedTaskCtx {
+        int pid;
+        int prevCpu;
+        @Unsigned long nrCpusAllowed;
+        @Unsigned long flags;
+        @Unsigned long startTs;
+        @Unsigned long stopTs;
+        @Unsigned long execRuntime;
+        @Unsigned long weight;
+        @Unsigned long vtime;
+        @Unsigned long enqCnt;
+        @Size(16) byte[] comm;
+    }
 
     /**
      * User→kernel ring-buf record. Wire-layout-equivalent to rustland's
@@ -365,12 +374,9 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * Route the task to the correct destination DSQ.
      *
      * <p>Framework threads (PIDs in {@link #frameworkPids}) go straight to
-     * {@link #framework} with priority. All other tasks are published to the
-     * Java-side via the {@link #queued} ring-buf after the kthread fast-path
-     * check (Task 5).
-     *
-     * TODO Task 5: kthread fast path (PF_KTHREAD && nr_cpus_allowed==1, kswapdPid, khugepageDPid).
-     * TODO Task 5/6: lastEnqueueNs update, taskCtx.enqCnt bump, queued.reserve/submit per spec §2 lines 262-284.
+     * {@link #framework} with priority. Per-CPU kthreads and well-known mm
+     * helpers (kswapd, khugepaged) bypass userspace via the kthread fast path.
+     * All other tasks are published to Java via the {@link #queued} ring-buf.
      */
     @Override
     public void enqueue(Ptr<task_struct> p, long enq_flags) {
@@ -380,42 +386,105 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
             incStat(STAT_FRAMEWORK_ENQUEUES, 1);
             return;
         }
-        // TODO Task 5: kthread fast path per spec §2 lines 255-261
-        // TODO Task 5/6: lastEnqueueNs update, taskCtx.enqCnt bump, queued.reserve/submit per spec §2 lines 262-284
-        // Temporary fallback: route unhandled tasks to SHARED_DSQ until Task 5
-        shared.insertScaled(p, EnqFlags.passThrough(enq_flags));
+        // Kthread fast path: per-CPU kernel threads and the well-known mm
+        // helpers (kswapd, khugepaged) bypass userspace and go straight to
+        // the task's last CPU to avoid latency from the userspace round-trip.
+        boolean isPerCpuKthread = (p.val().flags & PerProcessFlags.PF_KTHREAD) != 0
+                                  && p.val().nr_cpus_allowed == 1;
+        if (isPerCpuKthread || pid == kswapdPid.get() || pid == khugepageDPid.get()) {
+            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL_ON.value() | scx_bpf_task_cpu(p),
+                               SCX_SLICE_DFL.value(), enq_flags);
+            return;
+        }
+        lastEnqueueNs.set(currentNs());
+        Ptr<TaskCtx> tctx = taskCtx.bpf_get(p);
+        if (tctx != null) tctx.val().enqCnt += 1;
+        Ptr<QueuedTaskCtx> evt = queued.reserve();
+        if (evt == null) {
+            incStat(STAT_CONGESTION_EVENTS, 1);
+            shared.insertScaled(p, EnqFlags.passThrough(enq_flags));
+            return;
+        }
+        fillQueuedCtx(evt, p, enq_flags);     // copies enqCnt from tctx
+        queued.submit(evt);   // TODO Task 6: wake-suppress: if (nrUserPending.get() > 0) queued.submitNoWakeup(evt)
+        incStat(STAT_NR_QUEUED, 1);
+    }
+
+    /**
+     * Populate a ring-buf record from the task and its per-task storage.
+     *
+     * <p>Copies timing counters from {@link TaskCtx} if available, then fills
+     * weight, vtime and comm directly from {@code task_struct}.
+     */
+    @BPFFunction
+    void fillQueuedCtx(Ptr<QueuedTaskCtx> evt, Ptr<task_struct> p, long enq_flags) {
+        evt.val().pid           = p.val().pid;
+        evt.val().prevCpu       = scx_bpf_task_cpu(p);
+        evt.val().nrCpusAllowed = p.val().nr_cpus_allowed;
+        evt.val().flags         = enq_flags;
+        Ptr<TaskCtx> tctx = taskCtx.bpf_get(p);
+        if (tctx != null) {
+            evt.val().startTs     = tctx.val().startTs;
+            evt.val().stopTs      = tctx.val().stopTs;
+            evt.val().execRuntime = tctx.val().execRuntime;
+            evt.val().enqCnt      = tctx.val().enqCnt;
+        }
+        evt.val().weight = p.val().scx.weight;
+        evt.val().vtime  = p.val().scx.dsq_vtime;
+        bpf_probe_read_kernel_str(evt.val().comm, p.val().comm);
     }
 
     /**
      * Drain decisions from Java and dispatch tasks.
      *
      * <p>Priority order: (1) framework DSQ, (2) user ring-buf drain, (3) stall
-     * fallback to SHARED_DSQ when Java is silent too long.
-     *
-     * TODO Task 5/6: full dispatch body per spec §2 lines 287-327
-     *   — drain budget setup, dispatched.drain, lastUserDispatchNs, stall fallback.
+     * fallback to SHARED_DSQ when Java is silent too long (Task 6).
      */
     @Override
     public void dispatch(int cpu, Ptr<task_struct> prev) {
-        // 1. Drain framework DSQ first — unbounded priority
+        // 1. Framework DSQ first — unbounded priority
         if (framework.moveToLocal()) return;
-        // TODO Task 5/6: user ring-buf drain + stall fallback per spec §2 lines 292-327
-        shared.moveToLocal();
+
+        // 2. Drain Java decisions
+        Ptr<Integer> budget = dispatchBudget.bpf_get(0);
+        if (budget == null) return;
+        budget.set(scx_bpf_dispatch_nr_slots());
+        int drained = dispatched.drain((d, ctx) -> dispatchOne(d, ctx), budget);
+        if (drained > 0) {
+            lastUserDispatchNs.set(currentNs());
+            return;
+        }
+        // TODO Task 6: stall fallback — promote from SHARED_DSQ if lastEnqueueNs > lastUserDispatchNs by STALL_FALLBACK_NS
     }
 
     /**
      * Drain callback: dispatch one record from the user→kernel ring-buf.
      *
      * <p>Returns 0 to continue draining, 1 to stop (budget exhausted).
-     *
-     * TODO Task 5/6: full dispatchOne body per spec §2 lines 345-383
-     *   — bpf_task_from_pid, enqCnt cancellation (Task 6), affinity validation,
-     *     ANY_CPU routing, budget decrement.
+     * The enqCnt-cancellation arm that detects stale dispatches is deferred to Task 6.
      */
     @BPFFunction
     int dispatchOne(Ptr<DispatchedTaskCtx> d, Ptr<Integer> budget) {
-        // TODO Task 5/6: implement per spec §2 lines 345-383
-        return 0;
+        Ptr<task_struct> p = bpf_task_from_pid(d.val().pid);
+        if (p == null) { incStat(STAT_BOUNCED_DISPATCHES, 1); return 0; }
+        // TODO Task 6: enqCnt cancellation — re-add the tctx check + scx_bpf_dispatch_cancel
+        long slice = d.val().sliceNs == 0 ? 5_000_000L : d.val().sliceNs;
+        int targetCpu = d.val().targetCpu;
+        if (targetCpu < 0) {                                // ANY_CPU sentinel
+            scx_bpf_dsq_insert(p, SHARED_DSQ_ID, slice, d.val().flags);
+            DispatchQueue.kickCpu(scx_bpf_task_cpu(p), KickFlags.idle());
+        } else {
+            if (!bpf_cpumask_test_cpu(targetCpu, p.val().cpus_ptr)) {
+                targetCpu = scx_bpf_task_cpu(p);
+                incStat(STAT_BOUNCED_DISPATCHES, 1);
+            }
+            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL_ON.value() | targetCpu, slice, d.val().flags);
+        }
+        bpf_task_release(p);
+        incStat(STAT_USER_DISPATCHES, 1);
+        int remaining = budget.val() - 1;
+        budget.set(remaining);
+        return remaining <= 0 ? 1 : 0;
     }
 
     /**
