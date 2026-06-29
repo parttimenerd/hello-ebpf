@@ -359,7 +359,9 @@ public abstract class BPFProgram implements AutoCloseable {
         String fieldName = toConstantCase(canonical ? inner.getCanonicalName() : inner.getSimpleName())
                 .replace(".", "__");
         try {
-            return (BPFType<T>) outerImpl.getDeclaredField(fieldName).get(null);
+            var field = outerImpl.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return (BPFType<T>) field.get(null);
         } catch (IllegalAccessException | NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
