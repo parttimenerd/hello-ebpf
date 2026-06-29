@@ -84,6 +84,9 @@ public class BPFUserRingBuffer<E> extends BPFMap {
      */
     public MemorySegment reserve() {
         long size = elementType.size();
+        if (size > Integer.MAX_VALUE) {
+            throw new BPFError("element size " + size + " exceeds Integer.MAX_VALUE", -1);
+        }
         MemorySegment slot = Lib.user_ring_buffer__reserve(urb, (int) size);
         if (slot == null || slot.address() == 0) return null;
         return slot.reinterpret(size);
@@ -110,7 +113,7 @@ public class BPFUserRingBuffer<E> extends BPFMap {
 
     @Override
     public void close() {
-        try { Lib.user_ring_buffer__free(urb); } catch (Throwable ignored) {}
+        Lib.user_ring_buffer__free(urb);
         super.close();
     }
 
