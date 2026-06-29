@@ -97,6 +97,11 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
      *       and dereference key/value at the start of the lifted body so the user
      *       lambda body sees plain {@code k}/{@code v} variables of type {@code K}
      *       and {@code V}.</li>
+     *   <li>{@link #DYNPTR} — emit the libbpf {@code bpf_user_ringbuf_drain}
+     *       callback ABI: {@code (struct bpf_dynptr *dynptr, void *ctx)},
+     *       and prepend a {@code bpf_dynptr_read} prologue that decodes the
+     *       record into a stack-allocated {@code E} (where {@code E} is the
+     *       pointee of the first lambda parameter).</li>
      * </ul>
      */
     public enum FuncShape {

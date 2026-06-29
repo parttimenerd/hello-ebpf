@@ -92,6 +92,13 @@ public class BPFUserRingBuffer<E> extends BPFMap {
      *   <li>forwards {@code &record} and {@code ctx} to the user lambda body.</li>
      * </ol>
      *
+     * <p>Return {@code 0} from the callback to continue draining, {@code 1} to
+     * stop (matches libbpf's {@code bpf_user_ringbuf_callback_fn} contract).
+     * If a {@code bpf_dynptr_read} fails for a record, the generated thunk
+     * returns {@code 1} — i.e. <strong>the entire drain batch aborts on the
+     * first malformed entry</strong>. There is no in-band way to skip a single
+     * record under the libbpf ABI.
+     *
      * @param <Ctx>    type of the opaque context pointer
      * @param callback typed drain callback — receives a pointer to the decoded record
      * @param ctx      context pointer forwarded to each callback invocation
