@@ -7,6 +7,8 @@ import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
+import me.bechberger.ebpf.annotations.bpf.BPFTimer;
+import me.bechberger.ebpf.annotations.bpf.Tracepoint;
 import me.bechberger.ebpf.bpf.map.BPFArray;
 import me.bechberger.ebpf.bpf.map.BPFArena;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
@@ -28,6 +30,8 @@ import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_and;
 import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_or;
 import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask_test_cpu;
 import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_task_from_pid;
+import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_timer_init;
+import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_timer_start;
 import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_task_release;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
@@ -342,22 +346,21 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     // ─── sched_ext ops ───────────────────────────────────────────
 
     /**
-     * Creates both shared and framework DSQs.
+     * Creates both shared and framework DSQs, then arms the heartbeat timer.
      *
      * <p>Inlined SchedulerBase.init() body until super.init() lowering is fixed (see project memory: super.init() lowers to circular self-reference in struct_ops entry).
      * {@link #shared} uses {@link DispatchQueue#attach} so SHARED_DSQ_ID is created
      * exactly once here rather than double-created. FRAMEWORK_DSQ's return code is
      * captured; if it fails, the scheduler aborts startup cleanly.
-     *
-     * TODO Task 7: add initHeartbeat() @BPFFunction + call it from here
-     *   once bpf_timer_init is supported.
      */
     @Override
     public int init() {
         // Inlined SchedulerBase.init() body until super.init() lowering is fixed (see project memory: super.init() lowers to circular self-reference in struct_ops entry).
         int rc = scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
         if (rc != 0) return rc;
-        return scx_bpf_create_dsq(FRAMEWORK_DSQ, -1);
+        rc = scx_bpf_create_dsq(FRAMEWORK_DSQ, -1);
+        if (rc != 0) return rc;
+        return initHeartbeat();
     }
 
     /**
@@ -594,17 +597,82 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * Java run loop can starve and trip the sched_ext watchdog before
      * {@link #STALL_FALLBACK_NS} fires.
      *
-     * TODO Task 7: implement per spec §2 lines 437-448
-     *   (bpf_timer_start reschedule + schedulerCpu kick via DispatchQueue.kickCpu).
+     * <p>BPF timer ABI requires three arguments: map, key, and value.
      */
+    @BPFTimer
     @BPFFunction
-    int heartbeatTick(Ptr<bpf_timer> t) {
-        // TODO Task 7: DispatchQueue.kickCpu(schedulerCpu.get(), KickFlags.idle())
-        //              + bpf_timer_start(t, HEARTBEAT_NS, 0)
+    int heartbeatTick(Ptr<?> map, Ptr<Integer> key, Ptr<bpf_timer> val) {
+        DispatchQueue.kickCpu(schedulerCpu.get(), KickFlags.idle());
+        bpf_timer_start(val, HEARTBEAT_NS, 0);
         return 0;
     }
 
-    // TODO Task 7: add initHeartbeat() called from init() + onFork tracepoint (spec §2 lines 458-474)
+    /**
+     * Initialise and arm the heartbeat timer from slot 0 of {@link #heartbeat}.
+     * Called from {@link #init()} after DSQ creation.
+     *
+     * <p>Uses {@code CLOCK_MONOTONIC} (clock id 1). {@code bpf_timer_init} needs a
+     * pointer to the owning map ({@code &heartbeat}) so the kernel can hold a
+     * reference; the {@code Ptr.of(heartbeat)} expression lowers to {@code &heartbeat}.
+     *
+     * @return 0 on success, negative errno on failure
+     */
+    @BPFFunction
+    int initHeartbeat() {
+        int zero = 0;
+        Ptr<bpf_timer> t = heartbeat.bpf_get(zero);
+        if (t == null) return -1;
+        bpf_timer_init(t, Ptr.of(heartbeat), 1 /* CLOCK_MONOTONIC */);
+        BPFJ.bpf_timer_set_callback(t, this::heartbeatTick);
+        bpf_timer_start(t, HEARTBEAT_NS, 0);
+        return 0;
+    }
+
+    // ─── Fork tracepoint ─────────────────────────────────────────
+
+    /**
+     * Context type for the {@code sched/sched_process_fork} tracepoint.
+     *
+     * <p>Field names and layout are taken verbatim from the running kernel:
+     * {@code /sys/kernel/debug/tracing/events/sched/sched_process_fork/format}.
+     *
+     * <p>Note: {@code parent_comm} and {@code child_comm} are {@code __data_loc char[]}
+     * fields in the kernel, encoded as a 32-bit offset/length value — represented here
+     * as {@code int} so the struct layout matches.
+     */
+    @Type
+    record TracepointSchedProcessFork(
+            @Unsigned short common_type,
+            byte common_flags,
+            byte common_preempt_count,
+            int common_pid,
+            int parent_comm,   // __data_loc char[] — encoded as 32-bit data_loc value
+            int parent_pid,
+            int child_comm,    // __data_loc char[] — encoded as 32-bit data_loc value
+            int child_pid
+    ) {}
+
+    /**
+     * Tracepoint fired on every {@code fork(2)} / {@code clone(2)}.
+     *
+     * <p>When the forking task belongs to the scheduler process (its TGID equals
+     * {@link #schedulerTgid}), the new child PID is inserted into {@link #frameworkPids}
+     * so the BPF {@link #enqueue} path routes it to {@link #framework} instead of
+     * serialising it through the userspace ring buffer.
+     *
+     * <p>On this kernel, {@code sched_process_fork} only exports {@code parent_pid} and
+     * {@code child_pid}; there are no separate tgid fields. Because the tracepoint is
+     * emitted at the parent thread level, {@code parent_pid} equals the parent's tgid
+     * (i.e., the scheduler process TGID) for the relevant fork events.
+     */
+    @Tracepoint(category = "sched", name = "sched_process_fork")
+    int onFork(Ptr<TracepointSchedProcessFork> ctx) {
+        if (ctx.val().parent_pid == schedulerTgid.get()) {
+            byte one = 1;
+            frameworkPids.bpf_put(ctx.val().child_pid, one);
+        }
+        return 0;
+    }
 
     // ─── BPF-side stat and bitmap helpers ────────────────────────
 
