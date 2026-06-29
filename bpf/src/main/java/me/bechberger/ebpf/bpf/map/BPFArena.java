@@ -1,9 +1,13 @@
 package me.bechberger.ebpf.bpf.map;
 
 import me.bechberger.ebpf.annotations.bpf.BPFMapClass;
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
+import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.bpf.BPFError;
 import me.bechberger.ebpf.shared.LibC;
 import me.bechberger.ebpf.shared.PanamaUtil.ResultAndErr;
+import me.bechberger.ebpf.type.Ptr;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -100,6 +104,22 @@ public class BPFArena extends BPFMap {
             LibC.munmap(seg, size);
         });
         return userView;
+    }
+
+    /**
+     * Pointer to the {@code idx}-th 8-byte word of this arena's page-0. Used by
+     * {@link me.bechberger.ebpf.bpf.UserspaceSchedulerBase} to maintain the idle
+     * CPU bitmap via atomic ops on each word.
+     *
+     * <p>Lowers to {@code (unsigned long *)((char *)arena + 8 * idx)}.
+     *
+     * @param idx 0-based word index; word 0 covers CPUs 0–63, word 1 covers 64–127, etc.
+     * @return pointer to the 8-byte word at the given index
+     */
+    @BuiltinBPFFunction("(unsigned long *)((char *)$this + 8 * $arg1)")
+    @NotUsableInJava
+    public Ptr<Long> bpf_arena_word_at(long idx) {
+        throw new MethodIsBPFRelatedFunction();
     }
 
     @Override
