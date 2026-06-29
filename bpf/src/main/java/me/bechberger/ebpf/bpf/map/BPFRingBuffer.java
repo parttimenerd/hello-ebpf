@@ -28,6 +28,12 @@ import static me.bechberger.ebpf.shared.PanamaUtil.*;
  * that allows to efficiently communicate between the eBPF program and the user space using events
  *
  * @param <E> type of the event
+ *
+ * <p>Note: {@code consumeRaw(...)} is <b>single-consumer</b>. The framework swaps the
+ * internal callback/context fields per invocation; two concurrent {@code consumeRaw}
+ * calls (with different callbacks) can race and one may observe a transient null
+ * or a mismatched (cb, ctx) pair. The scheduler drain loop is single-threaded
+ * by design — callers in other contexts must serialize externally.
  */
 @BPFMapClass(
         cTemplate = """
@@ -101,6 +107,24 @@ public class BPFRingBuffer<E> extends BPFMap {
     private EventCallback<E> callback;
 
     /**
+     * Second libbpf {@code ring_buffer} handle bound to the same map fd, lazily
+     * constructed on the first {@link #consumeRaw} call. libbpf binds the sample
+     * callback at {@code ring_buffer__new()} time, so we need a separate handle
+     * for the raw-segment dispatch path; this keeps the typed {@link #consume()}
+     * path unchanged.
+     */
+    private volatile MemorySegment rawRb = MemorySegment.NULL;
+    /** Latest SegmentCallback bound to {@link #rawRb}; the trampoline reads this volatile field. */
+    private volatile SegmentCallback rawCb;
+    /**
+     * Latest AddressCallback bound to {@link #rawRb}; preferred over {@link #rawCb} when set
+     * because it avoids the {@code MemorySegment.reinterpret} on the hot path.
+     */
+    private volatile AddressCallback rawAddrCb;
+    /** User-supplied ctx forwarded to {@link #rawCb} or {@link #rawAddrCb} on every record. */
+    private volatile Object rawCtx;
+
+    /**
      * Error caught while calling the callback
      */
     public sealed interface CaughtBPFRingBufferError {
@@ -125,7 +149,7 @@ public class BPFRingBuffer<E> extends BPFMap {
 
     /**
      * Create a new ring buffer
-     *^
+     *
      * @param fd        file descriptor of the ring buffer
      * @param eventType type of the event
      * @param callback  callback that is called when a new event is received
@@ -352,9 +376,166 @@ public class BPFRingBuffer<E> extends BPFMap {
         return drainToList().stream();
     }
 
+    /**
+     * Drain the ring buffer without materialising records into Java objects.
+     *
+     * <p>Each available record is delivered to {@code cb} as an unmaterialised
+     * {@link MemorySegment} view (zero-copy, zero per-record heap allocation).
+     * The callee reads only the fields it cares about via
+     * {@link java.lang.foreign.ValueLayout}/VarHandle.
+     *
+     * <p>This is intentionally a separate code path from {@link #consume()}:
+     * libbpf binds the sample callback at {@code ring_buffer__new()} time, so
+     * the typed callback used by {@link #initRingBuffer} cannot be swapped per
+     * call. We lazily build a second {@code ring_buffer} handle ({@link #rawRb})
+     * on the first invocation, bound to a trampoline that reads the latest
+     * {@link SegmentCallback} from a {@code volatile} field. Subsequent calls
+     * just update the field and invoke {@code ring_buffer__consume} on
+     * {@link #rawRb}; allocations on the hot path are zero.
+     *
+     * <p>{@link #consume()}, {@link #poll(int)}, and the typed callback path
+     * continue to work concurrently and independently of this method.
+     *
+     * @param cb  the callback to invoke per record. Return {@code 0} to keep
+     *            consuming, non-zero to stop early (matches libbpf's
+     *            {@code ring_buffer_sample_fn} contract).
+     * @param ctx user context forwarded to {@code cb} on every record; may be
+     *            {@code null}.
+     * @return the number of records consumed, or a negative value when libbpf
+     *         reports a non-recoverable error.
+     * @throws BPFRingBufferError if the second ring buffer handle could not be
+     *         created or the underlying consume call failed non-trivially.
+     * @implNote This method is <b>single-consumer</b>; see the class-level note on
+     *         {@code consumeRaw} for the concurrency contract.
+     */
+    public int consumeRaw(SegmentCallback cb, Object ctx) {
+        // Update before kicking off the consume so the trampoline picks up the
+        // latest callback even on the very first dispatch.
+        this.rawAddrCb = null;  // clear the fast path so trampoline falls back to SegmentCallback
+        this.rawCb = cb;
+        this.rawCtx = ctx;
+        if (rawRb == MemorySegment.NULL) {
+            initRawRingBuffer();
+        }
+        try (Arena arena = Arena.ofConfined()) {
+            var ret = ring_buffer__consume.call(arena, rawRb);
+            if ((int) ret.result() < 0) {
+                int err = ret.err();
+                if (err == ERRNO_EAGAIN || err == ERRNO_EINVAL || err == ERRNO_ENOENT) {
+                    return ret.result();
+                }
+                throw new BPFRingBufferError("Failed to consume raw events", err);
+            }
+            return ret.result();
+        }
+    }
+
+    /**
+     * Drain the ring buffer without materialising records into Java objects or
+     * even creating a transient {@link java.lang.foreign.MemorySegment}.
+     *
+     * <p>Each available record is delivered to {@code cb} as a raw native address
+     * ({@code long}) and its length. This avoids the {@code MemorySegment.reinterpret}
+     * call present in the {@link #consumeRaw(SegmentCallback, Object)} path, cutting
+     * per-record allocation to near zero and making it suitable for scheduler hot paths.
+     *
+     * <p>Shares the lazily created {@link #rawRb} handle with
+     * {@link #consumeRaw(SegmentCallback, Object)}. When this overload is active,
+     * the trampoline skips the {@code reinterpret} branch entirely.
+     *
+     * @param cb  the callback to invoke per record. Return {@code 0} to keep
+     *            consuming, non-zero to stop early (matches libbpf's
+     *            {@code ring_buffer_sample_fn} contract).
+     * @param ctx user context forwarded to {@code cb} on every record; may be
+     *            {@code null}.
+     * @return the number of records consumed, or a negative value when libbpf
+     *         reports a non-recoverable error.
+     * @throws BPFRingBufferError if the second ring buffer handle could not be
+     *         created or the underlying consume call failed non-trivially.
+     * @implNote This method is <b>single-consumer</b>; see the class-level note on
+     *         {@code consumeRaw} for the concurrency contract.
+     */
+    public int consumeRaw(AddressCallback cb, Object ctx) {
+        // Set the fast-path callback first; trampoline will prefer rawAddrCb over rawCb.
+        this.rawAddrCb = cb;
+        this.rawCb = null;  // clear SegmentCallback so trampoline won't fall back to it
+        this.rawCtx = ctx;
+        if (rawRb == MemorySegment.NULL) {
+            initRawRingBuffer();
+        }
+        try (Arena arena = Arena.ofConfined()) {
+            var ret = ring_buffer__consume.call(arena, rawRb);
+            if ((int) ret.result() < 0) {
+                int err = ret.err();
+                if (err == ERRNO_EAGAIN || err == ERRNO_EINVAL || err == ERRNO_ENOENT) {
+                    return ret.result();
+                }
+                throw new BPFRingBufferError("Failed to consume raw events", err);
+            }
+            return ret.result();
+        }
+    }
+
+    /**
+     * Lazily build {@link #rawRb}. Synchronized to ensure exactly one handle
+     * is created even under concurrent first-call races.
+     */
+    private synchronized void initRawRingBuffer() {
+        if (rawRb != MemorySegment.NULL) {
+            return;
+        }
+        // Trampoline bridges libbpf's int(*)(void*ctx, void*data, size_t size)
+        // to AddressCallback.apply (fast path, no reinterpret) or SegmentCallback.apply
+        // (fallback), reading the latest cb/ctx from volatile fields so callers can
+        // swap them between consumeRaw calls without tearing down the libbpf handle.
+        //
+        // Priority: rawAddrCb (set) → call apply(address, len, ctx) with zero allocation.
+        //           rawCb (set)     → reinterpret data to len bytes, call apply(segment, len, ctx).
+        //
+        // The {@code data} segment is delivered by Panama as a zero-sized
+        // address-only segment (the underlying libbpf descriptor has no
+        // target layout). We re-interpret it to {@code len} bytes so the
+        // SegmentCallback can read fields directly. HotSpot is expected to scalarise
+        // the transient segment header for fast-path callees that do not
+        // capture {@code record} across the callback boundary.
+        ring_buffer_sample_fn.Function trampoline = (ringCtx, data, len) -> {
+            Object userCtx = this.rawCtx;
+            AddressCallback addrCb = this.rawAddrCb;
+            if (addrCb != null) {
+                // Fast path: pass native address directly — no MemorySegment allocation.
+                try {
+                    return addrCb.apply(data.address(), len, userCtx);
+                } catch (Throwable t) {
+                    addCaughtError(new CaughtBPFRingBufferError.CaughtBPFRingBufferParseError(t, data, len));
+                    return 0;
+                }
+            }
+            SegmentCallback cb = this.rawCb;
+            if (cb == null) {
+                return 0;
+            }
+            try {
+                MemorySegment record = data.reinterpret(len);
+                return cb.apply(record, len, userCtx);
+            } catch (Throwable t) {
+                addCaughtError(new CaughtBPFRingBufferError.CaughtBPFRingBufferParseError(t, data, len));
+                return 0;
+            }
+        };
+        var sampleFn = ring_buffer_sample_fn.allocate(trampoline, ringArena);
+        var rawNew = ring_buffer__new(ringArena, getFd().fd(), sampleFn, MemorySegment.NULL, MemorySegment.NULL);
+        if (rawNew.result() == MemorySegment.NULL) {
+            throw new BPFRingBufferError("Failed to create raw ring buffer", rawNew.err());
+        }
+        this.rawRb = rawNew.result();
+    }
+
     @Override
     public void close() {
         Lib.ring_buffer__free(rb);
+        if (rawRb != MemorySegment.NULL) {
+            Lib.ring_buffer__free(rawRb);
+        }
         ringArena.close();
         super.close();
     }
