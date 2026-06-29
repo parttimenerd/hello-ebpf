@@ -1,10 +1,14 @@
 package me.bechberger.ebpf.bpf.map;
 
 import me.bechberger.ebpf.annotations.bpf.BPFMapClass;
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
+import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.bpf.BPFError;
 import me.bechberger.ebpf.shared.LibC;
 import me.bechberger.ebpf.shared.PanamaUtil.ResultAndErr;
 import me.bechberger.ebpf.type.BPFType;
+import me.bechberger.ebpf.type.Ptr;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -208,6 +212,21 @@ public class BPFTypedArena<T> extends BPFMap {
     public void atomicSetLong(int i, long fieldOffset, long value) {
         checkBounds(i);
         LONG_VH.setVolatile(userView(), slotOffset(i) + fieldOffset, value);
+    }
+
+    /**
+     * BPF-side: look up a pointer to slot {@code index}.
+     *
+     * <p>Lowers to {@code bpf_map_lookup_elem(&arena, &index)}.
+     * Returns {@code null} if the index is out of range (verifier-visible).
+     *
+     * @param index slot index (must be in [0, maxEntries))
+     * @return pointer to the slot, or {@code null}
+     */
+    @BuiltinBPFFunction("bpf_map_lookup_elem(&$this, $pointery$arg1)")
+    @NotUsableInJava
+    public Ptr<T> bpf_lookup_elem(Ptr<Integer> index) {
+        throw new MethodIsBPFRelatedFunction();
     }
 
     /**
