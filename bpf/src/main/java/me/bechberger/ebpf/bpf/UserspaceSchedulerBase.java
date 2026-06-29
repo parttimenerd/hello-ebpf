@@ -13,6 +13,7 @@ import me.bechberger.ebpf.annotations.bpf.Tracepoint;
 import me.bechberger.ebpf.bpf.map.BPFArray;
 import me.bechberger.ebpf.bpf.map.BPFArena;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
+import me.bechberger.ebpf.bpf.map.BPFHistogram;
 import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
 import me.bechberger.ebpf.bpf.map.BPFTaskStorage;
@@ -305,6 +306,110 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      */
     @BPFMapDefinition(maxEntries = 1)
     BPFArray<bpf_timer> heartbeat;
+
+    // ─── Observability histograms (Task 14) ──────────────────────────────────
+    // All five histograms use 64 buckets (BCC log2_hist layout: bucket i counts
+    // values in [2^(i-1), 2^i)).  BPF-side recording via hist.record(value);
+    // Java-side write via hist.increment(value); Java-side read via entrySet().
+
+    /**
+     * log2 histogram of batch sizes from {@code drainBatchOnce}.
+     * Recorded on the Java side after each non-empty drain.
+     */
+    @BPFMapDefinition(maxEntries = 64)
+    BPFHistogram batchSizeHist;
+
+    /**
+     * log2 histogram of kernel→user→kernel round-trip time in microseconds.
+     * Recorded on the Java side at dispatch time, using {@code QueuedTask.stopTs}
+     * (the BPF ktime when the task last stopped) as the start timestamp.
+     *
+     * <p>Note: {@code stopTs} is the task's last context-switch-out time, which
+     * is a close but not exact proxy for the enqueue timestamp. A more precise
+     * implementation would stamp the ring-buf record at {@code enqueue} time;
+     * deferred to Task 21 obs-benchmark.
+     */
+    @BPFMapDefinition(maxEntries = 64)
+    BPFHistogram roundTripUsHist;
+
+    /**
+     * log2 histogram of enqueue→dispatch latency in microseconds.
+     * Intended for BPF-side recording at dispatch consume time.
+     *
+     * <p>TODO: Task 21 obs-benchmark — wire up BPF-side recording in
+     * {@code dispatchOne} once a per-task enqueue timestamp is available.
+     */
+    @BPFMapDefinition(maxEntries = 64)
+    BPFHistogram dispatchLatencyUsHist;
+
+    /**
+     * log2 histogram of ring-queue depth at enqueue time.
+     * Intended for BPF-side recording inside {@code enqueue}.
+     *
+     * <p>TODO: Task 21 obs-benchmark — wire up BPF-side recording once a
+     * depth estimator (e.g., a running NR_QUEUED - NR_CONSUMED counter) is
+     * available in BPF context.
+     */
+    @BPFMapDefinition(maxEntries = 64)
+    BPFHistogram queueDepthHist;
+
+    /**
+     * log2 histogram of time spent in one {@code consumeRaw} call in microseconds.
+     * Recorded on the Java side, wrapping the {@code consumeRaw} call in
+     * {@code drainBatchOnce}.
+     */
+    @BPFMapDefinition(maxEntries = 64)
+    BPFHistogram ringConsumeUsHist;
+
+    // ─── Histogram accessor seams (Task 14) ──────────────────────────────────
+    //
+    // These public methods are the ONLY way UserspaceScheduler should write to or
+    // read from the five BPF histograms. Public (not protected) because
+    // UserspaceScheduler is not a subclass of this class and requires cross-package
+    // access. Following the same precedent as putFrameworkPid / frameworkPidsIterable.
+    //
+    // Tests may override UserspaceScheduler's recording seams (recordBatchSize etc.)
+    // to capture calls without a live BPF fd; these base-class methods are exercised
+    // only in production runs.
+
+    /**
+     * Test seam. Returns the {@link BPFHistogram} for batch sizes so that
+     * {@link UserspaceScheduler#printHistograms} can read it without touching the
+     * field directly across the package boundary.
+     *
+     * <p>Public to allow cross-package access from {@code UserspaceScheduler}
+     * (which is not a subclass). Production code uses this for reading; histogram
+     * writes go through {@link #recordBatchSizeHist}.
+     */
+    public BPFHistogram batchSizeHistView()       { return batchSizeHist; }
+
+    /**
+     * Test seam. Returns the {@link BPFHistogram} for round-trip latency.
+     *
+     * @see #batchSizeHistView()
+     */
+    public BPFHistogram roundTripHistView()       { return roundTripUsHist; }
+
+    /**
+     * Test seam. Returns the {@link BPFHistogram} for dispatch latency.
+     *
+     * @see #batchSizeHistView()
+     */
+    public BPFHistogram dispatchLatencyHistView() { return dispatchLatencyUsHist; }
+
+    /**
+     * Test seam. Returns the {@link BPFHistogram} for queue depth.
+     *
+     * @see #batchSizeHistView()
+     */
+    public BPFHistogram queueDepthHistView()      { return queueDepthHist; }
+
+    /**
+     * Test seam. Returns the {@link BPFHistogram} for ring-consume durations.
+     *
+     * @see #batchSizeHistView()
+     */
+    public BPFHistogram ringConsumeHistView()     { return ringConsumeUsHist; }
 
     // ─── DSQ handles ─────────────────────────────────────────────
     /**

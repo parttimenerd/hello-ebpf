@@ -4,6 +4,7 @@ package me.bechberger.ebpf.bpf.userspace;
 import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.QueuedTask;
 import me.bechberger.ebpf.bpf.UserspaceSchedulerBase;
+import me.bechberger.ebpf.bpf.map.BPFHistogram;
 import me.bechberger.ebpf.bpf.map.SegmentCallback;
 import me.bechberger.ebpf.bpf.userspace.jfr.BatchEvent;
 import me.bechberger.ebpf.bpf.userspace.jfr.DispatchEvent;
@@ -11,6 +12,7 @@ import me.bechberger.ebpf.bpf.userspace.jfr.TickEvent;
 
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
@@ -318,7 +320,10 @@ public abstract class UserspaceScheduler {
         int drained = drainRaw();
         if (drained <= 0) return;
 
+        recordBatchSize(batchCtx.count);
+
         long dispBefore = sDispatched;
+        long nowNs = System.nanoTime();
         var ev = new BatchEvent();
         ev.begin();
         try {
@@ -330,6 +335,20 @@ public abstract class UserspaceScheduler {
                 } catch (Throwable th) {
                     onPolicyException(t, th);
                     continue;          // skip — do NOT fall through to dispatchInternal
+                }
+                // Record round-trip: stopTs is the BPF ktime when the task was last
+                // context-switched out, which is a close proxy for the enqueue ktime.
+                // System.nanoTime() is not directly comparable with BPF ktime (which uses
+                // CLOCK_MONOTONIC), but both are ns-resolution monotonic clocks and are
+                // equal on most kernels. Recorded here for observability; exact semantics
+                // are documented in UserspaceSchedulerBase.roundTripUsHist.
+                // nowNs is hoisted out of the loop so all tasks in one batch share the
+                // same "end of batch" snapshot — cheaper and more meaningful semantically.
+                // The guard rejects negative deltas that can occur on clock skew or when
+                // stopTs is stale (zero is already excluded by the outer check).
+                if (t.stopTs > 0) {
+                    long deltaUs = (nowNs - t.stopTs) / 1_000L;
+                    if (deltaUs >= 0) recordRoundTrip(deltaUs);
                 }
                 dispatchInternal(t, cpu);
             }
@@ -363,7 +382,11 @@ public abstract class UserspaceScheduler {
             return 0;
         }
         batchCtx.count = 0;
-        return bpfHandle.queued.consumeRaw(drainCallback, batchCtx);
+        long nsBeforeConsume = System.nanoTime();
+        int result = bpfHandle.queued.consumeRaw(drainCallback, batchCtx);
+        long nsAfterConsume = System.nanoTime();
+        recordRingConsume((nsAfterConsume - nsBeforeConsume) / 1_000L);
+        return result;
     }
 
     /**
@@ -378,6 +401,99 @@ public abstract class UserspaceScheduler {
             int newSize = Math.max(minSize, opts.batchSize);
             taskPool = new QueuedTask[newSize];
             for (int i = 0; i < taskPool.length; i++) taskPool[i] = new QueuedTask();
+        }
+    }
+
+    // ── Histogram recording seams (Task 14) ──────────────────────────────────
+    //
+    // These protected methods are the ONLY way drainBatchOnce/drainRaw should
+    // write to the BPF histograms. Tests override them with in-memory counters
+    // so the production recording logic runs without a live BPF file descriptor.
+
+    /**
+     * Record one batch-size sample. Called once per non-empty drain with the
+     * number of tasks in the batch.
+     *
+     * <p>Default: delegates to {@link UserspaceSchedulerBase#batchSizeHistView()}.
+     * Tests override to capture the call without a BPF fd.
+     */
+    protected void recordBatchSize(long value) {
+        if (bpfHandle != null) bpfHandle.batchSizeHistView().increment(value);
+    }
+
+    /**
+     * Record one round-trip sample in microseconds. Called once per task whose
+     * {@code stopTs} is non-zero and whose delta is non-negative.
+     *
+     * <p>Default: delegates to {@link UserspaceSchedulerBase#roundTripHistView()}.
+     * Tests override to capture the call without a BPF fd.
+     */
+    protected void recordRoundTrip(long usValue) {
+        if (bpfHandle != null) bpfHandle.roundTripHistView().increment(usValue);
+    }
+
+    /**
+     * Record one ring-consume duration sample in microseconds. Called once per
+     * non-null-handle {@code drainRaw} call.
+     *
+     * <p>Default: delegates to {@link UserspaceSchedulerBase#ringConsumeHistView()}.
+     * Tests override to capture the call without a BPF fd.
+     */
+    protected void recordRingConsume(long usValue) {
+        if (bpfHandle != null) bpfHandle.ringConsumeHistView().increment(usValue);
+    }
+
+    // ── Histogram printing ────────────────────────────────────────────────────
+
+    /**
+     * Print all five histograms to {@code out}. Each bucket [i] represents
+     * values in the half-open range [2^(i-1) .. 2^i). Zero buckets are skipped.
+     *
+     * <p>Public for use from sample schedulers' periodic stderr dumps; safe
+     * to call from any thread. Reads via BPF map syscall — not a zero-copy path.
+     */
+    public void printHistograms(PrintStream out) {
+        if (bpfHandle == null) return;
+        out.println("== batchSize ==");
+        printOne(out, bpfHandle.batchSizeHistView());
+        out.println("== roundTrip us ==");
+        printOne(out, bpfHandle.roundTripHistView());
+        out.println("== dispatchLat us ==");
+        printOne(out, bpfHandle.dispatchLatencyHistView());
+        out.println("== queueDepth ==");
+        printOne(out, bpfHandle.queueDepthHistView());
+        out.println("== ringConsume us ==");
+        printOne(out, bpfHandle.ringConsumeHistView());
+    }
+
+    private static void printOne(PrintStream out, BPFHistogram h) {
+        var entries = new java.util.ArrayList<>(h.entrySet());
+        entries.sort(java.util.Map.Entry.comparingByKey());
+        for (var e : entries) {
+            int slot = e.getKey();
+            long v = e.getValue();
+            if (slot >= 0 && slot < BPFHistogram.BUCKET_COUNT && v > 0) {
+                out.printf("  [2^%2d ..) %d%n", slot, v);
+            }
+        }
+    }
+
+    /**
+     * Print a histogram snapshot (a {@code Map<Integer,Long>} of bucket→count) to
+     * {@code out}. Extracted so tests can call it with a controlled in-heap map
+     * without needing a BPF file descriptor.
+     *
+     * <p>Package-private; intended for use by {@link HistogramsTest}.
+     */
+    static void printHistogram(PrintStream out, java.util.Map<Integer, Long> snapshot) {
+        var entries = new java.util.ArrayList<>(snapshot.entrySet());
+        entries.sort(java.util.Map.Entry.comparingByKey());
+        for (var e : entries) {
+            int slot = e.getKey();
+            long v = e.getValue();
+            if (slot >= 0 && slot < BPFHistogram.BUCKET_COUNT && v > 0) {
+                out.printf("  [2^%2d ..) %d%n", slot, v);
+            }
         }
     }
 

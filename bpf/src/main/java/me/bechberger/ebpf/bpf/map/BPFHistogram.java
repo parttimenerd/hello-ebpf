@@ -14,7 +14,7 @@ import java.util.Arrays;
  * A power-of-2 log2 histogram backed by a {@link BPFHashMap BPFHashMap&lt;Integer, Long&gt;}.
  *
  * <p>Keys are bucket indices 0..63 where bucket {@code i} counts values in the range
- * {@code [2^(i-1), 2^i)}.  Bucket 0 counts the value 0; bucket 1 counts value 1;
+ * {@code [2^(i-1), 2^i)}.  Bucket 0 counts values &lt;= 0; bucket 1 counts value 1;
  * bucket 2 counts values 2–3; and so on.  This matches the BCC {@code log2_hist} layout.
  *
  * <h2>BPF-side usage</h2>
@@ -44,9 +44,12 @@ import java.util.Arrays;
         } $field SEC(".maps");
         """,
         javaTemplate = """
-        new $class<>($fd)
+        new $class($fd)
         """)
 public class BPFHistogram extends BPFHashMap<Integer, Long> {
+
+    /** Number of log2 buckets. Bucket {@code i} counts values in {@code [2^(i-1), 2^i)}. */
+    public static final int BUCKET_COUNT = 64;
 
     public BPFHistogram(FileDescriptor fd) {
         super(fd, INT32, INT64);
@@ -123,5 +126,29 @@ public class BPFHistogram extends BPFHashMap<Integer, Long> {
         long lo = 1L << (slot - 1);
         long hi = (1L << slot) - 1;
         return String.format("[%d, %d]", lo, hi);
+    }
+
+    /**
+     * Java-side: increment the log2 histogram bucket for {@code value}.
+     *
+     * <p>Mirrors the BPF-side {@link #record(long)} semantics: the bucket index is
+     * {@code value <= 0 ? 0 : (Long.SIZE - Long.numberOfLeadingZeros(value))},
+     * which matches the BCC {@code log2_hist} convention.
+     *
+     * <p>Values &lt;= 0 are placed in bucket 0.
+     *
+     * <p>Uses a read-modify-write via {@link #compute} — not atomic across threads.
+     *
+     * <p><strong>MUST be called from a single thread.</strong> The read-modify-write
+     * is not atomic across threads; concurrent callers will silently lose increments.
+     * The {@code UserspaceScheduler} drain loop is single-threaded and safe; external
+     * callers must hold an external lock.
+     *
+     * @param value the observed sample (values &lt;= 0 are placed in bucket 0)
+     */
+    public void increment(long value) {
+        int slot = value <= 0 ? 0 : (Long.SIZE - Long.numberOfLeadingZeros(value));
+        assert slot <= BUCKET_COUNT - 1 : slot;
+        compute(slot, (k, v) -> v == null ? 1L : v + 1L);
     }
 }
