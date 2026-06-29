@@ -560,6 +560,9 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * @param cpu   CPU number (must be in [0, {@link #MAX_CPUS}))
      * @param idle  {@code true} to mark idle (set bit), {@code false} to mark busy (clear bit)
      */
+    // TODO Task 12: setBit currently no-ops for the mmap'd Java reader — see
+    // BPFArena.bpf_arena_word_at javadoc for the underlying address-space bug.
+    // pickIdleCpu must not be exposed to user code until this is fixed.
     @BPFFunction
     void setBit(int cpu, boolean idle) {
         if (cpu >= MAX_CPUS) return;             // bounded write
