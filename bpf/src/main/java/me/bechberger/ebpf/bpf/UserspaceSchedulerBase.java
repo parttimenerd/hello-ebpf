@@ -104,18 +104,20 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     }
 
     // Keep shorter aliases for use in method bodies below.
-    private static final int STAT_ONLINE_CPUS         = Stats.ONLINE_CPUS;
+    // Tasks 5/6/7/8 will reference the remaining slots; suppress until then.
+    @SuppressWarnings("unused") private static final int STAT_ONLINE_CPUS         = Stats.ONLINE_CPUS;
+    @SuppressWarnings("unused") private static final int STAT_NR_QUEUED            = Stats.NR_QUEUED;
+    @SuppressWarnings("unused") private static final int STAT_NR_SCHEDULED         = Stats.NR_SCHEDULED;
+    @SuppressWarnings("unused") private static final int STAT_USER_DISPATCHES      = Stats.USER_DISPATCHES;
+    @SuppressWarnings("unused") private static final int STAT_KERNEL_DISPATCHES    = Stats.KERNEL_DISPATCHES;
+    @SuppressWarnings("unused") private static final int STAT_BOUNCED_DISPATCHES   = Stats.BOUNCED_DISPATCHES;
+    @SuppressWarnings("unused") private static final int STAT_CANCELLED_DISPATCHES = Stats.CANCELLED_DISPATCHES;
+    @SuppressWarnings("unused") private static final int STAT_CONGESTION_EVENTS    = Stats.CONGESTION_EVENTS;
+    @SuppressWarnings("unused") private static final int STAT_POLICY_EXCEPTIONS    = Stats.POLICY_EXCEPTIONS;
+    // Active aliases — no suppression needed:
     private static final int STAT_RUNNING_TASKS        = Stats.RUNNING_TASKS;
-    private static final int STAT_NR_QUEUED            = Stats.NR_QUEUED;
-    private static final int STAT_NR_SCHEDULED         = Stats.NR_SCHEDULED;
-    private static final int STAT_USER_DISPATCHES      = Stats.USER_DISPATCHES;
-    private static final int STAT_KERNEL_DISPATCHES    = Stats.KERNEL_DISPATCHES;
-    private static final int STAT_BOUNCED_DISPATCHES   = Stats.BOUNCED_DISPATCHES;
-    private static final int STAT_CANCELLED_DISPATCHES = Stats.CANCELLED_DISPATCHES;
-    private static final int STAT_CONGESTION_EVENTS    = Stats.CONGESTION_EVENTS;
     private static final int STAT_FRAMEWORK_ENQUEUES   = Stats.FRAMEWORK_ENQUEUES;
-    private static final int STAT_POLICY_EXCEPTIONS    = Stats.POLICY_EXCEPTIONS;
-    private static final int STAT_IDLE_FAST_PATH       = Stats.IDLE_FAST_PATH;
+    private static final int STAT_IDLE_FAST_PATH        = Stats.IDLE_FAST_PATH;
 
     // ─── BPF @Type records/classes ────────────────────────────────
     /**
@@ -323,7 +325,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     /**
      * Creates both shared and framework DSQs.
      *
-     * <p>Inlined SchedulerBase.init() body until super.init() lowering is fixed (see #issue).
+     * <p>Inlined SchedulerBase.init() body until super.init() lowering is fixed (see project memory: super.init() lowers to circular self-reference in struct_ops entry).
      * {@link #shared} uses {@link DispatchQueue#attach} so SHARED_DSQ_ID is created
      * exactly once here rather than double-created. FRAMEWORK_DSQ's return code is
      * captured; if it fails, the scheduler aborts startup cleanly.
@@ -333,7 +335,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      */
     @Override
     public int init() {
-        // Inlined SchedulerBase.init() body until super.init() lowering is fixed (see #issue).
+        // Inlined SchedulerBase.init() body until super.init() lowering is fixed (see project memory: super.init() lowers to circular self-reference in struct_ops entry).
         int rc = scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
         if (rc != 0) return rc;
         return scx_bpf_create_dsq(FRAMEWORK_DSQ, -1);
