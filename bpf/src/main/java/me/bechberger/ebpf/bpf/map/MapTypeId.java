@@ -13,6 +13,8 @@ public enum MapTypeId {
     /** Ring buffer map type, see {@link BPFRingBuffer} */
     RINGBUF(27),
     INODE_STORAGE(28), TASK_STORAGE(29), BLOOM_FILTER(30),
+    /** User ring buffer map type (user→kernel direction), see {@link BPFUserRingBuffer} */
+    USER_RINGBUF(31),
     /** Arena map type, see {@link BPFArena} */
     ARENA(33);
     private final int id;
