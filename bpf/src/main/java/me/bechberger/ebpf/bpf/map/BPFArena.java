@@ -111,12 +111,16 @@ public class BPFArena extends BPFMap {
      * {@link me.bechberger.ebpf.bpf.UserspaceSchedulerBase} to maintain the idle
      * CPU bitmap via atomic ops on each word.
      *
-     * <p>Lowers to {@code (unsigned long *)((char *)arena + 8 * idx)}.
+     * <p>The arena's memory starts at {@code map_extra} VA (architecture-specific:
+     * {@code 0x1ull << 44} on x86, {@code 0x1ull << 32} on arm64). This lowers to
+     * a cast of {@code &map_struct} (the arena's user VA base) to a {@code long} pointer
+     * at offset {@code 8 * idx}. The cast implicitly treats the map's VA as the arena
+     * base address, which is correct for {@code BPF_MAP_TYPE_ARENA} maps.
      *
      * @param idx 0-based word index; word 0 covers CPUs 0–63, word 1 covers 64–127, etc.
      * @return pointer to the 8-byte word at the given index
      */
-    @BuiltinBPFFunction("(unsigned long *)((char *)$this + 8 * $arg1)")
+    @BuiltinBPFFunction("(unsigned long *)((char *)(uintptr_t)((__u64)&$this) + 8 * $arg1)")
     @NotUsableInJava
     public Ptr<Long> bpf_arena_word_at(long idx) {
         throw new MethodIsBPFRelatedFunction();

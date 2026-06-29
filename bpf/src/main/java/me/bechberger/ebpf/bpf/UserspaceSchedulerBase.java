@@ -8,11 +8,11 @@ import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.bpf.map.BPFArray;
+import me.bechberger.ebpf.bpf.map.BPFArena;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
 import me.bechberger.ebpf.bpf.map.BPFTaskStorage;
-import me.bechberger.ebpf.bpf.map.BPFTypedArena;
 import me.bechberger.ebpf.bpf.map.BPFUserRingBuffer;
 import me.bechberger.ebpf.bpf.sched.DispatchQueue;
 import me.bechberger.ebpf.bpf.sched.EnqFlags;
@@ -24,6 +24,9 @@ import static me.bechberger.ebpf.bpf.BPFJ.currentNs;
 import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_add;
 import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_and;
 import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_or;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 /**
@@ -210,27 +213,30 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
 
     // ─── Arena maps ───────────────────────────────────────────────
     /**
-     * Shared stats arena, mmap'd from Java. Single slot of type {@link SchedStats}.
-     * Slot 0 maps directly to the 12-counter struct; no index arithmetic needed.
+     * Idle-CPU bitmap, mmap'd from Java. Each 8-byte word covers 64 CPUs;
+     * word {@code i} covers CPUs {@code [64*i, 64*i+63]}. BPF uses atomic
+     * or/and ops via {@link #setBit}. Java reads via the mmap'd view for
+     * zero-syscall {@code pickIdleCpu} (Task 12, spec line 686).
      * <p>
-     * Only one arena map is declared to avoid a clang {@code __ulong(map_extra,...)}
-     * macro-counter collision that occurs when two arena maps appear in the same
-     * generated C translation unit.
+     * This is the HOT path arena — must remain a {@code BPFArena} for zero-syscall
+     * reads. One page = 4 KiB = 512 words = 32 768 bits; 16 words suffice for
+     * {@link #MAX_CPUS} = 1 024 CPUs.
      */
-    @BPFMapDefinition(maxEntries = 1)   // 1 page = 4 KiB; SchedStats is 96 B
-    BPFTypedArena<SchedStats> stats;
+    @BPFMapDefinition(maxEntries = 1)   // 1 page = 4 KiB; 16 words cover MAX_CPUS
+    BPFArena idleMask;
+
+    /**
+     * Scheduler stats array. Single entry of type {@link SchedStats} at index 0.
+     * BPF writes counters atomically via {@link #incStat}/{@link #decStat};
+     * Java reads via {@code bpf_map_lookup_elem} syscall (acceptable: cold path).
+     * <p>
+     * TODO Task 8: replace with mmap'd BPFTypedArena once the second-arena
+     * cTemplate collision is solved (or once Task 4's stats path is the only arena).
+     */
+    @BPFMapDefinition(maxEntries = 1)   // single SchedStats slot
+    BPFArray<SchedStats> stats;
 
     // ─── Hash and array maps ──────────────────────────────────────
-    /**
-     * Idle-CPU bitmap. One {@code long} word per 64 CPUs, indexed by {@code cpu / 64}.
-     * BPF uses {@code __sync_fetch_and_or}/{@code and} to set/clear bits atomically
-     * in {@link #setBit}. Java reads words individually via the map file-descriptor
-     * (no mmap required — polled infrequently by the Java scheduler).
-     * <p>
-     * 16 entries = 1 024 bits = {@link #MAX_CPUS} coverage.
-     */
-    @BPFMapDefinition(maxEntries = 16)  // BITMAP_WORDS = MAX_CPUS / 64 = 16
-    BPFArray<Long> idleBitmap;
 
     /** PIDs of threads that belong to the scheduler process; value is ignored. */
     @BPFMapDefinition(maxEntries = 8192)
@@ -266,15 +272,10 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     /**
      * Shared FIFO DSQ — stall-fallback path drains from here.
      * <p>
-     * Declared with {@code new DispatchQueue(0L)} so the plugin injects
-     * {@code scx_bpf_create_dsq(0, -1)} into {@code init()} alongside
-     * {@link #framework}'s creation call. We do NOT override {@code init()}
-     * (which would require calling {@code super.init()}, broken in C since
-     * {@code init} and the BPF struct-ops entry point are the same symbol) — instead
-     * we let both {@code DispatchQueue} field constructors inject their
-     * {@code scx_bpf_create_dsq} calls via the {@code @BPFAbstraction} mechanism.
+     * {@link SchedulerBase#init()} already creates {@code SHARED_DSQ_ID}; this just
+     * attaches to it without emitting a second {@code scx_bpf_create_dsq} call.
      */
-    final DispatchQueue shared = new DispatchQueue(0L);
+    final DispatchQueue shared = DispatchQueue.attach(SHARED_DSQ_ID);
 
     // ─── Global variables ─────────────────────────────────────────
     /**
@@ -319,13 +320,24 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
 
     // ─── sched_ext ops ───────────────────────────────────────────
 
-    // init() is NOT overridden here. Both DispatchQueue fields (framework, shared)
-    // inject their scx_bpf_create_dsq() calls into the inherited init() via the
-    // @BPFAbstraction(constructorPrependTo = "init") mechanism. No super.init()
-    // call is needed — SchedulerBase.init() only creates SHARED_DSQ_ID(=0), which
-    // is now handled by `new DispatchQueue(0L)` above.
-    // TODO Task 7: add initHeartbeat() @BPFFunction + call it from init() override
-    //   once bpf_timer_init is supported without a super.init() chaining issue.
+    /**
+     * Creates both shared and framework DSQs.
+     *
+     * <p>Inlined SchedulerBase.init() body until super.init() lowering is fixed (see #issue).
+     * {@link #shared} uses {@link DispatchQueue#attach} so SHARED_DSQ_ID is created
+     * exactly once here rather than double-created. FRAMEWORK_DSQ's return code is
+     * captured; if it fails, the scheduler aborts startup cleanly.
+     *
+     * TODO Task 7: add initHeartbeat() @BPFFunction + call it from here
+     *   once bpf_timer_init is supported.
+     */
+    @Override
+    public int init() {
+        // Inlined SchedulerBase.init() body until super.init() lowering is fixed (see #issue).
+        int rc = scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
+        if (rc != 0) return rc;
+        return scx_bpf_create_dsq(FRAMEWORK_DSQ, -1);
+    }
 
     /**
      * Idle short-circuit: when the kernel reports a known-idle CPU, pre-dispatch
@@ -333,16 +345,18 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * rustland's selectCPU behaviour. Falls back to "let {@link #enqueue} ship
      * to Java" when no idle CPU is available.
      *
-     * <p>Uses {@link #selectCpuDefault} which pre-dispatches to
-     * {@code SCX_DSQ_LOCAL} when idle and increments the idle-fast-path stat
-     * via {@link #incStat}.
+     * <p>Increments {@code STAT_IDLE_FAST_PATH} when the idle path is taken,
+     * per spec §2 lines 232-240.
      */
     @Override
     public int selectCPU(Ptr<task_struct> p, int prev_cpu, long wake_flags) {
-        // selectCpuDefault pre-dispatches to SCX_DSQ_LOCAL when idle (enqueue won't be called).
-        return selectCpuDefault(p, prev_cpu, wake_flags);
-        // TODO Task 5: also call incStat(STAT_IDLE_FAST_PATH, 1) when idle path taken
-        //   (needs is_idle detection; selectCpuDefault hides it — consider inlining)
+        boolean is_idle = false;
+        int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
+        if (is_idle) {
+            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL.value(), SCX_SLICE_DFL.value(), 0);
+            incStat(STAT_IDLE_FAST_PATH, 1);
+        }
+        return cpu;
     }
 
     /**
@@ -403,7 +417,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     }
 
     /**
-     * Keep the idle-CPU bitmap ({@link #idleBitmap}) current.
+     * Keep the idle-CPU bitmap ({@link #idleMask}) current.
      * Also tracks the {@code runningTasks} stat counter (gauge).
      */
     @Override
@@ -498,7 +512,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      *
      * <p>Slot indices are defined in {@link Stats}; slot numbering is an ABI contract.
      * Lowers to a {@code __sync_fetch_and_add} on the corresponding {@code long} field
-     * of the single {@link SchedStats} record at index 0 of the {@link #stats} arena.
+     * of the single {@link SchedStats} record at index 0 of the {@link #stats} array.
      *
      * <p>Spec §"BPF-side stat and bitmap helpers" lines 1341-1347.
      *
@@ -507,8 +521,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      */
     @BPFFunction
     void incStat(int slot, long delta) {
-        int zero = 0;
-        Ptr<SchedStats> s = stats.bpf_lookup_elem(Ptr.of(zero));
+        Ptr<SchedStats> s = stats.bpf_get(0);
         if (s == null) return;
         // slot is 1-based; field offset = (slot - 1) * 8 bytes (all longs, tightly packed)
         long offset = (long)(slot - 1) * 8L;
@@ -526,8 +539,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      */
     @BPFFunction
     void decStat(int slot, long delta) {
-        int zero = 0;
-        Ptr<SchedStats> s = stats.bpf_lookup_elem(Ptr.of(zero));
+        Ptr<SchedStats> s = stats.bpf_get(0);
         if (s == null) return;
         long offset = (long)(slot - 1) * 8L;
         Ptr<Long> fieldPtr = s.<Byte>cast().add(offset).<Long>cast();
@@ -542,9 +554,8 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * {@code __sync_fetch_and_and} (clear) to be safe against concurrent
      * {@link #updateIdle} calls from different CPUs.
      *
-     * <p>The bitmap is stored in {@link #idleBitmap}, a {@code BPFArray<Long>}
-     * with 16 words (= 1 024 bits = {@link #MAX_CPUS} coverage). Java reads words
-     * individually via the map fd (no mmap — polled infrequently).
+     * <p>The bitmap is stored in {@link #idleMask}, a {@code BPFArena} mmap'd
+     * from Java (zero-syscall reads via {@link BPFArena#bpf_arena_word_at}).
      *
      * @param cpu   CPU number (must be in [0, {@link #MAX_CPUS}))
      * @param idle  {@code true} to mark idle (set bit), {@code false} to mark busy (clear bit)
@@ -552,9 +563,8 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     @BPFFunction
     void setBit(int cpu, boolean idle) {
         if (cpu >= MAX_CPUS) return;             // bounded write
-        int wordIdx = cpu / 64;
-        Ptr<Long> word = idleBitmap.bpf_get(wordIdx);
-        if (word == null) return;
+        long wordIdx = cpu / 64;
+        Ptr<Long> word = idleMask.bpf_arena_word_at(wordIdx);
         long mask = 1L << (cpu & 63);
         if (idle) sync_fetch_and_or(word, mask);
         else      sync_fetch_and_and(word, ~mask);
