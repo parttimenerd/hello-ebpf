@@ -3,6 +3,7 @@ package me.bechberger.ebpf.bpf.map;
 import me.bechberger.ebpf.annotations.bpf.BPFMapClass;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.type.Ptr;
 
@@ -46,27 +47,36 @@ public class BPFUserRingBuffer<E> extends BPFMap {
     }
 
     /**
-     * Reserve a slot in the ring buffer (BPF-side no-op stub; full impl in Task 1).
+     * BPF-side: reserve a slot in the ring buffer. Lowered by the plugin to
+     * {@code bpf_ringbuf_reserve}; not callable from Java.
+     *
+     * <p>The user-space producer side (Java {@code reserve}/{@code submit}) is
+     * introduced in Task 1 as separate Java methods.
      */
     @BuiltinBPFFunction("bpf_ringbuf_reserve(&$this, sizeof($C1), 0)")
+    @NotUsableInJava
     public Ptr<E> reserve() {
-        throw new UnsupportedOperationException("BPFUserRingBuffer.reserve() not yet implemented (Task 1)");
+        throw new MethodIsBPFRelatedFunction();
     }
 
     /**
-     * Submit a reserved entry (BPF-side no-op stub; full impl in Task 1).
+     * BPF-side: submit a reserved entry. Lowered by the plugin to
+     * {@code bpf_ringbuf_submit}; not callable from Java.
      */
     @BuiltinBPFFunction("bpf_ringbuf_submit($arg1, 0)")
+    @NotUsableInJava
     public void submit(Ptr<E> ptr) {
-        throw new UnsupportedOperationException("BPFUserRingBuffer.submit() not yet implemented (Task 1)");
+        throw new MethodIsBPFRelatedFunction();
     }
 
     /**
-     * Discard a reserved entry (BPF-side no-op stub; full impl in Task 1).
+     * BPF-side: discard a reserved entry. Lowered by the plugin to
+     * {@code bpf_ringbuf_discard}; not callable from Java.
      */
     @BuiltinBPFFunction("bpf_ringbuf_discard($arg1, 0)")
+    @NotUsableInJava
     public void discard(Ptr<E> ptr) {
-        throw new UnsupportedOperationException("BPFUserRingBuffer.discard() not yet implemented (Task 1)");
+        throw new MethodIsBPFRelatedFunction();
     }
 
     /**
@@ -74,6 +84,9 @@ public class BPFUserRingBuffer<E> extends BPFMap {
      *
      * <p>Maps to {@code bpf_user_ringbuf_drain} which iterates over entries
      * the user-space producer has committed, calling {@code callback} for each.
+     * The {@code callback} parameter is typed as {@code Object} here; Task 0c
+     * introduces a typed {@code BPFUserRingbufCallback} functional interface
+     * and the plugin lowering that uses it.
      *
      * @param callback BPF callback function
      * @param ctx      opaque context pointer passed to the callback
