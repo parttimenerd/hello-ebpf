@@ -80,20 +80,25 @@ public class BPFUserRingBuffer<E> extends BPFMap {
     }
 
     /**
-     * Drain entries from the user ring buffer into a BPF callback.
+     * Drain entries from the user ring buffer into a typed BPF callback.
      *
-     * <p>Maps to {@code bpf_user_ringbuf_drain} which iterates over entries
-     * the user-space producer has committed, calling {@code callback} for each.
-     * The {@code callback} parameter is typed as {@code Object} here; Task 0c
-     * introduces a typed {@code BPFUserRingbufCallback} functional interface
-     * and the plugin lowering that uses it.
+     * <p>Maps to {@code bpf_user_ringbuf_drain}.  The compiler plugin lowers
+     * the lambda into a C thunk with signature
+     * {@code int thunk(struct bpf_dynptr *dynptr, void *ctx)} that:
+     * <ol>
+     *   <li>stack-allocates an {@code E} record;</li>
+     *   <li>reads {@code sizeof(E)} bytes from the dynptr via
+     *       {@code bpf_dynptr_read};</li>
+     *   <li>forwards {@code &record} and {@code ctx} to the user lambda body.</li>
+     * </ol>
      *
-     * @param callback BPF callback function
-     * @param ctx      opaque context pointer passed to the callback
+     * @param <Ctx>    type of the opaque context pointer
+     * @param callback typed drain callback — receives a pointer to the decoded record
+     * @param ctx      context pointer forwarded to each callback invocation
      * @return number of entries drained, or a negative error code
      */
-    @BuiltinBPFFunction("bpf_user_ringbuf_drain(&$this, $arg1, $arg2, 0)")
-    public int drain(Object callback, Ptr<?> ctx) {
+    @BuiltinBPFFunction("bpf_user_ringbuf_drain(&$this, $func1:dynptr, $arg2, 0)")
+    public <Ctx> int drain(BPFUserRingbufCallback<E, Ctx> callback, Ptr<Ctx> ctx) {
         throw new MethodIsBPFRelatedFunction();
     }
 }

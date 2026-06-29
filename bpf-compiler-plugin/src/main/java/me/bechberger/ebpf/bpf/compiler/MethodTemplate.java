@@ -100,7 +100,17 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
      * </ul>
      */
     public enum FuncShape {
-        PLAIN, MAPELEM
+        PLAIN, MAPELEM,
+        /**
+         * Generates a {@code bpf_user_ringbuf_drain} callback thunk with signature
+         * {@code int thunk(struct bpf_dynptr *dynptr, void *ctx)}.
+         * The record type {@code E} is inferred from the first lambda parameter (which
+         * must be {@code Ptr<E>} / {@code E *} in C terms).  The thunk stack-allocates
+         * an {@code E}, reads {@code sizeof(E)} bytes from the dynptr via
+         * {@code bpf_dynptr_read}, then forwards {@code &rec} and {@code ctx} to the
+         * inlined lambda body.
+         */
+        DYNPTR
     }
 
     /**
@@ -520,6 +530,9 @@ public record MethodTemplate(String methodName, String raw, List<TemplatePart> p
                 if (rest.startsWith(":mapelem")) {
                     shape = FuncShape.MAPELEM;
                     rest = rest.substring(":mapelem".length());
+                } else if (rest.startsWith(":dynptr")) {
+                    shape = FuncShape.DYNPTR;
+                    rest = rest.substring(":dynptr".length());
                 }
                 templateParts.add(new FuncRef(funcNum - 1, shape));
                 part = rest;

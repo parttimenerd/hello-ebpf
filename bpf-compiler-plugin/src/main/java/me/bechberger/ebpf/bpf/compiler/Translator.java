@@ -1618,6 +1618,65 @@ class Translator {
                     "static __always_inline int " + name +
                             "(struct bpf_map *__map, const void *__key, void *__value, void *" + ctxParamName + ")");
             params = null;
+        } else if (shape == MethodTemplate.FuncShape.DYNPTR) {
+            // bpf_user_ringbuf_drain callback ABI:
+            //   int cb(struct bpf_dynptr *dynptr, void *ctx)
+            // User writes: (m, ctx) -> ... where m is Ptr<E> (first param, C type E *)
+            //                                   ctx is Ptr<Ctx> (second param, C type Ctx *)
+            // Generated thunk:
+            //   static __always_inline int __bpf_lambda_foo_N(
+            //       struct bpf_dynptr *__dynptr, void *__ctx) {
+            //     E ___rec;
+            //     if (bpf_dynptr_read(&___rec, sizeof(___rec), __dynptr, 0, 0)) return 1;
+            //     E *m = &___rec;
+            //     [Ctx *ctx = (Ctx *)__ctx;]
+            //     <user body>
+            //   }
+            if (lambda.parameters().size() < 1 || lambda.parameters().size() > 2) {
+                logError(methodPath.leaf(), "BPFUserRingbufCallback lambda must have one or two parameters "
+                        + "(record) or (record, ctx), got " + lambda.parameters().size());
+                return null;
+            }
+            var recParam = lambda.parameters().get(0);
+            var recName = recParam.name() != null ? recParam.name().name() : "___r";
+            // The record parameter is Ptr<E>, translated as E * in C.
+            // Extract the pointee type name (strip the trailing *).
+            String recPtrTypeStr = recParam.declarator().toPrettyString();
+            // recPtrTypeStr is something like "Msg *" — strip the trailing " *" or "*"
+            String recTypeStr;
+            if (recParam.declarator() instanceof PointerDeclarator ptrDecl) {
+                recTypeStr = ptrDecl.declarator().toPrettyString();
+            } else {
+                // Fallback: strip trailing * manually
+                recTypeStr = recPtrTypeStr.replaceAll("\\s*\\*\\s*$", "").trim();
+            }
+            var prologue = new ArrayList<Statement>();
+            prologue.add(new VerbatimStatement(recTypeStr + " ___rec;"));
+            prologue.add(new VerbatimStatement(
+                    "if (bpf_dynptr_read(&___rec, sizeof(___rec), __dynptr, 0, 0)) return 1;"));
+            prologue.add(new VerbatimStatement(recPtrTypeStr + " " + recName + " = &___rec;"));
+
+            if (lambda.parameters().size() == 2) {
+                var ctxParam = lambda.parameters().get(1);
+                if (ctxParam.name() != null) {
+                    String ctxPtrTypeStr = ctxParam.declarator().toPrettyString().trim();
+                    boolean isVoidPtr = "void *".equals(ctxPtrTypeStr) || "void*".equals(ctxPtrTypeStr);
+                    String ctxName2 = ctxParam.name().name();
+                    if (!isVoidPtr) {
+                        prologue.add(new VerbatimStatement(
+                                ctxPtrTypeStr + " " + ctxName2 + " = (" + ctxPtrTypeStr + ")__ctx;"));
+                    } else {
+                        prologue.add(new VerbatimStatement("void *" + ctxName2 + " = __ctx;"));
+                    }
+                }
+            }
+            var newBody = new ArrayList<Statement>(prologue);
+            newBody.addAll(bodyStatements);
+            bodyStatements = newBody;
+            verbatimHeader = new VerbatimFunctionDeclarator(
+                    "static __always_inline int " + name +
+                            "(struct bpf_dynptr *__dynptr, void *__ctx)");
+            params = null;
         } else {
             // PLAIN shape: emit lambda parameters verbatim. The user's lambda already
             // includes the ctx parameter (e.g. `(i, ctx) -> ...` for bpf_loop). The
