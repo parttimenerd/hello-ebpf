@@ -5,6 +5,9 @@ import me.bechberger.ebpf.bpf.BPFProgram;
 import me.bechberger.ebpf.bpf.QueuedTask;
 import me.bechberger.ebpf.bpf.UserspaceSchedulerBase;
 import me.bechberger.ebpf.bpf.map.SegmentCallback;
+import me.bechberger.ebpf.bpf.userspace.jfr.BatchEvent;
+import me.bechberger.ebpf.bpf.userspace.jfr.DispatchEvent;
+import me.bechberger.ebpf.bpf.userspace.jfr.TickEvent;
 
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
@@ -35,6 +38,9 @@ public abstract class UserspaceScheduler {
     /** Sentinel returned by {@link #policy} to mean "let BPF pick any idle CPU". */
     public static final int ANY_CPU = -1;
 
+    private static final long BYTES_PER_MIB = 1024L * 1024L;
+    private static final long TICK_PERIOD_NS = 1_000_000_000L;
+
     private final AtomicBoolean exitRequested = new AtomicBoolean(false);
     private final AtomicBoolean hasExited     = new AtomicBoolean(false);
     private Opts opts = Opts.defaults();
@@ -43,11 +49,13 @@ public abstract class UserspaceScheduler {
     private long sDispatched;
     private long sDispatchFailed;
 
-    private QueuedTask[] taskPool;
+    /** Task pool — package-private so test subclasses can seed fake tasks via {@link #drainRaw()}. */
+    QueuedTask[] taskPool;
 
-    private final BatchCtx batchCtx = new BatchCtx();
+    /** Batch context — package-private so test overrides of {@link #drainRaw()} can set the count. */
+    final BatchCtx batchCtx = new BatchCtx();
 
-    private static final class BatchCtx {
+    static final class BatchCtx {
         int count;
     }
 
@@ -245,14 +253,48 @@ public abstract class UserspaceScheduler {
     /** BPF transport — set by {@link #loadAndAttachBpf}, cleared by {@link #cleanupBpf}. */
     UserspaceSchedulerBase bpfHandle;
 
+    /**
+     * Emit a {@link TickEvent} for the current heartbeat tick.
+     *
+     * <p>Called by {@link #runLoop} just before {@link #tick()}. Protected so tests
+     * can call it directly without spinning up the full run loop.
+     */
+    protected void emitTickEvent() {
+        var ev = new TickEvent();
+        ev.begin();
+        try {
+            // no-op: timing runs over the full tick-event emission window
+        } finally {
+            ev.end();
+            if (ev.shouldCommit()) {
+                ev.heapUsedMb    = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / BYTES_PER_MIB;
+                ev.frameworkPids = (int) frameworkPidCount();
+                ev.commit();
+            }
+        }
+    }
+
+    /**
+     * Human-readable single-line stats summary, suitable for periodic stderr printing
+     * from sample schedulers. Format is intentionally compact and may change.
+     */
+    public String formatStats() {
+        var s = stats();
+        return String.format(
+            "drained=%d dropped=%d disp=%d/-%d cancel=%d stall=%d kicks=%d",
+            s.ringDrained(), s.ringDropped(),
+            s.dispatched(), s.dispatchFailed(),
+            s.ringCanceled(), s.stallFallbacks(), s.heartbeatKicks());
+    }
+
     private void runLoop() {
         long lastTickNs   = System.nanoTime();
-        long tickPeriodNs = 1_000_000_000L;
         while (!exitRequested.get() && isAttached()) {
             maybeRescanFrameworkPids();
             drainBatchOnce();
             long now = System.nanoTime();
-            if (now - lastTickNs >= tickPeriodNs) {
+            if (now - lastTickNs >= TICK_PERIOD_NS) {
+                emitTickEvent();
                 try {
                     tick();
                 } catch (Throwable t) {
@@ -269,28 +311,73 @@ public abstract class UserspaceScheduler {
      * kernel via the user→kernel ring buffer ({@code dispatched}).
      *
      * <p>If the ring buffer is empty, returns without blocking (zero-copy fast path).
-     * The method is a package-private testability hook to allow unit tests to call
-     * it directly on a fake/mocked handle without spinning up the full run loop.
+     * The method is protected to allow unit tests to call it directly on a
+     * fake/mocked handle without spinning up the full run loop.
      */
     protected void drainBatchOnce() {
+        int drained = drainRaw();
+        if (drained <= 0) return;
+
+        long dispBefore = sDispatched;
+        var ev = new BatchEvent();
+        ev.begin();
+        try {
+            for (int i = 0; i < batchCtx.count; i++) {
+                QueuedTask t = taskPool[i];
+                int cpu;
+                try {
+                    cpu = policy(t);
+                } catch (Throwable th) {
+                    onPolicyException(t, th);
+                    continue;          // skip — do NOT fall through to dispatchInternal
+                }
+                dispatchInternal(t, cpu);
+            }
+        } finally {
+            ev.end();
+            if (ev.shouldCommit()) {
+                ev.size = batchCtx.count;
+                ev.dispatched = (int) (sDispatched - dispBefore);
+                ev.commit();
+            }
+        }
+    }
+
+    /**
+     * Drain raw tasks from the kernel ring buffer into {@link #taskPool}, setting
+     * {@link BatchCtx#count} to the number of tasks filled.
+     *
+     * <p>Returns the number of tasks drained (as reported by {@code consumeRaw}),
+     * or {@code <= 0} if the ring is empty. When {@code bpfHandle} is {@code null},
+     * sleeps briefly to avoid busy-spinning in lifecycle tests and returns 0.
+     *
+     * <p>Protected for test injection: a test subclass may override this to fill
+     * {@link #taskPool} with controllable {@link QueuedTask}s and return their count,
+     * bypassing the real BPF ring buffer. The overriding method must also set
+     * {@link BatchCtx#count} to match the number of tasks placed into the pool.
+     */
+    protected int drainRaw() {
         if (bpfHandle == null) {
             // No BPF handle — sleep briefly to avoid a busy spin in the lifecycle test.
             try { Thread.sleep(10); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
-            return;
+            return 0;
         }
         batchCtx.count = 0;
-        int drained = bpfHandle.queued.consumeRaw(drainCallback, batchCtx);
-        if (drained <= 0) return;
-        for (int i = 0; i < batchCtx.count; i++) {
-            QueuedTask t = taskPool[i];
-            int cpu;
-            try {
-                cpu = policy(t);
-            } catch (Throwable th) {
-                onPolicyException(t, th);
-                continue;          // skip — do NOT fall through to dispatchInternal
-            }
-            dispatchInternal(t, cpu);
+        return bpfHandle.queued.consumeRaw(drainCallback, batchCtx);
+    }
+
+    /**
+     * Ensure {@link #taskPool} is allocated with at least {@code minSize} entries.
+     *
+     * <p>Package-private for test subclasses that override {@link #drainRaw()} and
+     * need to seed fake tasks before calling {@link #drainBatchOnce()} without
+     * going through {@link #runUntilExit(Opts)}.
+     */
+    void ensureTaskPool(int minSize) {
+        if (taskPool == null || taskPool.length < minSize) {
+            int newSize = Math.max(minSize, opts.batchSize);
+            taskPool = new QueuedTask[newSize];
+            for (int i = 0; i < taskPool.length; i++) taskPool[i] = new QueuedTask();
         }
     }
 
@@ -304,8 +391,21 @@ public abstract class UserspaceScheduler {
      * @param cpu policy-provided CPU, or {@link #ANY_CPU}
      */
     void dispatchInternal(QueuedTask t, int cpu) {
+        var ev = new DispatchEvent();
+        ev.pid = t.pid;
+        ev.begin();
         int target = (cpu == ANY_CPU) ? pickIdleCpu() : cpu;
-        int rc = submitDispatch(target, t.pid, t.enqCnt, 0L, t.vtime);
+        int rc = -1;
+        try {
+            rc = submitDispatch(target, t.pid, t.enqCnt, 0L, t.vtime);
+        } finally {
+            ev.end();
+            if (ev.shouldCommit()) {
+                ev.cpu = target;
+                ev.rc  = rc;
+                ev.commit();
+            }
+        }
         if (rc == 0) sDispatched++;
         else         sDispatchFailed++;
     }
