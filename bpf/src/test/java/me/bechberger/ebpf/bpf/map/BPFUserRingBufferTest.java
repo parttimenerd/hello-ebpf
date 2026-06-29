@@ -87,11 +87,17 @@ public class BPFUserRingBufferTest {
         slot.set(ValueLayout.JAVA_LONG, 8, ts);
     }
 
-    /** Invoke {@code drainOnce} via BPF_PROG_TEST_RUN and return records drained. */
+    /**
+     * Invoke {@code drainOnce} via BPF_PROG_TEST_RUN and return records drained.
+     *
+     * <p>Uses {@code result.ctx().drained} — the value written back by the BPF program
+     * into the context pointer — rather than {@code retval()}, exercising the full
+     * ctx round-trip that real callers depend on.
+     */
     private static int callDrainOnce(Consumer p) {
         Consumer.DrainCtx ctx = new Consumer.DrainCtx();
         var result = p.runSyscallProgram("drainOnce", ctx);
-        return result.retval();
+        return result.ctx().drained;
     }
 
     // ------------------------------------------------------------------
@@ -108,12 +114,15 @@ public class BPFUserRingBufferTest {
         try (var p = BPFProgram.load(Consumer.class)) {
             MemorySegment slot = p.rb.reserve();
             assertNotNull(slot, "reserve() must succeed on an empty ring buffer");
+            // Guard against silent layout drift: Msg is {int pid (4B), pad (4B), long ts (8B)} = 16B.
+            // If Msg gains a field, writeMsg's hard-coded offsets would silently corrupt the slot.
+            assertEquals(16L, slot.byteSize(), "Msg layout changed — update writeMsg offsets");
 
             writeMsg(slot, 1234, 5678L);
             p.rb.submit(slot);
 
             int drained = callDrainOnce(p);
-            assertTrue(drained >= 1, "drainOnce must report at least 1 record drained, got " + drained);
+            assertEquals(1, drained, "drainOnce must report exactly 1 record drained, got " + drained);
 
             long seenCount = p.seen.get();
             assertEquals(1L, seenCount,
@@ -131,7 +140,7 @@ public class BPFUserRingBufferTest {
     public void testReserveReturnsNullWhenFull() {
         try (var p = BPFProgram.load(Consumer.class)) {
             int reserved = 0;
-            final int CAP = 100_000;
+            final int CAP = 4096 * 2; // 2× maxEntries — more than enough to exhaust the buffer
             for (int i = 0; i < CAP; i++) {
                 MemorySegment slot = p.rb.reserve();
                 if (slot == null) {
