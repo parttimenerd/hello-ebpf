@@ -19,6 +19,7 @@ public final class DispatchedTask {
     public DispatchedTask() {}
 
     public DispatchedTask fillFrom(QueuedTask q) {
+        // KEEP IN SYNC: every field above must be copied here.
         this.pid    = q.pid;
         this.flags  = q.flags;
         this.enqCnt = q.enqCnt;

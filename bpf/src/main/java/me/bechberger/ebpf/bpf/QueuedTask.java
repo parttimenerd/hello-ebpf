@@ -3,7 +3,7 @@ package me.bechberger.ebpf.bpf;
 /**
  * Kernel→user record. Mutable public fields, rustland-style. The framework
  * holds a pooled instance and refills it from the ringbuf {@link
- * java.lang.foreign.MemorySegment} via {@link #fillFromSegment} on each drain
+ * java.lang.foreign.MemorySegment} via {@code fillFromSegment} on each drain
  * callback.
  *
  * <p>Wire-layout-equivalent to BPF's {@code queued_task_ctx} struct.
@@ -21,11 +21,12 @@ public final class QueuedTask {
     public long weight;         // [1..10000], default 100
     public long vtime;
     public long enqCnt;
-    final byte[] comm = new byte[16];
+    public final byte[] comm = new byte[16];
 
     public QueuedTask() {}
 
     public QueuedTask(QueuedTask src) {
+        // KEEP IN SYNC: every field above must be copied here.
         this.pid = src.pid; this.prevCpu = src.prevCpu;
         this.nrCpusAllowed = src.nrCpusAllowed; this.flags = src.flags;
         this.startTs = src.startTs; this.stopTs = src.stopTs;
@@ -45,6 +46,6 @@ public final class QueuedTask {
         for (int i = 0; i < len; i++) {
             if ((comm[i] & 0xFF) != (other.charAt(i) & 0xFF)) return false;
         }
-        return len == 16 || comm[len] == 0;
+        return comm[len] == 0;
     }
 }

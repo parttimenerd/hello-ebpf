@@ -39,7 +39,7 @@ public class QueuedTaskDispatchedTaskMarshallingTest {
         src.flags = 0xCAFEBABEL; src.startTs = 111_000L; src.stopTs = 222_000L;
         src.execRuntime = 999L; src.weight = 200L; src.vtime = 12_345L;
         src.enqCnt = 7L;
-        byte[] commIn = "java\0".getBytes();
+        byte[] commIn = "java\0".getBytes(java.nio.charset.StandardCharsets.UTF_8);
         System.arraycopy(commIn, 0, src.comm, 0, commIn.length);
 
         try (Arena a = Arena.ofConfined()) {
@@ -98,5 +98,19 @@ public class QueuedTaskDispatchedTaskMarshallingTest {
         assertEquals(0L,                       d.vtime);
         assertEquals(5L,                       d.flags);
         assertEquals(17L,                      d.enqCnt);
+    }
+
+    @Test
+    public void testCommHelpersEdgeCases() {
+        QueuedTask empty = new QueuedTask();
+        assertEquals("", empty.commStr());
+        assertTrue(empty.commEquals(""));
+
+        QueuedTask full = new QueuedTask();
+        // Fill all 16 bytes with no NUL — commStr returns the full string,
+        // commEquals must reject any prefix because the buffer is not NUL-terminated.
+        java.util.Arrays.fill(full.comm, (byte) 'a');
+        assertEquals(16, full.commStr().length());
+        assertFalse(full.commEquals("aaaaaaaaaaaaaaa"));  // 15 'a's, but byte[15] != 0
     }
 }
