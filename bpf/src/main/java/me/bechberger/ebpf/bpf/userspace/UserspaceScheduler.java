@@ -8,6 +8,9 @@ import me.bechberger.ebpf.bpf.map.SegmentCallback;
 
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,7 +37,7 @@ public abstract class UserspaceScheduler {
 
     private final AtomicBoolean exitRequested = new AtomicBoolean(false);
     private final AtomicBoolean hasExited     = new AtomicBoolean(false);
-    private Opts opts;
+    private Opts opts = Opts.defaults();
 
     private long sRingDrained;     // tasks successfully consumed from kernel→user ringbuf
     private long sDispatched;
@@ -51,6 +54,9 @@ public abstract class UserspaceScheduler {
     private final AtomicInteger cpuCursor = new AtomicInteger(0);
     /** CPU count cached once at construction; avoids per-call syscall in {@link #pickIdleCpu}. */
     private final int nrCpus = Runtime.getRuntime().availableProcessors();
+
+    /** Timestamp of the last /proc/self/task rescan (nanoseconds, from System.nanoTime()). */
+    private long lastRescanNs;
 
     // ── hoisted drain callback (avoids lambda allocation on hot path) ─────────
     private final SegmentCallback drainCallback = (seg, size, ctx) -> {
@@ -99,6 +105,10 @@ public abstract class UserspaceScheduler {
     public final void runUntilExit(Opts opts) {
         this.opts = opts;
         loadAndAttachBpf();
+        // Seed kernel-thread PIDs into BPF globals so the kthread fast path works
+        // immediately, and force the first /proc/self/task rescan.
+        seedKernelThreadPids();
+        lastRescanNs = 0; // force immediate rescan on first runLoop iteration
         // Allocate the task pool after BPF load so the handle is available.
         taskPool = new QueuedTask[opts.batchSize];
         for (int i = 0; i < taskPool.length; i++) taskPool[i] = new QueuedTask();
@@ -187,6 +197,49 @@ public abstract class UserspaceScheduler {
         return bpfHandle != null && bpfHandle.isSchedulerAttachedProperly();
     }
 
+    /**
+     * Insert {@code pid} into the framework-PID set.
+     *
+     * <p>Default: delegates to {@link UserspaceSchedulerBase#putFrameworkPid}.
+     * Tests override to capture into an in-heap {@code Map<Integer,Byte>} so
+     * the real {@link #maybeRescanFrameworkPids} logic can run without a live
+     * BPF file descriptor.
+     */
+    protected void putFrameworkPid(int pid) {
+        bpfHandle.putFrameworkPid(pid);
+    }
+
+    /**
+     * Return an iterable view of the framework-PID set entries.
+     *
+     * <p>Default: delegates to {@link UserspaceSchedulerBase#frameworkPidsIterable}, or
+     * returns an empty iterable if the BPF handle is not yet loaded.
+     * Tests override to return an in-heap collection so
+     * the real {@link #frameworkPidCount} logic can run without a live
+     * BPF file descriptor.
+     */
+    protected Iterable<Map.Entry<Integer, Byte>> frameworkPidsIterable() {
+        if (bpfHandle == null) return java.util.Collections.emptyList();
+        return bpfHandle.frameworkPidsIterable();
+    }
+
+    /**
+     * Ask the kernel for a recommended CPU for {@code pid} given hint {@code prevCpu}.
+     *
+     * <p>Default: delegates to {@link UserspaceSchedulerBase#selectCpuFor}.
+     * Tests override to return a controllable stub result so
+     * the real {@link #selectCpu} delegation logic can be verified without a live
+     * BPF file descriptor.
+     *
+     * @param pid     target task PID
+     * @param prevCpu previous / hint CPU
+     * @return kernel-recommended CPU if an idle CPU was found, or {@code prevCpu}
+     *         if the task is gone or the kernel has no idle CPU recommendation
+     */
+    protected int selectCpuFor(int pid, int prevCpu) {
+        return bpfHandle.selectCpuFor(pid, prevCpu, 0L);
+    }
+
     // ── internal ─────────────────────────────────────────────────────────────
 
     /** BPF transport — set by {@link #loadAndAttachBpf}, cleared by {@link #cleanupBpf}. */
@@ -196,6 +249,7 @@ public abstract class UserspaceScheduler {
         long lastTickNs   = System.nanoTime();
         long tickPeriodNs = 1_000_000_000L;
         while (!exitRequested.get() && isAttached()) {
+            maybeRescanFrameworkPids();
             drainBatchOnce();
             long now = System.nanoTime();
             if (now - lastTickNs >= tickPeriodNs) {
@@ -304,5 +358,103 @@ public abstract class UserspaceScheduler {
     protected MemorySegment idleMaskView() {
         if (bpfHandle == null) return null;
         return bpfHandle.idleMaskView();
+    }
+
+    // ── kernel-assisted CPU selection ────────────────────────────────────────
+
+    /**
+     * Ask the kernel for a recommended CPU for {@code pid} given hint {@code prevCpu}.
+     *
+     * <p>Delegates to {@link #selectCpuFor} which by default calls
+     * {@link UserspaceSchedulerBase#selectCpuFor} on the kernel side.
+     * Cheap; safe to call from {@link #policy}.
+     * Returns {@code prevCpu} if the kernel has no idle CPU recommendation
+     * ({@code scx_bpf_select_cpu_dfl} sets {@code found = false}) OR the task is gone.
+     *
+     * @param pid     target task PID
+     * @param prevCpu previous / hint CPU
+     * @return kernel-recommended CPU if an idle CPU was found, or {@code prevCpu}
+     *         if the task is gone or the kernel has no idle CPU recommendation
+     */
+    public final int selectCpu(int pid, int prevCpu) {
+        return selectCpuFor(pid, prevCpu);
+    }
+
+    // ── framework-PID rescan ─────────────────────────────────────────────────
+
+    /**
+     * Re-scan {@code /proc/self/task} and insert every TID into the
+     * {@code frameworkPids} BPF hash map so the BPF enqueue path routes them to
+     * the framework DSQ without a userspace round-trip.
+     *
+     * <p>Only runs if {@code opts.frameworkPidRescan} has elapsed since the last
+     * scan. On the first call ({@code lastRescanNs == 0}) the scan always runs.
+     *
+     * <p>Errors are logged to stderr and ignored so a transient {@code /proc} race
+     * never aborts the scheduler.
+     */
+    void maybeRescanFrameworkPids() {
+        long now = System.nanoTime();
+        if (now - lastRescanNs < opts.frameworkPidRescan.toNanos()) return;
+        lastRescanNs = now;
+        try (var stream = Files.list(Path.of("/proc/self/task"))) {
+            stream.forEach(p -> {
+                try {
+                    int tid = Integer.parseInt(p.getFileName().toString());
+                    putFrameworkPid(tid);
+                } catch (NumberFormatException ignored) {}
+            });
+        } catch (Exception e) {
+            System.err.println("[sched] /proc/self/task rescan failed: " + e);
+        }
+    }
+
+    /**
+     * Return the number of entries currently in the {@code frameworkPids} BPF map.
+     *
+     * <p>Public for tests. Returns 0 if the BPF handle is not yet loaded
+     * (the default {@link #frameworkPidsIterable} returns an empty iterable when
+     * {@code bpfHandle} is {@code null}).
+     */
+    public long frameworkPidCount() {
+        long c = 0;
+        for (var ignored : frameworkPidsIterable()) c++;
+        return c;
+    }
+
+    // ── kernel-thread PID seeding ────────────────────────────────────────────
+
+    /**
+     * Scan {@code /proc} for kernel threads {@code kswapd*} and {@code khugepaged},
+     * then write their PIDs into the BPF globals {@link UserspaceSchedulerBase#kswapdPid}
+     * and {@link UserspaceSchedulerBase#khugepageDPid}.
+     *
+     * <p>Called once after {@link #loadAndAttachBpf()} so the kthread fast path in
+     * BPF {@code enqueue} is populated before the first task arrives.
+     *
+     * <p>{@code /proc} races (process exits between listing and reading {@code comm})
+     * are silently ignored.
+     */
+    private void seedKernelThreadPids() {
+        if (bpfHandle == null) return;
+        try (var stream = Files.list(Path.of("/proc"))) {
+            stream.forEach(p -> {
+                String name = p.getFileName().toString();
+                int pid;
+                try { pid = Integer.parseInt(name); } catch (NumberFormatException e) { return; }
+                try {
+                    String comm = Files.readString(p.resolve("comm")).trim();
+                    if (comm.startsWith("kswapd")) {
+                        bpfHandle.setKswapdPid(pid);
+                    } else if (comm.equals("khugepaged")) {
+                        bpfHandle.setKhugepageDPid(pid);
+                    }
+                } catch (java.io.IOException ignored) {
+                    // /proc race: pid exited between listing and read — fine
+                }
+            });
+        } catch (Exception e) {
+            System.err.println("[sched] kernel-thread PID seeding failed: " + e);
+        }
     }
 }

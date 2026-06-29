@@ -27,6 +27,7 @@ import me.bechberger.ebpf.type.Ptr;
 
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
+import java.util.Map;
 
 import static me.bechberger.ebpf.bpf.BPFJ.bpf_probe_read_kernel_str;
 import static me.bechberger.ebpf.bpf.BPFJ.bpfArenaAllocPages;
@@ -361,6 +362,61 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * {@link #kswapdPid} (Task 5).
      */
     final GlobalVariable<Integer> khugepageDPid = new GlobalVariable<>(0);
+
+    // ─── Java-side testability seams ─────────────────────────────
+    //
+    // These protected methods are the ONLY way UserspaceScheduler should touch
+    // frameworkPids, kswapdPid, and khugepageDPid. Tests override them with
+    // in-heap fakes so the real UserspaceScheduler logic runs without a live
+    // BPF file descriptor.
+
+    /**
+     * Test seam. Production code routes BPF map writes through this method so
+     * tests can override it with an in-heap fake. Not part of the user-facing API.
+     *
+     * <p>Public to allow cross-package access from
+     * {@link me.bechberger.ebpf.bpf.userspace.UserspaceScheduler}, which holds
+     * a {@code UserspaceSchedulerBase} reference and is not a subclass.
+     */
+    public void putFrameworkPid(int pid) {
+        frameworkPids.put(pid, (byte) 1);
+    }
+
+    /**
+     * Test seam. Production code routes BPF map reads through this method so
+     * tests can override it with an in-heap fake. Not part of the user-facing API.
+     *
+     * <p>Public to allow cross-package access from
+     * {@link me.bechberger.ebpf.bpf.userspace.UserspaceScheduler}, which holds
+     * a {@code UserspaceSchedulerBase} reference and is not a subclass.
+     */
+    public Iterable<Map.Entry<Integer, Byte>> frameworkPidsIterable() {
+        return frameworkPids;
+    }
+
+    /**
+     * Test seam. Production code routes BPF global writes through this method so
+     * tests can override it with an in-heap fake. Not part of the user-facing API.
+     *
+     * <p>Public to allow cross-package access from
+     * {@link me.bechberger.ebpf.bpf.userspace.UserspaceScheduler}, which holds
+     * a {@code UserspaceSchedulerBase} reference and is not a subclass.
+     */
+    public void setKswapdPid(int pid) {
+        kswapdPid.set(pid);
+    }
+
+    /**
+     * Test seam. Production code routes BPF global writes through this method so
+     * tests can override it with an in-heap fake. Not part of the user-facing API.
+     *
+     * <p>Public to allow cross-package access from
+     * {@link me.bechberger.ebpf.bpf.userspace.UserspaceScheduler}, which holds
+     * a {@code UserspaceSchedulerBase} reference and is not a subclass.
+     */
+    public void setKhugepageDPid(int pid) {
+        khugepageDPid.set(pid);
+    }
 
     // ─── sched_ext ops ───────────────────────────────────────────
 
@@ -779,6 +835,36 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     private static final long DTC_SLICE_NS   = 16;
     private static final long DTC_VTIME      = 24;
     private static final long DTC_ENQ_CNT    = 32;
+
+    // ─── Java-callable BPF helpers ───────────────────────────────
+
+    /**
+     * Ask the kernel for a recommended CPU for {@code pid} given hint {@code prevCpu}.
+     *
+     * <p>Looks up the task by PID via {@code bpf_task_from_pid}, calls
+     * {@code scx_bpf_select_cpu_dfl} with the provided wake flags, then releases the
+     * task reference before returning. The {@code found} pointer is a local bool so
+     * the verifier tracks it as a valid non-null pointer.
+     *
+     * <p>Returns {@code prevCpu} if the task with {@code pid} has already exited, or
+     * if the kernel has no idle CPU recommendation ({@code scx_bpf_select_cpu_dfl}
+     * sets {@code found = false}).
+     *
+     * @param pid       target task PID
+     * @param prevCpu   previous / hint CPU
+     * @param wakeFlags {@code SCX_WAKE_*} flags as provided by the kernel
+     * @return the kernel-recommended CPU if an idle CPU was found, or {@code prevCpu}
+     *         if the task is gone or the kernel has no idle CPU recommendation
+     */
+    @BPFFunction
+    public int selectCpuFor(int pid, int prevCpu, long wakeFlags) {
+        Ptr<task_struct> task = bpf_task_from_pid(pid);
+        if (task == null) return prevCpu;
+        boolean found = false;
+        int cpu = scx_bpf_select_cpu_dfl(task, prevCpu, wakeFlags, Ptr.of(found));
+        bpf_task_release(task);
+        return found ? cpu : prevCpu;
+    }
 
     /**
      * Reserve a slot in the {@link #dispatched} user→kernel ring buffer, write a
