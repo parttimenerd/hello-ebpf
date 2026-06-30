@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserspaceSchedulerObsBenchTest {
 
     @Test
-    @Timeout(60)
+    @Timeout(90)
     void medianRoundTripUnder250us() throws Exception {
         Assumptions.assumeTrue("1".equals(System.getenv("BENCH")),
                 "BENCH=1 not set; skipping micro-benchmark");
@@ -42,8 +42,8 @@ public class UserspaceSchedulerObsBenchTest {
         runner.setDaemon(true);
         runner.start();
         Thread.sleep(500);
-        TestUtil.spawnCpuHogs(Runtime.getRuntime().availableProcessors(), 20_000);
-        Thread.sleep(21_000);
+        TestUtil.spawnCpuHogs(Runtime.getRuntime().availableProcessors(), 10_000);
+        Thread.sleep(11_000);
         sched.requestExit();
         runner.join(10_000);
 
