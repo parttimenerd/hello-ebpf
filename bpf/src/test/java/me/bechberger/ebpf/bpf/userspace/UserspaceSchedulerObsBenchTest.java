@@ -4,6 +4,7 @@ package me.bechberger.ebpf.bpf.userspace;
 import me.bechberger.ebpf.bpf.QueuedTask;
 import me.bechberger.ebpf.bpf.SchedulerExtension;
 import me.bechberger.ebpf.bpf.TestUtil;
+import me.bechberger.ebpf.bpf.map.BPFHistogram;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -45,29 +46,50 @@ public class UserspaceSchedulerObsBenchTest {
             e.printStackTrace(System.err);
         });
         runner.start();
-        Thread.sleep(500);
+
+        // Wait until bpfHandle is set (load+attach done) and grab a stable
+        // reference to the histogram. We read directly from this reference so
+        // a transient cleanupBpf() in another thread can't NPE us.
+        BPFHistogram hist = null;
+        long deadline = System.nanoTime() + 10_000_000_000L;
+        while (System.nanoTime() < deadline) {
+            var bpf = sched.bpf();
+            if (bpf != null) { hist = bpf.roundTripHistView(); break; }
+            Thread.sleep(50);
+        }
+        assertNotNull(hist, "bpfHandle never became non-null within 10s");
+
+        // Drive load.
         TestUtil.spawnCpuHogs(Runtime.getRuntime().availableProcessors(), 10_000);
-        Thread.sleep(11_000);
 
-        System.err.println("BENCH: runner.isAlive=" + runner.isAlive()
-            + " sched.exited=" + sched.exited()
-            + " bpfHandle=" + (sched.bpf() != null));
+        // Sample percentiles periodically until we have enough data or the
+        // scheduler detaches. Read from the stable hist reference so a
+        // racing cleanupBpf() can't trip us.
+        long total = 0, p50 = 0, p99 = 0;
+        long sampleDeadline = System.nanoTime() + 10_000_000_000L;
+        while (System.nanoTime() < sampleDeadline && sched.bpf() != null) {
+            try {
+                long t = hist.totalCount();
+                if (t > total) { total = t; p50 = hist.percentile(0.50); p99 = hist.percentile(0.99); }
+            } catch (Exception e) {
+                System.err.println("BENCH: hist read failed (likely cleanup race): " + e);
+                break;
+            }
+            Thread.sleep(200);
+        }
 
-        // Snapshot histograms BEFORE requesting exit — cleanupBpf() nulls bpfHandle.
-        var hist = sched.bpf().roundTripHistView();
-        long total = hist.totalCount();
-        long p50 = hist.percentile(0.50);
-        long p99 = hist.percentile(0.99);
-
-        sched.requestExit();
+        boolean prematureExit = sched.bpf() == null;
+        if (!prematureExit) {
+            sched.requestExit();
+        }
         runner.join(10_000);
 
-        assertTrue(total > 1000, "not enough samples: " + total);
         var s = sched.stats();
-
         System.err.println("BENCH summary: " + sched.formatStats());
-        System.err.printf("BENCH histogram: samples=%d p50=%dus p99=%dus%n", total, p50, p99);
+        System.err.printf("BENCH histogram: samples=%d p50=%dus p99=%dus prematureExit=%s%n",
+                total, p50, p99, prematureExit);
 
+        assertTrue(total > 1000, "not enough samples: " + total);
         assertTrue(p50 < 250,  "p50 too high: " + p50 + "us");
         assertTrue(p99 < 2000, "p99 too high: " + p99 + "us");
         assertTrue(s.ringDropped() * 100 < Math.max(s.ringEnqueued(), 1),
