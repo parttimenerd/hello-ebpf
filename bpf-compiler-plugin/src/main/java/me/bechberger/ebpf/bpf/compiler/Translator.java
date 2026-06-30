@@ -1926,16 +1926,21 @@ class Translator {
 
     /**
      * Detection site 2: if {@code callee} is a {@code @BPFFunction}-annotated method
-     * in the same class as the current method, record the call edge
+     * in the same class as the current method (or in one of its superclasses — covers
+     * subclasses calling inherited handler/helper methods), record the call edge
      * {@code (currentMethod, callee)} in {@link CompilerPlugin#callGraph}.
      */
     private void maybeRecordCallEdge(MethodSymbol callee) {
         // Check callee has @BPFFunction (via effective lookup to handle inheritance)
         if (compilerPlugin.getEffectiveBPFFunction(callee) == null) return;
 
-        // Both methods must be in the same enclosing class
         var currentMethod = (MethodSymbol) compilerPlugin.trees.getElement(methodPath.path());
-        if (!callee.getEnclosingElement().equals(currentMethod.getEnclosingElement())) return;
+        if (currentMethod == null) return;
+        var currentClass = currentMethod.getEnclosingElement();
+        var calleeClass = callee.getEnclosingElement();
+        if (!(currentClass instanceof ClassSymbol cs) || !(calleeClass instanceof ClassSymbol calleeCs)) return;
+        // Same class OR callee declared in a superclass of the current method's class.
+        if (!cs.equals(calleeCs) && !compilerPlugin.types.isSubtype(cs.type, calleeCs.type)) return;
 
         compilerPlugin.callGraph
                 .computeIfAbsent(currentMethod, k -> new HashSet<>())

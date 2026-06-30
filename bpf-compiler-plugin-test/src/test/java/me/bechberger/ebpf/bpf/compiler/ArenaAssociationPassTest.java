@@ -215,6 +215,68 @@ public class ArenaAssociationPassTest {
                 "callGraph[f] must contain 'g'.\nActual callees: " + callees);
     }
 
+    // ─── Test: cross-class inheritance ───────────────────────────────────────
+
+    /**
+     * When a struct_ops entry handler in a child class calls a {@code @BPFFunction}
+     * method that is INHERITED from a parent abstract {@code @BPF} class, the
+     * call edge must be recorded.  Without this, transitive arena reachability
+     * (Task B) would miss arena derefs that live in inherited helpers
+     * (e.g. {@code UserspaceSchedulerBase.setBit} called from a concrete
+     * scheduler's {@code sched_update_idle}).
+     */
+    @Test
+    public void callEdgesCollectedAcrossInheritance() {
+        CompilerPlugin.LAST_PLUGIN.remove();
+
+        // Parent abstract @BPF class declares @BPFFunction void g().
+        var parentSrc = sourceFile(PKG + ".InheritParent",
+                "package " + PKG + ";\n"
+                + commonImports()
+                + "@BPF(license = \"GPL\")\n"
+                + "public abstract class InheritParent extends BPFProgram {\n"
+                + "    @BPFFunction\n"
+                + "    public void g() {}\n"
+                + "}\n");
+
+        // Child @BPF class extends parent and calls inherited g() from a Kprobe.
+        var childSrc = sourceFile(PKG + ".InheritChild",
+                "package " + PKG + ";\n"
+                + commonImports()
+                + "@BPF(license = \"GPL\")\n"
+                + "public abstract class InheritChild extends InheritParent {\n"
+                + "    @Kprobe(\"do_sys_openat2\")\n"
+                + "    public int f(Ptr<PtDefinitions.pt_regs> ctx) {\n"
+                + "        g();\n"
+                + "        return 0;\n"
+                + "    }\n"
+                + "}\n");
+
+        var output = compileWithPlugin(List.of(parentSrc, childSrc));
+        var plugin = CompilerPlugin.LAST_PLUGIN.get();
+        assertNotNull(plugin,
+                "CompilerPlugin.LAST_PLUGIN must be set after compilation.\n"
+                + "Compiler output:\n" + output);
+
+        var graph = plugin.getCallGraph();
+        var fEntry = graph.entrySet().stream()
+                .filter(e -> e.getKey().getSimpleName().contentEquals("f"))
+                .findFirst();
+        assertTrue(fEntry.isPresent(),
+                "callGraph must contain an entry for method 'f' (child Kprobe).\n"
+                + "Actual keys: "
+                + graph.keySet().stream()
+                        .map(s -> s.getSimpleName().toString())
+                        .collect(Collectors.toList())
+                + "\nCompiler output:\n" + output);
+        var callees = fEntry.get().getValue().stream()
+                .map(s -> s.getSimpleName().toString())
+                .collect(Collectors.toSet());
+        assertTrue(callees.contains("g"),
+                "callGraph[f] must contain inherited 'g' from parent class.\n"
+                + "Actual callees: " + callees);
+    }
+
     // ─── Test 3 ──────────────────────────────────────────────────────────────
 
     /**
