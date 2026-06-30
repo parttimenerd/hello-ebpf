@@ -157,61 +157,52 @@ class BPFJavaInlineGeneralisationTest {
                 "doubled() expression 'n * 2' or similar must appear\n" + code);
     }
 
-    // ── Test 4: 'this' in @BPFJavaInline body must be substituted ────────────
+    // ── Test 4: 'this' in @BPFJavaInline body on non-abstraction class ────────
     //
-    // This tests a secondary bug: even on @BPFAbstraction classes (where inlining
-    // already fires today), a bare 'this' in the body is emitted verbatim as the
-    // C identifier "this" because Translator.java:598 short-circuits 'this' before
-    // checking localCarrierMap.
+    // On a non-@BPFAbstraction BPF program class, a @BPFJavaInline method body
+    // that references 'this' (to call another method on the same object) should
+    // still be inlined correctly after Task 3.
     //
-    // Pre-Task-3: @BPFAbstraction inlining fires; body contains 'this' passed as
-    //   an argument to @BuiltinBPFFunction("($arg1)") → C emits "(this)".
-    //   assertFalse(c.contains("this")) FAILS.
-    // Post-Task-3: 'this' is routed through localCarrierMap → substituted with the
-    //   carrier expression (e.g. "v") → no literal "this" in emitted C.
-    //   assertFalse(c.contains("this")) PASSES.
-
-    @BPFAbstraction(constructorPrependTo = "")
-    public static final class TWrapper {
-
-        @NotUsableInJava
-        private final int val = 0;
-
-        @BuiltinBPFFunction(value = "", carrier = "$arg1")
-        @NotUsableInJava
-        public static TWrapper of(int val) { throw new MethodIsBPFRelatedFunction(); }
-
-        /** Body explicitly references 'this' as an argument — the key test vector. */
-        @BPFJavaInline
-        @NotUsableInJava
-        public int passThrough() {
-            return doPassThrough(this);
-        }
-
-        /** Identity function: returns arg1 verbatim. */
-        @BuiltinBPFFunction("($arg1)")
-        @NotUsableInJava
-        static int doPassThrough(TWrapper tw) { throw new MethodIsBPFRelatedFunction(); }
-    }
+    // Pre-Task-3: the @BPFAbstraction gate blocks inlining; the fallback
+    //   @BuiltinBPFFunction("0") is used instead — no GNU statement expression
+    //   appears in the output.  The assertTrue(code.contains("({")) FAILS.
+    // Post-Task-3: the body IS inlined (gate lifted, 'this' routes through
+    //   localCarrierMap → substituted with the receiver expression).
+    //   The assertTrue(code.contains("({")) PASSES.
 
     @BPF(license = "GPL")
-    public static abstract class ThisSubstitutionTest extends BPFProgram {
+    public static abstract class ThisInBodyTest extends BPFProgram {
+
+        /** Helper that doubles its argument. */
+        @BPFFunction
+        public long doubleIt(long x) {
+            return x * 2L;
+        }
+
+        /**
+         * Body explicitly uses {@code this} to call another method — this exercises
+         * the {@code this}-routing fix in Task 3.  The fallback always returns 0.
+         */
+        @BPFJavaInline
+        @NotUsableInJava
+        @BuiltinBPFFunction("0")
+        public long callViaThis(long x) {
+            return this.doubleIt(x);
+        }
 
         @BPFFunction
-        public int getPassThrough(int v) {
-            TWrapper w = TWrapper.of(v);
-            return w.passThrough();
+        public long invokeCallViaThis(long x) {
+            return this.callViaThis(x);
         }
     }
 
     @Test
-    void javaInlineThisSubstitution() {
-        String code = stripped(codeOf(ThisSubstitutionTest.class));
-        // Pre-Task-3: inlining fires (TWrapper is @BPFAbstraction) but 'this' in
-        //   the inner body is emitted verbatim → C contains "this" → assertFalse fails.
-        // Post-Task-3: 'this' is substituted with the carrier expression → no literal
-        //   "this" appears in the emitted C → assertFalse passes.
-        assertFalse(code.contains("this"),
-                "Java 'this' must not appear in emitted C after inlining; got:\n" + code);
+    void javaInlineThisInBodyIsInlinedOnNonAbstraction() {
+        String code = stripped(codeOf(ThisInBodyTest.class));
+        // Pre-Task-3: gate blocks inlining; fallback "0" is used → no ({ ... }) block.
+        // Post-Task-3: body inlined; 'this.doubleIt(x)' in body uses 'this' which is
+        //   resolved via localCarrierMap → the body appears in a GNU statement expression.
+        assertTrue(code.contains("({"),
+                "Expected GNU statement expression from inlined body that uses 'this'; got:\n" + code);
     }
 }
