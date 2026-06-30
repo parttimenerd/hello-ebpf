@@ -1,7 +1,9 @@
 package me.bechberger.ebpf.bpf.compiler;
 
+import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.bpf.*;
 import me.bechberger.ebpf.bpf.BPFProgram;
+import me.bechberger.ebpf.type.Struct;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Collectors;
@@ -157,61 +159,78 @@ class BPFJavaInlineGeneralisationTest {
                 "doubled() expression 'n * 2' or similar must appear\n" + code);
     }
 
-    // ── Test 4: 'this' as a bare argument in @BPFJavaInline body ─────────────
+    // ── Test 4: 'this' substitution in @BPFJavaInline body — non-@BPFAbstraction class ──
     //
-    // Strategy: 'this' is passed as an argument to a @BuiltinBPFFunction whose
-    // template substitutes $arg1 directly.  The Translator must look up 'this'
-    // in localCarrierMap to produce the receiver carrier expression.  If the
-    // short-circuit at Translator.java:598 fires instead (returning "this"
-    // literally), the second assertion catches it.
+    // Strategy: define a @Type struct class Plain (NOT @BPFAbstraction) that has a
+    // @BPFJavaInline instance method passThrough() which passes 'this' as an argument
+    // to a @BuiltinBPFFunction.  The call site in invokePassThrough(Plain p) receives
+    // a Plain parameter 'p' and calls p.passThrough().
     //
-    // This is stronger than the previous fixture (this.doubleIt(x)), where the
-    // @BPFFunction dispatcher strips the receiver before 'this' can be evaluated.
+    // When translating p.passThrough():
+    //   - receiverExpr = JCIdent for 'p' (a method parameter)
+    //   - translate(p) → C identifier "p" (parameter's enclosing element is the method,
+    //     not a class, so the default-return path fires)
+    //   - carrierExpr = "p"
+    //   - innerCarrierMap.put("this", "p") ← the line Task 3 added
     //
-    // Pre-Task-3 (current state): the @BPFAbstraction gate blocks inlining for
-    //   non-abstraction classes entirely; the fallback @BuiltinBPFFunction("0")
-    //   is used.  No GNU statement expression ({ ... }) appears in the output.
-    //   assertFalse(inlinedBlocks.isEmpty()) FAILS — the test is RED.
+    // Inside the inlined body:
+    //   - 'this' IdentifierTree → localCarrierMap.get("this") = "p"  ← Task 3 IdentifierTree reorder
+    //   - fieldN(this) → @BuiltinBPFFunction("($arg1).n") with $arg1="p" → "(p).n"
+    //   - The dummy 'long pre' forces 2 non-blank statements, so the ({...}) wrapper fires.
     //
-    // Post-Task-3 (gate lifted + this-substitution reordered):
-    //   1. The body is inlined into a ({ ... }) block — first assertion passes.
-    //   2. 'this' resolves to the receiver carrier expression (not the literal C
-    //      identifier "this") — second assertion passes.  GREEN.
+    // Post-Task-3: GNU statement expression is emitted; 'this' does NOT appear inside it.
     //
-    // If the gate is lifted but Translator.java:598 is NOT reordered, the inlined
-    // block appears but contains a bare "this" token — the second assertion fails,
-    // catching the regression.
+    // Regression guard:
+    //   Removing innerCarrierMap.put("this", carrierExpr) → 'this' stays in inlined body → RED
+    //   Removing the IdentifierTree carrier-map reorder   → 'this' emitted verbatim → RED
+    //   Removing tryInlineJavaInlineMethod gate-lift      → fallback BuiltinBPFFunction
+    //                                                       used (no ({}) wrapper) → RED
 
     @BPF(license = "GPL")
     public static abstract class ThisSubstitutionTest extends BPFProgram {
 
         /**
-         * Passes {@code this} as a bare value to a @BuiltinBPFFunction.
-         * The template "(long)($arg1)" substitutes the translated argument
-         * expression for $arg1.  If 'this' flows through localCarrierMap the
-         * result is the carrier expression; if the short-circuit fires first,
-         * the result is the literal C identifier "this".
-         * The fallback "0" is used pre-Task-3 when inlining is blocked.
+         * Plain BPF struct (NOT @BPFAbstraction), nested inside the @BPF program so
+         * that its C struct definition is emitted by the annotation processor.
+         * Its @BPFJavaInline method references {@code this} — which must resolve to
+         * the caller's receiver expression, not the literal C identifier {@code this}.
          */
-        @BPFJavaInline
-        @NotUsableInJava
-        @BuiltinBPFFunction("0")
-        public long passSelf() {
-            long pre = 0;  // dummy intermediate statement to force multi-stmt body and ({}) wrapper
-            return identityArg(this);
+        @Type
+        public static class Plain extends Struct {
+            long n;
+
+            /**
+             * Passes {@code this} as a bare argument to a @BuiltinBPFFunction.
+             * The dummy {@code long pre} forces a multi-statement body so the
+             * ({@code {...}}) wrapper is always emitted, making the inlined block
+             * detectable by the test.
+             */
+            @BPFJavaInline
+            @NotUsableInJava
+            public long passThrough() {
+                long pre = 0L;
+                return fieldN(this);
+            }
+
+            /**
+             * Reads field 'n' of the struct argument.
+             * ($arg1).n is valid C for both struct value and struct Plain arguments.
+             * When 'this' substitution works, $arg1 becomes "p" → (p).n.
+             * When 'this' substitution is broken, $arg1 stays "this" → (this).n.
+             */
+            @BuiltinBPFFunction("($arg1).n")
+            @NotUsableInJava
+            static long fieldN(Object self) { throw new MethodIsBPFRelatedFunction(); }
         }
 
         /**
-         * Identity template: $arg1 is substituted with the translated argument
-         * expression.  Static so it has no receiver of its own.
+         * 'p' is a method parameter of struct type Plain.  When p.passThrough() is
+         * translated, the receiver expression is the C identifier "p" (not "this").
+         * Inside the inlined body, 'this' must resolve to "p".
          */
-        @BuiltinBPFFunction("(long)($arg1)")
-        @NotUsableInJava
-        static long identityArg(Object self) { throw new MethodIsBPFRelatedFunction(); }
-
         @BPFFunction
-        public long invokePassSelf() {
-            return passSelf();
+        public long invokePassThrough(Plain p) {
+            return p.passThrough();
         }
     }
 
@@ -222,17 +241,17 @@ class BPFJavaInlineGeneralisationTest {
         var inlinedBlocks = code.lines()
                 .filter(l -> l.contains("({") && l.contains("})"))
                 .toList();
-        // Pre-Task-3: no inlining happens at all — the ({ ... }) block is absent.
+        // The ({}) wrapper must appear — passThrough() has a multi-statement body.
         assertFalse(inlinedBlocks.isEmpty(),
-                "Expected @BPFJavaInline body to be inlined at call site as a GNU "
-                + "statement expression ({ ... }); got:\n" + code);
-        // Post-Task-3: the inlined block must NOT contain a bare 'this' token.
-        // 'this' must have been replaced with the receiver carrier expression.
+                "Expected @BPFJavaInline body to be inlined as a GNU statement "
+                + "expression ({ ... }); got:\n" + code);
+        // Post-Task-3: 'this' inside the inlined body must NOT appear as the literal
+        // C identifier 'this'.  It must have been substituted with the receiver carrier ("p").
         var hasBareThis = inlinedBlocks.stream()
                 .anyMatch(l -> l.matches(".*\\bthis\\b.*"));
         assertFalse(hasBareThis,
-                "'this' inside @BPFJavaInline body must resolve to the receiver "
-                + "carrier expression, not the literal C identifier 'this'; "
+                "'this' inside @BPFJavaInline body must resolve to the carrier "
+                + "expression, not the literal C identifier 'this'; "
                 + "got inlined blocks:\n" + String.join("\n", inlinedBlocks));
     }
 }
