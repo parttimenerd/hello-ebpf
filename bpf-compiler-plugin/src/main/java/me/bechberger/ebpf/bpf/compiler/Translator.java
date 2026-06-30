@@ -1872,9 +1872,9 @@ class Translator {
      * walk its initializer to find the arena name via the {@code bpfArenaAllocPages} call,
      * and record {@code (currentMethod, arenaName)} in {@link CompilerPlugin#directArenaRefs}.
      *
-     * <p>Silently no-ops when the receiver isn't an {@code @InArena} field, or when the
-     * initializer pattern doesn't match {@code bpfArenaAllocPages(arenaField, …)}.
-     * Task C will add the strict guard; here we only collect.
+     * <p>If the field's initializer does NOT trace to a
+     * {@code bpfArenaAllocPages(arenaField, …)}-shaped call, a compile-time error is emitted
+     * at the field's position (deduplicated — at most once per distinct field symbol).
      */
     private void maybeRecordArenaDeref(ExpressionTree receiver) {
         // The receiver must be an identifier that resolves to a class field
@@ -1890,33 +1890,45 @@ class Translator {
         var fieldTree = compilerPlugin.trees.getTree(fieldSym);
         if (!(fieldTree instanceof JCVariableDecl varDecl)) return;
         var init = varDecl.init;
-        if (init == null) return;
 
-        // Expect: bpfArenaAllocPages(arenaField, ...) — possibly wrapped in a cast
+        // Try to find bpfArenaAllocPages(arenaField, ...) — possibly wrapped in a cast
         JCMethodInvocation allocCall = null;
         if (init instanceof JCMethodInvocation mi) {
             allocCall = mi;
         } else if (init instanceof JCTypeCast tc && tc.expr instanceof JCMethodInvocation mi) {
             allocCall = mi;
         }
-        if (allocCall == null) return;
 
-        // Verify the method is bpfArenaAllocPages
-        MethodSymbol allocSym = null;
-        if (allocCall.meth instanceof JCFieldAccess fa && fa.sym instanceof MethodSymbol ms) {
-            allocSym = ms;
-        } else if (allocCall.meth instanceof JCIdent id && id.sym instanceof MethodSymbol ms) {
-            allocSym = ms;
+        // Validate the call shape: must be bpfArenaAllocPages with an identifier as first arg
+        JCIdent arenaIdent = null;
+        if (allocCall != null) {
+            MethodSymbol allocSym = null;
+            if (allocCall.meth instanceof JCFieldAccess fa && fa.sym instanceof MethodSymbol ms) {
+                allocSym = ms;
+            } else if (allocCall.meth instanceof JCIdent id && id.sym instanceof MethodSymbol ms) {
+                allocSym = ms;
+            }
+            if (allocSym != null
+                    && allocSym.getSimpleName().contentEquals("bpfArenaAllocPages")
+                    && !allocCall.getArguments().isEmpty()
+                    && allocCall.getArguments().get(0) instanceof JCIdent ai) {
+                arenaIdent = ai;
+            }
         }
-        if (allocSym == null) return;
-        if (!allocSym.getSimpleName().contentEquals("bpfArenaAllocPages")) return;
 
-        // The first argument should be an identifier referring to the arena field
-        if (allocCall.getArguments().isEmpty()) return;
-        var firstArg = allocCall.getArguments().get(0);
-        if (!(firstArg instanceof JCIdent arenaIdent)) return;
+        if (arenaIdent == null) {
+            // Initializer does not match the expected pattern.
+            // Emit a compile error once per offending field (dedup across methods).
+            if (compilerPlugin.erroredArenaFields.add(fieldSym)) {
+                logError(varDecl,
+                        "cannot determine the arena map for @InArena field '"
+                        + fieldSym.getSimpleName()
+                        + "' — initialize it via bpfArenaAllocPages(<arenaField>, ...)");
+            }
+            return;
+        }
 
-        // Record the arena name
+        // Happy path: record the arena field name for this method.
         var currentMethod = (MethodSymbol) compilerPlugin.trees.getElement(methodPath.path());
         var arenaName = arenaIdent.getName().toString();
         compilerPlugin.directArenaRefs

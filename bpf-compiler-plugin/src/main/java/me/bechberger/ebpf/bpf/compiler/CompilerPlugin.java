@@ -86,6 +86,13 @@ public class CompilerPlugin implements Plugin {
     final Map<MethodSymbol, Set<String>> directArenaRefs = new HashMap<>();
 
     /**
+     * Fields for which an "unresolvable @InArena initializer" compile-error has already
+     * been emitted (by {@link Translator#maybeRecordArenaDeref}).  Deduplicated across
+     * all method translations so each offending field produces exactly one error.
+     */
+    final Set<com.sun.tools.javac.code.Symbol.VarSymbol> erroredArenaFields = new HashSet<>();
+
+    /**
      * Side-channel populated during translation: for each translated method, the set of
      * other {@code @BPFFunction} method symbols it directly calls (in the same class).
      * Collected by {@link Translator}; consumed by {@code ArenaAssociationPass} in Task B.

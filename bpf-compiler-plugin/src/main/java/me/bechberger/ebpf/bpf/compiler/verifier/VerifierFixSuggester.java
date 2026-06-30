@@ -115,6 +115,19 @@ public final class VerifierFixSuggester {
                     verifier doesn't have to walk every iteration.
                     See: cookbook §Program size""";
 
+            case ARENA_NOT_ASSOCIATED -> """
+                    The verifier rejected an addr_space_cast instruction because the program has \
+                    no associated arena.
+                    Why: this is a hello-ebpf framework bug — the ArenaAssociationPass failed to \
+                    inject the per-prog arena-association helper into this struct_ops entry, so \
+                    the verifier did not see the required BPF_PSEUDO_MAP_FD ldimm64 for the \
+                    arena map.
+                    Fix: please file an issue at https://github.com/parttimenerd/hello-ebpf \
+                    with the BPF source file and the @BPF class that triggered this error. \
+                    Do NOT add manual bpfArenaAssociate calls — those are an internal \
+                    implementation detail.
+                    See: https://github.com/parttimenerd/hello-ebpf/issues""";
+
             case OTHER -> """
                     The verifier rejected the program with a message we do not yet pattern-match.
                     Why: see the verifier message above for the kernel's own explanation.

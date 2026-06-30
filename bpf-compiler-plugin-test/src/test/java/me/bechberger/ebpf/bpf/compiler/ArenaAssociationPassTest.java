@@ -331,4 +331,42 @@ public class ArenaAssociationPassTest {
                         .collect(Collectors.toList()))
                         .orElse(List.of()));
     }
+
+    // ─── Test C1: strict initializer guard ───────────────────────────────────
+
+    /**
+     * When an {@code @InArena Ptr<Long>} field is declared without an initializer (i.e. it
+     * does not trace to a {@code bpfArenaAllocPages(arenaField, …)} call) and a method
+     * dereferences it, the plugin must emit a compile-time error containing the field name
+     * and the expected fix hint.
+     */
+    @Test
+    public void uninitializedInArenaFieldDerefEmitsCompileError() {
+        CompilerPlugin.LAST_PLUGIN.remove();
+        // 'x' has no initializer — dereference in 'f' must produce a compile error.
+        var src = sourceFile(PKG + ".UninitInArenaTest",
+                "package " + PKG + ";\n"
+                + commonImports()
+                + "@BPF(license = \"GPL\")\n"
+                + "public abstract class UninitInArenaTest extends BPFProgram {\n"
+                + "    @BPFMapDefinition(maxEntries = 1) BPFArena myArena;\n"
+                + "    @InArena me.bechberger.ebpf.type.Ptr<Long> x;\n"
+                + "\n"
+                + "    @Kprobe(\"do_sys_openat2\")\n"
+                + "    public int f(Ptr<PtDefinitions.pt_regs> ctx) {\n"
+                + "        x.val();\n"
+                + "        return 0;\n"
+                + "    }\n"
+                + "}\n");
+        var output = compileWithPlugin(List.of(src));
+        assertTrue(output.contains("ERROR") || output.contains("error"),
+                "Compilation of a class with uninitialized @InArena field deref must fail.\n"
+                + "Actual output:\n" + output);
+        assertTrue(output.contains("x"),
+                "Error message must mention the offending field name 'x'.\n"
+                + "Actual output:\n" + output);
+        assertTrue(output.contains("bpfArenaAllocPages") || output.contains("arena"),
+                "Error message must mention the fix hint (bpfArenaAllocPages / arena).\n"
+                + "Actual output:\n" + output);
+    }
 }

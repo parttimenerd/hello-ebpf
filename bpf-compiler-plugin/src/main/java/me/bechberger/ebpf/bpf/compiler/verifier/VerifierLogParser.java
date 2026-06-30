@@ -65,6 +65,7 @@ public final class VerifierLogParser {
         HELPER_NOT_ALLOWED,            // unknown func / helper not allowed
         UNRESOLVED_FUNC,               // call to '...' is not allowed / unknown opcode
         PROGRAM_TOO_LARGE,             // BPF program is too large / processed insn count exceeded
+        ARENA_NOT_ASSOCIATED,          // addr_space_cast insn can only be used in a program that has an associated arena
         OTHER                          // catch-all
     }
 
@@ -274,6 +275,10 @@ public final class VerifierLogParser {
                 || m.contains("unsupported function")
                 || m.contains("kernel subsystem misconfigured func")) {
             return ErrorClass.UNRESOLVED_FUNC;
+        }
+
+        if (m.contains("addr_space_cast insn can only be used in a program that has an associated arena")) {
+            return ErrorClass.ARENA_NOT_ASSOCIATED;
         }
 
         return ErrorClass.OTHER;

@@ -494,4 +494,24 @@ class VerifierLogParserTest {
         assertEquals(4, err.instructionOffset().orElseThrow(),
                 "offset must attach to the chosen error line's preceding insn, not the first candidate");
     }
+
+    // --- ARENA_NOT_ASSOCIATED (Task C) ---
+
+    @Test
+    void addrSpaceCastWithoutAssociatedArenaClassifiesAsArenaNotAssociated() {
+        var log = """
+                0: R1=ctx() R10=fp0
+                0: (95) exit
+                addr_space_cast insn can only be used in a program that has an associated arena
+                """;
+        var err = VerifierLogParser.parse(log).error().orElseThrow();
+        assertEquals(VerifierLogParser.ErrorClass.ARENA_NOT_ASSOCIATED, err.errorClass());
+    }
+
+    @Test
+    void addrSpaceCastClassifyDirectly() {
+        assertEquals(VerifierLogParser.ErrorClass.ARENA_NOT_ASSOCIATED,
+                VerifierLogParser.classify(
+                        "addr_space_cast insn can only be used in a program that has an associated arena"));
+    }
 }
