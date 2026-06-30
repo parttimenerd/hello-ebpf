@@ -123,10 +123,9 @@ public abstract class UserspaceScheduler {
     public final void runUntilExit(Opts opts) {
         this.opts = opts;
         loadAndAttachBpf();
-        // Seed kernel-thread PIDs into BPF globals so the kthread fast path works
-        // immediately, and force the first /proc/self/task rescan.
-        seedKernelThreadPids();
-        lastRescanNs = 0; // force immediate rescan on first runLoop iteration
+        // loadAndAttachBpf has already seeded kernel-thread PIDs and done the
+        // initial /proc/self/task rescan; the next periodic rescan happens on
+        // schedule (opts.frameworkPidRescan after the one done in load).
         // Allocate the task pool after BPF load so the handle is available.
         taskPool = new QueuedTask[opts.batchSize];
         for (int i = 0; i < taskPool.length; i++) taskPool[i] = new QueuedTask();
@@ -185,13 +184,23 @@ public abstract class UserspaceScheduler {
         } catch (Exception e) {
             throw new UserspaceSchedulerStartupException("BPF load failed", e);
         }
+        this.bpfHandle = bpf;
+        // Seed framework PIDs BEFORE attaching the scheduler. Once attached, every
+        // JVM thread that blocks/wakes (GC, JIT, the run-loop thread itself) is
+        // routed by BPF enqueue: framework PIDs bypass userspace; everything else
+        // sits in the user ring waiting for the run-loop thread to drain it.
+        // If the run-loop thread is not yet in frameworkPids and happens to block
+        // on a syscall here (e.g., /proc reads, mmap), the scheduler can dead-lock
+        // on itself — the drainer is the very task that needs dispatching.
+        seedKernelThreadPids();
+        maybeRescanFrameworkPids();
         try {
             bpf.attachScheduler();
         } catch (Exception e) {
+            this.bpfHandle = null;
             bpf.close();
             throw new UserspaceSchedulerStartupException("attachScheduler failed", e);
         }
-        this.bpfHandle = bpf;
     }
 
     /**
