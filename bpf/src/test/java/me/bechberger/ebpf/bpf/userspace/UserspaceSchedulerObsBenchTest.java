@@ -86,8 +86,8 @@ public class UserspaceSchedulerObsBenchTest {
 
         var s = sched.stats();
         System.err.println("BENCH summary: " + sched.formatStats());
-        System.err.printf("BENCH ringConsume: samples=%d p50=%dus p99=%dus prematureExit=%s%n",
-                total, p50, p99, prematureExit);
+        System.err.printf("BENCH ringConsume: samples=%d p50=%dus p99=%dus prematureExit=%s exitCause=%s%n",
+                total, p50, p99, prematureExit, sched.exitCause());
 
         assertTrue(total > 1000, "not enough samples: " + total);
         assertTrue(p50 < 250,  "p50 too high: " + p50 + "us");

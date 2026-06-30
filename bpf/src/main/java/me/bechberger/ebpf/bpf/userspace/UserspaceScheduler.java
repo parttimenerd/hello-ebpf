@@ -45,7 +45,18 @@ public abstract class UserspaceScheduler {
 
     private final AtomicBoolean exitRequested = new AtomicBoolean(false);
     private final AtomicBoolean hasExited     = new AtomicBoolean(false);
+    /** Set by {@link #runLoop} just before it returns so {@link #runUntilExit} can log why. */
+    private volatile ExitCause exitCause = ExitCause.NOT_EXITED;
     private Opts opts = Opts.defaults();
+
+    /** Why {@link #runLoop} returned. Used by the exit diagnostic in {@link #runUntilExit}. */
+    public enum ExitCause {
+        NOT_EXITED,
+        /** {@link #requestExit} was called from another thread. */
+        REQUESTED,
+        /** {@link #isAttached} returned false — kernel detached the scheduler (watchdog, error, etc.). */
+        DETACHED
+    }
 
     private long sRingDrained;     // tasks successfully consumed from kernel→user ringbuf
     private long sDispatched;
@@ -132,9 +143,33 @@ public abstract class UserspaceScheduler {
         try {
             runLoop();
         } finally {
+            logExitDiagnostic();
             hasExited.set(true);
             cleanupBpf();
         }
+    }
+
+    /**
+     * Why {@link #runLoop} returned, or {@link ExitCause#NOT_EXITED} if it hasn't.
+     * Visible to tests that need to assert on the exit cause.
+     */
+    public final ExitCause exitCause() {
+        return exitCause;
+    }
+
+    /**
+     * Print a single-line diagnostic explaining why the run loop returned. Called from
+     * {@link #runUntilExit}'s {@code finally} so callers don't get a silent exit when
+     * the kernel detaches us. Reads the SCX exit code from BPF before {@link #cleanupBpf}
+     * nulls the handle.
+     */
+    private void logExitDiagnostic() {
+        long scxExitCode = 0L;
+        if (bpfHandle != null) {
+            try { scxExitCode = bpfHandle.getExitCode(); } catch (Exception ignored) {}
+        }
+        System.err.printf("[sched] runLoop exited: cause=%s scxExitCode=0x%x %s%n",
+                exitCause, scxExitCode, formatStats());
     }
 
     /** Ask the run loop to exit at the next batch boundary. Safe from any thread. */
@@ -325,7 +360,9 @@ public abstract class UserspaceScheduler {
 
     private void runLoop() {
         long lastTickNs   = System.nanoTime();
-        while (!exitRequested.get() && isAttached()) {
+        while (true) {
+            if (exitRequested.get()) { exitCause = ExitCause.REQUESTED; break; }
+            if (!isAttached())       { exitCause = ExitCause.DETACHED;  break; }
             maybeRescanFrameworkPids();
             drainBatchOnce();
             long now = System.nanoTime();
