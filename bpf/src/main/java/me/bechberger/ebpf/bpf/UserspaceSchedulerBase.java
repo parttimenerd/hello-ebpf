@@ -924,7 +924,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         // Non-atomic compound assignment: BPF does not allow BPF_ATOMIC on arena
         // (address-space 1) pointers. Each CPU only writes its own bit, so there is
         // no intra-BPF write-write race and non-atomic ops are safe.
-        Ptr<Long> word = idleMaskBase.add(wordIdx);
+        @InArena Ptr<Long> word = idleMaskBase.add(wordIdx);
         if (idle) word.set(word.val() | mask);
         else      word.set(word.val() & ~mask);
     }
