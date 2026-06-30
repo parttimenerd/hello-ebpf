@@ -159,8 +159,11 @@ public class ArenaAssociationPassEmissionTest {
         assertTrue(code.contains("static __always_inline void bpf_arena_associate_arena1(void)"),
                 "Expected 'static __always_inline void bpf_arena_associate_arena1(void)' "
                 + "in generated C:\n" + code);
-        assertTrue(code.contains("bpf_arena_alloc_pages(&arena1, NULL, 0, NUMA_NO_NODE, 0)"),
-                "Expected 'bpf_arena_alloc_pages(&arena1, ...)' inside helper in generated C:\n" + code);
+        assertTrue(code.contains("bpf_printk(\"arena=%p\\n\", (void *)(&arena1))"),
+                "Expected 'bpf_printk(\"arena=%p\\n\", (void *)(&arena1))' inside helper in generated C "
+                + "(bpf_printk forces the verifier-required ldimm64 without being sleepable, "
+                + "unlike bpf_arena_alloc_pages which is rejected in non-sleepable struct_ops handlers):\n"
+                + code);
 
         // The call must be injected into the handler body.
         assertTrue(code.contains("bpf_arena_associate_arena1();"),

@@ -35,10 +35,16 @@ import java.util.*;
  *       static __always_inline void bpf_arena_associate_<N>(void) {
  *           static bool _verify_once;
  *           if (_verify_once) return;
- *           bpf_arena_alloc_pages(&<N>, NULL, 0, NUMA_NO_NODE, 0);
+ *           bpf_printk("arena=%p\n", (void *)(&<N>));
  *           _verify_once = true;
  *       }
- *       }</pre></li>
+ *       }</pre>
+ *       Note: {@code bpf_arena_alloc_pages} cannot be used here because it is a sleepable
+ *       kfunc that the verifier rejects in non-sleepable {@code struct_ops} handlers.
+ *       {@code bpf_printk} is non-sleepable and forces clang to emit an {@code ldimm64}
+ *       referencing the arena map, which is all the verifier needs to associate the prog.
+ *       This matches the pattern used in the upstream scx library ({@code sdt_alloc.bpf.c
+ *       scx_arena_subprog_init}).</li>
  *   <li>Prepends one {@code bpf_arena_associate_<N>();} call at the top of each
  *       struct_ops entry body, one call per reachable arena (sorted by name for
  *       deterministic output).</li>
@@ -96,8 +102,17 @@ public class ArenaAssociationPass {
             MethodSymbol m = methodSymbols.get(i);
             BPFFunction bpfFn = plugin.getEffectiveBPFFunction(m);
             if (bpfFn == null) continue;
+            // Identify struct_ops entries two ways:
+            //   (a) section() starts with "struct_ops/" or "struct_ops.s/" (explicit SEC annotation)
+            //   (b) headerTemplate contains "BPF_STRUCT_OPS(" or "BPF_STRUCT_OPS_SLEEPABLE("
+            //       — this covers Scheduler interface methods that use BPF_STRUCT_OPS macro but
+            //       leave section() empty (the macro itself emits the SEC attribute in C).
             String section = bpfFn.section();
-            if (!section.startsWith("struct_ops/") && !section.startsWith("struct_ops.s/")) continue;
+            String headerTpl = bpfFn.headerTemplate();
+            boolean isStructOpsEntry =
+                    section.startsWith("struct_ops/") || section.startsWith("struct_ops.s/")
+                    || headerTpl.contains("BPF_STRUCT_OPS(") || headerTpl.contains("BPF_STRUCT_OPS_SLEEPABLE(");
+            if (!isStructOpsEntry) continue;
             Set<String> arenas = transitiveArenas.get(m);
             if (arenas == null || arenas.isEmpty()) continue;
             var sorted = new ArrayList<>(arenas);
@@ -154,6 +169,12 @@ public class ArenaAssociationPass {
      * {@code static __always_inline void bpf_arena_associate_<N>(void)} header
      * is emitted verbatim, which avoids needing to construct a full
      * FunctionDeclarator with return types, modifiers, etc.
+     *
+     * <p>Uses {@code bpf_printk("arena=%p\\n", &<N>)} (not {@code bpf_arena_alloc_pages})
+     * because {@code bpf_arena_alloc_pages} is a sleepable kfunc rejected in non-sleepable
+     * {@code struct_ops} entry handlers. {@code bpf_printk} is non-sleepable and forces
+     * clang to emit a {@code ldimm64} referencing {@code &arena}, which is all the BPF
+     * verifier needs to associate the prog. Pattern from upstream scx ({@code sdt_alloc.bpf.c}).
      */
     private FunctionDeclarationStatement buildHelperFunction(String arenaName) {
         var header = new VerbatimFunctionDeclarator(
@@ -162,8 +183,14 @@ public class ArenaAssociationPass {
         List<Statement> bodyStatements = new ArrayList<>();
         bodyStatements.add(Statement.verbatim("static bool _verify_once;"));
         bodyStatements.add(Statement.verbatim("if (_verify_once) return;"));
+        // bpf_printk forces clang to emit an ldimm64 referencing &arena so the BPF verifier
+        // sets prog->aux->arena for this program.  bpf_arena_alloc_pages cannot be used here
+        // because it is a sleepable kfunc, which the verifier rejects in non-sleepable
+        // struct_ops entry handlers.  The "%p" format string is needed to reference the arena
+        // pointer value; clang optimises away arguments that are never formatted.
+        // Pattern from scx upstream (sdt_alloc.bpf.c scx_arena_subprog_init).
         bodyStatements.add(Statement.verbatim(
-                "bpf_arena_alloc_pages(&" + arenaName + ", NULL, 0, NUMA_NO_NODE, 0);"));
+                "bpf_printk(\"arena=%p\\n\", (void *)(&" + arenaName + "));"));
         bodyStatements.add(Statement.verbatim("_verify_once = true;"));
 
         return new FunctionDeclarationStatement(header, new CompoundStatement(bodyStatements));

@@ -1077,6 +1077,9 @@ class Translator {
                 }
                 thisExpression = translate(access.selected);
                 thisJavacExpression = access.selected;
+                // Detection site 1b: record @InArena deref for any method called on an
+                // @InArena field (covers Ptr.add(), Ptr.cast(), etc. — not only Ptr.val()).
+                maybeRecordArenaDeref(access.selected);
                 if (compilerPlugin.methodTemplateCache.isAutoUnboxing(symbol)) {
                     // ((Integer)X).intValue() -> X
                     if (thisExpression instanceof OperatorExpression opExpr && opExpr.operator() == Operator.CAST) {
@@ -1917,6 +1920,12 @@ class Translator {
         }
 
         if (arenaIdent == null) {
+            // No inline initializer — scan the enclosing class for an assignment of the form
+            // fieldName = bpfArenaAllocPages(<arenaField>, ...) (covers fields initialised in init()).
+            arenaIdent = findArenaAllocAssignment(fieldSym);
+        }
+
+        if (arenaIdent == null) {
             // Initializer does not match the expected pattern.
             // Emit a compile error once per offending field (dedup across methods).
             if (compilerPlugin.erroredArenaFields.add(fieldSym)) {
@@ -1937,7 +1946,89 @@ class Translator {
     }
 
     /**
-     * Detection site 2: if {@code callee} is a {@code @BPFFunction}-annotated method
+     * Scans all methods in the enclosing class of {@code fieldSym} for an assignment
+     * of the form {@code fieldSym = bpfArenaAllocPages(<arenaField>, ...)}.
+     *
+     * <p>This handles the common pattern where the {@code @InArena} field is declared
+     * without an inline initializer and assigned inside {@code init()} or another method.
+     *
+     * @param fieldSym the {@code @InArena} field to look up
+     * @return the arena identifier from the {@code bpfArenaAllocPages} call, or {@code null}
+     */
+    @Nullable
+    private JCIdent findArenaAllocAssignment(com.sun.tools.javac.code.Symbol.VarSymbol fieldSym) {
+        var enclosingClass = fieldSym.getEnclosingElement();
+        if (!(enclosingClass instanceof com.sun.tools.javac.code.Symbol.ClassSymbol classSym)) return null;
+        var classTree = compilerPlugin.trees.getTree(classSym);
+        if (!(classTree instanceof JCClassDecl classDecl)) return null;
+
+        // Walk every method body in the class looking for:
+        //   fieldSym = bpfArenaAllocPages(<arenaField>, ...)
+        for (var member : classDecl.getMembers()) {
+            if (!(member instanceof JCMethodDecl methodDecl)) continue;
+            if (methodDecl.body == null) continue;
+            var found = scanStatementsForArenaAlloc(fieldSym, methodDecl.body.stats);
+            if (found != null) return found;
+        }
+        return null;
+    }
+
+    /**
+     * Recursively scans a list of statements for an assignment
+     * {@code fieldSym = bpfArenaAllocPages(<arenaField>, ...)}, including inside
+     * if/try/block bodies.
+     */
+    @Nullable
+    private JCIdent scanStatementsForArenaAlloc(
+            com.sun.tools.javac.code.Symbol.VarSymbol fieldSym,
+            com.sun.tools.javac.util.List<JCStatement> stmts) {
+        if (stmts == null) return null;
+        for (var stmt : stmts) {
+            JCIdent result = null;
+            if (stmt instanceof JCExpressionStatement exprStmt
+                    && exprStmt.expr instanceof JCAssign assign
+                    && assign.lhs instanceof JCIdent lhsIdent
+                    && lhsIdent.sym != null && lhsIdent.sym.equals(fieldSym)) {
+                // Found an assignment to our field — check the RHS
+                JCMethodInvocation allocCall = null;
+                var rhs = assign.rhs;
+                if (rhs instanceof JCMethodInvocation mi) {
+                    allocCall = mi;
+                } else if (rhs instanceof JCTypeCast tc && tc.expr instanceof JCMethodInvocation mi) {
+                    allocCall = mi;
+                }
+                if (allocCall != null) {
+                    MethodSymbol allocSym = null;
+                    if (allocCall.meth instanceof JCFieldAccess fa && fa.sym instanceof MethodSymbol ms) {
+                        allocSym = ms;
+                    } else if (allocCall.meth instanceof JCIdent id && id.sym instanceof MethodSymbol ms) {
+                        allocSym = ms;
+                    }
+                    if (allocSym != null
+                            && allocSym.getSimpleName().contentEquals("bpfArenaAllocPages")
+                            && !allocCall.getArguments().isEmpty()
+                            && allocCall.getArguments().get(0) instanceof JCIdent arenaId) {
+                        return arenaId;
+                    }
+                }
+            } else if (stmt instanceof JCIf ifStmt) {
+                result = scanStatementsForArenaAlloc(fieldSym,
+                        ifStmt.thenpart instanceof JCBlock b ? b.stats : com.sun.tools.javac.util.List.of(ifStmt.thenpart));
+                if (result != null) return result;
+                if (ifStmt.elsepart != null) {
+                    result = scanStatementsForArenaAlloc(fieldSym,
+                            ifStmt.elsepart instanceof JCBlock b2 ? b2.stats : com.sun.tools.javac.util.List.of(ifStmt.elsepart));
+                    if (result != null) return result;
+                }
+            } else if (stmt instanceof JCBlock block) {
+                result = scanStatementsForArenaAlloc(fieldSym, block.stats);
+                if (result != null) return result;
+            }
+        }
+        return null;
+    }
+
+    /**
      * in the same class as the current method (or in one of its superclasses — covers
      * subclasses calling inherited handler/helper methods), record the call edge
      * {@code (currentMethod, callee)} in {@link CompilerPlugin#callGraph}.
