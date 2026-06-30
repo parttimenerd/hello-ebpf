@@ -28,7 +28,9 @@ These predate proper Java translation of `Ptr.set(Ptr.val() | x)`. **Validated o
 
 ## Approach
 
-Add `Ptr.directVal()` — a sibling of `val()` with the same `@BuiltinBPFFunction("(*($this))")` template but a different name. Because `stripPtrVal()` only matches `"val"`, the result of `directVal()` doesn't go through CO-RE lifting; subsequent `MemberSelect` accesses emit direct field reads.
+Add `Ptr.directVal()` — a sibling of `val()` whose body is just `return val();` and whose distinguishing feature is the *name*. Because `stripPtrVal()` only matches `"val"`, the result of `directVal()` doesn't go through CO-RE lifting; subsequent `MemberSelect` accesses emit direct field reads.
+
+To express the body as plain Java (no `@BuiltinBPFFunction` template duplication), we **generalise `@BPFJavaInline` to work on any class**, not only `@BPFAbstraction`-annotated ones. The carrier-field rewrite (every instance field substituted with the receiver expression) stays gated behind `@BPFAbstraction`; for non-abstraction classes, only `this` is substituted with the receiver. That makes `@BPFJavaInline` a general-purpose "inline this Java body at the call site" primitive — and lets `Ptr.directVal()` say literally `return val();` and have the plugin inline it to `(*(p))` via `val()`'s existing template.
 
 `directVal()` is a sharp tool. The plugin enforces a structural rule: **the result of `directVal()` must be immediately followed by a `MemberSelect`**, or the call is a compile error. Two overrides relax the check:
 
@@ -39,15 +41,19 @@ In the same change, delete the three inline-C builtins (`taskCpuIsAllowed`, `are
 
 ## File Structure
 
-**`bpf-processor/src/main/java/me/bechberger/ebpf/type/Ptr.java`** — add `directVal()`. Pure additive change; identical template to `val()`.
+**`bpf-processor/src/main/java/me/bechberger/ebpf/type/Ptr.java`** — add `directVal()` using `@BPFJavaInline`. Pure additive change.
 
 **`annotations/src/main/java/me/bechberger/ebpf/annotations/`** — add two source-retention annotations:
 - `TrustedPtr.java` — `@Target(PARAMETER)`
 - `AllowDirectVal.java` — `@Target({LOCAL_VARIABLE, METHOD})`
 
 **`bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/Translator.java`** —
+- **Generalise `@BPFJavaInline`**: lift the `@BPFAbstraction` gate in `tryInlineAbstractionMethod` (line 2409). When the enclosing class is `@BPFAbstraction`, keep current behaviour (all instance fields substituted with receiver). When it is NOT, skip field-substitution; only `this` references in the body resolve to the receiver expression. Rename `tryInlineAbstractionMethod` → `tryInlineJavaInlineMethod` to reflect the broader applicability.
 - Extend `stripPtrVal()` to also match `"directVal"` (so the result is pierced for emission).
 - Add the structural check at the `MethodInvocationTree` emission site: detect `directVal()` calls, classify by parent shape (MemberSelect = OK; else search for override; else error).
+
+**`annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/BPFJavaInline.java`** —
+- Update Javadoc: remove the "only on `@BPFAbstraction`" implication; document the field-substitution caveat ("carrier-field substitution only applies on `@BPFAbstraction` classes; on other classes, `this` is the only thing rewritten").
 
 **`bpf/src/main/java/me/bechberger/ebpf/bpf/UserspaceSchedulerBase.java`** —
 - Delete `taskCpuIsAllowed`, `arena_or_assign`, `arena_and_assign` methods.
@@ -63,7 +69,9 @@ In the same change, delete the three inline-C builtins (`taskCpuIsAllowed`, `are
 - `bpf-samples/.../LotteryScheduler.java:41` — `bpf_cpumask_test_cpu(cpu, p.val().cpus_ptr)` (same pattern).
 - `bpf/src/main/java/me/bechberger/ebpf/bpf/sched/DispatchQueue.java:341` — appears in a Javadoc snippet; update the doc.
 
-**`bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/DirectValTest.java`** — new file with seven unit cases.
+**`bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/DirectValTest.java`** — new file with the seven directVal unit cases.
+
+**`bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/BPFJavaInlineGeneralisationTest.java`** — new file covering the lifted `@BPFAbstraction` gate (see Tests).
 
 **`bpf-samples/src/test/java/me/bechberger/ebpf/bpf/DirectValTaskCpuAllowedTest.java`** — new framework-level integration test running a minimal scheduler that exercises `p.directVal().cpus_ptr` against a real kernel.
 
@@ -87,9 +95,16 @@ In the same change, delete the three inline-C builtins (`taskCpuIsAllowed`, `are
  *
  * Outside a @BPFFunction body this method is identical to val().
  */
-@BuiltinBPFFunction("(*($this))")
-public T directVal() { return val(); }
+@BPFJavaInline
+@NotUsableInJava
+public T directVal() {
+    return val();
+}
 ```
+
+The `@BPFJavaInline` body inlines the `val()` call to its template `(*($this))`, so at every call site `p.directVal()` becomes `(*(p))` — identical to `val()`'s emitted C, only the method name differs (and that's what suppresses the CO-RE lifting via `stripPtrVal()`).
+
+This relies on the generalised `@BPFJavaInline` — `Ptr` is not `@BPFAbstraction`, so the carrier-field substitution doesn't apply; only `this` resolves to the receiver expression.
 
 ### `@TrustedPtr`
 
@@ -113,6 +128,41 @@ Call-site escape hatch.
 
 ## Plugin Enforcement
 
+### Generalising `@BPFJavaInline`
+
+The check that currently restricts inlining to `@BPFAbstraction` classes lives at `Translator.java:2409`:
+
+```java
+if (enclosingClass.getAnnotation(BPFAbstraction.class) == null) {
+    return null;
+}
+```
+
+Remove this gate. The downstream code that builds the carrier-field substitution map (lines 2437-2456) stays — but it should be guarded so that on non-`@BPFAbstraction` classes the `innerCarrierMap` is left empty for fields, and only `this` is populated.
+
+Pseudocode for the gated section:
+
+```java
+boolean isAbstraction = enclosingClass.getAnnotation(BPFAbstraction.class) != null;
+String carrierExpr = receiverExpr != null ? translate(receiverExpr).toPrettyString() : null;
+
+if (isAbstraction && carrierExpr != null) {
+    // Existing behaviour: every instance field rewritten to the receiver expression.
+    for (var fieldName : collectInstanceFields(enclosingClass)) {
+        innerCarrierMap.put(fieldName, carrierExpr);
+    }
+}
+if (carrierExpr != null) {
+    innerCarrierMap.put("this", carrierExpr);  // always available
+}
+```
+
+The inner translator's `this`-substitution is the new piece — verify the existing carrier-map lookup path also routes `this` references through `innerCarrierMap`. If it doesn't, add that handling. (The existing `@BPFAbstraction` use case never references `this` because the field substitution covers it; the test suite for that path doesn't exercise `this`. The Translator's expression path that resolves `MemberSelectTree` against `this` needs to be reviewed during implementation.)
+
+Rename `tryInlineAbstractionMethod` → `tryInlineJavaInlineMethod`.
+
+### `directVal()` structural check
+
 A single check at the `MethodInvocationTree` translation site in `Translator.java`:
 
 1. Detect `directVal()` invocation via a helper `isDirectValCall(mit)` that mirrors the structure of `stripPtrVal()`.
@@ -125,7 +175,7 @@ A single check at the `MethodInvocationTree` translation site in `Translator.jav
    - Otherwise emit `compiler.err.proc.messager` at the call site:
      > `directVal() result must be followed by a field access (or annotate the kfunc parameter with @TrustedPtr / the call site with @AllowDirectVal)`
 
-Also extend `stripPtrVal()` so it pierces both `val` and `directVal` — without this, the `(*p)` template would be left in the emitted C verbatim, breaking the MemberSelect-to-direct-access lowering.
+Also extend `stripPtrVal()` so it pierces both `val` and `directVal` — without this, the `(*p)` produced by the inlined body would be left in the emitted C verbatim, breaking the MemberSelect-to-direct-access lowering.
 
 ## Migration of UserspaceSchedulerBase
 
@@ -163,7 +213,14 @@ The local variable ensures `idleMaskBase.add(wordIdx)` is evaluated once, matchi
 
 ## Tests
 
-**Plugin unit tests** (mac OK, pure Java):
+**`@BPFJavaInline` generalisation tests** (`BPFJavaInlineGeneralisationTest.java`, mac OK):
+
+1. `javaInlineWorksOnNonAbstractionClass` — non-`@BPFAbstraction` class with a `@BPFJavaInline` method calling another method; assert body inlines correctly at the call site.
+2. `javaInlineFieldSubstitutionStillRequiresAbstraction` — non-`@BPFAbstraction` class with an instance field; `@BPFJavaInline` method body references the field; assert the field reference is emitted as `receiver->field` (regular field access) **not** rewritten to the carrier expression. (This is the boundary that distinguishes the new behaviour from the original carrier-substitution.)
+3. `javaInlineCarrierSubstitutionStillWorksOnAbstraction` — control: existing `@BPFAbstraction` + `@BPFJavaInline` test from `BPFAbstractionTest` continues to pass unchanged.
+4. `javaInlineThisSubstitution` — non-`@BPFAbstraction` class with `@BPFJavaInline` body that uses `this` explicitly; assert `this` resolves to the receiver carrier expression.
+
+**`directVal()` plugin unit tests** (`DirectValTest.java`, mac OK):
 
 1. `directValBeforeMemberSelectEmitsDirectAccess` — `kfunc(p.directVal().field)` → C contains `kfunc(p->field)`, not `BPF_CORE_READ(p, field)`.
 2. `directValWithoutMemberSelectErrors` — `long x = p.directVal()` → compile error with documented message.
