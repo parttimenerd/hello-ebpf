@@ -49,7 +49,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *       [--stats-interval <seconds>]
  * }</pre>
  */
-public final class LotterySample extends UserspaceScheduler {
+public class LotterySample extends UserspaceScheduler {
 
     /** Upper bound of {@code QueuedTask.weight}; ticket draw is uniform in [0, this). */
     private static final long WEIGHT_DENOMINATOR = 10_000L;
