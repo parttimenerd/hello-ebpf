@@ -592,14 +592,27 @@ class Translator {
                 var element = compilerPlugin.trees.getElement(methodPath.path(identifierTree));
                 var defaultReturn = variable(identifierTree.getName().toString());
                 if (element == null) {
+                    // Even with no element, 'this' may have a carrier in the map (e.g. inside
+                    // an inlined body). Check the map first.
+                    if (identifierTree.getName().contentEquals("this") && localCarrierMap.containsKey("this")) {
+                        yield new VerbatimExpression(localCarrierMap.get("this"));
+                    }
                     yield defaultReturn;
                 }
-                // 'this' and 'super' are not class members; treat them as verbatim C identifiers
+                // When 'this' appears inside a @BPFJavaInline body, the carrier map may
+                // hold a receiver expression for it. Check the map first so that inlined
+                // non-abstraction methods that reference 'this' resolve to the caller's
+                // receiver rather than emitting an invalid C identifier.
+                var localName = identifierTree.getName().toString();
+                if ("this".equals(localName) && localCarrierMap.containsKey("this")) {
+                    yield new VerbatimExpression(localCarrierMap.get("this"));
+                }
+                // 'this' and 'super' are not valid C identifiers; treat them as verbatim C identifiers.
+                // When 'this' is present in localCarrierMap (handled above), this fallback is skipped.
                 if (identifierTree.getName().contentEquals("this") || identifierTree.getName().contentEquals("super")) {
                     yield defaultReturn;
                 }
                 // @BPFAbstraction local variable: substitute the carrier expression
-                var localName = identifierTree.getName().toString();
                 if (localCarrierMap.containsKey(localName)) {
                     yield new VerbatimExpression(localCarrierMap.get(localName));
                 }
@@ -1182,9 +1195,9 @@ class Translator {
                 return new VerbatimExpression(carrier);
             }
         }
-        // @BPFAbstraction + @BPFJavaInline: inline the Java method body at the call site.
-        // This is the "write the abstraction in Java" path — no @BuiltinBPFFunction template string needed.
-        var inlined = tryInlineAbstractionMethod(symbol, thisJavacExpression, methodInvocationTree, arguments);
+        // @BPFJavaInline: inline the Java method body at the call site.
+        // Works on any class; @BPFAbstraction is no longer required.
+        var inlined = tryInlineJavaInlineMethod(symbol, thisJavacExpression, methodInvocationTree, arguments);
         if (inlined != null) {
             return inlined;
         }
@@ -2388,31 +2401,33 @@ class Translator {
      * <p>The translation context binds:
      * <ul>
      *   <li>Each instance field of the abstraction class → the caller's carrier expression
-     *       (i.e. the receiver translated as a C expression).</li>
+     *       (i.e. the receiver translated as a C expression). This only applies when the
+     *       declaring class is also annotated {@code @BPFAbstraction}.</li>
+     *   <li>{@code this} → the receiver carrier expression, regardless of
+     *       {@code @BPFAbstraction}. This enables plain (non-abstraction) classes to
+     *       expose {@code @BPFJavaInline} methods whose bodies use {@code this}.</li>
      *   <li>Each parameter name → the corresponding call argument's C expression.</li>
      * </ul>
      *
      * <p>Returns {@code null} if the method is not eligible for inlining (e.g. it has
-     * a {@code @BuiltinBPFFunction} annotation, the class is not {@code @BPFAbstraction},
-     * or the method source is unavailable).
+     * a {@code @BuiltinBPFFunction} annotation, the method does not carry
+     * {@code @BPFJavaInline}, or the method source is unavailable).
      */
     @Nullable
-    private CAST.Expression tryInlineAbstractionMethod(MethodSymbol symbol,
+    private CAST.Expression tryInlineJavaInlineMethod(MethodSymbol symbol,
                                                        @Nullable JCExpression receiverExpr,
                                                        MethodInvocationTree callSite,
                                                        List<Argument> translatedArgs) {
-        // Only instance methods on @BPFAbstraction classes with @BPFJavaInline
-        if (symbol.isStatic()) return null;
+        // Only instance methods with @BPFJavaInline
+        if (symbol.isStatic()) { return null; }
         if (!(symbol.getEnclosingElement() instanceof com.sun.tools.javac.code.Symbol.ClassSymbol enclosingClass)) {
-            return null;
-        }
-        if (enclosingClass.getAnnotation(BPFAbstraction.class) == null) {
             return null;
         }
         var javaInlineAnn = symbol.getAnnotation(BPFJavaInline.class);
         if (javaInlineAnn == null) {
             return null;
         }
+        boolean isAbstraction = enclosingClass.getAnnotation(BPFAbstraction.class) != null;
 
         // Get the method's source tree
         var methodTree = compilerPlugin.trees.getTree(symbol);
@@ -2435,24 +2450,26 @@ class Translator {
         }
 
         // Collect the instance fields of the abstraction class (these are the carrier fields)
-        var carrierFields = new ArrayList<String>();
-        for (var enc : enclosingClass.getEnclosedElements()) {
-            if (enc instanceof javax.lang.model.element.VariableElement ve
-                    && enc.getKind() == ElementKind.FIELD
-                    && !enc.getModifiers().contains(Modifier.STATIC)) {
-                carrierFields.add(ve.getSimpleName().toString());
+        // and build the carrier map for the inner translator.
+        var innerCarrierMap = new java.util.HashMap<String, String>();
+
+        // Carrier-field substitution: only applies on @BPFAbstraction classes.
+        // On plain classes, instance fields keep their normal receiver->field access.
+        if (isAbstraction && carrierExpr != null) {
+            for (var enc : enclosingClass.getEnclosedElements()) {
+                if (enc instanceof javax.lang.model.element.VariableElement ve
+                        && enc.getKind() == ElementKind.FIELD
+                        && !enc.getModifiers().contains(Modifier.STATIC)) {
+                    innerCarrierMap.put(ve.getSimpleName().toString(), carrierExpr);
+                }
             }
         }
 
-        // Build the carrier map for the inner translator
-        var innerCarrierMap = new java.util.HashMap<String, String>();
-
-        // Map each carrier field to the receiver carrier expression
-        // For a single-field abstraction, that field = $this = the carrier expression
+        // 'this' substitution applies to every @BPFJavaInline call site that has a
+        // receiver, regardless of @BPFAbstraction. Non-abstraction callees that
+        // reference 'this' (e.g. passed as an argument) resolve correctly here.
         if (carrierExpr != null) {
-            for (var fieldName : carrierFields) {
-                innerCarrierMap.put(fieldName, carrierExpr);
-            }
+            innerCarrierMap.put("this", carrierExpr);
         }
 
         // Map parameter names to their translated call arguments
