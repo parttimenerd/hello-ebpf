@@ -22,16 +22,16 @@ import static org.junit.jupiter.api.Assertions.*;
  *   <li>Drop rate stays under 1% of total enqueues.</li>
  * </ul>
  *
- * <p>We assert on {@code ringConsumeUsHist} rather than {@code roundTripUsHist}:
- * the round-trip histogram depends on {@code TaskCtx.stopTs} being non-zero,
- * which only happens after a task has been context-switched out at least once
- * by our scheduler. With short-lived synthetic load this often produces zero
- * samples; ring-consume is recorded on every drain pass and reflects the
- * userspace half of the dispatch loop, which is what this benchmark exercises.
- *
  * <p>Skipped unless {@code BENCH=1} is set in the environment — running this
  * is not a regression gate (numbers depend heavily on host load), only a
  * point-in-time SLO check.
+ *
+ * <p>Known gap: at the time of writing, the histogram maps are populated via
+ * Java-side {@link BPFHistogram#increment} (read-modify-write through
+ * {@code compute}) and may not surface samples in {@code totalCount()} under
+ * certain VNG/host configurations. A failure here with {@code samples=0} but
+ * non-zero {@code drained} in the {@code BENCH summary} indicates the
+ * histogram-population bug, not a real SLO regression.
  */
 @ExtendWith(SchedulerExtension.class)
 public class UserspaceSchedulerObsBenchTest {
@@ -54,7 +54,6 @@ public class UserspaceSchedulerObsBenchTest {
         });
         runner.start();
 
-        // Wait until bpfHandle is set and capture a stable histogram reference.
         BPFHistogram hist = null;
         long deadline = System.nanoTime() + 10_000_000_000L;
         while (System.nanoTime() < deadline) {
@@ -66,8 +65,6 @@ public class UserspaceSchedulerObsBenchTest {
 
         TestUtil.spawnCpuHogs(Runtime.getRuntime().availableProcessors(), 10_000);
 
-        // Sample percentiles while runner is alive. Latches the highest sample
-        // count seen so a late detach doesn't erase the result.
         long total = 0, p50 = 0, p99 = 0;
         long sampleDeadline = System.nanoTime() + 5_000_000_000L;
         while (System.nanoTime() < sampleDeadline && sched.bpf() != null) {
