@@ -24,6 +24,22 @@ public class Ptr<T> {
         throw new MethodIsBPFRelatedFunction();
     }
 
+    /**
+     * Stub for Task 4 scaffolding. Task 5 will replace the body with the proper
+     * {@code @BPFJavaInline} body. Currently identical to {@link #val()} except in name.
+     *
+     * <p>The "directVal" identifier suppresses CO-RE lifting because
+     * {@code Translator.stripPtrVal()} matches {@code "val"} exactly; this method's
+     * name falls through that filter and the resulting {@code (*p)} lowers via
+     * {@code MemberSelect} to {@code p->field} with the trusted-pointer annotation
+     * preserved.
+     */
+    @BuiltinBPFFunction("(*($this))")
+    @NotUsableInJava
+    public T directVal() {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
     /** Create a pointer of the passed value,
      * <p>
      *  Has to be a proper l-value (?) that has a place in memory,
