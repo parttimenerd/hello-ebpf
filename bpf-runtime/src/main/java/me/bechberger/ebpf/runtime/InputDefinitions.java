@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1204,7 +1205,7 @@ public final class InputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_add_uevent_bm_var($arg1, (const u8*)$arg2, (const long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("input_add_uevent_bm_var($arg1, (const u8 *)$arg2, (const long unsigned int *)$arg3, $arg4)")
   public static int input_add_uevent_bm_var(Ptr<kobj_uevent_env> env, String name,
       Ptr<java.lang. @Unsigned Long> bitmap, int max) {
     throw new MethodIsBPFRelatedFunction();
@@ -1248,7 +1249,7 @@ public final class InputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_copy_abs($arg1, $arg2, (const struct input_dev*)$arg3, $arg4)")
+  @BuiltinBPFFunction("input_copy_abs($arg1, $arg2, (const struct input_dev *)$arg3, $arg4)")
   public static void input_copy_abs(Ptr<input_dev> dst, @Unsigned int dst_axis, Ptr<input_dev> src,
       @Unsigned int src_axis) {
     throw new MethodIsBPFRelatedFunction();
@@ -1261,7 +1262,7 @@ public final class InputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_default_setkeycode($arg1, (const struct input_keymap_entry*)$arg2, $arg3)")
+  @BuiltinBPFFunction("input_default_setkeycode($arg1, (const struct input_keymap_entry *)$arg2, $arg3)")
   public static int input_default_setkeycode(Ptr<input_dev> dev, Ptr<input_keymap_entry> ke,
       Ptr<java.lang. @Unsigned Integer> old_keycode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1355,7 +1356,7 @@ public final class InputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_dev_set_poll_interval($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("input_dev_set_poll_interval($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long input_dev_set_poll_interval(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1500,7 +1501,7 @@ public final class InputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_dev_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("input_dev_uevent((const struct device *)$arg1, $arg2)")
   public static int input_dev_uevent(Ptr<device> device, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1532,7 +1533,7 @@ public final class InputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_devnode((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("input_devnode((const struct device *)$arg1, $arg2)")
   public static String input_devnode(Ptr<device> dev,
       Ptr<java.lang. @Unsigned @OriginalName("umode_t") Short> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1558,13 +1559,13 @@ public final class InputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_event_from_user((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("input_event_from_user((const u8 *)$arg1, $arg2)")
   public static int input_event_from_user(String buffer, Ptr<input_event> event) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_event_to_user($arg1, (const struct input_event*)$arg2)")
+  @BuiltinBPFFunction("input_event_to_user($arg1, (const struct input_event *)$arg2)")
   public static int input_event_to_user(String buffer, Ptr<input_event> event) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1588,7 +1589,7 @@ public final class InputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_ff_effect_from_user((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("input_ff_effect_from_user((const u8 *)$arg1, $arg2, $arg3)")
   public static int input_ff_effect_from_user(String buffer, @Unsigned long size,
       Ptr<ff_effect> effect) {
     throw new MethodIsBPFRelatedFunction();
@@ -1745,13 +1746,13 @@ public final class InputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_match_device_id((const struct input_dev*)$arg1, (const struct input_device_id*)$arg2)")
+  @BuiltinBPFFunction("input_match_device_id((const struct input_dev *)$arg1, (const struct input_device_id *)$arg2)")
   public static boolean input_match_device_id(Ptr<input_dev> dev, Ptr<input_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_mt_assign_slots($arg1, $arg2, (const struct input_mt_pos*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("input_mt_assign_slots($arg1, $arg2, (const struct input_mt_pos *)$arg3, $arg4, $arg5)")
   public static int input_mt_assign_slots(Ptr<input_dev> dev, Ptr<java.lang.Integer> slots,
       Ptr<input_mt_pos> pos, int num_pos, int dmax) {
     throw new MethodIsBPFRelatedFunction();
@@ -1834,21 +1835,21 @@ public final class InputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_print_bitmap($arg1, $arg2, (const long unsigned int*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("input_print_bitmap($arg1, $arg2, (const long unsigned int *)$arg3, $arg4, $arg5)")
   public static int input_print_bitmap(String buf, int buf_size,
       Ptr<java.lang. @Unsigned Long> bitmap, int max, int add_cr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_print_modalias_bits($arg1, $arg2, $arg3, (const long unsigned int*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("input_print_modalias_bits($arg1, $arg2, $arg3, (const long unsigned int *)$arg4, $arg5, $arg6)")
   public static int input_print_modalias_bits(String buf, int size, char name,
       Ptr<java.lang. @Unsigned Long> bm, @Unsigned int min_bit, @Unsigned int max_bit) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_print_modalias_parts($arg1, $arg2, $arg3, (const struct input_dev*)$arg4)")
+  @BuiltinBPFFunction("input_print_modalias_parts($arg1, $arg2, $arg3, (const struct input_dev *)$arg4)")
   public static int input_print_modalias_parts(String buf, int size, int full_len,
       Ptr<input_dev> id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1916,7 +1917,7 @@ public final class InputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_scancode_to_scalar((const struct input_keymap_entry*)$arg1, $arg2)")
+  @BuiltinBPFFunction("input_scancode_to_scalar((const struct input_keymap_entry *)$arg1, $arg2)")
   public static int input_scancode_to_scalar(Ptr<input_keymap_entry> ke,
       Ptr<java.lang. @Unsigned Integer> scancode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1943,7 +1944,7 @@ public final class InputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("input_set_keycode($arg1, (const struct input_keymap_entry*)$arg2)")
+  @BuiltinBPFFunction("input_set_keycode($arg1, (const struct input_keymap_entry *)$arg2)")
   public static int input_set_keycode(Ptr<input_dev> dev, Ptr<input_keymap_entry> ke) {
     throw new MethodIsBPFRelatedFunction();
   }

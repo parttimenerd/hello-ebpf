@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1109,7 +1110,7 @@ public final class EmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("em_compute_costs($arg1, $arg2, (const struct em_data_callback*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("em_compute_costs($arg1, $arg2, (const struct em_data_callback *)$arg3, $arg4, $arg5)")
   public static int em_compute_costs(Ptr<device> dev, Ptr<em_perf_state> table,
       Ptr<em_data_callback> cb, int nr_states, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1128,7 +1129,7 @@ public final class EmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("em_create_pd($arg1, $arg2, (const struct em_data_callback*)$arg3, (const cpumask*)$arg4, $arg5)")
+  @BuiltinBPFFunction("em_create_pd($arg1, $arg2, (const struct em_data_callback *)$arg3, (const cpumask *)$arg4, $arg5)")
   public static int em_create_pd(Ptr<device> dev, int nr_states, Ptr<em_data_callback> cb,
       Ptr<@OriginalName("cpumask_t") cpumask> cpus, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1237,14 +1238,14 @@ public final class EmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("em_dev_register_pd_no_update($arg1, $arg2, (const struct em_data_callback*)$arg3, (const cpumask*)$arg4, $arg5)")
+  @BuiltinBPFFunction("em_dev_register_pd_no_update($arg1, $arg2, (const struct em_data_callback *)$arg3, (const cpumask *)$arg4, $arg5)")
   public static int em_dev_register_pd_no_update(Ptr<device> dev, @Unsigned int nr_states,
       Ptr<em_data_callback> cb, Ptr<@OriginalName("cpumask_t") cpumask> cpus, boolean microwatts) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("em_dev_register_perf_domain($arg1, $arg2, (const struct em_data_callback*)$arg3, (const cpumask*)$arg4, $arg5)")
+  @BuiltinBPFFunction("em_dev_register_perf_domain($arg1, $arg2, (const struct em_data_callback *)$arg3, (const cpumask *)$arg4, $arg5)")
   public static int em_dev_register_perf_domain(Ptr<device> dev, @Unsigned int nr_states,
       Ptr<em_data_callback> cb, Ptr<@OriginalName("cpumask_t") cpumask> cpus, boolean microwatts) {
     throw new MethodIsBPFRelatedFunction();

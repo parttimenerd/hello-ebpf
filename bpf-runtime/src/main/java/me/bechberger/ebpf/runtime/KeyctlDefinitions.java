@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1164,7 +1165,7 @@ public final class KeyctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyctl_instantiate_key($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("keyctl_instantiate_key($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static long keyctl_instantiate_key(@OriginalName("key_serial_t") int id, Ptr<?> _payload,
       @Unsigned long plen, @OriginalName("key_serial_t") int ringid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1178,7 +1179,7 @@ public final class KeyctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyctl_instantiate_key_iov($arg1, (const struct iovec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("keyctl_instantiate_key_iov($arg1, (const struct iovec *)$arg2, $arg3, $arg4)")
   public static long keyctl_instantiate_key_iov(@OriginalName("key_serial_t") int id,
       Ptr<iovec> _payload_iov, @Unsigned int ioc, @OriginalName("key_serial_t") int ringid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1191,7 +1192,7 @@ public final class KeyctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyctl_join_session_keyring((const u8*)$arg1)")
+  @BuiltinBPFFunction("keyctl_join_session_keyring((const u8 *)$arg1)")
   public static long keyctl_join_session_keyring(String _name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1218,7 +1219,7 @@ public final class KeyctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyctl_keyring_search($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("keyctl_keyring_search($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static long keyctl_keyring_search(@OriginalName("key_serial_t") int ringid, String _type,
       String _description, @OriginalName("key_serial_t") int destringid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1239,28 +1240,28 @@ public final class KeyctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyctl_pkey_e_d_s($arg1, (const struct keyctl_pkey_params*)$arg2, (const u8*)$arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("keyctl_pkey_e_d_s($arg1, (const struct keyctl_pkey_params *)$arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5)")
   public static long keyctl_pkey_e_d_s(int op, Ptr<keyctl_pkey_params> _params, String _info,
       Ptr<?> _in, Ptr<?> _out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyctl_pkey_params_get($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("keyctl_pkey_params_get($arg1, (const u8 *)$arg2, $arg3)")
   public static int keyctl_pkey_params_get(@OriginalName("key_serial_t") int id, String _info,
       Ptr<kernel_pkey_params> params) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyctl_pkey_params_get_2((const struct keyctl_pkey_params*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("keyctl_pkey_params_get_2((const struct keyctl_pkey_params *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int keyctl_pkey_params_get_2(Ptr<keyctl_pkey_params> _params, String _info, int op,
       Ptr<kernel_pkey_params> params) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyctl_pkey_verify((const struct keyctl_pkey_params*)$arg1, (const u8*)$arg2, (const void*)$arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("keyctl_pkey_verify((const struct keyctl_pkey_params *)$arg1, (const u8 *)$arg2, (const void *)$arg3, (const void *)$arg4)")
   public static long keyctl_pkey_verify(Ptr<keyctl_pkey_params> _params, String _info, Ptr<?> _in,
       Ptr<?> _in2) {
     throw new MethodIsBPFRelatedFunction();
@@ -1281,7 +1282,7 @@ public final class KeyctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyctl_restrict_keyring($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("keyctl_restrict_keyring($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static long keyctl_restrict_keyring(@OriginalName("key_serial_t") int id, String _type,
       String _restriction) {
     throw new MethodIsBPFRelatedFunction();
@@ -1320,7 +1321,7 @@ public final class KeyctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyctl_update_key($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("keyctl_update_key($arg1, (const void *)$arg2, $arg3)")
   public static long keyctl_update_key(@OriginalName("key_serial_t") int id, Ptr<?> _payload,
       @Unsigned long plen) {
     throw new MethodIsBPFRelatedFunction();

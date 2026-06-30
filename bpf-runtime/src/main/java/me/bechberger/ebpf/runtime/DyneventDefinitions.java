@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1130,7 +1131,7 @@ public final class DyneventDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dynevent_str_add($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("dynevent_str_add($arg1, (const u8 *)$arg2)")
   public static int dynevent_str_add(Ptr<dynevent_cmd> cmd, String str) {
     throw new MethodIsBPFRelatedFunction();
   }

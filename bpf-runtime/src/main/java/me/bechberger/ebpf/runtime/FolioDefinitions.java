@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1309,7 +1310,7 @@ public final class FolioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("folio_anon_vma((const struct folio*)$arg1)")
+  @BuiltinBPFFunction("folio_anon_vma((const struct folio *)$arg1)")
   public static Ptr<anon_vma> folio_anon_vma(Ptr<folio> folio) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1389,7 +1390,7 @@ public final class FolioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("folio_get_anon_vma((const struct folio*)$arg1)")
+  @BuiltinBPFFunction("folio_get_anon_vma((const struct folio *)$arg1)")
   public static Ptr<anon_vma> folio_get_anon_vma(Ptr<folio> folio) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1427,7 +1428,7 @@ public final class FolioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("folio_lock_anon_vma_read((const struct folio*)$arg1, $arg2)")
+  @BuiltinBPFFunction("folio_lock_anon_vma_read((const struct folio *)$arg1, $arg2)")
   public static Ptr<anon_vma> folio_lock_anon_vma_read(Ptr<folio> folio,
       Ptr<rmap_walk_control> rwc) {
     throw new MethodIsBPFRelatedFunction();
@@ -1453,7 +1454,7 @@ public final class FolioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("folio_mapcount((const struct folio*)$arg1)")
+  @BuiltinBPFFunction("folio_mapcount((const struct folio *)$arg1)")
   public static int folio_mapcount(Ptr<folio> folio) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1617,7 +1618,7 @@ public final class FolioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("folio_size((const struct folio*)$arg1)")
+  @BuiltinBPFFunction("folio_size((const struct folio *)$arg1)")
   public static @Unsigned long folio_size(Ptr<folio> folio) {
     throw new MethodIsBPFRelatedFunction();
   }

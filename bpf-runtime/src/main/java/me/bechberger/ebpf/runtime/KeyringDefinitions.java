@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class KeyringDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("keyring_alloc((const u8*)$arg1, $arg2, $arg3, (const struct cred*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("keyring_alloc((const u8 *)$arg1, $arg2, $arg3, (const struct cred *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static Ptr<key> keyring_alloc(String description, kuid_t uid, kgid_t gid, Ptr<cred> cred,
       @Unsigned @OriginalName("key_perm_t") int perm, @Unsigned long flags,
       Ptr<key_restriction> restrict_link, Ptr<key> dest) {
@@ -1104,13 +1105,13 @@ public final class KeyringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyring_compare_object((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("keyring_compare_object((const void *)$arg1, (const void *)$arg2)")
   public static boolean keyring_compare_object(Ptr<?> object, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyring_describe((const struct key*)$arg1, $arg2)")
+  @BuiltinBPFFunction("keyring_describe((const struct key *)$arg1, $arg2)")
   public static void keyring_describe(Ptr<key> keyring, Ptr<seq_file> m) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1128,13 +1129,13 @@ public final class KeyringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyring_detect_cycle_iterator((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("keyring_detect_cycle_iterator((const void *)$arg1, $arg2)")
   public static int keyring_detect_cycle_iterator(Ptr<?> object, Ptr<?> iterator_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyring_diff_objects((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("keyring_diff_objects((const void *)$arg1, (const void *)$arg2)")
   public static int keyring_diff_objects(Ptr<?> object, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1158,7 +1159,7 @@ public final class KeyringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyring_gc_check_iterator((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("keyring_gc_check_iterator((const void *)$arg1, $arg2)")
   public static int keyring_gc_check_iterator(Ptr<?> object, Ptr<?> iterator_data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1170,13 +1171,13 @@ public final class KeyringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyring_get_key_chunk((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("keyring_get_key_chunk((const void *)$arg1, $arg2)")
   public static @Unsigned long keyring_get_key_chunk(Ptr<?> data, int level) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyring_get_object_key_chunk((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("keyring_get_object_key_chunk((const void *)$arg1, $arg2)")
   public static @Unsigned long keyring_get_object_key_chunk(Ptr<?> object, int level) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1194,19 +1195,19 @@ public final class KeyringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyring_read((const struct key*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("keyring_read((const struct key *)$arg1, $arg2, $arg3)")
   public static long keyring_read(Ptr<key> keyring, String buffer, @Unsigned long buflen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyring_read_iterator((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("keyring_read_iterator((const void *)$arg1, $arg2)")
   public static int keyring_read_iterator(Ptr<?> object, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyring_restrict($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("keyring_restrict($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int keyring_restrict(
       @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> keyring_ref,
       String type, String restriction) {
@@ -1226,7 +1227,7 @@ public final class KeyringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyring_search($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("keyring_search($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> keyring_search(
       @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> keyring,
       Ptr<key_type> type, String description, boolean recurse) {
@@ -1234,7 +1235,7 @@ public final class KeyringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("keyring_search_iterator((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("keyring_search_iterator((const void *)$arg1, $arg2)")
   public static int keyring_search_iterator(Ptr<?> object, Ptr<?> iterator_data) {
     throw new MethodIsBPFRelatedFunction();
   }

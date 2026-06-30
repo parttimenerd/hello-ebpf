@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1250,7 +1251,7 @@ public final class VmemmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vmemmap_should_optimize_folio((const struct hstate*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vmemmap_should_optimize_folio((const struct hstate *)$arg1, $arg2)")
   public static boolean vmemmap_should_optimize_folio(Ptr<hstate> h, Ptr<folio> folio) {
     throw new MethodIsBPFRelatedFunction();
   }

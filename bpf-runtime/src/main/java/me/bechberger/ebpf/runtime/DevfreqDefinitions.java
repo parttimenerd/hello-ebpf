@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DevfreqDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("devfreq_add_device($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("devfreq_add_device($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<devfreq> devfreq_add_device(Ptr<device> dev, Ptr<devfreq_dev_profile> profile,
       String governor_name, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1195,14 +1196,14 @@ public final class DevfreqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devfreq_event_get_edev_by_phandle($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devfreq_event_get_edev_by_phandle($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<devfreq_event_dev> devfreq_event_get_edev_by_phandle(Ptr<device> dev,
       String phandle_name, int index) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devfreq_event_get_edev_count($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devfreq_event_get_edev_count($arg1, (const u8 *)$arg2)")
   public static int devfreq_event_get_edev_count(Ptr<device> dev, String phandle_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1257,7 +1258,7 @@ public final class DevfreqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devfreq_get_devfreq_by_phandle($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devfreq_get_devfreq_by_phandle($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<devfreq> devfreq_get_devfreq_by_phandle(Ptr<device> dev, String phandle_name,
       int index) {
     throw new MethodIsBPFRelatedFunction();

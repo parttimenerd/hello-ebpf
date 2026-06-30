@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1125,7 +1126,7 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__cgroup_bpf_query($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__cgroup_bpf_query($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int __cgroup_bpf_query(Ptr<cgroup> cgrp, Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1181,7 +1182,7 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__cgroup_bpf_run_filter_sysctl($arg1, (const struct ctl_table*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__cgroup_bpf_run_filter_sysctl($arg1, (const struct ctl_table *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int __cgroup_bpf_run_filter_sysctl(Ptr<ctl_table_header> head, Ptr<ctl_table> table,
       int write, Ptr<String> buf, Ptr<java.lang. @Unsigned Long> pcount,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos, cgroup_bpf_attach_type atype) {
@@ -1189,19 +1190,19 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__cgroup_bpf_run_lsm_current((const void*)$arg1, (const struct bpf_insn*)$arg2)")
+  @BuiltinBPFFunction("__cgroup_bpf_run_lsm_current((const void *)$arg1, (const struct bpf_insn *)$arg2)")
   public static @Unsigned int __cgroup_bpf_run_lsm_current(Ptr<?> ctx, Ptr<bpf_insn> insn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__cgroup_bpf_run_lsm_sock((const void*)$arg1, (const struct bpf_insn*)$arg2)")
+  @BuiltinBPFFunction("__cgroup_bpf_run_lsm_sock((const void *)$arg1, (const struct bpf_insn *)$arg2)")
   public static @Unsigned int __cgroup_bpf_run_lsm_sock(Ptr<?> ctx, Ptr<bpf_insn> insn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__cgroup_bpf_run_lsm_socket((const void*)$arg1, (const struct bpf_insn*)$arg2)")
+  @BuiltinBPFFunction("__cgroup_bpf_run_lsm_socket((const void *)$arg1, (const struct bpf_insn *)$arg2)")
   public static @Unsigned int __cgroup_bpf_run_lsm_socket(Ptr<?> ctx, Ptr<bpf_insn> insn) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1233,7 +1234,7 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__cgroup_task_count((const struct cgroup*)$arg1)")
+  @BuiltinBPFFunction("__cgroup_task_count((const struct cgroup *)$arg1)")
   public static int __cgroup_task_count(Ptr<cgroup> cgrp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1345,26 +1346,26 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_bpf_link_attach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cgroup_bpf_link_attach((const union bpf_attr *)$arg1, $arg2)")
   public static int cgroup_bpf_link_attach(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_bpf_prog_attach((const union bpf_attr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("cgroup_bpf_prog_attach((const union bpf_attr *)$arg1, $arg2, $arg3)")
   public static int cgroup_bpf_prog_attach(Ptr<bpf_attr> attr, bpf_prog_type ptype,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_bpf_prog_detach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cgroup_bpf_prog_detach((const union bpf_attr *)$arg1, $arg2)")
   public static int cgroup_bpf_prog_detach(Ptr<bpf_attr> attr, bpf_prog_type ptype) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_bpf_prog_query((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cgroup_bpf_prog_query((const union bpf_attr *)$arg1, $arg2)")
   public static int cgroup_bpf_prog_query(Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1421,7 +1422,7 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)cgroup_common_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)cgroup_common_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> cgroup_common_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -1447,7 +1448,7 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_create($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("cgroup_create($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<cgroup> cgroup_create(Ptr<cgroup> parent, String name,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1478,13 +1479,13 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)cgroup_dev_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)cgroup_dev_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> cgroup_dev_func_proto(bpf_func_id func_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_dev_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("cgroup_dev_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean cgroup_dev_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1569,7 +1570,7 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_file_name($arg1, (const struct cftype*)$arg2, $arg3)")
+  @BuiltinBPFFunction("cgroup_file_name($arg1, (const struct cftype *)$arg2, $arg3)")
   public static String cgroup_file_name(Ptr<cgroup> cgrp, Ptr<cftype> cft, String buf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1699,7 +1700,7 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_get_from_path((const u8*)$arg1)")
+  @BuiltinBPFFunction("cgroup_get_from_path((const u8 *)$arg1)")
   public static Ptr<cgroup> cgroup_get_from_path(String path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1937,7 +1938,7 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_mkdir($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("cgroup_mkdir($arg1, (const u8 *)$arg2, $arg3)")
   public static int cgroup_mkdir(Ptr<kernfs_node> parent_kn, String name,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1956,13 +1957,13 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_on_dfl((const struct cgroup*)$arg1)")
+  @BuiltinBPFFunction("cgroup_on_dfl((const struct cgroup *)$arg1)")
   public static boolean cgroup_on_dfl(Ptr<cgroup> cgrp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_parse_float((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("cgroup_parse_float((const u8 *)$arg1, $arg2, $arg3)")
   public static int cgroup_parse_float(String input, @Unsigned int dec_shift,
       Ptr<java.lang.Long> v) {
     throw new MethodIsBPFRelatedFunction();
@@ -2261,7 +2262,7 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_storage_check_btf((const struct bpf_map*)$arg1, (const struct btf*)$arg2, (const struct btf_type*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("cgroup_storage_check_btf((const struct bpf_map *)$arg1, (const struct btf *)$arg2, (const struct btf_type *)$arg3, (const struct btf_type *)$arg4)")
   public static int cgroup_storage_check_btf(Ptr<bpf_map> map, Ptr<btf> btf, Ptr<btf_type> key_type,
       Ptr<btf_type> value_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -2298,7 +2299,7 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_storage_map_usage((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("cgroup_storage_map_usage((const struct bpf_map *)$arg1)")
   public static @Unsigned long cgroup_storage_map_usage(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2342,7 +2343,7 @@ public final class CgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup_task_count((const struct cgroup*)$arg1)")
+  @BuiltinBPFFunction("cgroup_task_count((const struct cgroup *)$arg1)")
   public static int cgroup_task_count(Ptr<cgroup> cgrp) {
     throw new MethodIsBPFRelatedFunction();
   }

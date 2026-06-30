@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class InsnDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("insn_decode($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("insn_decode($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static int insn_decode(Ptr<insn> insn, Ptr<?> kaddr, int buf_len, insn_mode m) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1109,7 +1110,7 @@ public final class InsnDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("insn_def_regno((const struct bpf_insn*)$arg1)")
+  @BuiltinBPFFunction("insn_def_regno((const struct bpf_insn *)$arg1)")
   public static int insn_def_regno(Ptr<bpf_insn> insn) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1218,7 +1219,7 @@ public final class InsnDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("insn_init($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("insn_init($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static void insn_init(Ptr<insn> insn, Ptr<?> kaddr, int buf_len, int x86_64) {
     throw new MethodIsBPFRelatedFunction();
   }

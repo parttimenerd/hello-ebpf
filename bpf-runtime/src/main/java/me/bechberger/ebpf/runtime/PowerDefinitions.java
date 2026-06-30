@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1128,14 +1129,14 @@ public final class PowerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__power_supply_register($arg1, (const struct power_supply_desc*)$arg2, (const struct power_supply_config*)$arg3)")
+  @BuiltinBPFFunction("__power_supply_register($arg1, (const struct power_supply_desc *)$arg2, (const struct power_supply_config *)$arg3)")
   public static Ptr<power_supply> __power_supply_register(Ptr<device> parent,
       Ptr<power_supply_desc> desc, Ptr<power_supply_config> cfg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__power_supply_set_property($arg1, $arg2, (const union power_supply_propval*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__power_supply_set_property($arg1, $arg2, (const union power_supply_propval *)$arg3, $arg4)")
   public static int __power_supply_set_property(Ptr<power_supply> psy, power_supply_property psp,
       Ptr<power_supply_propval> val, boolean use_extensions) {
     throw new MethodIsBPFRelatedFunction();
@@ -1259,7 +1260,7 @@ public final class PowerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_charge_behaviour_parse($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("power_supply_charge_behaviour_parse($arg1, (const u8 *)$arg2)")
   public static int power_supply_charge_behaviour_parse(@Unsigned int available_behaviours,
       String buf) {
     throw new MethodIsBPFRelatedFunction();
@@ -1274,7 +1275,7 @@ public final class PowerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_charge_types_parse($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("power_supply_charge_types_parse($arg1, (const u8 *)$arg2)")
   public static int power_supply_charge_types_parse(@Unsigned int available_types, String buf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1317,13 +1318,13 @@ public final class PowerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_escape_spaces((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("power_supply_escape_spaces((const u8 *)$arg1, $arg2, $arg3)")
   public static void power_supply_escape_spaces(String str, String buf, @Unsigned long bufsize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_ext_has_property((const struct power_supply_ext*)$arg1, $arg2)")
+  @BuiltinBPFFunction("power_supply_ext_has_property((const struct power_supply_ext *)$arg1, $arg2)")
   public static boolean power_supply_ext_has_property(Ptr<power_supply_ext> psy_ext,
       power_supply_property psp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1363,13 +1364,13 @@ public final class PowerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_get_by_name((const u8*)$arg1)")
+  @BuiltinBPFFunction("power_supply_get_by_name((const u8 *)$arg1)")
   public static Ptr<power_supply> power_supply_get_by_name(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_get_by_reference($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("power_supply_get_by_reference($arg1, (const u8 *)$arg2)")
   public static Ptr<power_supply> power_supply_get_by_reference(Ptr<fwnode_handle> fwnode,
       String property) {
     throw new MethodIsBPFRelatedFunction();
@@ -1417,7 +1418,7 @@ public final class PowerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_hwmon_is_visible((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("power_supply_hwmon_is_visible((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned @OriginalName("umode_t") short power_supply_hwmon_is_visible(Ptr<?> data,
       hwmon_sensor_types type, @Unsigned int attr, int channel) {
     throw new MethodIsBPFRelatedFunction();
@@ -1470,19 +1471,19 @@ public final class PowerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_match_device_by_name($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("power_supply_match_device_by_name($arg1, (const void *)$arg2)")
   public static int power_supply_match_device_by_name(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_match_device_fwnode($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("power_supply_match_device_fwnode($arg1, (const void *)$arg2)")
   public static int power_supply_match_device_fwnode(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_ocv2cap_simple((const struct power_supply_battery_ocv_table*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("power_supply_ocv2cap_simple((const struct power_supply_battery_ocv_table *)$arg1, $arg2, $arg3)")
   public static int power_supply_ocv2cap_simple(Ptr<power_supply_battery_ocv_table> table,
       int table_len, int ocv) {
     throw new MethodIsBPFRelatedFunction();
@@ -1528,21 +1529,21 @@ public final class PowerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_register($arg1, (const struct power_supply_desc*)$arg2, (const struct power_supply_config*)$arg3)")
+  @BuiltinBPFFunction("power_supply_register($arg1, (const struct power_supply_desc *)$arg2, (const struct power_supply_config *)$arg3)")
   public static Ptr<power_supply> power_supply_register(Ptr<device> parent,
       Ptr<power_supply_desc> desc, Ptr<power_supply_config> cfg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_register_extension($arg1, (const struct power_supply_ext*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("power_supply_register_extension($arg1, (const struct power_supply_ext *)$arg2, $arg3, $arg4)")
   public static int power_supply_register_extension(Ptr<power_supply> psy,
       Ptr<power_supply_ext> ext, Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_register_led_trigger($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("power_supply_register_led_trigger($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int power_supply_register_led_trigger(Ptr<power_supply> psy, String name_template,
       Ptr<Ptr<led_trigger>> tp, Ptr<java.lang.Integer> err) {
     throw new MethodIsBPFRelatedFunction();
@@ -1567,21 +1568,21 @@ public final class PowerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_set_property($arg1, $arg2, (const union power_supply_propval*)$arg3)")
+  @BuiltinBPFFunction("power_supply_set_property($arg1, $arg2, (const union power_supply_propval *)$arg3)")
   public static int power_supply_set_property(Ptr<power_supply> psy, power_supply_property psp,
       Ptr<power_supply_propval> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_set_property_direct($arg1, $arg2, (const union power_supply_propval*)$arg3)")
+  @BuiltinBPFFunction("power_supply_set_property_direct($arg1, $arg2, (const union power_supply_propval *)$arg3)")
   public static int power_supply_set_property_direct(Ptr<power_supply> psy,
       power_supply_property psp, Ptr<power_supply_propval> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_show_enum_with_available($arg1, (const u8**)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("power_supply_show_enum_with_available($arg1, (const const u8 **)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long power_supply_show_enum_with_available(Ptr<device> dev,
       Ptr<String> labels, int label_count, @Unsigned int available_values, int value, String buf) {
     throw new MethodIsBPFRelatedFunction();
@@ -1595,35 +1596,35 @@ public final class PowerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_store_property($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("power_supply_store_property($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long power_supply_store_property(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_sysfs_add_extension($arg1, (const struct power_supply_ext*)$arg2, $arg3)")
+  @BuiltinBPFFunction("power_supply_sysfs_add_extension($arg1, (const struct power_supply_ext *)$arg2, $arg3)")
   public static int power_supply_sysfs_add_extension(Ptr<power_supply> psy,
       Ptr<power_supply_ext> ext, Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_sysfs_remove_extension($arg1, (const struct power_supply_ext*)$arg2)")
+  @BuiltinBPFFunction("power_supply_sysfs_remove_extension($arg1, (const struct power_supply_ext *)$arg2)")
   public static void power_supply_sysfs_remove_extension(Ptr<power_supply> psy,
       Ptr<power_supply_ext> ext) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_temp2resist_simple((const struct power_supply_resistance_temp_table*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("power_supply_temp2resist_simple((const struct power_supply_resistance_temp_table *)$arg1, $arg2, $arg3)")
   public static int power_supply_temp2resist_simple(Ptr<power_supply_resistance_temp_table> table,
       int table_len, int temp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("power_supply_uevent((const struct device *)$arg1, $arg2)")
   public static int power_supply_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1641,7 +1642,7 @@ public final class PowerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_supply_unregister_extension($arg1, (const struct power_supply_ext*)$arg2)")
+  @BuiltinBPFFunction("power_supply_unregister_extension($arg1, (const struct power_supply_ext *)$arg2)")
   public static void power_supply_unregister_extension(Ptr<power_supply> psy,
       Ptr<power_supply_ext> ext) {
     throw new MethodIsBPFRelatedFunction();
@@ -1674,7 +1675,7 @@ public final class PowerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("power_write_file($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("power_write_file($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long power_write_file(Ptr<pci_slot> pci_slot, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

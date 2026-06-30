@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,27 +1091,27 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class VfatDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("vfat_add_entry($arg1, (const struct qstr*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("vfat_add_entry($arg1, (const struct qstr *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int vfat_add_entry(Ptr<inode> dir, Ptr<qstr> qname, int is_dir, int cluster,
       Ptr<timespec64> ts, Ptr<fat_slot_info> sinfo) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfat_build_slots($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("vfat_build_slots($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int vfat_build_slots(Ptr<inode> dir, String name, int len, int is_dir, int cluster,
       Ptr<timespec64> ts, Ptr<msdos_dir_slot> slots, Ptr<java.lang.Integer> nr_slots) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfat_cmp((const struct dentry*)$arg1, $arg2, (const u8*)$arg3, (const struct qstr*)$arg4)")
+  @BuiltinBPFFunction("vfat_cmp((const struct dentry *)$arg1, $arg2, (const u8 *)$arg3, (const struct qstr *)$arg4)")
   public static int vfat_cmp(Ptr<dentry> dentry, @Unsigned int len, String str, Ptr<qstr> name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfat_cmpi((const struct dentry*)$arg1, $arg2, (const u8*)$arg3, (const struct qstr*)$arg4)")
+  @BuiltinBPFFunction("vfat_cmpi((const struct dentry *)$arg1, $arg2, (const u8 *)$arg3, (const struct qstr *)$arg4)")
   public static int vfat_cmpi(Ptr<dentry> dentry, @Unsigned int len, String str, Ptr<qstr> name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1143,13 +1144,13 @@ public final class VfatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfat_hash((const struct dentry*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vfat_hash((const struct dentry *)$arg1, $arg2)")
   public static int vfat_hash(Ptr<dentry> dentry, Ptr<qstr> qstr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfat_hashi((const struct dentry*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vfat_hashi((const struct dentry *)$arg1, $arg2)")
   public static int vfat_hashi(Ptr<dentry> dentry, Ptr<qstr> qstr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1201,14 +1202,14 @@ public final class VfatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfat_revalidate($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vfat_revalidate($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int vfat_revalidate(Ptr<inode> dir, Ptr<qstr> name, Ptr<dentry> dentry,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfat_revalidate_ci($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vfat_revalidate_ci($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int vfat_revalidate_ci(Ptr<inode> dir, Ptr<qstr> name, Ptr<dentry> dentry,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();

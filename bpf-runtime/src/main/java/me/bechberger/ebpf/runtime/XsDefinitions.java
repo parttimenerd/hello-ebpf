@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1132,7 +1133,7 @@ public final class XsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xs_single($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("xs_single($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<?> xs_single(xenbus_transaction t, xsd_sockmsg_type type, String string,
       Ptr<java.lang. @Unsigned Integer> len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1151,14 +1152,14 @@ public final class XsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xs_talkv($arg1, $arg2, (const struct kvec*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("xs_talkv($arg1, $arg2, (const struct kvec *)$arg3, $arg4, $arg5)")
   public static Ptr<?> xs_talkv(xenbus_transaction t, xsd_sockmsg_type type, Ptr<kvec> iovec,
       @Unsigned int num_vecs, Ptr<java.lang. @Unsigned Integer> len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xs_unwatch((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("xs_unwatch((const u8 *)$arg1, (const u8 *)$arg2)")
   public static int xs_unwatch(String path, String token) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1176,7 +1177,7 @@ public final class XsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xs_watch((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("xs_watch((const u8 *)$arg1, (const u8 *)$arg2)")
   public static int xs_watch(String path, String token) {
     throw new MethodIsBPFRelatedFunction();
   }

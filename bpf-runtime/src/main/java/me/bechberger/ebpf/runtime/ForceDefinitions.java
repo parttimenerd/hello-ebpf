@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1163,7 +1164,7 @@ public final class ForceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("force_raw_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("force_raw_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long force_raw_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1183,7 +1184,7 @@ public final class ForceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("force_remove_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("force_remove_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long force_remove_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1197,7 +1198,7 @@ public final class ForceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("force_ro_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("force_ro_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long force_ro_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1296,7 +1297,7 @@ public final class ForceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("force_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("force_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long force_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

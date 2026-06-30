@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1150,7 +1151,7 @@ public final class Serial8250Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("serial8250_console_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("serial8250_console_write($arg1, (const u8 *)$arg2, $arg3)")
   public static void serial8250_console_write(Ptr<uart_8250_port> up, String s,
       @Unsigned int count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1195,7 +1196,7 @@ public final class Serial8250Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("serial8250_do_set_termios($arg1, $arg2, (const struct ktermios*)$arg3)")
+  @BuiltinBPFFunction("serial8250_do_set_termios($arg1, $arg2, (const struct ktermios *)$arg3)")
   public static void serial8250_do_set_termios(Ptr<uart_port> port, Ptr<ktermios> termios,
       Ptr<ktermios> old) {
     throw new MethodIsBPFRelatedFunction();
@@ -1426,7 +1427,7 @@ public final class Serial8250Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("serial8250_register_8250_port((const struct uart_8250_port*)$arg1)")
+  @BuiltinBPFFunction("serial8250_register_8250_port((const struct uart_8250_port *)$arg1)")
   public static int serial8250_register_8250_port(Ptr<uart_8250_port> up) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1547,7 +1548,7 @@ public final class Serial8250Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("serial8250_set_termios($arg1, $arg2, (const struct ktermios*)$arg3)")
+  @BuiltinBPFFunction("serial8250_set_termios($arg1, $arg2, (const struct ktermios *)$arg3)")
   public static void serial8250_set_termios(Ptr<uart_port> port, Ptr<ktermios> termios,
       Ptr<ktermios> old) {
     throw new MethodIsBPFRelatedFunction();

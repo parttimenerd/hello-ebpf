@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class IcmpDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__icmp_send($arg1, $arg2, $arg3, $arg4, (const struct ip_options*)$arg5)")
+  @BuiltinBPFFunction("__icmp_send($arg1, $arg2, $arg3, $arg4, (const struct ip_options *)$arg5)")
   public static void __icmp_send(Ptr<sk_buff> skb_in, int type, int code,
       @Unsigned @OriginalName("__be32") int info, Ptr<ip_options> opt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1184,7 +1185,7 @@ public final class IcmpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("icmp_route_lookup($arg1, $arg2, $arg3, (const struct iphdr*)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("icmp_route_lookup($arg1, $arg2, $arg3, (const struct iphdr *)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10)")
   public static Ptr<rtable> icmp_route_lookup(Ptr<net> net, Ptr<flowi4> fl4, Ptr<sk_buff> skb_in,
       Ptr<iphdr> iph, @Unsigned @OriginalName("__be32") int saddr,
       @OriginalName("dscp_t") char dscp, @Unsigned int mark, int type, int code,

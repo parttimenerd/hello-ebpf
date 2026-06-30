@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1233,7 +1234,7 @@ public final class RemoveDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("remove_files($arg1, (const struct attribute_group*)$arg2)")
+  @BuiltinBPFFunction("remove_files($arg1, (const struct attribute_group *)$arg2)")
   public static void remove_files(Ptr<kernfs_node> parent, Ptr<attribute_group> grp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1270,7 +1271,7 @@ public final class RemoveDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("remove_id_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("remove_id_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long remove_id_store(Ptr<device_driver> driver, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1429,13 +1430,13 @@ public final class RemoveDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("remove_proc_entry((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("remove_proc_entry((const u8 *)$arg1, $arg2)")
   public static void remove_proc_entry(String name, Ptr<proc_dir_entry> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("remove_proc_subtree((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("remove_proc_subtree((const u8 *)$arg1, $arg2)")
   public static int remove_proc_subtree(String name, Ptr<proc_dir_entry> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1478,14 +1479,14 @@ public final class RemoveDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("remove_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("remove_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long remove_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("remove_vm_area((const void*)$arg1)")
+  @BuiltinBPFFunction("remove_vm_area((const void *)$arg1)")
   public static Ptr<vm_struct> remove_vm_area(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }

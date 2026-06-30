@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1112,14 +1113,14 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__blk_crypto_cfg_supported($arg1, (const struct blk_crypto_config*)$arg2)")
+  @BuiltinBPFFunction("__blk_crypto_cfg_supported($arg1, (const struct blk_crypto_config *)$arg2)")
   public static boolean __blk_crypto_cfg_supported(Ptr<blk_crypto_profile> profile,
       Ptr<blk_crypto_config> cfg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__blk_crypto_evict_key($arg1, (const struct blk_crypto_key*)$arg2)")
+  @BuiltinBPFFunction("__blk_crypto_evict_key($arg1, (const struct blk_crypto_key *)$arg2)")
   public static int __blk_crypto_evict_key(Ptr<blk_crypto_profile> profile,
       Ptr<blk_crypto_key> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -1317,7 +1318,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__blk_trace_note_message($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("__blk_trace_note_message($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void __blk_trace_note_message(Ptr<blk_trace> bt, Ptr<cgroup_subsys_state> css,
       String fmt, java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1584,7 +1585,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_create_buf_file_callback((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("blk_create_buf_file_callback((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static Ptr<dentry> blk_create_buf_file_callback(String filename, Ptr<dentry> parent,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<rchan_buf> buf,
       Ptr<java.lang.Integer> is_global) {
@@ -1599,21 +1600,21 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_config_supported($arg1, (const struct blk_crypto_config*)$arg2)")
+  @BuiltinBPFFunction("blk_crypto_config_supported($arg1, (const struct blk_crypto_config *)$arg2)")
   public static boolean blk_crypto_config_supported(Ptr<block_device> bdev,
       Ptr<blk_crypto_config> cfg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_config_supported_natively($arg1, (const struct blk_crypto_config*)$arg2)")
+  @BuiltinBPFFunction("blk_crypto_config_supported_natively($arg1, (const struct blk_crypto_config *)$arg2)")
   public static boolean blk_crypto_config_supported_natively(Ptr<block_device> bdev,
       Ptr<blk_crypto_config> cfg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_derive_sw_secret($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("blk_crypto_derive_sw_secret($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int blk_crypto_derive_sw_secret(Ptr<block_device> bdev,
       Ptr<java.lang.Character> eph_key, @Unsigned long eph_key_size,
       Ptr<java.lang.Character> sw_secret) {
@@ -1621,7 +1622,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_evict_key($arg1, (const struct blk_crypto_key*)$arg2)")
+  @BuiltinBPFFunction("blk_crypto_evict_key($arg1, (const struct blk_crypto_key *)$arg2)")
   public static void blk_crypto_evict_key(Ptr<block_device> bdev, Ptr<blk_crypto_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1670,7 +1671,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_fallback_evict_key((const struct blk_crypto_key*)$arg1)")
+  @BuiltinBPFFunction("blk_crypto_fallback_evict_key((const struct blk_crypto_key *)$arg1)")
   public static int blk_crypto_fallback_evict_key(Ptr<blk_crypto_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1688,14 +1689,14 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_fallback_keyslot_evict($arg1, (const struct blk_crypto_key*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blk_crypto_fallback_keyslot_evict($arg1, (const struct blk_crypto_key *)$arg2, $arg3)")
   public static int blk_crypto_fallback_keyslot_evict(Ptr<blk_crypto_profile> profile,
       Ptr<blk_crypto_key> key, @Unsigned int slot) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_fallback_keyslot_program($arg1, (const struct blk_crypto_key*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blk_crypto_fallback_keyslot_program($arg1, (const struct blk_crypto_key *)$arg2, $arg3)")
   public static int blk_crypto_fallback_keyslot_program(Ptr<blk_crypto_profile> profile,
       Ptr<blk_crypto_key> key, @Unsigned int slot) {
     throw new MethodIsBPFRelatedFunction();
@@ -1721,7 +1722,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_get_keyslot($arg1, (const struct blk_crypto_key*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blk_crypto_get_keyslot($arg1, (const struct blk_crypto_key *)$arg2, $arg3)")
   public static @OriginalName("blk_status_t") char blk_crypto_get_keyslot(
       Ptr<blk_crypto_profile> profile, Ptr<blk_crypto_key> key,
       Ptr<Ptr<blk_crypto_keyslot>> slot_ptr) {
@@ -1729,14 +1730,14 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_has_capabilities((const struct blk_crypto_profile*)$arg1, (const struct blk_crypto_profile*)$arg2)")
+  @BuiltinBPFFunction("blk_crypto_has_capabilities((const struct blk_crypto_profile *)$arg1, (const struct blk_crypto_profile *)$arg2)")
   public static boolean blk_crypto_has_capabilities(Ptr<blk_crypto_profile> target,
       Ptr<blk_crypto_profile> reference) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_import_key($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("blk_crypto_import_key($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int blk_crypto_import_key(Ptr<blk_crypto_profile> profile,
       Ptr<java.lang.Character> raw_key, @Unsigned long raw_key_size,
       Ptr<java.lang.Character> lt_key) {
@@ -1744,7 +1745,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_init_key($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("blk_crypto_init_key($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int blk_crypto_init_key(Ptr<blk_crypto_key> blk_key,
       Ptr<java.lang.Character> key_bytes, @Unsigned long key_size, blk_crypto_key_type key_type,
       blk_crypto_mode_num crypto_mode, @Unsigned int dun_bytes, @Unsigned int data_unit_size) {
@@ -1752,7 +1753,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_intersect_capabilities($arg1, (const struct blk_crypto_profile*)$arg2)")
+  @BuiltinBPFFunction("blk_crypto_intersect_capabilities($arg1, (const struct blk_crypto_profile *)$arg2)")
   public static void blk_crypto_intersect_capabilities(Ptr<blk_crypto_profile> parent,
       Ptr<blk_crypto_profile> child) {
     throw new MethodIsBPFRelatedFunction();
@@ -1810,7 +1811,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_prepare_key($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("blk_crypto_prepare_key($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int blk_crypto_prepare_key(Ptr<blk_crypto_profile> profile,
       Ptr<java.lang.Character> lt_key, @Unsigned long lt_key_size,
       Ptr<java.lang.Character> eph_key) {
@@ -1861,7 +1862,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_start_using_key($arg1, (const struct blk_crypto_key*)$arg2)")
+  @BuiltinBPFFunction("blk_crypto_start_using_key($arg1, (const struct blk_crypto_key *)$arg2)")
   public static int blk_crypto_start_using_key(Ptr<block_device> bdev, Ptr<blk_crypto_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1885,7 +1886,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_crypto_update_capabilities($arg1, (const struct blk_crypto_profile*)$arg2)")
+  @BuiltinBPFFunction("blk_crypto_update_capabilities($arg1, (const struct blk_crypto_profile *)$arg2)")
   public static void blk_crypto_update_capabilities(Ptr<blk_crypto_profile> dst,
       Ptr<blk_crypto_profile> src) {
     throw new MethodIsBPFRelatedFunction();
@@ -1949,7 +1950,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_flags_show($arg1, (const long unsigned int)$arg2, (const u8**)$arg3, $arg4)")
+  @BuiltinBPFFunction("blk_flags_show($arg1, (const long unsigned int)$arg2, (const const u8 **)$arg3, $arg4)")
   public static int blk_flags_show(Ptr<seq_file> m, @Unsigned long flags, Ptr<String> flag_name,
       int flag_name_count) {
     throw new MethodIsBPFRelatedFunction();
@@ -2151,61 +2152,61 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_log_action($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blk_log_action($arg1, (const u8 *)$arg2, $arg3)")
   public static void blk_log_action(Ptr<trace_iterator> iter, String act, boolean has_cg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_log_action_classic($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blk_log_action_classic($arg1, (const u8 *)$arg2, $arg3)")
   public static void blk_log_action_classic(Ptr<trace_iterator> iter, String act, boolean has_cg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_log_dump_pdu($arg1, (const struct trace_entry*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blk_log_dump_pdu($arg1, (const struct trace_entry *)$arg2, $arg3)")
   public static void blk_log_dump_pdu(Ptr<trace_seq> s, Ptr<trace_entry> ent, boolean has_cg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_log_generic($arg1, (const struct trace_entry*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blk_log_generic($arg1, (const struct trace_entry *)$arg2, $arg3)")
   public static void blk_log_generic(Ptr<trace_seq> s, Ptr<trace_entry> ent, boolean has_cg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_log_plug($arg1, (const struct trace_entry*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blk_log_plug($arg1, (const struct trace_entry *)$arg2, $arg3)")
   public static void blk_log_plug(Ptr<trace_seq> s, Ptr<trace_entry> ent, boolean has_cg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_log_remap($arg1, (const struct trace_entry*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blk_log_remap($arg1, (const struct trace_entry *)$arg2, $arg3)")
   public static void blk_log_remap(Ptr<trace_seq> s, Ptr<trace_entry> ent, boolean has_cg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_log_split($arg1, (const struct trace_entry*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blk_log_split($arg1, (const struct trace_entry *)$arg2, $arg3)")
   public static void blk_log_split(Ptr<trace_seq> s, Ptr<trace_entry> ent, boolean has_cg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_log_unplug($arg1, (const struct trace_entry*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blk_log_unplug($arg1, (const struct trace_entry *)$arg2, $arg3)")
   public static void blk_log_unplug(Ptr<trace_seq> s, Ptr<trace_entry> ent, boolean has_cg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_log_with_error($arg1, (const struct trace_entry*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blk_log_with_error($arg1, (const struct trace_entry *)$arg2, $arg3)")
   public static void blk_log_with_error(Ptr<trace_seq> s, Ptr<trace_entry> ent, boolean has_cg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_lookup_devt((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("blk_lookup_devt((const u8 *)$arg1, $arg2)")
   public static @Unsigned @OriginalName("dev_t") int blk_lookup_devt(String name, int partno) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2327,7 +2328,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_mq_alloc_sq_tag_set($arg1, (const struct blk_mq_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("blk_mq_alloc_sq_tag_set($arg1, (const struct blk_mq_ops *)$arg2, $arg3, $arg4)")
   public static int blk_mq_alloc_sq_tag_set(Ptr<blk_mq_tag_set> set, Ptr<blk_mq_ops> ops,
       @Unsigned int queue_depth, @Unsigned int set_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2479,7 +2480,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_mq_debugfs_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("blk_mq_debugfs_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long blk_mq_debugfs_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2908,7 +2909,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_mq_num_queues((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("blk_mq_num_queues((const struct cpumask *)$arg1, $arg2)")
   public static @Unsigned int blk_mq_num_queues(Ptr<cpumask> mask, @Unsigned int max_queues) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3331,7 +3332,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_msg_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("blk_msg_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long blk_msg_write(Ptr<file> filp, String buffer,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -3502,7 +3503,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_rq_cur_bytes((const struct request*)$arg1)")
+  @BuiltinBPFFunction("blk_rq_cur_bytes((const struct request *)$arg1)")
   public static int blk_rq_cur_bytes(Ptr<request> rq) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3569,7 +3570,7 @@ public final class BlkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blk_rq_map_user_iov($arg1, $arg2, $arg3, (const struct iov_iter*)$arg4, $arg5)")
+  @BuiltinBPFFunction("blk_rq_map_user_iov($arg1, $arg2, $arg3, (const struct iov_iter *)$arg4, $arg5)")
   public static int blk_rq_map_user_iov(Ptr<request_queue> q, Ptr<request> rq,
       Ptr<rq_map_data> map_data, Ptr<iov_iter> iter,
       @Unsigned @OriginalName("gfp_t") int gfp_mask) {

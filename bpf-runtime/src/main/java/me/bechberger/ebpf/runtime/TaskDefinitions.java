@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1109,7 +1110,7 @@ public final class TaskDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("task_affinity_all((const struct task_struct*)$arg1)")
+  @BuiltinBPFFunction("task_affinity_all((const struct task_struct *)$arg1)")
   public static boolean task_affinity_all(Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1220,7 +1221,7 @@ public final class TaskDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("task_curr((const struct task_struct*)$arg1)")
+  @BuiltinBPFFunction("task_curr((const struct task_struct *)$arg1)")
   public static int task_curr(Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1447,7 +1448,7 @@ public final class TaskDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("task_on_scx((const struct task_struct*)$arg1)")
+  @BuiltinBPFFunction("task_on_scx((const struct task_struct *)$arg1)")
   public static boolean task_on_scx(Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1459,7 +1460,7 @@ public final class TaskDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("task_prio((const struct task_struct*)$arg1)")
+  @BuiltinBPFFunction("task_prio((const struct task_struct *)$arg1)")
   public static int task_prio(Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2699,7 +2700,7 @@ public final class TaskDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const struct tomoyo_path_info*; }"
+      cType = "struct { const struct tomoyo_path_info *domainname; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

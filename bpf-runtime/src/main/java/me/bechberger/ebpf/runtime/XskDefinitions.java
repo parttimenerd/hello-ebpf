@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1284,13 +1285,13 @@ public final class XskDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xsk_map_mem_usage((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("xsk_map_mem_usage((const struct bpf_map *)$arg1)")
   public static @Unsigned long xsk_map_mem_usage(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xsk_map_meta_equal((const struct bpf_map*)$arg1, (const struct bpf_map*)$arg2)")
+  @BuiltinBPFFunction("xsk_map_meta_equal((const struct bpf_map *)$arg1, (const struct bpf_map *)$arg2)")
   public static boolean xsk_map_meta_equal(Ptr<bpf_map> meta0, Ptr<bpf_map> meta1) {
     throw new MethodIsBPFRelatedFunction();
   }

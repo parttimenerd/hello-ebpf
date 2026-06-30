@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1121,7 +1122,7 @@ public final class OsnoiseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("osnoise_cpus_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("osnoise_cpus_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long osnoise_cpus_write(Ptr<file> filp, String ubuf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1152,7 +1153,7 @@ public final class OsnoiseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("osnoise_options_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("osnoise_options_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long osnoise_options_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1177,7 +1178,7 @@ public final class OsnoiseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("osnoise_trace_irq_exit($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("osnoise_trace_irq_exit($arg1, (const u8 *)$arg2)")
   public static void osnoise_trace_irq_exit(int id, String desc) {
     throw new MethodIsBPFRelatedFunction();
   }

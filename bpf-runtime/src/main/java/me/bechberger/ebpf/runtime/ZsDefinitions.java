@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class ZsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zs_create_pool((const u8*)$arg1)")
+  @BuiltinBPFFunction("zs_create_pool((const u8 *)$arg1)")
   public static Ptr<zs_pool> zs_create_pool(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1221,7 +1222,7 @@ public final class ZsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zs_zpool_create((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("zs_zpool_create((const u8 *)$arg1, $arg2)")
   public static Ptr<?> zs_zpool_create(String name, @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
   }

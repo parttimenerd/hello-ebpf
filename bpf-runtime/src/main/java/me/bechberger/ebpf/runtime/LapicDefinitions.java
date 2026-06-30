@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1192,7 +1193,7 @@ public final class LapicDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lapic_timer_broadcast((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("lapic_timer_broadcast((const struct cpumask *)$arg1)")
   public static void lapic_timer_broadcast(Ptr<cpumask> mask) {
     throw new MethodIsBPFRelatedFunction();
   }

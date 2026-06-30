@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1250,7 +1251,7 @@ public final class EhciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ehci_init_driver($arg1, (const struct ehci_driver_overrides*)$arg2)")
+  @BuiltinBPFFunction("ehci_init_driver($arg1, (const struct ehci_driver_overrides *)$arg2)")
   public static void ehci_init_driver(Ptr<hc_driver> drv, Ptr<ehci_driver_overrides> over) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1286,7 +1287,7 @@ public final class EhciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ehci_pci_probe($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("ehci_pci_probe($arg1, (const struct pci_device_id *)$arg2)")
   public static int ehci_pci_probe(Ptr<pci_dev> pdev, Ptr<pci_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }

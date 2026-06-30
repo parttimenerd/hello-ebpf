@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class PtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ptrace_link($arg1, $arg2, (const struct cred*)$arg3)")
+  @BuiltinBPFFunction("__ptrace_link($arg1, $arg2, (const struct cred *)$arg3)")
   public static void __ptrace_link(Ptr<task_struct> child, Ptr<task_struct> new_parent,
       Ptr<cred> ptracer_cred) {
     throw new MethodIsBPFRelatedFunction();
@@ -1225,7 +1226,7 @@ public final class PtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ptrace_set_syscall_info($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("ptrace_set_syscall_info($arg1, $arg2, (const void *)$arg3)")
   public static int ptrace_set_syscall_info(Ptr<task_struct> child, @Unsigned long user_size,
       Ptr<?> datavp) {
     throw new MethodIsBPFRelatedFunction();

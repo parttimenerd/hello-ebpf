@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1105,14 +1106,14 @@ public final class VmallocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__vmalloc_node_noprof($arg1, $arg2, $arg3, $arg4, (const void*)$arg5)")
+  @BuiltinBPFFunction("__vmalloc_node_noprof($arg1, $arg2, $arg3, $arg4, (const void *)$arg5)")
   public static Ptr<?> __vmalloc_node_noprof(@Unsigned long size, @Unsigned long align,
       @Unsigned @OriginalName("gfp_t") int gfp_mask, int node, Ptr<?> caller) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__vmalloc_node_range_noprof($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, (const void*)$arg9)")
+  @BuiltinBPFFunction("__vmalloc_node_range_noprof($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, (const void *)$arg9)")
   public static Ptr<?> __vmalloc_node_range_noprof(@Unsigned long size, @Unsigned long align,
       @Unsigned long start, @Unsigned long end, @Unsigned @OriginalName("gfp_t") int gfp_mask,
       @OriginalName("pgprot_t") pgprot prot, @Unsigned long vm_flags, int node, Ptr<?> caller) {
@@ -1176,13 +1177,13 @@ public final class VmallocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vmalloc_to_page((const void*)$arg1)")
+  @BuiltinBPFFunction("vmalloc_to_page((const void *)$arg1)")
   public static Ptr<page> vmalloc_to_page(Ptr<?> vmalloc_addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vmalloc_to_pfn((const void*)$arg1)")
+  @BuiltinBPFFunction("vmalloc_to_pfn((const void *)$arg1)")
   public static @Unsigned long vmalloc_to_pfn(Ptr<?> vmalloc_addr) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CheckDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__check_buffer_access($arg1, (const u8*)$arg2, (const struct bpf_reg_state*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__check_buffer_access($arg1, (const u8 *)$arg2, (const struct bpf_reg_state *)$arg3, $arg4, $arg5, $arg6)")
   public static int __check_buffer_access(Ptr<bpf_verifier_env> env, String buf_info,
       Ptr<bpf_reg_state> reg, int regno, int off, int size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1103,7 +1104,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__check_heap_object((const void*)$arg1, $arg2, (const struct slab*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__check_heap_object((const void *)$arg1, $arg2, (const struct slab *)$arg3, $arg4)")
   public static void __check_heap_object(Ptr<?> ptr, @Unsigned long n, Ptr<slab> slab,
       boolean to_user) {
     throw new MethodIsBPFRelatedFunction();
@@ -1123,7 +1124,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__check_object_size((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__check_object_size((const void *)$arg1, $arg2, $arg3)")
   public static void __check_object_size(Ptr<?> ptr, @Unsigned long n, boolean to_user) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1136,7 +1137,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__check_ptr_off_reg($arg1, (const struct bpf_reg_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__check_ptr_off_reg($arg1, (const struct bpf_reg_state *)$arg2, $arg3, $arg4)")
   public static int __check_ptr_off_reg(Ptr<bpf_verifier_env> env, Ptr<bpf_reg_state> reg,
       int regno, boolean fixed_off_ok) {
     throw new MethodIsBPFRelatedFunction();
@@ -1236,20 +1237,20 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_btf_kconfigs((const struct module*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("check_btf_kconfigs((const struct module *)$arg1, (const u8 *)$arg2)")
   public static int check_btf_kconfigs(Ptr<module> module, String feature) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_btf_line($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("check_btf_line($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int check_btf_line(Ptr<bpf_verifier_env> env, Ptr<bpf_attr> attr,
       @OriginalName("bpfptr_t") sockptr_t uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_bytes_and_report($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("check_bytes_and_report($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int check_bytes_and_report(Ptr<kmem_cache> s, Ptr<slab> slab,
       Ptr<java.lang.Character> object, String what, Ptr<java.lang.Character> start,
       @Unsigned int value, @Unsigned int bytes, boolean slab_obj_print) {
@@ -1275,7 +1276,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_canary((const struct kfence_metadata*)$arg1)")
+  @BuiltinBPFFunction("check_canary((const struct kfence_metadata *)$arg1)")
   public static void check_canary(Ptr<kfence_metadata> meta) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1306,14 +1307,14 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_class_changed($arg1, $arg2, (const struct sched_class*)$arg3, $arg4)")
+  @BuiltinBPFFunction("check_class_changed($arg1, $arg2, (const struct sched_class *)$arg3, $arg4)")
   public static void check_class_changed(Ptr<rq> rq, Ptr<task_struct> p,
       Ptr<sched_class> prev_class, int oldprio) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_class_changing($arg1, $arg2, (const struct sched_class*)$arg3)")
+  @BuiltinBPFFunction("check_class_changing($arg1, $arg2, (const struct sched_class *)$arg3)")
   public static void check_class_changing(Ptr<rq> rq, Ptr<task_struct> p,
       Ptr<sched_class> prev_class) {
     throw new MethodIsBPFRelatedFunction();
@@ -1327,7 +1328,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_command((const u8*)$arg1)")
+  @BuiltinBPFFunction("check_command((const u8 *)$arg1)")
   public static int check_command(String raw_command) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1346,7 +1347,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_core_relo($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("check_core_relo($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int check_core_relo(Ptr<bpf_verifier_env> env, Ptr<bpf_attr> attr,
       @OriginalName("bpfptr_t") sockptr_t uattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1448,7 +1449,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_for_audio_disc($arg1, (const struct cdrom_device_ops*)$arg2)")
+  @BuiltinBPFFunction("check_for_audio_disc($arg1, (const struct cdrom_device_ops *)$arg2)")
   public static int check_for_audio_disc(Ptr<cdrom_device_info> cdi, Ptr<cdrom_device_ops> cdo) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1473,27 +1474,27 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_func_arg($arg1, $arg2, $arg3, (const struct bpf_func_proto*)$arg4, $arg5)")
+  @BuiltinBPFFunction("check_func_arg($arg1, $arg2, $arg3, (const struct bpf_func_proto *)$arg4, $arg5)")
   public static int check_func_arg(Ptr<bpf_verifier_env> env, @Unsigned int arg,
       Ptr<bpf_call_arg_meta> meta, Ptr<bpf_func_proto> fn, int insn_idx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_func_arg_reg_off($arg1, (const struct bpf_reg_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("check_func_arg_reg_off($arg1, (const struct bpf_reg_state *)$arg2, $arg3, $arg4)")
   public static int check_func_arg_reg_off(Ptr<bpf_verifier_env> env, Ptr<bpf_reg_state> reg,
       int regno, bpf_arg_type arg_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_func_proto((const struct bpf_func_proto*)$arg1, $arg2)")
+  @BuiltinBPFFunction("check_func_proto((const struct bpf_func_proto *)$arg1, $arg2)")
   public static int check_func_proto(Ptr<bpf_func_proto> fn, int func_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_heap_object((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("check_heap_object((const void *)$arg1, $arg2, $arg3)")
   public static void check_heap_object(Ptr<?> ptr, @Unsigned long n, boolean to_user) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1567,7 +1568,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_igot_inode($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("check_igot_inode($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int check_igot_inode(Ptr<inode> inode,
       @OriginalName("ext4_iget_flags") EXT4_IGET flags, String function, @Unsigned int line) {
     throw new MethodIsBPFRelatedFunction();
@@ -1669,13 +1670,13 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_load_and_stores((const struct sock_filter*)$arg1, $arg2)")
+  @BuiltinBPFFunction("check_load_and_stores((const struct sock_filter *)$arg1, $arg2)")
   public static int check_load_and_stores(Ptr<sock_filter> filter, int flen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_load_mem($arg1, $arg2, $arg3, $arg4, $arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("check_load_mem($arg1, $arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6)")
   public static int check_load_mem(Ptr<bpf_verifier_env> env, Ptr<bpf_insn> insn,
       boolean strict_alignment_once, boolean is_ldsx, boolean allow_trust_mismatch, String ctx) {
     throw new MethodIsBPFRelatedFunction();
@@ -1796,7 +1797,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_modstruct_version((const struct load_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("check_modstruct_version((const struct load_info *)$arg1, $arg2)")
   public static int check_modstruct_version(Ptr<load_info> info, Ptr<module> mod) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1863,7 +1864,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_panic_on_warn((const u8*)$arg1)")
+  @BuiltinBPFFunction("check_panic_on_warn((const u8 *)$arg1)")
   public static void check_panic_on_warn(String origin) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1893,7 +1894,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_pointer($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("check_pointer($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int check_pointer(Ptr<String> buf, String end, Ptr<?> ptr, printf_spec spec) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1930,7 +1931,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_ptr_alignment($arg1, (const struct bpf_reg_state*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("check_ptr_alignment($arg1, (const struct bpf_reg_state *)$arg2, $arg3, $arg4, $arg5)")
   public static int check_ptr_alignment(Ptr<bpf_verifier_env> env, Ptr<bpf_reg_state> reg, int off,
       int size, boolean strict_alignment_once) {
     throw new MethodIsBPFRelatedFunction();
@@ -1971,14 +1972,14 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_reg_sane_offset($arg1, (const struct bpf_reg_state*)$arg2, $arg3)")
+  @BuiltinBPFFunction("check_reg_sane_offset($arg1, (const struct bpf_reg_state *)$arg2, $arg3)")
   public static boolean check_reg_sane_offset(Ptr<bpf_verifier_env> env, Ptr<bpf_reg_state> reg,
       bpf_reg_type type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_reg_type($arg1, $arg2, $arg3, (const unsigned int*)$arg4, $arg5)")
+  @BuiltinBPFFunction("check_reg_type($arg1, $arg2, $arg3, (const unsigned int *)$arg4, $arg5)")
   public static int check_reg_type(Ptr<bpf_verifier_env> env, @Unsigned int regno,
       bpf_arg_type arg_type, Ptr<java.lang. @Unsigned Integer> arg_btf_id,
       Ptr<bpf_call_arg_meta> meta) {
@@ -1993,14 +1994,14 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_resource_leak($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("check_resource_leak($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int check_resource_leak(Ptr<bpf_verifier_env> env, boolean exception_exit,
       boolean check_lock, String prefix) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_return_code($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("check_return_code($arg1, $arg2, (const u8 *)$arg3)")
   public static int check_return_code(Ptr<bpf_verifier_env> env, int regno, String reg_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2030,7 +2031,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_signature((volatile const void*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("check_signature((volatile const void *)$arg1, (const u8 *)$arg2, $arg3)")
   public static int check_signature(Ptr<?> io_addr, String signature, int length) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2061,7 +2062,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_special_kfunc($arg1, $arg2, $arg3, $arg4, (const struct btf_type*)$arg5, $arg6)")
+  @BuiltinBPFFunction("check_special_kfunc($arg1, $arg2, $arg3, $arg4, (const struct btf_type *)$arg5, $arg6)")
   public static int check_special_kfunc(Ptr<bpf_verifier_env> env,
       Ptr<bpf_kfunc_call_arg_meta> meta, Ptr<bpf_reg_state> regs, Ptr<bpf_insn_aux_data> insn_aux,
       Ptr<btf_type> ptr_type, Ptr<btf> desc_btf) {
@@ -2089,7 +2090,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_stack_object((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("check_stack_object((const void *)$arg1, $arg2)")
   public static int check_stack_object(Ptr<?> obj, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2181,7 +2182,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_tp_buffer_access($arg1, (const struct bpf_reg_state*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("check_tp_buffer_access($arg1, (const struct bpf_reg_state *)$arg2, $arg3, $arg4, $arg5)")
   public static int check_tp_buffer_access(Ptr<bpf_verifier_env> env, Ptr<bpf_reg_state> reg,
       int regno, int off, int size) {
     throw new MethodIsBPFRelatedFunction();
@@ -2224,7 +2225,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_tty_count($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("check_tty_count($arg1, (const u8 *)$arg2)")
   public static void check_tty_count(Ptr<tty_struct> tty, String routine) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2297,7 +2298,7 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_xattrs($arg1, $arg2, $arg3, $arg4, $arg5, (const u8*)$arg6, $arg7)")
+  @BuiltinBPFFunction("check_xattrs($arg1, $arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6, $arg7)")
   public static int check_xattrs(Ptr<inode> inode, Ptr<buffer_head> bh, Ptr<ext4_xattr_entry> entry,
       Ptr<?> end, Ptr<?> value_start, String function, @Unsigned int line) {
     throw new MethodIsBPFRelatedFunction();
@@ -2317,13 +2318,13 @@ public final class CheckDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_zero_holes((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("check_zero_holes((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int check_zero_holes(Ptr<btf> btf, Ptr<btf_type> t, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("check_zeroed_user((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("check_zeroed_user((const void *)$arg1, $arg2)")
   public static int check_zeroed_user(Ptr<?> from, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class NdiscDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__ndisc_fill_addr_option($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__ndisc_fill_addr_option($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static void __ndisc_fill_addr_option(Ptr<sk_buff> skb, int type, Ptr<?> data, int data_len,
       int pad) {
     throw new MethodIsBPFRelatedFunction();
@@ -1103,7 +1104,7 @@ public final class NdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_allow_add((const struct net_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ndisc_allow_add((const struct net_device *)$arg1, $arg2)")
   public static boolean ndisc_allow_add(Ptr<net_device> dev, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1127,14 +1128,14 @@ public final class NdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_hash((const void*)$arg1, (const struct net_device*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ndisc_hash((const void *)$arg1, (const struct net_device *)$arg2, $arg3)")
   public static @Unsigned int ndisc_hash(Ptr<?> pkey, Ptr<net_device> dev,
       Ptr<java.lang. @Unsigned Integer> hash_rnd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_ifinfo_sysctl_change((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ndisc_ifinfo_sysctl_change((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int ndisc_ifinfo_sysctl_change(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1147,13 +1148,13 @@ public final class NdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_is_multicast((const void*)$arg1)")
+  @BuiltinBPFFunction("ndisc_is_multicast((const void *)$arg1)")
   public static int ndisc_is_multicast(Ptr<?> pkey) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_key_eq((const struct neighbour*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ndisc_key_eq((const struct neighbour *)$arg1, (const void *)$arg2)")
   public static boolean ndisc_key_eq(Ptr<neighbour> n, Ptr<?> pkey) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1171,7 +1172,7 @@ public final class NdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_mc_map((const struct in6_addr*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ndisc_mc_map((const struct in6_addr *)$arg1, $arg2, $arg3, $arg4)")
   public static int ndisc_mc_map(Ptr<in6_addr> addr, String buf, Ptr<net_device> dev, int dir) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1202,14 +1203,14 @@ public final class NdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_ns_create($arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ndisc_ns_create($arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3, $arg4)")
   public static Ptr<sk_buff> ndisc_ns_create(Ptr<net_device> dev, Ptr<in6_addr> solicit,
       Ptr<in6_addr> saddr, @Unsigned long nonce) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_parse_options((const struct net_device*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ndisc_parse_options((const struct net_device *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<ndisc_options> ndisc_parse_options(Ptr<net_device> dev,
       Ptr<java.lang.Character> opt, int opt_len, Ptr<ndisc_options> ndopts) {
     throw new MethodIsBPFRelatedFunction();
@@ -1258,7 +1259,7 @@ public final class NdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_send_na($arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ndisc_send_na($arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static void ndisc_send_na(Ptr<net_device> dev, Ptr<in6_addr> daddr,
       Ptr<in6_addr> solicited_addr, boolean router, boolean solicited, boolean override,
       boolean inc_opt) {
@@ -1266,26 +1267,26 @@ public final class NdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_send_ns($arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3, (const struct in6_addr*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ndisc_send_ns($arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3, (const struct in6_addr *)$arg4, $arg5)")
   public static void ndisc_send_ns(Ptr<net_device> dev, Ptr<in6_addr> solicit, Ptr<in6_addr> daddr,
       Ptr<in6_addr> saddr, @Unsigned long nonce) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_send_redirect($arg1, (const struct in6_addr*)$arg2)")
+  @BuiltinBPFFunction("ndisc_send_redirect($arg1, (const struct in6_addr *)$arg2)")
   public static void ndisc_send_redirect(Ptr<sk_buff> skb, Ptr<in6_addr> target) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_send_rs($arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3)")
+  @BuiltinBPFFunction("ndisc_send_rs($arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3)")
   public static void ndisc_send_rs(Ptr<net_device> dev, Ptr<in6_addr> saddr, Ptr<in6_addr> daddr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_send_skb($arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3)")
+  @BuiltinBPFFunction("ndisc_send_skb($arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3)")
   public static void ndisc_send_skb(Ptr<sk_buff> skb, Ptr<in6_addr> daddr, Ptr<in6_addr> saddr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1303,7 +1304,7 @@ public final class NdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_update((const struct net_device*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ndisc_update((const struct net_device *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static void ndisc_update(Ptr<net_device> dev, Ptr<neighbour> neigh,
       Ptr<java.lang.Character> lladdr, char _new, @Unsigned int flags, char icmp6_type,
       Ptr<ndisc_options> ndopts) {
@@ -1311,7 +1312,7 @@ public final class NdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ndisc_warn_deprecated_sysctl((const struct ctl_table*)$arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("ndisc_warn_deprecated_sysctl((const struct ctl_table *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static void ndisc_warn_deprecated_sysctl(Ptr<ctl_table> ctl, String func,
       String dev_name) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1114,7 +1115,7 @@ public final class DisableDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("disable_acpi_irq((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("disable_acpi_irq((const struct dmi_system_id *)$arg1)")
   public static int disable_acpi_irq(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1126,7 +1127,7 @@ public final class DisableDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("disable_acpi_pci((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("disable_acpi_pci((const struct dmi_system_id *)$arg1)")
   public static int disable_acpi_pci(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1138,7 +1139,7 @@ public final class DisableDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("disable_acpi_xsdt((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("disable_acpi_xsdt((const struct dmi_system_id *)$arg1)")
   public static int disable_acpi_xsdt(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1349,7 +1350,7 @@ public final class DisableDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("disable_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("disable_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long disable_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

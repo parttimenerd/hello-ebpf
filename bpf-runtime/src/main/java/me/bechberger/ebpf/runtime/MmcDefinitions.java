@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1234,7 +1235,7 @@ public final class MmcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mmc_alloc_card($arg1, (const struct device_type*)$arg2)")
+  @BuiltinBPFFunction("mmc_alloc_card($arg1, (const struct device_type *)$arg2)")
   public static Ptr<mmc_card> mmc_alloc_card(Ptr<mmc_host> host, Ptr<device_type> type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1270,7 +1271,7 @@ public final class MmcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mmc_attach_bus($arg1, (const struct mmc_bus_ops*)$arg2)")
+  @BuiltinBPFFunction("mmc_attach_bus($arg1, (const struct mmc_bus_ops *)$arg2)")
   public static void mmc_attach_bus(Ptr<mmc_host> host, Ptr<mmc_bus_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1336,7 +1337,7 @@ public final class MmcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mmc_bus_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mmc_bus_uevent((const struct device *)$arg1, $arg2)")
   public static int mmc_bus_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1681,7 +1682,7 @@ public final class MmcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mmc_err_stats_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("mmc_err_stats_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long mmc_err_stats_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1707,7 +1708,7 @@ public final class MmcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mmc_fixup_device($arg1, (const struct mmc_fixup*)$arg2)")
+  @BuiltinBPFFunction("mmc_fixup_device($arg1, (const struct mmc_fixup *)$arg2)")
   public static void mmc_fixup_device(Ptr<mmc_card> card, Ptr<mmc_fixup> table) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1780,7 +1781,7 @@ public final class MmcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mmc_gpiod_request_cd($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("mmc_gpiod_request_cd($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int mmc_gpiod_request_cd(Ptr<mmc_host> host, String con_id, @Unsigned int idx,
       boolean override_active_level, @Unsigned int debounce) {
     throw new MethodIsBPFRelatedFunction();
@@ -1793,7 +1794,7 @@ public final class MmcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mmc_gpiod_request_ro($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("mmc_gpiod_request_ro($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int mmc_gpiod_request_ro(Ptr<mmc_host> host, String con_id, @Unsigned int idx,
       @Unsigned int debounce) {
     throw new MethodIsBPFRelatedFunction();
@@ -2095,7 +2096,7 @@ public final class MmcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mmc_of_parse_timing_phase($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mmc_of_parse_timing_phase($arg1, (const u8 *)$arg2, $arg3)")
   public static void mmc_of_parse_timing_phase(Ptr<device> dev, String prop,
       Ptr<mmc_clk_phase> phase) {
     throw new MethodIsBPFRelatedFunction();
@@ -2783,7 +2784,7 @@ public final class MmcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mmc_set_data_timeout($arg1, (const struct mmc_card*)$arg2)")
+  @BuiltinBPFFunction("mmc_set_data_timeout($arg1, (const struct mmc_card *)$arg2)")
   public static void mmc_set_data_timeout(Ptr<mmc_data> data, Ptr<mmc_card> card) {
     throw new MethodIsBPFRelatedFunction();
   }

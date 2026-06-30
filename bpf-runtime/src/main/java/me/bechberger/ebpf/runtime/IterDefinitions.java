@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1138,7 +1139,7 @@ public final class IterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)iter_type_str((const struct btf*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const u8*)iter_type_str((const struct btf *)$arg1, $arg2))")
   public static String iter_type_str(Ptr<btf> btf, @Unsigned int btf_id) {
     throw new MethodIsBPFRelatedFunction();
   }

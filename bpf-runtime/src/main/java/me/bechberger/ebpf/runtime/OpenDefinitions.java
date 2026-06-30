@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class OpenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("open_exec((const u8*)$arg1)")
+  @BuiltinBPFFunction("open_exec((const u8 *)$arg1)")
   public static Ptr<file> open_exec(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1114,7 +1115,7 @@ public final class OpenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)open_last_lookups($arg1, $arg2, (const struct open_flags*)$arg3))")
+  @BuiltinBPFFunction("((const u8*)open_last_lookups($arg1, $arg2, (const struct open_flags *)$arg3))")
   public static String open_last_lookups(Ptr<nameidata> nd, Ptr<file> file, Ptr<open_flags> op) {
     throw new MethodIsBPFRelatedFunction();
   }

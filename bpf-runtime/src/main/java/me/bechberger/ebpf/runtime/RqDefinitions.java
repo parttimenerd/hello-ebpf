@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1216,7 +1217,7 @@ public final class RqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rq_qos_add($arg1, $arg2, $arg3, (const struct rq_qos_ops*)$arg4)")
+  @BuiltinBPFFunction("rq_qos_add($arg1, $arg2, $arg3, (const struct rq_qos_ops *)$arg4)")
   public static int rq_qos_add(Ptr<rq_qos> rqos, Ptr<gendisk> disk, rq_qos_id id,
       Ptr<rq_qos_ops> ops) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1149,7 +1150,7 @@ public final class KimageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kimage_file_prepare_segments($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("kimage_file_prepare_segments($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int kimage_file_prepare_segments(Ptr<kimage> image, int kernel_fd, int initrd_fd,
       String cmdline_ptr, @Unsigned long cmdline_len, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();

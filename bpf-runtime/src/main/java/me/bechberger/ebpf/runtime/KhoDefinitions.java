@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,13 +1097,13 @@ public final class KhoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kho_add_subtree($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("kho_add_subtree($arg1, (const u8 *)$arg2, $arg3)")
   public static int kho_add_subtree(Ptr<kho_serialization> ser, String name, Ptr<?> fdt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kho_debugfs_fdt_add($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("kho_debugfs_fdt_add($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4)")
   public static int kho_debugfs_fdt_add(Ptr<list_head> list, Ptr<dentry> dir, String name,
       Ptr<?> fdt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1139,7 +1140,7 @@ public final class KhoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kho_mem_deserialize((const void*)$arg1)")
+  @BuiltinBPFFunction("kho_mem_deserialize((const void *)$arg1)")
   public static void kho_mem_deserialize(Ptr<?> fdt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1214,7 +1215,7 @@ public final class KhoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kho_retrieve_subtree((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kho_retrieve_subtree((const u8 *)$arg1, $arg2)")
   public static int kho_retrieve_subtree(String name,
       Ptr<java.lang. @Unsigned @OriginalName("phys_addr_t") Long> phys) {
     throw new MethodIsBPFRelatedFunction();

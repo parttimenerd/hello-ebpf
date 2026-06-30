@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,14 +1098,14 @@ public final class KobjDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobj_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("kobj_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long kobj_attr_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct kobj_ns_type_operations*)kobj_child_ns_ops((const struct kobject*)$arg1))")
+  @BuiltinBPFFunction("((const struct kobj_ns_type_operations*)kobj_child_ns_ops((const struct kobject *)$arg1))")
   public static Ptr<kobj_ns_type_operations> kobj_child_ns_ops(Ptr<kobject> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1141,13 +1142,13 @@ public final class KobjDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct kobj_ns_type_operations*)kobj_ns_ops((const struct kobject*)$arg1))")
+  @BuiltinBPFFunction("((const struct kobj_ns_type_operations*)kobj_ns_ops((const struct kobject *)$arg1))")
   public static Ptr<kobj_ns_type_operations> kobj_ns_ops(Ptr<kobject> kobj) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobj_ns_type_register((const struct kobj_ns_type_operations*)$arg1)")
+  @BuiltinBPFFunction("kobj_ns_type_register((const struct kobj_ns_type_operations *)$arg1)")
   public static int kobj_ns_type_register(Ptr<kobj_ns_type_operations> ops) {
     throw new MethodIsBPFRelatedFunction();
   }

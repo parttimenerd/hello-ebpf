@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1109,14 +1110,14 @@ public final class SataDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sata_link_debounce($arg1, (const unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sata_link_debounce($arg1, (const unsigned int *)$arg2, $arg3)")
   public static int sata_link_debounce(Ptr<ata_link> link, Ptr<java.lang. @Unsigned Integer> params,
       @Unsigned long deadline) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sata_link_hardreset($arg1, (const unsigned int*)$arg2, $arg3, $arg4, (int (*)(struct ata_link*))$arg5)")
+  @BuiltinBPFFunction("sata_link_hardreset($arg1, (const unsigned int *)$arg2, $arg3, $arg4, (int (*)(struct ata_link*))$arg5)")
   public static int sata_link_hardreset(Ptr<ata_link> link,
       Ptr<java.lang. @Unsigned Integer> timing, @Unsigned long deadline,
       Ptr<java.lang. @OriginalName("bool") Boolean> online, Ptr<?> check_ready) {
@@ -1130,7 +1131,7 @@ public final class SataDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sata_link_resume($arg1, (const unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sata_link_resume($arg1, (const unsigned int *)$arg2, $arg3)")
   public static int sata_link_resume(Ptr<ata_link> link, Ptr<java.lang. @Unsigned Integer> params,
       @Unsigned long deadline) {
     throw new MethodIsBPFRelatedFunction();

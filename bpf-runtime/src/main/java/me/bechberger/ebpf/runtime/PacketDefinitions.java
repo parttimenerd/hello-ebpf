@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class PacketDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__packet_rcv_has_room((const struct packet_sock*)$arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("__packet_rcv_has_room((const struct packet_sock *)$arg1, (const struct sk_buff *)$arg2)")
   public static int __packet_rcv_has_room(Ptr<packet_sock> po, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1120,7 +1121,7 @@ public final class PacketDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("packet_do_bind($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("packet_do_bind($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int packet_do_bind(Ptr<sock> sk, String name, int ifindex,
       @Unsigned @OriginalName("__be16") short proto) {
     throw new MethodIsBPFRelatedFunction();
@@ -1240,7 +1241,7 @@ public final class PacketDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("packet_read_pending((const struct packet_ring_buffer*)$arg1)")
+  @BuiltinBPFFunction("packet_read_pending((const struct packet_ring_buffer *)$arg1)")
   public static @Unsigned int packet_read_pending(Ptr<packet_ring_buffer> rb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1323,13 +1324,13 @@ public final class PacketDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("packet_sock_flag((const struct packet_sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("packet_sock_flag((const struct packet_sock *)$arg1, $arg2)")
   public static boolean packet_sock_flag(Ptr<packet_sock> po, packet_sock_flags flag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("packet_xmit((const struct packet_sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("packet_xmit((const struct packet_sock *)$arg1, $arg2)")
   public static int packet_xmit(Ptr<packet_sock> po, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }

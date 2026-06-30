@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1145,7 +1146,7 @@ public final class NetifDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__netif_set_xps_queue($arg1, (const long unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__netif_set_xps_queue($arg1, (const long unsigned int *)$arg2, $arg3, $arg4)")
   public static int __netif_set_xps_queue(Ptr<net_device> dev, Ptr<java.lang. @Unsigned Long> mask,
       @Unsigned short index, xps_map_type type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1183,7 +1184,7 @@ public final class NetifDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netif_change_name($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("netif_change_name($arg1, (const u8 *)$arg2)")
   public static int netif_change_name(Ptr<net_device> dev, String newname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1243,7 +1244,7 @@ public final class NetifDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netif_get_flags((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("netif_get_flags((const struct net_device *)$arg1)")
   public static @Unsigned int netif_get_flags(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1268,7 +1269,7 @@ public final class NetifDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netif_inherit_tso_max($arg1, (const struct net_device*)$arg2)")
+  @BuiltinBPFFunction("netif_inherit_tso_max($arg1, (const struct net_device *)$arg2)")
   public static void netif_inherit_tso_max(Ptr<net_device> to, Ptr<net_device> from) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1293,7 +1294,7 @@ public final class NetifDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netif_napi_irq_notify($arg1, (const cpumask*)$arg2)")
+  @BuiltinBPFFunction("netif_napi_irq_notify($arg1, (const cpumask *)$arg2)")
   public static void netif_napi_irq_notify(Ptr<irq_affinity_notify> notify,
       Ptr<@OriginalName("cpumask_t") cpumask> mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1312,7 +1313,7 @@ public final class NetifDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netif_pre_changeaddr_notify($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("netif_pre_changeaddr_notify($arg1, (const u8 *)$arg2, $arg3)")
   public static int netif_pre_changeaddr_notify(Ptr<net_device> dev, String addr,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1326,7 +1327,7 @@ public final class NetifDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netif_receive_generic_xdp($arg1, $arg2, (const struct bpf_prog*)$arg3)")
+  @BuiltinBPFFunction("netif_receive_generic_xdp($arg1, $arg2, (const struct bpf_prog *)$arg3)")
   public static @Unsigned int netif_receive_generic_xdp(Ptr<Ptr<sk_buff>> pskb, Ptr<xdp_buff> xdp,
       Ptr<bpf_prog> xdp_prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -1388,7 +1389,7 @@ public final class NetifDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netif_set_alias($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("netif_set_alias($arg1, (const u8 *)$arg2, $arg3)")
   public static int netif_set_alias(Ptr<net_device> dev, String alias, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1475,7 +1476,7 @@ public final class NetifDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netif_set_xps_queue($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("netif_set_xps_queue($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int netif_set_xps_queue(Ptr<net_device> dev, Ptr<cpumask> mask,
       @Unsigned short index) {
     throw new MethodIsBPFRelatedFunction();
@@ -1489,7 +1490,7 @@ public final class NetifDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netif_stacked_transfer_operstate((const struct net_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netif_stacked_transfer_operstate((const struct net_device *)$arg1, $arg2)")
   public static void netif_stacked_transfer_operstate(Ptr<net_device> rootdev,
       Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();

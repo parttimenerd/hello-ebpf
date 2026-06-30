@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1116,13 +1117,13 @@ public final class DstDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dst_blackhole_mtu((const struct dst_entry*)$arg1)")
+  @BuiltinBPFFunction("dst_blackhole_mtu((const struct dst_entry *)$arg1)")
   public static @Unsigned int dst_blackhole_mtu(Ptr<dst_entry> dst) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dst_blackhole_neigh_lookup((const struct dst_entry*)$arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("dst_blackhole_neigh_lookup((const struct dst_entry *)$arg1, $arg2, (const void *)$arg3)")
   public static Ptr<neighbour> dst_blackhole_neigh_lookup(Ptr<dst_entry> dst, Ptr<sk_buff> skb,
       Ptr<?> daddr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1194,14 +1195,14 @@ public final class DstDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dst_cache_set_ip6($arg1, $arg2, (const struct in6_addr*)$arg3)")
+  @BuiltinBPFFunction("dst_cache_set_ip6($arg1, $arg2, (const struct in6_addr *)$arg3)")
   public static void dst_cache_set_ip6(Ptr<dst_cache> dst_cache, Ptr<dst_entry> dst,
       Ptr<in6_addr> saddr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dst_copy_metrics($arg1, (const struct dst_entry*)$arg2)")
+  @BuiltinBPFFunction("dst_copy_metrics($arg1, (const struct dst_entry *)$arg2)")
   public static void dst_copy_metrics(Ptr<dst_entry> dest, Ptr<dst_entry> src) {
     throw new MethodIsBPFRelatedFunction();
   }

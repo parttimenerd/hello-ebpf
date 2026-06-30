@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class PathDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__path_perm((const u8*)$arg1, (const struct cred*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11, $arg12)")
+  @BuiltinBPFFunction("__path_perm((const u8 *)$arg1, (const struct cred *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11, $arg12)")
   public static int __path_perm(String op, Ptr<cred> subj_cred, Ptr<aa_label> label,
       Ptr<aa_label> flabel, Ptr<file> file, @Unsigned int request, @Unsigned int denied,
       Ptr<path_cond> cond, int flags, boolean in_atomic, boolean is_mqueue,
@@ -1118,38 +1119,38 @@ public final class PathDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("path_get((const struct path*)$arg1)")
+  @BuiltinBPFFunction("path_get((const struct path *)$arg1)")
   public static void path_get(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("path_getxattrat($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("path_getxattrat($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long path_getxattrat(int dfd, String pathname,
       @Unsigned int at_flags, String name, Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("path_has_submounts((const struct path*)$arg1)")
+  @BuiltinBPFFunction("path_has_submounts((const struct path *)$arg1)")
   public static int path_has_submounts(Ptr<path> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("path_is_mountpoint((const struct path*)$arg1)")
+  @BuiltinBPFFunction("path_is_mountpoint((const struct path *)$arg1)")
   public static boolean path_is_mountpoint(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("path_is_under((const struct path*)$arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("path_is_under((const struct path *)$arg1, (const struct path *)$arg2)")
   public static boolean path_is_under(Ptr<path> path1, Ptr<path> path2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("path_listxattrat($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("path_listxattrat($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static @OriginalName("ssize_t") long path_listxattrat(int dfd, String pathname,
       @Unsigned int at_flags, String list, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1162,14 +1163,14 @@ public final class PathDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("path_mount((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("path_mount((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int path_mount(String dev_name, Ptr<path> path, String type_page,
       @Unsigned long flags, Ptr<?> data_page) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("path_name((const u8*)$arg1, (const struct cred*)$arg2, $arg3, (const struct path*)$arg4, $arg5, $arg6, (const u8**)$arg7, $arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("path_name((const u8 *)$arg1, (const struct cred *)$arg2, $arg3, (const struct path *)$arg4, $arg5, $arg6, (const u8**)$arg7, $arg8, $arg9, $arg10)")
   public static int path_name(String op, Ptr<cred> subj_cred, Ptr<aa_label> label, Ptr<path> path,
       int flags, String buffer, Ptr<String> name, Ptr<path_cond> cond, @Unsigned int request,
       boolean prompt) {
@@ -1177,13 +1178,13 @@ public final class PathDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("path_noexec((const struct path*)$arg1)")
+  @BuiltinBPFFunction("path_noexec((const struct path *)$arg1)")
   public static boolean path_noexec(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("path_openat($arg1, (const struct open_flags*)$arg2, $arg3)")
+  @BuiltinBPFFunction("path_openat($arg1, (const struct open_flags *)$arg2, $arg3)")
   public static Ptr<file> path_openat(Ptr<nameidata> nd, Ptr<open_flags> op, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1195,20 +1196,20 @@ public final class PathDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("path_put((const struct path*)$arg1)")
+  @BuiltinBPFFunction("path_put((const struct path *)$arg1)")
   public static void path_put(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("path_removexattrat($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("path_removexattrat($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4)")
   public static int path_removexattrat(int dfd, String pathname, @Unsigned int at_flags,
       String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("path_setxattrat($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, (const void*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("path_setxattrat($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, (const void *)$arg5, $arg6, $arg7)")
   public static int path_setxattrat(int dfd, String pathname, @Unsigned int at_flags, String name,
       Ptr<?> value, @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1229,7 +1230,7 @@ public final class PathDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const struct tomoyo_path_info*; const struct tomoyo_path_info*; u8 operation; }"
+      cType = "struct { const struct tomoyo_path_info *filename; const struct tomoyo_path_info *matched_path; u8 operation; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -1243,7 +1244,7 @@ public final class PathDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const struct tomoyo_path_info*; long unsigned int number; u8 operation; }"
+      cType = "struct { const struct tomoyo_path_info *filename; long unsigned int number; u8 operation; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

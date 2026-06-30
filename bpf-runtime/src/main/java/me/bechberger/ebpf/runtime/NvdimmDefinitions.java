@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class NvdimmDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__nvdimm_create($arg1, $arg2, (const struct attribute_group**)$arg3, $arg4, $arg5, $arg6, $arg7, (const u8*)$arg8, (const struct nvdimm_security_ops*)$arg9, (const struct nvdimm_fw_ops*)$arg10)")
+  @BuiltinBPFFunction("__nvdimm_create($arg1, $arg2, (const struct attribute_group**)$arg3, $arg4, $arg5, $arg6, $arg7, (const u8 *)$arg8, (const struct nvdimm_security_ops *)$arg9, (const struct nvdimm_fw_ops *)$arg10)")
   public static Ptr<nvdimm> __nvdimm_create(Ptr<nvdimm_bus> nvdimm_bus, Ptr<?> provider_data,
       Ptr<Ptr<attribute_group>> groups, @Unsigned long flags, @Unsigned long cmd_mask,
       int num_flush, Ptr<resource> flush_wpq, String dimm_id, Ptr<nvdimm_security_ops> sec_ops,
@@ -1139,7 +1140,7 @@ public final class NvdimmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvdimm_badblocks_populate($arg1, $arg2, (const struct range*)$arg3)")
+  @BuiltinBPFFunction("nvdimm_badblocks_populate($arg1, $arg2, (const struct range *)$arg3)")
   public static void nvdimm_badblocks_populate(Ptr<nd_region> nd_region, Ptr<badblocks> bb,
       Ptr<range> range) {
     throw new MethodIsBPFRelatedFunction();
@@ -1196,7 +1197,7 @@ public final class NvdimmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvdimm_bus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("nvdimm_bus_match($arg1, (const struct device_driver *)$arg2)")
   public static int nvdimm_bus_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1233,7 +1234,7 @@ public final class NvdimmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvdimm_bus_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("nvdimm_bus_uevent((const struct device *)$arg1, $arg2)")
   public static int nvdimm_bus_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1548,7 +1549,7 @@ public final class NvdimmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvdimm_security_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nvdimm_security_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long nvdimm_security_store(Ptr<device> dev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();

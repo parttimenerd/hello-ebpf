@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1129,7 +1130,7 @@ public final class Fib4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib4_rule_default((const struct fib_rule*)$arg1)")
+  @BuiltinBPFFunction("fib4_rule_default((const struct fib_rule *)$arg1)")
   public static boolean fib4_rule_default(Ptr<fib_rule> rule) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1190,7 +1191,7 @@ public final class Fib4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib4_rules_seq_read((const struct net*)$arg1)")
+  @BuiltinBPFFunction("fib4_rules_seq_read((const struct net *)$arg1)")
   public static @Unsigned int fib4_rules_seq_read(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1208,7 +1209,7 @@ public final class Fib4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib4_seq_read((const struct net*)$arg1)")
+  @BuiltinBPFFunction("fib4_seq_read((const struct net *)$arg1)")
   public static @Unsigned int fib4_seq_read(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }

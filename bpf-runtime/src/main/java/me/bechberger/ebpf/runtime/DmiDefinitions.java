@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DmiDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_callback((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_callback((const struct dmi_system_id *)$arg1)")
   public static int dmi_callback(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_callback_siemens((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_callback_siemens((const struct dmi_system_id *)$arg1)")
   public static int dmi_callback_siemens(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1114,25 +1115,25 @@ public final class DmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_check_system((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_check_system((const struct dmi_system_id *)$arg1)")
   public static int dmi_check_system(Ptr<dmi_system_id> list) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_checksum((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dmi_checksum((const u8 *)$arg1, $arg2)")
   public static int dmi_checksum(Ptr<java.lang.Character> buf, char len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_decode((const struct dmi_header*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dmi_decode((const struct dmi_header *)$arg1, $arg2)")
   public static void dmi_decode(Ptr<dmi_header> dm, Ptr<?> dummy) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_decode_ipmi((const struct dmi_header*)$arg1)")
+  @BuiltinBPFFunction("dmi_decode_ipmi((const struct dmi_header *)$arg1)")
   public static void dmi_decode_ipmi(Ptr<dmi_header> dm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1151,61 +1152,61 @@ public final class DmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_dev_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dmi_dev_uevent((const struct device *)$arg1, $arg2)")
   public static int dmi_dev_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_disable_acpi((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_disable_acpi((const struct dmi_system_id *)$arg1)")
   public static int dmi_disable_acpi(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_disable_ioapicreroute((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_disable_ioapicreroute((const struct dmi_system_id *)$arg1)")
   public static int dmi_disable_ioapicreroute(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_disable_osi_vista((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_disable_osi_vista((const struct dmi_system_id *)$arg1)")
   public static int dmi_disable_osi_vista(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_disable_osi_win7((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_disable_osi_win7((const struct dmi_system_id *)$arg1)")
   public static int dmi_disable_osi_win7(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_disable_osi_win8((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_disable_osi_win8((const struct dmi_system_id *)$arg1)")
   public static int dmi_disable_osi_win8(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_enable_osi_linux((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_enable_osi_linux((const struct dmi_system_id *)$arg1)")
   public static int dmi_enable_osi_linux(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_enable_rev_override((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_enable_rev_override((const struct dmi_system_id *)$arg1)")
   public static int dmi_enable_rev_override(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct dmi_device*)dmi_find_device($arg1, (const u8*)$arg2, (const struct dmi_device*)$arg3))")
+  @BuiltinBPFFunction("((const struct dmi_device*)dmi_find_device($arg1, (const u8 *)$arg2, (const struct dmi_device *)$arg3))")
   public static Ptr<dmi_device> dmi_find_device(int type, String name, Ptr<dmi_device> from) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct dmi_system_id*)dmi_first_match((const struct dmi_system_id*)$arg1))")
+  @BuiltinBPFFunction("((const struct dmi_system_id*)dmi_first_match((const struct dmi_system_id *)$arg1))")
   public static Ptr<dmi_system_id> dmi_first_match(Ptr<dmi_system_id> list) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1242,7 +1243,7 @@ public final class DmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_ignore_irq0_timer_override((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_ignore_irq0_timer_override((const struct dmi_system_id *)$arg1)")
   public static int dmi_ignore_irq0_timer_override(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1254,25 +1255,25 @@ public final class DmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_io_delay_0xed_port((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_io_delay_0xed_port((const struct dmi_system_id *)$arg1)")
   public static int dmi_io_delay_0xed_port(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_match($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("dmi_match($arg1, (const u8 *)$arg2)")
   public static boolean dmi_match(dmi_field f, String str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_matched_7k62_bios_bug((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_matched_7k62_bios_bug((const struct dmi_system_id *)$arg1)")
   public static int dmi_matched_7k62_bios_bug(Ptr<dmi_system_id> dmi) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_matches((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_matches((const struct dmi_system_id *)$arg1)")
   public static boolean dmi_matches(Ptr<dmi_system_id> dmi) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1302,56 +1303,56 @@ public final class DmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_name_in_serial((const u8*)$arg1)")
+  @BuiltinBPFFunction("dmi_name_in_serial((const u8 *)$arg1)")
   public static int dmi_name_in_serial(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_name_in_vendors((const u8*)$arg1)")
+  @BuiltinBPFFunction("dmi_name_in_vendors((const u8 *)$arg1)")
   public static int dmi_name_in_vendors(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_pcie_pme_disable_msi((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("dmi_pcie_pme_disable_msi((const struct dmi_system_id *)$arg1)")
   public static int dmi_pcie_pme_disable_msi(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_present((const u8*)$arg1)")
+  @BuiltinBPFFunction("dmi_present((const u8 *)$arg1)")
   public static int dmi_present(Ptr<java.lang.Character> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_save_dev_pciaddr($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("dmi_save_dev_pciaddr($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static void dmi_save_dev_pciaddr(int instance, int segment, int bus, int devfn,
       String name, int type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_save_ident((const struct dmi_header*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("dmi_save_ident((const struct dmi_header *)$arg1, $arg2, $arg3)")
   public static void dmi_save_ident(Ptr<dmi_header> dm, int slot, int string) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_save_ipmi_device((const struct dmi_header*)$arg1)")
+  @BuiltinBPFFunction("dmi_save_ipmi_device((const struct dmi_header *)$arg1)")
   public static void dmi_save_ipmi_device(Ptr<dmi_header> dm) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_save_one_device($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("dmi_save_one_device($arg1, (const u8 *)$arg2)")
   public static void dmi_save_one_device(int type, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_save_release((const struct dmi_header*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("dmi_save_release((const struct dmi_header *)$arg1, $arg2, $arg3)")
   public static void dmi_save_release(Ptr<dmi_header> dm, int slot, int index) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1369,19 +1370,19 @@ public final class DmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmi_smbios3_present((const u8*)$arg1)")
+  @BuiltinBPFFunction("dmi_smbios3_present((const u8 *)$arg1)")
   public static int dmi_smbios3_present(Ptr<java.lang.Character> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)dmi_string((const struct dmi_header*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const u8*)dmi_string((const struct dmi_header *)$arg1, $arg2))")
   public static String dmi_string(Ptr<dmi_header> dm, char s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)dmi_string_nosave((const struct dmi_header*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const u8*)dmi_string_nosave((const struct dmi_header *)$arg1, $arg2))")
   public static String dmi_string_nosave(Ptr<dmi_header> dm, char s) {
     throw new MethodIsBPFRelatedFunction();
   }

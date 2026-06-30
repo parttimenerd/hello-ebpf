@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1110,7 +1111,7 @@ public final class Ip6mrDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6mr_cache_report((const struct mr_table*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ip6mr_cache_report((const struct mr_table *)$arg1, $arg2, $arg3, $arg4)")
   public static int ip6mr_cache_report(Ptr<mr_table> mrt, Ptr<sk_buff> pkt,
       @Unsigned @OriginalName("mifi_t") short mifi, int _assert) {
     throw new MethodIsBPFRelatedFunction();
@@ -1187,7 +1188,7 @@ public final class Ip6mrDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6mr_hash_cmp($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ip6mr_hash_cmp($arg1, (const void *)$arg2)")
   public static int ip6mr_hash_cmp(Ptr<rhashtable_compare_arg> arg, Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1277,7 +1278,7 @@ public final class Ip6mrDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6mr_rule_default((const struct fib_rule*)$arg1)")
+  @BuiltinBPFFunction("ip6mr_rule_default((const struct fib_rule *)$arg1)")
   public static boolean ip6mr_rule_default(Ptr<fib_rule> rule) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1308,7 +1309,7 @@ public final class Ip6mrDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6mr_seq_read((const struct net*)$arg1)")
+  @BuiltinBPFFunction("ip6mr_seq_read((const struct net *)$arg1)")
   public static @Unsigned int ip6mr_seq_read(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }

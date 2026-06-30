@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class RtnlDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__rtnl_newlink($arg1, $arg2, (const struct rtnl_link_ops*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("__rtnl_newlink($arg1, $arg2, (const struct rtnl_link_ops *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static int __rtnl_newlink(Ptr<sk_buff> skb, Ptr<nlmsghdr> nlh, Ptr<rtnl_link_ops> ops,
       Ptr<net> tgt_net, Ptr<net> link_net, Ptr<net> peer_net, Ptr<rtnl_newlink_tbs> tbs,
       Ptr<Ptr<nlattr>> data, Ptr<netlink_ext_ack> extack) {
@@ -1098,7 +1099,7 @@ public final class RtnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__rtnl_register_many((const struct rtnl_msg_handler*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__rtnl_register_many((const struct rtnl_msg_handler *)$arg1, $arg2)")
   public static int __rtnl_register_many(Ptr<rtnl_msg_handler> handlers, int n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1110,7 +1111,7 @@ public final class RtnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__rtnl_unregister_many((const struct rtnl_msg_handler*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__rtnl_unregister_many((const struct rtnl_msg_handler *)$arg1, $arg2)")
   public static void __rtnl_unregister_many(Ptr<rtnl_msg_handler> handlers, int n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1160,21 +1161,21 @@ public final class RtnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_configure_link($arg1, (const struct ifinfomsg*)$arg2, $arg3, (const struct nlmsghdr*)$arg4)")
+  @BuiltinBPFFunction("rtnl_configure_link($arg1, (const struct ifinfomsg *)$arg2, $arg3, (const struct nlmsghdr *)$arg4)")
   public static int rtnl_configure_link(Ptr<net_device> dev, Ptr<ifinfomsg> ifm,
       @Unsigned int portid, Ptr<nlmsghdr> nlh) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_create_link($arg1, (const u8*)$arg2, $arg3, (const struct rtnl_link_ops*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("rtnl_create_link($arg1, (const u8 *)$arg2, $arg3, (const struct rtnl_link_ops *)$arg4, $arg5, $arg6)")
   public static Ptr<net_device> rtnl_create_link(Ptr<net> net, String ifname, char name_assign_type,
       Ptr<rtnl_link_ops> ops, Ptr<Ptr<nlattr>> tb, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_delete_link($arg1, $arg2, (const struct nlmsghdr*)$arg3)")
+  @BuiltinBPFFunction("rtnl_delete_link($arg1, $arg2, (const struct nlmsghdr *)$arg3)")
   public static int rtnl_delete_link(Ptr<net_device> dev, @Unsigned int portid, Ptr<nlmsghdr> nlh) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1291,7 +1292,7 @@ public final class RtnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_get_peer_net((const struct rtnl_link_ops*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("rtnl_get_peer_net((const struct rtnl_link_ops *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<net> rtnl_get_peer_net(Ptr<rtnl_link_ops> ops, Ptr<Ptr<nlattr>> tbp,
       Ptr<Ptr<nlattr>> data, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1316,7 +1317,7 @@ public final class RtnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_link_fill($arg1, (const struct net_device*)$arg2)")
+  @BuiltinBPFFunction("rtnl_link_fill($arg1, (const struct net_device *)$arg2)")
   public static int rtnl_link_fill(Ptr<sk_buff> skb, Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1328,14 +1329,14 @@ public final class RtnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_link_get_net_capable((const struct sk_buff*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("rtnl_link_get_net_capable((const struct sk_buff *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<net> rtnl_link_get_net_capable(Ptr<sk_buff> skb, Ptr<net> src_net,
       Ptr<Ptr<nlattr>> tb, int cap) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_link_get_size((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("rtnl_link_get_size((const struct net_device *)$arg1)")
   public static @Unsigned long rtnl_link_get_size(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1453,7 +1454,7 @@ public final class RtnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_newlink_create($arg1, $arg2, (const struct rtnl_link_ops*)$arg3, $arg4, $arg5, $arg6, (const struct nlmsghdr*)$arg7, $arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("rtnl_newlink_create($arg1, $arg2, (const struct rtnl_link_ops *)$arg3, $arg4, $arg5, $arg6, (const struct nlmsghdr *)$arg7, $arg8, $arg9, $arg10)")
   public static int rtnl_newlink_create(Ptr<sk_buff> skb, Ptr<ifinfomsg> ifm,
       Ptr<rtnl_link_ops> ops, Ptr<net> tgt_net, Ptr<net> link_net, Ptr<net> peer_net,
       Ptr<nlmsghdr> nlh, Ptr<Ptr<nlattr>> tb, Ptr<Ptr<nlattr>> data, Ptr<netlink_ext_ack> extack) {
@@ -1468,14 +1469,14 @@ public final class RtnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_nla_parse_ifinfomsg($arg1, (const struct nlattr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rtnl_nla_parse_ifinfomsg($arg1, (const struct nlattr *)$arg2, $arg3)")
   public static int rtnl_nla_parse_ifinfomsg(Ptr<Ptr<nlattr>> tb, Ptr<nlattr> nla_peer,
       Ptr<netlink_ext_ack> exterr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_notify($arg1, $arg2, $arg3, $arg4, (const struct nlmsghdr*)$arg5, $arg6)")
+  @BuiltinBPFFunction("rtnl_notify($arg1, $arg2, $arg3, $arg4, (const struct nlmsghdr *)$arg5, $arg6)")
   public static void rtnl_notify(Ptr<sk_buff> skb, Ptr<net> net, @Unsigned int pid,
       @Unsigned int group, Ptr<nlmsghdr> nlh, @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1496,7 +1497,7 @@ public final class RtnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_offload_xstats_get_size((const struct net_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("rtnl_offload_xstats_get_size((const struct net_device *)$arg1, $arg2)")
   public static int rtnl_offload_xstats_get_size(Ptr<net_device> dev,
       @Unsigned int off_filter_mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1556,7 +1557,7 @@ public final class RtnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_stats_get_parse((const struct nlmsghdr*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("rtnl_stats_get_parse((const struct nlmsghdr *)$arg1, $arg2, $arg3, $arg4)")
   public static int rtnl_stats_get_parse(Ptr<nlmsghdr> nlh, @Unsigned int filter_mask,
       Ptr<rtnl_stats_dump_filters> filters, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1594,34 +1595,34 @@ public final class RtnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_valid_dump_net_req((const struct nlmsghdr*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("rtnl_valid_dump_net_req((const struct nlmsghdr *)$arg1, $arg2, $arg3, $arg4)")
   public static int rtnl_valid_dump_net_req(Ptr<nlmsghdr> nlh, Ptr<sock> sk,
       Ptr<rtnl_net_dump_cb> net_cb, Ptr<netlink_callback> cb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_valid_stats_req((const struct nlmsghdr*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("rtnl_valid_stats_req((const struct nlmsghdr *)$arg1, $arg2, $arg3, $arg4)")
   public static int rtnl_valid_stats_req(Ptr<nlmsghdr> nlh, boolean strict_check, boolean is_dump,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_validate_mdb_entry((const struct nlattr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("rtnl_validate_mdb_entry((const struct nlattr *)$arg1, $arg2)")
   public static int rtnl_validate_mdb_entry(Ptr<nlattr> attr, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_validate_mdb_entry_del_bulk((const struct nlattr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("rtnl_validate_mdb_entry_del_bulk((const struct nlattr *)$arg1, $arg2)")
   public static int rtnl_validate_mdb_entry_del_bulk(Ptr<nlattr> attr,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rtnl_validate_mdb_entry_get((const struct nlattr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("rtnl_validate_mdb_entry_get((const struct nlattr *)$arg1, $arg2)")
   public static int rtnl_validate_mdb_entry_get(Ptr<nlattr> attr, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }

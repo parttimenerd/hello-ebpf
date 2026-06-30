@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1123,7 +1124,7 @@ public final class WakeupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wakeup_count_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("wakeup_count_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long wakeup_count_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1313,7 +1314,7 @@ public final class WakeupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wakeup_source_register($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("wakeup_source_register($arg1, (const u8 *)$arg2)")
   public static Ptr<wakeup_source> wakeup_source_register(Ptr<device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1411,7 +1412,7 @@ public final class WakeupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wakeup_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("wakeup_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long wakeup_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();

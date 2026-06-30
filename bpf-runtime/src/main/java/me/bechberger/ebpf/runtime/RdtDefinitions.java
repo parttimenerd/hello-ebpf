@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1187,13 +1188,13 @@ public final class RdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rdt_last_cmd_printf((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("rdt_last_cmd_printf((const u8 *)$arg1, $arg2_)")
   public static void rdt_last_cmd_printf(String fmt, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rdt_last_cmd_puts((const u8*)$arg1)")
+  @BuiltinBPFFunction("rdt_last_cmd_puts((const u8 *)$arg1)")
   public static void rdt_last_cmd_puts(String s) {
     throw new MethodIsBPFRelatedFunction();
   }

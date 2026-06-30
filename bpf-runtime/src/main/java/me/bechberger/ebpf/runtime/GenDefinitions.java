@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1266,7 +1267,7 @@ public final class GenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gen_pool_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("gen_pool_get($arg1, (const u8 *)$arg2)")
   public static Ptr<gen_pool> gen_pool_get(Ptr<device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1307,7 +1308,7 @@ public final class GenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gen_symlink_name($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("gen_symlink_name($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static String gen_symlink_name(int depth, String dirname, String fname) {
     throw new MethodIsBPFRelatedFunction();
   }

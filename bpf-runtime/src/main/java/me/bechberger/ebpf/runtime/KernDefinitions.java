@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,26 +1103,26 @@ public final class KernDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kern_path((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kern_path((const u8 *)$arg1, $arg2, $arg3)")
   public static int kern_path(String name, @Unsigned int flags, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kern_path_create($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("kern_path_create($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<dentry> kern_path_create(int dfd, String pathname, Ptr<path> path,
       @Unsigned int lookup_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kern_path_locked((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kern_path_locked((const u8 *)$arg1, $arg2)")
   public static Ptr<dentry> kern_path_locked(String name, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kern_path_locked_negative((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kern_path_locked_negative((const u8 *)$arg1, $arg2)")
   public static Ptr<dentry> kern_path_locked_negative(String name, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }

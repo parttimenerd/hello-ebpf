@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1112,14 +1113,14 @@ public final class FibDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_add_nexthop($arg1, (const struct fib_nh_common*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fib_add_nexthop($arg1, (const struct fib_nh_common *)$arg2, $arg3, $arg4, $arg5)")
   public static int fib_add_nexthop(Ptr<sk_buff> skb, Ptr<fib_nh_common> nhc, int nh_weight,
       char rt_family, @Unsigned int nh_tclassid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_alias_hw_flags_set($arg1, (const struct fib_rt_info*)$arg2)")
+  @BuiltinBPFFunction("fib_alias_hw_flags_set($arg1, (const struct fib_rt_info *)$arg2)")
   public static void fib_alias_hw_flags_set(Ptr<net> net, Ptr<fib_rt_info> fri) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1191,7 +1192,7 @@ public final class FibDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_dump_info($arg1, $arg2, $arg3, $arg4, (const struct fib_rt_info*)$arg5, $arg6)")
+  @BuiltinBPFFunction("fib_dump_info($arg1, $arg2, $arg3, $arg4, (const struct fib_rt_info *)$arg5, $arg6)")
   public static int fib_dump_info(Ptr<sk_buff> skb, @Unsigned int portid, @Unsigned int seq,
       int event, Ptr<fib_rt_info> fri, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1278,14 +1279,14 @@ public final class FibDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_info_laddrhash_bucket((const struct net*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fib_info_laddrhash_bucket((const struct net *)$arg1, $arg2)")
   public static Ptr<hlist_head> fib_info_laddrhash_bucket(Ptr<net> net,
       @Unsigned @OriginalName("__be32") int val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_info_nh_uses_dev($arg1, (const struct net_device*)$arg2)")
+  @BuiltinBPFFunction("fib_info_nh_uses_dev($arg1, (const struct net_device *)$arg2)")
   public static boolean fib_info_nh_uses_dev(Ptr<fib_info> fi, Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1311,7 +1312,7 @@ public final class FibDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_lookup_good_nhc((const struct fib_nh_common*)$arg1, $arg2, (const struct flowi4*)$arg3)")
+  @BuiltinBPFFunction("fib_lookup_good_nhc((const struct fib_nh_common *)$arg1, $arg2, (const struct flowi4 *)$arg3)")
   public static boolean fib_lookup_good_nhc(Ptr<fib_nh_common> nhc, int fib_flags,
       Ptr<flowi4> flp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1337,7 +1338,7 @@ public final class FibDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_multipath_hash((const struct net*)$arg1, (const struct flowi4*)$arg2, (const struct sk_buff*)$arg3, $arg4)")
+  @BuiltinBPFFunction("fib_multipath_hash((const struct net *)$arg1, (const struct flowi4 *)$arg2, (const struct sk_buff *)$arg3, $arg4)")
   public static int fib_multipath_hash(Ptr<net> net, Ptr<flowi4> fl4, Ptr<sk_buff> skb,
       Ptr<flow_keys> flkeys) {
     throw new MethodIsBPFRelatedFunction();
@@ -1381,7 +1382,7 @@ public final class FibDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_nexthop_info($arg1, (const struct fib_nh_common*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fib_nexthop_info($arg1, (const struct fib_nh_common *)$arg2, $arg3, $arg4, $arg5)")
   public static int fib_nexthop_info(Ptr<sk_buff> skb, Ptr<fib_nh_common> nhc, char rt_family,
       String flags, boolean skip_oif) {
     throw new MethodIsBPFRelatedFunction();
@@ -1437,7 +1438,7 @@ public final class FibDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_nl2rule_port_mask((const struct nlattr*)$arg1, (const struct fib_rule_port_range*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fib_nl2rule_port_mask((const struct nlattr *)$arg1, (const struct fib_rule_port_range *)$arg2, $arg3, $arg4)")
   public static int fib_nl2rule_port_mask(Ptr<nlattr> mask_attr, Ptr<fib_rule_port_range> range,
       Ptr<java.lang. @Unsigned Short> port_mask, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1502,7 +1503,7 @@ public final class FibDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_notifier_ops_register((const struct fib_notifier_ops*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fib_notifier_ops_register((const struct fib_notifier_ops *)$arg1, $arg2)")
   public static Ptr<fib_notifier_ops> fib_notifier_ops_register(Ptr<fib_notifier_ops> tmpl,
       Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
@@ -1599,7 +1600,7 @@ public final class FibDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_rule_matchall((const struct fib_rule*)$arg1)")
+  @BuiltinBPFFunction("fib_rule_matchall((const struct fib_rule *)$arg1)")
   public static boolean fib_rule_matchall(Ptr<fib_rule> rule) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1643,13 +1644,13 @@ public final class FibDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_rules_register((const struct fib_rules_ops*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fib_rules_register((const struct fib_rules_ops *)$arg1, $arg2)")
   public static Ptr<fib_rules_ops> fib_rules_register(Ptr<fib_rules_ops> tmpl, Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_rules_seq_read((const struct net*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fib_rules_seq_read((const struct net *)$arg1, $arg2)")
   public static @Unsigned int fib_rules_seq_read(Ptr<net> net, int family) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1661,19 +1662,19 @@ public final class FibDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_select_default((const struct flowi4*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fib_select_default((const struct flowi4 *)$arg1, $arg2)")
   public static void fib_select_default(Ptr<flowi4> flp, Ptr<fib_result> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_select_multipath($arg1, $arg2, (const struct flowi4*)$arg3)")
+  @BuiltinBPFFunction("fib_select_multipath($arg1, $arg2, (const struct flowi4 *)$arg3)")
   public static void fib_select_multipath(Ptr<fib_result> res, int hash, Ptr<flowi4> fl4) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_select_path($arg1, $arg2, $arg3, (const struct sk_buff*)$arg4)")
+  @BuiltinBPFFunction("fib_select_path($arg1, $arg2, $arg3, (const struct sk_buff *)$arg4)")
   public static void fib_select_path(Ptr<net> net, Ptr<fib_result> res, Ptr<flowi4> fl4,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
@@ -1744,7 +1745,7 @@ public final class FibDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib_table_lookup($arg1, (const struct flowi4*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fib_table_lookup($arg1, (const struct flowi4 *)$arg2, $arg3, $arg4)")
   public static int fib_table_lookup(Ptr<fib_table> tb, Ptr<flowi4> flp, Ptr<fib_result> res,
       int fib_flags) {
     throw new MethodIsBPFRelatedFunction();

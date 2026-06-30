@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1120,7 +1121,7 @@ public final class IpcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipc_init_proc_interface((const u8*)$arg1, (const u8*)$arg2, $arg3, (int (*)(struct seq_file*, void*))$arg4)")
+  @BuiltinBPFFunction("ipc_init_proc_interface((const u8 *)$arg1, (const u8 *)$arg2, $arg3, (int (*)(struct seq_file*, void*))$arg4)")
   public static void ipc_init_proc_interface(String path, String header, int ids, Ptr<?> show) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1156,7 +1157,7 @@ public final class IpcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipc_permissions($arg1, (const struct ctl_table*)$arg2)")
+  @BuiltinBPFFunction("ipc_permissions($arg1, (const struct ctl_table *)$arg2)")
   public static int ipc_permissions(Ptr<ctl_table_header> head, Ptr<ctl_table> table) {
     throw new MethodIsBPFRelatedFunction();
   }

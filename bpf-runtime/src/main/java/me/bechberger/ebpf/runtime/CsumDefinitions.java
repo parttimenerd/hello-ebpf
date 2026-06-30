@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,28 +1098,28 @@ public final class CsumDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("csum_and_copy_from_user((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("csum_and_copy_from_user((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned @OriginalName("__wsum") int csum_and_copy_from_user(Ptr<?> src,
       Ptr<?> dst, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("csum_and_copy_to_iter((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("csum_and_copy_to_iter((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned long csum_and_copy_to_iter(Ptr<?> addr, @Unsigned long bytes,
       Ptr<?> _csstate, Ptr<iov_iter> i) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("csum_and_copy_to_user((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("csum_and_copy_to_user((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned @OriginalName("__wsum") int csum_and_copy_to_user(Ptr<?> src, Ptr<?> dst,
       int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("csum_ipv6_magic((const struct in6_addr*)$arg1, (const struct in6_addr*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("csum_ipv6_magic((const struct in6_addr *)$arg1, (const struct in6_addr *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned @OriginalName("__sum16") short csum_ipv6_magic(Ptr<in6_addr> saddr,
       Ptr<in6_addr> daddr, @Unsigned int len, char proto,
       @Unsigned @OriginalName("__wsum") int sum) {
@@ -1126,7 +1127,7 @@ public final class CsumDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("csum_partial((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("csum_partial((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned @OriginalName("__wsum") int csum_partial(Ptr<?> buff, int len,
       @Unsigned @OriginalName("__wsum") int sum) {
     throw new MethodIsBPFRelatedFunction();
@@ -1139,7 +1140,7 @@ public final class CsumDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("csum_partial_copy_nocheck((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("csum_partial_copy_nocheck((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned @OriginalName("__wsum") int csum_partial_copy_nocheck(Ptr<?> src,
       Ptr<?> dst, int len) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class ClassDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("class_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long class_attr_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1116,7 +1117,7 @@ public final class ClassDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct kobj_ns_type_operations*)class_child_ns_type((const struct kobject*)$arg1))")
+  @BuiltinBPFFunction("((const struct kobj_ns_type_operations*)class_child_ns_type((const struct kobject *)$arg1))")
   public static Ptr<kobj_ns_type_operations> class_child_ns_type(Ptr<kobject> kobj) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1128,7 +1129,7 @@ public final class ClassDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_compat_register((const u8*)$arg1)")
+  @BuiltinBPFFunction("class_compat_register((const u8 *)$arg1)")
   public static Ptr<class_compat> class_compat_register(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1146,25 +1147,25 @@ public final class ClassDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_create((const u8*)$arg1)")
+  @BuiltinBPFFunction("class_create((const u8 *)$arg1)")
   public static Ptr<_class> class_create(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_create_file_ns((const struct class*)$arg1, (const struct class_attribute*)$arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("class_create_file_ns((const struct class *)$arg1, (const struct class_attribute *)$arg2, (const void *)$arg3)")
   public static int class_create_file_ns(Ptr<_class> cls, Ptr<class_attribute> attr, Ptr<?> ns) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_create_release((const struct class*)$arg1)")
+  @BuiltinBPFFunction("class_create_release((const struct class *)$arg1)")
   public static void class_create_release(Ptr<_class> cls) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_destroy((const struct class*)$arg1)")
+  @BuiltinBPFFunction("class_destroy((const struct class *)$arg1)")
   public static void class_destroy(Ptr<_class> cls) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1176,7 +1177,7 @@ public final class ClassDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_dev_iter_init($arg1, (const struct class*)$arg2, (const struct device*)$arg3, (const struct device_type*)$arg4)")
+  @BuiltinBPFFunction("class_dev_iter_init($arg1, (const struct class *)$arg2, (const struct device *)$arg3, (const struct device_type *)$arg4)")
   public static void class_dev_iter_init(Ptr<class_dev_iter> iter, Ptr<_class> _class,
       Ptr<device> start, Ptr<device_type> type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1189,7 +1190,7 @@ public final class ClassDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct kobj_ns_type_operations*)class_dir_child_ns_type((const struct kobject*)$arg1))")
+  @BuiltinBPFFunction("((const struct kobj_ns_type_operations*)class_dir_child_ns_type((const struct kobject *)$arg1))")
   public static Ptr<kobj_ns_type_operations> class_dir_child_ns_type(Ptr<kobject> kobj) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1201,14 +1202,14 @@ public final class ClassDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_find_device((const struct class*)$arg1, (const struct device*)$arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("class_find_device((const struct class *)$arg1, (const struct device *)$arg2, (const void *)$arg3, $arg4)")
   public static Ptr<device> class_find_device(Ptr<_class> _class, Ptr<device> start, Ptr<?> data,
       @OriginalName("device_match_t") Ptr<?> match) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_for_each_device((const struct class*)$arg1, (const struct device*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("class_for_each_device((const struct class *)$arg1, (const struct device *)$arg2, $arg3, $arg4)")
   public static int class_for_each_device(Ptr<_class> _class, Ptr<device> start, Ptr<?> data,
       @OriginalName("device_iter_t") Ptr<?> fn) {
     throw new MethodIsBPFRelatedFunction();
@@ -1239,7 +1240,7 @@ public final class ClassDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_is_registered((const struct class*)$arg1)")
+  @BuiltinBPFFunction("class_is_registered((const struct class *)$arg1)")
   public static boolean class_is_registered(Ptr<_class> _class) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1276,7 +1277,7 @@ public final class ClassDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_register((const struct class*)$arg1)")
+  @BuiltinBPFFunction("class_register((const struct class *)$arg1)")
   public static int class_register(Ptr<_class> cls) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1288,7 +1289,7 @@ public final class ClassDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_remove_file_ns((const struct class*)$arg1, (const struct class_attribute*)$arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("class_remove_file_ns((const struct class *)$arg1, (const struct class_attribute *)$arg2, (const void *)$arg3)")
   public static void class_remove_file_ns(Ptr<_class> cls, Ptr<class_attribute> attr, Ptr<?> ns) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1307,13 +1308,13 @@ public final class ClassDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_to_subsys((const struct class*)$arg1)")
+  @BuiltinBPFFunction("class_to_subsys((const struct class *)$arg1)")
   public static Ptr<subsys_private> class_to_subsys(Ptr<_class> _class) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("class_unregister((const struct class*)$arg1)")
+  @BuiltinBPFFunction("class_unregister((const struct class *)$arg1)")
   public static void class_unregister(Ptr<_class> cls) {
     throw new MethodIsBPFRelatedFunction();
   }

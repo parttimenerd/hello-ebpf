@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1123,13 +1124,13 @@ public final class SmkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_fetch((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("smk_fetch((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<smack_known> smk_fetch(String name, Ptr<inode> ip, Ptr<dentry> dp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_fill_rule((const u8*)$arg1, (const u8*)$arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("smk_fill_rule((const u8 *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5, $arg6, $arg7)")
   public static int smk_fill_rule(String subject, String object, String access1, String access2,
       Ptr<smack_parsed_rule> rule, int _import, int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1142,7 +1143,7 @@ public final class SmkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_find_entry((const u8*)$arg1)")
+  @BuiltinBPFFunction("smk_find_entry((const u8 *)$arg1)")
   public static Ptr<smack_known> smk_find_entry(String string) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1161,13 +1162,13 @@ public final class SmkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_import_entry((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("smk_import_entry((const u8 *)$arg1, $arg2)")
   public static Ptr<smack_known> smk_import_entry(String string, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_import_valid_label((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("smk_import_valid_label((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<smack_known> smk_import_valid_label(String label, int label_len,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1265,7 +1266,7 @@ public final class SmkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_parse_label_len((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("smk_parse_label_len((const u8 *)$arg1, $arg2)")
   public static int smk_parse_label_len(String string, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1284,19 +1285,19 @@ public final class SmkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_parse_smack((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("smk_parse_smack((const u8 *)$arg1, $arg2)")
   public static String smk_parse_smack(String string, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_perm_from_str((const u8*)$arg1)")
+  @BuiltinBPFFunction("smk_perm_from_str((const u8 *)$arg1)")
   public static int smk_perm_from_str(String string) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_ptrace_rule_check($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("smk_ptrace_rule_check($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int smk_ptrace_rule_check(Ptr<task_struct> tracer, Ptr<smack_known> tracee_known,
       @Unsigned int mode, String func) {
     throw new MethodIsBPFRelatedFunction();
@@ -1390,147 +1391,147 @@ public final class SmkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_access($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_access($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_access(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_access2($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_access2($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_access2(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_ambient($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_ambient($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_ambient(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_change_rule($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_change_rule($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_change_rule(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_cipso($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_cipso($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_cipso(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_cipso2($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_cipso2($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_cipso2(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_direct($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_direct($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_direct(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_doi($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_doi($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_doi(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_load($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_load($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_load(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_load2($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_load2($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_load2(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_load_self($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_load_self($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_load_self(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_load_self2($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_load_self2($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_load_self2(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_logging($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_logging($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_logging(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_mapped($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_mapped($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_mapped(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_net4addr($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_net4addr($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_net4addr(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_net6addr($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_net6addr($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_net6addr(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_onlycap($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_onlycap($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_onlycap(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_ptrace($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_ptrace($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_ptrace(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_relabel_self($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_relabel_self($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_relabel_self(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_revoke_subj($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_revoke_subj($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_revoke_subj(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smk_write_syslog($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smk_write_syslog($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long smk_write_syslog(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

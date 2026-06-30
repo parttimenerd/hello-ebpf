@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1104,7 +1105,7 @@ public final class GnetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gnet_stats_add_queue($arg1, (const struct gnet_stats_queue*)$arg2, (const struct gnet_stats_queue*)$arg3)")
+  @BuiltinBPFFunction("gnet_stats_add_queue($arg1, (const struct gnet_stats_queue *)$arg2, (const struct gnet_stats_queue *)$arg3)")
   public static void gnet_stats_add_queue(Ptr<gnet_stats_queue> qstats, Ptr<gnet_stats_queue> cpu,
       Ptr<gnet_stats_queue> q) {
     throw new MethodIsBPFRelatedFunction();

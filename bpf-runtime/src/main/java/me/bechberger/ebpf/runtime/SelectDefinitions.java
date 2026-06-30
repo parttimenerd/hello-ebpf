@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1117,7 +1118,7 @@ public final class SelectDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("select_cpu_from_kfunc($arg1, $arg2, $arg3, (const struct cpumask*)$arg4, $arg5)")
+  @BuiltinBPFFunction("select_cpu_from_kfunc($arg1, $arg2, $arg3, (const struct cpumask *)$arg4, $arg5)")
   public static int select_cpu_from_kfunc(Ptr<task_struct> p, int prev_cpu,
       @Unsigned long wake_flags, Ptr<cpumask> allowed, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1161,7 +1162,7 @@ public final class SelectDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("select_local_address((const struct pm_nl_pernet*)$arg1, (const struct mptcp_sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("select_local_address((const struct pm_nl_pernet *)$arg1, (const struct mptcp_sock *)$arg2, $arg3)")
   public static boolean select_local_address(Ptr<pm_nl_pernet> pernet, Ptr<mptcp_sock> msk,
       Ptr<mptcp_pm_local> new_local) {
     throw new MethodIsBPFRelatedFunction();
@@ -1170,13 +1171,13 @@ public final class SelectDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("select_pmem_id($arg1, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static int select_pmem_id(Ptr<nd_region> nd_region, Ptr<uuid_t> pmem_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("select_target_cpu((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("select_target_cpu((const struct cpumask *)$arg1)")
   public static @Unsigned int select_target_cpu(Ptr<cpumask> dest) {
     throw new MethodIsBPFRelatedFunction();
   }

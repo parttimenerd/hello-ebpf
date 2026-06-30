@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class EcDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("ec_clear_on_resume((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("ec_clear_on_resume((const struct dmi_system_id *)$arg1)")
   public static int ec_clear_on_resume(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ec_correct_ecdt((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("ec_correct_ecdt((const struct dmi_system_id *)$arg1)")
   public static int ec_correct_ecdt(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1114,7 +1115,7 @@ public final class EcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ec_honor_dsdt_gpe((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("ec_honor_dsdt_gpe((const struct dmi_system_id *)$arg1)")
   public static int ec_honor_dsdt_gpe(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1148,7 +1149,7 @@ public final class EcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ec_transaction($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ec_transaction($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int ec_transaction(char command, Ptr<java.lang.Character> wdata,
       @Unsigned int wdata_len, Ptr<java.lang.Character> rdata, @Unsigned int rdata_len) {
     throw new MethodIsBPFRelatedFunction();

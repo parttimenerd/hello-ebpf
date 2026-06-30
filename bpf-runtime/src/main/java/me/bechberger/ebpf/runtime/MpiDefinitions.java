@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1222,14 +1223,14 @@ public final class MpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mpi_read_from_buffer((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mpi_read_from_buffer((const void *)$arg1, $arg2)")
   public static @OriginalName("MPI") Ptr<gcry_mpi> mpi_read_from_buffer(Ptr<?> xbuffer,
       Ptr<java.lang. @Unsigned Integer> ret_nread) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mpi_read_raw_data((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mpi_read_raw_data((const void *)$arg1, $arg2)")
   public static @OriginalName("MPI") Ptr<gcry_mpi> mpi_read_raw_data(Ptr<?> xbuffer,
       @Unsigned long nbytes) {
     throw new MethodIsBPFRelatedFunction();

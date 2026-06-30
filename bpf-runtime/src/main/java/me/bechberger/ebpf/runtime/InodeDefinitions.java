@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1139,7 +1140,7 @@ public final class InodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inode_dio_finished((const struct inode*)$arg1)")
+  @BuiltinBPFFunction("inode_dio_finished((const struct inode *)$arg1)")
   public static boolean inode_dio_finished(Ptr<inode> inode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1195,7 +1196,7 @@ public final class InodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inode_has_perm((const struct cred*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("inode_has_perm((const struct cred *)$arg1, $arg2, $arg3, $arg4)")
   public static int inode_has_perm(Ptr<cred> cred, Ptr<inode> inode, @Unsigned int perms,
       Ptr<common_audit_data> adp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1233,7 +1234,7 @@ public final class InodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inode_init_owner($arg1, $arg2, (const struct inode*)$arg3, $arg4)")
+  @BuiltinBPFFunction("inode_init_owner($arg1, $arg2, (const struct inode *)$arg3, $arg4)")
   public static void inode_init_owner(Ptr<mnt_idmap> idmap, Ptr<inode> inode, Ptr<inode> dir,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1298,7 +1299,7 @@ public final class InodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inode_newsize_ok((const struct inode*)$arg1, $arg2)")
+  @BuiltinBPFFunction("inode_newsize_ok((const struct inode *)$arg1, $arg2)")
   public static int inode_newsize_ok(Ptr<inode> inode, @OriginalName("loff_t") long offset) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1310,7 +1311,7 @@ public final class InodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inode_owner_or_capable($arg1, (const struct inode*)$arg2)")
+  @BuiltinBPFFunction("inode_owner_or_capable($arg1, (const struct inode *)$arg2)")
   public static boolean inode_owner_or_capable(Ptr<mnt_idmap> idmap, Ptr<inode> inode) {
     throw new MethodIsBPFRelatedFunction();
   }

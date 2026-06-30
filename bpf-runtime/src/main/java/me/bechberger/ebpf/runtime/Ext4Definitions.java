@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1098,7 +1099,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_check_dir_entry((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("__ext4_check_dir_entry((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static int __ext4_check_dir_entry(String function, @Unsigned int line, Ptr<inode> dir,
       Ptr<file> filp, Ptr<ext4_dir_entry_2> de, Ptr<buffer_head> bh, String buf, int size,
       @Unsigned int offset) {
@@ -1106,21 +1107,21 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_error($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6, (const u8*)$arg7, $arg8_)")
+  @BuiltinBPFFunction("__ext4_error($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6, (const u8 *)$arg7, $arg8_)")
   public static void __ext4_error(Ptr<super_block> sb, String function, @Unsigned int line,
       boolean force_ro, int error, @Unsigned long block, String fmt, java.lang.Object... param7) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_error_file($arg1, (const u8*)$arg2, $arg3, $arg4, (const u8*)$arg5, $arg6_)")
+  @BuiltinBPFFunction("__ext4_error_file($arg1, (const u8 *)$arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6_)")
   public static void __ext4_error_file(Ptr<file> file, String function, @Unsigned int line,
       @Unsigned @OriginalName("ext4_fsblk_t") long block, String fmt, java.lang.Object... param5) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_error_inode($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, (const u8*)$arg6, $arg7_)")
+  @BuiltinBPFFunction("__ext4_error_inode($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6, $arg7_)")
   public static void __ext4_error_inode(Ptr<inode> inode, String function, @Unsigned int line,
       @Unsigned @OriginalName("ext4_fsblk_t") long block, int error, String fmt,
       java.lang.Object... param6) {
@@ -1136,7 +1137,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_ext_check((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__ext4_ext_check((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int __ext4_ext_check(String function, @Unsigned int line, Ptr<inode> inode,
       Ptr<ext4_extent_header> eh, int depth, @Unsigned @OriginalName("ext4_fsblk_t") long pblk,
       @Unsigned @OriginalName("ext4_lblk_t") int lblk) {
@@ -1144,7 +1145,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_ext_dirty((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__ext4_ext_dirty((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int __ext4_ext_dirty(String where, @Unsigned int line,
       Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle, Ptr<inode> inode,
       Ptr<ext4_ext_path> path) {
@@ -1188,7 +1189,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_forget((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__ext4_forget((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int __ext4_forget(String where, @Unsigned int line,
       Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle, int is_metadata, Ptr<inode> inode,
       Ptr<buffer_head> bh, @Unsigned @OriginalName("ext4_fsblk_t") long blocknr) {
@@ -1209,7 +1210,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_grp_locked_error((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const u8*)$arg7, $arg8_)")
+  @BuiltinBPFFunction("__ext4_grp_locked_error((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const u8 *)$arg7, $arg8_)")
   public static void __ext4_grp_locked_error(String function, @Unsigned int line,
       Ptr<super_block> sb, @Unsigned @OriginalName("ext4_group_t") int grp, @Unsigned long ino,
       @Unsigned @OriginalName("ext4_fsblk_t") long block, String fmt, java.lang.Object... param7) {
@@ -1217,7 +1218,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_handle_dirty_metadata((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__ext4_handle_dirty_metadata((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int __ext4_handle_dirty_metadata(String where, @Unsigned int line,
       Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle, Ptr<inode> inode,
       Ptr<buffer_head> bh) {
@@ -1225,7 +1226,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_iget($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__ext4_iget($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static Ptr<inode> __ext4_iget(Ptr<super_block> sb, @Unsigned long ino,
       @OriginalName("ext4_iget_flags") EXT4_IGET flags, String function, @Unsigned int line) {
     throw new MethodIsBPFRelatedFunction();
@@ -1246,7 +1247,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_journal_get_create_access((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__ext4_journal_get_create_access((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int __ext4_journal_get_create_access(String where, @Unsigned int line,
       Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle, Ptr<super_block> sb,
       Ptr<buffer_head> bh, ext4_journal_trigger_type trigger_type) {
@@ -1254,7 +1255,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_journal_get_write_access((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__ext4_journal_get_write_access((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int __ext4_journal_get_write_access(String where, @Unsigned int line,
       Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle, Ptr<super_block> sb,
       Ptr<buffer_head> bh, ext4_journal_trigger_type trigger_type) {
@@ -1277,7 +1278,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_journal_stop((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__ext4_journal_stop((const u8 *)$arg1, $arg2, $arg3)")
   public static int __ext4_journal_stop(String where, @Unsigned int line,
       Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle) {
     throw new MethodIsBPFRelatedFunction();
@@ -1297,7 +1298,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_mark_inode_dirty($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__ext4_mark_inode_dirty($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int __ext4_mark_inode_dirty(
       Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle, Ptr<inode> inode, String func,
       @Unsigned int line) {
@@ -1305,14 +1306,14 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_msg($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("__ext4_msg($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4_)")
   public static void __ext4_msg(Ptr<super_block> sb, String prefix, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_new_inode($arg1, $arg2, $arg3, $arg4, (const struct qstr*)$arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("__ext4_new_inode($arg1, $arg2, $arg3, $arg4, (const struct qstr *)$arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
   public static Ptr<inode> __ext4_new_inode(Ptr<mnt_idmap> idmap,
       Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle, Ptr<inode> dir,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<qstr> qstr, @Unsigned int goal,
@@ -1322,7 +1323,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_read_dirblock($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__ext4_read_dirblock($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static Ptr<buffer_head> __ext4_read_dirblock(Ptr<inode> inode,
       @Unsigned @OriginalName("ext4_lblk_t") int block, dirblock_type_t type, String func,
       @Unsigned int line) {
@@ -1343,14 +1344,14 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_std_error($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__ext4_std_error($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void __ext4_std_error(Ptr<super_block> sb, String function, @Unsigned int line,
       int errno) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_unlink($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__ext4_unlink($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int __ext4_unlink(Ptr<inode> dir, Ptr<qstr> d_name, Ptr<inode> inode,
       Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
@@ -1364,14 +1365,14 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_warning($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("__ext4_warning($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, $arg5_)")
   public static void __ext4_warning(Ptr<super_block> sb, String function, @Unsigned int line,
       String fmt, java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ext4_warning_inode((const struct inode*)$arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("__ext4_warning_inode((const struct inode *)$arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, $arg5_)")
   public static void __ext4_warning_inode(Ptr<inode> inode, String function, @Unsigned int line,
       String fmt, java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
@@ -1398,13 +1399,13 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_acl_from_disk((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ext4_acl_from_disk((const void *)$arg1, $arg2)")
   public static Ptr<posix_acl> ext4_acl_from_disk(Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_acl_to_disk((const struct posix_acl*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ext4_acl_to_disk((const struct posix_acl *)$arg1, $arg2)")
   public static Ptr<?> ext4_acl_to_disk(Ptr<posix_acl> acl, Ptr<java.lang. @Unsigned Long> size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1507,7 +1508,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ext4_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long ext4_attr_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1681,7 +1682,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_check_blockref((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ext4_check_blockref((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int ext4_check_blockref(String function, @Unsigned int line, Ptr<inode> inode,
       Ptr<java.lang. @Unsigned @OriginalName("__le32") Integer> p, @Unsigned int max) {
     throw new MethodIsBPFRelatedFunction();
@@ -1929,7 +1930,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_da_write_begin((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ext4_da_write_begin((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int ext4_da_write_begin(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, Ptr<Ptr<folio>> foliop,
       Ptr<Ptr<?>> fsdata) {
@@ -1937,7 +1938,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_da_write_end((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ext4_da_write_end((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int ext4_da_write_end(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, @Unsigned int copied, Ptr<folio> folio,
       Ptr<?> fsdata) {
@@ -2181,7 +2182,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_encrypted_symlink_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ext4_encrypted_symlink_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int ext4_encrypted_symlink_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path,
       Ptr<kstat> stat, @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2206,7 +2207,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_end_enable_verity($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ext4_end_enable_verity($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static int ext4_end_enable_verity(Ptr<file> filp, Ptr<?> desc, @Unsigned long desc_size,
       @Unsigned long merkle_tree_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -2934,7 +2935,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_file_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ext4_file_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int ext4_file_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -3008,7 +3009,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_find_delete_entry($arg1, $arg2, (const struct qstr*)$arg3)")
+  @BuiltinBPFFunction("ext4_find_delete_entry($arg1, $arg2, (const struct qstr *)$arg3)")
   public static int ext4_find_delete_entry(
       Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle, Ptr<inode> dir, Ptr<qstr> d_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -3022,7 +3023,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_find_entry($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ext4_find_entry($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static Ptr<buffer_head> ext4_find_entry(Ptr<inode> dir, Ptr<qstr> d_name,
       Ptr<Ptr<ext4_dir_entry_2>> res_dir, Ptr<java.lang.Integer> inlined) {
     throw new MethodIsBPFRelatedFunction();
@@ -3082,7 +3083,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_fname_from_fscrypt_name($arg1, (const struct fscrypt_name*)$arg2)")
+  @BuiltinBPFFunction("ext4_fname_from_fscrypt_name($arg1, (const struct fscrypt_name *)$arg2)")
   public static void ext4_fname_from_fscrypt_name(Ptr<ext4_filename> dst, Ptr<fscrypt_name> src) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3095,14 +3096,14 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_fname_setup_ci_filename($arg1, (const struct qstr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ext4_fname_setup_ci_filename($arg1, (const struct qstr *)$arg2, $arg3)")
   public static int ext4_fname_setup_ci_filename(Ptr<inode> dir, Ptr<qstr> iname,
       Ptr<ext4_filename> name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_fname_setup_filename($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ext4_fname_setup_filename($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int ext4_fname_setup_filename(Ptr<inode> dir, Ptr<qstr> iname, int lookup,
       Ptr<ext4_filename> fname) {
     throw new MethodIsBPFRelatedFunction();
@@ -3224,7 +3225,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_generic_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ext4_generic_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long ext4_generic_attr_store(Ptr<ext4_attr> a,
       Ptr<ext4_sb_info> sbi, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3437,7 +3438,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ext4_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int ext4_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -3459,7 +3460,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_getfsmap_compare($arg1, (const struct list_head*)$arg2, (const struct list_head*)$arg3)")
+  @BuiltinBPFFunction("ext4_getfsmap_compare($arg1, (const struct list_head *)$arg2, (const struct list_head *)$arg3)")
   public static int ext4_getfsmap_compare(Ptr<?> priv, Ptr<list_head> a, Ptr<list_head> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3480,7 +3481,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_getfsmap_dev_compare((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ext4_getfsmap_dev_compare((const void *)$arg1, (const void *)$arg2)")
   public static int ext4_getfsmap_dev_compare(Ptr<?> p1, Ptr<?> p2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3605,7 +3606,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_handle_error($arg1, $arg2, $arg3, $arg4, $arg5, (const u8*)$arg6, $arg7)")
+  @BuiltinBPFFunction("ext4_handle_error($arg1, $arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6, $arg7)")
   public static void ext4_handle_error(Ptr<super_block> sb, boolean force_ro, int error,
       @Unsigned int ino, @Unsigned long block, String func, @Unsigned int line) {
     throw new MethodIsBPFRelatedFunction();
@@ -3812,7 +3813,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_init_security($arg1, $arg2, $arg3, (const struct qstr*)$arg4)")
+  @BuiltinBPFFunction("ext4_init_security($arg1, $arg2, $arg3, (const struct qstr *)$arg4)")
   public static int ext4_init_security(Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle,
       Ptr<inode> inode, Ptr<inode> dir, Ptr<qstr> qstr) {
     throw new MethodIsBPFRelatedFunction();
@@ -3845,7 +3846,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_initxattrs($arg1, (const struct xattr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ext4_initxattrs($arg1, (const struct xattr *)$arg2, $arg3)")
   public static int ext4_initxattrs(Ptr<inode> inode, Ptr<xattr> xattr_array, Ptr<?> fs_info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4043,7 +4044,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_ioctl_setlabel($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("ext4_ioctl_setlabel($arg1, (const u8 *)$arg2)")
   public static int ext4_ioctl_setlabel(Ptr<file> filp, String user_label) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4221,7 +4222,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_journalled_write_end((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ext4_journalled_write_end((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int ext4_journalled_write_end(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, @Unsigned int copied, Ptr<folio> folio,
       Ptr<?> fsdata) {
@@ -4385,7 +4386,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_match($arg1, (const struct ext4_filename*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ext4_match($arg1, (const struct ext4_filename *)$arg2, $arg3)")
   public static boolean ext4_match(Ptr<inode> parent, Ptr<ext4_filename> fname,
       Ptr<ext4_dir_entry_2> de) {
     throw new MethodIsBPFRelatedFunction();
@@ -5022,7 +5023,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_quota_on($arg1, $arg2, $arg3, (const struct path*)$arg4)")
+  @BuiltinBPFFunction("ext4_quota_on($arg1, $arg2, $arg3, (const struct path *)$arg4)")
   public static int ext4_quota_on(Ptr<super_block> sb, int type, int format_id, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5035,7 +5036,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_quota_write($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ext4_quota_write($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static @OriginalName("ssize_t") long ext4_quota_write(Ptr<super_block> sb, int type,
       String data, @Unsigned long len, @OriginalName("loff_t") long off) {
     throw new MethodIsBPFRelatedFunction();
@@ -5362,13 +5363,13 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_sb_setlabel($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ext4_sb_setlabel($arg1, (const void *)$arg2)")
   public static void ext4_sb_setlabel(Ptr<ext4_super_block> es, Ptr<?> arg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_sb_setuuid($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ext4_sb_setuuid($arg1, (const void *)$arg2)")
   public static void ext4_sb_setuuid(Ptr<ext4_super_block> es, Ptr<?> arg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5413,7 +5414,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_set_context($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ext4_set_context($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static int ext4_set_context(Ptr<inode> inode, Ptr<?> ctx, @Unsigned long len,
       Ptr<?> fs_data) {
     throw new MethodIsBPFRelatedFunction();
@@ -5565,7 +5566,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_symlink($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("ext4_symlink($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int ext4_symlink(Ptr<mnt_idmap> idmap, Ptr<inode> dir, Ptr<dentry> dentry,
       String symname) {
     throw new MethodIsBPFRelatedFunction();
@@ -5680,7 +5681,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_update_backup_sb($arg1, $arg2, $arg3, $arg4, (const void*)$arg5)")
+  @BuiltinBPFFunction("ext4_update_backup_sb($arg1, $arg2, $arg3, $arg4, (const void *)$arg5)")
   public static int ext4_update_backup_sb(Ptr<super_block> sb,
       Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle,
       @Unsigned @OriginalName("ext4_group_t") int grp, Ptr<?> func, Ptr<?> arg) {
@@ -5734,14 +5735,14 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_update_primary_sb($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("ext4_update_primary_sb($arg1, $arg2, $arg3, (const void *)$arg4)")
   public static int ext4_update_primary_sb(Ptr<super_block> sb,
       Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle, Ptr<?> func, Ptr<?> arg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_update_superblocks_fn($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("ext4_update_superblocks_fn($arg1, $arg2, (const void *)$arg3)")
   public static int ext4_update_superblocks_fn(Ptr<super_block> sb, Ptr<?> func, Ptr<?> arg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5804,7 +5805,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_write_begin((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ext4_write_begin((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int ext4_write_begin(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, Ptr<Ptr<folio>> foliop,
       Ptr<Ptr<?>> fsdata) {
@@ -5818,7 +5819,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_write_end((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ext4_write_end((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int ext4_write_end(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, @Unsigned int copied, Ptr<folio> folio,
       Ptr<?> fsdata) {
@@ -5852,7 +5853,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_write_merkle_tree_block($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ext4_write_merkle_tree_block($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static int ext4_write_merkle_tree_block(Ptr<inode> inode, Ptr<?> buf, @Unsigned long pos,
       @Unsigned int size) {
     throw new MethodIsBPFRelatedFunction();
@@ -5872,7 +5873,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_block_get($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ext4_xattr_block_get($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int ext4_xattr_block_get(Ptr<inode> inode, int name_index, String name,
       Ptr<?> buffer, @Unsigned long buffer_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -5919,7 +5920,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_get($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ext4_xattr_get($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int ext4_xattr_get(Ptr<inode> inode, int name_index, String name, Ptr<?> buffer,
       @Unsigned long buffer_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -5932,7 +5933,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_hurd_get((const struct xattr_handler*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ext4_xattr_hurd_get((const struct xattr_handler *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int ext4_xattr_hurd_get(Ptr<xattr_handler> handler, Ptr<dentry> unused,
       Ptr<inode> inode, String name, Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -5945,7 +5946,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_hurd_set((const struct xattr_handler*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("ext4_xattr_hurd_set((const struct xattr_handler *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, (const void *)$arg6, $arg7, $arg8)")
   public static int ext4_xattr_hurd_set(Ptr<xattr_handler> handler, Ptr<mnt_idmap> idmap,
       Ptr<dentry> unused, Ptr<inode> inode, String name, Ptr<?> value, @Unsigned long size,
       int flags) {
@@ -5953,7 +5954,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_ibody_get($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ext4_xattr_ibody_get($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int ext4_xattr_ibody_get(Ptr<inode> inode, int name_index, String name,
       Ptr<?> buffer, @Unsigned long buffer_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -5973,7 +5974,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_inode_cache_find($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ext4_xattr_inode_cache_find($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static Ptr<inode> ext4_xattr_inode_cache_find(Ptr<inode> inode, Ptr<?> value,
       @Unsigned long value_len, @Unsigned int hash) {
     throw new MethodIsBPFRelatedFunction();
@@ -6026,7 +6027,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_inode_lookup_create($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ext4_xattr_inode_lookup_create($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static Ptr<inode> ext4_xattr_inode_lookup_create(
       Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle, Ptr<inode> inode, Ptr<?> value,
       @Unsigned long value_len) {
@@ -6048,7 +6049,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_inode_write($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ext4_xattr_inode_write($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int ext4_xattr_inode_write(
       Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle, Ptr<inode> ea_inode, Ptr<?> buf,
       int bufsize) {
@@ -6088,14 +6089,14 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_security_get((const struct xattr_handler*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ext4_xattr_security_get((const struct xattr_handler *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int ext4_xattr_security_get(Ptr<xattr_handler> handler, Ptr<dentry> unused,
       Ptr<inode> inode, String name, Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_security_set((const struct xattr_handler*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("ext4_xattr_security_set((const struct xattr_handler *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, (const void *)$arg6, $arg7, $arg8)")
   public static int ext4_xattr_security_set(Ptr<xattr_handler> handler, Ptr<mnt_idmap> idmap,
       Ptr<dentry> unused, Ptr<inode> inode, String name, Ptr<?> value, @Unsigned long size,
       int flags) {
@@ -6103,7 +6104,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_set($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ext4_xattr_set($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int ext4_xattr_set(Ptr<inode> inode, int name_index, String name, Ptr<?> value,
       @Unsigned long value_len, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -6125,7 +6126,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_set_handle($arg1, $arg2, $arg3, (const u8*)$arg4, (const void*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ext4_xattr_set_handle($arg1, $arg2, $arg3, (const u8 *)$arg4, (const void *)$arg5, $arg6, $arg7)")
   public static int ext4_xattr_set_handle(Ptr<@OriginalName("handle_t") jbd2_journal_handle> handle,
       Ptr<inode> inode, int name_index, String name, Ptr<?> value, @Unsigned long value_len,
       int flags) {
@@ -6140,7 +6141,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_trusted_get((const struct xattr_handler*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ext4_xattr_trusted_get((const struct xattr_handler *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int ext4_xattr_trusted_get(Ptr<xattr_handler> handler, Ptr<dentry> unused,
       Ptr<inode> inode, String name, Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -6153,7 +6154,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_trusted_set((const struct xattr_handler*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("ext4_xattr_trusted_set((const struct xattr_handler *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, (const void *)$arg6, $arg7, $arg8)")
   public static int ext4_xattr_trusted_set(Ptr<xattr_handler> handler, Ptr<mnt_idmap> idmap,
       Ptr<dentry> unused, Ptr<inode> inode, String name, Ptr<?> value, @Unsigned long size,
       int flags) {
@@ -6161,7 +6162,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_user_get((const struct xattr_handler*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ext4_xattr_user_get((const struct xattr_handler *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int ext4_xattr_user_get(Ptr<xattr_handler> handler, Ptr<dentry> unused,
       Ptr<inode> inode, String name, Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -6174,7 +6175,7 @@ public final class Ext4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ext4_xattr_user_set((const struct xattr_handler*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("ext4_xattr_user_set((const struct xattr_handler *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, (const void *)$arg6, $arg7, $arg8)")
   public static int ext4_xattr_user_set(Ptr<xattr_handler> handler, Ptr<mnt_idmap> idmap,
       Ptr<dentry> unused, Ptr<inode> inode, String name, Ptr<?> value, @Unsigned long size,
       int flags) {

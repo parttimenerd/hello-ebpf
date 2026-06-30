@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class SuspendDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__suspend_report_result((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__suspend_report_result((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void __suspend_report_result(String function, Ptr<device> dev, Ptr<?> fn, int ret) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__suspend_set_state($arg1, (const struct regulator_state*)$arg2)")
+  @BuiltinBPFFunction("__suspend_set_state($arg1, (const struct regulator_state *)$arg2)")
   public static int __suspend_set_state(Ptr<regulator_dev> rdev, Ptr<regulator_state> rstate) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1168,7 +1169,7 @@ public final class SuspendDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("suspend_hi_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("suspend_hi_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long suspend_hi_store(Ptr<mddev> mddev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1187,7 +1188,7 @@ public final class SuspendDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("suspend_lo_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("suspend_lo_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long suspend_lo_store(Ptr<mddev> mddev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1245,7 +1246,7 @@ public final class SuspendDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("suspend_set_ops((const struct platform_suspend_ops*)$arg1)")
+  @BuiltinBPFFunction("suspend_set_ops((const struct platform_suspend_ops *)$arg1)")
   public static void suspend_set_ops(Ptr<platform_suspend_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }

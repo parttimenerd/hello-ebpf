@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1115,14 +1116,14 @@ public final class CpuhpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__cpuhp_setup_state($arg1, (const u8*)$arg2, $arg3, (int (*)(unsigned int))$arg4, (int (*)(unsigned int))$arg5, $arg6)")
+  @BuiltinBPFFunction("__cpuhp_setup_state($arg1, (const u8 *)$arg2, $arg3, (int (*)(unsigned int))$arg4, (int (*)(unsigned int))$arg5, $arg6)")
   public static int __cpuhp_setup_state(cpuhp_state state, String name, boolean invoke,
       Ptr<?> startup, Ptr<?> teardown, boolean multi_instance) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__cpuhp_setup_state_cpuslocked($arg1, (const u8*)$arg2, $arg3, (int (*)(unsigned int))$arg4, (int (*)(unsigned int))$arg5, $arg6)")
+  @BuiltinBPFFunction("__cpuhp_setup_state_cpuslocked($arg1, (const u8 *)$arg2, $arg3, (int (*)(unsigned int))$arg4, (int (*)(unsigned int))$arg5, $arg6)")
   public static int __cpuhp_setup_state_cpuslocked(cpuhp_state state, String name, boolean invoke,
       Ptr<?> startup, Ptr<?> teardown, boolean multi_instance) {
     throw new MethodIsBPFRelatedFunction();
@@ -1174,7 +1175,7 @@ public final class CpuhpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpuhp_bringup_mask((const struct cpumask*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("cpuhp_bringup_mask((const struct cpumask *)$arg1, $arg2, $arg3)")
   public static void cpuhp_bringup_mask(Ptr<cpumask> mask, @Unsigned int ncpus,
       cpuhp_state target) {
     throw new MethodIsBPFRelatedFunction();

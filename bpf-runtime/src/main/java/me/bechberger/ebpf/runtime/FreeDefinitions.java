@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1644,7 +1645,7 @@ public final class FreeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("free_init_pages((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("free_init_pages((const u8 *)$arg1, $arg2, $arg3)")
   public static void free_init_pages(String what, @Unsigned long begin, @Unsigned long end) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1759,7 +1760,7 @@ public final class FreeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("free_kernel_image_pages((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("free_kernel_image_pages((const u8 *)$arg1, $arg2, $arg3)")
   public static void free_kernel_image_pages(String what, Ptr<?> begin, Ptr<?> end) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2139,7 +2140,7 @@ public final class FreeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("free_reserved_area($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("free_reserved_area($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static @Unsigned long free_reserved_area(Ptr<?> start, Ptr<?> end, int poison, String s) {
     throw new MethodIsBPFRelatedFunction();
   }

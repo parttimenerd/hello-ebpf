@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1380,7 +1381,7 @@ public final class DataDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { u8 buswidth; u8 dtr; u8 ecc; u8 swap16; u8 __pad; enum spi_mem_data_dir dir; unsigned int nbytes; union { void *in; const void*; }; }"
+      cType = "struct { u8 buswidth; u8 dtr; u8 ecc; u8 swap16; u8 __pad; enum spi_mem_data_dir dir; unsigned int nbytes; union { void *in; const void *out; }; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -7715,7 +7716,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_DecompressFastArgs_init($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const unsigned int*)$arg6)")
+  @BuiltinBPFFunction("HUF_DecompressFastArgs_init($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const unsigned int *)$arg6)")
   public static @Unsigned long HUF_DecompressFastArgs_init(Ptr<HUF_DecompressFastArgs> args,
       Ptr<?> dst, @Unsigned long dstSize, Ptr<?> src, @Unsigned long srcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable) {
@@ -7747,7 +7748,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("PageHuge((const struct page*)$arg1)")
+  @BuiltinBPFFunction("PageHuge((const struct page *)$arg1)")
   public static boolean PageHuge(Ptr<page> page) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7759,7 +7760,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_dictMatchState_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_dictMatchState_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_BtFindBestMatch_dictMatchState_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -7768,7 +7769,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_dictMatchState_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_dictMatchState_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_BtFindBestMatch_dictMatchState_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -7777,7 +7778,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_dictMatchState_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_dictMatchState_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_BtFindBestMatch_dictMatchState_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -7786,7 +7787,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_extDict_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_extDict_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_BtFindBestMatch_extDict_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -7795,7 +7796,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_extDict_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_extDict_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_BtFindBestMatch_extDict_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -7804,7 +7805,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_extDict_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_extDict_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_BtFindBestMatch_extDict_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -7813,7 +7814,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_noDict_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_noDict_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_BtFindBestMatch_noDict_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -7822,7 +7823,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_noDict_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_noDict_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_BtFindBestMatch_noDict_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -7831,7 +7832,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_noDict_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_BtFindBestMatch_noDict_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_BtFindBestMatch_noDict_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -7840,7 +7841,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_CCtxParams_getParameter((const ZSTD_CCtx_params_s*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_CCtxParams_getParameter((const ZSTD_CCtx_params_s *)$arg1, $arg2, $arg3)")
   public static @Unsigned long ZSTD_CCtxParams_getParameter(Ptr<ZSTD_CCtx_params_s> CCtxParams,
       @OriginalName("ZSTD_cParameter") ZSTD_c param, Ptr<java.lang.Integer> value) {
     throw new MethodIsBPFRelatedFunction();
@@ -7876,7 +7877,7 @@ public final class runtime {
           + "    int checksumFlag;\n"
           + "    int noDictIDFlag;\n"
           + "  } fParams;\n"
-          + "}*)$arg2, $arg3)")
+          + "} *)$arg2, $arg3)")
   public static void ZSTD_CCtxParams_init_internal(Ptr<ZSTD_CCtx_params_s> cctxParams,
       Ptr<ZSTD_parameters> params, int compressionLevel) {
     throw new MethodIsBPFRelatedFunction();
@@ -7903,7 +7904,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_CCtx_getParameter((const ZSTD_CCtx_s*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_CCtx_getParameter((const ZSTD_CCtx_s *)$arg1, $arg2, $arg3)")
   public static @Unsigned long ZSTD_CCtx_getParameter(Ptr<ZSTD_CCtx_s> cctx,
       @OriginalName("ZSTD_cParameter") ZSTD_c param, Ptr<java.lang.Integer> value) {
     throw new MethodIsBPFRelatedFunction();
@@ -7917,14 +7918,14 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_CCtx_loadDictionary($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_CCtx_loadDictionary($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long ZSTD_CCtx_loadDictionary(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dict,
       @Unsigned long dictSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_CCtx_loadDictionary_advanced($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_CCtx_loadDictionary_advanced($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_CCtx_loadDictionary_advanced(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dict,
       @Unsigned long dictSize, @OriginalName("ZSTD_dictLoadMethod_e") ZSTD_dlm_by dictLoadMethod,
       @OriginalName("ZSTD_dictContentType_e") dictContentType_of_ZSTD_CDict_and_dictContentType_of_ZSTD_CDict_s_and_dictContentType_of_ZSTD_localDict dictContentType) {
@@ -7932,27 +7933,27 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_CCtx_loadDictionary_byReference($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_CCtx_loadDictionary_byReference($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long ZSTD_CCtx_loadDictionary_byReference(Ptr<ZSTD_CCtx_s> cctx,
       Ptr<?> dict, @Unsigned long dictSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_CCtx_refCDict($arg1, (const ZSTD_CDict_s*)$arg2)")
+  @BuiltinBPFFunction("ZSTD_CCtx_refCDict($arg1, (const ZSTD_CDict_s *)$arg2)")
   public static @Unsigned long ZSTD_CCtx_refCDict(Ptr<ZSTD_CCtx_s> cctx, Ptr<ZSTD_CDict_s> cdict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_CCtx_refPrefix($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_CCtx_refPrefix($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long ZSTD_CCtx_refPrefix(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> prefix,
       @Unsigned long prefixSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_CCtx_refPrefix_advanced($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_CCtx_refPrefix_advanced($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static @Unsigned long ZSTD_CCtx_refPrefix_advanced(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> prefix,
       @Unsigned long prefixSize,
       @OriginalName("ZSTD_dictContentType_e") dictContentType_of_ZSTD_CDict_and_dictContentType_of_ZSTD_CDict_s_and_dictContentType_of_ZSTD_localDict dictContentType) {
@@ -7995,7 +7996,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_CCtx_setParametersUsingCCtxParams($arg1, (const ZSTD_CCtx_params_s*)$arg2)")
+  @BuiltinBPFFunction("ZSTD_CCtx_setParametersUsingCCtxParams($arg1, (const ZSTD_CCtx_params_s *)$arg2)")
   public static @Unsigned long ZSTD_CCtx_setParametersUsingCCtxParams(Ptr<ZSTD_CCtx_s> cctx,
       Ptr<ZSTD_CCtx_params_s> params) {
     throw new MethodIsBPFRelatedFunction();
@@ -8040,14 +8041,14 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_DCtx_loadDictionary($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_DCtx_loadDictionary($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long ZSTD_DCtx_loadDictionary(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dict,
       @Unsigned long dictSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_DCtx_loadDictionary_advanced($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_DCtx_loadDictionary_advanced($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_DCtx_loadDictionary_advanced(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dict,
       @Unsigned long dictSize, @OriginalName("ZSTD_dictLoadMethod_e") ZSTD_dlm_by dictLoadMethod,
       @OriginalName("ZSTD_dictContentType_e") dictContentType_of_ZSTD_CDict_and_dictContentType_of_ZSTD_CDict_s_and_dictContentType_of_ZSTD_localDict dictContentType) {
@@ -8055,27 +8056,27 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_DCtx_loadDictionary_byReference($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_DCtx_loadDictionary_byReference($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long ZSTD_DCtx_loadDictionary_byReference(Ptr<ZSTD_DCtx_s> dctx,
       Ptr<?> dict, @Unsigned long dictSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_DCtx_refDDict($arg1, (const ZSTD_DDict_s*)$arg2)")
+  @BuiltinBPFFunction("ZSTD_DCtx_refDDict($arg1, (const ZSTD_DDict_s *)$arg2)")
   public static @Unsigned long ZSTD_DCtx_refDDict(Ptr<ZSTD_DCtx_s> dctx, Ptr<ZSTD_DDict_s> ddict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_DCtx_refPrefix($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_DCtx_refPrefix($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long ZSTD_DCtx_refPrefix(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> prefix,
       @Unsigned long prefixSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_DCtx_refPrefix_advanced($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_DCtx_refPrefix_advanced($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static @Unsigned long ZSTD_DCtx_refPrefix_advanced(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> prefix,
       @Unsigned long prefixSize,
       @OriginalName("ZSTD_dictContentType_e") dictContentType_of_ZSTD_CDict_and_dictContentType_of_ZSTD_CDict_s_and_dictContentType_of_ZSTD_localDict dictContentType) {
@@ -8117,20 +8118,20 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_DDictHashSet_emplaceDDict($arg1, (const ZSTD_DDict_s*)$arg2)")
+  @BuiltinBPFFunction("ZSTD_DDictHashSet_emplaceDDict($arg1, (const ZSTD_DDict_s *)$arg2)")
   public static @Unsigned long ZSTD_DDictHashSet_emplaceDDict(Ptr<ZSTD_DDictHashSet> hashSet,
       Ptr<ZSTD_DDict_s> ddict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)ZSTD_DDict_dictContent((const ZSTD_DDict_s*)$arg1))")
+  @BuiltinBPFFunction("((const void*)ZSTD_DDict_dictContent((const ZSTD_DDict_s *)$arg1))")
   public static Ptr<?> ZSTD_DDict_dictContent(Ptr<ZSTD_DDict_s> ddict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_DDict_dictSize((const ZSTD_DDict_s*)$arg1)")
+  @BuiltinBPFFunction("ZSTD_DDict_dictSize((const ZSTD_DDict_s *)$arg1)")
   public static @Unsigned long ZSTD_DDict_dictSize(Ptr<ZSTD_DDict_s> ddict) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8158,7 +8159,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_DUBT_findBetterDictMatch((const ZSTD_MatchState_t*)$arg1, (const const u8*)$arg2, (const const u8*)$arg3, $arg4, $arg5, $arg6, (const unsigned int)$arg7, (const ZSTD)$arg8)")
+  @BuiltinBPFFunction("ZSTD_DUBT_findBetterDictMatch((const ZSTD_MatchState_t *)$arg1, (const const u8*)$arg2, (const const u8*)$arg3, $arg4, $arg5, $arg6, (const unsigned int)$arg7, (const ZSTD)$arg8)")
   public static @Unsigned long ZSTD_DUBT_findBetterDictMatch(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iend,
@@ -8168,7 +8169,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_dedicatedDictSearch_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_dedicatedDictSearch_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_HcFindBestMatch_dedicatedDictSearch_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8177,7 +8178,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_dedicatedDictSearch_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_dedicatedDictSearch_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_HcFindBestMatch_dedicatedDictSearch_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8186,7 +8187,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_dedicatedDictSearch_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_dedicatedDictSearch_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_HcFindBestMatch_dedicatedDictSearch_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8195,7 +8196,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_dictMatchState_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_dictMatchState_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_HcFindBestMatch_dictMatchState_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8204,7 +8205,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_dictMatchState_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_dictMatchState_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_HcFindBestMatch_dictMatchState_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8213,7 +8214,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_dictMatchState_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_dictMatchState_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_HcFindBestMatch_dictMatchState_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8222,7 +8223,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_extDict_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_extDict_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_HcFindBestMatch_extDict_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8231,7 +8232,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_extDict_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_extDict_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_HcFindBestMatch_extDict_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8240,7 +8241,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_extDict_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_extDict_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_HcFindBestMatch_extDict_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8249,7 +8250,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_noDict_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_noDict_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_HcFindBestMatch_noDict_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8258,7 +8259,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_noDict_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_noDict_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_HcFindBestMatch_noDict_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8267,7 +8268,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_noDict_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_HcFindBestMatch_noDict_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_HcFindBestMatch_noDict_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8276,14 +8277,14 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_NCountCost((const unsigned int*)$arg1, (const unsigned int)$arg2, (const long unsigned int)$arg3, (const unsigned int)$arg4)")
+  @BuiltinBPFFunction("ZSTD_NCountCost((const unsigned int *)$arg1, (const unsigned int)$arg2, (const long unsigned int)$arg3, (const unsigned int)$arg4)")
   public static @Unsigned long ZSTD_NCountCost(Ptr<java.lang. @Unsigned Integer> count,
       @Unsigned int max, @Unsigned long nbSeq, @Unsigned int FSELog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_4_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_4_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dedicatedDictSearch_4_4(
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8292,7 +8293,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_4_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_4_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dedicatedDictSearch_4_5(
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8301,7 +8302,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_4_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_4_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dedicatedDictSearch_4_6(
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8310,7 +8311,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_5_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_5_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dedicatedDictSearch_5_4(
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8319,7 +8320,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_5_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_5_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dedicatedDictSearch_5_5(
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8328,7 +8329,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_5_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_5_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dedicatedDictSearch_5_6(
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8337,7 +8338,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_6_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_6_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dedicatedDictSearch_6_4(
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8346,7 +8347,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_6_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_6_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dedicatedDictSearch_6_5(
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8355,7 +8356,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_6_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dedicatedDictSearch_6_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dedicatedDictSearch_6_6(
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8364,7 +8365,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_4_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_4_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dictMatchState_4_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8373,7 +8374,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_4_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_4_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dictMatchState_4_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8382,7 +8383,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_4_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_4_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dictMatchState_4_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8391,7 +8392,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_5_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_5_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dictMatchState_5_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8400,7 +8401,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_5_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_5_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dictMatchState_5_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8409,7 +8410,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_5_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_5_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dictMatchState_5_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8418,7 +8419,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_6_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_6_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dictMatchState_6_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8427,7 +8428,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_6_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_6_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dictMatchState_6_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8436,7 +8437,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_6_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_dictMatchState_6_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_dictMatchState_6_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8445,7 +8446,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_4_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_4_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_extDict_4_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8454,7 +8455,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_4_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_4_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_extDict_4_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8463,7 +8464,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_4_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_4_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_extDict_4_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8472,7 +8473,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_5_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_5_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_extDict_5_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8481,7 +8482,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_5_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_5_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_extDict_5_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8490,7 +8491,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_5_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_5_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_extDict_5_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8499,7 +8500,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_6_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_6_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_extDict_6_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8508,7 +8509,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_6_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_6_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_extDict_6_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8517,7 +8518,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_6_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_extDict_6_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_extDict_6_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8526,7 +8527,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_4_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_4_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_noDict_4_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8535,7 +8536,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_4_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_4_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_noDict_4_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8544,7 +8545,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_4_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_4_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_noDict_4_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8553,7 +8554,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_5_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_5_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_noDict_5_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8562,7 +8563,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_5_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_5_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_noDict_5_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8571,7 +8572,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_5_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_5_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_noDict_5_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8580,7 +8581,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_6_4($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_6_4($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_noDict_6_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8589,7 +8590,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_6_5($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_6_5($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_noDict_6_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8598,7 +8599,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_6_6($arg1, (const u8*)$arg2, (const const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_RowFindBestMatch_noDict_6_6($arg1, (const u8 *)$arg2, (const const u8*)$arg3, $arg4)")
   public static @Unsigned long ZSTD_RowFindBestMatch_noDict_6_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iLimit,
@@ -8613,7 +8614,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("___ratelimit($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("___ratelimit($arg1, (const u8 *)$arg2)")
   public static int ___ratelimit(Ptr<ratelimit_state> rs, String func) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8690,7 +8691,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__die((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__die((const u8 *)$arg1, $arg2, $arg3)")
   public static int __die(String str, Ptr<pt_regs> regs, long err) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8747,7 +8748,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ksize((const void*)$arg1)")
+  @BuiltinBPFFunction("__ksize((const void *)$arg1)")
   public static @Unsigned long __ksize(Ptr<?> object) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8870,7 +8871,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__unpack((const void*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__unpack((const void *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void __unpack(Ptr<?> pbuf, Ptr<java.lang. @Unsigned Long> uval,
       @Unsigned long startbit, @Unsigned long endbit, @Unsigned long pbuflen, char quirks) {
     throw new MethodIsBPFRelatedFunction();
@@ -8883,7 +8884,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__warn((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__warn((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void __warn(String file, int line, Ptr<?> caller, @Unsigned int taint,
       Ptr<pt_regs> regs, Ptr<warn_args> args) {
     throw new MethodIsBPFRelatedFunction();
@@ -8914,25 +8915,25 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_kstrtol((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("_kstrtol((const u8 *)$arg1, $arg2, $arg3)")
   public static int _kstrtol(String s, @Unsigned int base, Ptr<java.lang.Long> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_kstrtoul((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("_kstrtoul((const u8 *)$arg1, $arg2, $arg3)")
   public static int _kstrtoul(String s, @Unsigned int base, Ptr<java.lang. @Unsigned Long> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_kstrtoull((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("_kstrtoull((const u8 *)$arg1, $arg2, $arg3)")
   public static int _kstrtoull(String s, @Unsigned int base, Ptr<java.lang. @Unsigned Long> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_printk((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("_printk((const u8 *)$arg1, $arg2_)")
   public static int _printk(String fmt, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8988,25 +8989,25 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bcmp((const void*)$arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bcmp((const void *)$arg1, (const void *)$arg2, $arg3)")
   public static int bcmp(Ptr<?> a, Ptr<?> b, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bin2hex($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bin2hex($arg1, (const void *)$arg2, $arg3)")
   public static String bin2hex(String dst, Ptr<?> src, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blacklisted((const u8*)$arg1)")
+  @BuiltinBPFFunction("blacklisted((const u8 *)$arg1)")
   public static boolean blacklisted(String module_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blake2s($arg1, (const u8*)$arg2, (const u8*)$arg3, (const long unsigned int)$arg4, (const long unsigned int)$arg5, (const long unsigned int)$arg6)")
+  @BuiltinBPFFunction("blake2s($arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const long unsigned int)$arg4, (const long unsigned int)$arg5, (const long unsigned int)$arg6)")
   public static void blake2s(Ptr<java.lang.Character> out, Ptr<java.lang.Character> in,
       Ptr<java.lang.Character> key, @Unsigned long outlen, @Unsigned long inlen,
       @Unsigned long keylen) {
@@ -9027,7 +9028,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bsearch((const void*)$arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bsearch((const void *)$arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static Ptr<?> bsearch(Ptr<?> key, Ptr<?> base, @Unsigned long num, @Unsigned long size,
       @OriginalName("cmp_func_t") Ptr<?> cmp) {
     throw new MethodIsBPFRelatedFunction();
@@ -9101,7 +9102,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("char2uni((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("char2uni((const u8 *)$arg1, $arg2, $arg3)")
   public static int char2uni(String rawstring, int boundlen,
       Ptr<java.lang. @Unsigned @OriginalName("wchar_t") Short> uni) {
     throw new MethodIsBPFRelatedFunction();
@@ -9132,13 +9133,13 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clock($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("clock($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static String clock(String buf, String end, Ptr<clk> clk, printf_spec spec, String fmt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cmppid((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("cmppid((const void *)$arg1, (const void *)$arg2)")
   public static int cmppid(Ptr<?> a, Ptr<?> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9162,20 +9163,20 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpcompare((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("cpcompare((const void *)$arg1, (const void *)$arg2)")
   public static int cpcompare(Ptr<?> a, Ptr<?> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crc16($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crc16($arg1, (const u8 *)$arg2, $arg3)")
   public static @Unsigned short crc16(@Unsigned short crc, Ptr<java.lang.Character> p,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crc32c($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crc32c($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned int crc32c(@Unsigned int crc, Ptr<?> p, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9205,7 +9206,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("datacmp($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("datacmp($arg1, (const void *)$arg2)")
   public static int datacmp(Ptr<rhashtable_compare_arg> arg, Ptr<?> obj) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9237,7 +9238,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("die((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("die((const u8 *)$arg1, $arg2, $arg3)")
   public static void die(String str, Ptr<pt_regs> regs, long err) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9507,7 +9508,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eraser($arg1, (const struct tty_struct*)$arg2)")
+  @BuiltinBPFFunction("eraser($arg1, (const struct tty_struct *)$arg2)")
   public static void eraser(char c, Ptr<tty_struct> tty) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9525,7 +9526,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("errpos((const u8*)$arg1)")
+  @BuiltinBPFFunction("errpos((const u8 *)$arg1)")
   public static int errpos(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9630,21 +9631,21 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("filldir($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("filldir($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static boolean filldir(Ptr<dir_context> ctx, String name, int namlen,
       @OriginalName("loff_t") long offset, @Unsigned long ino, @Unsigned int d_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("filldir64($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("filldir64($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static boolean filldir64(Ptr<dir_context> ctx, String name, int namlen,
       @OriginalName("loff_t") long offset, @Unsigned long ino, @Unsigned int d_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fillonedir($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fillonedir($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static boolean fillonedir(Ptr<dir_context> ctx, String name, int namlen,
       @OriginalName("loff_t") long offset, @Unsigned long ino, @Unsigned int d_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -9670,7 +9671,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fintek_8250_set_termios($arg1, $arg2, (const struct ktermios*)$arg3)")
+  @BuiltinBPFFunction("fintek_8250_set_termios($arg1, $arg2, (const struct ktermios *)$arg3)")
   public static void fintek_8250_set_termios(Ptr<uart_port> port, Ptr<ktermios> termios,
       Ptr<ktermios> old) {
     throw new MethodIsBPFRelatedFunction();
@@ -9799,7 +9800,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsnotify($arg1, (const void*)$arg2, $arg3, $arg4, (const struct qstr*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("fsnotify($arg1, (const void *)$arg2, $arg3, $arg4, (const struct qstr *)$arg5, $arg6, $arg7)")
   public static int fsnotify(@Unsigned int mask, Ptr<?> data, int data_type, Ptr<inode> dir,
       Ptr<qstr> file_name, Ptr<inode> inode, @Unsigned int cookie) {
     throw new MethodIsBPFRelatedFunction();
@@ -9832,7 +9833,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("getconsxy((const struct vc_data*)$arg1, $arg2)")
+  @BuiltinBPFFunction("getconsxy((const struct vc_data *)$arg1, $arg2)")
   public static void getconsxy(Ptr<vc_data> vc, String xy) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9871,13 +9872,13 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gf128mul_4k_lle($arg1, (const struct gf128mul_4k*)$arg2)")
+  @BuiltinBPFFunction("gf128mul_4k_lle($arg1, (const struct gf128mul_4k *)$arg2)")
   public static void gf128mul_4k_lle(Ptr<be128> a, Ptr<gf128mul_4k> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gf128mul_64k_bbe($arg1, (const struct gf128mul_64k*)$arg2)")
+  @BuiltinBPFFunction("gf128mul_64k_bbe($arg1, (const struct gf128mul_64k *)$arg2)")
   public static void gf128mul_64k_bbe(Ptr<be128> a, Ptr<gf128mul_64k> t) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9902,7 +9903,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hex2bin($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hex2bin($arg1, (const u8 *)$arg2, $arg3)")
   public static int hex2bin(Ptr<java.lang.Character> dst, String src, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9922,7 +9923,7 @@ public final class runtime {
   @NotUsableInJava
   @BuiltinBPFFunction("hsiphash_1u32((const unsigned int)$arg1, (const struct {\n"
           + "  long unsigned int key[2];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static @Unsigned int hsiphash_1u32(@Unsigned int first, Ptr<hsiphash_key_t> key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9930,7 +9931,7 @@ public final class runtime {
   @NotUsableInJava
   @BuiltinBPFFunction("hsiphash_2u32((const unsigned int)$arg1, (const unsigned int)$arg2, (const struct {\n"
           + "  long unsigned int key[2];\n"
-          + "}*)$arg3)")
+          + "} *)$arg3)")
   public static @Unsigned int hsiphash_2u32(@Unsigned int first, @Unsigned int second,
       Ptr<hsiphash_key_t> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -9939,7 +9940,7 @@ public final class runtime {
   @NotUsableInJava
   @BuiltinBPFFunction("hsiphash_3u32((const unsigned int)$arg1, (const unsigned int)$arg2, (const unsigned int)$arg3, (const struct {\n"
           + "  long unsigned int key[2];\n"
-          + "}*)$arg4)")
+          + "} *)$arg4)")
   public static @Unsigned int hsiphash_3u32(@Unsigned int first, @Unsigned int second,
       @Unsigned int third, Ptr<hsiphash_key_t> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -9948,7 +9949,7 @@ public final class runtime {
   @NotUsableInJava
   @BuiltinBPFFunction("hsiphash_4u32((const unsigned int)$arg1, (const unsigned int)$arg2, (const unsigned int)$arg3, (const unsigned int)$arg4, (const struct {\n"
           + "  long unsigned int key[2];\n"
-          + "}*)$arg5)")
+          + "} *)$arg5)")
   public static @Unsigned int hsiphash_4u32(@Unsigned int first, @Unsigned int second,
       @Unsigned int third, @Unsigned int forth, Ptr<hsiphash_key_t> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -10100,31 +10101,31 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ioread16((const void*)$arg1)")
+  @BuiltinBPFFunction("ioread16((const void *)$arg1)")
   public static @Unsigned int ioread16(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ioread16be((const void*)$arg1)")
+  @BuiltinBPFFunction("ioread16be((const void *)$arg1)")
   public static @Unsigned int ioread16be(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ioread32((const void*)$arg1)")
+  @BuiltinBPFFunction("ioread32((const void *)$arg1)")
   public static @Unsigned int ioread32(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ioread32be((const void*)$arg1)")
+  @BuiltinBPFFunction("ioread32be((const void *)$arg1)")
   public static @Unsigned int ioread32be(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ioread8((const void*)$arg1)")
+  @BuiltinBPFFunction("ioread8((const void *)$arg1)")
   public static @Unsigned int ioread8(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10137,7 +10138,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iounmap((volatile void*)$arg1)")
+  @BuiltinBPFFunction("iounmap((volatile void *)$arg1)")
   public static void iounmap(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10173,7 +10174,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipcget($arg1, $arg2, (const struct ipc_ops*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ipcget($arg1, $arg2, (const struct ipc_ops *)$arg3, $arg4)")
   public static int ipcget(Ptr<ipc_namespace> ns, Ptr<ipc_ids> ids, Ptr<ipc_ops> ops,
       Ptr<ipc_params> params) {
     throw new MethodIsBPFRelatedFunction();
@@ -10210,7 +10211,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ispnpidacpi((const u8*)$arg1)")
+  @BuiltinBPFFunction("ispnpidacpi((const u8 *)$arg1)")
   public static int ispnpidacpi(String id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10239,7 +10240,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("jhash((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("jhash((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned int jhash(Ptr<?> key, @Unsigned int length, @Unsigned int initval) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10251,7 +10252,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("join((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("join((const u8 *)$arg1, (const u8 *)$arg2)")
   public static String join(String dir, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10264,7 +10265,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kasprintf($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("kasprintf($arg1, (const u8 *)$arg2, $arg3_)")
   public static String kasprintf(@Unsigned @OriginalName("gfp_t") int gfp, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
@@ -10284,38 +10285,38 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdbgetenv((const u8*)$arg1)")
+  @BuiltinBPFFunction("kdbgetenv((const u8 *)$arg1)")
   public static String kdbgetenv(String match) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdbgetintenv((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kdbgetintenv((const u8 *)$arg1, $arg2)")
   public static int kdbgetintenv(String match, Ptr<java.lang.Integer> value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdbgetsymval((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kdbgetsymval((const u8 *)$arg1, $arg2)")
   public static int kdbgetsymval(String symname,
       Ptr<@OriginalName("kdb_symtab_t") __ksymtab> symtab) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdbgetu64arg((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kdbgetu64arg((const u8 *)$arg1, $arg2)")
   public static int kdbgetu64arg(String arg, Ptr<java.lang. @Unsigned Long> value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdbgetularg((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kdbgetularg((const u8 *)$arg1, $arg2)")
   public static int kdbgetularg(String arg, Ptr<java.lang. @Unsigned Long> value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdbgetulenv((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kdbgetulenv((const u8 *)$arg1, $arg2)")
   public static int kdbgetulenv(String match, Ptr<java.lang. @Unsigned Long> value) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10328,7 +10329,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kfree((const void*)$arg1)")
+  @BuiltinBPFFunction("kfree((const void *)$arg1)")
   public static void kfree(Ptr<?> object) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10364,76 +10365,76 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ksize((const void*)$arg1)")
+  @BuiltinBPFFunction("ksize((const void *)$arg1)")
   public static @Unsigned long ksize(Ptr<?> objp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kstrdup((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kstrdup((const u8 *)$arg1, $arg2)")
   public static String kstrdup(String s, @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kstrndup((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kstrndup((const u8 *)$arg1, $arg2, $arg3)")
   public static String kstrndup(String s, @Unsigned long max,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kstrtobool((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kstrtobool((const u8 *)$arg1, $arg2)")
   public static int kstrtobool(String s, Ptr<java.lang. @OriginalName("bool") Boolean> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kstrtoint((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kstrtoint((const u8 *)$arg1, $arg2, $arg3)")
   public static int kstrtoint(String s, @Unsigned int base, Ptr<java.lang.Integer> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kstrtoll((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kstrtoll((const u8 *)$arg1, $arg2, $arg3)")
   public static int kstrtoll(String s, @Unsigned int base, Ptr<java.lang.Long> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kstrtos16((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kstrtos16((const u8 *)$arg1, $arg2, $arg3)")
   public static int kstrtos16(String s, @Unsigned int base, Ptr<java.lang.Short> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kstrtos8((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kstrtos8((const u8 *)$arg1, $arg2, $arg3)")
   public static int kstrtos8(String s, @Unsigned int base,
       Ptr<java.lang. @OriginalName("s8") Byte> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kstrtou16((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kstrtou16((const u8 *)$arg1, $arg2, $arg3)")
   public static int kstrtou16(String s, @Unsigned int base, Ptr<java.lang. @Unsigned Short> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kstrtou8((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kstrtou8((const u8 *)$arg1, $arg2, $arg3)")
   public static int kstrtou8(String s, @Unsigned int base, Ptr<java.lang.Character> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kstrtouint((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kstrtouint((const u8 *)$arg1, $arg2, $arg3)")
   public static int kstrtouint(String s, @Unsigned int base,
       Ptr<java.lang. @Unsigned Integer> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kstrtoull((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kstrtoull((const u8 *)$arg1, $arg2, $arg3)")
   public static int kstrtoull(String s, @Unsigned int base, Ptr<java.lang. @Unsigned Long> res) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10451,20 +10452,20 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kvasprintf($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("kvasprintf($arg1, (const u8 *)$arg2, $arg3)")
   public static String kvasprintf(@Unsigned @OriginalName("gfp_t") int gfp, String fmt,
       Ptr<__va_list_tag> ap) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kvfree((const void*)$arg1)")
+  @BuiltinBPFFunction("kvfree((const void *)$arg1)")
   public static void kvfree(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kvmemdup((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kvmemdup((const void *)$arg1, $arg2, $arg3)")
   public static Ptr<?> kvmemdup(Ptr<?> src, @Unsigned long len,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
@@ -10478,7 +10479,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("l1_1_aspm_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("l1_1_aspm_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long l1_1_aspm_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -10492,7 +10493,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("l1_1_pcipm_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("l1_1_pcipm_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long l1_1_pcipm_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -10506,7 +10507,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("l1_2_aspm_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("l1_2_aspm_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long l1_2_aspm_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -10520,7 +10521,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("l1_2_pcipm_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("l1_2_pcipm_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long l1_2_pcipm_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -10552,7 +10553,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("logfc($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("logfc($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, $arg5_)")
   public static void logfc(Ptr<fc_log> log, String prefix, char level, String fmt,
       java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
@@ -10565,7 +10566,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lookup((const struct inetpeer_addr*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("lookup((const struct inetpeer_addr *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static Ptr<inet_peer> lookup(Ptr<inetpeer_addr> daddr, Ptr<inet_peer_base> base,
       @Unsigned int seq, Ptr<Ptr<inet_peer>> gc_stack, Ptr<java.lang. @Unsigned Integer> gc_cnt,
       Ptr<Ptr<rb_node>> parent_p, Ptr<Ptr<Ptr<rb_node>>> pp_p) {
@@ -10579,21 +10580,21 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lzo1x_1_compress((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("lzo1x_1_compress((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int lzo1x_1_compress(String in, @Unsigned long in_len, String out,
       Ptr<java.lang. @Unsigned Long> out_len, Ptr<?> wrkmem) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lzo1x_1_compress_safe((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("lzo1x_1_compress_safe((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int lzo1x_1_compress_safe(String in, @Unsigned long in_len, String out,
       Ptr<java.lang. @Unsigned Long> out_len, Ptr<?> wrkmem) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lzo1x_1_do_compress_safe((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const u8)$arg8)")
+  @BuiltinBPFFunction("lzo1x_1_do_compress_safe((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const u8)$arg8)")
   public static int lzo1x_1_do_compress_safe(String in, @Unsigned long in_len, Ptr<String> out,
       String op_end, Ptr<java.lang. @Unsigned Long> tp, Ptr<?> wrkmem,
       Ptr<java.lang.Byte> state_offset, char bitstream_version) {
@@ -10601,28 +10602,28 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lzogeneric1x_1_compress((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, (const u8)$arg6)")
+  @BuiltinBPFFunction("lzogeneric1x_1_compress((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, (const u8)$arg6)")
   public static int lzogeneric1x_1_compress(String in, @Unsigned long in_len, String out,
       Ptr<java.lang. @Unsigned Long> out_len, Ptr<?> wrkmem, char bitstream_version) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lzogeneric1x_1_compress_safe((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, (const u8)$arg6)")
+  @BuiltinBPFFunction("lzogeneric1x_1_compress_safe((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, (const u8)$arg6)")
   public static int lzogeneric1x_1_compress_safe(String in, @Unsigned long in_len, String out,
       Ptr<java.lang. @Unsigned Long> out_len, Ptr<?> wrkmem, char bitstream_version) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lzorle1x_1_compress((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("lzorle1x_1_compress((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int lzorle1x_1_compress(String in, @Unsigned long in_len, String out,
       Ptr<java.lang. @Unsigned Long> out_len, Ptr<?> wrkmem) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lzorle1x_1_compress_safe((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("lzorle1x_1_compress_safe((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int lzorle1x_1_compress_safe(String in, @Unsigned long in_len, String out,
       Ptr<java.lang. @Unsigned Long> out_len, Ptr<?> wrkmem) {
     throw new MethodIsBPFRelatedFunction();
@@ -10671,7 +10672,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("memparse((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("memparse((const u8 *)$arg1, $arg2)")
   public static @Unsigned long memparse(String ptr, Ptr<String> retptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10702,7 +10703,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("memweight((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("memweight((const void *)$arg1, $arg2)")
   public static @Unsigned long memweight(Ptr<?> ptr, @Unsigned long bytes) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10733,7 +10734,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("modecpy($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("modecpy($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void modecpy(Ptr<java.lang.Character> dest, Ptr<java.lang.Character> src, int n,
       boolean changeable) {
     throw new MethodIsBPFRelatedFunction();
@@ -10746,7 +10747,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("namecmp((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("namecmp((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int namecmp(String name1, int len1, String name2, int len2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10843,7 +10844,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("osap($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("osap($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int osap(Ptr<tpm_buf> tb, Ptr<osapsess> s, String key,
       @Unsigned @OriginalName("uint16_t") short type,
       @Unsigned @OriginalName("uint32_t") int handle) {
@@ -10865,19 +10866,19 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("panic((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("panic((const u8 *)$arg1, $arg2_)")
   public static void panic(String fmt, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parameq((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("parameq((const u8 *)$arg1, (const u8 *)$arg2)")
   public static boolean parameq(String a, String b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parameqn((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("parameqn((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static boolean parameqn(String a, String b, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10889,13 +10890,13 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_OID((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("parse_OID((const void *)$arg1, $arg2, $arg3)")
   public static int parse_OID(Ptr<?> data, @Unsigned long datasize, Ptr<OID> oid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("peernet2id((const struct net*)$arg1, $arg2)")
+  @BuiltinBPFFunction("peernet2id((const struct net *)$arg1, $arg2)")
   public static int peernet2id(Ptr<net> net, Ptr<net> peer) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10913,7 +10914,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pointer((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("pointer((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static String pointer(String fmt, String buf, String end, Ptr<?> ptr, printf_spec spec) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11087,13 +11088,13 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("romchecksum((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("romchecksum((const u8 *)$arg1, $arg2)")
   public static int romchecksum(String rom, @Unsigned long length) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("romsignature((const u8*)$arg1)")
+  @BuiltinBPFFunction("romsignature((const u8 *)$arg1)")
   public static int romsignature(String rom) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11105,7 +11106,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scnprintf($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("scnprintf($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static int scnprintf(String buf, @Unsigned long size, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -11142,21 +11143,21 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("setactive($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("setactive($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long setactive(Ptr<file> f, String data,
       @Unsigned long len, Ptr<java.lang. @OriginalName("loff_t") Long> offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("setaudit($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("setaudit($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long setaudit(Ptr<file> f, String data, @Unsigned long len,
       Ptr<java.lang. @OriginalName("loff_t") Long> offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("setenforce($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("setenforce($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long setenforce(Ptr<file> f, String data,
       @Unsigned long len, Ptr<java.lang. @OriginalName("loff_t") Long> offset) {
     throw new MethodIsBPFRelatedFunction();
@@ -11212,35 +11213,35 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha1((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("sha1((const u8 *)$arg1, $arg2, $arg3)")
   public static void sha1(Ptr<java.lang.Character> data, @Unsigned long len,
       Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha224((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("sha224((const u8 *)$arg1, $arg2, $arg3)")
   public static void sha224(Ptr<java.lang.Character> data, @Unsigned long len,
       Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha256((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("sha256((const u8 *)$arg1, $arg2, $arg3)")
   public static void sha256(Ptr<java.lang.Character> data, @Unsigned long len,
       Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha384((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("sha384((const u8 *)$arg1, $arg2, $arg3)")
   public static void sha384(Ptr<java.lang.Character> data, @Unsigned long len,
       Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha512((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("sha512((const u8 *)$arg1, $arg2, $arg3)")
   public static void sha512(Ptr<java.lang.Character> data, @Unsigned long len,
       Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -11268,7 +11269,7 @@ public final class runtime {
   @NotUsableInJava
   @BuiltinBPFFunction("siphash_1u32((const unsigned int)$arg1, (const struct {\n"
           + "  long long unsigned int key[2];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static @Unsigned long siphash_1u32(@Unsigned int first, Ptr<siphash_key_t> key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11276,7 +11277,7 @@ public final class runtime {
   @NotUsableInJava
   @BuiltinBPFFunction("siphash_1u64((const long long unsigned int)$arg1, (const struct {\n"
           + "  long long unsigned int key[2];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static @Unsigned long siphash_1u64(@Unsigned long first, Ptr<siphash_key_t> key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11284,7 +11285,7 @@ public final class runtime {
   @NotUsableInJava
   @BuiltinBPFFunction("siphash_2u64((const long long unsigned int)$arg1, (const long long unsigned int)$arg2, (const struct {\n"
           + "  long long unsigned int key[2];\n"
-          + "}*)$arg3)")
+          + "} *)$arg3)")
   public static @Unsigned long siphash_2u64(@Unsigned long first, @Unsigned long second,
       Ptr<siphash_key_t> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -11293,7 +11294,7 @@ public final class runtime {
   @NotUsableInJava
   @BuiltinBPFFunction("siphash_3u32((const unsigned int)$arg1, (const unsigned int)$arg2, (const unsigned int)$arg3, (const struct {\n"
           + "  long long unsigned int key[2];\n"
-          + "}*)$arg4)")
+          + "} *)$arg4)")
   public static @Unsigned long siphash_3u32(@Unsigned int first, @Unsigned int second,
       @Unsigned int third, Ptr<siphash_key_t> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -11302,7 +11303,7 @@ public final class runtime {
   @NotUsableInJava
   @BuiltinBPFFunction("siphash_3u64((const long long unsigned int)$arg1, (const long long unsigned int)$arg2, (const long long unsigned int)$arg3, (const struct {\n"
           + "  long long unsigned int key[2];\n"
-          + "}*)$arg4)")
+          + "} *)$arg4)")
   public static @Unsigned long siphash_3u64(@Unsigned long first, @Unsigned long second,
       @Unsigned long third, Ptr<siphash_key_t> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -11311,7 +11312,7 @@ public final class runtime {
   @NotUsableInJava
   @BuiltinBPFFunction("siphash_4u64((const long long unsigned int)$arg1, (const long long unsigned int)$arg2, (const long long unsigned int)$arg3, (const long long unsigned int)$arg4, (const struct {\n"
           + "  long long unsigned int key[2];\n"
-          + "}*)$arg5)")
+          + "} *)$arg5)")
   public static @Unsigned long siphash_4u64(@Unsigned long first, @Unsigned long second,
       @Unsigned long third, @Unsigned long forth, Ptr<siphash_key_t> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -11372,7 +11373,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("snprintf($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("snprintf($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static int snprintf(String buf, @Unsigned long size, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -11393,13 +11394,13 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sprintf($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("sprintf($arg1, (const u8 *)$arg2, $arg3_)")
   public static int sprintf(String buf, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sscanf((const u8*)$arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("sscanf((const u8 *)$arg1, (const u8 *)$arg2, $arg3_)")
   public static int sscanf(String buf, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11436,7 +11437,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store(Ptr<kobject> kobj, Ptr<attribute> attr,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -11449,31 +11450,31 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strcasecmp((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("strcasecmp((const u8 *)$arg1, (const u8 *)$arg2)")
   public static int strcasecmp(String s1, String s2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strcat((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("strcat((const u8*)$arg1, (const u8 *)$arg2)")
   public static String strcat(String p, String q) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strchr((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("strchr((const u8 *)$arg1, $arg2)")
   public static String strchr(String s, int c) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strchrnul((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("strchrnul((const u8 *)$arg1, $arg2)")
   public static String strchrnul(String s, int c) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strcmp((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("strcmp((const u8 *)$arg1, (const u8 *)$arg2)")
   public static int strcmp(String cs, String ct) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11485,13 +11486,13 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strcspn((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("strcspn((const u8 *)$arg1, (const u8 *)$arg2)")
   public static @Unsigned @OriginalName("__kernel_size_t") long strcspn(String s, String reject) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strhash((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("strhash((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned int strhash(Ptr<?> data, @Unsigned int len, @Unsigned int seed) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11503,7 +11504,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("string($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("string($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static String string(String buf, String end, String s, printf_spec spec) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11515,55 +11516,55 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strlen((const u8*)$arg1)")
+  @BuiltinBPFFunction("strlen((const u8 *)$arg1)")
   public static @Unsigned long strlen(String s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strncasecmp((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("strncasecmp((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static int strncasecmp(String s1, String s2, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strnchr((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("strnchr((const u8 *)$arg1, $arg2, $arg3)")
   public static String strnchr(String s, @Unsigned long count, int c) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strnchrnul((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("strnchrnul((const u8 *)$arg1, $arg2, $arg3)")
   public static String strnchrnul(String s, @Unsigned long count, int c) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strncmp((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("strncmp((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static int strncmp(String cs, String ct, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)strnext((const u8*)$arg1, (const u8*)$arg2))")
+  @BuiltinBPFFunction("((const u8*)strnext((const u8 *)$arg1, (const u8 *)$arg2))")
   public static String strnext(String s1, String s2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strnstr((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("strnstr((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static String strnstr(String s1, String s2, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strpbrk((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("strpbrk((const u8 *)$arg1, (const u8 *)$arg2)")
   public static String strpbrk(String cs, String ct) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strrchr((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("strrchr((const u8 *)$arg1, $arg2)")
   public static String strrchr(String s, int c) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11575,19 +11576,19 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strsep($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("strsep($arg1, (const u8 *)$arg2)")
   public static String strsep(Ptr<String> s, String ct) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strspn((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("strspn((const u8 *)$arg1, (const u8 *)$arg2)")
   public static @Unsigned @OriginalName("__kernel_size_t") long strspn(String s, String accept) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strstr((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("strstr((const u8 *)$arg1, (const u8 *)$arg2)")
   public static String strstr(String s1, String s2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11661,13 +11662,13 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("symcmp((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("symcmp((const void *)$arg1, (const void *)$arg2)")
   public static int symcmp(Ptr<?> key1, Ptr<?> key2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("symhash((const void*)$arg1)")
+  @BuiltinBPFFunction("symhash((const void *)$arg1)")
   public static @Unsigned int symhash(Ptr<?> key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11697,7 +11698,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("titan_400l_800l_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("titan_400l_800l_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int titan_400l_800l_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -11774,7 +11775,7 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("unpack((const void*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("unpack((const void *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int unpack(Ptr<?> pbuf, Ptr<java.lang. @Unsigned Long> uval,
       @Unsigned long startbit, @Unsigned long endbit, @Unsigned long pbuflen, char quirks) {
     throw new MethodIsBPFRelatedFunction();
@@ -11813,21 +11814,21 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("utf8ncursor($arg1, (const struct unicode_map*)$arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("utf8ncursor($arg1, (const struct unicode_map *)$arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int utf8ncursor(Ptr<utf8cursor> u8c, Ptr<unicode_map> um, utf8_normalization n,
       String s, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("utf8nlen((const struct unicode_map*)$arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("utf8nlen((const struct unicode_map *)$arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long utf8nlen(Ptr<unicode_map> um, utf8_normalization n,
       String s, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("utf8nlookup((const struct unicode_map*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("utf8nlookup((const struct unicode_map *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static Ptr<java.lang. @OriginalName("utf8leaf_t") Character> utf8nlookup(
       Ptr<unicode_map> um, utf8_normalization n, String hangul, String s, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -11840,13 +11841,13 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("verbose($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("verbose($arg1, (const u8 *)$arg2, $arg3_)")
   public static void verbose(Ptr<?> private_data, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfree((const void*)$arg1)")
+  @BuiltinBPFFunction("vfree((const void *)$arg1)")
   public static void vfree(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11899,45 +11900,45 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vpanic((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vpanic((const u8 *)$arg1, $arg2)")
   public static void vpanic(String fmt, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vprintk((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vprintk((const u8 *)$arg1, $arg2)")
   public static int vprintk(String fmt, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vscnprintf($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vscnprintf($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int vscnprintf(String buf, @Unsigned long size, String fmt,
       Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vsnprintf($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vsnprintf($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int vsnprintf(String buf, @Unsigned long size, String fmt_str,
       Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vsprintf($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("vsprintf($arg1, (const u8 *)$arg2, $arg3)")
   public static int vsprintf(String buf, String fmt, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vsscanf((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("vsscanf((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static int vsscanf(String buf, String fmt, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vunmap((const void*)$arg1)")
+  @BuiltinBPFFunction("vunmap((const void *)$arg1)")
   public static void vunmap(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11986,21 +11987,21 @@ public final class runtime {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xwrite($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("xwrite($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long xwrite(Ptr<file> file, String p, @Unsigned long count,
       Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xxh32((const void*)$arg1, (const long unsigned int)$arg2, (const unsigned int)$arg3)")
+  @BuiltinBPFFunction("xxh32((const void *)$arg1, (const long unsigned int)$arg2, (const unsigned int)$arg3)")
   public static @Unsigned @OriginalName("uint32_t") int xxh32(Ptr<?> input, @Unsigned long len,
       @Unsigned @OriginalName("uint32_t") int seed) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xxh64((const void*)$arg1, (const long unsigned int)$arg2, (const long long unsigned int)$arg3)")
+  @BuiltinBPFFunction("xxh64((const void *)$arg1, (const long unsigned int)$arg2, (const long long unsigned int)$arg3)")
   public static @Unsigned @OriginalName("uint64_t") long xxh64(Ptr<?> input, @Unsigned long len,
       @Unsigned @OriginalName("uint64_t") long seed) {
     throw new MethodIsBPFRelatedFunction();
@@ -15161,7 +15162,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType810169941C80 extends Union {
+  public static class AnonymousType178325065C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_initcall_level") Ptr<?> handler;
@@ -15173,7 +15174,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType178325065C78 extends Union {
+  public static class AnonymousType783785150C78 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_initcall_start") Ptr<?> handler;
@@ -15185,7 +15186,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1798861270C83 extends Union {
+  public static class AnonymousType749098095C83 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_initcall_finish") Ptr<?> handler;
@@ -15290,7 +15291,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2065730373C67 extends Struct {
+  public static class AnonymousType2095970915C67 extends Struct {
     public elf32_note _nhdr;
 
     public char @Size(6) [] _name;
@@ -15304,7 +15305,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType96453207C65 extends Struct {
+  public static class AnonymousType65551384C65 extends Struct {
     public elf32_note _nhdr;
 
     public char @Size(6) [] _name;
@@ -16618,7 +16619,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2095970915C65 extends Struct {
+  public static class AnonymousType1562595588C65 extends Struct {
     public char @Size(110) [] header;
 
     public char @Size(8195) [] symlink;
@@ -16774,8 +16775,8 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType65551384C295 extends Union {
-    public AnonymousType2017393480C248 anon0;
+  public static class AnonymousType1317963297C295 extends Union {
+    public AnonymousType205810452C248 anon0;
 
     public char @Size(64) [] bytes;
   }
@@ -16786,7 +16787,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2017393480C248 extends Struct {
+  public static class AnonymousType205810452C248 extends Struct {
     public @Unsigned long r14;
 
     public @Unsigned long r15;
@@ -17378,7 +17379,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1562595588C74 extends Union {
+  public static class AnonymousType61814127C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_emulate_vsyscall") Ptr<?> handler;
@@ -18322,7 +18323,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1317963297C32 extends Struct {
+  public static class AnonymousType1145302895C32 extends Struct {
     public int id;
 
     public String name;
@@ -18334,7 +18335,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType205810452C49 extends Struct {
+  public static class AnonymousType2118571592C49 extends Struct {
     public hybrid_pmu_type id;
 
     public String name;
@@ -18781,8 +18782,8 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType61814127C99 extends Union {
-    public AnonymousType1145302895C50 anon0;
+  public static class AnonymousType1366629983C99 extends Union {
+    public AnonymousType722160979C50 anon0;
 
     public @Unsigned long lbr;
   }
@@ -18793,7 +18794,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1145302895C50 extends Struct {
+  public static class AnonymousType722160979C50 extends Struct {
     public @Unsigned int from;
 
     public @Unsigned int to;
@@ -21088,7 +21089,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2118571592C72 extends Struct {
+  public static class AnonymousType1885927370C72 extends Struct {
     public attribute_group group;
 
     public Ptr<attribute> @Size(0) [] attrs;
@@ -21853,7 +21854,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1366629983C134 extends Struct {
+  public static class AnonymousType945064729C134 extends Struct {
     public @Unsigned long next_area_mfn;
 
     public @Unsigned long target_pfn;
@@ -21968,7 +21969,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType722160979C64 extends Struct {
+  public static class AnonymousType1101721002C64 extends Struct {
     public mmuext_op op;
 
     public @Unsigned long @Size(128) [] mask;
@@ -21980,7 +21981,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1885927370C89 extends Union {
+  public static class AnonymousType809128217C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mc_batch") Ptr<?> handler;
@@ -21992,7 +21993,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType945064729C89 extends Union {
+  public static class AnonymousType123418227C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mc_issue") Ptr<?> handler;
@@ -22004,7 +22005,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1101721002C108 extends Union {
+  public static class AnonymousType466319810C108 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mc_entry") Ptr<?> handler;
@@ -22016,7 +22017,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType809128217C88 extends Union {
+  public static class AnonymousType219812012C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mc_entry_alloc") Ptr<?> handler;
@@ -22028,7 +22029,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType123418227C91 extends Union {
+  public static class AnonymousType1875520143C91 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mc_callback") Ptr<?> handler;
@@ -22040,7 +22041,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType466319810C95 extends Union {
+  public static class AnonymousType838627755C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mc_flush_reason") Ptr<?> handler;
@@ -22052,7 +22053,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType219812012C111 extends Union {
+  public static class AnonymousType1899567935C111 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mc_flush") Ptr<?> handler;
@@ -22064,7 +22065,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1875520143C132 extends Union {
+  public static class AnonymousType754707140C132 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mc_extend_args") Ptr<?> handler;
@@ -22076,7 +22077,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType838627755C144 extends Union {
+  public static class AnonymousType316355462C144 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mmu_set_pte") Ptr<?> handler;
@@ -22088,7 +22089,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1899567935C144 extends Union {
+  public static class AnonymousType1081633119C144 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mmu_set_pmd") Ptr<?> handler;
@@ -22100,7 +22101,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType754707140C144 extends Union {
+  public static class AnonymousType2040623756C144 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mmu_set_pud") Ptr<?> handler;
@@ -22112,7 +22113,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType316355462C182 extends Union {
+  public static class AnonymousType176097974C182 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mmu_set_p4d") Ptr<?> handler;
@@ -22124,7 +22125,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1081633119C182 extends Union {
+  public static class AnonymousType1106468732C182 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mmu_ptep_modify_prot_start") Ptr<?> handler;
@@ -22136,7 +22137,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2040623756C182 extends Union {
+  public static class AnonymousType1120072844C182 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mmu_ptep_modify_prot_commit") Ptr<?> handler;
@@ -22148,7 +22149,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType176097974C128 extends Union {
+  public static class AnonymousType805690186C128 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mmu_alloc_ptpage") Ptr<?> handler;
@@ -22160,7 +22161,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1106468732C109 extends Union {
+  public static class AnonymousType1113414982C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mmu_release_ptpage") Ptr<?> handler;
@@ -22172,7 +22173,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1120072844C126 extends Union {
+  public static class AnonymousType428798670C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mmu_pgd_pin") Ptr<?> handler;
@@ -22184,7 +22185,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType805690186C126 extends Union {
+  public static class AnonymousType1287455719C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mmu_pgd_unpin") Ptr<?> handler;
@@ -22196,7 +22197,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1113414982C88 extends Union {
+  public static class AnonymousType1392271025C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mmu_flush_tlb_one_user") Ptr<?> handler;
@@ -22208,7 +22209,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType428798670C149 extends Union {
+  public static class AnonymousType2053349061C149 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mmu_flush_tlb_multi") Ptr<?> handler;
@@ -22220,7 +22221,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1287455719C95 extends Union {
+  public static class AnonymousType336927685C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_mmu_write_cr3") Ptr<?> handler;
@@ -22232,7 +22233,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1392271025C119 extends Union {
+  public static class AnonymousType806588571C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_cpu_write_ldt_entry") Ptr<?> handler;
@@ -22244,7 +22245,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2053349061C108 extends Union {
+  public static class AnonymousType2771454C108 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_cpu_write_idt_entry") Ptr<?> handler;
@@ -22256,7 +22257,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType336927685C93 extends Union {
+  public static class AnonymousType1717136008C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_cpu_load_idt") Ptr<?> handler;
@@ -22268,7 +22269,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType806588571C113 extends Union {
+  public static class AnonymousType1521389237C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_cpu_write_gdt_entry") Ptr<?> handler;
@@ -22280,7 +22281,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2771454C96 extends Union {
+  public static class AnonymousType1989495347C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xen_cpu_set_ldt") Ptr<?> handler;
@@ -22343,7 +22344,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1717136008C122 extends Union {
+  public static class AnonymousType614635686C122 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hyperv_mmu_flush_tlb_multi") Ptr<?> handler;
@@ -22355,7 +22356,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1521389237C98 extends Union {
+  public static class AnonymousType159562640C98 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hyperv_nested_flush_guest_mapping") Ptr<?> handler;
@@ -22367,7 +22368,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1989495347C98 extends Union {
+  public static class AnonymousType670517043C98 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hyperv_nested_flush_guest_mapping_range") Ptr<?> handler;
@@ -22379,7 +22380,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType614635686C97 extends Union {
+  public static class AnonymousType2079278380C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hyperv_send_ipi_mask") Ptr<?> handler;
@@ -22391,7 +22392,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType159562640C79 extends Union {
+  public static class AnonymousType1270383967C79 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hyperv_send_ipi_one") Ptr<?> handler;
@@ -22945,7 +22946,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType670517043C74 extends Union {
+  public static class AnonymousType1476061571C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_local_timer_entry") Ptr<?> handler;
@@ -22957,7 +22958,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2079278380C74 extends Union {
+  public static class AnonymousType1244263056C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_local_timer_exit") Ptr<?> handler;
@@ -22969,7 +22970,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1270383967C74 extends Union {
+  public static class AnonymousType1273895132C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_spurious_apic_entry") Ptr<?> handler;
@@ -22981,7 +22982,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1476061571C74 extends Union {
+  public static class AnonymousType1156841091C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_spurious_apic_exit") Ptr<?> handler;
@@ -22993,7 +22994,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1244263056C74 extends Union {
+  public static class AnonymousType1153802607C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_error_apic_entry") Ptr<?> handler;
@@ -23005,7 +23006,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1273895132C74 extends Union {
+  public static class AnonymousType1098737173C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_error_apic_exit") Ptr<?> handler;
@@ -23017,7 +23018,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1156841091C74 extends Union {
+  public static class AnonymousType2054077982C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_x86_platform_ipi_entry") Ptr<?> handler;
@@ -23029,7 +23030,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1153802607C74 extends Union {
+  public static class AnonymousType556945462C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_x86_platform_ipi_exit") Ptr<?> handler;
@@ -23041,7 +23042,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1098737173C74 extends Union {
+  public static class AnonymousType1217741734C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_work_entry") Ptr<?> handler;
@@ -23053,7 +23054,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2054077982C74 extends Union {
+  public static class AnonymousType1651689839C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_work_exit") Ptr<?> handler;
@@ -23065,7 +23066,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType556945462C74 extends Union {
+  public static class AnonymousType1843594609C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_reschedule_entry") Ptr<?> handler;
@@ -23077,7 +23078,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1217741734C74 extends Union {
+  public static class AnonymousType1591954203C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_reschedule_exit") Ptr<?> handler;
@@ -23089,7 +23090,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1651689839C74 extends Union {
+  public static class AnonymousType1015659282C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_call_function_entry") Ptr<?> handler;
@@ -23101,7 +23102,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1843594609C74 extends Union {
+  public static class AnonymousType1220813917C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_call_function_exit") Ptr<?> handler;
@@ -23113,7 +23114,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1591954203C74 extends Union {
+  public static class AnonymousType1039759545C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_call_function_single_entry") Ptr<?> handler;
@@ -23125,7 +23126,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1015659282C74 extends Union {
+  public static class AnonymousType2030458766C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_call_function_single_exit") Ptr<?> handler;
@@ -23137,7 +23138,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1220813917C74 extends Union {
+  public static class AnonymousType145105559C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_threshold_apic_entry") Ptr<?> handler;
@@ -23149,7 +23150,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1039759545C74 extends Union {
+  public static class AnonymousType1638471954C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_threshold_apic_exit") Ptr<?> handler;
@@ -23161,7 +23162,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2030458766C74 extends Union {
+  public static class AnonymousType392403246C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_deferred_error_apic_entry") Ptr<?> handler;
@@ -23173,7 +23174,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType145105559C74 extends Union {
+  public static class AnonymousType1553077867C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_deferred_error_apic_exit") Ptr<?> handler;
@@ -23185,7 +23186,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1638471954C74 extends Union {
+  public static class AnonymousType1704535540C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_thermal_apic_entry") Ptr<?> handler;
@@ -23197,7 +23198,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType392403246C74 extends Union {
+  public static class AnonymousType1288815068C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_thermal_apic_exit") Ptr<?> handler;
@@ -23209,7 +23210,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1553077867C125 extends Union {
+  public static class AnonymousType1206946689C125 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_vector_config") Ptr<?> handler;
@@ -23221,7 +23222,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1704535540C139 extends Union {
+  public static class AnonymousType194903130C139 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_vector_update") Ptr<?> handler;
@@ -23233,7 +23234,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1288815068C139 extends Union {
+  public static class AnonymousType663215704C139 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_vector_clear") Ptr<?> handler;
@@ -23245,7 +23246,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1206946689C88 extends Union {
+  public static class AnonymousType1704600661C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_vector_reserve_managed") Ptr<?> handler;
@@ -23257,7 +23258,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType194903130C88 extends Union {
+  public static class AnonymousType645208036C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_vector_reserve") Ptr<?> handler;
@@ -23269,7 +23270,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType663215704C109 extends Union {
+  public static class AnonymousType1114525788C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_vector_alloc") Ptr<?> handler;
@@ -23281,7 +23282,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1704600661C102 extends Union {
+  public static class AnonymousType1526866775C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_vector_alloc_managed") Ptr<?> handler;
@@ -23293,7 +23294,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType645208036C104 extends Union {
+  public static class AnonymousType1871580398C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_vector_activate") Ptr<?> handler;
@@ -23305,7 +23306,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1114525788C104 extends Union {
+  public static class AnonymousType1632300236C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_vector_deactivate") Ptr<?> handler;
@@ -23317,7 +23318,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1526866775C97 extends Union {
+  public static class AnonymousType1360440329C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_vector_teardown") Ptr<?> handler;
@@ -23329,7 +23330,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1871580398C95 extends Union {
+  public static class AnonymousType465839591C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_vector_setup") Ptr<?> handler;
@@ -23341,7 +23342,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1632300236C118 extends Union {
+  public static class AnonymousType78816013C118 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_vector_free_moved") Ptr<?> handler;
@@ -23353,7 +23354,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1360440329C96 extends Union {
+  public static class AnonymousType841483227C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_nmi_handler") Ptr<?> handler;
@@ -23736,7 +23737,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType465839591C79 extends Struct {
+  public static class AnonymousType1455064947C79 extends Struct {
     public char movl;
 
     public @Unsigned int val;
@@ -23752,7 +23753,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType78816013C89 extends Struct {
+  public static class AnonymousType1827371870C89 extends Struct {
     public @Unsigned short poplmovl;
 
     public @Unsigned int val;
@@ -24088,7 +24089,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1455064947C82 extends Union {
+  public static class AnonymousType253027775C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_x86_fpu_before_save") Ptr<?> handler;
@@ -24100,7 +24101,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1827371870C82 extends Union {
+  public static class AnonymousType219638321C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_x86_fpu_after_save") Ptr<?> handler;
@@ -24112,7 +24113,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2110785285C82 extends Union {
+  public static class AnonymousType982634822C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_x86_fpu_regs_activated") Ptr<?> handler;
@@ -24124,7 +24125,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType253027775C82 extends Union {
+  public static class AnonymousType1199833406C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_x86_fpu_regs_deactivated") Ptr<?> handler;
@@ -24136,7 +24137,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType219638321C82 extends Union {
+  public static class AnonymousType1872047468C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_x86_fpu_dropped") Ptr<?> handler;
@@ -24148,7 +24149,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType982634822C82 extends Union {
+  public static class AnonymousType1499825229C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_x86_fpu_copy_dst") Ptr<?> handler;
@@ -24160,7 +24161,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1199833406C82 extends Union {
+  public static class AnonymousType1833592262C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_x86_fpu_xstate_check_failed") Ptr<?> handler;
@@ -24447,7 +24448,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1872047468C79 extends Struct {
+  public static class AnonymousType178259104C79 extends Struct {
     public @Unsigned int unused0;
 
     public @Unsigned int nproc;
@@ -24461,7 +24462,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1499825229C83 extends Struct {
+  public static class AnonymousType1285072597C83 extends Struct {
     public @Unsigned int cache_type;
 
     public @Unsigned int unused;
@@ -24475,7 +24476,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1833592262C139 extends Struct {
+  public static class AnonymousType959055079C139 extends Struct {
     public @Unsigned int x2apic_shift;
 
     public @Unsigned int num_processors;
@@ -24493,8 +24494,8 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType178259104C168 extends Union {
-    public AnonymousType1285072597C117 anon0;
+  public static class AnonymousType133177937C168 extends Union {
+    public AnonymousType234857227C117 anon0;
 
     public @Unsigned long msr;
   }
@@ -24505,7 +24506,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1285072597C117 extends Struct {
+  public static class AnonymousType234857227C117 extends Struct {
     public @Unsigned long node_id;
 
     public @Unsigned long nodes_per_pkg;
@@ -24519,7 +24520,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType959055079C150 extends Struct {
+  public static class AnonymousType81269359C150 extends Struct {
     public @Unsigned int ext_apic_id;
 
     public @Unsigned int core_id;
@@ -24537,7 +24538,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType133177937C102 extends Struct {
+  public static class AnonymousType1832657711C102 extends Struct {
     public @Unsigned int cpu_nthreads;
 
     public @Unsigned int apicid_coreid_len;
@@ -24562,11 +24563,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; enum spectre_v2_user_cmd cmd; _Bool secure; }"
+      cType = "struct { const u8 *option; enum spectre_v2_user_cmd cmd; _Bool secure; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType234857227C69 extends Struct {
+  public static class AnonymousType1800959603C78 extends Struct {
     public String option;
 
     public spectre_v2_user_cmd cmd;
@@ -24576,11 +24577,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; enum spectre_v2_mitigation_cmd cmd; _Bool secure; }"
+      cType = "struct { const u8 *option; enum spectre_v2_mitigation_cmd cmd; _Bool secure; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType81269359C75 extends Struct {
+  public static class AnonymousType466577384C84 extends Struct {
     public String option;
 
     public spectre_v2_mitigation_cmd cmd;
@@ -24590,11 +24591,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; enum ssb_mitigation_cmd cmd; }"
+      cType = "struct { const u8 *option; enum ssb_mitigation_cmd cmd; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1832657711C52 extends Struct {
+  public static class AnonymousType1598047636C61 extends Struct {
     public String option;
 
     public ssb_mitigation_cmd cmd;
@@ -24626,7 +24627,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1800959603C40 extends Struct {
+  public static class AnonymousType1399398408C40 extends Struct {
     public @Unsigned long @Size(512) [] map;
   }
 
@@ -24636,7 +24637,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType466577384C175 extends Struct {
+  public static class AnonymousType2066366456C175 extends Struct {
     public @Unsigned int nr_assigned_cpus;
 
     public @Unsigned int nr_disabled_cpus;
@@ -24712,7 +24713,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1598047636C89 extends Union {
+  public static class AnonymousType465233746C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mce_record") Ptr<?> handler;
@@ -25083,7 +25084,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1399398408C83 extends Union {
+  public static class AnonymousType1175154004C83 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pseudo_lock_mem_latency") Ptr<?> handler;
@@ -25095,7 +25096,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2066366456C117 extends Union {
+  public static class AnonymousType1559788797C117 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pseudo_lock_l2") Ptr<?> handler;
@@ -25107,7 +25108,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType465233746C117 extends Union {
+  public static class AnonymousType1980194149C117 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pseudo_lock_l3") Ptr<?> handler;
@@ -25255,11 +25256,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; enum split_lock_detect_state state; }"
+      cType = "struct { const u8 *option; enum split_lock_detect_state state; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1175154004C59 extends Struct {
+  public static class AnonymousType978035840C68 extends Struct {
     public String option;
 
     public split_lock_detect_state state;
@@ -25522,7 +25523,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1980194149C391 extends Struct {
+  public static class AnonymousType943165647C391 extends Struct {
     public int active;
 
     public @Unsigned int apic_id;
@@ -25908,7 +25909,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType978035840C33 extends Struct {
+  public static class AnonymousType1956060889C33 extends Struct {
     public int pin;
 
     public int apic;
@@ -26136,7 +26137,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType943165647C251 extends Struct {
+  public static class AnonymousType214768579C251 extends Struct {
     public @Unsigned int apicid_shift;
 
     public @Unsigned int apicid_mask;
@@ -27133,7 +27134,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1956060889C124 extends Union {
+  public static class AnonymousType142103421C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_page_fault_user") Ptr<?> handler;
@@ -27145,7 +27146,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType320850799C124 extends Union {
+  public static class AnonymousType1146484093C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_page_fault_kernel") Ptr<?> handler;
@@ -27250,7 +27251,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType214768579C41 extends Struct {
+  public static class AnonymousType704387627C41 extends Struct {
     public @Unsigned long @Size(2) [] d;
   }
 
@@ -27794,7 +27795,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1146484093C22 extends Struct {
+  public static class AnonymousType128077491C22 extends Struct {
     public char @Size(64) [] __;
   }
 
@@ -27857,7 +27858,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType704387627C109 extends Union {
+  public static class AnonymousType1815592231C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_task_newtask") Ptr<?> handler;
@@ -27869,7 +27870,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1292570580C101 extends Union {
+  public static class AnonymousType634638280C101 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_task_rename") Ptr<?> handler;
@@ -27881,7 +27882,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType128077491C150 extends Union {
+  public static class AnonymousType808653065C150 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_task_prctl_unknown") Ptr<?> handler;
@@ -27893,7 +27894,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1815592231C114 extends Union {
+  public static class AnonymousType628164202C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cpuhp_enter") Ptr<?> handler;
@@ -27905,7 +27906,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType634638280C154 extends Union {
+  public static class AnonymousType1962826086C154 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cpuhp_multi_enter") Ptr<?> handler;
@@ -27917,7 +27918,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType808653065C98 extends Union {
+  public static class AnonymousType1340634558C98 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cpuhp_exit") Ptr<?> handler;
@@ -27993,7 +27994,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType628164202C93 extends Union {
+  public static class AnonymousType1736150547C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_handler_entry") Ptr<?> handler;
@@ -28005,7 +28006,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1962826086C98 extends Union {
+  public static class AnonymousType1251247808C98 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_handler_exit") Ptr<?> handler;
@@ -28017,7 +28018,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1340634558C83 extends Union {
+  public static class AnonymousType1277678493C83 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_softirq_entry") Ptr<?> handler;
@@ -28029,7 +28030,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1736150547C83 extends Union {
+  public static class AnonymousType1089341986C83 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_softirq_exit") Ptr<?> handler;
@@ -28041,7 +28042,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1251247808C83 extends Union {
+  public static class AnonymousType2078154554C83 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_softirq_raise") Ptr<?> handler;
@@ -28053,7 +28054,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1277678493C100 extends Union {
+  public static class AnonymousType361903111C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tasklet_entry") Ptr<?> handler;
@@ -28065,7 +28066,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1089341986C100 extends Union {
+  public static class AnonymousType1742448147C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tasklet_exit") Ptr<?> handler;
@@ -28191,7 +28192,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2078154554C129 extends Union {
+  public static class AnonymousType1465126864C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_signal_generate") Ptr<?> handler;
@@ -28203,7 +28204,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType361903111C119 extends Union {
+  public static class AnonymousType1559817679C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_signal_deliver") Ptr<?> handler;
@@ -28215,7 +28216,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1742448147C35 extends Struct {
+  public static class AnonymousType1489946715C35 extends Struct {
     public char limit;
 
     public char layout;
@@ -28522,7 +28523,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1465126864C119 extends Union {
+  public static class AnonymousType1654589039C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_workqueue_queue_work") Ptr<?> handler;
@@ -28534,7 +28535,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1559817679C90 extends Union {
+  public static class AnonymousType356691811C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_workqueue_activate_work") Ptr<?> handler;
@@ -28546,7 +28547,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1489946715C90 extends Union {
+  public static class AnonymousType248495761C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_workqueue_execute_start") Ptr<?> handler;
@@ -28558,7 +28559,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1654589039C119 extends Union {
+  public static class AnonymousType552416003C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_workqueue_execute_end") Ptr<?> handler;
@@ -28570,7 +28571,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType356691811C28 extends Struct {
+  public static class AnonymousType987489551C28 extends Struct {
     public @Unsigned int x;
   }
 
@@ -29300,7 +29301,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType248495761C76 extends Union {
+  public static class AnonymousType979532928C76 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_notifier_register") Ptr<?> handler;
@@ -29312,7 +29313,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType552416003C76 extends Union {
+  public static class AnonymousType1235908203C76 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_notifier_unregister") Ptr<?> handler;
@@ -29324,7 +29325,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType987489551C76 extends Union {
+  public static class AnonymousType9843062C76 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_notifier_run") Ptr<?> handler;
@@ -29659,7 +29660,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType979532928C90 extends Union {
+  public static class AnonymousType1694519286C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_kthread_stop") Ptr<?> handler;
@@ -29671,7 +29672,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1235908203C74 extends Union {
+  public static class AnonymousType1286580650C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_kthread_stop_ret") Ptr<?> handler;
@@ -29683,7 +29684,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType9843062C115 extends Union {
+  public static class AnonymousType1445758842C115 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_kthread_work_queue_work") Ptr<?> handler;
@@ -29695,7 +29696,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1694519286C91 extends Union {
+  public static class AnonymousType1728057672C91 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_kthread_work_execute_start") Ptr<?> handler;
@@ -29707,7 +29708,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1286580650C121 extends Union {
+  public static class AnonymousType10001825C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_kthread_work_execute_end") Ptr<?> handler;
@@ -29719,7 +29720,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1445758842C90 extends Union {
+  public static class AnonymousType835426017C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_waking") Ptr<?> handler;
@@ -29731,7 +29732,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1728057672C90 extends Union {
+  public static class AnonymousType65982709C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_wakeup") Ptr<?> handler;
@@ -29743,7 +29744,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType10001825C90 extends Union {
+  public static class AnonymousType1677921169C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_wakeup_new") Ptr<?> handler;
@@ -29755,7 +29756,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType835426017C132 extends Union {
+  public static class AnonymousType540206885C132 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_switch") Ptr<?> handler;
@@ -29767,7 +29768,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType65982709C95 extends Union {
+  public static class AnonymousType1294139740C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_migrate_task") Ptr<?> handler;
@@ -29779,7 +29780,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1677921169C90 extends Union {
+  public static class AnonymousType943659381C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_process_free") Ptr<?> handler;
@@ -29791,7 +29792,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType540206885C97 extends Union {
+  public static class AnonymousType1142735456C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_process_exit") Ptr<?> handler;
@@ -29803,7 +29804,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1294139740C90 extends Union {
+  public static class AnonymousType1939869193C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_wait_task") Ptr<?> handler;
@@ -29815,7 +29816,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType943659381C82 extends Union {
+  public static class AnonymousType652007616C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_process_wait") Ptr<?> handler;
@@ -29827,7 +29828,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1142735456C111 extends Union {
+  public static class AnonymousType1726515679C111 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_process_fork") Ptr<?> handler;
@@ -29839,7 +29840,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1939869193C117 extends Union {
+  public static class AnonymousType1145391264C117 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_process_exec") Ptr<?> handler;
@@ -29851,7 +29852,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType652007616C112 extends Union {
+  public static class AnonymousType929482343C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_prepare_exec") Ptr<?> handler;
@@ -29863,7 +29864,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1726515679C114 extends Union {
+  public static class AnonymousType2000421523C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_stat_wait") Ptr<?> handler;
@@ -29875,7 +29876,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1145391264C114 extends Union {
+  public static class AnonymousType1438178266C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_stat_sleep") Ptr<?> handler;
@@ -29887,7 +29888,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType929482343C114 extends Union {
+  public static class AnonymousType995531141C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_stat_iowait") Ptr<?> handler;
@@ -29899,7 +29900,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2000421523C114 extends Union {
+  public static class AnonymousType973219190C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_stat_blocked") Ptr<?> handler;
@@ -29911,7 +29912,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1438178266C114 extends Union {
+  public static class AnonymousType767393855C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_stat_runtime") Ptr<?> handler;
@@ -29923,7 +29924,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType995531141C111 extends Union {
+  public static class AnonymousType1044965465C111 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_pi_setprio") Ptr<?> handler;
@@ -29935,7 +29936,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType973219190C90 extends Union {
+  public static class AnonymousType836621476C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_process_hang") Ptr<?> handler;
@@ -29947,7 +29948,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType767393855C100 extends Union {
+  public static class AnonymousType442465916C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_move_numa") Ptr<?> handler;
@@ -29959,7 +29960,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1044965465C121 extends Union {
+  public static class AnonymousType1529002352C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_stick_numa") Ptr<?> handler;
@@ -29971,7 +29972,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType836621476C121 extends Union {
+  public static class AnonymousType584157293C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_swap_numa") Ptr<?> handler;
@@ -29983,7 +29984,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType442465916C138 extends Union {
+  public static class AnonymousType2113273959C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_skip_vma_numa") Ptr<?> handler;
@@ -29995,7 +29996,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1529002352C133 extends Union {
+  public static class AnonymousType482032955C133 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_skip_cpuset_numa") Ptr<?> handler;
@@ -30007,7 +30008,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType584157293C74 extends Union {
+  public static class AnonymousType1386020581C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_wake_idle_without_ipi") Ptr<?> handler;
@@ -30019,7 +30020,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2113273959C85 extends Union {
+  public static class AnonymousType2090894907C85 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pelt_cfs_tp") Ptr<?> handler;
@@ -30031,7 +30032,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType482032955C81 extends Union {
+  public static class AnonymousType832066800C81 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pelt_rt_tp") Ptr<?> handler;
@@ -30043,7 +30044,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1386020581C81 extends Union {
+  public static class AnonymousType1955587357C81 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pelt_dl_tp") Ptr<?> handler;
@@ -30055,7 +30056,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2090894907C81 extends Union {
+  public static class AnonymousType1095849663C81 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pelt_hw_tp") Ptr<?> handler;
@@ -30067,7 +30068,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType832066800C81 extends Union {
+  public static class AnonymousType960004592C81 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pelt_irq_tp") Ptr<?> handler;
@@ -30079,7 +30080,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1955587357C91 extends Union {
+  public static class AnonymousType1257532915C91 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pelt_se_tp") Ptr<?> handler;
@@ -30091,7 +30092,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1095849663C81 extends Union {
+  public static class AnonymousType1096343229C81 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_cpu_capacity_tp") Ptr<?> handler;
@@ -30103,7 +30104,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType960004592C97 extends Union {
+  public static class AnonymousType183995527C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_overutilized_tp") Ptr<?> handler;
@@ -30115,7 +30116,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1257532915C85 extends Union {
+  public static class AnonymousType2000530216C85 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_util_est_cfs_tp") Ptr<?> handler;
@@ -30127,7 +30128,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1096343229C91 extends Union {
+  public static class AnonymousType516934601C91 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_util_est_se_tp") Ptr<?> handler;
@@ -30139,7 +30140,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType183995527C86 extends Union {
+  public static class AnonymousType426070939C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_update_nr_running_tp") Ptr<?> handler;
@@ -30151,7 +30152,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2000530216C152 extends Union {
+  public static class AnonymousType801142660C152 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_compute_energy_tp") Ptr<?> handler;
@@ -30163,7 +30164,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType516934601C76 extends Union {
+  public static class AnonymousType893320639C76 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_entry_tp") Ptr<?> handler;
@@ -30175,7 +30176,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType426070939C76 extends Union {
+  public static class AnonymousType1439693138C76 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_exit_tp") Ptr<?> handler;
@@ -30187,7 +30188,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType801142660C100 extends Union {
+  public static class AnonymousType1711641083C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_set_need_resched_tp") Ptr<?> handler;
@@ -30199,7 +30200,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType893320639C115 extends Union {
+  public static class AnonymousType1247127272C115 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ipi_send_cpu") Ptr<?> handler;
@@ -30211,7 +30212,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1439693138C118 extends Union {
+  public static class AnonymousType147089688C118 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ipi_send_cpumask") Ptr<?> handler;
@@ -30481,7 +30482,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1711641083C192 extends Struct {
+  public static class AnonymousType577442875C192 extends Struct {
     public @OriginalName("cpumask_var_t") Ptr<cpumask> idle_cpus_mask;
 
     public atomic_t nr_cpus;
@@ -30501,7 +30502,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType147089688C80 extends Union {
+  public static class AnonymousType254692047C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_ext_dump") Ptr<?> handler;
@@ -30513,7 +30514,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType577442875C95 extends Union {
+  public static class AnonymousType604602011C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sched_ext_event") Ptr<?> handler;
@@ -30774,7 +30775,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1747702724C90 extends Union {
+  public static class AnonymousType1589214445C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_contention_begin") Ptr<?> handler;
@@ -30786,7 +30787,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType254692047C81 extends Union {
+  public static class AnonymousType1757032717C81 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_contention_end") Ptr<?> handler;
@@ -30965,7 +30966,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType604602011C99 extends Union {
+  public static class AnonymousType356476647C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_console") Ptr<?> handler;
@@ -31214,7 +31215,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1589214445C89 extends Union {
+  public static class AnonymousType2058174333C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_matrix_online") Ptr<?> handler;
@@ -31226,7 +31227,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1757032717C89 extends Union {
+  public static class AnonymousType1868987089C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_matrix_offline") Ptr<?> handler;
@@ -31238,7 +31239,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType356476647C89 extends Union {
+  public static class AnonymousType1449987177C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_matrix_reserve") Ptr<?> handler;
@@ -31250,7 +31251,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2058174333C89 extends Union {
+  public static class AnonymousType948650013C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_matrix_remove_reserved") Ptr<?> handler;
@@ -31262,7 +31263,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1868987089C94 extends Union {
+  public static class AnonymousType734971558C94 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_matrix_assign_system") Ptr<?> handler;
@@ -31274,7 +31275,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1449987177C124 extends Union {
+  public static class AnonymousType2007138812C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_matrix_reserve_managed") Ptr<?> handler;
@@ -31286,7 +31287,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType948650013C124 extends Union {
+  public static class AnonymousType1225970981C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_matrix_remove_managed") Ptr<?> handler;
@@ -31298,7 +31299,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType734971558C124 extends Union {
+  public static class AnonymousType737935282C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_matrix_alloc_managed") Ptr<?> handler;
@@ -31310,7 +31311,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2007138812C124 extends Union {
+  public static class AnonymousType1985869725C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_matrix_assign") Ptr<?> handler;
@@ -31322,7 +31323,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1225970981C124 extends Union {
+  public static class AnonymousType353580491C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_matrix_alloc") Ptr<?> handler;
@@ -31334,7 +31335,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType737935282C124 extends Union {
+  public static class AnonymousType1249337777C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_matrix_free") Ptr<?> handler;
@@ -31346,7 +31347,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1985869725C80 extends Union {
+  public static class AnonymousType1048903970C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rcu_utilization") Ptr<?> handler;
@@ -31358,7 +31359,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType353580491C91 extends Union {
+  public static class AnonymousType670951536C91 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rcu_stall_warning") Ptr<?> handler;
@@ -31421,7 +31422,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1249337777C196 extends Union {
+  public static class AnonymousType726416425C196 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_map_page") Ptr<?> handler;
@@ -31433,7 +31434,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1048903970C196 extends Union {
+  public static class AnonymousType1523034648C196 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_map_resource") Ptr<?> handler;
@@ -31445,7 +31446,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType670951536C172 extends Union {
+  public static class AnonymousType1289563251C172 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_unmap_page") Ptr<?> handler;
@@ -31457,7 +31458,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType726416425C172 extends Union {
+  public static class AnonymousType78377968C172 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_unmap_resource") Ptr<?> handler;
@@ -31469,7 +31470,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1523034648C193 extends Union {
+  public static class AnonymousType1313618488C193 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_alloc") Ptr<?> handler;
@@ -31481,7 +31482,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1289563251C193 extends Union {
+  public static class AnonymousType691854979C193 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_alloc_pages") Ptr<?> handler;
@@ -31493,7 +31494,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType78377968C193 extends Union {
+  public static class AnonymousType203936099C193 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_alloc_sgt_err") Ptr<?> handler;
@@ -31505,7 +31506,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1313618488C180 extends Union {
+  public static class AnonymousType1472759652C180 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_alloc_sgt") Ptr<?> handler;
@@ -31517,7 +31518,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType691854979C179 extends Union {
+  public static class AnonymousType2029709919C179 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_free") Ptr<?> handler;
@@ -31529,7 +31530,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType203936099C179 extends Union {
+  public static class AnonymousType939391749C179 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_free_pages") Ptr<?> handler;
@@ -31541,7 +31542,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1472759652C147 extends Union {
+  public static class AnonymousType98801744C147 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_free_sgt") Ptr<?> handler;
@@ -31553,7 +31554,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2029709919C160 extends Union {
+  public static class AnonymousType369351727C160 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_map_sg") Ptr<?> handler;
@@ -31565,7 +31566,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType939391749C160 extends Union {
+  public static class AnonymousType964981922C160 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_map_sg_err") Ptr<?> handler;
@@ -31577,7 +31578,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType98801744C155 extends Union {
+  public static class AnonymousType1635358020C155 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_unmap_sg") Ptr<?> handler;
@@ -31589,7 +31590,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType369351727C153 extends Union {
+  public static class AnonymousType2025955363C153 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_sync_single_for_cpu") Ptr<?> handler;
@@ -31601,7 +31602,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType964981922C153 extends Union {
+  public static class AnonymousType1890318768C153 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_sync_single_for_device") Ptr<?> handler;
@@ -31613,7 +31614,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1635358020C136 extends Union {
+  public static class AnonymousType1779479139C136 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_sync_sg_for_cpu") Ptr<?> handler;
@@ -31625,7 +31626,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2025955363C136 extends Union {
+  public static class AnonymousType1198442960C136 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_sync_sg_for_device") Ptr<?> handler;
@@ -31677,7 +31678,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1890318768C128 extends Union {
+  public static class AnonymousType844872102C128 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_swiotlb_bounced") Ptr<?> handler;
@@ -31689,7 +31690,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1779479139C96 extends Union {
+  public static class AnonymousType487764004C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sys_enter") Ptr<?> handler;
@@ -31701,7 +31702,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1198442960C96 extends Union {
+  public static class AnonymousType1929284175C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sys_exit") Ptr<?> handler;
@@ -31713,7 +31714,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType844872102C85 extends Union {
+  public static class AnonymousType1139801481C85 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_module_load") Ptr<?> handler;
@@ -31725,7 +31726,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType487764004C85 extends Union {
+  public static class AnonymousType739703515C85 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_module_free") Ptr<?> handler;
@@ -31737,7 +31738,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1929284175C104 extends Union {
+  public static class AnonymousType613281005C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_module_get") Ptr<?> handler;
@@ -31749,7 +31750,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1139801481C104 extends Union {
+  public static class AnonymousType573023937C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_module_put") Ptr<?> handler;
@@ -31761,7 +31762,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType739703515C100 extends Union {
+  public static class AnonymousType513279161C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_module_request") Ptr<?> handler;
@@ -31773,7 +31774,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType613281005C42 extends Struct {
+  public static class AnonymousType88335763C42 extends Struct {
     public char @Size(56) [] name;
 
     public char @Size(24) [] taints;
@@ -31797,11 +31798,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const struct kernel_symbol*; unsigned int num; }"
+      cType = "struct { const struct kernel_symbol *sym; unsigned int num; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType573023937C59 extends Struct {
+  public static class AnonymousType1315081042C65 extends Struct {
     public Ptr<kernel_symbol> sym;
 
     public @Unsigned int num;
@@ -31902,7 +31903,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType513279161C89 extends Union {
+  public static class AnonymousType1374432753C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_timer_init") Ptr<?> handler;
@@ -31914,7 +31915,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType88335763C108 extends Union {
+  public static class AnonymousType261052089C108 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_timer_start") Ptr<?> handler;
@@ -31926,7 +31927,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1315081042C108 extends Union {
+  public static class AnonymousType368727462C108 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_timer_expire_entry") Ptr<?> handler;
@@ -31938,7 +31939,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1374432753C89 extends Union {
+  public static class AnonymousType1326998608C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_timer_expire_exit") Ptr<?> handler;
@@ -31950,7 +31951,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType261052089C89 extends Union {
+  public static class AnonymousType2141932519C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_timer_cancel") Ptr<?> handler;
@@ -31962,7 +31963,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType368727462C90 extends Union {
+  public static class AnonymousType174383157C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_timer_base_idle") Ptr<?> handler;
@@ -31974,7 +31975,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1326998608C110 extends Union {
+  public static class AnonymousType1299497914C110 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hrtimer_setup") Ptr<?> handler;
@@ -31986,7 +31987,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2141932519C105 extends Union {
+  public static class AnonymousType1103234208C105 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hrtimer_start") Ptr<?> handler;
@@ -31998,7 +31999,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType174383157C102 extends Union {
+  public static class AnonymousType1679002380C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hrtimer_expire_entry") Ptr<?> handler;
@@ -32010,7 +32011,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1299497914C86 extends Union {
+  public static class AnonymousType1239132915C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hrtimer_expire_exit") Ptr<?> handler;
@@ -32022,7 +32023,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1103234208C86 extends Union {
+  public static class AnonymousType584698209C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hrtimer_cancel") Ptr<?> handler;
@@ -32034,7 +32035,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1679002380C132 extends Union {
+  public static class AnonymousType1936670366C132 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_itimer_state") Ptr<?> handler;
@@ -32046,7 +32047,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1239132915C111 extends Union {
+  public static class AnonymousType199000084C111 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_itimer_expire") Ptr<?> handler;
@@ -32058,7 +32059,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType584698209C79 extends Union {
+  public static class AnonymousType524566446C79 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tick_stop") Ptr<?> handler;
@@ -32104,7 +32105,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1936670366C89 extends Union {
+  public static class AnonymousType1941598182C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_alarmtimer_suspend") Ptr<?> handler;
@@ -32116,7 +32117,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType199000084C99 extends Union {
+  public static class AnonymousType2041263297C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_alarmtimer_fired") Ptr<?> handler;
@@ -32128,7 +32129,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType524566446C99 extends Union {
+  public static class AnonymousType379115456C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_alarmtimer_start") Ptr<?> handler;
@@ -32140,7 +32141,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1941598182C99 extends Union {
+  public static class AnonymousType673129458C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_alarmtimer_cancel") Ptr<?> handler;
@@ -32168,7 +32169,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2041263297C101 extends Struct {
+  public static class AnonymousType142261320C101 extends Struct {
     public Ptr<timer_hash_bucket> buckets;
 
     public @Unsigned long mask;
@@ -32182,7 +32183,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType379115456C90 extends Union {
+  public static class AnonymousType685219002C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_group_set") Ptr<?> handler;
@@ -32194,7 +32195,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType673129458C90 extends Union {
+  public static class AnonymousType2015455415C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_connect_child_parent") Ptr<?> handler;
@@ -32206,7 +32207,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType142261320C88 extends Union {
+  public static class AnonymousType703644914C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_connect_cpu_parent") Ptr<?> handler;
@@ -32218,7 +32219,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1949672824C123 extends Union {
+  public static class AnonymousType1014824123C123 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_group_set_cpu_inactive") Ptr<?> handler;
@@ -32230,7 +32231,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1620301064C123 extends Union {
+  public static class AnonymousType1706790953C123 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_group_set_cpu_active") Ptr<?> handler;
@@ -32242,7 +32243,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType319061373C88 extends Union {
+  public static class AnonymousType469643779C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_cpu_new_timer") Ptr<?> handler;
@@ -32254,7 +32255,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1014824123C88 extends Union {
+  public static class AnonymousType723602324C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_cpu_active") Ptr<?> handler;
@@ -32266,7 +32267,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1706790953C88 extends Union {
+  public static class AnonymousType1893987183C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_cpu_online") Ptr<?> handler;
@@ -32278,7 +32279,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType469643779C88 extends Union {
+  public static class AnonymousType1231036290C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_cpu_offline") Ptr<?> handler;
@@ -32290,7 +32291,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType723602324C88 extends Union {
+  public static class AnonymousType602161799C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_handle_remote_cpu") Ptr<?> handler;
@@ -32302,7 +32303,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1893987183C112 extends Union {
+  public static class AnonymousType45666436C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_cpu_idle") Ptr<?> handler;
@@ -32314,7 +32315,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1231036290C112 extends Union {
+  public static class AnonymousType1840194359C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_cpu_new_timer_idle") Ptr<?> handler;
@@ -32326,7 +32327,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType602161799C173 extends Union {
+  public static class AnonymousType620412175C173 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_update_events") Ptr<?> handler;
@@ -32338,7 +32339,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType45666436C90 extends Union {
+  public static class AnonymousType621486957C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tmigr_handle_remote") Ptr<?> handler;
@@ -32428,7 +32429,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1840194359C108 extends Struct {
+  public static class AnonymousType1643379640C108 extends Struct {
     public @Unsigned long hashmask;
 
     public @Unsigned int hashshift;
@@ -32526,7 +32527,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType620412175C144 extends Union {
+  public static class AnonymousType1968298538C144 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_csd_queue_cpu") Ptr<?> handler;
@@ -32538,7 +32539,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType621486957C105 extends Union {
+  public static class AnonymousType70386506C105 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_csd_function_entry") Ptr<?> handler;
@@ -32550,7 +32551,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1643379640C105 extends Union {
+  public static class AnonymousType2027837674C105 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_csd_function_exit") Ptr<?> handler;
@@ -32691,7 +32692,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1968298538C90 extends Union {
+  public static class AnonymousType101601906C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_setup_root") Ptr<?> handler;
@@ -32703,7 +32704,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType70386506C90 extends Union {
+  public static class AnonymousType2104842259C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_destroy_root") Ptr<?> handler;
@@ -32715,7 +32716,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2027837674C90 extends Union {
+  public static class AnonymousType1774795940C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_remount") Ptr<?> handler;
@@ -32727,7 +32728,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType101601906C96 extends Union {
+  public static class AnonymousType1675239551C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_mkdir") Ptr<?> handler;
@@ -32739,7 +32740,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2104842259C96 extends Union {
+  public static class AnonymousType389247924C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_rmdir") Ptr<?> handler;
@@ -32751,7 +32752,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1774795940C96 extends Union {
+  public static class AnonymousType1087440001C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_release") Ptr<?> handler;
@@ -32763,7 +32764,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1675239551C96 extends Union {
+  public static class AnonymousType1625111587C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_rename") Ptr<?> handler;
@@ -32775,7 +32776,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType389247924C96 extends Union {
+  public static class AnonymousType1387671967C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_freeze") Ptr<?> handler;
@@ -32787,7 +32788,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1087440001C96 extends Union {
+  public static class AnonymousType1586779822C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_unfreeze") Ptr<?> handler;
@@ -32799,7 +32800,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1625111587C124 extends Union {
+  public static class AnonymousType380216561C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_attach_task") Ptr<?> handler;
@@ -32811,7 +32812,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1387671967C124 extends Union {
+  public static class AnonymousType521973283C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_transfer_tasks") Ptr<?> handler;
@@ -32823,7 +32824,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1586779822C101 extends Union {
+  public static class AnonymousType2084920982C101 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_notify_populated") Ptr<?> handler;
@@ -32835,7 +32836,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType380216561C101 extends Union {
+  public static class AnonymousType9983638C101 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_notify_frozen") Ptr<?> handler;
@@ -32847,7 +32848,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType521973283C97 extends Union {
+  public static class AnonymousType1540219992C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_rstat_lock_contended") Ptr<?> handler;
@@ -32859,7 +32860,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2084920982C97 extends Union {
+  public static class AnonymousType559559860C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_rstat_locked") Ptr<?> handler;
@@ -32871,7 +32872,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType9983638C97 extends Union {
+  public static class AnonymousType2008907751C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cgroup_rstat_unlock") Ptr<?> handler;
@@ -33387,7 +33388,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1540219992C28 extends Struct {
+  public static class AnonymousType903064416C28 extends Struct {
     public @Unsigned @OriginalName("__be32") int x;
   }
 
@@ -33501,7 +33502,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType559559860C51 extends Union {
+  public static class AnonymousType17331878C51 extends Union {
     public @Unsigned long word;
 
     public char @Size(8) [] c;
@@ -33627,7 +33628,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2008907751C64 extends Struct {
+  public static class AnonymousType1904676263C64 extends Struct {
     public @Unsigned long prev_time;
 
     public @OriginalName("arch_spinlock_t") qspinlock lock;
@@ -34052,11 +34053,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { long long unsigned int (*func)(); const u8*; int in_ns; }"
+      cType = "struct { long long unsigned int (*func)(); const u8 *name; int in_ns; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType903064416C70 extends Struct {
+  public static class AnonymousType1842943543C77 extends Struct {
     public Ptr<?> func;
 
     public String name;
@@ -34205,7 +34206,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType17331878C93 extends Union {
+  public static class AnonymousType1165568071C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_osnoise_sample") Ptr<?> handler;
@@ -34217,7 +34218,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1904676263C94 extends Union {
+  public static class AnonymousType117885704C94 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_timerlat_sample") Ptr<?> handler;
@@ -34229,7 +34230,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1842943543C138 extends Union {
+  public static class AnonymousType1311052922C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_thread_noise") Ptr<?> handler;
@@ -34241,7 +34242,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1165568071C122 extends Union {
+  public static class AnonymousType1802029863C122 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_softirq_noise") Ptr<?> handler;
@@ -34253,7 +34254,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType117885704C133 extends Union {
+  public static class AnonymousType1734343965C133 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_irq_noise") Ptr<?> handler;
@@ -34265,7 +34266,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1311052922C117 extends Union {
+  public static class AnonymousType1445999733C117 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_nmi_noise") Ptr<?> handler;
@@ -34277,7 +34278,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1802029863C141 extends Union {
+  public static class AnonymousType810576909C141 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sample_threshold") Ptr<?> handler;
@@ -34485,7 +34486,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1734343965C100 extends Struct {
+  public static class AnonymousType499951827C100 extends Struct {
     public String @Size(2) [] act;
 
     public Ptr<?> print;
@@ -34493,11 +34494,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { int mask; const u8*; }"
+      cType = "struct { int mask; const u8 *str; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1445999733C33 extends Struct {
+  public static class AnonymousType90380642C39 extends Struct {
     public int mask;
 
     public String str;
@@ -36210,7 +36211,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType810576909C80 extends Union {
+  public static class AnonymousType1386677799C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_bpf_trace_printk") Ptr<?> handler;
@@ -36222,7 +36223,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType499951827C109 extends Union {
+  public static class AnonymousType1629759610C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_error_report_end") Ptr<?> handler;
@@ -36234,7 +36235,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType90380642C97 extends Union {
+  public static class AnonymousType425107133C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cpu_idle") Ptr<?> handler;
@@ -36246,7 +36247,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1386677799C104 extends Union {
+  public static class AnonymousType73608444C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cpu_idle_miss") Ptr<?> handler;
@@ -36258,7 +36259,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1629759610C225 extends Union {
+  public static class AnonymousType1847559273C225 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pstate_sample") Ptr<?> handler;
@@ -36270,7 +36271,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType425107133C97 extends Union {
+  public static class AnonymousType775423528C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cpu_frequency") Ptr<?> handler;
@@ -36282,7 +36283,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType73608444C93 extends Union {
+  public static class AnonymousType62309924C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cpu_frequency_limits") Ptr<?> handler;
@@ -36294,7 +36295,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1847559273C101 extends Union {
+  public static class AnonymousType514793058C101 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_device_pm_callback_start") Ptr<?> handler;
@@ -36306,7 +36307,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType775423528C90 extends Union {
+  public static class AnonymousType209845522C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_device_pm_callback_end") Ptr<?> handler;
@@ -36318,7 +36319,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType62309924C92 extends Union {
+  public static class AnonymousType1659282412C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_suspend_resume") Ptr<?> handler;
@@ -36330,7 +36331,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType514793058C94 extends Union {
+  public static class AnonymousType1465179762C94 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_wakeup_source_activate") Ptr<?> handler;
@@ -36342,7 +36343,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType209845522C94 extends Union {
+  public static class AnonymousType837719796C94 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_wakeup_source_deactivate") Ptr<?> handler;
@@ -36354,7 +36355,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1659282412C74 extends Union {
+  public static class AnonymousType839161014C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pm_qos_add_request") Ptr<?> handler;
@@ -36366,7 +36367,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1465179762C74 extends Union {
+  public static class AnonymousType1697298649C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pm_qos_update_request") Ptr<?> handler;
@@ -36378,7 +36379,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType837719796C74 extends Union {
+  public static class AnonymousType352083264C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pm_qos_remove_request") Ptr<?> handler;
@@ -36390,7 +36391,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType839161014C103 extends Union {
+  public static class AnonymousType1373646877C103 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pm_qos_update_target") Ptr<?> handler;
@@ -36402,7 +36403,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1697298649C103 extends Union {
+  public static class AnonymousType1205321651C103 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pm_qos_update_flags") Ptr<?> handler;
@@ -36414,7 +36415,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType352083264C111 extends Union {
+  public static class AnonymousType1997224928C111 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dev_pm_qos_add_request") Ptr<?> handler;
@@ -36426,7 +36427,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1373646877C111 extends Union {
+  public static class AnonymousType32206364C111 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dev_pm_qos_update_request") Ptr<?> handler;
@@ -36438,7 +36439,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1205321651C111 extends Union {
+  public static class AnonymousType1373361892C111 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dev_pm_qos_remove_request") Ptr<?> handler;
@@ -36450,7 +36451,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1997224928C104 extends Union {
+  public static class AnonymousType730583371C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_guest_halt_poll_ns") Ptr<?> handler;
@@ -36462,7 +36463,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType32206364C90 extends Union {
+  public static class AnonymousType99695585C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rpm_suspend") Ptr<?> handler;
@@ -36474,7 +36475,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1373361892C90 extends Union {
+  public static class AnonymousType1596997325C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rpm_resume") Ptr<?> handler;
@@ -36486,7 +36487,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType730583371C90 extends Union {
+  public static class AnonymousType1356054329C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rpm_idle") Ptr<?> handler;
@@ -36498,7 +36499,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType99695585C90 extends Union {
+  public static class AnonymousType631717345C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rpm_usage") Ptr<?> handler;
@@ -36510,7 +36511,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1596997325C109 extends Union {
+  public static class AnonymousType696591495C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rpm_return_int") Ptr<?> handler;
@@ -36522,7 +36523,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1356054329C102 extends Union {
+  public static class AnonymousType1998434604C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rpm_status") Ptr<?> handler;
@@ -36534,7 +36535,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType631717345C96 extends Union {
+  public static class AnonymousType989520513C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_event_wwnr") Ptr<?> handler;
@@ -36546,7 +36547,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType696591495C84 extends Union {
+  public static class AnonymousType648972298C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_error_wwnr") Ptr<?> handler;
@@ -36558,7 +36559,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1998434604C79 extends Union {
+  public static class AnonymousType638525764C79 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rv_retries_error") Ptr<?> handler;
@@ -36594,7 +36595,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType989520513C133 extends Union {
+  public static class AnonymousType1006727288C133 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xdp_exception") Ptr<?> handler;
@@ -36606,7 +36607,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType648972298C110 extends Union {
+  public static class AnonymousType1367503763C110 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xdp_bulk_tx") Ptr<?> handler;
@@ -36618,7 +36619,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType638525764C184 extends Union {
+  public static class AnonymousType62803825C184 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xdp_redirect") Ptr<?> handler;
@@ -36630,7 +36631,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1006727288C184 extends Union {
+  public static class AnonymousType1550080835C184 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xdp_redirect_err") Ptr<?> handler;
@@ -36642,7 +36643,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1367503763C133 extends Union {
+  public static class AnonymousType1808884231C133 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xdp_cpumap_kthread") Ptr<?> handler;
@@ -36654,7 +36655,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType62803825C107 extends Union {
+  public static class AnonymousType697145861C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xdp_cpumap_enqueue") Ptr<?> handler;
@@ -36666,7 +36667,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1550080835C136 extends Union {
+  public static class AnonymousType1480170882C136 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xdp_devmap_xmit") Ptr<?> handler;
@@ -36678,7 +36679,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1808884231C102 extends Union {
+  public static class AnonymousType653880197C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mem_disconnect") Ptr<?> handler;
@@ -36690,7 +36691,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType697145861C130 extends Union {
+  public static class AnonymousType1188623367C130 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mem_connect") Ptr<?> handler;
@@ -36702,7 +36703,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1480170882C80 extends Union {
+  public static class AnonymousType62915435C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_bpf_xdp_link_attach_failed") Ptr<?> handler;
@@ -37057,7 +37058,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType653880197C47 extends Union {
+  public static class AnonymousType394349340C47 extends Union {
     public @Unsigned int val;
 
     public @OriginalName("arch_spinlock_t") qspinlock lock;
@@ -37065,11 +37066,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; long long unsigned int val; _Bool omit; }"
+      cType = "struct { const u8 *name; long long unsigned int val; _Bool omit; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1188623367C65 extends Struct {
+  public static class AnonymousType2060037930C72 extends Struct {
     public String name;
 
     public @Unsigned long val;
@@ -37408,11 +37409,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct bpf_ctx_convert *__t; const struct btf_type*; }"
+      cType = "union { struct bpf_ctx_convert *__t; const struct btf_type *t; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType62915435C64 extends Union {
+  public static class AnonymousType2075133112C68 extends Union {
     public Ptr<bpf_ctx_convert> __t;
 
     public Ptr<btf_type> t;
@@ -37965,7 +37966,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2060037930C141 extends Struct {
+  public static class AnonymousType1697441364C141 extends Struct {
     public perf_event_header header;
 
     public @Unsigned long time;
@@ -37981,7 +37982,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2075133112C76 extends Struct {
+  public static class AnonymousType1378592036C76 extends Struct {
     public perf_event_header header;
 
     public @Unsigned long lost;
@@ -37993,7 +37994,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2028510206C52 extends Struct {
+  public static class AnonymousType700837405C52 extends Struct {
     public @Unsigned int size;
 
     public @Unsigned int data;
@@ -38005,7 +38006,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1697441364C105 extends Struct {
+  public static class AnonymousType365864880C105 extends Struct {
     public perf_event_header header;
 
     public @Unsigned long id;
@@ -38065,7 +38066,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1378592036C74 extends Union {
+  public static class AnonymousType399699227C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_user_enter") Ptr<?> handler;
@@ -38077,7 +38078,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType700837405C74 extends Union {
+  public static class AnonymousType408909888C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_user_exit") Ptr<?> handler;
@@ -38089,7 +38090,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType365864880C90 extends Union {
+  public static class AnonymousType510445648C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rseq_update") Ptr<?> handler;
@@ -38101,7 +38102,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType399699227C145 extends Union {
+  public static class AnonymousType2122256138C145 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rseq_ip_fixup") Ptr<?> handler;
@@ -38272,7 +38273,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType408909888C84 extends Union {
+  public static class AnonymousType2126876651C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_filemap_delete_from_page_cache") Ptr<?> handler;
@@ -38284,7 +38285,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType510445648C84 extends Union {
+  public static class AnonymousType498820363C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_filemap_add_to_page_cache") Ptr<?> handler;
@@ -38296,7 +38297,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2122256138C130 extends Union {
+  public static class AnonymousType1701646500C130 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_filemap_get_pages") Ptr<?> handler;
@@ -38308,7 +38309,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2126876651C130 extends Union {
+  public static class AnonymousType1676428380C130 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_filemap_map_pages") Ptr<?> handler;
@@ -38320,7 +38321,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType498820363C111 extends Union {
+  public static class AnonymousType822359325C111 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_filemap_fault") Ptr<?> handler;
@@ -38332,7 +38333,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1701646500C106 extends Union {
+  public static class AnonymousType2010221835C106 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_filemap_set_wb_err") Ptr<?> handler;
@@ -38344,7 +38345,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1676428380C97 extends Union {
+  public static class AnonymousType2050247525C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_file_check_and_advance_wb_err") Ptr<?> handler;
@@ -38356,7 +38357,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType822359325C90 extends Union {
+  public static class AnonymousType2071674587C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_oom_score_adj_update") Ptr<?> handler;
@@ -38368,7 +38369,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2010221835C160 extends Union {
+  public static class AnonymousType1799831668C160 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_reclaim_retry_zone") Ptr<?> handler;
@@ -38380,7 +38381,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2050247525C104 extends Union {
+  public static class AnonymousType277164482C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mark_victim") Ptr<?> handler;
@@ -38392,7 +38393,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2071674587C74 extends Union {
+  public static class AnonymousType1219637204C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_wake_reaper") Ptr<?> handler;
@@ -38404,7 +38405,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1799831668C74 extends Union {
+  public static class AnonymousType1788698111C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_start_task_reaping") Ptr<?> handler;
@@ -38416,7 +38417,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType277164482C74 extends Union {
+  public static class AnonymousType990442552C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_finish_task_reaping") Ptr<?> handler;
@@ -38428,7 +38429,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1219637204C74 extends Union {
+  public static class AnonymousType45795770C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_skip_task_reaping") Ptr<?> handler;
@@ -38440,7 +38441,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1788698111C135 extends Union {
+  public static class AnonymousType1529842358C135 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_compact_retry") Ptr<?> handler;
@@ -38452,7 +38453,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType990442552C84 extends Union {
+  public static class AnonymousType1541232265C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_lru_insertion") Ptr<?> handler;
@@ -38464,7 +38465,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType45795770C84 extends Union {
+  public static class AnonymousType663277822C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_lru_activate") Ptr<?> handler;
@@ -38623,7 +38624,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1529842358C74 extends Union {
+  public static class AnonymousType1940601516C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_kswapd_sleep") Ptr<?> handler;
@@ -38635,7 +38636,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1541232265C84 extends Union {
+  public static class AnonymousType1425433685C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_kswapd_wake") Ptr<?> handler;
@@ -38647,7 +38648,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType663277822C98 extends Union {
+  public static class AnonymousType1705904476C98 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_wakeup_kswapd") Ptr<?> handler;
@@ -38659,7 +38660,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1940601516C88 extends Union {
+  public static class AnonymousType79706679C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_direct_reclaim_begin") Ptr<?> handler;
@@ -38671,7 +38672,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1425433685C88 extends Union {
+  public static class AnonymousType773066329C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_memcg_reclaim_begin") Ptr<?> handler;
@@ -38683,7 +38684,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1705904476C88 extends Union {
+  public static class AnonymousType1235686146C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_memcg_softlimit_reclaim_begin") Ptr<?> handler;
@@ -38695,7 +38696,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType79706679C88 extends Union {
+  public static class AnonymousType1557534595C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_direct_reclaim_end") Ptr<?> handler;
@@ -38707,7 +38708,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType773066329C88 extends Union {
+  public static class AnonymousType1497538476C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_memcg_reclaim_end") Ptr<?> handler;
@@ -38719,7 +38720,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1235686146C88 extends Union {
+  public static class AnonymousType1470772251C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_memcg_softlimit_reclaim_end") Ptr<?> handler;
@@ -38731,7 +38732,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1557534595C188 extends Union {
+  public static class AnonymousType652481263C188 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_shrink_slab_start") Ptr<?> handler;
@@ -38743,7 +38744,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1497538476C127 extends Union {
+  public static class AnonymousType1256350655C127 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_shrink_slab_end") Ptr<?> handler;
@@ -38755,7 +38756,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1470772251C160 extends Union {
+  public static class AnonymousType118504112C160 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_lru_isolate") Ptr<?> handler;
@@ -38767,7 +38768,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType652481263C84 extends Union {
+  public static class AnonymousType27053221C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_write_folio") Ptr<?> handler;
@@ -38779,7 +38780,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1256350655C134 extends Union {
+  public static class AnonymousType124376339C134 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_reclaim_pages") Ptr<?> handler;
@@ -38791,7 +38792,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType118504112C144 extends Union {
+  public static class AnonymousType1582277082C144 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_lru_shrink_inactive") Ptr<?> handler;
@@ -38803,7 +38804,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType27053221C160 extends Union {
+  public static class AnonymousType1485624601C160 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_lru_shrink_active") Ptr<?> handler;
@@ -38815,7 +38816,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType124376339C93 extends Union {
+  public static class AnonymousType1066582857C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_node_reclaim_begin") Ptr<?> handler;
@@ -38827,7 +38828,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1582277082C88 extends Union {
+  public static class AnonymousType1989826789C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_node_reclaim_end") Ptr<?> handler;
@@ -38839,7 +38840,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1485624601C89 extends Union {
+  public static class AnonymousType1442342557C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_vmscan_throttled") Ptr<?> handler;
@@ -39072,7 +39073,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1066582857C192 extends Union {
+  public static class AnonymousType1809995046C192 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_percpu_alloc_percpu") Ptr<?> handler;
@@ -39084,7 +39085,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1989826789C88 extends Union {
+  public static class AnonymousType1111710616C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_percpu_free_percpu") Ptr<?> handler;
@@ -39096,7 +39097,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1442342557C121 extends Union {
+  public static class AnonymousType1723498053C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_percpu_alloc_percpu_fail") Ptr<?> handler;
@@ -39108,7 +39109,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1809995046C76 extends Union {
+  public static class AnonymousType1893736577C76 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_percpu_create_chunk") Ptr<?> handler;
@@ -39120,7 +39121,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1111710616C76 extends Union {
+  public static class AnonymousType164757726C76 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_percpu_destroy_chunk") Ptr<?> handler;
@@ -39156,7 +39157,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1723498053C140 extends Union {
+  public static class AnonymousType1360332263C140 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_kmem_cache_alloc") Ptr<?> handler;
@@ -39168,7 +39169,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1893736577C158 extends Union {
+  public static class AnonymousType1684541910C158 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_kmalloc") Ptr<?> handler;
@@ -39180,7 +39181,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType164757726C101 extends Union {
+  public static class AnonymousType368955890C101 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_kfree") Ptr<?> handler;
@@ -39192,7 +39193,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1360332263C127 extends Union {
+  public static class AnonymousType212924259C127 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_kmem_cache_free") Ptr<?> handler;
@@ -39204,7 +39205,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1684541910C97 extends Union {
+  public static class AnonymousType1970528559C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_page_free") Ptr<?> handler;
@@ -39216,7 +39217,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType368955890C83 extends Union {
+  public static class AnonymousType1370597622C83 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_page_free_batched") Ptr<?> handler;
@@ -39228,7 +39229,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType212924259C116 extends Union {
+  public static class AnonymousType708350323C116 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_page_alloc") Ptr<?> handler;
@@ -39240,7 +39241,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1970528559C107 extends Union {
+  public static class AnonymousType557342904C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_page_alloc_zone_locked") Ptr<?> handler;
@@ -39252,7 +39253,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1370597622C102 extends Union {
+  public static class AnonymousType1269339945C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_page_pcpu_drain") Ptr<?> handler;
@@ -39264,7 +39265,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType708350323C103 extends Union {
+  public static class AnonymousType394424498C103 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_page_alloc_extfrag") Ptr<?> handler;
@@ -39276,7 +39277,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType557342904C83 extends Union {
+  public static class AnonymousType2036324408C83 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_setup_per_zone_wmarks") Ptr<?> handler;
@@ -39288,7 +39289,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1269339945C107 extends Union {
+  public static class AnonymousType453007883C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_setup_per_zone_lowmem_reserve") Ptr<?> handler;
@@ -39300,7 +39301,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType394424498C88 extends Union {
+  public static class AnonymousType337545117C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_calculate_totalreserve_pages") Ptr<?> handler;
@@ -39312,7 +39313,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2036324408C93 extends Union {
+  public static class AnonymousType278753868C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rss_stat") Ptr<?> handler;
@@ -39324,7 +39325,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType453007883C145 extends Union {
+  public static class AnonymousType386201215C145 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_isolate_migratepages") Ptr<?> handler;
@@ -39336,7 +39337,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType337545117C145 extends Union {
+  public static class AnonymousType239937174C145 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_isolate_freepages") Ptr<?> handler;
@@ -39348,7 +39349,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType278753868C145 extends Union {
+  public static class AnonymousType1846508205C145 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_fast_isolate_freepages") Ptr<?> handler;
@@ -39360,7 +39361,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType386201215C97 extends Union {
+  public static class AnonymousType368802354C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_migratepages") Ptr<?> handler;
@@ -39372,7 +39373,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType239937174C139 extends Union {
+  public static class AnonymousType628933116C139 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_begin") Ptr<?> handler;
@@ -39384,7 +39385,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1846508205C144 extends Union {
+  public static class AnonymousType1122118227C144 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_end") Ptr<?> handler;
@@ -39396,7 +39397,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType368802354C93 extends Union {
+  public static class AnonymousType1471019696C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_try_to_compact_pages") Ptr<?> handler;
@@ -39408,7 +39409,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType628933116C93 extends Union {
+  public static class AnonymousType424226973C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_finished") Ptr<?> handler;
@@ -39420,7 +39421,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1122118227C93 extends Union {
+  public static class AnonymousType1526296937C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_suitable") Ptr<?> handler;
@@ -39432,7 +39433,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1471019696C88 extends Union {
+  public static class AnonymousType161118423C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_deferred") Ptr<?> handler;
@@ -39444,7 +39445,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType424226973C88 extends Union {
+  public static class AnonymousType836397870C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_defer_compaction") Ptr<?> handler;
@@ -39456,7 +39457,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1526296937C88 extends Union {
+  public static class AnonymousType1640458320C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_defer_reset") Ptr<?> handler;
@@ -39468,7 +39469,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType161118423C74 extends Union {
+  public static class AnonymousType1881419576C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_kcompactd_sleep") Ptr<?> handler;
@@ -39480,7 +39481,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType836397870C95 extends Union {
+  public static class AnonymousType706915627C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_wakeup_kcompactd") Ptr<?> handler;
@@ -39492,7 +39493,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1640458320C95 extends Union {
+  public static class AnonymousType1220747354C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_compaction_kcompactd_wake") Ptr<?> handler;
@@ -39537,7 +39538,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1881419576C95 extends Union {
+  public static class AnonymousType303846650C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mmap_lock_start_locking") Ptr<?> handler;
@@ -39549,7 +39550,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType706915627C95 extends Union {
+  public static class AnonymousType1133573230C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mmap_lock_released") Ptr<?> handler;
@@ -39561,7 +39562,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1220747354C102 extends Union {
+  public static class AnonymousType2086945474C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mmap_lock_acquire_returned") Ptr<?> handler;
@@ -39597,7 +39598,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType303846650C119 extends Union {
+  public static class AnonymousType762604772C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_vm_unmapped_area") Ptr<?> handler;
@@ -39609,7 +39610,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1133573230C88 extends Union {
+  public static class AnonymousType1572820532C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_exit_mmap") Ptr<?> handler;
@@ -39621,7 +39622,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2086945474C93 extends Union {
+  public static class AnonymousType424209001C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tlb_flush") Ptr<?> handler;
@@ -39633,7 +39634,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType762604772C207 extends Union {
+  public static class AnonymousType1206180304C207 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_migrate_pages") Ptr<?> handler;
@@ -39645,7 +39646,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1572820532C93 extends Union {
+  public static class AnonymousType1232703108C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_migrate_pages_start") Ptr<?> handler;
@@ -39657,7 +39658,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType424209001C112 extends Union {
+  public static class AnonymousType1859153769C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_set_migration_pte") Ptr<?> handler;
@@ -39669,7 +39670,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1206180304C112 extends Union {
+  public static class AnonymousType806738808C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_remove_migration_pte") Ptr<?> handler;
@@ -39681,7 +39682,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1232703108C169 extends Union {
+  public static class AnonymousType1365163763C169 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_alloc_vmap_area") Ptr<?> handler;
@@ -39693,7 +39694,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1859153769C121 extends Union {
+  public static class AnonymousType1414924274C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_purge_vmap_area_lazy") Ptr<?> handler;
@@ -39705,7 +39706,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType806738808C126 extends Union {
+  public static class AnonymousType957387062C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_free_vmap_area_noflush") Ptr<?> handler;
@@ -39834,10 +39835,10 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1414924274C115 extends Union {
+  public static class AnonymousType55429210C115 extends Union {
     public me.bechberger.ebpf.type.BPFType.BPFIntType. @Unsigned Int128 var;
 
-    public AnonymousType1365163763C71 anon1;
+    public AnonymousType666911607C71 anon1;
   }
 
   @Type(
@@ -39912,7 +39913,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType957387062C88 extends Union {
+  public static class AnonymousType1732261462C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ksm_start_scan") Ptr<?> handler;
@@ -39924,7 +39925,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType666911607C88 extends Union {
+  public static class AnonymousType1516536489C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ksm_stop_scan") Ptr<?> handler;
@@ -39936,7 +39937,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType55429210C76 extends Union {
+  public static class AnonymousType2140846441C76 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ksm_enter") Ptr<?> handler;
@@ -39948,7 +39949,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1732261462C76 extends Union {
+  public static class AnonymousType318288344C76 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ksm_exit") Ptr<?> handler;
@@ -39960,7 +39961,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1516536489C107 extends Union {
+  public static class AnonymousType1953290071C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ksm_merge_one_page") Ptr<?> handler;
@@ -39972,7 +39973,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2140846441C114 extends Union {
+  public static class AnonymousType182678201C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ksm_merge_with_ksm_page") Ptr<?> handler;
@@ -39984,7 +39985,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType318288344C88 extends Union {
+  public static class AnonymousType546886525C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ksm_remove_ksm_page") Ptr<?> handler;
@@ -39996,7 +39997,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1953290071C102 extends Union {
+  public static class AnonymousType2008666311C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ksm_remove_rmap_item") Ptr<?> handler;
@@ -40008,7 +40009,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType182678201C117 extends Union {
+  public static class AnonymousType1711105800C117 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ksm_advisor") Ptr<?> handler;
@@ -40020,7 +40021,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType546886525C107 extends Union {
+  public static class AnonymousType1956296628C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_set_migration_pmd") Ptr<?> handler;
@@ -40032,7 +40033,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2008666311C107 extends Union {
+  public static class AnonymousType310350177C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_remove_migration_pmd") Ptr<?> handler;
@@ -40044,7 +40045,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1711105800C130 extends Union {
+  public static class AnonymousType737756161C130 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_khugepaged_scan_pmd") Ptr<?> handler;
@@ -40056,7 +40057,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1956296628C98 extends Union {
+  public static class AnonymousType624079697C98 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_collapse_huge_page") Ptr<?> handler;
@@ -40068,7 +40069,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType310350177C106 extends Union {
+  public static class AnonymousType70555476C106 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_collapse_huge_page_isolate") Ptr<?> handler;
@@ -40080,7 +40081,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType737756161C103 extends Union {
+  public static class AnonymousType1781459498C103 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_collapse_huge_page_swapin") Ptr<?> handler;
@@ -40092,7 +40093,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType624079697C132 extends Union {
+  public static class AnonymousType194408994C132 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_khugepaged_scan_file") Ptr<?> handler;
@@ -40104,7 +40105,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType70555476C172 extends Union {
+  public static class AnonymousType990830650C172 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mm_khugepaged_collapse_file") Ptr<?> handler;
@@ -40116,7 +40117,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1781459498C99 extends Union {
+  public static class AnonymousType463494712C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mod_memcg_state") Ptr<?> handler;
@@ -40128,7 +40129,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType194408994C99 extends Union {
+  public static class AnonymousType113416412C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mod_memcg_lruvec_state") Ptr<?> handler;
@@ -40140,7 +40141,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType990830650C113 extends Union {
+  public static class AnonymousType1048444228C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_count_memcg_events") Ptr<?> handler;
@@ -40152,7 +40153,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType463494712C118 extends Union {
+  public static class AnonymousType1916720513C118 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_memcg_flush_stats") Ptr<?> handler;
@@ -40242,7 +40243,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType113416412C126 extends Union {
+  public static class AnonymousType1802896480C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_test_pages_isolated") Ptr<?> handler;
@@ -40314,7 +40315,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1048444228C138 extends Union {
+  public static class AnonymousType2036360618C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cma_release") Ptr<?> handler;
@@ -40326,7 +40327,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1916720513C113 extends Union {
+  public static class AnonymousType681979935C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cma_alloc_start") Ptr<?> handler;
@@ -40338,7 +40339,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1802896480C157 extends Union {
+  public static class AnonymousType741370455C157 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cma_alloc_finish") Ptr<?> handler;
@@ -40350,7 +40351,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2036360618C152 extends Union {
+  public static class AnonymousType2000563893C152 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cma_alloc_busy_retry") Ptr<?> handler;
@@ -40829,7 +40830,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType681979935C104 extends Union {
+  public static class AnonymousType227100877C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_inode_set_ctime_to_ts") Ptr<?> handler;
@@ -40841,7 +40842,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType741370455C104 extends Union {
+  public static class AnonymousType339126187C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ctime_xchg_skip") Ptr<?> handler;
@@ -40853,7 +40854,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2000563893C126 extends Union {
+  public static class AnonymousType997918120C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ctime_ns_xchg") Ptr<?> handler;
@@ -40865,7 +40866,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType227100877C124 extends Union {
+  public static class AnonymousType1027006452C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_fill_mg_cmtime") Ptr<?> handler;
@@ -41074,7 +41075,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType339126187C107 extends Union {
+  public static class AnonymousType2059282367C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_dirty_folio") Ptr<?> handler;
@@ -41086,7 +41087,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType997918120C107 extends Union {
+  public static class AnonymousType1536478396C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_folio_wait_writeback") Ptr<?> handler;
@@ -41098,7 +41099,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1027006452C89 extends Union {
+  public static class AnonymousType950125603C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_mark_inode_dirty") Ptr<?> handler;
@@ -41110,7 +41111,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2059282367C89 extends Union {
+  public static class AnonymousType862152124C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_dirty_inode_start") Ptr<?> handler;
@@ -41122,7 +41123,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1536478396C89 extends Union {
+  public static class AnonymousType954937264C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_dirty_inode") Ptr<?> handler;
@@ -41134,7 +41135,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType950125603C125 extends Union {
+  public static class AnonymousType1164436797C125 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_inode_foreign_history") Ptr<?> handler;
@@ -41146,7 +41147,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType862152124C130 extends Union {
+  public static class AnonymousType1934729582C130 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_inode_switch_wbs") Ptr<?> handler;
@@ -41158,7 +41159,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType954937264C107 extends Union {
+  public static class AnonymousType1538745405C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_track_foreign_dirty") Ptr<?> handler;
@@ -41170,7 +41171,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1164436797C120 extends Union {
+  public static class AnonymousType985679444C120 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_flush_foreign") Ptr<?> handler;
@@ -41182,7 +41183,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1934729582C111 extends Union {
+  public static class AnonymousType1081344572C111 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_write_inode_start") Ptr<?> handler;
@@ -41194,7 +41195,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1538745405C111 extends Union {
+  public static class AnonymousType1053856141C111 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_write_inode") Ptr<?> handler;
@@ -41206,7 +41207,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType985679444C119 extends Union {
+  public static class AnonymousType1579584742C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_queue") Ptr<?> handler;
@@ -41218,7 +41219,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1081344572C119 extends Union {
+  public static class AnonymousType1726780304C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_exec") Ptr<?> handler;
@@ -41230,7 +41231,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1053856141C119 extends Union {
+  public static class AnonymousType115939475C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_start") Ptr<?> handler;
@@ -41242,7 +41243,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1579584742C119 extends Union {
+  public static class AnonymousType1007664442C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_written") Ptr<?> handler;
@@ -41254,7 +41255,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1726780304C119 extends Union {
+  public static class AnonymousType1445222369C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_wait") Ptr<?> handler;
@@ -41266,7 +41267,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType115939475C79 extends Union {
+  public static class AnonymousType1414934182C79 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_pages_written") Ptr<?> handler;
@@ -41278,7 +41279,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1007664442C92 extends Union {
+  public static class AnonymousType439720255C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_wake_background") Ptr<?> handler;
@@ -41290,7 +41291,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1445222369C95 extends Union {
+  public static class AnonymousType1527906606C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_bdi_register") Ptr<?> handler;
@@ -41302,7 +41303,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1414934182C122 extends Union {
+  public static class AnonymousType796774130C122 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_wbc_writepage") Ptr<?> handler;
@@ -41314,7 +41315,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType439720255C143 extends Union {
+  public static class AnonymousType1245439653C143 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_queue_io") Ptr<?> handler;
@@ -41326,7 +41327,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1527906606C107 extends Union {
+  public static class AnonymousType2096194236C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_global_dirty_state") Ptr<?> handler;
@@ -41338,7 +41339,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType796774130C130 extends Union {
+  public static class AnonymousType924915581C130 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_bdi_dirty_ratelimit") Ptr<?> handler;
@@ -41350,7 +41351,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1245439653C229 extends Union {
+  public static class AnonymousType1986676021C229 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_balance_dirty_pages") Ptr<?> handler;
@@ -41362,7 +41363,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2096194236C84 extends Union {
+  public static class AnonymousType1668385683C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_sb_inodes_requeue") Ptr<?> handler;
@@ -41374,7 +41375,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType924915581C130 extends Union {
+  public static class AnonymousType350413251C130 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_single_inode_start") Ptr<?> handler;
@@ -41386,7 +41387,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1986676021C130 extends Union {
+  public static class AnonymousType726107869C130 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_single_inode") Ptr<?> handler;
@@ -41398,7 +41399,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1668385683C84 extends Union {
+  public static class AnonymousType253767021C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_lazytime") Ptr<?> handler;
@@ -41410,7 +41411,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType350413251C84 extends Union {
+  public static class AnonymousType1625428489C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_lazytime_iput") Ptr<?> handler;
@@ -41422,7 +41423,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType726107869C84 extends Union {
+  public static class AnonymousType1661803311C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_writeback_dirty_inode_enqueue") Ptr<?> handler;
@@ -41434,7 +41435,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType253767021C84 extends Union {
+  public static class AnonymousType1953175805C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sb_mark_inode_writeback") Ptr<?> handler;
@@ -41446,7 +41447,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1625428489C84 extends Union {
+  public static class AnonymousType2049837144C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sb_clear_inode_writeback") Ptr<?> handler;
@@ -41574,7 +41575,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1661803311C52 extends Union {
+  public static class AnonymousType179060558C52 extends Union {
     public char @Size(136) [] bytes;
 
     public file_handle obj;
@@ -41864,7 +41865,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1953175805C126 extends Union {
+  public static class AnonymousType32737623C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dax_pmd_fault") Ptr<?> handler;
@@ -41876,7 +41877,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2049837144C126 extends Union {
+  public static class AnonymousType770950500C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dax_pmd_fault_done") Ptr<?> handler;
@@ -41888,7 +41889,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType179060558C124 extends Union {
+  public static class AnonymousType655713354C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dax_pmd_load_hole") Ptr<?> handler;
@@ -41900,7 +41901,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType32737623C124 extends Union {
+  public static class AnonymousType1277716905C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dax_pmd_load_hole_fallback") Ptr<?> handler;
@@ -41912,7 +41913,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType770950500C107 extends Union {
+  public static class AnonymousType1368193098C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dax_pte_fault") Ptr<?> handler;
@@ -41924,7 +41925,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType655713354C107 extends Union {
+  public static class AnonymousType1659363322C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dax_pte_fault_done") Ptr<?> handler;
@@ -41936,7 +41937,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1277716905C107 extends Union {
+  public static class AnonymousType1859965144C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dax_load_hole") Ptr<?> handler;
@@ -41948,7 +41949,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1368193098C107 extends Union {
+  public static class AnonymousType1630968203C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dax_insert_pfn_mkwrite_no_entry") Ptr<?> handler;
@@ -41960,7 +41961,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1659363322C107 extends Union {
+  public static class AnonymousType1473143631C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dax_insert_pfn_mkwrite") Ptr<?> handler;
@@ -41972,7 +41973,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1859965144C122 extends Union {
+  public static class AnonymousType193625667C122 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dax_writeback_range") Ptr<?> handler;
@@ -41984,7 +41985,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1630968203C122 extends Union {
+  public static class AnonymousType56112634C122 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dax_writeback_range_done") Ptr<?> handler;
@@ -41996,7 +41997,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1473143631C122 extends Union {
+  public static class AnonymousType1459035867C122 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dax_writeback_one") Ptr<?> handler;
@@ -42032,17 +42033,17 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType193625667C33 extends Struct {
+  public static class AnonymousType1913113425C33 extends Struct {
     public @Unsigned long x;
   }
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { struct page *page; const void*; long unsigned int index; unsigned int hoffset; }"
+      cType = "struct { struct page *page; const void *addr; long unsigned int index; unsigned int hoffset; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType56112634C95 extends Struct {
+  public static class AnonymousType707250996C102 extends Struct {
     public Ptr<page> page;
 
     public Ptr<?> addr;
@@ -42058,7 +42059,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1459035867C116 extends Union {
+  public static class AnonymousType1754451055C116 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_locks_get_lock_context") Ptr<?> handler;
@@ -42070,7 +42071,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1913113425C108 extends Union {
+  public static class AnonymousType117249632C108 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_posix_lock_inode") Ptr<?> handler;
@@ -42082,7 +42083,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType707250996C108 extends Union {
+  public static class AnonymousType1248598189C108 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_fcntl_setlk") Ptr<?> handler;
@@ -42094,7 +42095,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1754451055C108 extends Union {
+  public static class AnonymousType1585841343C108 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_locks_remove_posix") Ptr<?> handler;
@@ -42106,7 +42107,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType117249632C108 extends Union {
+  public static class AnonymousType537483956C108 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_flock_lock_inode") Ptr<?> handler;
@@ -42118,7 +42119,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1248598189C104 extends Union {
+  public static class AnonymousType1311315651C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_break_lease_noblock") Ptr<?> handler;
@@ -42130,7 +42131,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1585841343C104 extends Union {
+  public static class AnonymousType1688917723C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_break_lease_block") Ptr<?> handler;
@@ -42142,7 +42143,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType537483956C104 extends Union {
+  public static class AnonymousType182949133C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_break_lease_unblock") Ptr<?> handler;
@@ -42154,7 +42155,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1311315651C104 extends Union {
+  public static class AnonymousType1624355359C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_generic_delete_lease") Ptr<?> handler;
@@ -42166,7 +42167,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1688917723C104 extends Union {
+  public static class AnonymousType1724399560C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_time_out_leases") Ptr<?> handler;
@@ -42178,7 +42179,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType182949133C104 extends Union {
+  public static class AnonymousType1415979460C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_generic_add_lease") Ptr<?> handler;
@@ -42190,7 +42191,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1624355359C116 extends Union {
+  public static class AnonymousType1646234040C116 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_leases_conflict") Ptr<?> handler;
@@ -42218,7 +42219,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1724399560C52 extends Union {
+  public static class AnonymousType255041198C52 extends Union {
     public elf64_note nhdr;
 
     public char @Size(1024) [] data;
@@ -42230,7 +42231,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1415979460C52 extends Union {
+  public static class AnonymousType673367807C52 extends Union {
     public elf32_note nhdr;
 
     public char @Size(1024) [] data;
@@ -43312,7 +43313,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1646234040C35 extends Struct {
+  public static class AnonymousType1303362110C35 extends Struct {
     public int stat;
 
     public int errno;
@@ -43381,7 +43382,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType255041198C89 extends Union {
+  public static class AnonymousType1407428730C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iomap_readpage") Ptr<?> handler;
@@ -43393,7 +43394,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType673367807C89 extends Union {
+  public static class AnonymousType1077316166C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iomap_readahead") Ptr<?> handler;
@@ -43405,7 +43406,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1303362110C123 extends Union {
+  public static class AnonymousType2124261761C123 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iomap_writeback_folio") Ptr<?> handler;
@@ -43417,7 +43418,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1407428730C123 extends Union {
+  public static class AnonymousType1322484262C123 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iomap_release_folio") Ptr<?> handler;
@@ -43429,7 +43430,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1077316166C123 extends Union {
+  public static class AnonymousType4015102C123 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iomap_invalidate_folio") Ptr<?> handler;
@@ -43441,7 +43442,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2124261761C123 extends Union {
+  public static class AnonymousType1957530885C123 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iomap_dio_invalidate_fail") Ptr<?> handler;
@@ -43453,7 +43454,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1322484262C123 extends Union {
+  public static class AnonymousType1735390128C123 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iomap_dio_rw_queued") Ptr<?> handler;
@@ -43465,7 +43466,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType4015102C99 extends Union {
+  public static class AnonymousType905940937C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iomap_iter_dstmap") Ptr<?> handler;
@@ -43477,7 +43478,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1957530885C99 extends Union {
+  public static class AnonymousType1605834811C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iomap_iter_srcmap") Ptr<?> handler;
@@ -43489,7 +43490,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1735390128C137 extends Union {
+  public static class AnonymousType1198158701C137 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iomap_add_to_ioend") Ptr<?> handler;
@@ -43501,7 +43502,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType905940937C121 extends Union {
+  public static class AnonymousType1602288195C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iomap_iter") Ptr<?> handler;
@@ -43513,7 +43514,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1605834811C135 extends Union {
+  public static class AnonymousType382252989C135 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iomap_dio_rw_begin") Ptr<?> handler;
@@ -43525,7 +43526,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1198158701C99 extends Union {
+  public static class AnonymousType1901663135C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iomap_dio_complete") Ptr<?> handler;
@@ -43667,7 +43668,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1602288195C69 extends Struct {
+  public static class AnonymousType1706883010C69 extends Struct {
     public __genradix tree;
 
     public map_files_info @Size(0) [] type;
@@ -43679,7 +43680,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType382252989C39 extends Struct {
+  public static class AnonymousType1035357140C39 extends Struct {
     public short flag;
 
     public char name;
@@ -44507,7 +44508,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1901663135C56 extends Union {
+  public static class AnonymousType1846568576C56 extends Union {
     public char @Size(168) [] bytes;
 
     public ext4_group_info obj;
@@ -44561,7 +44562,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1706883010C103 extends Union {
+  public static class AnonymousType1466717494C103 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_other_inode_update_time") Ptr<?> handler;
@@ -44573,7 +44574,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1035357140C84 extends Union {
+  public static class AnonymousType1441577726C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_free_inode") Ptr<?> handler;
@@ -44585,7 +44586,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1846568576C89 extends Union {
+  public static class AnonymousType1519100796C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_request_inode") Ptr<?> handler;
@@ -44597,7 +44598,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1466717494C104 extends Union {
+  public static class AnonymousType935520971C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_allocate_inode") Ptr<?> handler;
@@ -44609,7 +44610,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1441577726C84 extends Union {
+  public static class AnonymousType36883680C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_evict_inode") Ptr<?> handler;
@@ -44621,7 +44622,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1519100796C89 extends Union {
+  public static class AnonymousType851033362C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_drop_inode") Ptr<?> handler;
@@ -44633,7 +44634,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType935520971C84 extends Union {
+  public static class AnonymousType892237946C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_nfs_commit_metadata") Ptr<?> handler;
@@ -44645,7 +44646,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType36883680C103 extends Union {
+  public static class AnonymousType362432678C103 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_mark_inode_dirty") Ptr<?> handler;
@@ -44657,7 +44658,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType851033362C99 extends Union {
+  public static class AnonymousType22790969C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_begin_ordered_truncate") Ptr<?> handler;
@@ -44669,7 +44670,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType892237946C113 extends Union {
+  public static class AnonymousType2121645869C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_write_begin") Ptr<?> handler;
@@ -44681,7 +44682,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType362432678C113 extends Union {
+  public static class AnonymousType945747249C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_da_write_begin") Ptr<?> handler;
@@ -44693,7 +44694,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType22790969C127 extends Union {
+  public static class AnonymousType2143700452C127 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_write_end") Ptr<?> handler;
@@ -44705,7 +44706,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2121645869C127 extends Union {
+  public static class AnonymousType542839598C127 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_journalled_write_end") Ptr<?> handler;
@@ -44717,7 +44718,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType945747249C127 extends Union {
+  public static class AnonymousType1929661663C127 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_da_write_end") Ptr<?> handler;
@@ -44729,7 +44730,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2143700452C111 extends Union {
+  public static class AnonymousType1019009267C111 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_writepages") Ptr<?> handler;
@@ -44741,7 +44742,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType542839598C141 extends Union {
+  public static class AnonymousType1905804261C141 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_da_write_folios_start") Ptr<?> handler;
@@ -44753,7 +44754,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1929661663C146 extends Union {
+  public static class AnonymousType161672347C146 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_da_write_folios_end") Ptr<?> handler;
@@ -44765,7 +44766,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1019009267C109 extends Union {
+  public static class AnonymousType1477520324C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_da_write_pages_extent") Ptr<?> handler;
@@ -44777,7 +44778,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1905804261C121 extends Union {
+  public static class AnonymousType36707189C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_writepages_result") Ptr<?> handler;
@@ -44789,7 +44790,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType161672347C99 extends Union {
+  public static class AnonymousType822409149C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_read_folio") Ptr<?> handler;
@@ -44801,7 +44802,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1477520324C99 extends Union {
+  public static class AnonymousType794563378C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_release_folio") Ptr<?> handler;
@@ -44813,7 +44814,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType36707189C122 extends Union {
+  public static class AnonymousType2126664214C122 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_invalidate_folio") Ptr<?> handler;
@@ -44825,7 +44826,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType822409149C122 extends Union {
+  public static class AnonymousType2091586824C122 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_journalled_invalidate_folio") Ptr<?> handler;
@@ -44837,7 +44838,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType794563378C138 extends Union {
+  public static class AnonymousType1787083839C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_discard_blocks") Ptr<?> handler;
@@ -44849,7 +44850,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2126664214C131 extends Union {
+  public static class AnonymousType630122462C131 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_mb_new_inode_pa") Ptr<?> handler;
@@ -44861,7 +44862,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2091586824C131 extends Union {
+  public static class AnonymousType1227903899C131 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_mb_new_group_pa") Ptr<?> handler;
@@ -44873,7 +44874,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1787083839C136 extends Union {
+  public static class AnonymousType1830231264C136 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_mb_release_inode_pa") Ptr<?> handler;
@@ -44885,7 +44886,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType630122462C119 extends Union {
+  public static class AnonymousType582819897C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_mb_release_group_pa") Ptr<?> handler;
@@ -44897,7 +44898,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1227903899C98 extends Union {
+  public static class AnonymousType1885307815C98 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_discard_preallocations") Ptr<?> handler;
@@ -44909,7 +44910,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1830231264C95 extends Union {
+  public static class AnonymousType1001958076C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_mb_discard_preallocations") Ptr<?> handler;
@@ -44921,7 +44922,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType582819897C102 extends Union {
+  public static class AnonymousType1847410999C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_request_blocks") Ptr<?> handler;
@@ -44933,7 +44934,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1885307815C126 extends Union {
+  public static class AnonymousType627709989C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_allocate_blocks") Ptr<?> handler;
@@ -44945,7 +44946,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1001958076C132 extends Union {
+  public static class AnonymousType698676628C132 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_free_blocks") Ptr<?> handler;
@@ -44957,7 +44958,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1847410999C88 extends Union {
+  public static class AnonymousType1471633238C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_sync_file_enter") Ptr<?> handler;
@@ -44969,7 +44970,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType627709989C89 extends Union {
+  public static class AnonymousType1395105902C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_sync_file_exit") Ptr<?> handler;
@@ -44981,7 +44982,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType698676628C95 extends Union {
+  public static class AnonymousType645476639C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_sync_fs") Ptr<?> handler;
@@ -44993,7 +44994,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1471633238C84 extends Union {
+  public static class AnonymousType679442449C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_alloc_da_blocks") Ptr<?> handler;
@@ -45005,7 +45006,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1395105902C102 extends Union {
+  public static class AnonymousType1159694255C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_mballoc_alloc") Ptr<?> handler;
@@ -45017,7 +45018,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType645476639C102 extends Union {
+  public static class AnonymousType727018418C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_mballoc_prealloc") Ptr<?> handler;
@@ -45029,7 +45030,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType679442449C129 extends Union {
+  public static class AnonymousType1154172430C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_mballoc_discard") Ptr<?> handler;
@@ -45041,7 +45042,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1159694255C129 extends Union {
+  public static class AnonymousType388436342C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_mballoc_free") Ptr<?> handler;
@@ -45053,7 +45054,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType727018418C113 extends Union {
+  public static class AnonymousType775741122C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_forget") Ptr<?> handler;
@@ -45065,7 +45066,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1154172430C94 extends Union {
+  public static class AnonymousType775174220C94 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_da_update_reserve_space") Ptr<?> handler;
@@ -45077,7 +45078,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType388436342C89 extends Union {
+  public static class AnonymousType810672306C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_da_reserve_space") Ptr<?> handler;
@@ -45089,7 +45090,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType775741122C89 extends Union {
+  public static class AnonymousType525527919C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_da_release_space") Ptr<?> handler;
@@ -45101,7 +45102,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType775174220C109 extends Union {
+  public static class AnonymousType1473313929C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_mb_bitmap_load") Ptr<?> handler;
@@ -45113,7 +45114,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType810672306C109 extends Union {
+  public static class AnonymousType1479100519C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_mb_buddy_bitmap_load") Ptr<?> handler;
@@ -45125,7 +45126,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType525527919C109 extends Union {
+  public static class AnonymousType1740797856C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_load_inode_bitmap") Ptr<?> handler;
@@ -45137,7 +45138,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1473313929C116 extends Union {
+  public static class AnonymousType1875108260C116 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_read_block_bitmap_load") Ptr<?> handler;
@@ -45149,7 +45150,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1479100519C119 extends Union {
+  public static class AnonymousType1067936865C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fallocate_enter") Ptr<?> handler;
@@ -45161,7 +45162,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1740797856C119 extends Union {
+  public static class AnonymousType761229698C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_punch_hole") Ptr<?> handler;
@@ -45173,7 +45174,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1875108260C119 extends Union {
+  public static class AnonymousType1498705150C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_zero_range") Ptr<?> handler;
@@ -45185,7 +45186,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1067936865C118 extends Union {
+  public static class AnonymousType703232177C118 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fallocate_exit") Ptr<?> handler;
@@ -45197,7 +45198,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType761229698C100 extends Union {
+  public static class AnonymousType757779849C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_unlink_enter") Ptr<?> handler;
@@ -45209,7 +45210,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1498705150C90 extends Union {
+  public static class AnonymousType2075093711C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_unlink_exit") Ptr<?> handler;
@@ -45221,7 +45222,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType703232177C84 extends Union {
+  public static class AnonymousType31906520C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_truncate_enter") Ptr<?> handler;
@@ -45233,7 +45234,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType757779849C84 extends Union {
+  public static class AnonymousType2066945445C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_truncate_exit") Ptr<?> handler;
@@ -45245,7 +45246,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2075093711C130 extends Union {
+  public static class AnonymousType9361871C130 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_ext_convert_to_initialized_enter") Ptr<?> handler;
@@ -45257,7 +45258,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType31906520C151 extends Union {
+  public static class AnonymousType16196099C151 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_ext_convert_to_initialized_fastpath") Ptr<?> handler;
@@ -45269,7 +45270,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2066945445C126 extends Union {
+  public static class AnonymousType930089183C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_ext_map_blocks_enter") Ptr<?> handler;
@@ -45281,7 +45282,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType9361871C126 extends Union {
+  public static class AnonymousType1410186665C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_ind_map_blocks_enter") Ptr<?> handler;
@@ -45293,7 +45294,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType16196099C128 extends Union {
+  public static class AnonymousType582702662C128 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_ext_map_blocks_exit") Ptr<?> handler;
@@ -45305,7 +45306,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType930089183C128 extends Union {
+  public static class AnonymousType468033320C128 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_ind_map_blocks_exit") Ptr<?> handler;
@@ -45317,7 +45318,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1410186665C122 extends Union {
+  public static class AnonymousType753162875C122 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_ext_load_extent") Ptr<?> handler;
@@ -45329,7 +45330,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType582702662C109 extends Union {
+  public static class AnonymousType356338363C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_load_inode") Ptr<?> handler;
@@ -45341,7 +45342,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType468033320C129 extends Union {
+  public static class AnonymousType1833707324C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_journal_start_sb") Ptr<?> handler;
@@ -45353,7 +45354,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType753162875C123 extends Union {
+  public static class AnonymousType1516759394C123 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_journal_start_inode") Ptr<?> handler;
@@ -45365,7 +45366,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType356338363C114 extends Union {
+  public static class AnonymousType1415469015C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_journal_start_reserved") Ptr<?> handler;
@@ -45377,7 +45378,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1833707324C114 extends Union {
+  public static class AnonymousType734635893C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_trim_extent") Ptr<?> handler;
@@ -45389,7 +45390,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1516759394C114 extends Union {
+  public static class AnonymousType665846007C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_trim_all_free") Ptr<?> handler;
@@ -45401,7 +45402,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1415469015C152 extends Union {
+  public static class AnonymousType1123664282C152 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_ext_handle_unwritten_extents") Ptr<?> handler;
@@ -45413,7 +45414,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType734635893C120 extends Union {
+  public static class AnonymousType1690294013C120 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_get_implied_cluster_alloc_exit") Ptr<?> handler;
@@ -45425,7 +45426,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType665846007C142 extends Union {
+  public static class AnonymousType44771088C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_ext_show_extent") Ptr<?> handler;
@@ -45437,7 +45438,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1123664282C168 extends Union {
+  public static class AnonymousType624637962C168 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_remove_blocks") Ptr<?> handler;
@@ -45449,7 +45450,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1690294013C144 extends Union {
+  public static class AnonymousType700631078C144 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_ext_rm_leaf") Ptr<?> handler;
@@ -45461,7 +45462,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType44771088C108 extends Union {
+  public static class AnonymousType860941277C108 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_ext_rm_idx") Ptr<?> handler;
@@ -45473,7 +45474,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType624637962C117 extends Union {
+  public static class AnonymousType1746458880C117 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_ext_remove_space") Ptr<?> handler;
@@ -45485,7 +45486,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType700631078C162 extends Union {
+  public static class AnonymousType345986913C162 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_ext_remove_space_done") Ptr<?> handler;
@@ -45497,7 +45498,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType860941277C107 extends Union {
+  public static class AnonymousType732118572C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_es_insert_extent") Ptr<?> handler;
@@ -45509,7 +45510,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1746458880C107 extends Union {
+  public static class AnonymousType521746054C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_es_cache_extent") Ptr<?> handler;
@@ -45521,7 +45522,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType345986913C112 extends Union {
+  public static class AnonymousType837233852C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_es_remove_extent") Ptr<?> handler;
@@ -45533,7 +45534,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType732118572C98 extends Union {
+  public static class AnonymousType1605190078C98 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_es_find_extent_range_enter") Ptr<?> handler;
@@ -45545,7 +45546,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType521746054C107 extends Union {
+  public static class AnonymousType1842173497C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_es_find_extent_range_exit") Ptr<?> handler;
@@ -45557,7 +45558,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType837233852C98 extends Union {
+  public static class AnonymousType993452032C98 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_es_lookup_extent_enter") Ptr<?> handler;
@@ -45569,7 +45570,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1605190078C112 extends Union {
+  public static class AnonymousType859617558C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_es_lookup_extent_exit") Ptr<?> handler;
@@ -45581,7 +45582,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1842173497C100 extends Union {
+  public static class AnonymousType103394942C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_es_shrink_count") Ptr<?> handler;
@@ -45593,7 +45594,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType993452032C100 extends Union {
+  public static class AnonymousType30563356C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_es_shrink_scan_enter") Ptr<?> handler;
@@ -45605,7 +45606,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType859617558C100 extends Union {
+  public static class AnonymousType233343686C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_es_shrink_scan_exit") Ptr<?> handler;
@@ -45617,7 +45618,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType103394942C114 extends Union {
+  public static class AnonymousType1539995236C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_collapse_range") Ptr<?> handler;
@@ -45629,7 +45630,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType30563356C114 extends Union {
+  public static class AnonymousType274426173C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_insert_range") Ptr<?> handler;
@@ -45641,7 +45642,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType233343686C129 extends Union {
+  public static class AnonymousType66774422C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_es_shrink") Ptr<?> handler;
@@ -45653,7 +45654,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1539995236C121 extends Union {
+  public static class AnonymousType1242427797C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_es_insert_delayed_extent") Ptr<?> handler;
@@ -45665,7 +45666,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType274426173C190 extends Union {
+  public static class AnonymousType1123862502C190 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fsmap_low_key") Ptr<?> handler;
@@ -45677,7 +45678,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType66774422C190 extends Union {
+  public static class AnonymousType153443333C190 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fsmap_high_key") Ptr<?> handler;
@@ -45689,7 +45690,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1242427797C190 extends Union {
+  public static class AnonymousType1571278562C190 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fsmap_mapping") Ptr<?> handler;
@@ -45701,7 +45702,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1123862502C110 extends Union {
+  public static class AnonymousType2021854618C110 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_getfsmap_low_key") Ptr<?> handler;
@@ -45713,7 +45714,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType153443333C110 extends Union {
+  public static class AnonymousType1558460059C110 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_getfsmap_high_key") Ptr<?> handler;
@@ -45725,7 +45726,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1571278562C110 extends Union {
+  public static class AnonymousType2139266166C110 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_getfsmap_mapping") Ptr<?> handler;
@@ -45737,7 +45738,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2021854618C109 extends Union {
+  public static class AnonymousType481402298C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_shutdown") Ptr<?> handler;
@@ -45749,7 +45750,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1558460059C115 extends Union {
+  public static class AnonymousType2084486251C115 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_error") Ptr<?> handler;
@@ -45761,7 +45762,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2139266166C132 extends Union {
+  public static class AnonymousType26418585C132 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_prefetch_bitmaps") Ptr<?> handler;
@@ -45773,7 +45774,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType481402298C104 extends Union {
+  public static class AnonymousType1788432625C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_lazy_itable_init") Ptr<?> handler;
@@ -45785,7 +45786,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2084486251C100 extends Union {
+  public static class AnonymousType2060799061C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fc_replay_scan") Ptr<?> handler;
@@ -45797,7 +45798,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType26418585C110 extends Union {
+  public static class AnonymousType1929476736C110 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fc_replay") Ptr<?> handler;
@@ -45809,7 +45810,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1788432625C104 extends Union {
+  public static class AnonymousType1793580716C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fc_commit_start") Ptr<?> handler;
@@ -45821,7 +45822,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2060799061C114 extends Union {
+  public static class AnonymousType1247348185C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fc_commit_stop") Ptr<?> handler;
@@ -45833,7 +45834,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1929476736C90 extends Union {
+  public static class AnonymousType440295203C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fc_stats") Ptr<?> handler;
@@ -45845,7 +45846,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1793580716C127 extends Union {
+  public static class AnonymousType1653859230C127 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fc_track_create") Ptr<?> handler;
@@ -45857,7 +45858,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1247348185C127 extends Union {
+  public static class AnonymousType911561694C127 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fc_track_link") Ptr<?> handler;
@@ -45869,7 +45870,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType440295203C127 extends Union {
+  public static class AnonymousType882962176C127 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fc_track_unlink") Ptr<?> handler;
@@ -45881,7 +45882,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1653859230C111 extends Union {
+  public static class AnonymousType1544518128C111 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fc_track_inode") Ptr<?> handler;
@@ -45893,7 +45894,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType911561694C131 extends Union {
+  public static class AnonymousType570294012C131 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fc_track_range") Ptr<?> handler;
@@ -45905,7 +45906,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType882962176C100 extends Union {
+  public static class AnonymousType1034584766C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_fc_cleanup") Ptr<?> handler;
@@ -45917,7 +45918,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1544518128C128 extends Union {
+  public static class AnonymousType247575268C128 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ext4_update_sb") Ptr<?> handler;
@@ -46166,7 +46167,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType570294012C86 extends Union {
+  public static class AnonymousType698784309C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_checkpoint") Ptr<?> handler;
@@ -46178,7 +46179,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1034584766C97 extends Union {
+  public static class AnonymousType1742900195C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_start_commit") Ptr<?> handler;
@@ -46190,7 +46191,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType247575268C97 extends Union {
+  public static class AnonymousType238308051C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_commit_locking") Ptr<?> handler;
@@ -46202,7 +46203,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType698784309C97 extends Union {
+  public static class AnonymousType232886115C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_commit_flushing") Ptr<?> handler;
@@ -46214,7 +46215,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1742900195C97 extends Union {
+  public static class AnonymousType277601240C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_commit_logging") Ptr<?> handler;
@@ -46226,7 +46227,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType238308051C97 extends Union {
+  public static class AnonymousType1665525689C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_drop_transaction") Ptr<?> handler;
@@ -46238,7 +46239,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType232886115C97 extends Union {
+  public static class AnonymousType1334528976C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_end_commit") Ptr<?> handler;
@@ -46250,7 +46251,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType277601240C84 extends Union {
+  public static class AnonymousType1318080469C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_submit_inode_data") Ptr<?> handler;
@@ -46262,7 +46263,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1665525689C130 extends Union {
+  public static class AnonymousType727236C130 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_handle_start") Ptr<?> handler;
@@ -46274,7 +46275,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1334528976C130 extends Union {
+  public static class AnonymousType1287606099C130 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_handle_restart") Ptr<?> handler;
@@ -46286,7 +46287,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1318080469C135 extends Union {
+  public static class AnonymousType1501513951C135 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_handle_extend") Ptr<?> handler;
@@ -46298,7 +46299,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType727236C145 extends Union {
+  public static class AnonymousType366828226C145 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_handle_stats") Ptr<?> handler;
@@ -46310,7 +46311,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1287606099C130 extends Union {
+  public static class AnonymousType1296612741C130 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_run_stats") Ptr<?> handler;
@@ -46322,7 +46323,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1501513951C130 extends Union {
+  public static class AnonymousType2075899560C130 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_checkpoint_stats") Ptr<?> handler;
@@ -46334,7 +46335,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType366828226C133 extends Union {
+  public static class AnonymousType1486954672C133 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_update_log_tail") Ptr<?> handler;
@@ -46346,7 +46347,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1296612741C95 extends Union {
+  public static class AnonymousType668301868C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_write_superblock") Ptr<?> handler;
@@ -46358,7 +46359,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2075899560C102 extends Union {
+  public static class AnonymousType804872134C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_lock_buffer_stall") Ptr<?> handler;
@@ -46370,7 +46371,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1486954672C119 extends Union {
+  public static class AnonymousType164733543C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_shrink_count") Ptr<?> handler;
@@ -46382,7 +46383,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType668301868C119 extends Union {
+  public static class AnonymousType1487185741C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_shrink_scan_enter") Ptr<?> handler;
@@ -46394,7 +46395,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType804872134C138 extends Union {
+  public static class AnonymousType1420599919C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_shrink_scan_exit") Ptr<?> handler;
@@ -46406,7 +46407,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType164733543C156 extends Union {
+  public static class AnonymousType827248723C156 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_jbd2_shrink_checkpoint_list") Ptr<?> handler;
@@ -46432,7 +46433,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1487185741C104 extends Union {
+  public static class AnonymousType889753223C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hugetlbfs_alloc_inode") Ptr<?> handler;
@@ -46444,7 +46445,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1420599919C84 extends Union {
+  public static class AnonymousType1215023524C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hugetlbfs_evict_inode") Ptr<?> handler;
@@ -46456,7 +46457,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType827248723C84 extends Union {
+  public static class AnonymousType2036704540C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hugetlbfs_free_inode") Ptr<?> handler;
@@ -46468,7 +46469,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType889753223C115 extends Union {
+  public static class AnonymousType1055800875C115 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hugetlbfs_setattr") Ptr<?> handler;
@@ -46480,7 +46481,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1215023524C124 extends Union {
+  public static class AnonymousType1331946439C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hugetlbfs_fallocate") Ptr<?> handler;
@@ -46525,7 +46526,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2036704540C28 extends Struct {
+  public static class AnonymousType1498621286C28 extends Struct {
     public @Unsigned @OriginalName("__le32") int x;
   }
 
@@ -46535,7 +46536,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1055800875C34 extends Struct {
+  public static class AnonymousType231351829C34 extends Struct {
     public @Unsigned @OriginalName("__le16") short x;
   }
 
@@ -46545,7 +46546,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1331946439C38 extends Struct {
+  public static class AnonymousType1109020385C38 extends Struct {
     public @Unsigned @OriginalName("__be64") long x;
   }
 
@@ -46555,7 +46556,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1498621286C34 extends Struct {
+  public static class AnonymousType305651902C34 extends Struct {
     public @Unsigned @OriginalName("__be16") short x;
   }
 
@@ -46595,7 +46596,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType231351829C93 extends Union {
+  public static class AnonymousType1385140107C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_fuse_request_send") Ptr<?> handler;
@@ -46607,7 +46608,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1109020385C93 extends Union {
+  public static class AnonymousType246014273C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_fuse_request_end") Ptr<?> handler;
@@ -46873,7 +46874,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType305651902C126 extends Union {
+  public static class AnonymousType508873523C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mon_llc_occupancy_limbo") Ptr<?> handler;
@@ -46955,7 +46956,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType499310212C78 extends Struct {
+  public static class AnonymousType2085601983C78 extends Struct {
     public Ptr<key> keyring;
 
     public Ptr<assoc_array_node> node;
@@ -47957,7 +47958,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1490434838C153 extends Union {
+  public static class AnonymousType794949943C153 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cap_capable") Ptr<?> handler;
@@ -47969,7 +47970,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2085601983C118 extends Union {
+  public static class AnonymousType1183213894C118 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_selinux_audited") Ptr<?> handler;
@@ -48248,11 +48249,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; int len; int opt; _Bool has_arg; }"
+      cType = "struct { const u8 *name; int len; int opt; _Bool has_arg; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2003961164C60 extends Struct {
+  public static class AnonymousType1155399955C67 extends Struct {
     public String name;
 
     public int len;
@@ -48479,11 +48480,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; int len; int opt; }"
+      cType = "struct { const u8 *name; int len; int opt; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType794949943C43 extends Struct {
+  public static class AnonymousType593573025C50 extends Struct {
     public String name;
 
     public int len;
@@ -48493,11 +48494,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; int (*write)(struct tomoyo_acl_param*); }"
+      cType = "struct { const u8 *keyword; int (*write)(struct tomoyo_acl_param*); }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1183213894C63 extends Struct {
+  public static class AnonymousType57264571C73 extends Struct {
     public String keyword;
 
     public Ptr<?> write;
@@ -48578,7 +48579,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1155399955C38 extends Struct {
+  public static class AnonymousType1993366729C38 extends Struct {
     public @Unsigned @OriginalName("__le64") long x;
   }
 
@@ -48773,7 +48774,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1993366729C49 extends Struct {
+  public static class AnonymousType632669667C49 extends Struct {
     public char @Size(16) [] buf;
 
     public scatterlist sg;
@@ -48785,7 +48786,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1118969241C190 extends Struct {
+  public static class AnonymousType1366811528C190 extends Struct {
     public be128 hash;
 
     public char @Size(16) [] iv;
@@ -48803,7 +48804,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1759313234C56 extends Union {
+  public static class AnonymousType58421994C56 extends Union {
     public char @Size(8) [] req;
 
     public @Unsigned @OriginalName("__be64") long req_int;
@@ -48825,7 +48826,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType632669667C111 extends Struct {
+  public static class AnonymousType214055354C111 extends Struct {
     public int rct_count;
 
     public @Unsigned int apt_observations;
@@ -48857,7 +48858,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1366811528C56 extends Struct {
+  public static class AnonymousType131301148C56 extends Struct {
     public asymmetric_key_id id;
 
     public char @Size(10) [] data;
@@ -49219,7 +49220,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType58421994C90 extends Union {
+  public static class AnonymousType1775675341C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_touch_buffer") Ptr<?> handler;
@@ -49231,7 +49232,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType214055354C90 extends Union {
+  public static class AnonymousType828535871C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_dirty_buffer") Ptr<?> handler;
@@ -49243,7 +49244,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType131301148C86 extends Union {
+  public static class AnonymousType745571392C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_rq_requeue") Ptr<?> handler;
@@ -49255,7 +49256,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1775675341C104 extends Union {
+  public static class AnonymousType809968973C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_rq_complete") Ptr<?> handler;
@@ -49267,7 +49268,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType828535871C104 extends Union {
+  public static class AnonymousType1827869767C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_rq_error") Ptr<?> handler;
@@ -49279,7 +49280,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType745571392C86 extends Union {
+  public static class AnonymousType1318209130C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_rq_insert") Ptr<?> handler;
@@ -49291,7 +49292,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType809968973C86 extends Union {
+  public static class AnonymousType1726519676C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_rq_issue") Ptr<?> handler;
@@ -49303,7 +49304,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1827869767C86 extends Union {
+  public static class AnonymousType1863103905C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_rq_merge") Ptr<?> handler;
@@ -49315,7 +49316,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1318209130C86 extends Union {
+  public static class AnonymousType455726379C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_io_start") Ptr<?> handler;
@@ -49327,7 +49328,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1726519676C86 extends Union {
+  public static class AnonymousType1196716338C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_io_done") Ptr<?> handler;
@@ -49339,7 +49340,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1863103905C105 extends Union {
+  public static class AnonymousType1700078557C105 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_bio_complete") Ptr<?> handler;
@@ -49351,7 +49352,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType455726379C82 extends Union {
+  public static class AnonymousType1870541675C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_bio_backmerge") Ptr<?> handler;
@@ -49363,7 +49364,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1196716338C82 extends Union {
+  public static class AnonymousType975905570C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_bio_frontmerge") Ptr<?> handler;
@@ -49375,7 +49376,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1700078557C82 extends Union {
+  public static class AnonymousType1578244276C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_bio_queue") Ptr<?> handler;
@@ -49387,7 +49388,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1870541675C82 extends Union {
+  public static class AnonymousType311788384C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_getrq") Ptr<?> handler;
@@ -49399,7 +49400,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType975905570C86 extends Union {
+  public static class AnonymousType208539442C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_blk_zone_append_update_request_bio") Ptr<?> handler;
@@ -49411,7 +49412,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1578244276C92 extends Union {
+  public static class AnonymousType1866403758C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_plug") Ptr<?> handler;
@@ -49423,7 +49424,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType311788384C113 extends Union {
+  public static class AnonymousType564555077C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_unplug") Ptr<?> handler;
@@ -49435,7 +49436,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType208539442C96 extends Union {
+  public static class AnonymousType529949842C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_split") Ptr<?> handler;
@@ -49447,7 +49448,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1866403758C120 extends Union {
+  public static class AnonymousType1677590477C120 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_bio_remap") Ptr<?> handler;
@@ -49459,7 +49460,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType564555077C124 extends Union {
+  public static class AnonymousType1948835427C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_block_rq_remap") Ptr<?> handler;
@@ -49471,7 +49472,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType529949842C106 extends Union {
+  public static class AnonymousType1727420902C106 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_blkdev_zone_mgmt") Ptr<?> handler;
@@ -49483,7 +49484,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1677590477C144 extends Union {
+  public static class AnonymousType1248334686C144 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_disk_zone_wplug_add_bio") Ptr<?> handler;
@@ -49495,7 +49496,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1948835427C144 extends Union {
+  public static class AnonymousType1181191753C144 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_blk_zone_wplug_bio") Ptr<?> handler;
@@ -49503,11 +49504,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { int errno; const u8*; }"
+      cType = "struct { int errno; const u8 *name; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1727420902C34 extends Struct {
+  public static class AnonymousType1955502880C41 extends Struct {
     public int errno;
 
     public String name;
@@ -50040,7 +50041,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1248334686C116 extends Struct {
+  public static class AnonymousType543409470C116 extends Struct {
     public char id;
 
     public Ptr<?> parse;
@@ -50318,7 +50319,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1181191753C185 extends Union {
+  public static class AnonymousType714850447C185 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iocost_iocg_activate") Ptr<?> handler;
@@ -50330,7 +50331,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1955502880C185 extends Union {
+  public static class AnonymousType1358169683C185 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iocost_iocg_idle") Ptr<?> handler;
@@ -50342,7 +50343,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType543409470C189 extends Union {
+  public static class AnonymousType1352913142C189 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iocost_inuse_shortage") Ptr<?> handler;
@@ -50354,7 +50355,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType714850447C189 extends Union {
+  public static class AnonymousType1851241961C189 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iocost_inuse_transfer") Ptr<?> handler;
@@ -50366,7 +50367,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1358169683C189 extends Union {
+  public static class AnonymousType448569108C189 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iocost_inuse_adjust") Ptr<?> handler;
@@ -50378,7 +50379,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1352913142C145 extends Union {
+  public static class AnonymousType1779090574C145 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iocost_ioc_vrate_adj") Ptr<?> handler;
@@ -50390,7 +50391,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1851241961C223 extends Union {
+  public static class AnonymousType618696025C223 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_iocost_iocg_forgive_debt") Ptr<?> handler;
@@ -50432,7 +50433,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType448569108C116 extends Union {
+  public static class AnonymousType2009832657C116 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_wbt_stat") Ptr<?> handler;
@@ -50444,7 +50445,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1779090574C114 extends Union {
+  public static class AnonymousType158460163C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_wbt_lat") Ptr<?> handler;
@@ -50456,7 +50457,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType618696025C172 extends Union {
+  public static class AnonymousType895705623C172 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_wbt_step") Ptr<?> handler;
@@ -50468,7 +50469,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2009832657C128 extends Union {
+  public static class AnonymousType357153703C128 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_wbt_timer") Ptr<?> handler;
@@ -51059,7 +51060,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType158460163C123 extends Union {
+  public static class AnonymousType1045397707C123 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_create") Ptr<?> handler;
@@ -51071,7 +51072,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType895705623C128 extends Union {
+  public static class AnonymousType946884592C128 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_register") Ptr<?> handler;
@@ -51083,7 +51084,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType357153703C92 extends Union {
+  public static class AnonymousType380494131C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_file_get") Ptr<?> handler;
@@ -51095,7 +51096,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1045397707C92 extends Union {
+  public static class AnonymousType1315038402C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_queue_async_work") Ptr<?> handler;
@@ -51107,7 +51108,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType946884592C87 extends Union {
+  public static class AnonymousType208301085C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_defer") Ptr<?> handler;
@@ -51119,7 +51120,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType380494131C105 extends Union {
+  public static class AnonymousType920632751C105 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_link") Ptr<?> handler;
@@ -51131,7 +51132,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1315038402C81 extends Union {
+  public static class AnonymousType1333945918C81 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_cqring_wait") Ptr<?> handler;
@@ -51143,7 +51144,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType208301085C105 extends Union {
+  public static class AnonymousType235195640C105 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_fail_link") Ptr<?> handler;
@@ -51155,7 +51156,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType920632751C119 extends Union {
+  public static class AnonymousType1372668833C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_complete") Ptr<?> handler;
@@ -51167,7 +51168,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1333945918C87 extends Union {
+  public static class AnonymousType438873841C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_submit_req") Ptr<?> handler;
@@ -51179,7 +51180,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType235195640C97 extends Union {
+  public static class AnonymousType1179093020C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_poll_arm") Ptr<?> handler;
@@ -51191,7 +51192,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1372668833C92 extends Union {
+  public static class AnonymousType1846345504C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_task_add") Ptr<?> handler;
@@ -51203,7 +51204,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType438873841C120 extends Union {
+  public static class AnonymousType899376395C120 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_req_failed") Ptr<?> handler;
@@ -51215,7 +51216,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1179093020C126 extends Union {
+  public static class AnonymousType1788545647C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_cqe_overflow") Ptr<?> handler;
@@ -51227,7 +51228,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1846345504C90 extends Union {
+  public static class AnonymousType275150920C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_task_work_run") Ptr<?> handler;
@@ -51239,7 +51240,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType899376395C148 extends Union {
+  public static class AnonymousType421163163C148 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_short_write") Ptr<?> handler;
@@ -51251,7 +51252,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1788545647C95 extends Union {
+  public static class AnonymousType2009591182C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_uring_local_work_run") Ptr<?> handler;
@@ -52055,7 +52056,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType275150920C44 extends Struct {
+  public static class AnonymousType1161644395C44 extends Struct {
     public @Unsigned long x;
   }
 
@@ -52065,7 +52066,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType421163163C34 extends Struct {
+  public static class AnonymousType1723518396C34 extends Struct {
     public @Unsigned int x;
   }
 
@@ -52075,7 +52076,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2009591182C40 extends Struct {
+  public static class AnonymousType745465688C40 extends Struct {
     public @Unsigned short x;
   }
 
@@ -52085,7 +52086,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1161644395C393 extends Struct {
+  public static class AnonymousType1678623942C393 extends Struct {
     public char @Size(16) [] bswap_mask;
 
     public @Unsigned long @Size(2) [] fold_across_2048_bits_consts;
@@ -52109,7 +52110,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1723518396C372 extends Struct {
+  public static class AnonymousType1263841085C372 extends Struct {
     public @Unsigned long @Size(2) [] fold_across_2048_bits_consts;
 
     public @Unsigned long @Size(2) [] fold_across_1024_bits_consts;
@@ -52131,7 +52132,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType745465688C28 extends Struct {
+  public static class AnonymousType2075352262C28 extends Struct {
     public @Unsigned int x;
   }
 
@@ -52141,7 +52142,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1678623942C38 extends Struct {
+  public static class AnonymousType540811471C38 extends Struct {
     public @Unsigned long x;
   }
 
@@ -52151,7 +52152,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1263841085C34 extends Struct {
+  public static class AnonymousType706604026C34 extends Struct {
     public @Unsigned short x;
   }
 
@@ -52161,14 +52162,14 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2075352262C189 extends Union {
-    public AnonymousType540811471C63 anon0;
+  public static class AnonymousType1155437763C189 extends Union {
+    public AnonymousType627746290C63 anon0;
 
     public char @Size(32) [] block0;
 
     public char @Size(64) [] chacha_stream;
 
-    public AnonymousType706604026C24 anon3;
+    public AnonymousType1678889928C24 anon3;
 
     public @Unsigned @OriginalName("__le64") long @Size(2) [] lens;
   }
@@ -52179,7 +52180,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType540811471C63 extends Struct {
+  public static class AnonymousType627746290C63 extends Struct {
     public @Unsigned int @Size(8) [] k;
 
     public @Unsigned @OriginalName("__le64") long @Size(2) [] iv;
@@ -52191,7 +52192,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType706604026C24 extends Struct {
+  public static class AnonymousType1678889928C24 extends Struct {
     public char @Size(32) [] mac;
   }
 
@@ -52201,7 +52202,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1155437763C74 extends Union {
+  public static class AnonymousType555136651C74 extends Union {
     public char @Size(32) [] block0;
 
     public char @Size(16) [] mac;
@@ -52215,7 +52216,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType627746290C60 extends Union {
+  public static class AnonymousType299783910C60 extends Union {
     public char @Size(32) [] block0;
 
     public @Unsigned @OriginalName("__le64") long @Size(2) [] lens;
@@ -52227,7 +52228,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1678889928C47 extends Union {
+  public static class AnonymousType1634411546C47 extends Union {
     public char @Size(64) [] b;
 
     public @Unsigned long @Size(8) [] w;
@@ -52239,7 +52240,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType555136651C49 extends Union {
+  public static class AnonymousType193864812C49 extends Union {
     public char @Size(128) [] b;
 
     public @Unsigned long @Size(16) [] w;
@@ -52251,7 +52252,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1634411546C56 extends Union {
+  public static class AnonymousType2092066079C56 extends Union {
     public vdso_time_data data;
 
     public char @Size(4096) [] page;
@@ -52263,7 +52264,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType193864812C55 extends Union {
+  public static class AnonymousType1145165159C55 extends Union {
     public vdso_rng_data data;
 
     public char @Size(4096) [] page;
@@ -52334,7 +52335,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType523794808C44 extends Struct {
+  public static class AnonymousType1041638599C44 extends Struct {
     public @Unsigned long x;
   }
 
@@ -52344,7 +52345,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2092066079C38 extends Struct {
+  public static class AnonymousType1656318404C38 extends Struct {
     public @Unsigned long x;
   }
 
@@ -52354,7 +52355,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1145165159C28 extends Struct {
+  public static class AnonymousType231498257C28 extends Struct {
     public @Unsigned int x;
   }
 
@@ -52646,7 +52647,7 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { long int value; const void*; const void*; unsigned int stateLog; }"
+      cType = "struct { long int value; const void *stateTable; const void *symbolTT; unsigned int stateLog; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -52666,7 +52667,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1041638599C40 extends Struct {
+  public static class AnonymousType1206678562C40 extends Struct {
     public @Unsigned short x;
   }
 
@@ -52676,7 +52677,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1656318404C34 extends Struct {
+  public static class AnonymousType1213419524C34 extends Struct {
     public @Unsigned int x;
   }
 
@@ -52950,7 +52951,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType231498257C39 extends Struct {
+  public static class AnonymousType1628305283C39 extends Struct {
     public @Unsigned long x;
   }
 
@@ -53073,7 +53074,7 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { long unsigned int bitContainer; unsigned int bitsConsumed; const u8*; const u8*; const u8*; }"
+      cType = "struct { long unsigned int bitContainer; unsigned int bitsConsumed; const u8 *ptr; const u8 *start; const u8 *limitPtr; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -53149,7 +53150,7 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8* ip[4]; u8* op[4]; long long unsigned int bits[4]; const void*; const u8*; u8 *oend; const u8* iend[4]; }"
+      cType = "struct { const u8* ip[4]; u8* op[4]; long long unsigned int bits[4]; const void *dt; const u8 *ilowest; u8 *oend; const u8* iend[4]; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -53239,7 +53240,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1206678562C34 extends Struct {
+  public static class AnonymousType255839577C34 extends Struct {
     public @Unsigned short x;
   }
 
@@ -53393,7 +53394,7 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const ZSTD_DDict_s*; long unsigned int ddictPtrTableSize; long unsigned int ddictPtrCount; }"
+      cType = "struct { const ZSTD_DDict_s **ddictPtrTable; long unsigned int ddictPtrTableSize; long unsigned int ddictPtrCount; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -53479,7 +53480,7 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { long unsigned int state; const void*; }"
+      cType = "struct { long unsigned int state; const void *table; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -53577,7 +53578,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1213419524C46 extends Struct {
+  public static class AnonymousType727119352C46 extends Struct {
     public @Unsigned int flag;
 
     public char opt_char;
@@ -53623,7 +53624,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType255839577C37 extends Struct {
+  public static class AnonymousType2003305136C37 extends Struct {
     public char hash;
 
     public OID oid;
@@ -53682,7 +53683,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType727119352C112 extends Union {
+  public static class AnonymousType105663489C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_read_msr") Ptr<?> handler;
@@ -53694,7 +53695,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2044150758C112 extends Union {
+  public static class AnonymousType447320069C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_write_msr") Ptr<?> handler;
@@ -53706,7 +53707,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2003305136C112 extends Union {
+  public static class AnonymousType1495414981C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rdpmc") Ptr<?> handler;
@@ -53954,7 +53955,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType105663489C93 extends Union {
+  public static class AnonymousType1860754643C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_gpio_direction") Ptr<?> handler;
@@ -53966,7 +53967,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType447320069C93 extends Union {
+  public static class AnonymousType169916747C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_gpio_value") Ptr<?> handler;
@@ -54924,7 +54925,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1495414981C129 extends Union {
+  public static class AnonymousType1558133170C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pwm_round_waveform_tohw") Ptr<?> handler;
@@ -54936,7 +54937,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1860754643C129 extends Union {
+  public static class AnonymousType351520508C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pwm_round_waveform_fromhw") Ptr<?> handler;
@@ -54948,7 +54949,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType169916747C101 extends Union {
+  public static class AnonymousType1020632821C101 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pwm_read_waveform") Ptr<?> handler;
@@ -54960,7 +54961,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1558133170C107 extends Union {
+  public static class AnonymousType867205829C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pwm_write_waveform") Ptr<?> handler;
@@ -54972,7 +54973,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType351520508C119 extends Union {
+  public static class AnonymousType369573800C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pwm_apply") Ptr<?> handler;
@@ -54984,7 +54985,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1020632821C119 extends Union {
+  public static class AnonymousType482987954C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_pwm_get") Ptr<?> handler;
@@ -55061,11 +55062,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { short unsigned int id; const u8*; }"
+      cType = "struct { short unsigned int id; const u8 *name; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType867205829C46 extends Struct {
+  public static class AnonymousType217827560C53 extends Struct {
     public @Unsigned short id;
 
     public String name;
@@ -55073,11 +55074,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct __kfifo kfifo; struct aer_recover_entry *type; const struct aer_recover_entry*; u8 (*rectype)[0]; struct aer_recover_entry *ptr; const struct aer_recover_entry*; }"
+      cType = "union { struct __kfifo kfifo; struct aer_recover_entry *type; const struct aer_recover_entry *const_type; u8 (*rectype)[0]; struct aer_recover_entry *ptr; const struct aer_recover_entry *ptr_const; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1005245720C186 extends Union {
+  public static class AnonymousType339186291C211 extends Union {
     public __kfifo kfifo;
 
     public Ptr<aer_recover_entry> type;
@@ -55093,11 +55094,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { union { struct __kfifo kfifo; struct aer_recover_entry *type; const struct aer_recover_entry*; u8 (*rectype)[0]; struct aer_recover_entry *ptr; const struct aer_recover_entry*; }; struct aer_recover_entry buf[16]; }"
+      cType = "struct { union { struct __kfifo kfifo; struct aer_recover_entry *type; const struct aer_recover_entry *const_type; u8 (*rectype)[0]; struct aer_recover_entry *ptr; const struct aer_recover_entry *ptr_const; }; struct aer_recover_entry buf[16]; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType348084146C246 extends Struct {
+  public static class AnonymousType2031667192C275 extends Struct {
     @InlineUnion(37026)
     public __kfifo kfifo;
 
@@ -55970,7 +55971,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2031667192C250 extends Struct {
+  public static class AnonymousType878506901C250 extends Struct {
     public char SeqCtrlIndex;
 
     public char CrtCtrlIndex;
@@ -56306,7 +56307,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType393481646C66 extends Struct {
+  public static class AnonymousType197449185C66 extends Struct {
     public acpi_resource res;
 
     public acpi_resource end;
@@ -57200,7 +57201,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType475024998C46 extends Union {
+  public static class AnonymousType1013620810C46 extends Union {
     public @Unsigned int value;
 
     public char @Size(4) [] bytes;
@@ -57518,7 +57519,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType878506901C132 extends Struct {
+  public static class AnonymousType576191199C132 extends Struct {
     public Ptr<acpi_hest_ia_corrected> cmc;
 
     public Ptr<acpi_hest_ia_machine_check> mc;
@@ -57528,11 +57529,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct __kfifo kfifo; struct cxl_cper_prot_err_work_data *type; const struct cxl_cper_prot_err_work_data*; u8 (*rectype)[0]; struct cxl_cper_prot_err_work_data *ptr; const struct cxl_cper_prot_err_work_data*; }"
+      cType = "union { struct __kfifo kfifo; struct cxl_cper_prot_err_work_data *type; const struct cxl_cper_prot_err_work_data *const_type; u8 (*rectype)[0]; struct cxl_cper_prot_err_work_data *ptr; const struct cxl_cper_prot_err_work_data *ptr_const; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType197449185C226 extends Union {
+  public static class AnonymousType1900307803C251 extends Union {
     public __kfifo kfifo;
 
     public Ptr<cxl_cper_prot_err_work_data> type;
@@ -57548,11 +57549,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { union { struct __kfifo kfifo; struct cxl_cper_prot_err_work_data *type; const struct cxl_cper_prot_err_work_data*; u8 (*rectype)[0]; struct cxl_cper_prot_err_work_data *ptr; const struct cxl_cper_prot_err_work_data*; }; struct cxl_cper_prot_err_work_data buf[8]; }"
+      cType = "struct { union { struct __kfifo kfifo; struct cxl_cper_prot_err_work_data *type; const struct cxl_cper_prot_err_work_data *const_type; u8 (*rectype)[0]; struct cxl_cper_prot_err_work_data *ptr; const struct cxl_cper_prot_err_work_data *ptr_const; }; struct cxl_cper_prot_err_work_data buf[8]; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1013620810C295 extends Struct {
+  public static class AnonymousType1552076111C324 extends Struct {
     @InlineUnion(40268)
     public __kfifo kfifo;
 
@@ -57576,11 +57577,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct __kfifo kfifo; struct cxl_cper_work_data *type; const struct cxl_cper_work_data*; u8 (*rectype)[0]; struct cxl_cper_work_data *ptr; const struct cxl_cper_work_data*; }"
+      cType = "union { struct __kfifo kfifo; struct cxl_cper_work_data *type; const struct cxl_cper_work_data *const_type; u8 (*rectype)[0]; struct cxl_cper_work_data *ptr; const struct cxl_cper_work_data *ptr_const; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType576191199C190 extends Union {
+  public static class AnonymousType897801829C215 extends Union {
     public __kfifo kfifo;
 
     public Ptr<cxl_cper_work_data> type;
@@ -57596,11 +57597,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { union { struct __kfifo kfifo; struct cxl_cper_work_data *type; const struct cxl_cper_work_data*; u8 (*rectype)[0]; struct cxl_cper_work_data *ptr; const struct cxl_cper_work_data*; }; struct cxl_cper_work_data buf[32]; }"
+      cType = "struct { union { struct __kfifo kfifo; struct cxl_cper_work_data *type; const struct cxl_cper_work_data *const_type; u8 (*rectype)[0]; struct cxl_cper_work_data *ptr; const struct cxl_cper_work_data *ptr_const; }; struct cxl_cper_work_data buf[32]; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1900307803C251 extends Struct {
+  public static class AnonymousType681564936C280 extends Struct {
     @InlineUnion(40275)
     public __kfifo kfifo;
 
@@ -57628,7 +57629,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1552076111C73 extends Union {
+  public static class AnonymousType2049121789C73 extends Union {
     public acpi_viot_mmio mmio;
 
     public acpi_viot_pci_range pci;
@@ -57640,7 +57641,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType897801829C93 extends Union {
+  public static class AnonymousType813780803C93 extends Union {
     public acpi_viot_virtio_iommu_pci pci;
 
     public acpi_viot_virtio_iommu_mmio mmio;
@@ -57648,11 +57649,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; int hrv; }"
+      cType = "struct { const u8 *hid; int hrv; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType681564936C32 extends Struct {
+  public static class AnonymousType534662976C38 extends Struct {
     public String hid;
 
     public int hrv;
@@ -57664,7 +57665,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2049121789C75 extends Struct {
+  public static class AnonymousType1238339624C75 extends Struct {
     public @Unsigned long start;
 
     public @Unsigned long length;
@@ -57700,7 +57701,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType813780803C87 extends Union {
+  public static class AnonymousType727818265C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_enable") Ptr<?> handler;
@@ -57712,7 +57713,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType534662976C87 extends Union {
+  public static class AnonymousType295700833C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_enable_complete") Ptr<?> handler;
@@ -57724,7 +57725,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1238339624C87 extends Union {
+  public static class AnonymousType2095702106C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_disable") Ptr<?> handler;
@@ -57736,7 +57737,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType727818265C87 extends Union {
+  public static class AnonymousType1234329919C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_disable_complete") Ptr<?> handler;
@@ -57748,7 +57749,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType295700833C87 extends Union {
+  public static class AnonymousType1876259196C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_prepare") Ptr<?> handler;
@@ -57760,7 +57761,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2095702106C87 extends Union {
+  public static class AnonymousType2117043942C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_prepare_complete") Ptr<?> handler;
@@ -57772,7 +57773,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1234329919C87 extends Union {
+  public static class AnonymousType1299661385C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_unprepare") Ptr<?> handler;
@@ -57784,7 +57785,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1876259196C87 extends Union {
+  public static class AnonymousType397822273C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_unprepare_complete") Ptr<?> handler;
@@ -57796,7 +57797,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2117043942C106 extends Union {
+  public static class AnonymousType1403815002C106 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_set_rate") Ptr<?> handler;
@@ -57808,7 +57809,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1299661385C106 extends Union {
+  public static class AnonymousType1362501759C106 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_set_rate_complete") Ptr<?> handler;
@@ -57820,7 +57821,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType397822273C106 extends Union {
+  public static class AnonymousType648303898C106 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_set_min_rate") Ptr<?> handler;
@@ -57832,7 +57833,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1403815002C106 extends Union {
+  public static class AnonymousType66972878C106 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_set_max_rate") Ptr<?> handler;
@@ -57844,7 +57845,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1362501759C125 extends Union {
+  public static class AnonymousType876881599C125 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_set_rate_range") Ptr<?> handler;
@@ -57856,7 +57857,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType648303898C105 extends Union {
+  public static class AnonymousType1410456976C105 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_set_parent") Ptr<?> handler;
@@ -57868,7 +57869,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType66972878C105 extends Union {
+  public static class AnonymousType1343835789C105 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_set_parent_complete") Ptr<?> handler;
@@ -57880,7 +57881,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType876881599C92 extends Union {
+  public static class AnonymousType1022251996C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_set_phase") Ptr<?> handler;
@@ -57892,7 +57893,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1410456976C92 extends Union {
+  public static class AnonymousType688581408C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_set_phase_complete") Ptr<?> handler;
@@ -57904,7 +57905,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1343835789C105 extends Union {
+  public static class AnonymousType1940737740C105 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_set_duty_cycle") Ptr<?> handler;
@@ -57916,7 +57917,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1022251996C105 extends Union {
+  public static class AnonymousType1775897362C105 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_set_duty_cycle_complete") Ptr<?> handler;
@@ -57928,7 +57929,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType688581408C95 extends Union {
+  public static class AnonymousType660915526C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_rate_request_start") Ptr<?> handler;
@@ -57940,7 +57941,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1940737740C95 extends Union {
+  public static class AnonymousType1497983329C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_clk_rate_request_done") Ptr<?> handler;
@@ -57948,11 +57949,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { long unsigned int flag; const u8*; }"
+      cType = "struct { long unsigned int flag; const u8 *name; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1775897362C47 extends Struct {
+  public static class AnonymousType1082886058C54 extends Struct {
     public @Unsigned long flag;
 
     public String name;
@@ -58039,8 +58040,8 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType660915526C108 extends Union {
-    public AnonymousType1497983329C69 anon0;
+  public static class AnonymousType2041611826C108 extends Union {
+    public AnonymousType2021601975C69 anon0;
 
     public @Unsigned int u32;
   }
@@ -58051,7 +58052,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1497983329C69 extends Struct {
+  public static class AnonymousType2021601975C69 extends Struct {
     public @Unsigned @OriginalName("__le16") short off_wrap;
 
     public @Unsigned @OriginalName("__le16") short flags;
@@ -58087,7 +58088,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1082886058C80 extends Union {
+  public static class AnonymousType1794068152C80 extends Union {
     public Ptr<grant_entry_v1> v1;
 
     public Ptr<grant_entry_v2> v2;
@@ -58101,7 +58102,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2041611826C72 extends Struct {
+  public static class AnonymousType1992630936C72 extends Struct {
     public Ptr<xb_req_data> req;
 
     public int idx;
@@ -58115,7 +58116,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2021601975C167 extends Struct {
+  public static class AnonymousType196717412C167 extends Struct {
     public xsd_sockmsg msg;
 
     public String body;
@@ -58139,7 +58140,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1794068152C56 extends Union {
+  public static class AnonymousType173197870C56 extends Union {
     public Ptr<?> alloc;
 
     public Ptr<xs_watch_event> watch;
@@ -58151,7 +58152,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1992630936C50 extends Struct {
+  public static class AnonymousType450420562C50 extends Struct {
     public xsd_sockmsg hdr;
 
     public char @Size(0) [] body;
@@ -58163,7 +58164,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType196717412C51 extends Struct {
+  public static class AnonymousType1171713907C51 extends Struct {
     public xsd_sockmsg hdr;
 
     public char @Size(16) [] body;
@@ -58175,7 +58176,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType173197870C62 extends Union {
+  public static class AnonymousType66231846C62 extends Union {
     public char @Size(16) [] bytes;
 
     public physdev_pci_device_add obj;
@@ -58309,7 +58310,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType450420562C80 extends Union {
+  public static class AnonymousType527247308C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regulator_enable") Ptr<?> handler;
@@ -58321,7 +58322,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1171713907C80 extends Union {
+  public static class AnonymousType1133730108C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regulator_enable_delay") Ptr<?> handler;
@@ -58333,7 +58334,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType66231846C80 extends Union {
+  public static class AnonymousType827099978C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regulator_enable_complete") Ptr<?> handler;
@@ -58345,7 +58346,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType527247308C80 extends Union {
+  public static class AnonymousType651698411C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regulator_disable") Ptr<?> handler;
@@ -58357,7 +58358,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1133730108C80 extends Union {
+  public static class AnonymousType1350377659C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regulator_disable_complete") Ptr<?> handler;
@@ -58369,7 +58370,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType827099978C80 extends Union {
+  public static class AnonymousType167692593C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regulator_bypass_enable") Ptr<?> handler;
@@ -58381,7 +58382,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType651698411C80 extends Union {
+  public static class AnonymousType1555895711C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regulator_bypass_enable_complete") Ptr<?> handler;
@@ -58393,7 +58394,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1350377659C80 extends Union {
+  public static class AnonymousType990226843C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regulator_bypass_disable") Ptr<?> handler;
@@ -58405,7 +58406,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType167692593C80 extends Union {
+  public static class AnonymousType46415544C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regulator_bypass_disable_complete") Ptr<?> handler;
@@ -58417,7 +58418,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1555895711C90 extends Union {
+  public static class AnonymousType2097989776C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regulator_set_voltage") Ptr<?> handler;
@@ -58429,7 +58430,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType990226843C94 extends Union {
+  public static class AnonymousType1227438915C94 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regulator_set_voltage_complete") Ptr<?> handler;
@@ -58550,7 +58551,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType46415544C34 extends Struct {
+  public static class AnonymousType1609960076C34 extends Struct {
     public @Unsigned short x;
   }
 
@@ -59281,7 +59282,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2097989776C52 extends Struct {
+  public static class AnonymousType2095373876C52 extends Struct {
     public char csr;
 
     public char acr;
@@ -59293,11 +59294,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; unsigned int mctrl; enum gpiod_flags flags; }"
+      cType = "struct { const u8 *name; unsigned int mctrl; enum gpiod_flags flags; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1227438915C69 extends Struct {
+  public static class AnonymousType1740095856C76 extends Struct {
     public String name;
 
     public @Unsigned int mctrl;
@@ -59402,7 +59403,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1609960076C73 extends Struct {
+  public static class AnonymousType1732513254C73 extends Struct {
     public char @Size(32) [] key;
 
     public @Unsigned long generation;
@@ -59463,7 +59464,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2095373876C82 extends Struct {
+  public static class AnonymousType143251944C82 extends Struct {
     public blake2s_state hash;
 
     public @OriginalName("spinlock_t") spinlock lock;
@@ -59492,7 +59493,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1740095856C70 extends Struct {
+  public static class AnonymousType1380361139C70 extends Struct {
     public @Unsigned long @Size(4) [] rdseed;
 
     public @Unsigned long counter;
@@ -59552,7 +59553,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1732513254C64 extends Struct {
+  public static class AnonymousType195253450C64 extends Struct {
     public @Unsigned @OriginalName("__virtio16") short cols;
 
     public @Unsigned @OriginalName("__virtio16") short rows;
@@ -59564,7 +59565,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType143251944C32 extends Struct {
+  public static class AnonymousType1280263013C32 extends Struct {
     public int mem;
 
     public int agp;
@@ -59690,7 +59691,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1380361139C186 extends Union {
+  public static class AnonymousType181372317C186 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_qi_submit") Ptr<?> handler;
@@ -59702,7 +59703,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType195253450C221 extends Union {
+  public static class AnonymousType1844700236C221 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_prq_report") Ptr<?> handler;
@@ -59714,7 +59715,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1280263013C88 extends Union {
+  public static class AnonymousType2095573052C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cache_tag_assign") Ptr<?> handler;
@@ -59726,7 +59727,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType181372317C88 extends Union {
+  public static class AnonymousType1241897134C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cache_tag_unassign") Ptr<?> handler;
@@ -59738,7 +59739,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1844700236C183 extends Union {
+  public static class AnonymousType1016090398C183 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cache_tag_flush_range") Ptr<?> handler;
@@ -59750,7 +59751,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2095573052C183 extends Union {
+  public static class AnonymousType1320357188C183 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cache_tag_flush_range_np") Ptr<?> handler;
@@ -59821,7 +59822,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1241897134C90 extends Union {
+  public static class AnonymousType223783590C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_add_device_to_group") Ptr<?> handler;
@@ -59833,7 +59834,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1016090398C90 extends Union {
+  public static class AnonymousType1769128714C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_remove_device_from_group") Ptr<?> handler;
@@ -59845,7 +59846,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1320357188C85 extends Union {
+  public static class AnonymousType1470400901C85 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_attach_device_to_domain") Ptr<?> handler;
@@ -59857,7 +59858,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType223783590C131 extends Union {
+  public static class AnonymousType28010264C131 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_map") Ptr<?> handler;
@@ -59869,7 +59870,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1769128714C126 extends Union {
+  public static class AnonymousType957414929C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_unmap") Ptr<?> handler;
@@ -59881,7 +59882,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1470400901C109 extends Union {
+  public static class AnonymousType1174737066C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_io_page_fault") Ptr<?> handler;
@@ -60148,7 +60149,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType28010264C113 extends Union {
+  public static class AnonymousType891175246C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_reg_write") Ptr<?> handler;
@@ -60160,7 +60161,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType957414929C113 extends Union {
+  public static class AnonymousType1876390738C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_reg_read") Ptr<?> handler;
@@ -60172,7 +60173,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1174737066C113 extends Union {
+  public static class AnonymousType1359603919C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_reg_read_cache") Ptr<?> handler;
@@ -60184,7 +60185,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType891175246C117 extends Union {
+  public static class AnonymousType1063723524C117 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_bulk_write") Ptr<?> handler;
@@ -60196,7 +60197,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1876390738C117 extends Union {
+  public static class AnonymousType2025066647C117 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_bulk_read") Ptr<?> handler;
@@ -60208,7 +60209,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1359603919C104 extends Union {
+  public static class AnonymousType741191984C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_hw_read_start") Ptr<?> handler;
@@ -60220,7 +60221,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1063723524C104 extends Union {
+  public static class AnonymousType847018986C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_hw_read_done") Ptr<?> handler;
@@ -60232,7 +60233,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2025066647C104 extends Union {
+  public static class AnonymousType881662115C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_hw_write_start") Ptr<?> handler;
@@ -60244,7 +60245,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType741191984C104 extends Union {
+  public static class AnonymousType1818592781C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_hw_write_done") Ptr<?> handler;
@@ -60256,7 +60257,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType847018986C107 extends Union {
+  public static class AnonymousType754978432C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regcache_sync") Ptr<?> handler;
@@ -60268,7 +60269,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType881662115C92 extends Union {
+  public static class AnonymousType2096268257C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_cache_only") Ptr<?> handler;
@@ -60280,7 +60281,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1818592781C92 extends Union {
+  public static class AnonymousType551994588C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_cache_bypass") Ptr<?> handler;
@@ -60292,7 +60293,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType754978432C104 extends Union {
+  public static class AnonymousType1618180899C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_async_write_start") Ptr<?> handler;
@@ -60304,7 +60305,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2096268257C85 extends Union {
+  public static class AnonymousType1294605731C85 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_async_io_complete") Ptr<?> handler;
@@ -60316,7 +60317,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType551994588C85 extends Union {
+  public static class AnonymousType623862380C85 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_async_complete_start") Ptr<?> handler;
@@ -60328,7 +60329,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1618180899C85 extends Union {
+  public static class AnonymousType871989809C85 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regmap_async_complete_done") Ptr<?> handler;
@@ -60340,7 +60341,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1294605731C113 extends Union {
+  public static class AnonymousType1210600718C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_regcache_drop_region") Ptr<?> handler;
@@ -60352,7 +60353,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType623862380C133 extends Union {
+  public static class AnonymousType1433568941C133 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_devres_log") Ptr<?> handler;
@@ -60748,7 +60749,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType871989809C45 extends Union {
+  public static class AnonymousType185639533C45 extends Union {
     public char @Size(4) [] bytes;
 
     public @Unsigned @OriginalName("__le32") int word;
@@ -60760,7 +60761,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1210600718C45 extends Union {
+  public static class AnonymousType1946636596C45 extends Union {
     public @Unsigned @OriginalName("__le32") int word;
 
     public char @Size(4) [] bytes;
@@ -60772,7 +60773,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1433568941C48 extends Union {
+  public static class AnonymousType2118984327C48 extends Union {
     public char @Size(4) [] bytes;
 
     public @Unsigned @OriginalName("__le32") int int_sts;
@@ -63031,11 +63032,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; int args; }"
+      cType = "struct { const u8 *name; int args; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType185639533C33 extends Struct {
+  public static class AnonymousType1061913613C40 extends Struct {
     public String name;
 
     public int args;
@@ -63047,7 +63048,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1946636596C88 extends Union {
+  public static class AnonymousType826690115C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_fence_emit") Ptr<?> handler;
@@ -63059,7 +63060,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2118984327C88 extends Union {
+  public static class AnonymousType2139501486C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_fence_init") Ptr<?> handler;
@@ -63071,7 +63072,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1061913613C88 extends Union {
+  public static class AnonymousType1757970371C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_fence_destroy") Ptr<?> handler;
@@ -63083,7 +63084,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType826690115C88 extends Union {
+  public static class AnonymousType197195067C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_fence_enable_signal") Ptr<?> handler;
@@ -63095,7 +63096,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2139501486C88 extends Union {
+  public static class AnonymousType148353618C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_fence_signaled") Ptr<?> handler;
@@ -63107,7 +63108,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1757970371C88 extends Union {
+  public static class AnonymousType1182985125C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_fence_wait_start") Ptr<?> handler;
@@ -63119,7 +63120,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType197195067C88 extends Union {
+  public static class AnonymousType1839182545C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dma_fence_wait_end") Ptr<?> handler;
@@ -63131,7 +63132,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType148353618C92 extends Union {
+  public static class AnonymousType1643838324C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sync_timeline") Ptr<?> handler;
@@ -63309,7 +63310,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1182985125C88 extends Union {
+  public static class AnonymousType1409978427C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_scsi_dispatch_cmd_start") Ptr<?> handler;
@@ -63321,7 +63322,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1839182545C93 extends Union {
+  public static class AnonymousType92575452C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_scsi_dispatch_cmd_error") Ptr<?> handler;
@@ -63333,7 +63334,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1643838324C88 extends Union {
+  public static class AnonymousType354268551C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_scsi_dispatch_cmd_done") Ptr<?> handler;
@@ -63345,7 +63346,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1409978427C88 extends Union {
+  public static class AnonymousType596299019C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_scsi_dispatch_cmd_timeout") Ptr<?> handler;
@@ -63357,7 +63358,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType92575452C88 extends Union {
+  public static class AnonymousType595663369C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_scsi_eh_wakeup") Ptr<?> handler;
@@ -63420,7 +63421,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType354268551C54 extends Struct {
+  public static class AnonymousType34757331C54 extends Struct {
     public scsi_device_state value;
 
     public String name;
@@ -63432,7 +63433,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType596299019C52 extends Struct {
+  public static class AnonymousType2052814491C52 extends Struct {
     public scsi_host_state value;
 
     public String name;
@@ -63444,7 +63445,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType595663369C34 extends Struct {
+  public static class AnonymousType256642638C34 extends Struct {
     public char value;
 
     public String name;
@@ -63456,7 +63457,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType34757331C85 extends Struct {
+  public static class AnonymousType607526140C85 extends Struct {
     public String vendor;
 
     public String model;
@@ -63742,7 +63743,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2052814491C79 extends Struct {
+  public static class AnonymousType887230059C79 extends Struct {
     public scsi_stream_status_header h;
 
     public scsi_stream_status s;
@@ -63754,7 +63755,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType256642638C126 extends Union {
+  public static class AnonymousType363616706C126 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_scsi_prepare_zone_append") Ptr<?> handler;
@@ -63766,7 +63767,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType607526140C140 extends Union {
+  public static class AnonymousType2055019335C140 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_scsi_zone_wp_update") Ptr<?> handler;
@@ -63829,7 +63830,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType887230059C93 extends Union {
+  public static class AnonymousType1857562888C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_qc_prep") Ptr<?> handler;
@@ -63841,7 +63842,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType363616706C93 extends Union {
+  public static class AnonymousType1250816994C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_qc_issue") Ptr<?> handler;
@@ -63853,7 +63854,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2055019335C93 extends Union {
+  public static class AnonymousType1033425208C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_qc_complete_internal") Ptr<?> handler;
@@ -63865,7 +63866,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1857562888C93 extends Union {
+  public static class AnonymousType791499503C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_qc_complete_failed") Ptr<?> handler;
@@ -63877,7 +63878,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1250816994C93 extends Union {
+  public static class AnonymousType15912555C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_qc_complete_done") Ptr<?> handler;
@@ -63889,7 +63890,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1033425208C115 extends Union {
+  public static class AnonymousType633683828C115 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_tf_load") Ptr<?> handler;
@@ -63901,7 +63902,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType791499503C129 extends Union {
+  public static class AnonymousType1580153829C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_exec_command") Ptr<?> handler;
@@ -63913,7 +63914,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType15912555C129 extends Union {
+  public static class AnonymousType466661605C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_bmdma_setup") Ptr<?> handler;
@@ -63925,7 +63926,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType633683828C129 extends Union {
+  public static class AnonymousType231191650C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_bmdma_start") Ptr<?> handler;
@@ -63937,7 +63938,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1580153829C129 extends Union {
+  public static class AnonymousType32838705C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_bmdma_stop") Ptr<?> handler;
@@ -63949,7 +63950,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType466661605C101 extends Union {
+  public static class AnonymousType648214521C101 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_bmdma_status") Ptr<?> handler;
@@ -63961,7 +63962,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType231191650C117 extends Union {
+  public static class AnonymousType954936400C117 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_eh_link_autopsy") Ptr<?> handler;
@@ -63973,7 +63974,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType32838705C93 extends Union {
+  public static class AnonymousType146799499C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_eh_link_autopsy_qc") Ptr<?> handler;
@@ -63985,7 +63986,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType648214521C115 extends Union {
+  public static class AnonymousType557982257C115 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_eh_about_to_do") Ptr<?> handler;
@@ -63997,7 +63998,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType954936400C115 extends Union {
+  public static class AnonymousType284034271C115 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_eh_done") Ptr<?> handler;
@@ -64009,7 +64010,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType146799499C121 extends Union {
+  public static class AnonymousType1904620350C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_link_hardreset_begin") Ptr<?> handler;
@@ -64021,7 +64022,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType557982257C121 extends Union {
+  public static class AnonymousType110296358C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_slave_hardreset_begin") Ptr<?> handler;
@@ -64033,7 +64034,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType284034271C121 extends Union {
+  public static class AnonymousType921764975C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_link_softreset_begin") Ptr<?> handler;
@@ -64045,7 +64046,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1904620350C107 extends Union {
+  public static class AnonymousType1457075858C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_link_hardreset_end") Ptr<?> handler;
@@ -64057,7 +64058,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType110296358C107 extends Union {
+  public static class AnonymousType377942196C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_slave_hardreset_end") Ptr<?> handler;
@@ -64069,7 +64070,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType921764975C107 extends Union {
+  public static class AnonymousType124540047C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_link_softreset_end") Ptr<?> handler;
@@ -64081,7 +64082,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1457075858C107 extends Union {
+  public static class AnonymousType956365425C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_link_postreset") Ptr<?> handler;
@@ -64093,7 +64094,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType377942196C107 extends Union {
+  public static class AnonymousType645015141C107 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_slave_postreset") Ptr<?> handler;
@@ -64105,7 +64106,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType124540047C87 extends Union {
+  public static class AnonymousType131096911C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_std_sched_eh") Ptr<?> handler;
@@ -64117,7 +64118,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType956365425C87 extends Union {
+  public static class AnonymousType1652393238C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_port_freeze") Ptr<?> handler;
@@ -64129,7 +64130,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType645015141C87 extends Union {
+  public static class AnonymousType1544562778C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_port_thaw") Ptr<?> handler;
@@ -64141,7 +64142,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType131096911C97 extends Union {
+  public static class AnonymousType1801878707C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_sff_hsm_state") Ptr<?> handler;
@@ -64153,7 +64154,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1652393238C97 extends Union {
+  public static class AnonymousType1865982601C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_sff_hsm_command_complete") Ptr<?> handler;
@@ -64165,7 +64166,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1544562778C97 extends Union {
+  public static class AnonymousType1642319693C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_sff_port_intr") Ptr<?> handler;
@@ -64177,7 +64178,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1801878707C121 extends Union {
+  public static class AnonymousType1022130643C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_sff_pio_transfer_data") Ptr<?> handler;
@@ -64189,7 +64190,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1865982601C121 extends Union {
+  public static class AnonymousType1689717017C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_atapi_pio_transfer_data") Ptr<?> handler;
@@ -64201,7 +64202,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1642319693C121 extends Union {
+  public static class AnonymousType1311884268C121 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_atapi_send_cdb") Ptr<?> handler;
@@ -64213,7 +64214,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1022130643C87 extends Union {
+  public static class AnonymousType827843776C87 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ata_sff_flush_pio_task") Ptr<?> handler;
@@ -64290,11 +64291,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { u8 command; const u8*; }"
+      cType = "struct { u8 command; const u8 *text; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1689717017C35 extends Struct {
+  public static class AnonymousType1856643544C42 extends Struct {
     public char command;
 
     public String text;
@@ -64306,7 +64307,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1311884268C44 extends Struct {
+  public static class AnonymousType847839957C44 extends Struct {
     public @Unsigned int value;
 
     public String name;
@@ -64464,7 +64465,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType827843776C28 extends Struct {
+  public static class AnonymousType1927776715C28 extends Struct {
     public int w;
 
     public int h;
@@ -64488,7 +64489,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType847839957C110 extends Union {
+  public static class AnonymousType1124288521C110 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_drm_vblank_event") Ptr<?> handler;
@@ -64500,7 +64501,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1927776715C106 extends Union {
+  public static class AnonymousType971404566C106 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_drm_vblank_event_queued") Ptr<?> handler;
@@ -64512,7 +64513,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2081952435C106 extends Union {
+  public static class AnonymousType1996556848C106 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_drm_vblank_event_delivered") Ptr<?> handler;
@@ -64524,7 +64525,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType971404566C82 extends Struct {
+  public static class AnonymousType313149846C82 extends Struct {
     public Ptr<?> fn;
 
     public String name;
@@ -65421,7 +65422,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1996556848C93 extends Union {
+  public static class AnonymousType418299920C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_spi_controller_idle") Ptr<?> handler;
@@ -65433,7 +65434,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1269826537C93 extends Union {
+  public static class AnonymousType1740708279C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_spi_controller_busy") Ptr<?> handler;
@@ -65445,7 +65446,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType313149846C94 extends Union {
+  public static class AnonymousType749072877C94 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_spi_setup") Ptr<?> handler;
@@ -65457,7 +65458,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType418299920C96 extends Union {
+  public static class AnonymousType1812200214C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_spi_set_cs") Ptr<?> handler;
@@ -65469,7 +65470,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1740708279C90 extends Union {
+  public static class AnonymousType42158278C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_spi_message_submit") Ptr<?> handler;
@@ -65481,7 +65482,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType749072877C90 extends Union {
+  public static class AnonymousType1843459456C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_spi_message_start") Ptr<?> handler;
@@ -65493,7 +65494,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1812200214C90 extends Union {
+  public static class AnonymousType1850301256C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_spi_message_done") Ptr<?> handler;
@@ -65505,7 +65506,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType42158278C112 extends Union {
+  public static class AnonymousType492947164C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_spi_transfer_start") Ptr<?> handler;
@@ -65517,7 +65518,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1843459456C112 extends Union {
+  public static class AnonymousType87845070C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_spi_transfer_stop") Ptr<?> handler;
@@ -65634,7 +65635,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1850301256C43 extends Struct {
+  public static class AnonymousType1872417052C43 extends Struct {
     public @Unsigned int attr;
 
     public String name;
@@ -65646,7 +65647,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType492947164C133 extends Union {
+  public static class AnonymousType1261257916C133 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mdio_access") Ptr<?> handler;
@@ -66666,7 +66667,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType87845070C21 extends Struct {
+  public static class AnonymousType1491676195C21 extends Struct {
     public char @Size(6) [] u;
   }
 
@@ -67077,7 +67078,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1261257916C34 extends Struct {
+  public static class AnonymousType123629835C34 extends Struct {
     public @Unsigned @OriginalName("__sum16") short x;
   }
 
@@ -67257,7 +67258,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1491676195C88 extends Union {
+  public static class AnonymousType653774328C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbg_address") Ptr<?> handler;
@@ -67269,7 +67270,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1047873000C88 extends Union {
+  public static class AnonymousType929985841C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbg_context_change") Ptr<?> handler;
@@ -67281,7 +67282,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType123629835C88 extends Union {
+  public static class AnonymousType589311025C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbg_quirks") Ptr<?> handler;
@@ -67293,7 +67294,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType653774328C88 extends Union {
+  public static class AnonymousType1468192631C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbg_reset_ep") Ptr<?> handler;
@@ -67305,7 +67306,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType929985841C88 extends Union {
+  public static class AnonymousType1333938290C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbg_cancel_urb") Ptr<?> handler;
@@ -67317,7 +67318,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType589311025C88 extends Union {
+  public static class AnonymousType184642382C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbg_init") Ptr<?> handler;
@@ -67329,7 +67330,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1468192631C88 extends Union {
+  public static class AnonymousType694329275C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbg_ring_expansion") Ptr<?> handler;
@@ -67341,7 +67342,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1333938290C129 extends Union {
+  public static class AnonymousType1746590863C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_address_ctx") Ptr<?> handler;
@@ -67353,7 +67354,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType184642382C138 extends Union {
+  public static class AnonymousType889640998C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_handle_event") Ptr<?> handler;
@@ -67365,7 +67366,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType694329275C138 extends Union {
+  public static class AnonymousType903716563C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_handle_command") Ptr<?> handler;
@@ -67377,7 +67378,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1746590863C138 extends Union {
+  public static class AnonymousType150950036C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_handle_transfer") Ptr<?> handler;
@@ -67389,7 +67390,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType889640998C138 extends Union {
+  public static class AnonymousType910101408C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_queue_trb") Ptr<?> handler;
@@ -67401,7 +67402,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType903716563C138 extends Union {
+  public static class AnonymousType905650857C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbc_handle_event") Ptr<?> handler;
@@ -67413,7 +67414,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType150950036C138 extends Union {
+  public static class AnonymousType1820920259C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbc_handle_transfer") Ptr<?> handler;
@@ -67425,7 +67426,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType910101408C138 extends Union {
+  public static class AnonymousType503353142C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbc_gadget_ep_queue") Ptr<?> handler;
@@ -67437,7 +67438,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType905650857C95 extends Union {
+  public static class AnonymousType1353512285C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_free_virt_device") Ptr<?> handler;
@@ -67449,7 +67450,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1820920259C95 extends Union {
+  public static class AnonymousType1018067851C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_alloc_virt_device") Ptr<?> handler;
@@ -67461,7 +67462,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType503353142C95 extends Union {
+  public static class AnonymousType407747276C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_setup_device") Ptr<?> handler;
@@ -67473,7 +67474,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1353512285C95 extends Union {
+  public static class AnonymousType45019084C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_setup_addressable_virt_device") Ptr<?> handler;
@@ -67485,7 +67486,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1018067851C95 extends Union {
+  public static class AnonymousType899675353C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_stop_device") Ptr<?> handler;
@@ -67497,7 +67498,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType407747276C82 extends Union {
+  public static class AnonymousType2049090498C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_urb_enqueue") Ptr<?> handler;
@@ -67509,7 +67510,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType45019084C82 extends Union {
+  public static class AnonymousType256703888C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_urb_giveback") Ptr<?> handler;
@@ -67521,7 +67522,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType899675353C82 extends Union {
+  public static class AnonymousType2062132026C82 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_urb_dequeue") Ptr<?> handler;
@@ -67533,7 +67534,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2049090498C109 extends Union {
+  public static class AnonymousType807053698C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_alloc_stream_info_ctx") Ptr<?> handler;
@@ -67545,7 +67546,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType256703888C109 extends Union {
+  public static class AnonymousType1607020784C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_handle_cmd_set_deq_stream") Ptr<?> handler;
@@ -67557,7 +67558,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2062132026C90 extends Union {
+  public static class AnonymousType922871524C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_handle_cmd_stop_ep") Ptr<?> handler;
@@ -67569,7 +67570,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType807053698C90 extends Union {
+  public static class AnonymousType13001549C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_handle_cmd_set_deq_ep") Ptr<?> handler;
@@ -67581,7 +67582,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1607020784C90 extends Union {
+  public static class AnonymousType1710591086C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_handle_cmd_reset_ep") Ptr<?> handler;
@@ -67593,7 +67594,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType922871524C90 extends Union {
+  public static class AnonymousType1940749968C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_handle_cmd_config_ep") Ptr<?> handler;
@@ -67605,7 +67606,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType13001549C90 extends Union {
+  public static class AnonymousType1269006535C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_add_endpoint") Ptr<?> handler;
@@ -67617,7 +67618,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1710591086C92 extends Union {
+  public static class AnonymousType2018270965C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_alloc_dev") Ptr<?> handler;
@@ -67629,7 +67630,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1940749968C92 extends Union {
+  public static class AnonymousType823343982C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_free_dev") Ptr<?> handler;
@@ -67641,7 +67642,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1269006535C92 extends Union {
+  public static class AnonymousType693275170C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_handle_cmd_disable_slot") Ptr<?> handler;
@@ -67653,7 +67654,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2018270965C92 extends Union {
+  public static class AnonymousType2124448375C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_discover_or_reset_device") Ptr<?> handler;
@@ -67665,7 +67666,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType823343982C92 extends Union {
+  public static class AnonymousType1677840544C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_setup_device_slot") Ptr<?> handler;
@@ -67677,7 +67678,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType693275170C92 extends Union {
+  public static class AnonymousType1289834245C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_handle_cmd_addr_dev") Ptr<?> handler;
@@ -67689,7 +67690,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2124448375C92 extends Union {
+  public static class AnonymousType1910492961C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_handle_cmd_reset_dev") Ptr<?> handler;
@@ -67701,7 +67702,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1677840544C92 extends Union {
+  public static class AnonymousType194402391C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_handle_cmd_set_deq") Ptr<?> handler;
@@ -67713,7 +67714,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1289834245C92 extends Union {
+  public static class AnonymousType1643646293C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_configure_endpoint") Ptr<?> handler;
@@ -67725,7 +67726,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1910492961C101 extends Union {
+  public static class AnonymousType665317128C101 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_address_ctrl_ctx") Ptr<?> handler;
@@ -67737,7 +67738,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType194402391C101 extends Union {
+  public static class AnonymousType672041498C101 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_configure_endpoint_ctrl_ctx") Ptr<?> handler;
@@ -67749,7 +67750,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1643646293C88 extends Union {
+  public static class AnonymousType300104620C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_ring_alloc") Ptr<?> handler;
@@ -67761,7 +67762,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType665317128C88 extends Union {
+  public static class AnonymousType810557024C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_ring_free") Ptr<?> handler;
@@ -67773,7 +67774,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType672041498C88 extends Union {
+  public static class AnonymousType681015501C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_ring_expansion") Ptr<?> handler;
@@ -67785,7 +67786,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType300104620C88 extends Union {
+  public static class AnonymousType1955948959C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_inc_enq") Ptr<?> handler;
@@ -67797,7 +67798,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType810557024C88 extends Union {
+  public static class AnonymousType2082673402C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_inc_deq") Ptr<?> handler;
@@ -67809,7 +67810,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType681015501C102 extends Union {
+  public static class AnonymousType1286643712C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_handle_port_status") Ptr<?> handler;
@@ -67821,7 +67822,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1955948959C102 extends Union {
+  public static class AnonymousType1609754699C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_get_port_status") Ptr<?> handler;
@@ -67833,7 +67834,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2082673402C102 extends Union {
+  public static class AnonymousType7646139C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_hub_status_data") Ptr<?> handler;
@@ -67845,7 +67846,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1286643712C97 extends Union {
+  public static class AnonymousType1688526221C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_ring_ep_doorbell") Ptr<?> handler;
@@ -67857,7 +67858,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1609754699C97 extends Union {
+  public static class AnonymousType769507769C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_ring_host_doorbell") Ptr<?> handler;
@@ -67869,7 +67870,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType7646139C90 extends Union {
+  public static class AnonymousType1705366777C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbc_alloc_request") Ptr<?> handler;
@@ -67881,7 +67882,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1688526221C90 extends Union {
+  public static class AnonymousType1076462213C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbc_free_request") Ptr<?> handler;
@@ -67893,7 +67894,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType769507769C90 extends Union {
+  public static class AnonymousType35874744C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbc_queue_request") Ptr<?> handler;
@@ -67905,7 +67906,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1705366777C90 extends Union {
+  public static class AnonymousType1102097996C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_xhci_dbc_giveback_request") Ptr<?> handler;
@@ -68056,7 +68057,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1076462213C51 extends Struct {
+  public static class AnonymousType184133791C51 extends Struct {
     public @Unsigned short keycode;
 
     public char set2;
@@ -68068,7 +68069,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType35874744C89 extends Union {
+  public static class AnonymousType105393903C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rtc_set_time") Ptr<?> handler;
@@ -68080,7 +68081,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1102097996C89 extends Union {
+  public static class AnonymousType533698361C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rtc_read_time") Ptr<?> handler;
@@ -68092,7 +68093,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType184133791C89 extends Union {
+  public static class AnonymousType1531545666C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rtc_set_alarm") Ptr<?> handler;
@@ -68104,7 +68105,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType105393903C89 extends Union {
+  public static class AnonymousType481525476C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rtc_read_alarm") Ptr<?> handler;
@@ -68116,7 +68117,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType533698361C79 extends Union {
+  public static class AnonymousType1540031691C79 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rtc_irq_set_freq") Ptr<?> handler;
@@ -68128,7 +68129,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1531545666C79 extends Union {
+  public static class AnonymousType945698516C79 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rtc_irq_set_state") Ptr<?> handler;
@@ -68140,7 +68141,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType481525476C88 extends Union {
+  public static class AnonymousType801284613C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rtc_alarm_irq_enable") Ptr<?> handler;
@@ -68152,7 +68153,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1540031691C84 extends Union {
+  public static class AnonymousType679587143C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rtc_set_offset") Ptr<?> handler;
@@ -68164,7 +68165,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType945698516C84 extends Union {
+  public static class AnonymousType737085888C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rtc_read_offset") Ptr<?> handler;
@@ -68176,7 +68177,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType801284613C88 extends Union {
+  public static class AnonymousType1657697023C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rtc_timer_enqueue") Ptr<?> handler;
@@ -68188,7 +68189,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType679587143C88 extends Union {
+  public static class AnonymousType1487287849C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rtc_timer_dequeue") Ptr<?> handler;
@@ -68200,7 +68201,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType737085888C88 extends Union {
+  public static class AnonymousType2112373743C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_rtc_timer_fired") Ptr<?> handler;
@@ -68212,7 +68213,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1657697023C124 extends Union {
+  public static class AnonymousType773518491C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_i2c_write") Ptr<?> handler;
@@ -68224,7 +68225,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1487287849C124 extends Union {
+  public static class AnonymousType1070740013C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_i2c_read") Ptr<?> handler;
@@ -68236,7 +68237,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2112373743C124 extends Union {
+  public static class AnonymousType1454136448C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_i2c_reply") Ptr<?> handler;
@@ -68248,7 +68249,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType773518491C106 extends Union {
+  public static class AnonymousType1776589441C106 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_i2c_result") Ptr<?> handler;
@@ -68260,7 +68261,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1070740013C178 extends Union {
+  public static class AnonymousType270734602C178 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_smbus_write") Ptr<?> handler;
@@ -68272,7 +68273,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1454136448C149 extends Union {
+  public static class AnonymousType1053695609C149 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_smbus_read") Ptr<?> handler;
@@ -68284,7 +68285,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1776589441C183 extends Union {
+  public static class AnonymousType179441020C183 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_smbus_reply") Ptr<?> handler;
@@ -68296,7 +68297,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType270734602C154 extends Union {
+  public static class AnonymousType1196404281C154 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_smbus_result") Ptr<?> handler;
@@ -68308,7 +68309,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1053695609C127 extends Union {
+  public static class AnonymousType1330411679C127 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_i2c_slave") Ptr<?> handler;
@@ -68537,11 +68538,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; long long unsigned int extcon_type; }"
+      cType = "struct { const u8 *name; long long unsigned int extcon_type; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType179441020C59 extends Struct {
+  public static class AnonymousType20945625C66 extends Struct {
     public String name;
 
     public @Unsigned long extcon_type;
@@ -68553,7 +68554,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1196404281C95 extends Union {
+  public static class AnonymousType461155951C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hwmon_attr_show") Ptr<?> handler;
@@ -68565,7 +68566,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1330411679C95 extends Union {
+  public static class AnonymousType569959775C95 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hwmon_attr_store") Ptr<?> handler;
@@ -68577,7 +68578,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType20945625C96 extends Union {
+  public static class AnonymousType224192895C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_hwmon_attr_show_string") Ptr<?> handler;
@@ -68589,7 +68590,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType461155951C98 extends Union {
+  public static class AnonymousType1883788127C98 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_thermal_temperature") Ptr<?> handler;
@@ -68601,7 +68602,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType569959775C120 extends Union {
+  public static class AnonymousType238654703C120 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_cdev_update") Ptr<?> handler;
@@ -68613,7 +68614,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType224192895C127 extends Union {
+  public static class AnonymousType1745701482C127 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_thermal_zone_trip") Ptr<?> handler;
@@ -68625,7 +68626,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1883788127C162 extends Union {
+  public static class AnonymousType49299717C162 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_thermal_power_devfreq_get_power") Ptr<?> handler;
@@ -68637,7 +68638,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType238654703C153 extends Union {
+  public static class AnonymousType814753967C153 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_thermal_power_devfreq_limit") Ptr<?> handler;
@@ -68649,7 +68650,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1745701482C169 extends Union {
+  public static class AnonymousType1917607102C169 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_thermal_power_allocator") Ptr<?> handler;
@@ -68661,7 +68662,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType49299717C131 extends Union {
+  public static class AnonymousType1880102535C131 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_thermal_power_actor") Ptr<?> handler;
@@ -68673,7 +68674,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType814753967C158 extends Union {
+  public static class AnonymousType1894287849C158 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_thermal_power_allocator_pid") Ptr<?> handler;
@@ -68747,7 +68748,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1917607102C99 extends Union {
+  public static class AnonymousType1099694603C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_watchdog_start") Ptr<?> handler;
@@ -68759,7 +68760,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1880102535C99 extends Union {
+  public static class AnonymousType1362435880C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_watchdog_ping") Ptr<?> handler;
@@ -68771,7 +68772,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1894287849C99 extends Union {
+  public static class AnonymousType560041895C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_watchdog_stop") Ptr<?> handler;
@@ -68783,7 +68784,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1099694603C113 extends Union {
+  public static class AnonymousType368242083C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_watchdog_set_timeout") Ptr<?> handler;
@@ -69140,7 +69141,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1362435880C80 extends Struct {
+  public static class AnonymousType885991756C80 extends Struct {
     public dm_uevent_type type;
 
     public kobject_action action;
@@ -69388,7 +69389,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType560041895C98 extends Struct {
+  public static class AnonymousType1299885218C98 extends Struct {
     public int cmd;
 
     public int flags;
@@ -69448,7 +69449,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType368242083C60 extends Struct {
+  public static class AnonymousType1615535645C60 extends Struct {
     public @Unsigned long min;
 
     public @Unsigned long max;
@@ -69484,7 +69485,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType885991756C198 extends Union {
+  public static class AnonymousType1649829954C198 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_amd_pstate_perf") Ptr<?> handler;
@@ -69496,7 +69497,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1299885218C113 extends Union {
+  public static class AnonymousType790538253C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_amd_pstate_epp_perf") Ptr<?> handler;
@@ -69658,7 +69659,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1615535645C108 extends Union {
+  public static class AnonymousType924393200C108 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mmc_request_start") Ptr<?> handler;
@@ -69670,7 +69671,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1649829954C108 extends Union {
+  public static class AnonymousType253380088C108 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mmc_request_done") Ptr<?> handler;
@@ -69694,7 +69695,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType790538253C22 extends Struct {
+  public static class AnonymousType1591683105C22 extends Struct {
     public String sign;
   }
 
@@ -70049,7 +70050,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType253380088C64 extends Union {
+  public static class AnonymousType2068499906C64 extends Union {
     public ms_hyperv_tsc_page page;
 
     public char @Size(4096) [] reserved;
@@ -70061,7 +70062,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1591683105C92 extends Struct {
+  public static class AnonymousType648176342C92 extends Struct {
     public char type;
 
     public char len;
@@ -70181,7 +70182,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType81505591C109 extends Union {
+  public static class AnonymousType18601987C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tsm_mr_read") Ptr<?> handler;
@@ -70193,7 +70194,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2068499906C114 extends Union {
+  public static class AnonymousType1492156162C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tsm_mr_refresh") Ptr<?> handler;
@@ -70205,7 +70206,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType648176342C120 extends Union {
+  public static class AnonymousType1970900227C120 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tsm_mr_write") Ptr<?> handler;
@@ -70277,7 +70278,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType18601987C124 extends Union {
+  public static class AnonymousType1090057640C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_devfreq_frequency") Ptr<?> handler;
@@ -70289,7 +70290,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1492156162C86 extends Union {
+  public static class AnonymousType536671860C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_devfreq_monitor") Ptr<?> handler;
@@ -70301,7 +70302,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1970900227C155 extends Union {
+  public static class AnonymousType1143968486C155 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_extlog_mem_event") Ptr<?> handler;
@@ -70313,7 +70314,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1090057640C221 extends Union {
+  public static class AnonymousType2097614581C221 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mc_event") Ptr<?> handler;
@@ -70325,7 +70326,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType536671860C204 extends Union {
+  public static class AnonymousType2052452680C204 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_arm_event") Ptr<?> handler;
@@ -70337,7 +70338,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1143968486C183 extends Union {
+  public static class AnonymousType48428832C183 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_non_standard_event") Ptr<?> handler;
@@ -70349,7 +70350,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2097614581C142 extends Union {
+  public static class AnonymousType987950392C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_aer_event") Ptr<?> handler;
@@ -70361,7 +70362,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2052452680C98 extends Union {
+  public static class AnonymousType2136419383C98 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_memory_failure_event") Ptr<?> handler;
@@ -70433,7 +70434,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType48428832C138 extends Union {
+  public static class AnonymousType719146276C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_icc_set_bw") Ptr<?> handler;
@@ -70445,7 +70446,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType987950392C92 extends Union {
+  public static class AnonymousType1066656936C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_icc_set_bw_end") Ptr<?> handler;
@@ -70999,7 +71000,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2136419383C268 extends Union {
+  public static class AnonymousType313869647C268 extends Union {
     public int val;
 
     public @Unsigned long val64;
@@ -71317,7 +71318,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType719146276C113 extends Struct {
+  public static class AnonymousType1413871034C113 extends Struct {
     public in6_addr saddr;
 
     public in6_addr daddr;
@@ -71333,7 +71334,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1066656936C116 extends Struct {
+  public static class AnonymousType338765435C116 extends Struct {
     public in6_addr saddr;
 
     public in6_addr daddr;
@@ -71440,7 +71441,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType313869647C62 extends Struct {
+  public static class AnonymousType874981105C62 extends Struct {
     public pppoe_hdr hdr;
 
     public @Unsigned @OriginalName("__be16") short proto;
@@ -71452,7 +71453,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1413871034C78 extends Struct {
+  public static class AnonymousType209748487C78 extends Struct {
     public batadv_unicast_packet batadv_unicast;
 
     public ethhdr eth;
@@ -71464,7 +71465,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType338765435C74 extends Struct {
+  public static class AnonymousType1997753864C74 extends Struct {
     public char @Size(6) [] ar_sha;
 
     public char @Size(4) [] ar_sip;
@@ -71480,7 +71481,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType874981105C37 extends Struct {
+  public static class AnonymousType1779219567C37 extends Struct {
     public @Unsigned @OriginalName("__be32") int session_id;
   }
 
@@ -71806,7 +71807,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType209748487C69 extends Struct {
+  public static class AnonymousType1729171313C69 extends Struct {
     public @Unsigned long ifindex;
 
     public int idxattr;
@@ -71820,7 +71821,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1997753864C39 extends Struct {
+  public static class AnonymousType1871259950C39 extends Struct {
     public @Unsigned long ifindex;
   }
 
@@ -72406,7 +72407,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1779219567C129 extends Union {
+  public static class AnonymousType34032089C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_kfree_skb") Ptr<?> handler;
@@ -72418,7 +72419,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1729171313C93 extends Union {
+  public static class AnonymousType233271858C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_consume_skb") Ptr<?> handler;
@@ -72430,7 +72431,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1871259950C97 extends Union {
+  public static class AnonymousType1650626168C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_skb_copy_datagram_iovec") Ptr<?> handler;
@@ -72442,7 +72443,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType34032089C118 extends Union {
+  public static class AnonymousType1149508419C118 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_net_dev_start_xmit") Ptr<?> handler;
@@ -72454,7 +72455,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType233271858C125 extends Union {
+  public static class AnonymousType2088098699C125 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_net_dev_xmit") Ptr<?> handler;
@@ -72466,7 +72467,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1650626168C94 extends Union {
+  public static class AnonymousType1253396693C94 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_net_dev_xmit_timeout") Ptr<?> handler;
@@ -72478,7 +72479,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1149508419C86 extends Union {
+  public static class AnonymousType1020397237C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_net_dev_queue") Ptr<?> handler;
@@ -72490,7 +72491,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2088098699C86 extends Union {
+  public static class AnonymousType1491623023C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_netif_receive_skb") Ptr<?> handler;
@@ -72502,7 +72503,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1253396693C86 extends Union {
+  public static class AnonymousType169049466C86 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_netif_rx") Ptr<?> handler;
@@ -72514,7 +72515,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1020397237C92 extends Union {
+  public static class AnonymousType1791014677C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_napi_gro_frags_entry") Ptr<?> handler;
@@ -72526,7 +72527,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1491623023C92 extends Union {
+  public static class AnonymousType1183572822C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_napi_gro_receive_entry") Ptr<?> handler;
@@ -72538,7 +72539,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType169049466C92 extends Union {
+  public static class AnonymousType1553646796C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_netif_receive_skb_entry") Ptr<?> handler;
@@ -72550,7 +72551,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1791014677C92 extends Union {
+  public static class AnonymousType1307810440C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_netif_receive_skb_list_entry") Ptr<?> handler;
@@ -72562,7 +72563,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1183572822C92 extends Union {
+  public static class AnonymousType577037372C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_netif_rx_entry") Ptr<?> handler;
@@ -72574,7 +72575,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1553646796C74 extends Union {
+  public static class AnonymousType1005331061C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_napi_gro_frags_exit") Ptr<?> handler;
@@ -72586,7 +72587,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1307810440C74 extends Union {
+  public static class AnonymousType836386144C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_napi_gro_receive_exit") Ptr<?> handler;
@@ -72598,7 +72599,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType577037372C74 extends Union {
+  public static class AnonymousType1621939721C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_netif_receive_skb_exit") Ptr<?> handler;
@@ -72610,7 +72611,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1005331061C74 extends Union {
+  public static class AnonymousType1710000932C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_netif_rx_exit") Ptr<?> handler;
@@ -72622,7 +72623,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType836386144C74 extends Union {
+  public static class AnonymousType1061806694C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_netif_receive_skb_list_exit") Ptr<?> handler;
@@ -72634,7 +72635,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1621939721C100 extends Union {
+  public static class AnonymousType1595472338C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_napi_poll") Ptr<?> handler;
@@ -72646,7 +72647,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1710000932C180 extends Union {
+  public static class AnonymousType1501716646C180 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_dql_stall_detected") Ptr<?> handler;
@@ -72658,7 +72659,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1061806694C100 extends Union {
+  public static class AnonymousType1488352537C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sock_rcvqueue_full") Ptr<?> handler;
@@ -72670,7 +72671,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1595472338C113 extends Union {
+  public static class AnonymousType672982715C113 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sock_exceed_buf_limit") Ptr<?> handler;
@@ -72682,7 +72683,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1501716646C111 extends Union {
+  public static class AnonymousType819092483C111 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_inet_sock_set_state") Ptr<?> handler;
@@ -72694,7 +72695,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1488352537C89 extends Union {
+  public static class AnonymousType2048888303C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_inet_sk_error_report") Ptr<?> handler;
@@ -72706,7 +72707,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType672982715C89 extends Union {
+  public static class AnonymousType292167944C89 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sk_data_ready") Ptr<?> handler;
@@ -72718,7 +72719,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType819092483C93 extends Union {
+  public static class AnonymousType1586246816C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sock_send_length") Ptr<?> handler;
@@ -72730,7 +72731,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2048888303C93 extends Union {
+  public static class AnonymousType2082232630C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_sock_recv_length") Ptr<?> handler;
@@ -72742,7 +72743,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType292167944C105 extends Union {
+  public static class AnonymousType2062209967C105 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_udp_fail_queue_rcv_skb") Ptr<?> handler;
@@ -72754,7 +72755,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1586246816C117 extends Union {
+  public static class AnonymousType986238875C117 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_retransmit_skb") Ptr<?> handler;
@@ -72766,7 +72767,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2082232630C138 extends Union {
+  public static class AnonymousType90096982C138 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_send_reset") Ptr<?> handler;
@@ -72778,7 +72779,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2062209967C83 extends Union {
+  public static class AnonymousType454424866C83 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_receive_reset") Ptr<?> handler;
@@ -72790,7 +72791,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType986238875C83 extends Union {
+  public static class AnonymousType936261188C83 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_destroy_sock") Ptr<?> handler;
@@ -72802,7 +72803,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType90096982C83 extends Union {
+  public static class AnonymousType1267110705C83 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_rcv_space_adjust") Ptr<?> handler;
@@ -72814,7 +72815,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType454424866C88 extends Union {
+  public static class AnonymousType939625314C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_rcvbuf_grow") Ptr<?> handler;
@@ -72826,7 +72827,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType936261188C117 extends Union {
+  public static class AnonymousType216644009C117 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_retransmit_synack") Ptr<?> handler;
@@ -72838,7 +72839,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1267110705C139 extends Union {
+  public static class AnonymousType1255395942C139 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_sendmsg_locked") Ptr<?> handler;
@@ -72850,7 +72851,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType939625314C104 extends Union {
+  public static class AnonymousType892591894C104 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_cwnd_reduction_tp") Ptr<?> handler;
@@ -72862,7 +72863,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType216644009C106 extends Union {
+  public static class AnonymousType22874185C106 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_probe") Ptr<?> handler;
@@ -72874,7 +72875,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1255395942C92 extends Union {
+  public static class AnonymousType1077464378C92 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_bad_csum") Ptr<?> handler;
@@ -72886,7 +72887,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType892591894C93 extends Union {
+  public static class AnonymousType346847161C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_cong_state_set") Ptr<?> handler;
@@ -72898,7 +72899,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType22874185C112 extends Union {
+  public static class AnonymousType1061998933C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_hash_bad_header") Ptr<?> handler;
@@ -72910,7 +72911,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1077464378C112 extends Union {
+  public static class AnonymousType1446676917C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_hash_md5_required") Ptr<?> handler;
@@ -72922,7 +72923,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType346847161C112 extends Union {
+  public static class AnonymousType1349373781C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_hash_md5_unexpected") Ptr<?> handler;
@@ -72934,7 +72935,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1061998933C112 extends Union {
+  public static class AnonymousType655059806C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_hash_md5_mismatch") Ptr<?> handler;
@@ -72946,7 +72947,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1446676917C112 extends Union {
+  public static class AnonymousType2123681939C112 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_hash_ao_required") Ptr<?> handler;
@@ -72958,7 +72959,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1349373781C142 extends Union {
+  public static class AnonymousType2086767061C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_ao_handshake_failure") Ptr<?> handler;
@@ -72970,7 +72971,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType655059806C142 extends Union {
+  public static class AnonymousType1112073835C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_ao_wrong_maclen") Ptr<?> handler;
@@ -72982,7 +72983,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2123681939C142 extends Union {
+  public static class AnonymousType1046820071C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_ao_mismatch") Ptr<?> handler;
@@ -72994,7 +72995,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2086767061C142 extends Union {
+  public static class AnonymousType1722645488C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_ao_key_not_found") Ptr<?> handler;
@@ -73006,7 +73007,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1112073835C142 extends Union {
+  public static class AnonymousType376601041C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_ao_rnext_request") Ptr<?> handler;
@@ -73018,7 +73019,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1046820071C109 extends Union {
+  public static class AnonymousType327986890C109 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_ao_synack_no_key") Ptr<?> handler;
@@ -73030,7 +73031,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1722645488C103 extends Union {
+  public static class AnonymousType81355344C103 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_ao_snd_sne_update") Ptr<?> handler;
@@ -73042,7 +73043,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType376601041C103 extends Union {
+  public static class AnonymousType161938368C103 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tcp_ao_rcv_sne_update") Ptr<?> handler;
@@ -73054,7 +73055,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType327986890C139 extends Union {
+  public static class AnonymousType203401172C139 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_fib_table_lookup") Ptr<?> handler;
@@ -73066,7 +73067,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType81355344C134 extends Union {
+  public static class AnonymousType2056499811C134 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_qdisc_dequeue") Ptr<?> handler;
@@ -73078,7 +73079,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType161938368C129 extends Union {
+  public static class AnonymousType890733699C129 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_qdisc_enqueue") Ptr<?> handler;
@@ -73090,7 +73091,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType203401172C84 extends Union {
+  public static class AnonymousType198250778C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_qdisc_reset") Ptr<?> handler;
@@ -73102,7 +73103,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2056499811C84 extends Union {
+  public static class AnonymousType2055288499C84 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_qdisc_destroy") Ptr<?> handler;
@@ -73114,7 +73115,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType890733699C128 extends Union {
+  public static class AnonymousType501650218C128 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_qdisc_create") Ptr<?> handler;
@@ -73126,7 +73127,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType198250778C155 extends Union {
+  public static class AnonymousType349978505C155 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_br_fdb_add") Ptr<?> handler;
@@ -73138,7 +73139,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2055288499C145 extends Union {
+  public static class AnonymousType386311625C145 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_br_fdb_external_learn_add") Ptr<?> handler;
@@ -73150,7 +73151,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType501650218C119 extends Union {
+  public static class AnonymousType1681993012C119 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_fdb_delete") Ptr<?> handler;
@@ -73162,7 +73163,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType349978505C164 extends Union {
+  public static class AnonymousType1293389141C164 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_br_fdb_update") Ptr<?> handler;
@@ -73174,7 +73175,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType386311625C116 extends Union {
+  public static class AnonymousType952288009C116 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_br_mdb_full") Ptr<?> handler;
@@ -73186,7 +73187,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1681993012C127 extends Union {
+  public static class AnonymousType440926517C127 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_page_pool_release") Ptr<?> handler;
@@ -73198,7 +73199,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1293389141C127 extends Union {
+  public static class AnonymousType2005776325C127 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_page_pool_state_release") Ptr<?> handler;
@@ -73210,7 +73211,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType952288009C127 extends Union {
+  public static class AnonymousType109175108C127 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_page_pool_state_hold") Ptr<?> handler;
@@ -73222,7 +73223,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType440926517C99 extends Union {
+  public static class AnonymousType678801430C99 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_page_pool_update_nid") Ptr<?> handler;
@@ -73234,7 +73235,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2005776325C155 extends Union {
+  public static class AnonymousType1928224132C155 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_neigh_create") Ptr<?> handler;
@@ -73246,7 +73247,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType109175108C131 extends Union {
+  public static class AnonymousType1757933443C131 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_neigh_update") Ptr<?> handler;
@@ -73258,7 +73259,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType678801430C93 extends Union {
+  public static class AnonymousType1631959070C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_neigh_update_done") Ptr<?> handler;
@@ -73270,7 +73271,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1928224132C93 extends Union {
+  public static class AnonymousType1681215776C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_neigh_timer_handler") Ptr<?> handler;
@@ -73282,7 +73283,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1757933443C93 extends Union {
+  public static class AnonymousType1689723487C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_neigh_event_send_done") Ptr<?> handler;
@@ -73294,7 +73295,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1631959070C93 extends Union {
+  public static class AnonymousType870019773C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_neigh_event_send_dead") Ptr<?> handler;
@@ -73306,7 +73307,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1681215776C93 extends Union {
+  public static class AnonymousType2140322192C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_neigh_cleanup_and_release") Ptr<?> handler;
@@ -73502,7 +73503,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1689723487C80 extends Union {
+  public static class AnonymousType836782867C80 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_netlink_extack") Ptr<?> handler;
@@ -73592,7 +73593,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType2140322192C74 extends Union {
+  public static class AnonymousType79620878C74 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_bpf_trigger_tp") Ptr<?> handler;
@@ -73604,7 +73605,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType836782867C75 extends Union {
+  public static class AnonymousType1854577712C75 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_bpf_test_finish") Ptr<?> handler;
@@ -73870,7 +73871,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1813525162C72 extends Struct {
+  public static class AnonymousType1560406561C72 extends Struct {
     public sock_extended_err ee;
 
     public sockaddr_in offender;
@@ -74320,7 +74321,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType79620878C54 extends Struct {
+  public static class AnonymousType1881218633C54 extends Struct {
     public tcphdr th;
 
     public @Unsigned @OriginalName("__be32") int @Size(10) [] opt;
@@ -74452,7 +74453,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1854577712C102 extends Union {
+  public static class AnonymousType62156248C102 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_icmp_send") Ptr<?> handler;
@@ -74492,7 +74493,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1560406561C67 extends Struct {
+  public static class AnonymousType962927234C67 extends Struct {
     public @Unsigned long ifindex;
 
     public @Unsigned int all_default;
@@ -74504,7 +74505,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1881218633C53 extends Struct {
+  public static class AnonymousType1810349933C53 extends Struct {
     public @Unsigned long ifindex;
 
     public int ip_idx;
@@ -74630,11 +74631,11 @@ public final class runtime {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; int index; }"
+      cType = "struct { const u8 *name; int index; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType62156248C34 extends Struct {
+  public static class AnonymousType323761934C41 extends Struct {
     public String name;
 
     public int index;
@@ -75799,10 +75800,10 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType962927234C135 extends Union {
+  public static class AnonymousType859193874C135 extends Union {
     public char @Size(64) [] __data;
 
-    public AnonymousType1810349933C95 anon1;
+    public AnonymousType571928572C95 anon1;
   }
 
   @Type(
@@ -75811,7 +75812,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1810349933C95 extends Struct {
+  public static class AnonymousType571928572C95 extends Struct {
     public in6_addr secret;
 
     public @Unsigned @OriginalName("__be32") int @Size(2) [] prefix;
@@ -75847,7 +75848,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType323761934C157 extends Union {
+  public static class AnonymousType1952194564C157 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_fib6_table_lookup") Ptr<?> handler;
@@ -75859,7 +75860,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType859193874C56 extends Struct {
+  public static class AnonymousType114990534C56 extends Struct {
     public in6_addr dst;
 
     public in6_addr src;
@@ -75910,7 +75911,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType571928572C73 extends Struct {
+  public static class AnonymousType134048221C73 extends Struct {
     public sock_extended_err ee;
 
     public sockaddr_in6 offender;
@@ -75942,7 +75943,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1952194564C138 extends Struct {
+  public static class AnonymousType302059473C138 extends Struct {
     public in6_addr saddr;
 
     public in6_addr daddr;
@@ -76078,7 +76079,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType114990534C148 extends Union {
+  public static class AnonymousType130564501C148 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_devlink_hwmsg") Ptr<?> handler;
@@ -76090,7 +76091,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType134048221C108 extends Union {
+  public static class AnonymousType1429133319C108 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_devlink_hwerr") Ptr<?> handler;
@@ -76102,7 +76103,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType302059473C114 extends Union {
+  public static class AnonymousType963768574C114 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_devlink_health_report") Ptr<?> handler;
@@ -76114,7 +76115,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType130564501C134 extends Union {
+  public static class AnonymousType596905862C134 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_devlink_health_recover_aborted") Ptr<?> handler;
@@ -76126,7 +76127,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1429133319C110 extends Union {
+  public static class AnonymousType1712666248C110 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_devlink_health_reporter_state_update") Ptr<?> handler;
@@ -76138,7 +76139,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType963768574C146 extends Union {
+  public static class AnonymousType1163404461C146 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_devlink_trap_report") Ptr<?> handler;
@@ -76426,7 +76427,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1894978338C36 extends Struct {
+  public static class AnonymousType236858974C36 extends Struct {
     public boolean cur;
 
     public boolean sav;
@@ -76650,7 +76651,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1058921154C56 extends Union {
+  public static class AnonymousType1713129148C56 extends Union {
     public char @Size(60) [] data_u8;
 
     public @Unsigned int @Size(15) [] data_u32;
@@ -76662,7 +76663,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1004862656C54 extends Union {
+  public static class AnonymousType931548023C54 extends Union {
     public char @Size(8) [] data_u8;
 
     public @Unsigned int @Size(2) [] data_u32;
@@ -76674,7 +76675,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType236858974C100 extends Union {
+  public static class AnonymousType731427771C100 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mptcp_subflow_get_send") Ptr<?> handler;
@@ -76686,7 +76687,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1713129148C88 extends Union {
+  public static class AnonymousType1410008136C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mptcp_sendmsg_frag") Ptr<?> handler;
@@ -76698,7 +76699,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType931548023C88 extends Union {
+  public static class AnonymousType1353093587C88 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_get_mapping_status") Ptr<?> handler;
@@ -76710,7 +76711,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType731427771C189 extends Union {
+  public static class AnonymousType1434367299C189 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ack_update_msk") Ptr<?> handler;
@@ -76722,7 +76723,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1410008136C90 extends Union {
+  public static class AnonymousType999674172C90 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_subflow_check_data_avail") Ptr<?> handler;
@@ -76809,7 +76810,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1353093587C96 extends Union {
+  public static class AnonymousType925936450C96 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mctp_key_acquire") Ptr<?> handler;
@@ -76821,7 +76822,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1434367299C101 extends Union {
+  public static class AnonymousType1400671358C101 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_mctp_key_release") Ptr<?> handler;
@@ -76833,7 +76834,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType999674172C21 extends Struct {
+  public static class AnonymousType1929969663C21 extends Struct {
     public int idx;
   }
 
@@ -77260,7 +77261,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType925936450C137 extends Union {
+  public static class AnonymousType1711393939C137 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_handshake_submit") Ptr<?> handler;
@@ -77272,7 +77273,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1400671358C142 extends Union {
+  public static class AnonymousType1423507882C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_handshake_submit_err") Ptr<?> handler;
@@ -77284,7 +77285,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1929969663C137 extends Union {
+  public static class AnonymousType1668376627C137 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_handshake_cancel") Ptr<?> handler;
@@ -77296,7 +77297,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1711393939C137 extends Union {
+  public static class AnonymousType1462928549C137 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_handshake_cancel_none") Ptr<?> handler;
@@ -77308,7 +77309,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1423507882C137 extends Union {
+  public static class AnonymousType1069531012C137 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_handshake_cancel_busy") Ptr<?> handler;
@@ -77320,7 +77321,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1668376627C137 extends Union {
+  public static class AnonymousType603401608C137 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_handshake_destruct") Ptr<?> handler;
@@ -77332,7 +77333,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1462928549C142 extends Union {
+  public static class AnonymousType1269819701C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_handshake_complete") Ptr<?> handler;
@@ -77344,7 +77345,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1069531012C142 extends Union {
+  public static class AnonymousType142302025C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_handshake_notify_err") Ptr<?> handler;
@@ -77356,7 +77357,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType603401608C142 extends Union {
+  public static class AnonymousType1249547869C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_handshake_cmd_accept") Ptr<?> handler;
@@ -77368,7 +77369,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1269819701C142 extends Union {
+  public static class AnonymousType1350269431C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_handshake_cmd_accept_err") Ptr<?> handler;
@@ -77380,7 +77381,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType142302025C142 extends Union {
+  public static class AnonymousType1688851596C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_handshake_cmd_done") Ptr<?> handler;
@@ -77392,7 +77393,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1249547869C142 extends Union {
+  public static class AnonymousType911895107C142 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_handshake_cmd_done_err") Ptr<?> handler;
@@ -77404,7 +77405,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1350269431C93 extends Union {
+  public static class AnonymousType680319659C93 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tls_contenttype") Ptr<?> handler;
@@ -77416,7 +77417,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1688851596C97 extends Union {
+  public static class AnonymousType598977164C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tls_alert_send") Ptr<?> handler;
@@ -77428,7 +77429,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType911895107C97 extends Union {
+  public static class AnonymousType160696258C97 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_tls_alert_recv") Ptr<?> handler;
@@ -77440,7 +77441,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType680319659C50 extends Struct {
+  public static class AnonymousType1819897025C50 extends Struct {
     public char link;
 
     public @Unsigned short bitmap;
@@ -77613,7 +77614,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType598977164C98 extends Union {
+  public static class AnonymousType577682023C98 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ma_op") Ptr<?> handler;
@@ -77625,7 +77626,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType160696258C98 extends Union {
+  public static class AnonymousType481792876C98 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ma_read") Ptr<?> handler;
@@ -77637,7 +77638,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1819897025C124 extends Union {
+  public static class AnonymousType892611887C124 extends Union {
     public bpf_raw_event_map event;
 
     public @OriginalName("btf_trace_ma_write") Ptr<?> handler;
@@ -77649,7 +77650,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType577682023C39 extends Struct {
+  public static class AnonymousType311185452C39 extends Struct {
     public @Unsigned long x;
   }
 
@@ -77659,7 +77660,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType481792876C56 extends Union {
+  public static class AnonymousType1164344728C56 extends Union {
     public long s;
 
     public @Unsigned long u;
@@ -77671,7 +77672,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType892611887C83 extends Union {
+  public static class AnonymousType1709882027C83 extends Union {
     public sockaddr raw;
 
     public sockaddr_in v4;
@@ -77727,7 +77728,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType311185452C18 extends Struct {
+  public static class AnonymousType1898167916C18 extends Struct {
     public byte x;
   }
 
@@ -77737,7 +77738,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1164344728C25 extends Struct {
+  public static class AnonymousType31366484C25 extends Struct {
     public short x;
   }
 
@@ -77747,7 +77748,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1709882027C19 extends Struct {
+  public static class AnonymousType2007149130C19 extends Struct {
     public int x;
   }
 
@@ -77757,7 +77758,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1898167916C18 extends Struct {
+  public static class AnonymousType1202547191C18 extends Struct {
     public @OriginalName("insn_byte_t") char x;
   }
 
@@ -77767,7 +77768,7 @@ public final class runtime {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType31366484C22 extends Struct {
+  public static class AnonymousType730955696C22 extends Struct {
     public char @Size(64) [] x;
   }
 }

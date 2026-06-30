@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class LwtunnelDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("lwtunnel_build_state($arg1, $arg2, $arg3, $arg4, (const void*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("lwtunnel_build_state($arg1, $arg2, $arg3, $arg4, (const void *)$arg5, $arg6, $arg7)")
   public static int lwtunnel_build_state(Ptr<net> net, @Unsigned short encap_type,
       Ptr<nlattr> encap, @Unsigned int family, Ptr<?> cfg, Ptr<Ptr<lwtunnel_state>> lws,
       Ptr<netlink_ext_ack> extack) {
@@ -1104,13 +1105,13 @@ public final class LwtunnelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lwtunnel_encap_add_ops((const struct lwtunnel_encap_ops*)$arg1, $arg2)")
+  @BuiltinBPFFunction("lwtunnel_encap_add_ops((const struct lwtunnel_encap_ops *)$arg1, $arg2)")
   public static int lwtunnel_encap_add_ops(Ptr<lwtunnel_encap_ops> ops, @Unsigned int num) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lwtunnel_encap_del_ops((const struct lwtunnel_encap_ops*)$arg1, $arg2)")
+  @BuiltinBPFFunction("lwtunnel_encap_del_ops((const struct lwtunnel_encap_ops *)$arg1, $arg2)")
   public static int lwtunnel_encap_del_ops(Ptr<lwtunnel_encap_ops> ops, @Unsigned int encap_type) {
     throw new MethodIsBPFRelatedFunction();
   }

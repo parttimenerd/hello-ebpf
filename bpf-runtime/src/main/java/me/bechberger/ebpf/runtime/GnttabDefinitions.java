@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1172,7 +1173,7 @@ public final class GnttabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gnttab_empty_grant_references((const unsigned int*)$arg1)")
+  @BuiltinBPFFunction("gnttab_empty_grant_references((const unsigned int *)$arg1)")
   public static int gnttab_empty_grant_references(
       Ptr<java.lang. @Unsigned @OriginalName("grant_ref_t") Integer> private_head) {
     throw new MethodIsBPFRelatedFunction();

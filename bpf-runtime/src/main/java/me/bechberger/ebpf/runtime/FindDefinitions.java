@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,15 +1091,15 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class FindDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__find_acq_core($arg1, (const struct xfrm_mark*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, (const union {\n"
+  @BuiltinBPFFunction("__find_acq_core($arg1, (const struct xfrm_mark *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, (const union {\n"
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg9, (const union {\n"
+          + "} *)$arg9, (const union {\n"
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg10, $arg11)")
+          + "} *)$arg10, $arg11)")
   public static Ptr<xfrm_state> __find_acq_core(Ptr<net> net, Ptr<xfrm_mark> m,
       @Unsigned short family, char mode, @Unsigned int reqid, @Unsigned int if_id,
       @Unsigned int pcpu_num, char proto, Ptr<xfrm_address_t> daddr, Ptr<xfrm_address_t> saddr,
@@ -1107,7 +1108,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__find_child($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__find_child($arg1, (const u8 *)$arg2)")
   public static Ptr<aa_profile> __find_child(Ptr<list_head> head, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1119,7 +1120,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__find_event_file($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__find_event_file($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static Ptr<trace_event_file> __find_event_file(Ptr<trace_array> tr, String system,
       String event) {
     throw new MethodIsBPFRelatedFunction();
@@ -1147,19 +1148,19 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__find_governor((const u8*)$arg1)")
+  @BuiltinBPFFunction("__find_governor((const u8 *)$arg1)")
   public static Ptr<thermal_governor> __find_governor(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__find_interface($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("__find_interface($arg1, (const void *)$arg2)")
   public static int __find_interface(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__find_kallsyms_symbol_value($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__find_kallsyms_symbol_value($arg1, (const u8 *)$arg2)")
   public static @Unsigned long __find_kallsyms_symbol_value(Ptr<module> mod, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1171,7 +1172,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__find_logger($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__find_logger($arg1, (const u8 *)$arg2)")
   public static Ptr<nf_logger> __find_logger(int pf, String str_logger) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1192,7 +1193,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__find_nth_and_andnot_bit((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, (const long unsigned int*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__find_nth_and_andnot_bit((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, (const long unsigned int *)$arg3, $arg4, $arg5)")
   public static @Unsigned long __find_nth_and_andnot_bit(Ptr<java.lang. @Unsigned Long> addr1,
       Ptr<java.lang. @Unsigned Long> addr2, Ptr<java.lang. @Unsigned Long> addr3,
       @Unsigned long size, @Unsigned long n) {
@@ -1200,21 +1201,21 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__find_nth_and_bit((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__find_nth_and_bit((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3, $arg4)")
   public static @Unsigned long __find_nth_and_bit(Ptr<java.lang. @Unsigned Long> addr1,
       Ptr<java.lang. @Unsigned Long> addr2, @Unsigned long size, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__find_nth_andnot_bit((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__find_nth_andnot_bit((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3, $arg4)")
   public static @Unsigned long __find_nth_andnot_bit(Ptr<java.lang. @Unsigned Long> addr1,
       Ptr<java.lang. @Unsigned Long> addr2, @Unsigned long size, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__find_nth_bit((const long unsigned int*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__find_nth_bit((const long unsigned int *)$arg1, $arg2, $arg3)")
   public static @Unsigned long __find_nth_bit(Ptr<java.lang. @Unsigned Long> addr,
       @Unsigned long size, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1254,7 +1255,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_find_first_and_and_bit((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, (const long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("_find_first_and_and_bit((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, (const long unsigned int *)$arg3, $arg4)")
   public static @Unsigned long _find_first_and_and_bit(Ptr<java.lang. @Unsigned Long> addr1,
       Ptr<java.lang. @Unsigned Long> addr2, Ptr<java.lang. @Unsigned Long> addr3,
       @Unsigned long size) {
@@ -1262,28 +1263,28 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_find_first_and_bit((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("_find_first_and_bit((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3)")
   public static @Unsigned long _find_first_and_bit(Ptr<java.lang. @Unsigned Long> addr1,
       Ptr<java.lang. @Unsigned Long> addr2, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_find_first_andnot_bit((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("_find_first_andnot_bit((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3)")
   public static @Unsigned long _find_first_andnot_bit(Ptr<java.lang. @Unsigned Long> addr1,
       Ptr<java.lang. @Unsigned Long> addr2, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_find_first_bit((const long unsigned int*)$arg1, $arg2)")
+  @BuiltinBPFFunction("_find_first_bit((const long unsigned int *)$arg1, $arg2)")
   public static @Unsigned long _find_first_bit(Ptr<java.lang. @Unsigned Long> addr,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_find_first_zero_bit((const long unsigned int*)$arg1, $arg2)")
+  @BuiltinBPFFunction("_find_first_zero_bit((const long unsigned int *)$arg1, $arg2)")
   public static @Unsigned long _find_first_zero_bit(Ptr<java.lang. @Unsigned Long> addr,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1304,42 +1305,42 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_find_last_bit((const long unsigned int*)$arg1, $arg2)")
+  @BuiltinBPFFunction("_find_last_bit((const long unsigned int *)$arg1, $arg2)")
   public static @Unsigned long _find_last_bit(Ptr<java.lang. @Unsigned Long> addr,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_find_next_and_bit((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("_find_next_and_bit((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3, $arg4)")
   public static @Unsigned long _find_next_and_bit(Ptr<java.lang. @Unsigned Long> addr1,
       Ptr<java.lang. @Unsigned Long> addr2, @Unsigned long nbits, @Unsigned long start) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_find_next_andnot_bit((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("_find_next_andnot_bit((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3, $arg4)")
   public static @Unsigned long _find_next_andnot_bit(Ptr<java.lang. @Unsigned Long> addr1,
       Ptr<java.lang. @Unsigned Long> addr2, @Unsigned long nbits, @Unsigned long start) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_find_next_bit((const long unsigned int*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("_find_next_bit((const long unsigned int *)$arg1, $arg2, $arg3)")
   public static @Unsigned long _find_next_bit(Ptr<java.lang. @Unsigned Long> addr,
       @Unsigned long nbits, @Unsigned long start) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_find_next_or_bit((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("_find_next_or_bit((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3, $arg4)")
   public static @Unsigned long _find_next_or_bit(Ptr<java.lang. @Unsigned Long> addr1,
       Ptr<java.lang. @Unsigned Long> addr2, @Unsigned long nbits, @Unsigned long start) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_find_next_zero_bit((const long unsigned int*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("_find_next_zero_bit((const long unsigned int *)$arg1, $arg2, $arg3)")
   public static @Unsigned long _find_next_zero_bit(Ptr<java.lang. @Unsigned Long> addr,
       @Unsigned long nbits, @Unsigned long start) {
     throw new MethodIsBPFRelatedFunction();
@@ -1384,7 +1385,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_and_lock_process_key((const u8*)$arg1, (const u8*)$arg2, $arg3, (const struct fscrypt_key**)$arg4)")
+  @BuiltinBPFFunction("find_and_lock_process_key((const u8 *)$arg1, (const u8 *)$arg2, $arg3, (const struct fscrypt_key**)$arg4)")
   public static Ptr<key> find_and_lock_process_key(String prefix,
       Ptr<java.lang.Character> descriptor, @Unsigned int min_keysize,
       Ptr<Ptr<fscrypt_key>> payload_ret) {
@@ -1392,27 +1393,27 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_any_unique_sec((const struct load_info*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("find_any_unique_sec((const struct load_info *)$arg1, (const u8 *)$arg2)")
   public static int find_any_unique_sec(Ptr<load_info> info, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_asymmetric_key($arg1, (const struct asymmetric_key_id*)$arg2, (const struct asymmetric_key_id*)$arg3, (const struct asymmetric_key_id*)$arg4, $arg5)")
+  @BuiltinBPFFunction("find_asymmetric_key($arg1, (const struct asymmetric_key_id *)$arg2, (const struct asymmetric_key_id *)$arg3, (const struct asymmetric_key_id *)$arg4, $arg5)")
   public static Ptr<key> find_asymmetric_key(Ptr<key> keyring, Ptr<asymmetric_key_id> id_0,
       Ptr<asymmetric_key_id> id_1, Ptr<asymmetric_key_id> id_2, boolean partial) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_attach((const struct linux_binprm*)$arg1, $arg2, $arg3, (const u8*)$arg4, (const u8**)$arg5)")
+  @BuiltinBPFFunction("find_attach((const struct linux_binprm *)$arg1, $arg2, $arg3, (const u8 *)$arg4, (const u8**)$arg5)")
   public static Ptr<aa_label> find_attach(Ptr<linux_binprm> bprm, Ptr<aa_ns> ns,
       Ptr<list_head> head, String name, Ptr<String> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_battery((const struct dmi_header*)$arg1, $arg2)")
+  @BuiltinBPFFunction("find_battery((const struct dmi_header *)$arg1, $arg2)")
   public static void find_battery(Ptr<dmi_header> dm, Ptr<?> _private) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1445,7 +1446,7 @@ public final class FindDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("find_candidate($arg1, (const struct {\n"
           + "  long unsigned int bits[1];\n"
-          + "}*)$arg2, $arg3, $arg4)")
+          + "} *)$arg2, $arg3, $arg4)")
   public static Ptr<dma_chan> find_candidate(Ptr<dma_device> device, Ptr<dma_cap_mask_t> mask,
       @OriginalName("dma_filter_fn") Ptr<?> fn, Ptr<?> fn_param) {
     throw new MethodIsBPFRelatedFunction();
@@ -1501,7 +1502,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_devfreq_governor((const u8*)$arg1)")
+  @BuiltinBPFFunction("find_devfreq_governor((const u8 *)$arg1)")
   public static Ptr<devfreq_governor> find_devfreq_governor(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1538,13 +1539,13 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_event_field((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("find_event_field((const u8 *)$arg1, $arg2)")
   public static Ptr<trace_event_fields> find_event_field(String fmt, Ptr<trace_event_call> call) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_event_file($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("find_event_file($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static Ptr<trace_event_file> find_event_file(Ptr<trace_array> tr, String system,
       String event) {
     throw new MethodIsBPFRelatedFunction();
@@ -1572,7 +1573,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_exported_symbol_in_section((const struct symsearch*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("find_exported_symbol_in_section((const struct symsearch *)$arg1, $arg2, $arg3)")
   public static boolean find_exported_symbol_in_section(Ptr<symsearch> syms, Ptr<module> owner,
       Ptr<find_symbol_arg> fsa) {
     throw new MethodIsBPFRelatedFunction();
@@ -1585,7 +1586,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct fetch_type*)find_fetch_type((const u8*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct fetch_type*)find_fetch_type((const u8 *)$arg1, $arg2))")
   public static Ptr<fetch_type> find_fetch_type(String type, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1611,7 +1612,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct font_desc*)find_font((const u8*)$arg1))")
+  @BuiltinBPFFunction("((const struct font_desc*)find_font((const u8 *)$arg1))")
   public static Ptr<font_desc> find_font(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1684,7 +1685,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_group_orlov($arg1, $arg2, $arg3, $arg4, (const struct qstr*)$arg5)")
+  @BuiltinBPFFunction("find_group_orlov($arg1, $arg2, $arg3, $arg4, (const struct qstr *)$arg5)")
   public static int find_group_orlov(Ptr<super_block> sb, Ptr<inode> parent,
       Ptr<java.lang. @Unsigned @OriginalName("ext4_group_t") Integer> group,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<qstr> qstr) {
@@ -1700,7 +1701,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_gtf2((const struct detailed_timing*)$arg1, $arg2)")
+  @BuiltinBPFFunction("find_gtf2((const struct detailed_timing *)$arg1, $arg2)")
   public static void find_gtf2(Ptr<detailed_timing> descriptor, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1708,7 +1709,7 @@ public final class FindDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("find_guid_info((const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg1, $arg2)")
+          + "} *)$arg1, $arg2)")
   public static Ptr<?> find_guid_info(Ptr<@OriginalName("guid_t") uuid_t> guid, char mode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1756,7 +1757,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_io_range_by_fwnode((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("find_io_range_by_fwnode((const struct fwnode_handle *)$arg1)")
   public static Ptr<logic_pio_hwaddr> find_io_range_by_fwnode(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1793,13 +1794,13 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_kallsyms_symbol_value($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("find_kallsyms_symbol_value($arg1, (const u8 *)$arg2)")
   public static @Unsigned long find_kallsyms_symbol_value(Ptr<module> mod, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_key_to_update($arg1, (const struct keyring_index_key*)$arg2)")
+  @BuiltinBPFFunction("find_key_to_update($arg1, (const struct keyring_index_key *)$arg2)")
   public static @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> find_key_to_update(
       @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> keyring_ref,
       Ptr<keyring_index_key> index_key) {
@@ -1807,7 +1808,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_keyring_by_name((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("find_keyring_by_name((const u8 *)$arg1, $arg2)")
   public static Ptr<key> find_keyring_by_name(String name, boolean uid_keyring) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1909,7 +1910,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_mergeable($arg1, $arg2, $arg3, (const u8*)$arg4, (void (*)(void*))$arg5)")
+  @BuiltinBPFFunction("find_mergeable($arg1, $arg2, $arg3, (const u8 *)$arg4, (void (*)(void*))$arg5)")
   public static Ptr<kmem_cache> find_mergeable(@Unsigned int size, @Unsigned int align,
       @Unsigned @OriginalName("slab_flags_t") int flags, String name, Ptr<?> ctor) {
     throw new MethodIsBPFRelatedFunction();
@@ -1922,13 +1923,13 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_module((const u8*)$arg1)")
+  @BuiltinBPFFunction("find_module((const u8 *)$arg1)")
   public static Ptr<module> find_module(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_module_all((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("find_module_all((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<module> find_module_all(String name, @Unsigned long len,
       boolean even_unformed) {
     throw new MethodIsBPFRelatedFunction();
@@ -1941,7 +1942,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_named_trigger((const u8*)$arg1)")
+  @BuiltinBPFFunction("find_named_trigger((const u8 *)$arg1)")
   public static Ptr<event_trigger_data> find_named_trigger(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1966,7 +1967,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_next_clump8($arg1, (const long unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("find_next_clump8($arg1, (const long unsigned int *)$arg2, $arg3, $arg4)")
   public static @Unsigned long find_next_clump8(Ptr<java.lang. @Unsigned Long> clump,
       Ptr<java.lang. @Unsigned Long> addr, @Unsigned long size, @Unsigned long offset) {
     throw new MethodIsBPFRelatedFunction();
@@ -1987,7 +1988,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_nls((const u8*)$arg1)")
+  @BuiltinBPFFunction("find_nls((const u8 *)$arg1)")
   public static Ptr<nls_table> find_nls(String charset) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2011,7 +2012,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_or_insert_direct_key($arg1, (const u8*)$arg2, (const struct fscrypt_inode_info*)$arg3)")
+  @BuiltinBPFFunction("find_or_insert_direct_key($arg1, (const u8 *)$arg2, (const struct fscrypt_inode_info *)$arg3)")
   public static Ptr<fscrypt_direct_key> find_or_insert_direct_key(Ptr<fscrypt_direct_key> to_insert,
       Ptr<java.lang.Character> raw_key, Ptr<fscrypt_inode_info> ci) {
     throw new MethodIsBPFRelatedFunction();
@@ -2050,7 +2051,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_probe_event((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("find_probe_event((const u8 *)$arg1, (const u8 *)$arg2)")
   public static Ptr<trace_uprobe> find_probe_event(String event, String group) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2068,7 +2069,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_random_bit((const long unsigned int*)$arg1, $arg2)")
+  @BuiltinBPFFunction("find_random_bit((const long unsigned int *)$arg1, $arg2)")
   public static @Unsigned long find_random_bit(Ptr<java.lang. @Unsigned Long> addr,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -2101,7 +2102,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_sec((const struct load_info*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("find_sec((const struct load_info *)$arg1, (const u8 *)$arg2)")
   public static @Unsigned int find_sec(Ptr<load_info> info, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2113,7 +2114,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_sort_method((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("find_sort_method((const struct dmi_system_id *)$arg1)")
   public static int find_sort_method(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2138,7 +2139,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_synth_event((const u8*)$arg1)")
+  @BuiltinBPFFunction("find_synth_event((const u8 *)$arg1)")
   public static Ptr<synth_event> find_synth_event(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2157,7 +2158,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)find_table($arg1, (const struct firmware*)$arg2))")
+  @BuiltinBPFFunction("((const void*)find_table($arg1, (const struct firmware *)$arg2))")
   public static Ptr<?> find_table(Ptr<device> dev, Ptr<firmware> fw) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2182,7 +2183,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_trace_kprobe((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("find_trace_kprobe((const u8 *)$arg1, (const u8 *)$arg2)")
   public static Ptr<trace_kprobe> find_trace_kprobe(String event, String group) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2240,7 +2241,7 @@ public final class FindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("find_vm_area((const void*)$arg1)")
+  @BuiltinBPFFunction("find_vm_area((const void *)$arg1)")
   public static Ptr<vm_struct> find_vm_area(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1258,7 +1259,7 @@ public final class VirtqueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtqueue_get_avail_addr((const struct virtqueue*)$arg1)")
+  @BuiltinBPFFunction("virtqueue_get_avail_addr((const struct virtqueue *)$arg1)")
   public static @Unsigned @OriginalName("dma_addr_t") long virtqueue_get_avail_addr(
       Ptr<virtqueue> _vq) {
     throw new MethodIsBPFRelatedFunction();
@@ -1293,33 +1294,33 @@ public final class VirtqueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtqueue_get_desc_addr((const struct virtqueue*)$arg1)")
+  @BuiltinBPFFunction("virtqueue_get_desc_addr((const struct virtqueue *)$arg1)")
   public static @Unsigned @OriginalName("dma_addr_t") long virtqueue_get_desc_addr(
       Ptr<virtqueue> _vq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtqueue_get_used_addr((const struct virtqueue*)$arg1)")
+  @BuiltinBPFFunction("virtqueue_get_used_addr((const struct virtqueue *)$arg1)")
   public static @Unsigned @OriginalName("dma_addr_t") long virtqueue_get_used_addr(
       Ptr<virtqueue> _vq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct vring*)virtqueue_get_vring((const struct virtqueue*)$arg1))")
+  @BuiltinBPFFunction("((const struct vring*)virtqueue_get_vring((const struct virtqueue *)$arg1))")
   public static Ptr<vring> virtqueue_get_vring(Ptr<virtqueue> vq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtqueue_get_vring_size((const struct virtqueue*)$arg1)")
+  @BuiltinBPFFunction("virtqueue_get_vring_size((const struct virtqueue *)$arg1)")
   public static @Unsigned int virtqueue_get_vring_size(Ptr<virtqueue> _vq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtqueue_is_broken((const struct virtqueue*)$arg1)")
+  @BuiltinBPFFunction("virtqueue_is_broken((const struct virtqueue *)$arg1)")
   public static boolean virtqueue_is_broken(Ptr<virtqueue> _vq) {
     throw new MethodIsBPFRelatedFunction();
   }

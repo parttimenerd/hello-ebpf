@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1152,7 +1153,7 @@ public final class MceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mce_chrdev_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("mce_chrdev_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long mce_chrdev_write(Ptr<file> filp, String ubuf,
       @Unsigned long usize, Ptr<java.lang. @OriginalName("loff_t") Long> off) {
     throw new MethodIsBPFRelatedFunction();
@@ -1339,7 +1340,7 @@ public final class MceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mce_panic((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("mce_panic((const u8 *)$arg1, $arg2, $arg3)")
   public static void mce_panic(String msg, Ptr<mce_hw_err> _final, String exp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1473,7 +1474,7 @@ public final class MceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mce_timed_out($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("mce_timed_out($arg1, (const u8 *)$arg2)")
   public static int mce_timed_out(Ptr<java.lang. @Unsigned Long> t, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }

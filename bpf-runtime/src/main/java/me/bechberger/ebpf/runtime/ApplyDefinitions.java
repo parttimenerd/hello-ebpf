@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1189,7 +1190,7 @@ public final class ApplyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apply_relocate_add($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("apply_relocate_add($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int apply_relocate_add(Ptr<@OriginalName("Elf64_Shdr") elf64_shdr> sechdrs,
       String strtab, @Unsigned int symindex, @Unsigned int relsec, Ptr<module> me) {
     throw new MethodIsBPFRelatedFunction();
@@ -1272,7 +1273,7 @@ public final class ApplyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apply_workqueue_attrs($arg1, (const struct workqueue_attrs*)$arg2)")
+  @BuiltinBPFFunction("apply_workqueue_attrs($arg1, (const struct workqueue_attrs *)$arg2)")
   public static int apply_workqueue_attrs(Ptr<workqueue_struct> wq, Ptr<workqueue_attrs> attrs) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1290,7 +1291,7 @@ public final class ApplyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apply_wqattrs_prepare($arg1, (const struct workqueue_attrs*)$arg2, (const struct cpumask*)$arg3)")
+  @BuiltinBPFFunction("apply_wqattrs_prepare($arg1, (const struct workqueue_attrs *)$arg2, (const struct cpumask*)$arg3)")
   public static Ptr<apply_wqattrs_ctx> apply_wqattrs_prepare(Ptr<workqueue_struct> wq,
       Ptr<workqueue_attrs> attrs, @OriginalName("cpumask_var_t") Ptr<cpumask> unbound_cpumask) {
     throw new MethodIsBPFRelatedFunction();

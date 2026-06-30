@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1155,7 +1156,7 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ftrace_set_clr_event_nolock($arg1, (const u8*)$arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("__ftrace_set_clr_event_nolock($arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5, (const u8 *)$arg6)")
   public static int __ftrace_set_clr_event_nolock(Ptr<trace_array> tr, String match, String sub,
       String event, int set, String mod) {
     throw new MethodIsBPFRelatedFunction();
@@ -1169,13 +1170,13 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ftrace_vbprintk($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__ftrace_vbprintk($arg1, (const u8 *)$arg2, $arg3)")
   public static int __ftrace_vbprintk(@Unsigned long ip, String fmt, Ptr<__va_list_tag> ap) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ftrace_vprintk($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__ftrace_vprintk($arg1, (const u8 *)$arg2, $arg3)")
   public static int __ftrace_vprintk(@Unsigned long ip, String fmt, Ptr<__va_list_tag> ap) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1265,13 +1266,13 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_cmp_ips((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ftrace_cmp_ips((const void *)$arg1, (const void *)$arg2)")
   public static int ftrace_cmp_ips(Ptr<?> a, Ptr<?> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_cmp_recs((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ftrace_cmp_recs((const void *)$arg1, (const void *)$arg2)")
   public static int ftrace_cmp_recs(Ptr<?> a, Ptr<?> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1412,7 +1413,7 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_enable_sysctl((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ftrace_enable_sysctl((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int ftrace_enable_sysctl(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1437,14 +1438,14 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_event_npid_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ftrace_event_npid_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ftrace_event_npid_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_event_pid_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ftrace_event_pid_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ftrace_event_pid_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1481,7 +1482,7 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_event_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ftrace_event_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ftrace_event_write(Ptr<file> file, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1507,7 +1508,7 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_filter_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ftrace_filter_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ftrace_filter_write(Ptr<file> file, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1733,7 +1734,7 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_graph_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ftrace_graph_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ftrace_graph_write(Ptr<file> file, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1894,7 +1895,7 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_modify_code_direct($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("ftrace_modify_code_direct($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int ftrace_modify_code_direct(@Unsigned long ip, String old_code, String new_code) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1918,7 +1919,7 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_no_pid_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ftrace_no_pid_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ftrace_no_pid_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1931,7 +1932,7 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_notrace_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ftrace_notrace_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ftrace_notrace_write(Ptr<file> file, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2019,7 +2020,7 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_pid_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ftrace_pid_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ftrace_pid_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2065,7 +2066,7 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_profile_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ftrace_profile_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ftrace_profile_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2341,7 +2342,7 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_text_reserved((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ftrace_text_reserved((const void *)$arg1, (const void *)$arg2)")
   public static int ftrace_text_reserved(Ptr<?> start, Ptr<?> end) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2446,7 +2447,7 @@ public final class FtraceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ftrace_verify_code($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("ftrace_verify_code($arg1, (const u8 *)$arg2)")
   public static int ftrace_verify_code(@Unsigned long ip, String old_code) {
     throw new MethodIsBPFRelatedFunction();
   }

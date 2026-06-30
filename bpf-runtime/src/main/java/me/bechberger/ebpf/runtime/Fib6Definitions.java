@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class Fib6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__fib6_drop_pcpu_from($arg1, (const struct fib6_info*)$arg2)")
+  @BuiltinBPFFunction("__fib6_drop_pcpu_from($arg1, (const struct fib6_info *)$arg2)")
   public static void __fib6_drop_pcpu_from(Ptr<fib6_nh> fib6_nh, Ptr<fib6_info> match) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1272,14 +1273,14 @@ public final class Fib6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib6_locate($arg1, (const struct in6_addr*)$arg2, $arg3, (const struct in6_addr*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fib6_locate($arg1, (const struct in6_addr *)$arg2, $arg3, (const struct in6_addr *)$arg4, $arg5, $arg6)")
   public static Ptr<fib6_node> fib6_locate(Ptr<fib6_node> root, Ptr<in6_addr> daddr, int dst_len,
       Ptr<in6_addr> saddr, int src_len, boolean exact_match) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib6_locate_1($arg1, (const struct in6_addr*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fib6_locate_1($arg1, (const struct in6_addr *)$arg2, $arg3, $arg4, $arg5)")
   public static Ptr<fib6_node> fib6_locate_1(Ptr<fib6_node> root, Ptr<in6_addr> addr, int plen,
       int offset, boolean exact_match) {
     throw new MethodIsBPFRelatedFunction();
@@ -1317,7 +1318,7 @@ public final class Fib6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib6_nh_age_exceptions((const struct fib6_nh*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("fib6_nh_age_exceptions((const struct fib6_nh *)$arg1, $arg2, $arg3)")
   public static void fib6_nh_age_exceptions(Ptr<fib6_nh> nh, Ptr<fib6_gc_args> gc_args,
       @Unsigned long now) {
     throw new MethodIsBPFRelatedFunction();
@@ -1379,7 +1380,7 @@ public final class Fib6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib6_nh_remove_exception((const struct fib6_nh*)$arg1, $arg2, (const struct rt6_info*)$arg3)")
+  @BuiltinBPFFunction("fib6_nh_remove_exception((const struct fib6_nh *)$arg1, $arg2, (const struct rt6_info *)$arg3)")
   public static int fib6_nh_remove_exception(Ptr<fib6_nh> nh, int plen, Ptr<rt6_info> rt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1391,7 +1392,7 @@ public final class Fib6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib6_node_lookup($arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3)")
+  @BuiltinBPFFunction("fib6_node_lookup($arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3)")
   public static Ptr<fib6_node> fib6_node_lookup(Ptr<fib6_node> root, Ptr<in6_addr> daddr,
       Ptr<in6_addr> saddr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1455,7 +1456,7 @@ public final class Fib6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib6_rule_default((const struct fib_rule*)$arg1)")
+  @BuiltinBPFFunction("fib6_rule_default((const struct fib_rule *)$arg1)")
   public static boolean fib6_rule_default(Ptr<fib_rule> rule) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1479,7 +1480,7 @@ public final class Fib6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib6_rule_lookup($arg1, $arg2, (const struct sk_buff*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fib6_rule_lookup($arg1, $arg2, (const struct sk_buff *)$arg3, $arg4, $arg5)")
   public static Ptr<dst_entry> fib6_rule_lookup(Ptr<net> net, Ptr<flowi6> fl6, Ptr<sk_buff> skb,
       int flags, @OriginalName("pol_lookup_t") Ptr<?> lookup) {
     throw new MethodIsBPFRelatedFunction();
@@ -1498,7 +1499,7 @@ public final class Fib6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib6_rule_saddr($arg1, $arg2, $arg3, $arg4, (const struct net_device*)$arg5)")
+  @BuiltinBPFFunction("fib6_rule_saddr($arg1, $arg2, $arg3, $arg4, (const struct net_device *)$arg5)")
   public static int fib6_rule_saddr(Ptr<net> net, Ptr<fib_rule> rule, int flags, Ptr<flowi6> flp6,
       Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
@@ -1542,7 +1543,7 @@ public final class Fib6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib6_rules_seq_read((const struct net*)$arg1)")
+  @BuiltinBPFFunction("fib6_rules_seq_read((const struct net *)$arg1)")
   public static @Unsigned int fib6_rules_seq_read(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1554,14 +1555,14 @@ public final class Fib6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib6_select_path((const struct net*)$arg1, $arg2, $arg3, $arg4, $arg5, (const struct sk_buff*)$arg6, $arg7)")
+  @BuiltinBPFFunction("fib6_select_path((const struct net *)$arg1, $arg2, $arg3, $arg4, $arg5, (const struct sk_buff *)$arg6, $arg7)")
   public static void fib6_select_path(Ptr<net> net, Ptr<fib6_result> res, Ptr<flowi6> fl6, int oif,
       boolean have_oif_match, Ptr<sk_buff> skb, int strict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib6_seq_read((const struct net*)$arg1)")
+  @BuiltinBPFFunction("fib6_seq_read((const struct net *)$arg1)")
   public static @Unsigned int fib6_seq_read(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1581,7 +1582,7 @@ public final class Fib6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fib6_tables_seq_read((const struct net*)$arg1)")
+  @BuiltinBPFFunction("fib6_tables_seq_read((const struct net *)$arg1)")
   public static @Unsigned int fib6_tables_seq_read(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }

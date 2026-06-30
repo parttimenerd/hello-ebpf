@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1146,7 +1147,7 @@ public final class FbconDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fbcon_do_set_font($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("fbcon_do_set_font($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int fbcon_do_set_font(Ptr<vc_data> vc, int w, int h, int charcount,
       Ptr<java.lang.Character> data, int userfont) {
     throw new MethodIsBPFRelatedFunction();
@@ -1252,7 +1253,7 @@ public final class FbconDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fbcon_putcs($arg1, (const short unsigned int*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fbcon_putcs($arg1, (const short unsigned int *)$arg2, $arg3, $arg4, $arg5)")
   public static void fbcon_putcs(Ptr<vc_data> vc, Ptr<java.lang. @Unsigned Short> s,
       @Unsigned int count, @Unsigned int ypos, @Unsigned int xpos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1345,7 +1346,7 @@ public final class FbconDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fbcon_set_def_font($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("fbcon_set_def_font($arg1, $arg2, (const u8 *)$arg3)")
   public static int fbcon_set_def_font(Ptr<vc_data> vc, Ptr<console_font> font, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1357,14 +1358,14 @@ public final class FbconDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fbcon_set_font($arg1, (const struct console_font*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fbcon_set_font($arg1, (const struct console_font *)$arg2, $arg3, $arg4)")
   public static int fbcon_set_font(Ptr<vc_data> vc, Ptr<console_font> font, @Unsigned int vpitch,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fbcon_set_palette($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fbcon_set_palette($arg1, (const u8 *)$arg2)")
   public static void fbcon_set_palette(Ptr<vc_data> vc, String table) {
     throw new MethodIsBPFRelatedFunction();
   }

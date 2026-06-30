@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1115,21 +1116,21 @@ public final class StopDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stop_machine($arg1, $arg2, (const struct cpumask*)$arg3)")
+  @BuiltinBPFFunction("stop_machine($arg1, $arg2, (const struct cpumask *)$arg3)")
   public static int stop_machine(@OriginalName("cpu_stop_fn_t") Ptr<?> fn, Ptr<?> data,
       Ptr<cpumask> cpus) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stop_machine_cpuslocked($arg1, $arg2, (const struct cpumask*)$arg3)")
+  @BuiltinBPFFunction("stop_machine_cpuslocked($arg1, $arg2, (const struct cpumask *)$arg3)")
   public static int stop_machine_cpuslocked(@OriginalName("cpu_stop_fn_t") Ptr<?> fn, Ptr<?> data,
       Ptr<cpumask> cpus) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stop_machine_from_inactive_cpu($arg1, $arg2, (const struct cpumask*)$arg3)")
+  @BuiltinBPFFunction("stop_machine_from_inactive_cpu($arg1, $arg2, (const struct cpumask *)$arg3)")
   public static int stop_machine_from_inactive_cpu(@OriginalName("cpu_stop_fn_t") Ptr<?> fn,
       Ptr<?> data, Ptr<cpumask> cpus) {
     throw new MethodIsBPFRelatedFunction();
@@ -1148,7 +1149,7 @@ public final class StopDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stop_machine_yield((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("stop_machine_yield((const struct cpumask *)$arg1)")
   public static void stop_machine_yield(Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }

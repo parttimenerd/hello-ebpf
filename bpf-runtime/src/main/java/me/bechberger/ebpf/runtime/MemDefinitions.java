@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1417,7 +1418,7 @@ public final class MemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mem_cgroup_sk_inherit((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mem_cgroup_sk_inherit((const struct sock *)$arg1, $arg2)")
   public static void mem_cgroup_sk_inherit(Ptr<sock> sk, Ptr<sock> newsk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1494,7 +1495,7 @@ public final class MemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mem_devnode((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mem_devnode((const struct device *)$arg1, $arg2)")
   public static String mem_devnode(Ptr<device> dev,
       Ptr<java.lang. @Unsigned @OriginalName("umode_t") Short> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1633,14 +1634,14 @@ public final class MemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mem_sleep_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("mem_sleep_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long mem_sleep_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mem_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("mem_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long mem_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

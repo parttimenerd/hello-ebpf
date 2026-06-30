@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class OomDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__oom_kill_process($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__oom_kill_process($arg1, (const u8 *)$arg2)")
   public static void __oom_kill_process(Ptr<task_struct> victim, String message) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1109,7 +1110,7 @@ public final class OomDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("oom_adj_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("oom_adj_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long oom_adj_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1146,7 +1147,7 @@ public final class OomDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("oom_kill_process($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("oom_kill_process($arg1, (const u8 *)$arg2)")
   public static void oom_kill_process(Ptr<oom_control> oc, String message) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1177,7 +1178,7 @@ public final class OomDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("oom_score_adj_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("oom_score_adj_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long oom_score_adj_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

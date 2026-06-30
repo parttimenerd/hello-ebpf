@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1166,7 +1167,7 @@ public final class HandleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("handle_dereference_arg((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("handle_dereference_arg((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void handle_dereference_arg(String arg_str, @Unsigned long string_flags, int len,
       Ptr<java.lang. @Unsigned Long> dereference_flags, int arg, Ptr<trace_event_call> call) {
     throw new MethodIsBPFRelatedFunction();
@@ -1341,7 +1342,7 @@ public final class HandleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("handle_onexec((const struct cred*)$arg1, $arg2, $arg3, $arg4, (const struct linux_binprm*)$arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("handle_onexec((const struct cred *)$arg1, $arg2, $arg3, $arg4, (const struct linux_binprm *)$arg5, $arg6, $arg7, $arg8)")
   public static Ptr<aa_label> handle_onexec(Ptr<cred> subj_cred, Ptr<aa_label> label,
       Ptr<aa_label> onexec, boolean stack, Ptr<linux_binprm> bprm, String buffer,
       Ptr<path_cond> cond, Ptr<java.lang. @OriginalName("bool") Boolean> unsafe) {
@@ -1379,7 +1380,7 @@ public final class HandleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("handle_policy_update($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("handle_policy_update($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long handle_policy_update(Ptr<file> file, String ubuf,
       @Unsigned long len, setid_type policy_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1519,7 +1520,7 @@ public final class HandleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("handle_vcpu_hotplug_event($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("handle_vcpu_hotplug_event($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static void handle_vcpu_hotplug_event(Ptr<xenbus_watch> watch, String path, String token) {
     throw new MethodIsBPFRelatedFunction();
   }

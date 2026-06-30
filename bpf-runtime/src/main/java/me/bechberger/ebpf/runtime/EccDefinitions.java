@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class EccDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__ecc_is_key_valid((const struct ecc_curve*)$arg1, (const long long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__ecc_is_key_valid((const struct ecc_curve *)$arg1, (const long long unsigned int *)$arg2, $arg3)")
   public static int __ecc_is_key_valid(Ptr<ecc_curve> curve,
       Ptr<java.lang. @Unsigned Long> private_key, @Unsigned int ndigits) {
     throw new MethodIsBPFRelatedFunction();
@@ -1109,7 +1110,7 @@ public final class EccDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecc_digits_from_bytes((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ecc_digits_from_bytes((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void ecc_digits_from_bytes(Ptr<java.lang.Character> in, @Unsigned int nbytes,
       Ptr<java.lang. @Unsigned Long> out, @Unsigned int ndigits) {
     throw new MethodIsBPFRelatedFunction();
@@ -1135,59 +1136,53 @@ public final class EccDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("")
-  public static void ecc_get_curve25519() {
-    throw new MethodIsBPFRelatedFunction();
-  }
-
-  @NotUsableInJava
-  @BuiltinBPFFunction("ecc_is_key_valid($arg1, $arg2, (const long long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ecc_is_key_valid($arg1, $arg2, (const long long unsigned int *)$arg3, $arg4)")
   public static int ecc_is_key_valid(@Unsigned int curve_id, @Unsigned int ndigits,
       Ptr<java.lang. @Unsigned Long> private_key, @Unsigned int private_key_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecc_is_pubkey_valid_full((const struct ecc_curve*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ecc_is_pubkey_valid_full((const struct ecc_curve *)$arg1, $arg2)")
   public static int ecc_is_pubkey_valid_full(Ptr<ecc_curve> curve, Ptr<ecc_point> pk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecc_is_pubkey_valid_partial((const struct ecc_curve*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ecc_is_pubkey_valid_partial((const struct ecc_curve *)$arg1, $arg2)")
   public static int ecc_is_pubkey_valid_partial(Ptr<ecc_curve> curve, Ptr<ecc_point> pk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecc_make_pub_key($arg1, $arg2, (const long long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ecc_make_pub_key($arg1, $arg2, (const long long unsigned int *)$arg3, $arg4)")
   public static int ecc_make_pub_key(@Unsigned int curve_id, @Unsigned int ndigits,
       Ptr<java.lang. @Unsigned Long> private_key, Ptr<java.lang. @Unsigned Long> public_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecc_point_add((const struct ecc_point*)$arg1, (const struct ecc_point*)$arg2, (const struct ecc_point*)$arg3, (const struct ecc_curve*)$arg4)")
+  @BuiltinBPFFunction("ecc_point_add((const struct ecc_point *)$arg1, (const struct ecc_point *)$arg2, (const struct ecc_point *)$arg3, (const struct ecc_curve *)$arg4)")
   public static void ecc_point_add(Ptr<ecc_point> result, Ptr<ecc_point> p, Ptr<ecc_point> q,
       Ptr<ecc_curve> curve) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecc_point_double_jacobian($arg1, $arg2, $arg3, (const struct ecc_curve*)$arg4)")
+  @BuiltinBPFFunction("ecc_point_double_jacobian($arg1, $arg2, $arg3, (const struct ecc_curve *)$arg4)")
   public static void ecc_point_double_jacobian(Ptr<java.lang. @Unsigned Long> x1,
       Ptr<java.lang. @Unsigned Long> y1, Ptr<java.lang. @Unsigned Long> z1, Ptr<ecc_curve> curve) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecc_point_is_zero((const struct ecc_point*)$arg1)")
+  @BuiltinBPFFunction("ecc_point_is_zero((const struct ecc_point *)$arg1)")
   public static boolean ecc_point_is_zero(Ptr<ecc_point> point) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecc_point_mult($arg1, (const struct ecc_point*)$arg2, (const long long unsigned int*)$arg3, $arg4, (const struct ecc_curve*)$arg5, $arg6)")
+  @BuiltinBPFFunction("ecc_point_mult($arg1, (const struct ecc_point *)$arg2, (const long long unsigned int *)$arg3, $arg4, (const struct ecc_curve *)$arg5, $arg6)")
   public static void ecc_point_mult(Ptr<ecc_point> result, Ptr<ecc_point> point,
       Ptr<java.lang. @Unsigned Long> scalar, Ptr<java.lang. @Unsigned Long> initial_z,
       Ptr<ecc_curve> curve, @Unsigned int ndigits) {
@@ -1195,7 +1190,7 @@ public final class EccDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecc_point_mult_shamir((const struct ecc_point*)$arg1, (const long long unsigned int*)$arg2, (const struct ecc_point*)$arg3, (const long long unsigned int*)$arg4, (const struct ecc_point*)$arg5, (const struct ecc_curve*)$arg6)")
+  @BuiltinBPFFunction("ecc_point_mult_shamir((const struct ecc_point *)$arg1, (const long long unsigned int *)$arg2, (const struct ecc_point *)$arg3, (const long long unsigned int *)$arg4, (const struct ecc_point *)$arg5, (const struct ecc_curve *)$arg6)")
   public static void ecc_point_mult_shamir(Ptr<ecc_point> result, Ptr<java.lang. @Unsigned Long> u1,
       Ptr<ecc_point> p, Ptr<java.lang. @Unsigned Long> u2, Ptr<ecc_point> q, Ptr<ecc_curve> curve) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,41 +1091,41 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class VfsDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__vfs_getxattr($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__vfs_getxattr($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static @OriginalName("ssize_t") long __vfs_getxattr(Ptr<dentry> dentry, Ptr<inode> inode,
       String name, Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__vfs_removexattr($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__vfs_removexattr($arg1, $arg2, (const u8 *)$arg3)")
   public static int __vfs_removexattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__vfs_removexattr_locked($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__vfs_removexattr_locked($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int __vfs_removexattr_locked(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name,
       Ptr<Ptr<inode>> delegated_inode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__vfs_setxattr($arg1, $arg2, $arg3, (const u8*)$arg4, (const void*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__vfs_setxattr($arg1, $arg2, $arg3, (const u8 *)$arg4, (const void *)$arg5, $arg6, $arg7)")
   public static int __vfs_setxattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, Ptr<inode> inode,
       String name, Ptr<?> value, @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__vfs_setxattr_locked($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__vfs_setxattr_locked($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6, $arg7)")
   public static int __vfs_setxattr_locked(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name,
       Ptr<?> value, @Unsigned long size, int flags, Ptr<Ptr<inode>> delegated_inode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__vfs_setxattr_noperm($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__vfs_setxattr_noperm($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int __vfs_setxattr_noperm(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name,
       Ptr<?> value, @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1183,7 +1184,7 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_coredump((const kernel_siginfo*)$arg1)")
+  @BuiltinBPFFunction("vfs_coredump((const kernel_siginfo *)$arg1)")
   public static void vfs_coredump(Ptr<@OriginalName("kernel_siginfo_t") kernel_siginfo> siginfo) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1282,7 +1283,7 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_fstatat($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vfs_fstatat($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int vfs_fstatat(int dfd, String filename, Ptr<kstat> stat, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1301,7 +1302,7 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_get_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("vfs_get_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<posix_acl> vfs_get_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1326,28 +1327,28 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_getattr((const struct path*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vfs_getattr((const struct path *)$arg1, $arg2, $arg3, $arg4)")
   public static int vfs_getattr(Ptr<path> path, Ptr<kstat> stat, @Unsigned int request_mask,
       @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_getattr_nosec((const struct path*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vfs_getattr_nosec((const struct path *)$arg1, $arg2, $arg3, $arg4)")
   public static int vfs_getattr_nosec(Ptr<path> path, Ptr<kstat> stat, @Unsigned int request_mask,
       @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_getxattr($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("vfs_getxattr($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static @OriginalName("ssize_t") long vfs_getxattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String name, Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_getxattr_alloc($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("vfs_getxattr_alloc($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static int vfs_getxattr_alloc(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name,
       Ptr<String> xattr_value, @Unsigned long xattr_size,
       @Unsigned @OriginalName("gfp_t") int flags) {
@@ -1395,7 +1396,7 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_kern_mount($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vfs_kern_mount($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<vfsmount> vfs_kern_mount(Ptr<file_system_type> type, int flags, String name,
       Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1451,13 +1452,13 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_open((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vfs_open((const struct path *)$arg1, $arg2)")
   public static int vfs_open(Ptr<path> path, Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_open_tree($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("vfs_open_tree($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<file> vfs_open_tree(int dfd, String filename, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1481,7 +1482,7 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_parse_fs_string($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vfs_parse_fs_string($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static int vfs_parse_fs_string(Ptr<fs_context> fc, String key, String value,
       @Unsigned long v_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1494,14 +1495,14 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_path_lookup($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("vfs_path_lookup($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int vfs_path_lookup(Ptr<dentry> dentry, Ptr<vfsmount> mnt, String name,
       @Unsigned int flags, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_path_parent_lookup($arg1, $arg2, $arg3, $arg4, $arg5, (const struct path*)$arg6)")
+  @BuiltinBPFFunction("vfs_path_parent_lookup($arg1, $arg2, $arg3, $arg4, $arg5, (const struct path *)$arg6)")
   public static int vfs_path_parent_lookup(Ptr<filename> filename, @Unsigned int flags,
       Ptr<path> parent, Ptr<qstr> last, Ptr<java.lang.Integer> type, Ptr<path> root) {
     throw new MethodIsBPFRelatedFunction();
@@ -1527,7 +1528,7 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_readv($arg1, (const struct iovec*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("vfs_readv($arg1, (const struct iovec *)$arg2, $arg3, $arg4, $arg5)")
   public static @OriginalName("ssize_t") long vfs_readv(Ptr<file> file, Ptr<iovec> vec,
       @Unsigned long vlen, Ptr<java.lang. @OriginalName("loff_t") Long> pos,
       @OriginalName("rwf_t") int flags) {
@@ -1535,13 +1536,13 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_remove_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("vfs_remove_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static int vfs_remove_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_removexattr($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("vfs_removexattr($arg1, $arg2, (const u8 *)$arg3)")
   public static int vfs_removexattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1559,7 +1560,7 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_set_acl($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vfs_set_acl($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int vfs_set_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String acl_name,
       Ptr<posix_acl> kacl) {
     throw new MethodIsBPFRelatedFunction();
@@ -1580,7 +1581,7 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_setxattr($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("vfs_setxattr($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int vfs_setxattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name,
       Ptr<?> value, @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1602,7 +1603,7 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_symlink($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("vfs_symlink($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int vfs_symlink(Ptr<mnt_idmap> idmap, Ptr<inode> dir, Ptr<dentry> dentry,
       String oldname) {
     throw new MethodIsBPFRelatedFunction();
@@ -1615,14 +1616,14 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_tmpfile($arg1, (const struct path*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vfs_tmpfile($arg1, (const struct path *)$arg2, $arg3, $arg4)")
   public static int vfs_tmpfile(Ptr<mnt_idmap> idmap, Ptr<path> parentpath, Ptr<file> file,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_truncate((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vfs_truncate((const struct path *)$arg1, $arg2)")
   public static int vfs_truncate(Ptr<path> path, @OriginalName("loff_t") long length) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1635,20 +1636,20 @@ public final class VfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_utimes((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vfs_utimes((const struct path *)$arg1, $arg2)")
   public static int vfs_utimes(Ptr<path> path, Ptr<timespec64> times) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vfs_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long vfs_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vfs_writev($arg1, (const struct iovec*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("vfs_writev($arg1, (const struct iovec *)$arg2, $arg3, $arg4, $arg5)")
   public static @OriginalName("ssize_t") long vfs_writev(Ptr<file> file, Ptr<iovec> vec,
       @Unsigned long vlen, Ptr<java.lang. @OriginalName("loff_t") Long> pos,
       @OriginalName("rwf_t") int flags) {
@@ -1664,7 +1665,7 @@ public final class VfsDefinitions {
   public static class vfs_cap_data extends Struct {
     public @Unsigned @OriginalName("__le32") int magic_etc;
 
-    public AnonymousType1778801068C64 @Size(2) [] data;
+    public AnonymousType2003961164C64 @Size(2) [] data;
   }
 
   @Type(
@@ -1676,7 +1677,7 @@ public final class VfsDefinitions {
   public static class vfs_ns_cap_data extends Struct {
     public @Unsigned @OriginalName("__le32") int magic_etc;
 
-    public AnonymousType1778801068C64 @Size(2) [] data;
+    public AnonymousType2003961164C64 @Size(2) [] data;
 
     public @Unsigned @OriginalName("__le32") int rootid;
   }
@@ -1687,7 +1688,7 @@ public final class VfsDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1778801068C64 extends Struct {
+  public static class AnonymousType2003961164C64 extends Struct {
     public @Unsigned @OriginalName("__le32") int permitted;
 
     public @Unsigned @OriginalName("__le32") int inheritable;

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1164,7 +1165,7 @@ public final class ZlibDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zlib_inflate_blob($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("zlib_inflate_blob($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int zlib_inflate_blob(Ptr<?> gunzip_buf, @Unsigned int sz, Ptr<?> buf,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();

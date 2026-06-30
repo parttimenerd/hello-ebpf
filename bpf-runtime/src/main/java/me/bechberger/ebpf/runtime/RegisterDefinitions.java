@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class RegisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__register_blkdev($arg1, (const u8*)$arg2, (void (*)(unsigned int))$arg3)")
+  @BuiltinBPFFunction("__register_blkdev($arg1, (const u8 *)$arg2, (void (*)(unsigned int))$arg3)")
   public static int __register_blkdev(@Unsigned int major, String name, Ptr<?> probe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1108,20 +1109,20 @@ public final class RegisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__register_btf_kfunc_id_set($arg1, (const struct btf_kfunc_id_set*)$arg2)")
+  @BuiltinBPFFunction("__register_btf_kfunc_id_set($arg1, (const struct btf_kfunc_id_set *)$arg2)")
   public static int __register_btf_kfunc_id_set(btf_kfunc_hook hook, Ptr<btf_kfunc_id_set> kset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__register_chrdev($arg1, $arg2, $arg3, (const u8*)$arg4, (const struct file_operations*)$arg5)")
+  @BuiltinBPFFunction("__register_chrdev($arg1, $arg2, $arg3, (const u8 *)$arg4, (const struct file_operations *)$arg5)")
   public static int __register_chrdev(@Unsigned int major, @Unsigned int baseminor,
       @Unsigned int count, String name, Ptr<file_operations> fops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__register_chrdev_region($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__register_chrdev_region($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static Ptr<char_device_struct> __register_chrdev_region(@Unsigned int major,
       @Unsigned int baseminor, int minorct, String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1165,14 +1166,14 @@ public final class RegisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__register_sysctl_init((const u8*)$arg1, (const struct ctl_table*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__register_sysctl_init((const u8 *)$arg1, (const struct ctl_table *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void __register_sysctl_init(String path, Ptr<ctl_table> table, String table_name,
       @Unsigned long table_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__register_sysctl_table($arg1, (const u8*)$arg2, (const struct ctl_table*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__register_sysctl_table($arg1, (const u8 *)$arg2, (const struct ctl_table *)$arg3, $arg4)")
   public static Ptr<ctl_table_header> __register_sysctl_table(Ptr<ctl_table_set> set, String path,
       Ptr<ctl_table> table, @Unsigned long table_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1227,26 +1228,26 @@ public final class RegisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("register_btf_fmodret_id_set((const struct btf_kfunc_id_set*)$arg1)")
+  @BuiltinBPFFunction("register_btf_fmodret_id_set((const struct btf_kfunc_id_set *)$arg1)")
   public static int register_btf_fmodret_id_set(Ptr<btf_kfunc_id_set> kset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("register_btf_id_dtor_kfuncs((const struct btf_id_dtor_kfunc*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("register_btf_id_dtor_kfuncs((const struct btf_id_dtor_kfunc *)$arg1, $arg2, $arg3)")
   public static int register_btf_id_dtor_kfuncs(Ptr<btf_id_dtor_kfunc> dtors, @Unsigned int add_cnt,
       Ptr<module> owner) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("register_btf_kfunc_id_set($arg1, (const struct btf_kfunc_id_set*)$arg2)")
+  @BuiltinBPFFunction("register_btf_kfunc_id_set($arg1, (const struct btf_kfunc_id_set *)$arg2)")
   public static int register_btf_kfunc_id_set(bpf_prog_type prog_type, Ptr<btf_kfunc_id_set> kset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("register_callback($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("register_callback($arg1, (const void *)$arg2)")
   public static int register_callback(@Unsigned int type, Ptr<?> func) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1258,14 +1259,14 @@ public final class RegisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("register_chrdev_region($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("register_chrdev_region($arg1, $arg2, (const u8 *)$arg3)")
   public static int register_chrdev_region(@Unsigned @OriginalName("dev_t") int from,
       @Unsigned int count, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("register_client($arg1, (const struct vga_switcheroo_client_ops*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("register_client($arg1, (const struct vga_switcheroo_client_ops *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int register_client(Ptr<pci_dev> pdev, Ptr<vga_switcheroo_client_ops> ops,
       vga_switcheroo_client_id id, Ptr<pci_dev> vga_dev, boolean active,
       boolean driver_power_control) {
@@ -1328,7 +1329,7 @@ public final class RegisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("register_earlycon($arg1, (const struct earlycon_id*)$arg2)")
+  @BuiltinBPFFunction("register_earlycon($arg1, (const struct earlycon_id *)$arg2)")
   public static int register_earlycon(String buf, Ptr<earlycon_id> match) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1365,7 +1366,7 @@ public final class RegisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("register_fprobe($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("register_fprobe($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int register_fprobe(Ptr<fprobe> fp, String filter, String notfilter) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1573,7 +1574,7 @@ public final class RegisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("register_memory_resource($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("register_memory_resource($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<resource> register_memory_resource(@Unsigned long start, @Unsigned long size,
       String resource_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1606,7 +1607,7 @@ public final class RegisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("register_net_sysctl_sz($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("register_net_sysctl_sz($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<ctl_table_header> register_net_sysctl_sz(Ptr<net> net, String path,
       Ptr<ctl_table> table, @Unsigned long table_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1854,13 +1855,13 @@ public final class RegisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("register_sysctl_mount_point((const u8*)$arg1)")
+  @BuiltinBPFFunction("register_sysctl_mount_point((const u8 *)$arg1)")
   public static Ptr<ctl_table_header> register_sysctl_mount_point(String path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("register_sysctl_sz((const u8*)$arg1, (const struct ctl_table*)$arg2, $arg3)")
+  @BuiltinBPFFunction("register_sysctl_sz((const u8 *)$arg1, (const struct ctl_table *)$arg2, $arg3)")
   public static Ptr<ctl_table_header> register_sysctl_sz(String path, Ptr<ctl_table> table,
       @Unsigned long table_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1873,7 +1874,7 @@ public final class RegisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("register_sysrq_key($arg1, (const struct sysrq_key_op*)$arg2)")
+  @BuiltinBPFFunction("register_sysrq_key($arg1, (const struct sysrq_key_op *)$arg2)")
   public static int register_sysrq_key(char key, Ptr<sysrq_key_op> op_p) {
     throw new MethodIsBPFRelatedFunction();
   }

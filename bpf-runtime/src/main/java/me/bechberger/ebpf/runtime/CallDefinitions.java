@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1242,7 +1243,7 @@ public final class CallDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)call_hid_bpf_rdesc_fixup($arg1, (const u8*)$arg2, $arg3))")
+  @BuiltinBPFFunction("((const u8*)call_hid_bpf_rdesc_fixup($arg1, (const u8 *)$arg2, $arg3))")
   public static Ptr<java.lang.Character> call_hid_bpf_rdesc_fixup(Ptr<hid_device> hdev,
       Ptr<java.lang.Character> rdesc, Ptr<java.lang. @Unsigned Integer> size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1393,7 +1394,7 @@ public final class CallDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("call_usermodehelper((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("call_usermodehelper((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int call_usermodehelper(String path, Ptr<String> argv, Ptr<String> envp, int wait) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1417,7 +1418,7 @@ public final class CallDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("call_usermodehelper_setup((const u8*)$arg1, $arg2, $arg3, $arg4, (int (*)(struct subprocess_info*, struct cred*))$arg5, (void (*)(struct subprocess_info*))$arg6, $arg7)")
+  @BuiltinBPFFunction("call_usermodehelper_setup((const u8 *)$arg1, $arg2, $arg3, $arg4, (int (*)(struct subprocess_info*, struct cred*))$arg5, (void (*)(struct subprocess_info*))$arg6, $arg7)")
   public static Ptr<subprocess_info> call_usermodehelper_setup(String path, Ptr<String> argv,
       Ptr<String> envp, @Unsigned @OriginalName("gfp_t") int gfp_mask, Ptr<?> init, Ptr<?> cleanup,
       Ptr<?> data) {

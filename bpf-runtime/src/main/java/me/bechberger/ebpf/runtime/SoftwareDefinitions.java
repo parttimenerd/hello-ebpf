@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class SoftwareDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("software_key_determine_akcipher((const struct public_key*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("software_key_determine_akcipher((const struct public_key *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static int software_key_determine_akcipher(Ptr<public_key> pkey, String encoding,
       String hash_algo, String alg_name, Ptr<java.lang. @OriginalName("bool") Boolean> sig,
       kernel_pkey_operation op) {
@@ -1098,13 +1099,13 @@ public final class SoftwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_key_eds_op($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("software_key_eds_op($arg1, (const void *)$arg2, $arg3)")
   public static int software_key_eds_op(Ptr<kernel_pkey_params> params, Ptr<?> in, Ptr<?> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_key_query((const struct kernel_pkey_params*)$arg1, $arg2)")
+  @BuiltinBPFFunction("software_key_query((const struct kernel_pkey_params *)$arg1, $arg2)")
   public static int software_key_query(Ptr<kernel_pkey_params> params,
       Ptr<kernel_pkey_query> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1117,14 +1118,14 @@ public final class SoftwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct software_node*)software_node_find_by_name((const struct software_node*)$arg1, (const u8*)$arg2))")
+  @BuiltinBPFFunction("((const struct software_node*)software_node_find_by_name((const struct software_node *)$arg1, (const u8 *)$arg2))")
   public static Ptr<software_node> software_node_find_by_name(Ptr<software_node> parent,
       String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_node_fwnode((const struct software_node*)$arg1)")
+  @BuiltinBPFFunction("software_node_fwnode((const struct software_node *)$arg1)")
   public static Ptr<fwnode_handle> software_node_fwnode(Ptr<software_node> node) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1136,39 +1137,39 @@ public final class SoftwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)software_node_get_name((const struct fwnode_handle*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)software_node_get_name((const struct fwnode_handle *)$arg1))")
   public static String software_node_get_name(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)software_node_get_name_prefix((const struct fwnode_handle*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)software_node_get_name_prefix((const struct fwnode_handle *)$arg1))")
   public static String software_node_get_name_prefix(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_node_get_named_child_node((const struct fwnode_handle*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("software_node_get_named_child_node((const struct fwnode_handle *)$arg1, (const u8 *)$arg2)")
   public static Ptr<fwnode_handle> software_node_get_named_child_node(Ptr<fwnode_handle> fwnode,
       String childname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_node_get_next_child((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("software_node_get_next_child((const struct fwnode_handle *)$arg1, $arg2)")
   public static Ptr<fwnode_handle> software_node_get_next_child(Ptr<fwnode_handle> fwnode,
       Ptr<fwnode_handle> child) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_node_get_parent((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("software_node_get_parent((const struct fwnode_handle *)$arg1)")
   public static Ptr<fwnode_handle> software_node_get_parent(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_node_get_reference_args((const struct fwnode_handle*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("software_node_get_reference_args((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static int software_node_get_reference_args(Ptr<fwnode_handle> fwnode, String propname,
       String nargs_prop, @Unsigned int nargs, @Unsigned int index,
       Ptr<fwnode_reference_args> args) {
@@ -1176,7 +1177,7 @@ public final class SoftwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_node_graph_get_next_endpoint((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("software_node_graph_get_next_endpoint((const struct fwnode_handle *)$arg1, $arg2)")
   public static Ptr<fwnode_handle> software_node_graph_get_next_endpoint(Ptr<fwnode_handle> fwnode,
       Ptr<fwnode_handle> endpoint) {
     throw new MethodIsBPFRelatedFunction();
@@ -1189,14 +1190,14 @@ public final class SoftwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_node_graph_get_remote_endpoint((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("software_node_graph_get_remote_endpoint((const struct fwnode_handle *)$arg1)")
   public static Ptr<fwnode_handle> software_node_graph_get_remote_endpoint(
       Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_node_graph_parse_endpoint((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("software_node_graph_parse_endpoint((const struct fwnode_handle *)$arg1, $arg2)")
   public static int software_node_graph_parse_endpoint(Ptr<fwnode_handle> fwnode,
       Ptr<fwnode_endpoint> endpoint) {
     throw new MethodIsBPFRelatedFunction();
@@ -1221,7 +1222,7 @@ public final class SoftwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_node_property_present((const struct fwnode_handle*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("software_node_property_present((const struct fwnode_handle *)$arg1, (const u8 *)$arg2)")
   public static boolean software_node_property_present(Ptr<fwnode_handle> fwnode, String propname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1233,21 +1234,21 @@ public final class SoftwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_node_read_int_array((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("software_node_read_int_array((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int software_node_read_int_array(Ptr<fwnode_handle> fwnode, String propname,
       @Unsigned int elem_size, Ptr<?> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_node_read_string_array((const struct fwnode_handle*)$arg1, (const u8*)$arg2, (const u8**)$arg3, $arg4)")
+  @BuiltinBPFFunction("software_node_read_string_array((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, (const u8**)$arg3, $arg4)")
   public static int software_node_read_string_array(Ptr<fwnode_handle> fwnode, String propname,
       Ptr<String> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_node_register((const struct software_node*)$arg1)")
+  @BuiltinBPFFunction("software_node_register((const struct software_node *)$arg1)")
   public static int software_node_register(Ptr<software_node> node) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1265,7 +1266,7 @@ public final class SoftwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("software_node_unregister((const struct software_node*)$arg1)")
+  @BuiltinBPFFunction("software_node_unregister((const struct software_node *)$arg1)")
   public static void software_node_unregister(Ptr<software_node> node) {
     throw new MethodIsBPFRelatedFunction();
   }

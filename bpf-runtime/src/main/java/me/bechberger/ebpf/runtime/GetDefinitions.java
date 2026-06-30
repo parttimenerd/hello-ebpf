@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1122,13 +1123,13 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__get_fs_type((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__get_fs_type((const u8 *)$arg1, $arg2)")
   public static Ptr<file_system_type> __get_fs_type(String name, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__get_hash_from_flowi6((const struct flowi6*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__get_hash_from_flowi6((const struct flowi6 *)$arg1, $arg2)")
   public static @Unsigned int __get_hash_from_flowi6(Ptr<flowi6> fl6, Ptr<flow_keys> keys) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1161,7 +1162,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__get_name_cell((const u8*)$arg1)")
+  @BuiltinBPFFunction("__get_name_cell((const u8 *)$arg1)")
   public static Ptr<hash_cell> __get_name_cell(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1288,7 +1289,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__get_uuid_cell((const u8*)$arg1)")
+  @BuiltinBPFFunction("__get_uuid_cell((const u8 *)$arg1)")
   public static Ptr<hash_cell> __get_uuid_cell(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1306,14 +1307,14 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__get_vm_area_caller($arg1, $arg2, $arg3, $arg4, (const void*)$arg5)")
+  @BuiltinBPFFunction("__get_vm_area_caller($arg1, $arg2, $arg3, $arg4, (const void *)$arg5)")
   public static Ptr<vm_struct> __get_vm_area_caller(@Unsigned long size, @Unsigned long flags,
       @Unsigned long start, @Unsigned long end, Ptr<?> caller) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__get_vm_area_node($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, (const void*)$arg9)")
+  @BuiltinBPFFunction("__get_vm_area_node($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, (const void *)$arg9)")
   public static Ptr<vm_struct> __get_vm_area_node(@Unsigned long size, @Unsigned long align,
       @Unsigned long shift, @Unsigned long flags, @Unsigned long start, @Unsigned long end,
       int node, @Unsigned @OriginalName("gfp_t") int gfp_mask, Ptr<?> caller) {
@@ -1341,14 +1342,14 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_get_div((const struct clk_div_table*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("_get_div((const struct clk_div_table *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned int _get_div(Ptr<clk_div_table> table, @Unsigned int val,
       @Unsigned long flags, char width) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_get_maxdiv((const struct clk_div_table*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("_get_maxdiv((const struct clk_div_table *)$arg1, $arg2, $arg3)")
   public static @Unsigned int _get_maxdiv(Ptr<clk_div_table> table, char width,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1492,7 +1493,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_bitmap($arg1, (const long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("get_bitmap($arg1, (const long unsigned int *)$arg2, $arg3)")
   public static int get_bitmap(Ptr<java.lang. @Unsigned Long> mask,
       Ptr<java.lang. @Unsigned Long> nmask, @Unsigned long maxnode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1690,7 +1691,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_compat_sigevent($arg1, (const struct compat_sigevent*)$arg2)")
+  @BuiltinBPFFunction("get_compat_sigevent($arg1, (const struct compat_sigevent *)$arg2)")
   public static int get_compat_sigevent(Ptr<sigevent> event, Ptr<compat_sigevent> u_event) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1698,7 +1699,7 @@ public final class GetDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("get_compat_sigset($arg1, (const struct {\n"
           + "  unsigned int sig[2];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static int get_compat_sigset(Ptr<sigset_t> set, Ptr<compat_sigset_t> compat) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1826,7 +1827,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_cur_val((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("get_cur_val((const struct cpumask *)$arg1, $arg2)")
   public static @Unsigned int get_cur_val(Ptr<cpumask> mask, Ptr<acpi_cpufreq_data> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1876,7 +1877,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_derived_key($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("get_derived_key($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int get_derived_key(Ptr<java.lang.Character> derived_key, derived_key_type key_type,
       Ptr<java.lang.Character> master_key, @Unsigned long master_keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1950,7 +1951,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_dominating_id($arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("get_dominating_id($arg1, (const struct path *)$arg2)")
   public static int get_dominating_id(Ptr<mount> mnt, Ptr<path> root) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1962,7 +1963,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_dynptr_arg_reg($arg1, (const struct bpf_func_proto*)$arg2, $arg3)")
+  @BuiltinBPFFunction("get_dynptr_arg_reg($arg1, (const struct bpf_func_proto *)$arg2, $arg3)")
   public static Ptr<bpf_reg_state> get_dynptr_arg_reg(Ptr<bpf_verifier_env> env,
       Ptr<bpf_func_proto> fn, Ptr<bpf_reg_state> regs) {
     throw new MethodIsBPFRelatedFunction();
@@ -2080,7 +2081,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_free_mem_region($arg1, $arg2, $arg3, (const long unsigned int)$arg4, (const u8*)$arg5, (const long unsigned int)$arg6, (const long unsigned int)$arg7)")
+  @BuiltinBPFFunction("get_free_mem_region($arg1, $arg2, $arg3, (const long unsigned int)$arg4, (const u8 *)$arg5, (const long unsigned int)$arg6, (const long unsigned int)$arg7)")
   public static Ptr<resource> get_free_mem_region(Ptr<device> dev, Ptr<resource> base,
       @Unsigned @OriginalName("resource_size_t") long size, @Unsigned long align, String name,
       @Unsigned long desc, @Unsigned long flags) {
@@ -2101,7 +2102,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_fs_type((const u8*)$arg1)")
+  @BuiltinBPFFunction("get_fs_type((const u8 *)$arg1)")
   public static Ptr<file_system_type> get_fs_type(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2148,7 +2149,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_governor((const u8*)$arg1)")
+  @BuiltinBPFFunction("get_governor((const u8 *)$arg1)")
   public static Ptr<cpufreq_governor> get_governor(String str_governor) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2168,7 +2169,7 @@ public final class GetDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("get_handler_for_ca_keys((const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static @OriginalName("efi_element_handler_t") Ptr<?> get_handler_for_ca_keys(
       Ptr<@OriginalName("efi_guid_t") uuid_t> sig_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -2177,7 +2178,7 @@ public final class GetDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("get_handler_for_code_signing_keys((const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static @OriginalName("efi_element_handler_t") Ptr<?> get_handler_for_code_signing_keys(
       Ptr<@OriginalName("efi_guid_t") uuid_t> sig_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -2186,7 +2187,7 @@ public final class GetDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("get_handler_for_db((const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static @OriginalName("efi_element_handler_t") Ptr<?> get_handler_for_db(
       Ptr<@OriginalName("efi_guid_t") uuid_t> sig_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -2195,7 +2196,7 @@ public final class GetDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("get_handler_for_dbx((const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static @OriginalName("efi_element_handler_t") Ptr<?> get_handler_for_dbx(
       Ptr<@OriginalName("efi_guid_t") uuid_t> sig_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -2204,7 +2205,7 @@ public final class GetDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("get_handler_for_mok((const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static @OriginalName("efi_element_handler_t") Ptr<?> get_handler_for_mok(
       Ptr<@OriginalName("efi_guid_t") uuid_t> sig_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -2349,20 +2350,20 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_ips_from_filter((const u8*)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("get_ips_from_filter((const u8 *)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int get_ips_from_filter(String filter, String notfilter,
       Ptr<java.lang. @Unsigned Long> addrs, Ptr<Ptr<module>> mods, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_itimerspec64($arg1, (const struct __kernel_itimerspec*)$arg2)")
+  @BuiltinBPFFunction("get_itimerspec64($arg1, (const struct __kernel_itimerspec *)$arg2)")
   public static int get_itimerspec64(Ptr<itimerspec64> it, Ptr<__kernel_itimerspec> uit) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_itimerval($arg1, (const struct __kernel_old_itimerval*)$arg2)")
+  @BuiltinBPFFunction("get_itimerval($arg1, (const struct __kernel_old_itimerval *)$arg2)")
   public static int get_itimerval(Ptr<itimerspec64> o, Ptr<__kernel_old_itimerval> i) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2406,7 +2407,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_kfunc_ptr_arg_type($arg1, $arg2, (const struct btf_type*)$arg3, (const struct btf_type*)$arg4, (const u8*)$arg5, (const struct btf_param*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("get_kfunc_ptr_arg_type($arg1, $arg2, (const struct btf_type *)$arg3, (const struct btf_type *)$arg4, (const u8 *)$arg5, (const struct btf_param *)$arg6, $arg7, $arg8)")
   public static kfunc_ptr_arg_type get_kfunc_ptr_arg_type(Ptr<bpf_verifier_env> env,
       Ptr<bpf_kfunc_call_arg_meta> meta, Ptr<btf_type> t, Ptr<btf_type> ref_t, String ref_tname,
       Ptr<btf_param> args, int argno, int nargs) {
@@ -2420,7 +2421,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_kpage_count((const struct page*)$arg1)")
+  @BuiltinBPFFunction("get_kpage_count((const struct page *)$arg1)")
   public static @Unsigned long get_kpage_count(Ptr<page> page) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2438,7 +2439,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_last_crashkernel($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("get_last_crashkernel($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static String get_last_crashkernel(String cmdline, String name, String suffix) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2540,13 +2541,13 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_memcg((const struct bpf_mem_cache*)$arg1)")
+  @BuiltinBPFFunction("get_memcg((const struct bpf_mem_cache *)$arg1)")
   public static Ptr<mem_cgroup> get_memcg(Ptr<bpf_mem_cache> c) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_memmap_mode($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("get_memmap_mode($arg1, (const struct kernel_param *)$arg2)")
   public static int get_memmap_mode(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2597,19 +2598,19 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_mode_idx_from_str((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("get_mode_idx_from_str((const u8 *)$arg1, $arg2)")
   public static int get_mode_idx_from_str(String str, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_monitor_name((const struct drm_edid*)$arg1, $arg2)")
+  @BuiltinBPFFunction("get_monitor_name((const struct drm_edid *)$arg1, $arg2)")
   public static int get_monitor_name(Ptr<drm_edid> drm_edid, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_monitor_range((const struct detailed_timing*)$arg1, $arg2)")
+  @BuiltinBPFFunction("get_monitor_range((const struct detailed_timing *)$arg1, $arg2)")
   public static void get_monitor_range(Ptr<detailed_timing> timing, Ptr<?> c) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2687,7 +2688,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_net_ns_by_id((const struct net*)$arg1, $arg2)")
+  @BuiltinBPFFunction("get_net_ns_by_id((const struct net *)$arg1, $arg2)")
   public static Ptr<net> get_net_ns_by_id(Ptr<net> net, int id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2731,7 +2732,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_next_modinfo((const struct load_info*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("get_next_modinfo((const struct load_info *)$arg1, (const u8 *)$arg2, $arg3)")
   public static String get_next_modinfo(Ptr<load_info> info, String tag, String prev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2756,7 +2757,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_nodes($arg1, (const long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("get_nodes($arg1, (const long unsigned int *)$arg2, $arg3)")
   public static int get_nodes(Ptr<nodemask_t> nodes, Ptr<java.lang. @Unsigned Long> nmask,
       @Unsigned long maxnode) {
     throw new MethodIsBPFRelatedFunction();
@@ -2824,7 +2825,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_old_itimerspec32($arg1, (const struct old_itimerspec32*)$arg2)")
+  @BuiltinBPFFunction("get_old_itimerspec32($arg1, (const struct old_itimerspec32 *)$arg2)")
   public static int get_old_itimerspec32(Ptr<itimerspec64> its, Ptr<old_itimerspec32> uits) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2836,13 +2837,13 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_old_timespec32($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("get_old_timespec32($arg1, (const void *)$arg2)")
   public static int get_old_timespec32(Ptr<timespec64> ts, Ptr<?> uts) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_old_timex32($arg1, (const struct old_timex32*)$arg2)")
+  @BuiltinBPFFunction("get_old_timex32($arg1, (const struct old_timex32 *)$arg2)")
   public static int get_old_timex32(Ptr<__kernel_timex> txc, Ptr<old_timex32> utp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2854,7 +2855,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_online_policy($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("get_online_policy($arg1, (const struct kernel_param *)$arg2)")
   public static int get_online_policy(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2873,13 +2874,13 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_options((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("get_options((const u8 *)$arg1, $arg2, $arg3)")
   public static String get_options(String str, int nints, Ptr<java.lang.Integer> ints) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_order_from_str((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("get_order_from_str((const u8 *)$arg1, $arg2)")
   public static int get_order_from_str(String size_str, @Unsigned long valid_orders) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2891,7 +2892,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_page_from_freelist($arg1, $arg2, $arg3, (const struct alloc_context*)$arg4)")
+  @BuiltinBPFFunction("get_page_from_freelist($arg1, $arg2, $arg3, (const struct alloc_context *)$arg4)")
   public static Ptr<page> get_page_from_freelist(@Unsigned @OriginalName("gfp_t") int gfp_mask,
       @Unsigned int order, int alloc_flags, Ptr<alloc_context> ac) {
     throw new MethodIsBPFRelatedFunction();
@@ -2985,14 +2986,14 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_pfnblock_bit((const struct page*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("get_pfnblock_bit((const struct page *)$arg1, $arg2, $arg3)")
   public static boolean get_pfnblock_bit(Ptr<page> page, @Unsigned long pfn,
       pageblock_bits pb_bit) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_pfnblock_migratetype((const struct page*)$arg1, $arg2)")
+  @BuiltinBPFFunction("get_pfnblock_migratetype((const struct page *)$arg1, $arg2)")
   public static migratetype get_pfnblock_migratetype(Ptr<page> page, @Unsigned long pfn) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3040,7 +3041,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_pinctrl_dev_from_devname((const u8*)$arg1)")
+  @BuiltinBPFFunction("get_pinctrl_dev_from_devname((const u8 *)$arg1)")
   public static Ptr<pinctrl_dev> get_pinctrl_dev_from_devname(String devname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3096,7 +3097,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct nf_defrag_hook*)get_proto_defrag_hook($arg1, (const struct nf_defrag_hook**)$arg2, (const u8*)$arg3))")
+  @BuiltinBPFFunction("((const struct nf_defrag_hook*)get_proto_defrag_hook($arg1, (const struct nf_defrag_hook**)$arg2, (const u8 *)$arg3))")
   public static Ptr<nf_defrag_hook> get_proto_defrag_hook(Ptr<bpf_nf_link> link,
       Ptr<Ptr<nf_defrag_hook>> ptr_global_hook, String mod) {
     throw new MethodIsBPFRelatedFunction();
@@ -3157,7 +3158,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_raw_hash((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("get_raw_hash((const u8 *)$arg1, $arg2, $arg3)")
   public static String get_raw_hash(Ptr<java.lang.Character> hash, @Unsigned long hash_len,
       blacklist_hash_type hash_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -3250,7 +3251,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_ro($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("get_ro($arg1, (const struct kernel_param *)$arg2)")
   public static int get_ro(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3379,7 +3380,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_sg_io_hdr($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("get_sg_io_hdr($arg1, (const void *)$arg2)")
   public static int get_sg_io_hdr(Ptr<sg_io_hdr> hdr, Ptr<?> argp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3456,7 +3457,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_stack_skipnr((const long unsigned int*)$arg1, $arg2, (const enum kfence_error_type*)$arg3)")
+  @BuiltinBPFFunction("get_stack_skipnr((const long unsigned int *)$arg1, $arg2, (const enum kfence_error_type *)$arg3)")
   public static int get_stack_skipnr(Ptr<java.lang. @Unsigned Long> stack_entries, int num_entries,
       Ptr<kfence_error_type> type) {
     throw new MethodIsBPFRelatedFunction();
@@ -3489,7 +3490,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_std_timing($arg1, $arg2, $arg3, $arg4, (const struct fb_monspecs*)$arg5)")
+  @BuiltinBPFFunction("get_std_timing($arg1, $arg2, $arg3, $arg4, (const struct fb_monspecs *)$arg5)")
   public static int get_std_timing(String block, Ptr<fb_videomode> mode, int ver, int rev,
       Ptr<fb_monspecs> specs) {
     throw new MethodIsBPFRelatedFunction();
@@ -3553,7 +3554,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_target_type((const u8*)$arg1)")
+  @BuiltinBPFFunction("get_target_type((const u8 *)$arg1)")
   public static Ptr<target_type> get_target_type(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3614,13 +3615,13 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_timespec64($arg1, (const struct __kernel_timespec*)$arg2)")
+  @BuiltinBPFFunction("get_timespec64($arg1, (const struct __kernel_timespec *)$arg2)")
   public static int get_timespec64(Ptr<timespec64> ts, Ptr<__kernel_timespec> uts) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_timing_level((const struct detailed_timing*)$arg1, $arg2)")
+  @BuiltinBPFFunction("get_timing_level((const struct detailed_timing *)$arg1, $arg2)")
   public static void get_timing_level(Ptr<detailed_timing> descriptor, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3695,13 +3696,13 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_tz_trend($arg1, (const struct thermal_trip*)$arg2)")
+  @BuiltinBPFFunction("get_tz_trend($arg1, (const struct thermal_trip *)$arg2)")
   public static int get_tz_trend(Ptr<thermal_zone_device> tz, Ptr<thermal_trip> trip) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_unbound_pool((const struct workqueue_attrs*)$arg1)")
+  @BuiltinBPFFunction("get_unbound_pool((const struct workqueue_attrs *)$arg1)")
   public static Ptr<worker_pool> get_unbound_pool(Ptr<workqueue_attrs> attrs) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3782,7 +3783,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_user_session_keyring_rcu((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("get_user_session_keyring_rcu((const struct cred *)$arg1)")
   public static Ptr<key> get_user_session_keyring_rcu(Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3812,7 +3813,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_vfs_caps_from_disk($arg1, (const struct dentry*)$arg2, $arg3)")
+  @BuiltinBPFFunction("get_vfs_caps_from_disk($arg1, (const struct dentry *)$arg2, $arg3)")
   public static int get_vfs_caps_from_disk(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       Ptr<cpu_vfs_cap_data> cpu_caps) {
     throw new MethodIsBPFRelatedFunction();
@@ -3825,7 +3826,7 @@ public final class GetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("get_vm_area_caller($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("get_vm_area_caller($arg1, $arg2, (const void *)$arg3)")
   public static Ptr<vm_struct> get_vm_area_caller(@Unsigned long size, @Unsigned long flags,
       Ptr<?> caller) {
     throw new MethodIsBPFRelatedFunction();

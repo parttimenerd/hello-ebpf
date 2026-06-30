@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,7 +1109,7 @@ public final class CxlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cxl_cper_print_prot_err((const u8*)$arg1, (const struct cxl_cper_sec_prot_err*)$arg2)")
+  @BuiltinBPFFunction("cxl_cper_print_prot_err((const u8 *)$arg1, (const struct cxl_cper_sec_prot_err *)$arg2)")
   public static void cxl_cper_print_prot_err(String pfx, Ptr<cxl_cper_sec_prot_err> prot_err) {
     throw new MethodIsBPFRelatedFunction();
   }

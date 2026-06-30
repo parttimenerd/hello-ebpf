@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1134,7 +1135,7 @@ public final class IntelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__intel_scu_ipc_register($arg1, (const struct intel_scu_ipc_data*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__intel_scu_ipc_register($arg1, (const struct intel_scu_ipc_data *)$arg2, $arg3)")
   public static Ptr<intel_scu_ipc_dev> __intel_scu_ipc_register(Ptr<device> parent,
       Ptr<intel_scu_ipc_data> scu_data, Ptr<module> owner) {
     throw new MethodIsBPFRelatedFunction();
@@ -1238,7 +1239,7 @@ public final class IntelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("intel_c1_demotion_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("intel_c1_demotion_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long intel_c1_demotion_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1764,7 +1765,7 @@ public final class IntelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct intel_community*)intel_get_community((const struct intel_pinctrl*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct intel_community*)intel_get_community((const struct intel_pinctrl *)$arg1, $arg2))")
   public static Ptr<intel_community> intel_get_community(Ptr<intel_pinctrl> pctrl,
       @Unsigned int pin) {
     throw new MethodIsBPFRelatedFunction();
@@ -2198,14 +2199,14 @@ public final class IntelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("intel_iommu_domain_alloc_nested($arg1, $arg2, $arg3, (const struct iommu_user_data*)$arg4)")
+  @BuiltinBPFFunction("intel_iommu_domain_alloc_nested($arg1, $arg2, $arg3, (const struct iommu_user_data *)$arg4)")
   public static Ptr<iommu_domain> intel_iommu_domain_alloc_nested(Ptr<device> dev,
       Ptr<iommu_domain> parent, @Unsigned int flags, Ptr<iommu_user_data> user_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("intel_iommu_domain_alloc_paging_flags($arg1, $arg2, (const struct iommu_user_data*)$arg3)")
+  @BuiltinBPFFunction("intel_iommu_domain_alloc_paging_flags($arg1, $arg2, (const struct iommu_user_data *)$arg3)")
   public static Ptr<iommu_domain> intel_iommu_domain_alloc_paging_flags(Ptr<device> dev,
       @Unsigned int flags, Ptr<iommu_user_data> user_data) {
     throw new MethodIsBPFRelatedFunction();
@@ -2399,7 +2400,7 @@ public final class IntelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("intel_ir_set_affinity($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("intel_ir_set_affinity($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int intel_ir_set_affinity(Ptr<irq_data> data, Ptr<cpumask> mask, boolean force) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2520,19 +2521,19 @@ public final class IntelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("intel_pad_acpi_mode((const struct intel_pinctrl*)$arg1, $arg2)")
+  @BuiltinBPFFunction("intel_pad_acpi_mode((const struct intel_pinctrl *)$arg1, $arg2)")
   public static boolean intel_pad_acpi_mode(Ptr<intel_pinctrl> pctrl, @Unsigned int pin) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("intel_pad_locked((const struct intel_pinctrl*)$arg1, $arg2)")
+  @BuiltinBPFFunction("intel_pad_locked((const struct intel_pinctrl *)$arg1, $arg2)")
   public static int intel_pad_locked(Ptr<intel_pinctrl> pctrl, @Unsigned int pin) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("intel_pad_owned_by_host((const struct intel_pinctrl*)$arg1, $arg2)")
+  @BuiltinBPFFunction("intel_pad_owned_by_host((const struct intel_pinctrl *)$arg1, $arg2)")
   public static boolean intel_pad_owned_by_host(Ptr<intel_pinctrl> pctrl, @Unsigned int pin) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2715,7 +2716,7 @@ public final class IntelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("intel_pinctrl_probe($arg1, (const struct intel_pinctrl_soc_data*)$arg2)")
+  @BuiltinBPFFunction("intel_pinctrl_probe($arg1, (const struct intel_pinctrl_soc_data *)$arg2)")
   public static int intel_pinctrl_probe(Ptr<platform_device> pdev,
       Ptr<intel_pinctrl_soc_data> soc_data) {
     throw new MethodIsBPFRelatedFunction();
@@ -2759,7 +2760,7 @@ public final class IntelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("intel_pmic_install_opregion_handler($arg1, $arg2, $arg3, (const struct intel_pmic_opregion_data*)$arg4)")
+  @BuiltinBPFFunction("intel_pmic_install_opregion_handler($arg1, $arg2, $arg3, (const struct intel_pmic_opregion_data *)$arg4)")
   public static int intel_pmic_install_opregion_handler(Ptr<device> dev,
       @OriginalName("acpi_handle") Ptr<?> handle, Ptr<regmap> regmap,
       Ptr<intel_pmic_opregion_data> d) {
@@ -3606,7 +3607,7 @@ public final class IntelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("intel_pstate_update_status((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("intel_pstate_update_status((const u8 *)$arg1, $arg2)")
   public static int intel_pstate_update_status(String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3714,7 +3715,7 @@ public final class IntelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("intel_scu_ipc_dev_command_with_size($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("intel_scu_ipc_dev_command_with_size($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int intel_scu_ipc_dev_command_with_size(Ptr<intel_scu_ipc_dev> scu, int cmd,
       int sub, Ptr<?> in, @Unsigned long inlen, @Unsigned long size, Ptr<?> out,
       @Unsigned long outlen) {
@@ -3811,7 +3812,7 @@ public final class IntelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("intel_scu_pci_probe($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("intel_scu_pci_probe($arg1, (const struct pci_device_id *)$arg2)")
   public static int intel_scu_pci_probe(Ptr<pci_dev> pdev, Ptr<pci_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3951,7 +3952,7 @@ public final class IntelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("intel_tlb_lookup((const struct leaf_0x2_table*)$arg1)")
+  @BuiltinBPFFunction("intel_tlb_lookup((const struct leaf_0x2_table *)$arg1)")
   public static void intel_tlb_lookup(Ptr<leaf_0x2_table> desc) {
     throw new MethodIsBPFRelatedFunction();
   }

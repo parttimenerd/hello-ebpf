@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1133,7 +1134,7 @@ public final class Cgroup1Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cgroup1_rename($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("cgroup1_rename($arg1, $arg2, (const u8 *)$arg3)")
   public static int cgroup1_rename(Ptr<kernfs_node> kn, Ptr<kernfs_node> new_parent,
       String new_name_str) {
     throw new MethodIsBPFRelatedFunction();

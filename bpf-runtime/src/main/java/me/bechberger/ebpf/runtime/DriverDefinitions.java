@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,25 +1104,25 @@ public final class DriverDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__driver_probe_device((const struct device_driver*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__driver_probe_device((const struct device_driver *)$arg1, $arg2)")
   public static int __driver_probe_device(Ptr<device_driver> drv, Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("driver_add_groups((const struct device_driver*)$arg1, (const struct attribute_group**)$arg2)")
+  @BuiltinBPFFunction("driver_add_groups((const struct device_driver *)$arg1, (const struct attribute_group**)$arg2)")
   public static int driver_add_groups(Ptr<device_driver> drv, Ptr<Ptr<attribute_group>> groups) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("driver_allows_async_probing((const struct device_driver*)$arg1)")
+  @BuiltinBPFFunction("driver_allows_async_probing((const struct device_driver *)$arg1)")
   public static boolean driver_allows_async_probing(Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("driver_attach((const struct device_driver*)$arg1)")
+  @BuiltinBPFFunction("driver_attach((const struct device_driver *)$arg1)")
   public static int driver_attach(Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1133,7 +1134,7 @@ public final class DriverDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("driver_create_file((const struct device_driver*)$arg1, (const struct driver_attribute*)$arg2)")
+  @BuiltinBPFFunction("driver_create_file((const struct device_driver *)$arg1, (const struct driver_attribute *)$arg2)")
   public static int driver_create_file(Ptr<device_driver> drv, Ptr<driver_attribute> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1163,7 +1164,7 @@ public final class DriverDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("driver_detach((const struct device_driver*)$arg1)")
+  @BuiltinBPFFunction("driver_detach((const struct device_driver *)$arg1)")
   public static void driver_detach(Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1175,13 +1176,13 @@ public final class DriverDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("driver_find((const u8*)$arg1, (const struct bus_type*)$arg2)")
+  @BuiltinBPFFunction("driver_find((const u8 *)$arg1, (const struct bus_type *)$arg2)")
   public static Ptr<device_driver> driver_find(String name, Ptr<bus_type> bus) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("driver_find_device((const struct device_driver*)$arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("driver_find_device((const struct device_driver *)$arg1, $arg2, (const void *)$arg3, $arg4)")
   public static Ptr<device> driver_find_device(Ptr<device_driver> drv, Ptr<device> start,
       Ptr<?> data, @OriginalName("device_match_t") Ptr<?> match) {
     throw new MethodIsBPFRelatedFunction();
@@ -1208,20 +1209,20 @@ public final class DriverDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("driver_override_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("driver_override_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long driver_override_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("driver_probe($arg1, (const struct usb_device_id*)$arg2)")
+  @BuiltinBPFFunction("driver_probe($arg1, (const struct usb_device_id *)$arg2)")
   public static int driver_probe(Ptr<usb_interface> intf, Ptr<usb_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("driver_probe_device((const struct device_driver*)$arg1, $arg2)")
+  @BuiltinBPFFunction("driver_probe_device((const struct device_driver *)$arg1, $arg2)")
   public static int driver_probe_device(Ptr<device_driver> drv, Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1245,13 +1246,13 @@ public final class DriverDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("driver_remove_file((const struct device_driver*)$arg1, (const struct driver_attribute*)$arg2)")
+  @BuiltinBPFFunction("driver_remove_file((const struct device_driver *)$arg1, (const struct driver_attribute *)$arg2)")
   public static void driver_remove_file(Ptr<device_driver> drv, Ptr<driver_attribute> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("driver_remove_groups((const struct device_driver*)$arg1, (const struct attribute_group**)$arg2)")
+  @BuiltinBPFFunction("driver_remove_groups((const struct device_driver *)$arg1, (const struct attribute_group**)$arg2)")
   public static void driver_remove_groups(Ptr<device_driver> drv,
       Ptr<Ptr<attribute_group>> groups) {
     throw new MethodIsBPFRelatedFunction();
@@ -1270,7 +1271,7 @@ public final class DriverDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("driver_set_override($arg1, (const u8**)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("driver_set_override($arg1, (const u8**)$arg2, (const u8 *)$arg3, $arg4)")
   public static int driver_set_override(Ptr<device> dev, Ptr<String> override, String s,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();

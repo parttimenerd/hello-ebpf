@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,28 +1091,28 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class X509Definitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_akid_note_kid($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_akid_note_kid($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_akid_note_kid(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_akid_note_name($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_akid_note_name($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_akid_note_name(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_akid_note_serial($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_akid_note_serial($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_akid_note_serial(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_cert_parse((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("x509_cert_parse((const void *)$arg1, $arg2)")
   public static Ptr<x509_certificate> x509_cert_parse(Ptr<?> data, @Unsigned long datalen) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1123,21 +1124,21 @@ public final class X509Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_decode_time($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_decode_time($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int x509_decode_time(Ptr<java.lang. @OriginalName("time64_t") Long> _t,
       @Unsigned long hdrlen, char tag, String value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_extract_key_data($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_extract_key_data($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_extract_key_data(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_extract_name_segment($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_extract_name_segment($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_extract_name_segment(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1174,84 +1175,84 @@ public final class X509Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_load_certificate_list((const u8*)$arg1, (const long unsigned int)$arg2, (const struct key*)$arg3)")
+  @BuiltinBPFFunction("x509_load_certificate_list((const u8 *)$arg1, (const long unsigned int)$arg2, (const struct key *)$arg3)")
   public static int x509_load_certificate_list(Ptr<java.lang.Character> cert_list,
       @Unsigned long list_size, Ptr<key> keyring) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_note_OID($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_note_OID($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_note_OID(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_note_issuer($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_note_issuer($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_note_issuer(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_note_not_after($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_note_not_after($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_note_not_after(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_note_not_before($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_note_not_before($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_note_not_before(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_note_params($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_note_params($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_note_params(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_note_serial($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_note_serial($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_note_serial(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_note_sig_algo($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_note_sig_algo($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_note_sig_algo(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_note_signature($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_note_signature($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_note_signature(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_note_subject($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_note_subject($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_note_subject(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_note_tbs_certificate($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_note_tbs_certificate($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_note_tbs_certificate(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x509_process_extension($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("x509_process_extension($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int x509_process_extension(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,13 +1103,13 @@ public final class PiixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("piix_init_one($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("piix_init_one($arg1, (const struct pci_device_id *)$arg2)")
   public static int piix_init_one(Ptr<pci_dev> pdev, Ptr<pci_device_id> ent) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const int*)piix_init_sata_map($arg1, $arg2, (const struct piix_map_db*)$arg3))")
+  @BuiltinBPFFunction("((const int*)piix_init_sata_map($arg1, $arg2, (const struct piix_map_db *)$arg3))")
   public static Ptr<java.lang.Integer> piix_init_sata_map(Ptr<pci_dev> pdev,
       Ptr<ata_port_info> pinfo, Ptr<piix_map_db> map_db) {
     throw new MethodIsBPFRelatedFunction();

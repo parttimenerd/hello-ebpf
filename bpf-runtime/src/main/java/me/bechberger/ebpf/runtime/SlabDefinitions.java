@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1098,7 +1099,7 @@ public final class SlabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__slab_bug($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__slab_bug($arg1, (const u8 *)$arg2, $arg3)")
   public static void __slab_bug(Ptr<kmem_cache> s, String fmt, Ptr<__va_list_tag> argsp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1124,14 +1125,14 @@ public final class SlabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("slab_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("slab_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long slab_attr_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("slab_bug($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("slab_bug($arg1, (const u8 *)$arg2, $arg3_)")
   public static void slab_bug(Ptr<kmem_cache> s, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1187,14 +1188,14 @@ public final class SlabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("slab_err($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("slab_err($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void slab_err(Ptr<kmem_cache> s, Ptr<slab> slab, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("slab_fix($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("slab_fix($arg1, (const u8 *)$arg2, $arg3_)")
   public static void slab_fix(Ptr<kmem_cache> s, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }

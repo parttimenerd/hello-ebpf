@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class TextDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__text_poke($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__text_poke($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static Ptr<?> __text_poke(Ptr<?> func, Ptr<?> addr, Ptr<?> src, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("text_poke($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("text_poke($arg1, (const void *)$arg2, $arg3)")
   public static Ptr<?> text_poke(Ptr<?> addr, Ptr<?> opcode, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1110,38 +1111,38 @@ public final class TextDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("text_poke_copy($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("text_poke_copy($arg1, (const void *)$arg2, $arg3)")
   public static Ptr<?> text_poke_copy(Ptr<?> addr, Ptr<?> opcode, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("text_poke_copy_locked($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("text_poke_copy_locked($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static Ptr<?> text_poke_copy_locked(Ptr<?> addr, Ptr<?> opcode, @Unsigned long len,
       boolean core_ok) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("text_poke_early($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("text_poke_early($arg1, (const void *)$arg2, $arg3)")
   public static void text_poke_early(Ptr<?> addr, Ptr<?> opcode, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("text_poke_kgdb($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("text_poke_kgdb($arg1, (const void *)$arg2, $arg3)")
   public static Ptr<?> text_poke_kgdb(Ptr<?> addr, Ptr<?> opcode, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("text_poke_memcpy($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("text_poke_memcpy($arg1, (const void *)$arg2, $arg3)")
   public static void text_poke_memcpy(Ptr<?> dst, Ptr<?> src, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("text_poke_memset($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("text_poke_memset($arg1, (const void *)$arg2, $arg3)")
   public static void text_poke_memset(Ptr<?> dst, Ptr<?> src, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1116,7 +1117,7 @@ public final class FpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fpu_copy_uabi_to_guest_fpstate($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fpu_copy_uabi_to_guest_fpstate($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static int fpu_copy_uabi_to_guest_fpstate(Ptr<fpu_guest> gfpu, Ptr<?> buf,
       @Unsigned long xcr0, Ptr<java.lang. @Unsigned Integer> vpkru) {
     throw new MethodIsBPFRelatedFunction();

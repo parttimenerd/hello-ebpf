@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1120,7 +1121,7 @@ public final class Univ8250Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("univ8250_console_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("univ8250_console_write($arg1, (const u8 *)$arg2, $arg3)")
   public static void univ8250_console_write(Ptr<console> co, String s, @Unsigned int count) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1144,7 +1145,7 @@ public final class Univ8250Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("univ8250_rsa_support($arg1, (const struct uart_ops*)$arg2)")
+  @BuiltinBPFFunction("univ8250_rsa_support($arg1, (const struct uart_ops *)$arg2)")
   public static void univ8250_rsa_support(Ptr<uart_ops> ops, Ptr<uart_ops> core_ops) {
     throw new MethodIsBPFRelatedFunction();
   }

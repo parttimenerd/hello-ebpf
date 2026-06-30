@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1146,7 +1147,7 @@ public final class VmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vm_area_init_from((const struct vm_area_struct*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vm_area_init_from((const struct vm_area_struct *)$arg1, $arg2)")
   public static void vm_area_init_from(Ptr<vm_area_struct> src, Ptr<vm_area_struct> dest) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1185,7 +1186,7 @@ public final class VmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vm_cmdline_get($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("vm_cmdline_get($arg1, (const struct kernel_param *)$arg2)")
   public static int vm_cmdline_get(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1197,7 +1198,7 @@ public final class VmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vm_cmdline_set((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("vm_cmdline_set((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int vm_cmdline_set(String device, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1409,7 +1410,7 @@ public final class VmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vm_set($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vm_set($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static void vm_set(Ptr<virtio_device> vdev, @Unsigned int offset, Ptr<?> buf,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1422,7 +1423,7 @@ public final class VmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vm_setup_vq($arg1, $arg2, (void (*)(struct virtqueue*))$arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("vm_setup_vq($arg1, $arg2, (void (*)(struct virtqueue*))$arg3, (const u8 *)$arg4, $arg5)")
   public static Ptr<virtqueue> vm_setup_vq(Ptr<virtio_device> vdev, @Unsigned int index,
       Ptr<?> callback, String name, boolean ctx) {
     throw new MethodIsBPFRelatedFunction();
@@ -1448,7 +1449,7 @@ public final class VmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vm_unmap_ram((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vm_unmap_ram((const void *)$arg1, $arg2)")
   public static void vm_unmap_ram(Ptr<?> mem, @Unsigned int count) {
     throw new MethodIsBPFRelatedFunction();
   }

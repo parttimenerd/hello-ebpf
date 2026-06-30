@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1179,7 +1180,7 @@ public final class StaticDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("static_call_site_cmp((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("static_call_site_cmp((const void *)$arg1, (const void *)$arg2)")
   public static int static_call_site_cmp(Ptr<?> _a, Ptr<?> _b) {
     throw new MethodIsBPFRelatedFunction();
   }

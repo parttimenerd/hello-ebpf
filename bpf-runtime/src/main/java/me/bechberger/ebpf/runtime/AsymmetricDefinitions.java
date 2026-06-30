@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class AsymmetricDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__asymmetric_key_hex_to_key_id((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__asymmetric_key_hex_to_key_id((const u8 *)$arg1, $arg2, $arg3)")
   public static int __asymmetric_key_hex_to_key_id(String id, Ptr<asymmetric_key_id> match_id,
       @Unsigned long hexlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1103,25 +1104,25 @@ public final class AsymmetricDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asymmetric_key_cmp((const struct key*)$arg1, (const struct key_match_data*)$arg2)")
+  @BuiltinBPFFunction("asymmetric_key_cmp((const struct key *)$arg1, (const struct key_match_data *)$arg2)")
   public static boolean asymmetric_key_cmp(Ptr<key> key, Ptr<key_match_data> match_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asymmetric_key_cmp_name((const struct key*)$arg1, (const struct key_match_data*)$arg2)")
+  @BuiltinBPFFunction("asymmetric_key_cmp_name((const struct key *)$arg1, (const struct key_match_data *)$arg2)")
   public static boolean asymmetric_key_cmp_name(Ptr<key> key, Ptr<key_match_data> match_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asymmetric_key_cmp_partial((const struct key*)$arg1, (const struct key_match_data*)$arg2)")
+  @BuiltinBPFFunction("asymmetric_key_cmp_partial((const struct key *)$arg1, (const struct key_match_data *)$arg2)")
   public static boolean asymmetric_key_cmp_partial(Ptr<key> key, Ptr<key_match_data> match_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asymmetric_key_describe((const struct key*)$arg1, $arg2)")
+  @BuiltinBPFFunction("asymmetric_key_describe((const struct key *)$arg1, $arg2)")
   public static void asymmetric_key_describe(Ptr<key> key, Ptr<seq_file> m) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1133,7 +1134,7 @@ public final class AsymmetricDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asymmetric_key_eds_op($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("asymmetric_key_eds_op($arg1, (const void *)$arg2, $arg3)")
   public static int asymmetric_key_eds_op(Ptr<kernel_pkey_params> params, Ptr<?> in, Ptr<?> out) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1145,27 +1146,27 @@ public final class AsymmetricDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asymmetric_key_generate_id((const void*)$arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("asymmetric_key_generate_id((const void *)$arg1, $arg2, (const void *)$arg3, $arg4)")
   public static Ptr<asymmetric_key_id> asymmetric_key_generate_id(Ptr<?> val_1,
       @Unsigned long len_1, Ptr<?> val_2, @Unsigned long len_2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asymmetric_key_hex_to_key_id((const u8*)$arg1)")
+  @BuiltinBPFFunction("asymmetric_key_hex_to_key_id((const u8 *)$arg1)")
   public static Ptr<asymmetric_key_id> asymmetric_key_hex_to_key_id(String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asymmetric_key_id_partial((const struct asymmetric_key_id*)$arg1, (const struct asymmetric_key_id*)$arg2)")
+  @BuiltinBPFFunction("asymmetric_key_id_partial((const struct asymmetric_key_id *)$arg1, (const struct asymmetric_key_id *)$arg2)")
   public static boolean asymmetric_key_id_partial(Ptr<asymmetric_key_id> kid1,
       Ptr<asymmetric_key_id> kid2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asymmetric_key_id_same((const struct asymmetric_key_id*)$arg1, (const struct asymmetric_key_id*)$arg2)")
+  @BuiltinBPFFunction("asymmetric_key_id_same((const struct asymmetric_key_id *)$arg1, (const struct asymmetric_key_id *)$arg2)")
   public static boolean asymmetric_key_id_same(Ptr<asymmetric_key_id> kid1,
       Ptr<asymmetric_key_id> kid2) {
     throw new MethodIsBPFRelatedFunction();
@@ -1196,20 +1197,20 @@ public final class AsymmetricDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asymmetric_key_verify_signature($arg1, (const void*)$arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("asymmetric_key_verify_signature($arg1, (const void *)$arg2, (const void *)$arg3)")
   public static int asymmetric_key_verify_signature(Ptr<kernel_pkey_params> params, Ptr<?> in,
       Ptr<?> in2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asymmetric_lookup_restriction((const u8*)$arg1)")
+  @BuiltinBPFFunction("asymmetric_lookup_restriction((const u8 *)$arg1)")
   public static Ptr<key_restriction> asymmetric_lookup_restriction(String restriction) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asymmetric_verify($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("asymmetric_verify($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int asymmetric_verify(Ptr<key> keyring, String sig, int siglen, String data,
       int datalen) {
     throw new MethodIsBPFRelatedFunction();

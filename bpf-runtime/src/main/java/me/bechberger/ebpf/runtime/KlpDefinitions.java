@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1122,7 +1123,7 @@ public final class KlpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("klp_apply_section_relocs($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5, $arg6, (const u8*)$arg7)")
+  @BuiltinBPFFunction("klp_apply_section_relocs($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5, $arg6, (const u8 *)$arg7)")
   public static int klp_apply_section_relocs(Ptr<module> pmod,
       Ptr<@OriginalName("Elf64_Shdr") elf64_shdr> sechdrs, String shstrtab, String strtab,
       @Unsigned int symndx, @Unsigned int secndx, String objname) {
@@ -1172,13 +1173,13 @@ public final class KlpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("klp_find_callback($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("klp_find_callback($arg1, (const u8 *)$arg2, $arg3)")
   public static int klp_find_callback(Ptr<?> data, String name, @Unsigned long addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("klp_find_object_symbol((const u8*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("klp_find_object_symbol((const u8 *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int klp_find_object_symbol(String objname, String name, @Unsigned long sympos,
       Ptr<java.lang. @Unsigned Long> addr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1318,7 +1319,7 @@ public final class KlpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("klp_resolve_symbols($arg1, (const u8*)$arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("klp_resolve_symbols($arg1, (const u8 *)$arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static int klp_resolve_symbols(Ptr<@OriginalName("Elf64_Shdr") elf64_shdr> sechdrs,
       String strtab, @Unsigned int symndx, Ptr<@OriginalName("Elf64_Shdr") elf64_shdr> relasec,
       String sec_objname) {
@@ -1442,7 +1443,7 @@ public final class KlpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("klp_write_section_relocs($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5, $arg6, (const u8*)$arg7, $arg8)")
+  @BuiltinBPFFunction("klp_write_section_relocs($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5, $arg6, (const u8 *)$arg7, $arg8)")
   public static int klp_write_section_relocs(Ptr<module> pmod,
       Ptr<@OriginalName("Elf64_Shdr") elf64_shdr> sechdrs, String shstrtab, String strtab,
       @Unsigned int symndx, @Unsigned int secndx, String objname, boolean apply) {

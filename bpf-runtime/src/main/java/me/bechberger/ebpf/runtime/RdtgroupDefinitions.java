@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1162,14 +1163,14 @@ public final class RdtgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rdtgroup_kn_mode_restore($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rdtgroup_kn_mode_restore($arg1, (const u8 *)$arg2, $arg3)")
   public static int rdtgroup_kn_mode_restore(Ptr<rdtgroup> r, String name,
       @Unsigned @OriginalName("umode_t") short mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rdtgroup_kn_mode_restrict($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("rdtgroup_kn_mode_restrict($arg1, (const u8 *)$arg2)")
   public static int rdtgroup_kn_mode_restrict(Ptr<rdtgroup> r, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1226,14 +1227,14 @@ public final class RdtgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rdtgroup_mkdir($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rdtgroup_mkdir($arg1, (const u8 *)$arg2, $arg3)")
   public static int rdtgroup_mkdir(Ptr<kernfs_node> parent_kn, String name,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rdtgroup_mkdir_ctrl_mon($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rdtgroup_mkdir_ctrl_mon($arg1, (const u8 *)$arg2, $arg3)")
   public static int rdtgroup_mkdir_ctrl_mon(Ptr<kernfs_node> parent_kn, String name,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1289,7 +1290,7 @@ public final class RdtgroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rdtgroup_rename($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("rdtgroup_rename($arg1, $arg2, (const u8 *)$arg3)")
   public static int rdtgroup_rename(Ptr<kernfs_node> kn, Ptr<kernfs_node> new_parent,
       String new_name) {
     throw new MethodIsBPFRelatedFunction();

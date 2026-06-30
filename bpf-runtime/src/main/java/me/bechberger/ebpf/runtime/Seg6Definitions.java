@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1104,7 +1105,7 @@ public final class Seg6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__seg6_end_dt_vrf_build($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__seg6_end_dt_vrf_build($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static int __seg6_end_dt_vrf_build(Ptr<seg6_local_lwt> slwt, Ptr<?> cfg,
       @Unsigned short family, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1117,7 +1118,7 @@ public final class Seg6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seg6_build_state($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("seg6_build_state($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int seg6_build_state(Ptr<net> net, Ptr<nlattr> nla, @Unsigned int family,
       Ptr<?> cfg, Ptr<Ptr<lwtunnel_state>> ts, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1167,21 +1168,21 @@ public final class Seg6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seg6_end_dt46_build($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("seg6_end_dt46_build($arg1, (const void *)$arg2, $arg3)")
   public static int seg6_end_dt46_build(Ptr<seg6_local_lwt> slwt, Ptr<?> cfg,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seg6_end_dt4_build($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("seg6_end_dt4_build($arg1, (const void *)$arg2, $arg3)")
   public static int seg6_end_dt4_build(Ptr<seg6_local_lwt> slwt, Ptr<?> cfg,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seg6_end_dt6_build($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("seg6_end_dt6_build($arg1, (const void *)$arg2, $arg3)")
   public static int seg6_end_dt6_build(Ptr<seg6_local_lwt> slwt, Ptr<?> cfg,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1254,7 +1255,7 @@ public final class Seg6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seg6_hmac_cmpfn($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("seg6_hmac_cmpfn($arg1, (const void *)$arg2)")
   public static int seg6_hmac_cmpfn(Ptr<rhashtable_compare_arg> arg, Ptr<?> obj) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1363,7 +1364,7 @@ public final class Seg6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seg6_local_build_state($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("seg6_local_build_state($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int seg6_local_build_state(Ptr<net> net, Ptr<nlattr> nla, @Unsigned int family,
       Ptr<?> cfg, Ptr<Ptr<lwtunnel_state>> ts, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1444,7 +1445,7 @@ public final class Seg6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seg6_next_csid_advance_arg($arg1, (const struct seg6_flavors_info*)$arg2)")
+  @BuiltinBPFFunction("seg6_next_csid_advance_arg($arg1, (const struct seg6_flavors_info *)$arg2)")
   public static void seg6_next_csid_advance_arg(Ptr<in6_addr> addr, Ptr<seg6_flavors_info> finfo) {
     throw new MethodIsBPFRelatedFunction();
   }

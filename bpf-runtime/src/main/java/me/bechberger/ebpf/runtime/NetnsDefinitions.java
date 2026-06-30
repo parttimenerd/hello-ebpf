@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class NetnsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netns_bpf_link_create((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netns_bpf_link_create((const union bpf_attr *)$arg1, $arg2)")
   public static int netns_bpf_link_create(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1114,19 +1115,19 @@ public final class NetnsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netns_bpf_prog_attach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netns_bpf_prog_attach((const union bpf_attr *)$arg1, $arg2)")
   public static int netns_bpf_prog_attach(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netns_bpf_prog_detach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netns_bpf_prog_detach((const union bpf_attr *)$arg1, $arg2)")
   public static int netns_bpf_prog_detach(Ptr<bpf_attr> attr, bpf_prog_type ptype) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netns_bpf_prog_query((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netns_bpf_prog_query((const union bpf_attr *)$arg1, $arg2)")
   public static int netns_bpf_prog_query(Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }

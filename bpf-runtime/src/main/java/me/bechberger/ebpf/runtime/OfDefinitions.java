@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class OfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__of_reset_control_get($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__of_reset_control_get($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<reset_control> __of_reset_control_get(Ptr<device_node> node, String id,
       int index, reset_control_flags flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1154,7 +1155,7 @@ public final class OfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("of_hwspin_lock_get_id_byname($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("of_hwspin_lock_get_id_byname($arg1, (const u8 *)$arg2)")
   public static int of_hwspin_lock_get_id_byname(Ptr<device_node> np, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1166,7 +1167,7 @@ public final class OfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("of_icc_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("of_icc_get($arg1, (const u8 *)$arg2)")
   public static Ptr<icc_path> of_icc_get(Ptr<device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1178,19 +1179,19 @@ public final class OfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("of_icc_get_from_provider((const struct of_phandle_args*)$arg1)")
+  @BuiltinBPFFunction("of_icc_get_from_provider((const struct of_phandle_args *)$arg1)")
   public static Ptr<icc_node_data> of_icc_get_from_provider(Ptr<of_phandle_args> spec) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("of_icc_xlate_onecell((const struct of_phandle_args*)$arg1, $arg2)")
+  @BuiltinBPFFunction("of_icc_xlate_onecell((const struct of_phandle_args *)$arg1, $arg2)")
   public static Ptr<icc_node> of_icc_xlate_onecell(Ptr<of_phandle_args> spec, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("of_mbox_index_xlate($arg1, (const struct of_phandle_args*)$arg2)")
+  @BuiltinBPFFunction("of_mbox_index_xlate($arg1, (const struct of_phandle_args *)$arg2)")
   public static Ptr<mbox_chan> of_mbox_index_xlate(Ptr<mbox_controller> mbox,
       Ptr<of_phandle_args> sp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1215,14 +1216,14 @@ public final class OfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("of_phandle_args_to_fwspec($arg1, (const unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("of_phandle_args_to_fwspec($arg1, (const unsigned int *)$arg2, $arg3, $arg4)")
   public static void of_phandle_args_to_fwspec(Ptr<device_node> np,
       Ptr<java.lang. @Unsigned Integer> args, @Unsigned int count, Ptr<irq_fwspec> fwspec) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("of_phy_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("of_phy_get($arg1, (const u8 *)$arg2)")
   public static Ptr<phy> of_phy_get(Ptr<device_node> np, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1240,7 +1241,7 @@ public final class OfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("of_phy_simple_xlate($arg1, (const struct of_phandle_args*)$arg2)")
+  @BuiltinBPFFunction("of_phy_simple_xlate($arg1, (const struct of_phandle_args *)$arg2)")
   public static Ptr<phy> of_phy_simple_xlate(Ptr<device> dev, Ptr<of_phandle_args> args) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1258,13 +1259,13 @@ public final class OfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("of_pwm_single_xlate($arg1, (const struct of_phandle_args*)$arg2)")
+  @BuiltinBPFFunction("of_pwm_single_xlate($arg1, (const struct of_phandle_args *)$arg2)")
   public static Ptr<pwm_device> of_pwm_single_xlate(Ptr<pwm_chip> chip, Ptr<of_phandle_args> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("of_pwm_xlate_with_flags($arg1, (const struct of_phandle_args*)$arg2)")
+  @BuiltinBPFFunction("of_pwm_xlate_with_flags($arg1, (const struct of_phandle_args *)$arg2)")
   public static Ptr<pwm_device> of_pwm_xlate_with_flags(Ptr<pwm_chip> chip,
       Ptr<of_phandle_args> args) {
     throw new MethodIsBPFRelatedFunction();
@@ -1278,7 +1279,7 @@ public final class OfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("of_reset_simple_xlate($arg1, (const struct of_phandle_args*)$arg2)")
+  @BuiltinBPFFunction("of_reset_simple_xlate($arg1, (const struct of_phandle_args *)$arg2)")
   public static int of_reset_simple_xlate(Ptr<reset_controller_dev> rcdev,
       Ptr<of_phandle_args> reset_spec) {
     throw new MethodIsBPFRelatedFunction();

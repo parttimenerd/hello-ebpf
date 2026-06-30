@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__add_cma_heap($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__add_cma_heap($arg1, (const u8 *)$arg2)")
   public static int __add_cma_heap(Ptr<cma> cma, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1136,7 +1137,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__add_to_kill($arg1, (const struct page*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__add_to_kill($arg1, (const struct page *)$arg2, $arg3, $arg4, $arg5)")
   public static void __add_to_kill(Ptr<task_struct> tsk, Ptr<page> p, Ptr<vm_area_struct> vma,
       Ptr<list_head> to_kill, @Unsigned long addr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1155,7 +1156,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_add_opp_dev((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("_add_opp_dev((const struct device *)$arg1, $arg2)")
   public static Ptr<opp_device> _add_opp_dev(Ptr<device> dev, Ptr<opp_table> opp_table) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1174,7 +1175,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_addr($arg1, (const struct in6_addr*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("add_addr($arg1, (const struct in6_addr *)$arg2, $arg3, $arg4, $arg5)")
   public static void add_addr(Ptr<inet6_dev> idev, Ptr<in6_addr> addr, int plen, int scope,
       char proto) {
     throw new MethodIsBPFRelatedFunction();
@@ -1188,13 +1189,13 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_alternate_cea_modes($arg1, (const struct drm_edid*)$arg2)")
+  @BuiltinBPFFunction("add_alternate_cea_modes($arg1, (const struct drm_edid *)$arg2)")
   public static int add_alternate_cea_modes(Ptr<drm_connector> connector, Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_bootloader_randomness((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("add_bootloader_randomness((const void *)$arg1, $arg2)")
   public static void add_bootloader_randomness(Ptr<?> buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1213,7 +1214,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_cea_modes($arg1, (const struct drm_edid*)$arg2)")
+  @BuiltinBPFFunction("add_cea_modes($arg1, (const struct drm_edid *)$arg2)")
   public static int add_cea_modes(Ptr<drm_connector> connector, Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1231,13 +1232,13 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_del_listener($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("add_del_listener($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int add_del_listener(@OriginalName("pid_t") int pid, Ptr<cpumask> mask, int isadd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_device_randomness((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("add_device_randomness((const void *)$arg1, $arg2)")
   public static void add_device_randomness(Ptr<?> buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1264,7 +1265,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_displayid_detailed_modes($arg1, (const struct drm_edid*)$arg2)")
+  @BuiltinBPFFunction("add_displayid_detailed_modes($arg1, (const struct drm_edid *)$arg2)")
   public static int add_displayid_detailed_modes(Ptr<drm_connector> connector,
       Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1314,7 +1315,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_hwgenerator_randomness((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("add_hwgenerator_randomness((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static void add_hwgenerator_randomness(Ptr<?> buf, @Unsigned long len,
       @Unsigned long entropy, boolean sleep_after) {
     throw new MethodIsBPFRelatedFunction();
@@ -1334,13 +1335,13 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_kallsyms($arg1, (const struct load_info*)$arg2)")
+  @BuiltinBPFFunction("add_kallsyms($arg1, (const struct load_info *)$arg2)")
   public static void add_kallsyms(Ptr<module> mod, Ptr<load_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_key_to_revocation_list((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("add_key_to_revocation_list((const u8 *)$arg1, $arg2)")
   public static int add_key_to_revocation_list(String data, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1409,7 +1410,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_memory_driver_managed($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("add_memory_driver_managed($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int add_memory_driver_managed(int nid, @Unsigned long start, @Unsigned long size,
       String resource_name, @OriginalName("mhp_t") int mhp_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1429,7 +1430,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_named_array((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("add_named_array((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int add_named_array(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1464,7 +1465,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_notes_attrs($arg1, (const struct load_info*)$arg2)")
+  @BuiltinBPFFunction("add_notes_attrs($arg1, (const struct load_info *)$arg2)")
   public static int add_notes_attrs(Ptr<module> mod, Ptr<load_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1503,7 +1504,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_policy($arg1, (const struct nla_policy*)$arg2, $arg3)")
+  @BuiltinBPFFunction("add_policy($arg1, (const struct nla_policy *)$arg2, $arg3)")
   public static int add_policy(Ptr<Ptr<netlink_policy_dump_state>> statep, Ptr<nla_policy> policy,
       @Unsigned int maxtype) {
     throw new MethodIsBPFRelatedFunction();
@@ -1516,13 +1517,13 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_preferred_console((const u8*)$arg1, (const short int)$arg2, $arg3)")
+  @BuiltinBPFFunction("add_preferred_console((const u8 *)$arg1, (const short int)$arg2, $arg3)")
   public static int add_preferred_console(String name, short idx, String options) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_prop_uevent((const struct device*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("add_prop_uevent((const struct device *)$arg1, $arg2, $arg3, $arg4)")
   public static int add_prop_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env,
       power_supply_property prop, String prop_buf) {
     throw new MethodIsBPFRelatedFunction();
@@ -1601,13 +1602,13 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_sect_attrs($arg1, (const struct load_info*)$arg2)")
+  @BuiltinBPFFunction("add_sect_attrs($arg1, (const struct load_info *)$arg2)")
   public static int add_sect_attrs(Ptr<module> mod, Ptr<load_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_setting($arg1, $arg2, (const struct pinctrl_map*)$arg3)")
+  @BuiltinBPFFunction("add_setting($arg1, $arg2, (const struct pinctrl_map *)$arg3)")
   public static int add_setting(Ptr<pinctrl> p, Ptr<pinctrl_dev> pctldev, Ptr<pinctrl_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1658,7 +1659,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_sysfs_param($arg1, (const struct kernel_param*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("add_sysfs_param($arg1, (const struct kernel_param *)$arg2, (const u8 *)$arg3)")
   public static int add_sysfs_param(Ptr<module_kobject> mk, Ptr<kernel_param> kp, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1734,7 +1735,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_to_kill_ksm($arg1, (const struct page*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("add_to_kill_ksm($arg1, (const struct page *)$arg2, $arg3, $arg4, $arg5)")
   public static void add_to_kill_ksm(Ptr<task_struct> tsk, Ptr<page> p, Ptr<vm_area_struct> vma,
       Ptr<list_head> to_kill, @Unsigned long addr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1749,7 +1750,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_to_machine_keyring((const u8*)$arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("add_to_machine_keyring((const u8 *)$arg1, (const void *)$arg2, $arg3)")
   public static void add_to_machine_keyring(String source, Ptr<?> data, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1769,13 +1770,13 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_to_platform_keyring((const u8*)$arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("add_to_platform_keyring((const u8 *)$arg1, (const void *)$arg2, $arg3)")
   public static void add_to_platform_keyring(String source, Ptr<?> data, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_to_secondary_keyring((const u8*)$arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("add_to_secondary_keyring((const u8 *)$arg1, (const void *)$arg2, $arg3)")
   public static void add_to_secondary_keyring(String source, Ptr<?> data, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1788,7 +1789,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_token_bytestring($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("add_token_bytestring($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void add_token_bytestring(Ptr<java.lang.Integer> err, Ptr<opal_dev> cmd,
       Ptr<java.lang.Character> bytestring, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1821,7 +1822,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_uevent_var($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("add_uevent_var($arg1, (const u8 *)$arg2, $arg3_)")
   public static int add_uevent_var(Ptr<kobj_uevent_env> env, String format,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
@@ -1846,7 +1847,7 @@ public final class AddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("add_vmfork_randomness((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("add_vmfork_randomness((const void *)$arg1, $arg2)")
   public static void add_vmfork_randomness(Ptr<?> unique_vm_id, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }

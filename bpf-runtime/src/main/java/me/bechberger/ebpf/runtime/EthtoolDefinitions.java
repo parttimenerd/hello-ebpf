@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1190,7 +1191,7 @@ public final class EthtoolDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_check_ops((const struct ethtool_ops*)$arg1)")
+  @BuiltinBPFFunction("ethtool_check_ops((const struct ethtool_ops *)$arg1)")
   public static int ethtool_check_ops(Ptr<ethtool_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1231,7 +1232,7 @@ public final class EthtoolDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_cmis_cdb_init($arg1, (const struct ethtool_module_fw_flash_params*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ethtool_cmis_cdb_init($arg1, (const struct ethtool_module_fw_flash_params *)$arg2, $arg3)")
   public static Ptr<ethtool_cmis_cdb> ethtool_cmis_cdb_init(Ptr<net_device> dev,
       Ptr<ethtool_module_fw_flash_params> params,
       Ptr<ethnl_module_fw_flash_ntf_params> ntf_params) {
@@ -1280,7 +1281,7 @@ public final class EthtoolDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_convert_link_mode_to_legacy_u32($arg1, (const long unsigned int*)$arg2)")
+  @BuiltinBPFFunction("ethtool_convert_link_mode_to_legacy_u32($arg1, (const long unsigned int *)$arg2)")
   public static boolean ethtool_convert_link_mode_to_legacy_u32(
       Ptr<java.lang. @Unsigned Integer> legacy_u32, Ptr<java.lang. @Unsigned Long> src) {
     throw new MethodIsBPFRelatedFunction();
@@ -1523,7 +1524,7 @@ public final class EthtoolDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_mmsv_init($arg1, $arg2, (const struct ethtool_mmsv_ops*)$arg3)")
+  @BuiltinBPFFunction("ethtool_mmsv_init($arg1, $arg2, (const struct ethtool_mmsv_ops *)$arg3)")
   public static void ethtool_mmsv_init(Ptr<ethtool_mmsv> mmsv, Ptr<net_device> dev,
       Ptr<ethtool_mmsv_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1599,7 +1600,7 @@ public final class EthtoolDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_puts($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("ethtool_puts($arg1, (const u8 *)$arg2)")
   public static void ethtool_puts(Ptr<Ptr<java.lang.Character>> data, String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1619,7 +1620,7 @@ public final class EthtoolDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_rx_flow_rule_create((const struct ethtool_rx_flow_spec_input*)$arg1)")
+  @BuiltinBPFFunction("ethtool_rx_flow_rule_create((const struct ethtool_rx_flow_spec_input *)$arg1)")
   public static Ptr<ethtool_rx_flow_rule> ethtool_rx_flow_rule_create(
       Ptr<ethtool_rx_flow_spec_input> input) {
     throw new MethodIsBPFRelatedFunction();
@@ -1644,21 +1645,21 @@ public final class EthtoolDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_rxfh_ctx_alloc((const struct ethtool_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ethtool_rxfh_ctx_alloc((const struct ethtool_ops *)$arg1, $arg2, $arg3)")
   public static Ptr<ethtool_rxfh_context> ethtool_rxfh_ctx_alloc(Ptr<ethtool_ops> ops,
       @Unsigned int indir_size, @Unsigned int key_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_rxnfc_copy_from_compat($arg1, (const struct compat_ethtool_rxnfc*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ethtool_rxnfc_copy_from_compat($arg1, (const struct compat_ethtool_rxnfc *)$arg2, $arg3)")
   public static int ethtool_rxnfc_copy_from_compat(Ptr<ethtool_rxnfc> rxnfc,
       Ptr<compat_ethtool_rxnfc> useraddr, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_rxnfc_copy_from_user($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ethtool_rxnfc_copy_from_user($arg1, (const void *)$arg2, $arg3)")
   public static int ethtool_rxnfc_copy_from_user(Ptr<ethtool_rxnfc> rxnfc, Ptr<?> useraddr,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1672,14 +1673,14 @@ public final class EthtoolDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_rxnfc_copy_to_compat($arg1, (const struct ethtool_rxnfc*)$arg2, $arg3, (const unsigned int*)$arg4)")
+  @BuiltinBPFFunction("ethtool_rxnfc_copy_to_compat($arg1, (const struct ethtool_rxnfc *)$arg2, $arg3, (const unsigned int *)$arg4)")
   public static int ethtool_rxnfc_copy_to_compat(Ptr<?> useraddr, Ptr<ethtool_rxnfc> rxnfc,
       @Unsigned long size, Ptr<java.lang. @Unsigned Integer> rule_buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_rxnfc_copy_to_user($arg1, (const struct ethtool_rxnfc*)$arg2, $arg3, (const unsigned int*)$arg4)")
+  @BuiltinBPFFunction("ethtool_rxnfc_copy_to_user($arg1, (const struct ethtool_rxnfc *)$arg2, $arg3, (const unsigned int *)$arg4)")
   public static int ethtool_rxnfc_copy_to_user(Ptr<?> useraddr, Ptr<ethtool_rxnfc> rxnfc,
       @Unsigned long size, Ptr<java.lang. @Unsigned Integer> rule_buf) {
     throw new MethodIsBPFRelatedFunction();
@@ -1723,7 +1724,7 @@ public final class EthtoolDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_set_ethtool_phy_ops((const struct ethtool_phy_ops*)$arg1)")
+  @BuiltinBPFFunction("ethtool_set_ethtool_phy_ops((const struct ethtool_phy_ops *)$arg1)")
   public static void ethtool_set_ethtool_phy_ops(Ptr<ethtool_phy_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1786,14 +1787,14 @@ public final class EthtoolDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_sprintf($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("ethtool_sprintf($arg1, (const u8 *)$arg2, $arg3_)")
   public static void ethtool_sprintf(Ptr<Ptr<java.lang.Character>> data, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_virtdev_set_link_ksettings($arg1, (const struct ethtool_link_ksettings*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ethtool_virtdev_set_link_ksettings($arg1, (const struct ethtool_link_ksettings *)$arg2, $arg3, $arg4)")
   public static int ethtool_virtdev_set_link_ksettings(Ptr<net_device> dev,
       Ptr<ethtool_link_ksettings> cmd, Ptr<java.lang. @Unsigned Integer> dev_speed,
       Ptr<java.lang.Character> dev_duplex) {
@@ -1801,7 +1802,7 @@ public final class EthtoolDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethtool_virtdev_validate_cmd((const struct ethtool_link_ksettings*)$arg1)")
+  @BuiltinBPFFunction("ethtool_virtdev_validate_cmd((const struct ethtool_link_ksettings *)$arg1)")
   public static boolean ethtool_virtdev_validate_cmd(Ptr<ethtool_link_ksettings> cmd) {
     throw new MethodIsBPFRelatedFunction();
   }

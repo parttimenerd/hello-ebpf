@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1114,7 +1115,7 @@ public final class TtyportDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ttyport_receive_buf($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ttyport_receive_buf($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static @Unsigned long ttyport_receive_buf(Ptr<tty_port> port, Ptr<java.lang.Character> cp,
       Ptr<java.lang.Character> fp, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1153,7 +1154,7 @@ public final class TtyportDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ttyport_write_buf($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ttyport_write_buf($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long ttyport_write_buf(Ptr<serdev_controller> ctrl,
       Ptr<java.lang.Character> data, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,14 +1097,14 @@ public final class FauxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("faux_device_create((const u8*)$arg1, $arg2, (const struct faux_device_ops*)$arg3)")
+  @BuiltinBPFFunction("faux_device_create((const u8 *)$arg1, $arg2, (const struct faux_device_ops *)$arg3)")
   public static Ptr<faux_device> faux_device_create(String name, Ptr<device> parent,
       Ptr<faux_device_ops> faux_ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("faux_device_create_with_groups((const u8*)$arg1, $arg2, (const struct faux_device_ops*)$arg3, (const struct attribute_group**)$arg4)")
+  @BuiltinBPFFunction("faux_device_create_with_groups((const u8 *)$arg1, $arg2, (const struct faux_device_ops *)$arg3, (const struct attribute_group**)$arg4)")
   public static Ptr<faux_device> faux_device_create_with_groups(String name, Ptr<device> parent,
       Ptr<faux_device_ops> faux_ops, Ptr<Ptr<attribute_group>> groups) {
     throw new MethodIsBPFRelatedFunction();
@@ -1122,7 +1123,7 @@ public final class FauxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("faux_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("faux_match($arg1, (const struct device_driver *)$arg2)")
   public static int faux_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }

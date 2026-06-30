@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1156,14 +1157,14 @@ public final class Pkcs1padDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs1pad_set_priv_key($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pkcs1pad_set_priv_key($arg1, (const void *)$arg2, $arg3)")
   public static int pkcs1pad_set_priv_key(Ptr<crypto_akcipher> tfm, Ptr<?> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs1pad_set_pub_key($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pkcs1pad_set_pub_key($arg1, (const void *)$arg2, $arg3)")
   public static int pkcs1pad_set_pub_key(Ptr<crypto_akcipher> tfm, Ptr<?> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();

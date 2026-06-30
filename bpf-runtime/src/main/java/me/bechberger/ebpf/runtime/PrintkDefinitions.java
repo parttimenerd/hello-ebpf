@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1120,7 +1121,7 @@ public final class PrintkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__printk_ratelimit((const u8*)$arg1)")
+  @BuiltinBPFFunction("__printk_ratelimit((const u8 *)$arg1)")
   public static int __printk_ratelimit(String func) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1138,7 +1139,7 @@ public final class PrintkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_printk_deferred((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("_printk_deferred((const u8 *)$arg1, $arg2_)")
   public static int _printk_deferred(String fmt, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1168,7 +1169,7 @@ public final class PrintkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("printk_get_level((const u8*)$arg1)")
+  @BuiltinBPFFunction("printk_get_level((const u8 *)$arg1)")
   public static int printk_get_level(String buffer) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1205,7 +1206,7 @@ public final class PrintkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("printk_parse_prefix((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("printk_parse_prefix((const u8 *)$arg1, $arg2, $arg3)")
   public static @Unsigned short printk_parse_prefix(String text, Ptr<java.lang.Integer> level,
       Ptr<printk_info_flags> flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1231,7 +1232,7 @@ public final class PrintkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("printk_sprint($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("printk_sprint($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static @Unsigned short printk_sprint(String text, @Unsigned short size, int facility,
       Ptr<printk_info_flags> flags, String fmt, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();

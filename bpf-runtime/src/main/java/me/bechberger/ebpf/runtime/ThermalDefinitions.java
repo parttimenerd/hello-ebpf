@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class ThermalDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__thermal_cooling_device_register($arg1, (const u8*)$arg2, $arg3, (const struct thermal_cooling_device_ops*)$arg4)")
+  @BuiltinBPFFunction("__thermal_cooling_device_register($arg1, (const u8 *)$arg2, $arg3, (const struct thermal_cooling_device_ops *)$arg4)")
   public static Ptr<thermal_cooling_device> __thermal_cooling_device_register(Ptr<device_node> np,
       String type, Ptr<?> devdata, Ptr<thermal_cooling_device_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1121,7 +1122,7 @@ public final class ThermalDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__thermal_thresholds_cmp($arg1, (const struct list_head*)$arg2, (const struct list_head*)$arg3)")
+  @BuiltinBPFFunction("__thermal_thresholds_cmp($arg1, (const struct list_head *)$arg2, (const struct list_head *)$arg3)")
   public static int __thermal_thresholds_cmp(Ptr<?> data, Ptr<list_head> l1, Ptr<list_head> l2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1183,7 +1184,7 @@ public final class ThermalDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_act((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("thermal_act((const struct dmi_system_id *)$arg1)")
   public static int thermal_act(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1238,7 +1239,7 @@ public final class ThermalDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_cooling_device_register((const u8*)$arg1, $arg2, (const struct thermal_cooling_device_ops*)$arg3)")
+  @BuiltinBPFFunction("thermal_cooling_device_register((const u8 *)$arg1, $arg2, (const struct thermal_cooling_device_ops *)$arg3)")
   public static Ptr<thermal_cooling_device> thermal_cooling_device_register(String type,
       Ptr<?> devdata, Ptr<thermal_cooling_device_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1469,7 +1470,7 @@ public final class ThermalDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_get_trend($arg1, (const struct thermal_trip*)$arg2, $arg3)")
+  @BuiltinBPFFunction("thermal_get_trend($arg1, (const struct thermal_trip *)$arg2, $arg3)")
   public static int thermal_get_trend(Ptr<thermal_zone_device> thermal, Ptr<thermal_trip> trip,
       Ptr<thermal_trend> trend) {
     throw new MethodIsBPFRelatedFunction();
@@ -1483,7 +1484,7 @@ public final class ThermalDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_hwmon_lookup_by_type((const struct thermal_zone_device*)$arg1)")
+  @BuiltinBPFFunction("thermal_hwmon_lookup_by_type((const struct thermal_zone_device *)$arg1)")
   public static Ptr<thermal_hwmon_device> thermal_hwmon_lookup_by_type(
       Ptr<thermal_zone_device> tz) {
     throw new MethodIsBPFRelatedFunction();
@@ -1508,113 +1509,113 @@ public final class ThermalDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_nocrt((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("thermal_nocrt((const struct dmi_system_id *)$arg1)")
   public static int thermal_nocrt(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_cdev_add((const struct thermal_cooling_device*)$arg1)")
+  @BuiltinBPFFunction("thermal_notify_cdev_add((const struct thermal_cooling_device *)$arg1)")
   public static int thermal_notify_cdev_add(Ptr<thermal_cooling_device> cdev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_cdev_delete((const struct thermal_cooling_device*)$arg1)")
+  @BuiltinBPFFunction("thermal_notify_cdev_delete((const struct thermal_cooling_device *)$arg1)")
   public static int thermal_notify_cdev_delete(Ptr<thermal_cooling_device> cdev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_cdev_state_update((const struct thermal_cooling_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("thermal_notify_cdev_state_update((const struct thermal_cooling_device *)$arg1, $arg2)")
   public static int thermal_notify_cdev_state_update(Ptr<thermal_cooling_device> cdev, int state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_threshold_add((const struct thermal_zone_device*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("thermal_notify_threshold_add((const struct thermal_zone_device *)$arg1, $arg2, $arg3)")
   public static int thermal_notify_threshold_add(Ptr<thermal_zone_device> tz, int temperature,
       int direction) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_threshold_delete((const struct thermal_zone_device*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("thermal_notify_threshold_delete((const struct thermal_zone_device *)$arg1, $arg2, $arg3)")
   public static int thermal_notify_threshold_delete(Ptr<thermal_zone_device> tz, int temperature,
       int direction) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_threshold_down((const struct thermal_zone_device*)$arg1)")
+  @BuiltinBPFFunction("thermal_notify_threshold_down((const struct thermal_zone_device *)$arg1)")
   public static int thermal_notify_threshold_down(Ptr<thermal_zone_device> tz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_threshold_flush((const struct thermal_zone_device*)$arg1)")
+  @BuiltinBPFFunction("thermal_notify_threshold_flush((const struct thermal_zone_device *)$arg1)")
   public static int thermal_notify_threshold_flush(Ptr<thermal_zone_device> tz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_threshold_up((const struct thermal_zone_device*)$arg1)")
+  @BuiltinBPFFunction("thermal_notify_threshold_up((const struct thermal_zone_device *)$arg1)")
   public static int thermal_notify_threshold_up(Ptr<thermal_zone_device> tz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_tz_create((const struct thermal_zone_device*)$arg1)")
+  @BuiltinBPFFunction("thermal_notify_tz_create((const struct thermal_zone_device *)$arg1)")
   public static int thermal_notify_tz_create(Ptr<thermal_zone_device> tz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_tz_delete((const struct thermal_zone_device*)$arg1)")
+  @BuiltinBPFFunction("thermal_notify_tz_delete((const struct thermal_zone_device *)$arg1)")
   public static int thermal_notify_tz_delete(Ptr<thermal_zone_device> tz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_tz_disable((const struct thermal_zone_device*)$arg1)")
+  @BuiltinBPFFunction("thermal_notify_tz_disable((const struct thermal_zone_device *)$arg1)")
   public static int thermal_notify_tz_disable(Ptr<thermal_zone_device> tz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_tz_enable((const struct thermal_zone_device*)$arg1)")
+  @BuiltinBPFFunction("thermal_notify_tz_enable((const struct thermal_zone_device *)$arg1)")
   public static int thermal_notify_tz_enable(Ptr<thermal_zone_device> tz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_tz_gov_change((const struct thermal_zone_device*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("thermal_notify_tz_gov_change((const struct thermal_zone_device *)$arg1, (const u8 *)$arg2)")
   public static int thermal_notify_tz_gov_change(Ptr<thermal_zone_device> tz, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_tz_trip_change((const struct thermal_zone_device*)$arg1, (const struct thermal_trip*)$arg2)")
+  @BuiltinBPFFunction("thermal_notify_tz_trip_change((const struct thermal_zone_device *)$arg1, (const struct thermal_trip *)$arg2)")
   public static int thermal_notify_tz_trip_change(Ptr<thermal_zone_device> tz,
       Ptr<thermal_trip> trip) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_tz_trip_down((const struct thermal_zone_device*)$arg1, (const struct thermal_trip*)$arg2)")
+  @BuiltinBPFFunction("thermal_notify_tz_trip_down((const struct thermal_zone_device *)$arg1, (const struct thermal_trip *)$arg2)")
   public static int thermal_notify_tz_trip_down(Ptr<thermal_zone_device> tz,
       Ptr<thermal_trip> trip) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_notify_tz_trip_up((const struct thermal_zone_device*)$arg1, (const struct thermal_trip*)$arg2)")
+  @BuiltinBPFFunction("thermal_notify_tz_trip_up((const struct thermal_zone_device *)$arg1, (const struct thermal_trip *)$arg2)")
   public static int thermal_notify_tz_trip_up(Ptr<thermal_zone_device> tz, Ptr<thermal_trip> trip) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_of_cooling_device_register($arg1, (const u8*)$arg2, $arg3, (const struct thermal_cooling_device_ops*)$arg4)")
+  @BuiltinBPFFunction("thermal_of_cooling_device_register($arg1, (const u8 *)$arg2, $arg3, (const struct thermal_cooling_device_ops *)$arg4)")
   public static Ptr<thermal_cooling_device> thermal_of_cooling_device_register(Ptr<device_node> np,
       String type, Ptr<?> devdata, Ptr<thermal_cooling_device_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1627,7 +1628,7 @@ public final class ThermalDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_psv((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("thermal_psv((const struct dmi_system_id *)$arg1)")
   public static int thermal_psv(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1735,7 +1736,7 @@ public final class ThermalDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_trip_is_bound_to_cdev($arg1, (const struct thermal_trip*)$arg2, $arg3)")
+  @BuiltinBPFFunction("thermal_trip_is_bound_to_cdev($arg1, (const struct thermal_trip *)$arg2, $arg3)")
   public static boolean thermal_trip_is_bound_to_cdev(Ptr<thermal_zone_device> tz,
       Ptr<thermal_trip> trip, Ptr<thermal_cooling_device> cdev) {
     throw new MethodIsBPFRelatedFunction();
@@ -1748,14 +1749,14 @@ public final class ThermalDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_tripless_zone_device_register((const u8*)$arg1, $arg2, (const struct thermal_zone_device_ops*)$arg3, (const struct thermal_zone_params*)$arg4)")
+  @BuiltinBPFFunction("thermal_tripless_zone_device_register((const u8 *)$arg1, $arg2, (const struct thermal_zone_device_ops *)$arg3, (const struct thermal_zone_params *)$arg4)")
   public static Ptr<thermal_zone_device> thermal_tripless_zone_device_register(String type,
       Ptr<?> devdata, Ptr<thermal_zone_device_ops> ops, Ptr<thermal_zone_params> tzp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_tzp((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("thermal_tzp((const struct dmi_system_id *)$arg1)")
   public static int thermal_tzp(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1840,7 +1841,7 @@ public final class ThermalDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_zone_device_register_with_trips((const u8*)$arg1, (const struct thermal_trip*)$arg2, $arg3, $arg4, (const struct thermal_zone_device_ops*)$arg5, (const struct thermal_zone_params*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("thermal_zone_device_register_with_trips((const u8 *)$arg1, (const struct thermal_trip *)$arg2, $arg3, $arg4, (const struct thermal_zone_device_ops *)$arg5, (const struct thermal_zone_params *)$arg6, $arg7, $arg8)")
   public static Ptr<thermal_zone_device> thermal_zone_device_register_with_trips(String type,
       Ptr<thermal_trip> trips, int num_trips, Ptr<?> devdata, Ptr<thermal_zone_device_ops> ops,
       Ptr<thermal_zone_params> tzp, @Unsigned int passive_delay, @Unsigned int polling_delay) {
@@ -1925,7 +1926,7 @@ public final class ThermalDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_zone_get_zone_by_name((const u8*)$arg1)")
+  @BuiltinBPFFunction("thermal_zone_get_zone_by_name((const u8 *)$arg1)")
   public static Ptr<thermal_zone_device> thermal_zone_get_zone_by_name(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1951,13 +1952,13 @@ public final class ThermalDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_zone_trip_id((const struct thermal_zone_device*)$arg1, (const struct thermal_trip*)$arg2)")
+  @BuiltinBPFFunction("thermal_zone_trip_id((const struct thermal_zone_device *)$arg1, (const struct thermal_trip *)$arg2)")
   public static int thermal_zone_trip_id(Ptr<thermal_zone_device> tz, Ptr<thermal_trip> trip) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("thermal_zone_trip_update($arg1, (const struct thermal_trip_desc*)$arg2, $arg3)")
+  @BuiltinBPFFunction("thermal_zone_trip_update($arg1, (const struct thermal_trip_desc *)$arg2, $arg3)")
   public static void thermal_zone_trip_update(Ptr<thermal_zone_device> tz,
       Ptr<thermal_trip_desc> td, int trip_threshold) {
     throw new MethodIsBPFRelatedFunction();

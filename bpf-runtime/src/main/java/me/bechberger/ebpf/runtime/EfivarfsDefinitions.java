@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1127,14 +1128,14 @@ public final class EfivarfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efivarfs_d_compare((const struct dentry*)$arg1, $arg2, (const u8*)$arg3, (const struct qstr*)$arg4)")
+  @BuiltinBPFFunction("efivarfs_d_compare((const struct dentry *)$arg1, $arg2, (const u8 *)$arg3, (const struct qstr *)$arg4)")
   public static int efivarfs_d_compare(Ptr<dentry> dentry, @Unsigned int len, String str,
       Ptr<qstr> name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efivarfs_d_hash((const struct dentry*)$arg1, $arg2)")
+  @BuiltinBPFFunction("efivarfs_d_hash((const struct dentry *)$arg1, $arg2)")
   public static int efivarfs_d_hash(Ptr<dentry> dentry, Ptr<qstr> qstr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1165,7 +1166,7 @@ public final class EfivarfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efivarfs_file_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("efivarfs_file_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long efivarfs_file_write(Ptr<file> file, String userbuf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1209,7 +1210,7 @@ public final class EfivarfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efivarfs_get_inode($arg1, (const struct inode*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("efivarfs_get_inode($arg1, (const struct inode *)$arg2, $arg3, $arg4, $arg5)")
   public static Ptr<inode> efivarfs_get_inode(Ptr<super_block> sb, Ptr<inode> dir, int mode,
       @Unsigned @OriginalName("dev_t") int dev, boolean is_removable) {
     throw new MethodIsBPFRelatedFunction();

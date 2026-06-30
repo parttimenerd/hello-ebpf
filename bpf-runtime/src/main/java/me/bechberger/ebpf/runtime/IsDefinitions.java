@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__is_local_mountpoint((const struct dentry*)$arg1)")
+  @BuiltinBPFFunction("__is_local_mountpoint((const struct dentry *)$arg1)")
   public static boolean __is_local_mountpoint(Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1128,19 +1129,19 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_acpi_data_node((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("is_acpi_data_node((const struct fwnode_handle *)$arg1)")
   public static boolean is_acpi_data_node(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_acpi_device_node((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("is_acpi_device_node((const struct fwnode_handle *)$arg1)")
   public static boolean is_acpi_device_node(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_acpi_graph_node($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("is_acpi_graph_node($arg1, (const u8 *)$arg2)")
   public static boolean is_acpi_graph_node(Ptr<fwnode_handle> fwnode, String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1165,7 +1166,7 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_binary_blacklisted((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("is_binary_blacklisted((const u8 *)$arg1, $arg2)")
   public static int is_binary_blacklisted(Ptr<java.lang.Character> hash, @Unsigned long hash_len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1238,7 +1239,7 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_coretext((const struct core_text*)$arg1, $arg2)")
+  @BuiltinBPFFunction("is_coretext((const struct core_text *)$arg1, $arg2)")
   public static boolean is_coretext(Ptr<core_text> ct, Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1250,7 +1251,7 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_descending($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("is_descending($arg1, (const u8 *)$arg2)")
   public static int is_descending(Ptr<trace_array> tr, String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1298,7 +1299,7 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_free_buddy_page((const struct page*)$arg1)")
+  @BuiltinBPFFunction("is_free_buddy_page((const struct page *)$arg1)")
   public static boolean is_free_buddy_page(Ptr<page> page) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1318,7 +1319,7 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_hash_blacklisted((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("is_hash_blacklisted((const u8 *)$arg1, $arg2, $arg3)")
   public static int is_hash_blacklisted(Ptr<java.lang.Character> hash, @Unsigned long hash_len,
       blacklist_hash_type hash_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1391,14 +1392,14 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_kfunc_arg_const_mem_size((const struct btf*)$arg1, (const struct btf_param*)$arg2, (const struct bpf_reg_state*)$arg3)")
+  @BuiltinBPFFunction("is_kfunc_arg_const_mem_size((const struct btf *)$arg1, (const struct btf_param *)$arg2, (const struct bpf_reg_state *)$arg3)")
   public static boolean is_kfunc_arg_const_mem_size(Ptr<btf> btf, Ptr<btf_param> arg,
       Ptr<bpf_reg_state> reg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_kfunc_arg_scalar_with_name((const struct btf*)$arg1, (const struct btf_param*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("is_kfunc_arg_scalar_with_name((const struct btf *)$arg1, (const struct btf_param *)$arg2, (const u8 *)$arg3)")
   public static boolean is_kfunc_arg_scalar_with_name(Ptr<btf> btf, Ptr<btf_param> arg,
       String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1448,7 +1449,7 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_mmconf_reserved($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("is_mmconf_reserved($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static boolean is_mmconf_reserved(@OriginalName("check_reserved_t") Ptr<?> is_reserved,
       Ptr<pci_mmcfg_region> cfg, Ptr<device> dev, String method) {
     throw new MethodIsBPFRelatedFunction();
@@ -1497,7 +1498,7 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_nd_dax((const struct device*)$arg1)")
+  @BuiltinBPFFunction("is_nd_dax((const struct device *)$arg1)")
   public static boolean is_nd_dax(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1509,19 +1510,19 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_nd_pmem((const struct device*)$arg1)")
+  @BuiltinBPFFunction("is_nd_pmem((const struct device *)$arg1)")
   public static boolean is_nd_pmem(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_nd_volatile((const struct device*)$arg1)")
+  @BuiltinBPFFunction("is_nd_volatile((const struct device *)$arg1)")
   public static boolean is_nd_volatile(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_nvdimm((const struct device*)$arg1)")
+  @BuiltinBPFFunction("is_nvdimm((const struct device *)$arg1)")
   public static boolean is_nvdimm(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1545,7 +1546,7 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_path_reachable($arg1, $arg2, (const struct path*)$arg3)")
+  @BuiltinBPFFunction("is_path_reachable($arg1, $arg2, (const struct path *)$arg3)")
   public static boolean is_path_reachable(Ptr<mount> mnt, Ptr<dentry> dentry, Ptr<path> root) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1605,7 +1606,7 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_rb((const struct detailed_timing*)$arg1, $arg2)")
+  @BuiltinBPFFunction("is_rb((const struct detailed_timing *)$arg1, $arg2)")
   public static void is_rb(Ptr<detailed_timing> descriptor, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1649,13 +1650,13 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_skb_forwardable((const struct net_device*)$arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("is_skb_forwardable((const struct net_device *)$arg1, (const struct sk_buff *)$arg2)")
   public static boolean is_skb_forwardable(Ptr<net_device> dev, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_software_node((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("is_software_node((const struct fwnode_handle *)$arg1)")
   public static boolean is_software_node(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1717,7 +1718,7 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_usb_device_driver((const struct device_driver*)$arg1)")
+  @BuiltinBPFFunction("is_usb_device_driver((const struct device_driver *)$arg1)")
   public static boolean is_usb_device_driver(Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1786,13 +1787,13 @@ public final class IsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_vmalloc_addr((const void*)$arg1)")
+  @BuiltinBPFFunction("is_vmalloc_addr((const void *)$arg1)")
   public static boolean is_vmalloc_addr(Ptr<?> x) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("is_vmalloc_or_module_addr((const void*)$arg1)")
+  @BuiltinBPFFunction("is_vmalloc_or_module_addr((const void *)$arg1)")
   public static int is_vmalloc_or_module_addr(Ptr<?> x) {
     throw new MethodIsBPFRelatedFunction();
   }

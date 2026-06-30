@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class EprobeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eprobe_dyn_event_create((const u8*)$arg1)")
+  @BuiltinBPFFunction("eprobe_dyn_event_create((const u8 *)$arg1)")
   public static int eprobe_dyn_event_create(String raw_command) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1108,7 +1109,7 @@ public final class EprobeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eprobe_dyn_event_match((const u8*)$arg1, (const u8*)$arg2, $arg3, (const u8**)$arg4, $arg5)")
+  @BuiltinBPFFunction("eprobe_dyn_event_match((const u8 *)$arg1, (const u8 *)$arg2, $arg3, (const u8**)$arg4, $arg5)")
   public static boolean eprobe_dyn_event_match(String system, String event, int argc,
       Ptr<String> argv, Ptr<dyn_event> ev) {
     throw new MethodIsBPFRelatedFunction();

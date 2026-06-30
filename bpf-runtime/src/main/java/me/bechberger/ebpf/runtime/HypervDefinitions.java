@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1122,13 +1123,13 @@ public final class HypervDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hyperv_flush_tlb_multi((const struct cpumask*)$arg1, (const struct flush_tlb_info*)$arg2)")
+  @BuiltinBPFFunction("hyperv_flush_tlb_multi((const struct cpumask *)$arg1, (const struct flush_tlb_info *)$arg2)")
   public static void hyperv_flush_tlb_multi(Ptr<cpumask> cpus, Ptr<flush_tlb_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hyperv_flush_tlb_others_ex((const struct cpumask*)$arg1, (const struct flush_tlb_info*)$arg2)")
+  @BuiltinBPFFunction("hyperv_flush_tlb_others_ex((const struct cpumask *)$arg1, (const struct flush_tlb_info *)$arg2)")
   public static @Unsigned long hyperv_flush_tlb_others_ex(Ptr<cpumask> cpus,
       Ptr<flush_tlb_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1141,7 +1142,7 @@ public final class HypervDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hyperv_ir_set_affinity($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hyperv_ir_set_affinity($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int hyperv_ir_set_affinity(Ptr<irq_data> data, Ptr<cpumask> mask, boolean force) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1186,7 +1187,7 @@ public final class HypervDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hyperv_root_ir_set_affinity($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hyperv_root_ir_set_affinity($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int hyperv_root_ir_set_affinity(Ptr<irq_data> data, Ptr<cpumask> mask,
       boolean force) {
     throw new MethodIsBPFRelatedFunction();

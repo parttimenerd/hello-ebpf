@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,7 +1109,7 @@ public final class PtpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ptp_classify_raw((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("ptp_classify_raw((const struct sk_buff *)$arg1)")
   public static @Unsigned int ptp_classify_raw(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1156,7 +1157,7 @@ public final class PtpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ptp_clock_settime($arg1, (const struct timespec64*)$arg2)")
+  @BuiltinBPFFunction("ptp_clock_settime($arg1, (const struct timespec64 *)$arg2)")
   public static int ptp_clock_settime(Ptr<posix_clock> pc, Ptr<timespec64> tp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1168,7 +1169,7 @@ public final class PtpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ptp_convert_timestamp((const long long int*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ptp_convert_timestamp((const long long int *)$arg1, $arg2)")
   public static @OriginalName("ktime_t") long ptp_convert_timestamp(
       Ptr<java.lang. @OriginalName("ktime_t") Long> hwtstamp, int vclock_index) {
     throw new MethodIsBPFRelatedFunction();
@@ -1278,7 +1279,7 @@ public final class PtpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ptp_pin_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ptp_pin_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long ptp_pin_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1374,7 +1375,7 @@ public final class PtpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ptp_vclock_settime($arg1, (const struct timespec64*)$arg2)")
+  @BuiltinBPFFunction("ptp_vclock_settime($arg1, (const struct timespec64 *)$arg2)")
   public static int ptp_vclock_settime(Ptr<ptp_clock_info> ptp, Ptr<timespec64> ts) {
     throw new MethodIsBPFRelatedFunction();
   }

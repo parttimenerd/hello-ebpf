@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,13 +1104,13 @@ public final class PidDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pid_delete_dentry((const struct dentry*)$arg1)")
+  @BuiltinBPFFunction("pid_delete_dentry((const struct dentry *)$arg1)")
   public static int pid_delete_dentry(Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pid_entry_nlink((const struct pid_entry*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pid_entry_nlink((const struct pid_entry *)$arg1, $arg2)")
   public static @Unsigned int pid_entry_nlink(Ptr<pid_entry> entries, @Unsigned int n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1121,7 +1122,7 @@ public final class PidDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pid_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("pid_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int pid_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1146,7 +1147,7 @@ public final class PidDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pid_mfd_noexec_dointvec_minmax((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("pid_mfd_noexec_dointvec_minmax((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int pid_mfd_noexec_dointvec_minmax(Ptr<ctl_table> table, int write, Ptr<?> buf,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1171,7 +1172,7 @@ public final class PidDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pid_ns_ctl_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("pid_ns_ctl_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int pid_ns_ctl_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1184,7 +1185,7 @@ public final class PidDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pid_revalidate($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pid_revalidate($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int pid_revalidate(Ptr<inode> dir, Ptr<qstr> name, Ptr<dentry> dentry,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1203,7 +1204,7 @@ public final class PidDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pid_table_root_permissions($arg1, (const struct ctl_table*)$arg2)")
+  @BuiltinBPFFunction("pid_table_root_permissions($arg1, (const struct ctl_table *)$arg2)")
   public static int pid_table_root_permissions(Ptr<ctl_table_header> head, Ptr<ctl_table> table) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1129,7 +1130,7 @@ public final class ProcessDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("process_adjtimex_modes($arg1, (const struct __kernel_timex*)$arg2, $arg3)")
+  @BuiltinBPFFunction("process_adjtimex_modes($arg1, (const struct __kernel_timex *)$arg2, $arg3)")
   public static void process_adjtimex_modes(Ptr<ntp_data> ntpdata, Ptr<__kernel_timex> txc,
       Ptr<java.lang.Integer> time_tai) {
     throw new MethodIsBPFRelatedFunction();
@@ -1157,7 +1158,7 @@ public final class ProcessDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("process_buffer_measurement($arg1, $arg2, (const void*)$arg3, $arg4, (const u8*)$arg5, $arg6, $arg7, (const u8*)$arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("process_buffer_measurement($arg1, $arg2, (const void *)$arg3, $arg4, (const u8 *)$arg5, $arg6, $arg7, (const u8 *)$arg8, $arg9, $arg10, $arg11)")
   public static int process_buffer_measurement(Ptr<mnt_idmap> idmap, Ptr<inode> inode, Ptr<?> buf,
       int size, String eventname, ima_hooks func, int pcr, String func_data, boolean buf_hash,
       Ptr<java.lang.Character> digest, @Unsigned long digest_len) {
@@ -1187,7 +1188,7 @@ public final class ProcessDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("process_cpu_nsleep((const int)$arg1, $arg2, (const struct timespec64*)$arg3)")
+  @BuiltinBPFFunction("process_cpu_nsleep((const int)$arg1, $arg2, (const struct timespec64 *)$arg3)")
   public static int process_cpu_nsleep(@OriginalName("clockid_t") int which_clock, int flags,
       Ptr<timespec64> rqtp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1286,7 +1287,7 @@ public final class ProcessDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("process_kf_arg_ptr_to_btf_id($arg1, $arg2, (const struct btf_type*)$arg3, (const u8*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("process_kf_arg_ptr_to_btf_id($arg1, $arg2, (const struct btf_type *)$arg3, (const u8 *)$arg4, $arg5, $arg6, $arg7)")
   public static int process_kf_arg_ptr_to_btf_id(Ptr<bpf_verifier_env> env, Ptr<bpf_reg_state> reg,
       Ptr<btf_type> ref_t, String ref_tname, @Unsigned int ref_id,
       Ptr<bpf_kfunc_call_arg_meta> meta, int argno) {
@@ -1294,7 +1295,7 @@ public final class ProcessDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("process_measurement($arg1, (const struct cred*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("process_measurement($arg1, (const struct cred *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int process_measurement(Ptr<file> file, Ptr<cred> cred, Ptr<lsm_prop> prop,
       String buf, @OriginalName("loff_t") long size, int mask, ima_hooks func) {
     throw new MethodIsBPFRelatedFunction();
@@ -1320,20 +1321,20 @@ public final class ProcessDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("process_output_block($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("process_output_block($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long process_output_block(Ptr<tty_struct> tty,
       Ptr<java.lang.Character> buf, @Unsigned int nr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("process_pointer((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("process_pointer((const u8 *)$arg1, $arg2, $arg3)")
   public static boolean process_pointer(String fmt, int len, Ptr<trace_event_call> call) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("process_preds($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("process_preds($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int process_preds(Ptr<trace_event_call> call, String filter_string,
       Ptr<event_filter> filter, Ptr<filter_parse_error> pe) {
     throw new MethodIsBPFRelatedFunction();
@@ -1377,7 +1378,7 @@ public final class ProcessDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("process_sysctl_arg($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("process_sysctl_arg($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int process_sysctl_arg(String param, String val, String unused, Ptr<?> arg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1396,7 +1397,7 @@ public final class ProcessDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("process_vm_rw($arg1, (const struct iovec*)$arg2, $arg3, (const struct iovec*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("process_vm_rw($arg1, (const struct iovec *)$arg2, $arg3, (const struct iovec *)$arg4, $arg5, $arg6, $arg7)")
   public static @OriginalName("ssize_t") long process_vm_rw(@OriginalName("pid_t") int pid,
       Ptr<iovec> lvec, @Unsigned long liovcnt, Ptr<iovec> rvec, @Unsigned long riovcnt,
       @Unsigned long flags, int vm_write) {

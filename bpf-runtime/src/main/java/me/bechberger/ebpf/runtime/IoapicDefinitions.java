@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1157,7 +1158,7 @@ public final class IoapicDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ioapic_set_affinity($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ioapic_set_affinity($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int ioapic_set_affinity(Ptr<irq_data> irq_data, Ptr<cpumask> mask, boolean force) {
     throw new MethodIsBPFRelatedFunction();
   }

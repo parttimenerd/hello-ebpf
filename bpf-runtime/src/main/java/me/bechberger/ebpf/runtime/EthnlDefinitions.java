@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_act_cable_test_tdr_cfg((const struct nlattr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ethnl_act_cable_test_tdr_cfg((const struct nlattr *)$arg1, $arg2, $arg3)")
   public static int ethnl_act_cable_test_tdr_cfg(Ptr<nlattr> nest, Ptr<genl_info> info,
       Ptr<phy_tdr_config> cfg) {
     throw new MethodIsBPFRelatedFunction();
@@ -1141,7 +1142,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_bitset32_size((const unsigned int*)$arg1, (const unsigned int*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ethnl_bitset32_size((const unsigned int *)$arg1, (const unsigned int *)$arg2, $arg3, $arg4, $arg5)")
   public static int ethnl_bitset32_size(Ptr<java.lang. @Unsigned Integer> val,
       Ptr<java.lang. @Unsigned Integer> mask, @Unsigned int nbits,
       @OriginalName("ethnl_string_array_t") Ptr<char @Size(32) []> names, boolean compact) {
@@ -1149,14 +1150,14 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_bitset_is_compact((const struct nlattr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ethnl_bitset_is_compact((const struct nlattr *)$arg1, $arg2)")
   public static int ethnl_bitset_is_compact(Ptr<nlattr> bitset,
       Ptr<java.lang. @OriginalName("bool") Boolean> compact) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_bitset_size((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ethnl_bitset_size((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3, $arg4, $arg5)")
   public static int ethnl_bitset_size(Ptr<java.lang. @Unsigned Long> val,
       Ptr<java.lang. @Unsigned Long> mask, @Unsigned int nbits,
       @OriginalName("ethnl_string_array_t") Ptr<char @Size(32) []> names, boolean compact) {
@@ -1221,7 +1222,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_compact_sanity_checks($arg1, (const struct nlattr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ethnl_compact_sanity_checks($arg1, (const struct nlattr *)$arg2, $arg3, $arg4)")
   public static int ethnl_compact_sanity_checks(@Unsigned int nbits, Ptr<nlattr> nest,
       Ptr<Ptr<nlattr>> tb, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1240,7 +1241,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_default_dump_one($arg1, $arg2, (const struct ethnl_dump_ctx*)$arg3, (const struct genl_info*)$arg4)")
+  @BuiltinBPFFunction("ethnl_default_dump_one($arg1, $arg2, (const struct ethnl_dump_ctx *)$arg3, (const struct genl_info *)$arg4)")
   public static int ethnl_default_dump_one(Ptr<sk_buff> skb, Ptr<net_device> dev,
       Ptr<ethnl_dump_ctx> ctx, Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1253,14 +1254,14 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_default_notify($arg1, $arg2, (const struct ethnl_req_info*)$arg3)")
+  @BuiltinBPFFunction("ethnl_default_notify($arg1, $arg2, (const struct ethnl_req_info *)$arg3)")
   public static void ethnl_default_notify(Ptr<net_device> dev, @Unsigned int cmd,
       Ptr<ethnl_req_info> orig_req_info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_default_parse($arg1, (const struct genl_info*)$arg2, (const struct ethnl_request_ops*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ethnl_default_parse($arg1, (const struct genl_info *)$arg2, (const struct ethnl_request_ops *)$arg3, $arg4)")
   public static int ethnl_default_parse(Ptr<ethnl_req_info> req_info, Ptr<genl_info> info,
       Ptr<ethnl_request_ops> request_ops, boolean require_dev) {
     throw new MethodIsBPFRelatedFunction();
@@ -1367,7 +1368,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_notify($arg1, $arg2, (const struct ethnl_req_info*)$arg3)")
+  @BuiltinBPFFunction("ethnl_notify($arg1, $arg2, (const struct ethnl_req_info *)$arg3)")
   public static void ethnl_notify(Ptr<net_device> dev, @Unsigned int cmd,
       Ptr<ethnl_req_info> req_info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1386,7 +1387,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_parse_bit($arg1, $arg2, $arg3, (const struct nlattr*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ethnl_parse_bit($arg1, $arg2, $arg3, (const struct nlattr *)$arg4, $arg5, $arg6, $arg7)")
   public static int ethnl_parse_bit(Ptr<java.lang. @Unsigned Integer> index,
       Ptr<java.lang. @OriginalName("bool") Boolean> val, @Unsigned int nbits, Ptr<nlattr> bit_attr,
       boolean no_mask, @OriginalName("ethnl_string_array_t") Ptr<char @Size(32) []> names,
@@ -1395,7 +1396,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_parse_bitset($arg1, $arg2, $arg3, (const struct nlattr*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ethnl_parse_bitset($arg1, $arg2, $arg3, (const struct nlattr *)$arg4, $arg5, $arg6)")
   public static int ethnl_parse_bitset(Ptr<java.lang. @Unsigned Long> val,
       Ptr<java.lang. @Unsigned Long> mask, @Unsigned int nbits, Ptr<nlattr> attr,
       @OriginalName("ethnl_string_array_t") Ptr<char @Size(32) []> names,
@@ -1404,7 +1405,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_parse_header_dev_get($arg1, (const struct nlattr*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ethnl_parse_header_dev_get($arg1, (const struct nlattr *)$arg2, $arg3, $arg4, $arg5)")
   public static int ethnl_parse_header_dev_get(Ptr<ethnl_req_info> req_info, Ptr<nlattr> header,
       Ptr<net> net, Ptr<netlink_ext_ack> extack, boolean require_dev) {
     throw new MethodIsBPFRelatedFunction();
@@ -1417,7 +1418,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_perphy_dump_one_dev($arg1, $arg2, (const struct genl_info*)$arg3)")
+  @BuiltinBPFFunction("ethnl_perphy_dump_one_dev($arg1, $arg2, (const struct genl_info *)$arg3)")
   public static int ethnl_perphy_dump_one_dev(Ptr<sk_buff> skb, Ptr<ethnl_perphy_dump_ctx> ctx,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1442,7 +1443,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_put_bitset($arg1, $arg2, (const long unsigned int*)$arg3, (const long unsigned int*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ethnl_put_bitset($arg1, $arg2, (const long unsigned int *)$arg3, (const long unsigned int *)$arg4, $arg5, $arg6, $arg7)")
   public static int ethnl_put_bitset(Ptr<sk_buff> skb, int attrtype,
       Ptr<java.lang. @Unsigned Long> val, Ptr<java.lang. @Unsigned Long> mask, @Unsigned int nbits,
       @OriginalName("ethnl_string_array_t") Ptr<char @Size(32) []> names, boolean compact) {
@@ -1450,7 +1451,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_put_bitset32($arg1, $arg2, (const unsigned int*)$arg3, (const unsigned int*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ethnl_put_bitset32($arg1, $arg2, (const unsigned int *)$arg3, (const unsigned int *)$arg4, $arg5, $arg6, $arg7)")
   public static int ethnl_put_bitset32(Ptr<sk_buff> skb, int attrtype,
       Ptr<java.lang. @Unsigned Integer> val, Ptr<java.lang. @Unsigned Integer> mask,
       @Unsigned int nbits, @OriginalName("ethnl_string_array_t") Ptr<char @Size(32) []> names,
@@ -1466,7 +1467,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_req_get_phydev((const struct ethnl_req_info*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ethnl_req_get_phydev((const struct ethnl_req_info *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<phy_device> ethnl_req_get_phydev(Ptr<ethnl_req_info> req_info,
       Ptr<Ptr<nlattr>> tb, @Unsigned int header, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1768,7 +1769,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_tunnel_info_fill_reply((const struct ethnl_req_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ethnl_tunnel_info_fill_reply((const struct ethnl_req_info *)$arg1, $arg2)")
   public static int ethnl_tunnel_info_fill_reply(Ptr<ethnl_req_info> req_base, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1787,7 +1788,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_update_bitset($arg1, $arg2, (const struct nlattr*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ethnl_update_bitset($arg1, $arg2, (const struct nlattr *)$arg3, $arg4, $arg5, $arg6)")
   public static int ethnl_update_bitset(Ptr<java.lang. @Unsigned Long> bitmap, @Unsigned int nbits,
       Ptr<nlattr> attr, @OriginalName("ethnl_string_array_t") Ptr<char @Size(32) []> names,
       Ptr<netlink_ext_ack> extack, Ptr<java.lang. @OriginalName("bool") Boolean> mod) {
@@ -1795,7 +1796,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_update_bitset32($arg1, $arg2, (const struct nlattr*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ethnl_update_bitset32($arg1, $arg2, (const struct nlattr *)$arg3, $arg4, $arg5, $arg6)")
   public static int ethnl_update_bitset32(Ptr<java.lang. @Unsigned Integer> bitmap,
       @Unsigned int nbits, Ptr<nlattr> attr,
       @OriginalName("ethnl_string_array_t") Ptr<char @Size(32) []> names,
@@ -1804,7 +1805,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_update_linkmodes($arg1, $arg2, $arg3, $arg4, (const struct net_device*)$arg5)")
+  @BuiltinBPFFunction("ethnl_update_linkmodes($arg1, $arg2, $arg3, $arg4, (const struct net_device *)$arg5)")
   public static int ethnl_update_linkmodes(Ptr<genl_info> info, Ptr<Ptr<nlattr>> tb,
       Ptr<ethtool_link_ksettings> ksettings, Ptr<java.lang. @OriginalName("bool") Boolean> mod,
       Ptr<net_device> dev) {
@@ -1812,7 +1813,7 @@ public final class EthnlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ethnl_update_profile($arg1, $arg2, (const struct nlattr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ethnl_update_profile($arg1, $arg2, (const struct nlattr *)$arg3, $arg4, $arg5)")
   public static int ethnl_update_profile(Ptr<net_device> dev, Ptr<Ptr<dim_cq_moder>> dst,
       Ptr<nlattr> nests, Ptr<java.lang. @OriginalName("bool") Boolean> mod,
       Ptr<netlink_ext_ack> extack) {

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1144,13 +1145,13 @@ public final class LinearDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("linear_range_get_max_value((const struct linear_range*)$arg1)")
+  @BuiltinBPFFunction("linear_range_get_max_value((const struct linear_range *)$arg1)")
   public static @Unsigned int linear_range_get_max_value(Ptr<linear_range> r) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("linear_range_get_selector_high((const struct linear_range*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("linear_range_get_selector_high((const struct linear_range *)$arg1, $arg2, $arg3, $arg4)")
   public static int linear_range_get_selector_high(Ptr<linear_range> r, @Unsigned int val,
       Ptr<java.lang. @Unsigned Integer> selector,
       Ptr<java.lang. @OriginalName("bool") Boolean> found) {
@@ -1158,7 +1159,7 @@ public final class LinearDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("linear_range_get_selector_low((const struct linear_range*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("linear_range_get_selector_low((const struct linear_range *)$arg1, $arg2, $arg3, $arg4)")
   public static int linear_range_get_selector_low(Ptr<linear_range> r, @Unsigned int val,
       Ptr<java.lang. @Unsigned Integer> selector,
       Ptr<java.lang. @OriginalName("bool") Boolean> found) {
@@ -1166,7 +1167,7 @@ public final class LinearDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("linear_range_get_selector_low_array((const struct linear_range*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("linear_range_get_selector_low_array((const struct linear_range *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int linear_range_get_selector_low_array(Ptr<linear_range> r, int ranges,
       @Unsigned int val, Ptr<java.lang. @Unsigned Integer> selector,
       Ptr<java.lang. @OriginalName("bool") Boolean> found) {
@@ -1174,34 +1175,34 @@ public final class LinearDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("linear_range_get_selector_within((const struct linear_range*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("linear_range_get_selector_within((const struct linear_range *)$arg1, $arg2, $arg3)")
   public static void linear_range_get_selector_within(Ptr<linear_range> r, @Unsigned int val,
       Ptr<java.lang. @Unsigned Integer> selector) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("linear_range_get_value((const struct linear_range*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("linear_range_get_value((const struct linear_range *)$arg1, $arg2, $arg3)")
   public static int linear_range_get_value(Ptr<linear_range> r, @Unsigned int selector,
       Ptr<java.lang. @Unsigned Integer> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("linear_range_get_value_array((const struct linear_range*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("linear_range_get_value_array((const struct linear_range *)$arg1, $arg2, $arg3, $arg4)")
   public static int linear_range_get_value_array(Ptr<linear_range> r, int ranges,
       @Unsigned int selector, Ptr<java.lang. @Unsigned Integer> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("linear_range_values_in_range((const struct linear_range*)$arg1)")
+  @BuiltinBPFFunction("linear_range_values_in_range((const struct linear_range *)$arg1)")
   public static @Unsigned int linear_range_values_in_range(Ptr<linear_range> r) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("linear_range_values_in_range_array((const struct linear_range*)$arg1, $arg2)")
+  @BuiltinBPFFunction("linear_range_values_in_range_array((const struct linear_range *)$arg1, $arg2)")
   public static @Unsigned int linear_range_values_in_range_array(Ptr<linear_range> r, int ranges) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class ReportDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("report_access((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("report_access((const u8 *)$arg1, $arg2, $arg3)")
   public static void report_access(String access, Ptr<task_struct> target, Ptr<task_struct> agent) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1159,7 +1160,7 @@ public final class ReportDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("report_probe($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("report_probe($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static void report_probe(Ptr<seq_file> pi, Ptr<kprobe> p, String sym, int offset,
       String modname, Ptr<kprobe> pp) {
     throw new MethodIsBPFRelatedFunction();

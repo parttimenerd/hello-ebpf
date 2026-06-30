@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CoreDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("core_cpus_list_read($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("core_cpus_list_read($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long core_cpus_list_read(Ptr<file> file, Ptr<kobject> kobj,
       Ptr<bin_attribute> attr, String buf, @OriginalName("loff_t") long off, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("core_cpus_read($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("core_cpus_read($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long core_cpus_read(Ptr<file> file, Ptr<kobject> kobj,
       Ptr<bin_attribute> attr, String buf, @OriginalName("loff_t") long off, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1190,7 +1191,7 @@ public final class CoreDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("core_siblings_list_read($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("core_siblings_list_read($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long core_siblings_list_read(Ptr<file> file,
       Ptr<kobject> kobj, Ptr<bin_attribute> attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -1198,7 +1199,7 @@ public final class CoreDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("core_siblings_read($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("core_siblings_read($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long core_siblings_read(Ptr<file> file, Ptr<kobject> kobj,
       Ptr<bin_attribute> attr, String buf, @OriginalName("loff_t") long off, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1283,7 +1284,7 @@ public final class DquotDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dquot_quota_on($arg1, $arg2, $arg3, (const struct path*)$arg4)")
+  @BuiltinBPFFunction("dquot_quota_on($arg1, $arg2, $arg3, (const struct path *)$arg4)")
   public static int dquot_quota_on(Ptr<super_block> sb, int type, int format_id, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }

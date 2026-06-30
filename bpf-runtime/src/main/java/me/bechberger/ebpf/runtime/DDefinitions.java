@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,13 +1097,13 @@ public final class DDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__d_add($arg1, $arg2, (const struct dentry_operations*)$arg3)")
+  @BuiltinBPFFunction("__d_add($arg1, $arg2, (const struct dentry_operations *)$arg3)")
   public static void __d_add(Ptr<dentry> dentry, Ptr<inode> inode, Ptr<dentry_operations> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__d_alloc($arg1, (const struct qstr*)$arg2)")
+  @BuiltinBPFFunction("__d_alloc($arg1, (const struct qstr *)$arg2)")
   public static Ptr<dentry> __d_alloc(Ptr<super_block> sb, Ptr<qstr> name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1132,20 +1133,20 @@ public final class DDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__d_lookup((const struct dentry*)$arg1, (const struct qstr*)$arg2)")
+  @BuiltinBPFFunction("__d_lookup((const struct dentry *)$arg1, (const struct qstr *)$arg2)")
   public static Ptr<dentry> __d_lookup(Ptr<dentry> parent, Ptr<qstr> name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__d_lookup_rcu((const struct dentry*)$arg1, (const struct qstr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__d_lookup_rcu((const struct dentry *)$arg1, (const struct qstr *)$arg2, $arg3)")
   public static Ptr<dentry> __d_lookup_rcu(Ptr<dentry> parent, Ptr<qstr> name,
       Ptr<java.lang. @Unsigned Integer> seqp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__d_lookup_rcu_op_compare((const struct dentry*)$arg1, (const struct qstr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__d_lookup_rcu_op_compare((const struct dentry *)$arg1, (const struct qstr *)$arg2, $arg3)")
   public static Ptr<dentry> __d_lookup_rcu_op_compare(Ptr<dentry> parent, Ptr<qstr> name,
       Ptr<java.lang. @Unsigned Integer> seqp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1177,7 +1178,7 @@ public final class DDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__d_path((const struct path*)$arg1, (const struct path*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__d_path((const struct path *)$arg1, (const struct path *)$arg2, $arg3, $arg4)")
   public static String __d_path(Ptr<path> path, Ptr<path> root, String buf, int buflen) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1189,7 +1190,7 @@ public final class DDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("d_absolute_path((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("d_absolute_path((const struct path *)$arg1, $arg2, $arg3)")
   public static String d_absolute_path(Ptr<path> path, String buf, int buflen) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1207,7 +1208,7 @@ public final class DDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("d_alloc($arg1, (const struct qstr*)$arg2)")
+  @BuiltinBPFFunction("d_alloc($arg1, (const struct qstr *)$arg2)")
   public static Ptr<dentry> d_alloc(Ptr<dentry> parent, Ptr<qstr> name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1225,20 +1226,20 @@ public final class DDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("d_alloc_name($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("d_alloc_name($arg1, (const u8 *)$arg2)")
   public static Ptr<dentry> d_alloc_name(Ptr<dentry> parent, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("d_alloc_parallel($arg1, (const struct qstr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("d_alloc_parallel($arg1, (const struct qstr *)$arg2, $arg3)")
   public static Ptr<dentry> d_alloc_parallel(Ptr<dentry> parent, Ptr<qstr> name,
       Ptr<@OriginalName("wait_queue_head_t") wait_queue_head> wq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("d_alloc_pseudo($arg1, (const struct qstr*)$arg2)")
+  @BuiltinBPFFunction("d_alloc_pseudo($arg1, (const struct qstr *)$arg2)")
   public static Ptr<dentry> d_alloc_pseudo(Ptr<super_block> sb, Ptr<qstr> name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1328,7 +1329,7 @@ public final class DDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("d_lookup((const struct dentry*)$arg1, (const struct qstr*)$arg2)")
+  @BuiltinBPFFunction("d_lookup((const struct dentry *)$arg1, (const struct qstr *)$arg2)")
   public static Ptr<dentry> d_lookup(Ptr<dentry> parent, Ptr<qstr> name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1370,7 +1371,7 @@ public final class DDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("d_namespace_path((const struct path*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("d_namespace_path((const struct path *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static int d_namespace_path(Ptr<path> path, String buf, Ptr<String> name, int flags,
       String disconnected) {
     throw new MethodIsBPFRelatedFunction();
@@ -1389,7 +1390,7 @@ public final class DDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("d_op_flags((const struct dentry_operations*)$arg1)")
+  @BuiltinBPFFunction("d_op_flags((const struct dentry_operations *)$arg1)")
   public static @Unsigned int d_op_flags(Ptr<dentry_operations> op) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1401,7 +1402,7 @@ public final class DDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("d_path((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("d_path((const struct path *)$arg1, $arg2, $arg3)")
   public static String d_path(Ptr<path> path, String buf, int buflen) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1419,7 +1420,7 @@ public final class DDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("d_same_name((const struct dentry*)$arg1, (const struct dentry*)$arg2, (const struct qstr*)$arg3)")
+  @BuiltinBPFFunction("d_same_name((const struct dentry *)$arg1, (const struct dentry *)$arg2, (const struct qstr *)$arg3)")
   public static boolean d_same_name(Ptr<dentry> dentry, Ptr<dentry> parent, Ptr<qstr> name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1437,7 +1438,7 @@ public final class DDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("d_splice_alias_ops($arg1, $arg2, (const struct dentry_operations*)$arg3)")
+  @BuiltinBPFFunction("d_splice_alias_ops($arg1, $arg2, (const struct dentry_operations *)$arg3)")
   public static Ptr<dentry> d_splice_alias_ops(Ptr<inode> inode, Ptr<dentry> dentry,
       Ptr<dentry_operations> ops) {
     throw new MethodIsBPFRelatedFunction();

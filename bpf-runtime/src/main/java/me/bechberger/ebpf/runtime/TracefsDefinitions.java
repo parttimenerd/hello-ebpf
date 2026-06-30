@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,13 +1097,13 @@ public final class TracefsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracefs_create_dir((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tracefs_create_dir((const u8 *)$arg1, $arg2)")
   public static Ptr<dentry> tracefs_create_dir(String name, Ptr<dentry> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracefs_create_file((const u8*)$arg1, $arg2, $arg3, $arg4, (const struct file_operations*)$arg5)")
+  @BuiltinBPFFunction("tracefs_create_file((const u8 *)$arg1, $arg2, $arg3, $arg4, (const struct file_operations *)$arg5)")
   public static Ptr<dentry> tracefs_create_file(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<dentry> parent, Ptr<?> data,
       Ptr<file_operations> fops) {
@@ -1110,14 +1111,14 @@ public final class TracefsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracefs_create_instance_dir((const u8*)$arg1, $arg2, (int (*)(const u8*))$arg3, (int (*)(const u8*))$arg4)")
+  @BuiltinBPFFunction("tracefs_create_instance_dir((const u8 *)$arg1, $arg2, (int (*)(const u8*))$arg3, (int (*)(const u8*))$arg4)")
   public static Ptr<dentry> tracefs_create_instance_dir(String name, Ptr<dentry> parent,
       Ptr<?> mkdir, Ptr<?> rmdir) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracefs_d_delete((const struct dentry*)$arg1)")
+  @BuiltinBPFFunction("tracefs_d_delete((const struct dentry *)$arg1)")
   public static int tracefs_d_delete(Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1129,7 +1130,7 @@ public final class TracefsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracefs_d_revalidate($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracefs_d_revalidate($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int tracefs_d_revalidate(Ptr<inode> inode, Ptr<qstr> name, Ptr<dentry> dentry,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1190,7 +1191,7 @@ public final class TracefsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracefs_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tracefs_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int tracefs_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1251,7 +1252,7 @@ public final class TracefsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracefs_start_creating((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tracefs_start_creating((const u8 *)$arg1, $arg2)")
   public static Ptr<dentry> tracefs_start_creating(String name, Ptr<dentry> parent) {
     throw new MethodIsBPFRelatedFunction();
   }

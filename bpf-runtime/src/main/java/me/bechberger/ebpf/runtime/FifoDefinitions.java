@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1152,7 +1153,7 @@ public final class FifoDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { union { struct __kfifo kfifo; struct memory_failure_entry *type; const struct memory_failure_entry*; u8 (*rectype)[0]; struct memory_failure_entry *ptr; const struct memory_failure_entry*; }; struct memory_failure_entry buf[16]; }"
+      cType = "struct { union { struct __kfifo kfifo; struct memory_failure_entry *type; const struct memory_failure_entry *const_type; u8 (*rectype)[0]; struct memory_failure_entry *ptr; const struct memory_failure_entry *ptr_const; }; struct memory_failure_entry buf[16]; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

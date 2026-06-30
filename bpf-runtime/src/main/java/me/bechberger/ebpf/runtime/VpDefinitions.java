@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1140,7 +1141,7 @@ public final class VpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vp_find_one_vq_msix($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("vp_find_one_vq_msix($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static Ptr<virtqueue> vp_find_one_vq_msix(Ptr<virtio_device> vdev, int queue_idx,
       Ptr<?> callback, String name, boolean ctx, boolean slow_path,
       Ptr<java.lang.Integer> allocated_vectors, vp_vq_vector_policy vector_policy,
@@ -1439,7 +1440,7 @@ public final class VpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vp_modern_set_extended_features($arg1, (const long long unsigned int*)$arg2)")
+  @BuiltinBPFFunction("vp_modern_set_extended_features($arg1, (const long long unsigned int *)$arg2)")
   public static void vp_modern_set_extended_features(Ptr<virtio_pci_modern_device> mdev,
       Ptr<java.lang. @Unsigned Long> features) {
     throw new MethodIsBPFRelatedFunction();
@@ -1498,7 +1499,7 @@ public final class VpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vp_set($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vp_set($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static void vp_set(Ptr<virtio_device> vdev, @Unsigned int offset, Ptr<?> buf,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1511,13 +1512,13 @@ public final class VpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vp_set_vq_affinity($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("vp_set_vq_affinity($arg1, (const struct cpumask *)$arg2)")
   public static int vp_set_vq_affinity(Ptr<virtqueue> vq, Ptr<cpumask> cpu_mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vp_setup_vq($arg1, $arg2, (void (*)(struct virtqueue*))$arg3, (const u8*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("vp_setup_vq($arg1, $arg2, (void (*)(struct virtqueue*))$arg3, (const u8 *)$arg4, $arg5, $arg6, $arg7)")
   public static Ptr<virtqueue> vp_setup_vq(Ptr<virtio_device> vdev, @Unsigned int index,
       Ptr<?> callback, String name, boolean ctx, @Unsigned short msix_vec,
       Ptr<Ptr<virtio_pci_vq_info>> p_info) {

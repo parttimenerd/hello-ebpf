@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class ElantsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("elants_i2c_do_update_firmware($arg1, (const struct firmware*)$arg2, $arg3)")
+  @BuiltinBPFFunction("elants_i2c_do_update_firmware($arg1, (const struct firmware *)$arg2, $arg3)")
   public static int elants_i2c_do_update_firmware(Ptr<i2c_client> client, Ptr<firmware> fw,
       boolean force) {
     throw new MethodIsBPFRelatedFunction();
@@ -1122,7 +1123,7 @@ public final class ElantsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("elants_i2c_execute_command($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6, (const u8*)$arg7)")
+  @BuiltinBPFFunction("elants_i2c_execute_command($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6, (const u8 *)$arg7)")
   public static int elants_i2c_execute_command(Ptr<i2c_client> client, Ptr<java.lang.Character> cmd,
       @Unsigned long cmd_size, Ptr<java.lang.Character> resp, @Unsigned long resp_size, int retries,
       String cmd_name) {
@@ -1185,7 +1186,7 @@ public final class ElantsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("elants_i2c_send($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("elants_i2c_send($arg1, (const void *)$arg2, $arg3)")
   public static int elants_i2c_send(Ptr<i2c_client> client, Ptr<?> data, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1134,14 +1135,14 @@ public final class SyscallDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)syscall_prog_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)syscall_prog_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> syscall_prog_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("syscall_prog_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("syscall_prog_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean syscall_prog_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();

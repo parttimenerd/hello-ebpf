@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DhDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__dh_safe_prime_create($arg1, $arg2, (const struct dh_safe_prime*)$arg3)")
+  @BuiltinBPFFunction("__dh_safe_prime_create($arg1, $arg2, (const struct dh_safe_prime *)$arg3)")
   public static int __dh_safe_prime_create(Ptr<crypto_template> tmpl, Ptr<Ptr<rtattr>> tb,
       Ptr<dh_safe_prime> safe_prime) {
     throw new MethodIsBPFRelatedFunction();
@@ -1194,7 +1195,7 @@ public final class DhDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dh_safe_prime_gen_privkey((const struct dh_safe_prime*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dh_safe_prime_gen_privkey((const struct dh_safe_prime *)$arg1, $arg2)")
   public static Ptr<?> dh_safe_prime_gen_privkey(Ptr<dh_safe_prime> safe_prime,
       Ptr<java.lang. @Unsigned Integer> key_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1219,20 +1220,20 @@ public final class DhDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dh_safe_prime_set_secret($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dh_safe_prime_set_secret($arg1, (const void *)$arg2, $arg3)")
   public static int dh_safe_prime_set_secret(Ptr<crypto_kpp> tfm, Ptr<?> buffer,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dh_set_secret($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dh_set_secret($arg1, (const void *)$arg2, $arg3)")
   public static int dh_set_secret(Ptr<crypto_kpp> tfm, Ptr<?> buf, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)dh_unpack_data($arg1, (const void*)$arg2, $arg3))")
+  @BuiltinBPFFunction("((const u8*)dh_unpack_data($arg1, (const void *)$arg2, $arg3))")
   public static Ptr<java.lang.Character> dh_unpack_data(Ptr<?> dst, Ptr<?> src,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();

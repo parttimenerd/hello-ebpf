@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__hmac_sha1_preparekey($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__hmac_sha1_preparekey($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void __hmac_sha1_preparekey(Ptr<sha1_block_state> istate,
       Ptr<sha1_block_state> ostate, Ptr<java.lang.Character> raw_key, @Unsigned long raw_key_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1111,13 +1112,13 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__hmac_sha256_init($arg1, (const struct __hmac_sha256_key*)$arg2)")
+  @BuiltinBPFFunction("__hmac_sha256_init($arg1, (const struct __hmac_sha256_key *)$arg2)")
   public static void __hmac_sha256_init(Ptr<__hmac_sha256_ctx> ctx, Ptr<__hmac_sha256_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__hmac_sha256_preparekey($arg1, $arg2, (const u8*)$arg3, $arg4, (const struct sha256_block_state*)$arg5)")
+  @BuiltinBPFFunction("__hmac_sha256_preparekey($arg1, $arg2, (const u8 *)$arg3, $arg4, (const struct sha256_block_state *)$arg5)")
   public static void __hmac_sha256_preparekey(Ptr<sha256_block_state> istate,
       Ptr<sha256_block_state> ostate, Ptr<java.lang.Character> raw_key, @Unsigned long raw_key_len,
       Ptr<sha256_block_state> iv) {
@@ -1132,13 +1133,13 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__hmac_sha512_init($arg1, (const struct __hmac_sha512_key*)$arg2)")
+  @BuiltinBPFFunction("__hmac_sha512_init($arg1, (const struct __hmac_sha512_key *)$arg2)")
   public static void __hmac_sha512_init(Ptr<__hmac_sha512_ctx> ctx, Ptr<__hmac_sha512_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__hmac_sha512_preparekey($arg1, $arg2, (const u8*)$arg3, $arg4, (const struct sha512_block_state*)$arg5)")
+  @BuiltinBPFFunction("__hmac_sha512_preparekey($arg1, $arg2, (const u8 *)$arg3, $arg4, (const struct sha512_block_state *)$arg5)")
   public static void __hmac_sha512_preparekey(Ptr<sha512_block_state> istate,
       Ptr<sha512_block_state> ostate, Ptr<java.lang.Character> raw_key, @Unsigned long raw_key_len,
       Ptr<sha512_block_state> iv) {
@@ -1226,7 +1227,7 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_finup($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("hmac_finup($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int hmac_finup(Ptr<shash_desc> pdesc, Ptr<java.lang.Character> data,
       @Unsigned int nbytes, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -1251,25 +1252,25 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("hmac_import($arg1, (const void *)$arg2)")
   public static int hmac_import(Ptr<shash_desc> pdesc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_import_ahash($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("hmac_import_ahash($arg1, (const void *)$arg2)")
   public static int hmac_import_ahash(Ptr<ahash_request> preq, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("hmac_import_core($arg1, (const void *)$arg2)")
   public static int hmac_import_core(Ptr<shash_desc> pdesc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_import_core_ahash($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("hmac_import_core_ahash($arg1, (const void *)$arg2)")
   public static int hmac_import_core_ahash(Ptr<ahash_request> preq, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1311,21 +1312,21 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hmac_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int hmac_setkey(Ptr<crypto_shash> parent, Ptr<java.lang.Character> inkey,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_setkey_ahash($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hmac_setkey_ahash($arg1, (const u8 *)$arg2, $arg3)")
   public static int hmac_setkey_ahash(Ptr<crypto_ahash> parent, Ptr<java.lang.Character> inkey,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha1((const struct hmac_sha1_key*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("hmac_sha1((const struct hmac_sha1_key *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void hmac_sha1(Ptr<hmac_sha1_key> key, Ptr<java.lang.Character> data,
       @Unsigned long data_len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -1338,27 +1339,27 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha1_init($arg1, (const struct hmac_sha1_key*)$arg2)")
+  @BuiltinBPFFunction("hmac_sha1_init($arg1, (const struct hmac_sha1_key *)$arg2)")
   public static void hmac_sha1_init(Ptr<hmac_sha1_ctx> ctx, Ptr<hmac_sha1_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha1_init_usingrawkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hmac_sha1_init_usingrawkey($arg1, (const u8 *)$arg2, $arg3)")
   public static void hmac_sha1_init_usingrawkey(Ptr<hmac_sha1_ctx> ctx,
       Ptr<java.lang.Character> raw_key, @Unsigned long raw_key_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha1_preparekey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hmac_sha1_preparekey($arg1, (const u8 *)$arg2, $arg3)")
   public static void hmac_sha1_preparekey(Ptr<hmac_sha1_key> key, Ptr<java.lang.Character> raw_key,
       @Unsigned long raw_key_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha1_usingrawkey((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("hmac_sha1_usingrawkey((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void hmac_sha1_usingrawkey(Ptr<java.lang.Character> raw_key,
       @Unsigned long raw_key_len, Ptr<java.lang.Character> data, @Unsigned long data_len,
       Ptr<java.lang.Character> out) {
@@ -1366,7 +1367,7 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha224((const struct hmac_sha224_key*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("hmac_sha224((const struct hmac_sha224_key *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void hmac_sha224(Ptr<hmac_sha224_key> key, Ptr<java.lang.Character> data,
       @Unsigned long data_len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -1379,21 +1380,21 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha224_init_usingrawkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hmac_sha224_init_usingrawkey($arg1, (const u8 *)$arg2, $arg3)")
   public static void hmac_sha224_init_usingrawkey(Ptr<hmac_sha224_ctx> ctx,
       Ptr<java.lang.Character> raw_key, @Unsigned long raw_key_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha224_preparekey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hmac_sha224_preparekey($arg1, (const u8 *)$arg2, $arg3)")
   public static void hmac_sha224_preparekey(Ptr<hmac_sha224_key> key,
       Ptr<java.lang.Character> raw_key, @Unsigned long raw_key_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha224_usingrawkey((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("hmac_sha224_usingrawkey((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void hmac_sha224_usingrawkey(Ptr<java.lang.Character> raw_key,
       @Unsigned long raw_key_len, Ptr<java.lang.Character> data, @Unsigned long data_len,
       Ptr<java.lang.Character> out) {
@@ -1401,7 +1402,7 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha256((const struct hmac_sha256_key*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("hmac_sha256((const struct hmac_sha256_key *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void hmac_sha256(Ptr<hmac_sha256_key> key, Ptr<java.lang.Character> data,
       @Unsigned long data_len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -1414,21 +1415,21 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha256_init_usingrawkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hmac_sha256_init_usingrawkey($arg1, (const u8 *)$arg2, $arg3)")
   public static void hmac_sha256_init_usingrawkey(Ptr<hmac_sha256_ctx> ctx,
       Ptr<java.lang.Character> raw_key, @Unsigned long raw_key_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha256_preparekey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hmac_sha256_preparekey($arg1, (const u8 *)$arg2, $arg3)")
   public static void hmac_sha256_preparekey(Ptr<hmac_sha256_key> key,
       Ptr<java.lang.Character> raw_key, @Unsigned long raw_key_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha256_usingrawkey((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("hmac_sha256_usingrawkey((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void hmac_sha256_usingrawkey(Ptr<java.lang.Character> raw_key,
       @Unsigned long raw_key_len, Ptr<java.lang.Character> data, @Unsigned long data_len,
       Ptr<java.lang.Character> out) {
@@ -1436,7 +1437,7 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha384((const struct hmac_sha384_key*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("hmac_sha384((const struct hmac_sha384_key *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void hmac_sha384(Ptr<hmac_sha384_key> key, Ptr<java.lang.Character> data,
       @Unsigned long data_len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -1449,21 +1450,21 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha384_init_usingrawkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hmac_sha384_init_usingrawkey($arg1, (const u8 *)$arg2, $arg3)")
   public static void hmac_sha384_init_usingrawkey(Ptr<hmac_sha384_ctx> ctx,
       Ptr<java.lang.Character> raw_key, @Unsigned long raw_key_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha384_preparekey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hmac_sha384_preparekey($arg1, (const u8 *)$arg2, $arg3)")
   public static void hmac_sha384_preparekey(Ptr<hmac_sha384_key> key,
       Ptr<java.lang.Character> raw_key, @Unsigned long raw_key_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha384_usingrawkey((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("hmac_sha384_usingrawkey((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void hmac_sha384_usingrawkey(Ptr<java.lang.Character> raw_key,
       @Unsigned long raw_key_len, Ptr<java.lang.Character> data, @Unsigned long data_len,
       Ptr<java.lang.Character> out) {
@@ -1471,7 +1472,7 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha512((const struct hmac_sha512_key*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("hmac_sha512((const struct hmac_sha512_key *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void hmac_sha512(Ptr<hmac_sha512_key> key, Ptr<java.lang.Character> data,
       @Unsigned long data_len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -1484,21 +1485,21 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha512_init_usingrawkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hmac_sha512_init_usingrawkey($arg1, (const u8 *)$arg2, $arg3)")
   public static void hmac_sha512_init_usingrawkey(Ptr<hmac_sha512_ctx> ctx,
       Ptr<java.lang.Character> raw_key, @Unsigned long raw_key_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha512_preparekey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hmac_sha512_preparekey($arg1, (const u8 *)$arg2, $arg3)")
   public static void hmac_sha512_preparekey(Ptr<hmac_sha512_key> key,
       Ptr<java.lang.Character> raw_key, @Unsigned long raw_key_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_sha512_usingrawkey((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("hmac_sha512_usingrawkey((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void hmac_sha512_usingrawkey(Ptr<java.lang.Character> raw_key,
       @Unsigned long raw_key_len, Ptr<java.lang.Character> data, @Unsigned long data_len,
       Ptr<java.lang.Character> out) {
@@ -1506,7 +1507,7 @@ public final class HmacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmac_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hmac_update($arg1, (const u8 *)$arg2, $arg3)")
   public static int hmac_update(Ptr<shash_desc> pdesc, Ptr<java.lang.Character> data,
       @Unsigned int nbytes) {
     throw new MethodIsBPFRelatedFunction();

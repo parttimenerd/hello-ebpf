@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1336,7 +1337,7 @@ public final class SysDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sys_copyarea($arg1, (const struct fb_copyarea*)$arg2)")
+  @BuiltinBPFFunction("sys_copyarea($arg1, (const struct fb_copyarea *)$arg2)")
   public static void sys_copyarea(Ptr<fb_info> p, Ptr<fb_copyarea> area) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1356,13 +1357,13 @@ public final class SysDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sys_fillrect($arg1, (const struct fb_fillrect*)$arg2)")
+  @BuiltinBPFFunction("sys_fillrect($arg1, (const struct fb_fillrect *)$arg2)")
   public static void sys_fillrect(Ptr<fb_info> p, Ptr<fb_fillrect> rect) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sys_imageblit($arg1, (const struct fb_image*)$arg2)")
+  @BuiltinBPFFunction("sys_imageblit($arg1, (const struct fb_image *)$arg2)")
   public static void sys_imageblit(Ptr<fb_info> p, Ptr<fb_image> image) {
     throw new MethodIsBPFRelatedFunction();
   }

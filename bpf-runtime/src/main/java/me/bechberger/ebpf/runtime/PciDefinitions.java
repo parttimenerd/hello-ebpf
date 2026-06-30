@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,14 +1097,14 @@ public final class PciDefinitions {
   public static final @Unsigned int pci_channel_io_perm_failure = 3;
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__pci_bridge_assign_resources((const struct pci_dev*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__pci_bridge_assign_resources((const struct pci_dev *)$arg1, $arg2, $arg3)")
   public static void __pci_bridge_assign_resources(Ptr<pci_dev> bridge, Ptr<list_head> add_head,
       Ptr<list_head> fail_head) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__pci_bus_assign_resources((const struct pci_bus*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__pci_bus_assign_resources((const struct pci_bus *)$arg1, $arg2, $arg3)")
   public static void __pci_bus_assign_resources(Ptr<pci_bus> bus, Ptr<list_head> realloc_head,
       Ptr<list_head> fail_head) {
     throw new MethodIsBPFRelatedFunction();
@@ -1116,7 +1117,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__pci_config_acs($arg1, $arg2, (const u8*)$arg3, (const short unsigned int)$arg4, (const short unsigned int)$arg5)")
+  @BuiltinBPFFunction("__pci_config_acs($arg1, $arg2, (const u8 *)$arg3, (const short unsigned int)$arg4, (const short unsigned int)$arg5)")
   public static void __pci_config_acs(Ptr<pci_dev> dev, Ptr<pci_acs> caps, String p,
       @Unsigned short acs_mask, @Unsigned short acs_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1168,7 +1169,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__pci_epc_create($arg1, (const struct pci_epc_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__pci_epc_create($arg1, (const struct pci_epc_ops *)$arg2, $arg3)")
   public static Ptr<pci_epc> __pci_epc_create(Ptr<device> dev, Ptr<pci_epc_ops> ops,
       Ptr<module> owner) {
     throw new MethodIsBPFRelatedFunction();
@@ -1194,14 +1195,14 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__pci_hp_initialize($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("__pci_hp_initialize($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, (const u8 *)$arg6)")
   public static int __pci_hp_initialize(Ptr<hotplug_slot> slot, Ptr<pci_bus> bus, int devnr,
       String name, Ptr<module> owner, String mod_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__pci_hp_register($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("__pci_hp_register($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, (const u8 *)$arg6)")
   public static int __pci_hp_register(Ptr<hotplug_slot> slot, Ptr<pci_bus> bus, int devnr,
       String name, Ptr<module> owner, String mod_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1247,19 +1248,19 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__pci_register_driver($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__pci_register_driver($arg1, $arg2, (const u8 *)$arg3)")
   public static int __pci_register_driver(Ptr<pci_driver> drv, Ptr<module> owner, String mod_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__pci_request_region($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__pci_request_region($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int __pci_request_region(Ptr<pci_dev> pdev, int bar, String name, int exclusive) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__pci_request_selected_regions($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__pci_request_selected_regions($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int __pci_request_selected_regions(Ptr<pci_dev> pdev, int bars, String name,
       int excl) {
     throw new MethodIsBPFRelatedFunction();
@@ -1341,7 +1342,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__pci_write_vpd($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__pci_write_vpd($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @OriginalName("ssize_t") long __pci_write_vpd(Ptr<pci_dev> dev,
       @OriginalName("loff_t") long pos, @Unsigned long count, Ptr<?> buf, boolean check_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1752,7 +1753,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_brcm_trumanage_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_brcm_trumanage_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_brcm_trumanage_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -1809,7 +1810,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_bus_add_devices((const struct pci_bus*)$arg1)")
+  @BuiltinBPFFunction("pci_bus_add_devices((const struct pci_bus *)$arg1)")
   public static void pci_bus_add_devices(Ptr<pci_bus> bus) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1854,7 +1855,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_bus_assign_resources((const struct pci_bus*)$arg1)")
+  @BuiltinBPFFunction("pci_bus_assign_resources((const struct pci_bus *)$arg1)")
   public static void pci_bus_assign_resources(Ptr<pci_bus> bus) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1928,7 +1929,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_bus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("pci_bus_match($arg1, (const struct device_driver *)$arg2)")
   public static int pci_bus_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2011,7 +2012,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_bus_resource_n((const struct pci_bus*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pci_bus_resource_n((const struct pci_bus *)$arg1, $arg2)")
   public static Ptr<resource> pci_bus_resource_n(Ptr<pci_bus> bus, int n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2087,7 +2088,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_call_probe($arg1, $arg2, (const struct pci_device_id*)$arg3)")
+  @BuiltinBPFFunction("pci_call_probe($arg1, $arg2, (const struct pci_device_id *)$arg3)")
   public static int pci_call_probe(Ptr<pci_driver> drv, Ptr<pci_dev> dev, Ptr<pci_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2184,7 +2185,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_clear_and_set_config_dword((const struct pci_dev*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_clear_and_set_config_dword((const struct pci_dev *)$arg1, $arg2, $arg3, $arg4)")
   public static void pci_clear_and_set_config_dword(Ptr<pci_dev> dev, int pos, @Unsigned int clear,
       @Unsigned int set) {
     throw new MethodIsBPFRelatedFunction();
@@ -2311,7 +2312,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_create_slot($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pci_create_slot($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<pci_slot> pci_create_slot(Ptr<pci_bus> parent, int slot_nr, String name,
       Ptr<hotplug_slot> hotplug) {
     throw new MethodIsBPFRelatedFunction();
@@ -2336,7 +2337,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_default_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_default_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_default_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -2386,14 +2387,14 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_dev_config_attr_bin_size($arg1, (const struct bin_attribute*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_dev_config_attr_bin_size($arg1, (const struct bin_attribute *)$arg2, $arg3)")
   public static @Unsigned long pci_dev_config_attr_bin_size(Ptr<kobject> kobj, Ptr<bin_attribute> a,
       int n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_dev_driver((const struct pci_dev*)$arg1)")
+  @BuiltinBPFFunction("pci_dev_driver((const struct pci_dev *)$arg1)")
   public static Ptr<pci_driver> pci_dev_driver(Ptr<pci_dev> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2430,7 +2431,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_dev_present((const struct pci_device_id*)$arg1)")
+  @BuiltinBPFFunction("pci_dev_present((const struct pci_device_id *)$arg1)")
   public static int pci_dev_present(Ptr<pci_device_id> ids) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2455,14 +2456,14 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_dev_rom_attr_bin_size($arg1, (const struct bin_attribute*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_dev_rom_attr_bin_size($arg1, (const struct bin_attribute *)$arg2, $arg3)")
   public static @Unsigned long pci_dev_rom_attr_bin_size(Ptr<kobject> kobj, Ptr<bin_attribute> a,
       int n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_dev_rom_attr_is_visible($arg1, (const struct bin_attribute*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_dev_rom_attr_is_visible($arg1, (const struct bin_attribute *)$arg2, $arg3)")
   public static @Unsigned @OriginalName("umode_t") short pci_dev_rom_attr_is_visible(
       Ptr<kobject> kobj, Ptr<bin_attribute> a, int n) {
     throw new MethodIsBPFRelatedFunction();
@@ -2511,13 +2512,13 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_dev_str_match($arg1, (const u8*)$arg2, (const u8**)$arg3)")
+  @BuiltinBPFFunction("pci_dev_str_match($arg1, (const u8 *)$arg2, (const u8**)$arg3)")
   public static int pci_dev_str_match(Ptr<pci_dev> dev, String p, Ptr<String> endptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_dev_str_match_path($arg1, (const u8*)$arg2, (const u8**)$arg3)")
+  @BuiltinBPFFunction("pci_dev_str_match_path($arg1, (const u8 *)$arg2, (const u8**)$arg3)")
   public static int pci_dev_str_match_path(Ptr<pci_dev> dev, String path, Ptr<String> endptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2710,7 +2711,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_doe($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("pci_doe($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, $arg7)")
   public static int pci_doe(Ptr<pci_doe_mb> doe_mb, @Unsigned short vendor, char type,
       Ptr<?> request, @Unsigned long request_sz, Ptr<?> response, @Unsigned long response_sz) {
     throw new MethodIsBPFRelatedFunction();
@@ -2979,13 +2980,13 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_ep_cfs_add_epc_group((const u8*)$arg1)")
+  @BuiltinBPFFunction("pci_ep_cfs_add_epc_group((const u8 *)$arg1)")
   public static Ptr<config_group> pci_ep_cfs_add_epc_group(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_ep_cfs_add_epf_group((const u8*)$arg1)")
+  @BuiltinBPFFunction("pci_ep_cfs_add_epf_group((const u8 *)$arg1)")
   public static Ptr<config_group> pci_ep_cfs_add_epf_group(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3072,7 +3073,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epc_get((const u8*)$arg1)")
+  @BuiltinBPFFunction("pci_epc_get((const u8 *)$arg1)")
   public static Ptr<pci_epc> pci_epc_get(String epc_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3085,7 +3086,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epc_get_first_free_bar((const struct pci_epc_features*)$arg1)")
+  @BuiltinBPFFunction("pci_epc_get_first_free_bar((const struct pci_epc_features *)$arg1)")
   public static pci_barno pci_epc_get_first_free_bar(Ptr<pci_epc_features> epc_features) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3103,7 +3104,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epc_get_next_free_bar((const struct pci_epc_features*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pci_epc_get_next_free_bar((const struct pci_epc_features *)$arg1, $arg2)")
   public static pci_barno pci_epc_get_next_free_bar(Ptr<pci_epc_features> epc_features,
       pci_barno bar) {
     throw new MethodIsBPFRelatedFunction();
@@ -3266,7 +3267,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epc_start_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_epc_start_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pci_epc_start_store(Ptr<config_item> item,
       String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3313,7 +3314,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_alloc_space($arg1, $arg2, $arg3, (const struct pci_epc_features*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pci_epf_alloc_space($arg1, $arg2, $arg3, (const struct pci_epc_features *)$arg4, $arg5)")
   public static Ptr<?> pci_epf_alloc_space(Ptr<pci_epf> epf, @Unsigned long size, pci_barno bar,
       Ptr<pci_epc_features> epc_features, pci_epc_interface_type type) {
     throw new MethodIsBPFRelatedFunction();
@@ -3327,7 +3328,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_baseclass_code_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_epf_baseclass_code_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pci_epf_baseclass_code_store(Ptr<config_item> item,
       String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3347,7 +3348,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_cache_line_size_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_epf_cache_line_size_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pci_epf_cache_line_size_store(Ptr<config_item> item,
       String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3360,7 +3361,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_create((const u8*)$arg1)")
+  @BuiltinBPFFunction("pci_epf_create((const u8 *)$arg1)")
   public static Ptr<pci_epf> pci_epf_create(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3378,7 +3379,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_device_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("pci_epf_device_match($arg1, (const struct device_driver *)$arg2)")
   public static int pci_epf_device_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3403,7 +3404,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_deviceid_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_epf_deviceid_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pci_epf_deviceid_store(Ptr<config_item> item,
       String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3448,14 +3449,14 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_interrupt_pin_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_epf_interrupt_pin_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pci_epf_interrupt_pin_store(Ptr<config_item> item,
       String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_make($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("pci_epf_make($arg1, (const u8 *)$arg2)")
   public static Ptr<config_group> pci_epf_make(Ptr<config_group> group, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3468,7 +3469,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_msi_interrupts_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_epf_msi_interrupts_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pci_epf_msi_interrupts_store(Ptr<config_item> item,
       String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3482,7 +3483,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_msix_interrupts_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_epf_msix_interrupts_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pci_epf_msix_interrupts_store(Ptr<config_item> item,
       String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3496,7 +3497,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_progif_code_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_epf_progif_code_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pci_epf_progif_code_store(Ptr<config_item> item,
       String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3528,7 +3529,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_revid_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_epf_revid_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pci_epf_revid_store(Ptr<config_item> item,
       String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3542,7 +3543,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_subclass_code_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_epf_subclass_code_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pci_epf_subclass_code_store(Ptr<config_item> item,
       String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3556,7 +3557,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_subsys_id_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_epf_subsys_id_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pci_epf_subsys_id_store(Ptr<config_item> item,
       String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3570,7 +3571,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_subsys_vendor_id_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_epf_subsys_vendor_id_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pci_epf_subsys_vendor_id_store(Ptr<config_item> item,
       String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3596,7 +3597,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_epf_vendorid_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pci_epf_vendorid_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pci_epf_vendorid_store(Ptr<config_item> item,
       String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3666,7 +3667,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_find_next_bus((const struct pci_bus*)$arg1)")
+  @BuiltinBPFFunction("pci_find_next_bus((const struct pci_bus *)$arg1)")
   public static Ptr<pci_bus> pci_find_next_bus(Ptr<pci_bus> from) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3691,7 +3692,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_find_parent_resource((const struct pci_dev*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pci_find_parent_resource((const struct pci_dev *)$arg1, $arg2)")
   public static Ptr<resource> pci_find_parent_resource(Ptr<pci_dev> dev, Ptr<resource> res) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3735,7 +3736,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_fintek_f815xxa_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_fintek_f815xxa_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_fintek_f815xxa_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -3755,7 +3756,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_fintek_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_fintek_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_fintek_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -4063,7 +4064,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_hp_diva_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_hp_diva_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_hp_diva_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -4382,7 +4383,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_llseek_resource($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("pci_llseek_resource($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5)")
   public static @OriginalName("loff_t") long pci_llseek_resource(Ptr<file> filep, Ptr<kobject> kobj,
       Ptr<bin_attribute> attr, @OriginalName("loff_t") long offset, int whence) {
     throw new MethodIsBPFRelatedFunction();
@@ -4432,7 +4433,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct pci_device_id*)pci_match_id((const struct pci_device_id*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct pci_device_id*)pci_match_id((const struct pci_device_id *)$arg1, $arg2))")
   public static Ptr<pci_device_id> pci_match_id(Ptr<pci_device_id> ids, Ptr<pci_dev> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4458,14 +4459,14 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_mmap_resource_uc($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pci_mmap_resource_uc($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4)")
   public static int pci_mmap_resource_uc(Ptr<file> filp, Ptr<kobject> kobj, Ptr<bin_attribute> attr,
       Ptr<vm_area_struct> vma) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_mmap_resource_wc($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pci_mmap_resource_wc($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4)")
   public static int pci_mmap_resource_wc(Ptr<file> filp, Ptr<kobject> kobj, Ptr<bin_attribute> attr,
       Ptr<vm_area_struct> vma) {
     throw new MethodIsBPFRelatedFunction();
@@ -4617,7 +4618,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_moxa_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_moxa_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_moxa_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -4751,7 +4752,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_msix_alloc_irq_at($arg1, $arg2, (const struct irq_affinity_desc*)$arg3)")
+  @BuiltinBPFFunction("pci_msix_alloc_irq_at($arg1, $arg2, (const struct irq_affinity_desc *)$arg3)")
   public static msi_map pci_msix_alloc_irq_at(Ptr<pci_dev> dev, @Unsigned int index,
       Ptr<irq_affinity_desc> affdesc) {
     throw new MethodIsBPFRelatedFunction();
@@ -4802,7 +4803,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_netmos_9900_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_netmos_9900_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_netmos_9900_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -4839,7 +4840,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_ni8430_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_ni8430_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_ni8430_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -4876,7 +4877,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_npem_init($arg1, (const struct npem_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_npem_init($arg1, (const struct npem_ops *)$arg2, $arg3, $arg4)")
   public static int pci_npem_init(Ptr<pci_dev> dev, Ptr<npem_ops> ops, int pos,
       @Unsigned int caps) {
     throw new MethodIsBPFRelatedFunction();
@@ -4901,7 +4902,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_omegapci_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_omegapci_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_omegapci_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -4934,7 +4935,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_oxsemi_tornado_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_oxsemi_tornado_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_oxsemi_tornado_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> up, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -4962,7 +4963,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_p2pdma_enable_store((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("pci_p2pdma_enable_store((const u8 *)$arg1, $arg2, $arg3)")
   public static int pci_p2pdma_enable_store(String page, Ptr<Ptr<pci_dev>> p2p_dev,
       Ptr<java.lang. @OriginalName("bool") Boolean> use_p2pdma) {
     throw new MethodIsBPFRelatedFunction();
@@ -5396,7 +5397,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_quatech_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_quatech_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_quatech_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -5566,7 +5567,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_read_config($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("pci_read_config($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long pci_read_config(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -5574,21 +5575,21 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_read_config_byte((const struct pci_dev*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("pci_read_config_byte((const struct pci_dev *)$arg1, $arg2, $arg3)")
   public static int pci_read_config_byte(Ptr<pci_dev> dev, int where,
       Ptr<java.lang.Character> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_read_config_dword((const struct pci_dev*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("pci_read_config_dword((const struct pci_dev *)$arg1, $arg2, $arg3)")
   public static int pci_read_config_dword(Ptr<pci_dev> dev, int where,
       Ptr<java.lang. @Unsigned Integer> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_read_config_word((const struct pci_dev*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("pci_read_config_word((const struct pci_dev *)$arg1, $arg2, $arg3)")
   public static int pci_read_config_word(Ptr<pci_dev> dev, int where,
       Ptr<java.lang. @Unsigned Short> val) {
     throw new MethodIsBPFRelatedFunction();
@@ -5601,7 +5602,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_read_resource_io($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("pci_read_resource_io($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long pci_read_resource_io(Ptr<file> filp,
       Ptr<kobject> kobj, Ptr<bin_attribute> attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -5609,7 +5610,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_read_rom($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("pci_read_rom($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long pci_read_rom(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -5717,7 +5718,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_register_io_range((const struct fwnode_handle*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("pci_register_io_range((const struct fwnode_handle *)$arg1, $arg2, $arg3)")
   public static int pci_register_io_range(Ptr<fwnode_handle> fwnode,
       @Unsigned @OriginalName("phys_addr_t") long addr,
       @Unsigned @OriginalName("resource_size_t") long size) {
@@ -5767,7 +5768,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_remap_iospace((const struct resource*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pci_remap_iospace((const struct resource *)$arg1, $arg2)")
   public static int pci_remap_iospace(Ptr<resource> res,
       @Unsigned @OriginalName("phys_addr_t") long phys_addr) {
     throw new MethodIsBPFRelatedFunction();
@@ -5810,7 +5811,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_request_irq($arg1, $arg2, $arg3, $arg4, $arg5, (const u8*)$arg6, $arg7_)")
+  @BuiltinBPFFunction("pci_request_irq($arg1, $arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6, $arg7_)")
   public static int pci_request_irq(Ptr<pci_dev> dev, @Unsigned int nr,
       @OriginalName("irq_handler_t") Ptr<?> handler,
       @OriginalName("irq_handler_t") Ptr<?> thread_fn, Ptr<?> dev_id, String fmt,
@@ -5819,31 +5820,31 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_request_region($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("pci_request_region($arg1, $arg2, (const u8 *)$arg3)")
   public static int pci_request_region(Ptr<pci_dev> pdev, int bar, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_request_regions($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("pci_request_regions($arg1, (const u8 *)$arg2)")
   public static int pci_request_regions(Ptr<pci_dev> pdev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_request_regions_exclusive($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("pci_request_regions_exclusive($arg1, (const u8 *)$arg2)")
   public static int pci_request_regions_exclusive(Ptr<pci_dev> pdev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_request_selected_regions($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("pci_request_selected_regions($arg1, $arg2, (const u8 *)$arg3)")
   public static int pci_request_selected_regions(Ptr<pci_dev> pdev, int bars, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_request_selected_regions_exclusive($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("pci_request_selected_regions_exclusive($arg1, $arg2, (const u8 *)$arg3)")
   public static int pci_request_selected_regions_exclusive(Ptr<pci_dev> pdev, int bars,
       String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -5935,7 +5936,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_resource_is_optional((const struct pci_dev*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pci_resource_is_optional((const struct pci_dev *)$arg1, $arg2)")
   public static boolean pci_resource_is_optional(Ptr<pci_dev> dev, int resno) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5947,7 +5948,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_resource_to_user((const struct pci_dev*)$arg1, $arg2, (const struct resource*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("pci_resource_to_user((const struct pci_dev *)$arg1, $arg2, (const struct resource *)$arg3, $arg4, $arg5)")
   public static void pci_resource_to_user(Ptr<pci_dev> dev, int bar, Ptr<resource> rsrc,
       Ptr<java.lang. @Unsigned @OriginalName("resource_size_t") Long> start,
       Ptr<java.lang. @Unsigned @OriginalName("resource_size_t") Long> end) {
@@ -6071,7 +6072,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_sanity_check((const struct pci_raw_ops*)$arg1)")
+  @BuiltinBPFFunction("pci_sanity_check((const struct pci_raw_ops *)$arg1)")
   public static int pci_sanity_check(Ptr<pci_raw_ops> o) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6364,7 +6365,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_siig_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_siig_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_siig_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -6378,7 +6379,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_slot_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pci_slot_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long pci_slot_attr_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -6409,7 +6410,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_sort_bf_cmp((const struct device*)$arg1, (const struct device*)$arg2)")
+  @BuiltinBPFFunction("pci_sort_bf_cmp((const struct device *)$arg1, (const struct device *)$arg2)")
   public static int pci_sort_bf_cmp(Ptr<device> d_a, Ptr<device> d_b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6507,7 +6508,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_sunix_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_sunix_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_sunix_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -6520,7 +6521,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_swizzle_interrupt_pin((const struct pci_dev*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pci_swizzle_interrupt_pin((const struct pci_dev *)$arg1, $arg2)")
   public static char pci_swizzle_interrupt_pin(Ptr<pci_dev> dev, char pin) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6539,7 +6540,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_test_config_bits($arg1, (const struct pci_bits*)$arg2)")
+  @BuiltinBPFFunction("pci_test_config_bits($arg1, (const struct pci_bits *)$arg2)")
   public static int pci_test_config_bits(Ptr<pci_dev> pdev, Ptr<pci_bits> bits) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6557,7 +6558,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_timedia_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_timedia_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_timedia_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -6582,7 +6583,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pci_uevent((const struct device *)$arg1, $arg2)")
   public static int pci_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6719,20 +6720,20 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_vpd_check_csum((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pci_vpd_check_csum((const void *)$arg1, $arg2)")
   public static int pci_vpd_check_csum(Ptr<?> buf, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_vpd_find_id_string((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("pci_vpd_find_id_string((const u8 *)$arg1, $arg2, $arg3)")
   public static int pci_vpd_find_id_string(Ptr<java.lang.Character> buf, @Unsigned int len,
       Ptr<java.lang. @Unsigned Integer> size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_vpd_find_ro_info_keyword((const void*)$arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pci_vpd_find_ro_info_keyword((const void *)$arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int pci_vpd_find_ro_info_keyword(Ptr<?> buf, @Unsigned int len, String kw,
       Ptr<java.lang. @Unsigned Integer> size) {
     throw new MethodIsBPFRelatedFunction();
@@ -6758,7 +6759,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_vpd_write($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pci_vpd_write($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @OriginalName("ssize_t") long pci_vpd_write(Ptr<pci_dev> dev,
       @OriginalName("loff_t") long pos, @Unsigned long count, Ptr<?> arg, boolean check_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -6801,14 +6802,14 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_wch_ch353_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_wch_ch353_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_wch_ch353_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_wch_ch355_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_wch_ch355_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_wch_ch355_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -6827,7 +6828,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_wch_ch38x_setup($arg1, (const struct pciserial_board*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pci_wch_ch38x_setup($arg1, (const struct pciserial_board *)$arg2, $arg3, $arg4)")
   public static int pci_wch_ch38x_setup(Ptr<serial_private> priv, Ptr<pciserial_board> board,
       Ptr<uart_8250_port> port, int idx) {
     throw new MethodIsBPFRelatedFunction();
@@ -6841,7 +6842,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_write_config($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("pci_write_config($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long pci_write_config(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -6849,19 +6850,19 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_write_config_byte((const struct pci_dev*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("pci_write_config_byte((const struct pci_dev *)$arg1, $arg2, $arg3)")
   public static int pci_write_config_byte(Ptr<pci_dev> dev, int where, char val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_write_config_dword((const struct pci_dev*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("pci_write_config_dword((const struct pci_dev *)$arg1, $arg2, $arg3)")
   public static int pci_write_config_dword(Ptr<pci_dev> dev, int where, @Unsigned int val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_write_config_word((const struct pci_dev*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("pci_write_config_word((const struct pci_dev *)$arg1, $arg2, $arg3)")
   public static int pci_write_config_word(Ptr<pci_dev> dev, int where, @Unsigned short val) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6873,7 +6874,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_write_resource_io($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("pci_write_resource_io($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long pci_write_resource_io(Ptr<file> filp,
       Ptr<kobject> kobj, Ptr<bin_attribute> attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -6881,7 +6882,7 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_write_rom($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("pci_write_rom($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long pci_write_rom(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -6889,14 +6890,14 @@ public final class PciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_write_vpd($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("pci_write_vpd($arg1, $arg2, $arg3, (const void *)$arg4)")
   public static @OriginalName("ssize_t") long pci_write_vpd(Ptr<pci_dev> dev,
       @OriginalName("loff_t") long pos, @Unsigned long count, Ptr<?> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pci_write_vpd_any($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("pci_write_vpd_any($arg1, $arg2, $arg3, (const void *)$arg4)")
   public static @OriginalName("ssize_t") long pci_write_vpd_any(Ptr<pci_dev> dev,
       @OriginalName("loff_t") long pos, @Unsigned long count, Ptr<?> buf) {
     throw new MethodIsBPFRelatedFunction();

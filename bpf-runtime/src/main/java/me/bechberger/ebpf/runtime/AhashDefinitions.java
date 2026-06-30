@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,7 +1109,7 @@ public final class AhashDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ahash_default_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ahash_default_import_core($arg1, (const void *)$arg2)")
   public static int ahash_default_import_core(Ptr<ahash_request> req, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1138,7 +1139,7 @@ public final class AhashDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ahash_nosetkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ahash_nosetkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int ahash_nosetkey(Ptr<crypto_ahash> tfm, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class EventfsDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("eventfs_create_dir((const u8*)$arg1, $arg2, (const struct eventfs_entry*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("eventfs_create_dir((const u8 *)$arg1, $arg2, (const struct eventfs_entry *)$arg3, $arg4, $arg5)")
   public static Ptr<eventfs_inode> eventfs_create_dir(String name, Ptr<eventfs_inode> parent,
       Ptr<eventfs_entry> entries, int size, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eventfs_create_events_dir((const u8*)$arg1, $arg2, (const struct eventfs_entry*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("eventfs_create_events_dir((const u8 *)$arg1, $arg2, (const struct eventfs_entry *)$arg3, $arg4, $arg5)")
   public static Ptr<eventfs_inode> eventfs_create_events_dir(String name, Ptr<dentry> parent,
       Ptr<eventfs_entry> entries, int size, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();

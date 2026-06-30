@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1193,13 +1194,13 @@ public final class RbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rb_first((const struct rb_root*)$arg1)")
+  @BuiltinBPFFunction("rb_first((const struct rb_root *)$arg1)")
   public static Ptr<rb_node> rb_first(Ptr<rb_root> root) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rb_first_postorder((const struct rb_root*)$arg1)")
+  @BuiltinBPFFunction("rb_first_postorder((const struct rb_root *)$arg1)")
   public static Ptr<rb_node> rb_first_postorder(Ptr<rb_root> root) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1260,7 +1261,7 @@ public final class RbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rb_last((const struct rb_root*)$arg1)")
+  @BuiltinBPFFunction("rb_last((const struct rb_root *)$arg1)")
   public static Ptr<rb_node> rb_last(Ptr<rb_root> root) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1279,19 +1280,19 @@ public final class RbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rb_next((const struct rb_node*)$arg1)")
+  @BuiltinBPFFunction("rb_next((const struct rb_node *)$arg1)")
   public static Ptr<rb_node> rb_next(Ptr<rb_node> node) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rb_next_postorder((const struct rb_node*)$arg1)")
+  @BuiltinBPFFunction("rb_next_postorder((const struct rb_node *)$arg1)")
   public static Ptr<rb_node> rb_next_postorder(Ptr<rb_node> node) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rb_prev((const struct rb_node*)$arg1)")
+  @BuiltinBPFFunction("rb_prev((const struct rb_node *)$arg1)")
   public static Ptr<rb_node> rb_prev(Ptr<rb_node> node) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1335,7 +1336,7 @@ public final class RbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rb_simple_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("rb_simple_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long rb_simple_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

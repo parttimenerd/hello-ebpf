@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1121,7 +1122,7 @@ public final class LoadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("load_idt((const struct desc_ptr*)$arg1)")
+  @BuiltinBPFFunction("load_idt((const struct desc_ptr *)$arg1)")
   public static void load_idt(Ptr<desc_ptr> dtr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1140,7 +1141,7 @@ public final class LoadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("load_link_ksettings_from_user($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("load_link_ksettings_from_user($arg1, (const void *)$arg2)")
   public static int load_link_ksettings_from_user(Ptr<ethtool_link_ksettings> to, Ptr<?> from) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1164,13 +1165,13 @@ public final class LoadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("load_msg((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("load_msg((const void *)$arg1, $arg2)")
   public static Ptr<msg_msg> load_msg(Ptr<?> src, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("load_nls((const u8*)$arg1)")
+  @BuiltinBPFFunction("load_nls((const u8 *)$arg1)")
   public static Ptr<nls_table> load_nls(String charset) {
     throw new MethodIsBPFRelatedFunction();
   }

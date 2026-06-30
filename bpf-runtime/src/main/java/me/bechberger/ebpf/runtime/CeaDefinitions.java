@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,13 +1097,13 @@ public final class CeaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cea_db_is_hdmi_vsdb((const struct cea_db*)$arg1)")
+  @BuiltinBPFFunction("cea_db_is_hdmi_vsdb((const struct cea_db *)$arg1)")
   public static boolean cea_db_is_hdmi_vsdb(Ptr<cea_db> db) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cea_db_iter_edid_begin((const struct drm_edid*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cea_db_iter_edid_begin((const struct drm_edid *)$arg1, $arg2)")
   public static void cea_db_iter_edid_begin(Ptr<drm_edid> drm_edid, Ptr<cea_db_iter> iter) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1121,7 +1122,7 @@ public final class CeaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cea_mode_alternate_clock((const struct drm_display_mode*)$arg1)")
+  @BuiltinBPFFunction("cea_mode_alternate_clock((const struct drm_display_mode *)$arg1)")
   public static @Unsigned int cea_mode_alternate_clock(Ptr<drm_display_mode> cea_mode) {
     throw new MethodIsBPFRelatedFunction();
   }

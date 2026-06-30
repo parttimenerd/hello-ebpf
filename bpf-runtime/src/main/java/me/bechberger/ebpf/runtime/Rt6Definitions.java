@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class Rt6Definitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__rt6_find_exception_rcu($arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3)")
+  @BuiltinBPFFunction("__rt6_find_exception_rcu($arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3)")
   public static Ptr<rt6_exception> __rt6_find_exception_rcu(Ptr<Ptr<rt6_exception_bucket>> bucket,
       Ptr<in6_addr> daddr, Ptr<in6_addr> saddr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__rt6_find_exception_spinlock($arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3)")
+  @BuiltinBPFFunction("__rt6_find_exception_spinlock($arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3)")
   public static Ptr<rt6_exception> __rt6_find_exception_spinlock(
       Ptr<Ptr<rt6_exception_bucket>> bucket, Ptr<in6_addr> daddr, Ptr<in6_addr> saddr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1110,14 +1111,14 @@ public final class Rt6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rt6_add_dflt_router($arg1, (const struct in6_addr*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("rt6_add_dflt_router($arg1, (const struct in6_addr *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<fib6_info> rt6_add_dflt_router(Ptr<net> net, Ptr<in6_addr> gwaddr,
       Ptr<net_device> dev, @Unsigned int pref, @Unsigned int defrtr_usr_metric, int lifetime) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rt6_add_route_info($arg1, (const struct in6_addr*)$arg2, $arg3, (const struct in6_addr*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("rt6_add_route_info($arg1, (const struct in6_addr *)$arg2, $arg3, (const struct in6_addr *)$arg4, $arg5, $arg6)")
   public static Ptr<fib6_info> rt6_add_route_info(Ptr<net> net, Ptr<in6_addr> prefix, int prefixlen,
       Ptr<in6_addr> gwaddr, Ptr<net_device> dev, @Unsigned int pref) {
     throw new MethodIsBPFRelatedFunction();
@@ -1138,7 +1139,7 @@ public final class Rt6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rt6_check_expired((const struct rt6_info*)$arg1)")
+  @BuiltinBPFFunction("rt6_check_expired((const struct rt6_info *)$arg1)")
   public static boolean rt6_check_expired(Ptr<rt6_info> rt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1150,7 +1151,7 @@ public final class Rt6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rt6_device_match($arg1, $arg2, (const struct in6_addr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("rt6_device_match($arg1, $arg2, (const struct in6_addr *)$arg3, $arg4, $arg5)")
   public static void rt6_device_match(Ptr<net> net, Ptr<fib6_result> res, Ptr<in6_addr> saddr,
       int oif, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1189,7 +1190,7 @@ public final class Rt6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rt6_find_cached_rt((const struct fib6_result*)$arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3)")
+  @BuiltinBPFFunction("rt6_find_cached_rt((const struct fib6_result *)$arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3)")
   public static Ptr<rt6_info> rt6_find_cached_rt(Ptr<fib6_result> res, Ptr<in6_addr> daddr,
       Ptr<in6_addr> saddr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1202,14 +1203,14 @@ public final class Rt6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rt6_get_dflt_router($arg1, (const struct in6_addr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rt6_get_dflt_router($arg1, (const struct in6_addr *)$arg2, $arg3)")
   public static Ptr<fib6_info> rt6_get_dflt_router(Ptr<net> net, Ptr<in6_addr> addr,
       Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rt6_get_route_info($arg1, (const struct in6_addr*)$arg2, $arg3, (const struct in6_addr*)$arg4, $arg5)")
+  @BuiltinBPFFunction("rt6_get_route_info($arg1, (const struct in6_addr *)$arg2, $arg3, (const struct in6_addr *)$arg4, $arg5)")
   public static Ptr<fib6_info> rt6_get_route_info(Ptr<net> net, Ptr<in6_addr> prefix, int prefixlen,
       Ptr<in6_addr> gwaddr, Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
@@ -1222,13 +1223,13 @@ public final class Rt6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rt6_insert_exception($arg1, (const struct fib6_result*)$arg2)")
+  @BuiltinBPFFunction("rt6_insert_exception($arg1, (const struct fib6_result *)$arg2)")
   public static int rt6_insert_exception(Ptr<rt6_info> nrt, Ptr<fib6_result> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rt6_lookup($arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3, $arg4, (const struct sk_buff*)$arg5, $arg6)")
+  @BuiltinBPFFunction("rt6_lookup($arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3, $arg4, (const struct sk_buff *)$arg5, $arg6)")
   public static Ptr<rt6_info> rt6_lookup(Ptr<net> net, Ptr<in6_addr> daddr, Ptr<in6_addr> saddr,
       int oif, Ptr<sk_buff> skb, int strict) {
     throw new MethodIsBPFRelatedFunction();
@@ -1247,7 +1248,7 @@ public final class Rt6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rt6_multipath_hash((const struct net*)$arg1, (const struct flowi6*)$arg2, (const struct sk_buff*)$arg3, $arg4)")
+  @BuiltinBPFFunction("rt6_multipath_hash((const struct net *)$arg1, (const struct flowi6 *)$arg2, (const struct sk_buff *)$arg3, $arg4)")
   public static @Unsigned int rt6_multipath_hash(Ptr<net> net, Ptr<flowi6> fl6, Ptr<sk_buff> skb,
       Ptr<flow_keys> flkeys) {
     throw new MethodIsBPFRelatedFunction();
@@ -1339,14 +1340,14 @@ public final class Rt6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rt6_route_rcv($arg1, $arg2, $arg3, (const struct in6_addr*)$arg4)")
+  @BuiltinBPFFunction("rt6_route_rcv($arg1, $arg2, $arg3, (const struct in6_addr *)$arg4)")
   public static int rt6_route_rcv(Ptr<net_device> dev, Ptr<java.lang.Character> opt, int len,
       Ptr<in6_addr> gwaddr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rt6_score_route((const struct fib6_nh*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("rt6_score_route((const struct fib6_nh *)$arg1, $arg2, $arg3, $arg4)")
   public static int rt6_score_route(Ptr<fib6_nh> nh, @Unsigned int fib6_flags, int oif,
       int strict) {
     throw new MethodIsBPFRelatedFunction();

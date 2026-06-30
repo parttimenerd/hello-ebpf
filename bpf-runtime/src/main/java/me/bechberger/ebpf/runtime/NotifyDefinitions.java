@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class NotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("notify_die($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("notify_die($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int notify_die(die_val val, String str, Ptr<pt_regs> regs, long err, int trap,
       int sig) {
     throw new MethodIsBPFRelatedFunction();

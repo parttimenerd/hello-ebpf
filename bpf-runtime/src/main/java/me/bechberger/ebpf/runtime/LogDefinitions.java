@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1158,7 +1159,7 @@ public final class LogDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("log_entry_type_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("log_entry_type_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long log_entry_type_store(Ptr<device> ras_feat_dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1167,9 +1168,9 @@ public final class LogDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("log_non_standard_event((const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg1, (const struct {\n"
+          + "} *)$arg1, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg2, (const u8*)$arg3, (const u8)$arg4, (const u8*)$arg5, (const unsigned int)$arg6)")
+          + "} *)$arg2, (const u8 *)$arg3, (const u8)$arg4, (const u8 *)$arg5, (const unsigned int)$arg6)")
   public static void log_non_standard_event(Ptr<@OriginalName("guid_t") uuid_t> sec_type,
       Ptr<@OriginalName("guid_t") uuid_t> fru_id, String fru_text, char sev,
       Ptr<java.lang.Character> err, @Unsigned int len) {

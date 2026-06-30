@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class FreezeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("freeze_filesystems_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("freeze_filesystems_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long freeze_filesystems_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1129,7 +1130,7 @@ public final class FreezeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("freeze_on_smi_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("freeze_on_smi_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long freeze_on_smi_store(Ptr<device> cdev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1148,7 +1149,7 @@ public final class FreezeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("freeze_super($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("freeze_super($arg1, $arg2, (const void *)$arg3)")
   public static int freeze_super(Ptr<super_block> sb, freeze_holder who, Ptr<?> freeze_owner) {
     throw new MethodIsBPFRelatedFunction();
   }

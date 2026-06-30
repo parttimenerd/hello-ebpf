@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1162,7 +1163,7 @@ public final class PppDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ppp_dev_configure($arg1, $arg2, (const struct ppp_config*)$arg3)")
+  @BuiltinBPFFunction("ppp_dev_configure($arg1, $arg2, (const struct ppp_config *)$arg3)")
   public static int ppp_dev_configure(Ptr<net> src_net, Ptr<net_device> dev, Ptr<ppp_config> conf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1289,19 +1290,19 @@ public final class PppDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ppp_nl_fill_info($arg1, (const struct net_device*)$arg2)")
+  @BuiltinBPFFunction("ppp_nl_fill_info($arg1, (const struct net_device *)$arg2)")
   public static int ppp_nl_fill_info(Ptr<sk_buff> skb, Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ppp_nl_get_link_net((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("ppp_nl_get_link_net((const struct net_device *)$arg1)")
   public static Ptr<net> ppp_nl_get_link_net(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ppp_nl_get_size((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("ppp_nl_get_size((const struct net_device *)$arg1)")
   public static @Unsigned long ppp_nl_get_size(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1450,7 +1451,7 @@ public final class PppDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ppp_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ppp_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ppp_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

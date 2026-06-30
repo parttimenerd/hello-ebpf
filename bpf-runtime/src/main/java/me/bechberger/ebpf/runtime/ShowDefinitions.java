@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,19 +1104,19 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__show_regs($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__show_regs($arg1, $arg2, (const u8 *)$arg3)")
   public static void __show_regs(Ptr<pt_regs> regs, show_regs_mode mode, String log_lvl) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__show_smap($arg1, (const struct mem_size_stats*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__show_smap($arg1, (const struct mem_size_stats *)$arg2, $arg3)")
   public static void __show_smap(Ptr<seq_file> m, Ptr<mem_size_stats> mss, boolean rollup_mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__show_trace_log_lvl($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__show_trace_log_lvl($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static void __show_trace_log_lvl(Ptr<task_struct> task, Ptr<pt_regs> regs,
       Ptr<java.lang. @Unsigned Long> stack, String log_lvl) {
     throw new MethodIsBPFRelatedFunction();
@@ -1352,7 +1353,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_class_attr_string((const struct class*)$arg1, (const struct class_attribute*)$arg2, $arg3)")
+  @BuiltinBPFFunction("show_class_attr_string((const struct class *)$arg1, (const struct class_attribute *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long show_class_attr_string(Ptr<_class> _class,
       Ptr<class_attribute> attr, String buf) {
     throw new MethodIsBPFRelatedFunction();
@@ -1435,7 +1436,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_coresize((const struct module_attribute*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("show_coresize((const struct module_attribute *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long show_coresize(Ptr<module_attribute> mattr,
       Ptr<module_kobject> mk, String buffer) {
     throw new MethodIsBPFRelatedFunction();
@@ -1537,7 +1538,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_delegatable_files($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("show_delegatable_files($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static @OriginalName("ssize_t") long show_delegatable_files(Ptr<cftype> files, String buf,
       @OriginalName("ssize_t") long size, String prefix) {
     throw new MethodIsBPFRelatedFunction();
@@ -1693,21 +1694,21 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_initsize((const struct module_attribute*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("show_initsize((const struct module_attribute *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long show_initsize(Ptr<module_attribute> mattr,
       Ptr<module_kobject> mk, String buffer) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_initstate((const struct module_attribute*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("show_initstate((const struct module_attribute *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long show_initstate(Ptr<module_attribute> mattr,
       Ptr<module_kobject> mk, String buffer) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_inquiry($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("show_inquiry($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long show_inquiry(Ptr<file> filep, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -1763,13 +1764,13 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_ip($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("show_ip($arg1, (const u8 *)$arg2)")
   public static void show_ip(Ptr<pt_regs> regs, String loglvl) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_iret_regs($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("show_iret_regs($arg1, (const u8 *)$arg2)")
   public static void show_iret_regs(Ptr<pt_regs> regs, String log_lvl) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1781,7 +1782,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_ldttss((const struct desc_ptr*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("show_ldttss((const struct desc_ptr *)$arg1, (const u8 *)$arg2, $arg3)")
   public static void show_ldttss(Ptr<desc_ptr> gdt, String name, @Unsigned short index) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1861,14 +1862,14 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_modinfo_srcversion((const struct module_attribute*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("show_modinfo_srcversion((const struct module_attribute *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long show_modinfo_srcversion(Ptr<module_attribute> mattr,
       Ptr<module_kobject> mk, String buffer) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_modinfo_version((const struct module_attribute*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("show_modinfo_version((const struct module_attribute *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long show_modinfo_version(Ptr<module_attribute> mattr,
       Ptr<module_kobject> mk, String buffer) {
     throw new MethodIsBPFRelatedFunction();
@@ -1961,7 +1962,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_opcodes($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("show_opcodes($arg1, (const u8 *)$arg2)")
   public static void show_opcodes(Ptr<pt_regs> regs, String loglvl) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2084,7 +2085,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_refcnt((const struct module_attribute*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("show_refcnt((const struct module_attribute *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long show_refcnt(Ptr<module_attribute> mattr,
       Ptr<module_kobject> mk, String buffer) {
     throw new MethodIsBPFRelatedFunction();
@@ -2104,7 +2105,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_regs_print_info((const u8*)$arg1)")
+  @BuiltinBPFFunction("show_regs_print_info((const u8 *)$arg1)")
   public static void show_regs_print_info(String log_lvl) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2296,7 +2297,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_stack($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("show_stack($arg1, $arg2, (const u8 *)$arg3)")
   public static void show_stack(Ptr<task_struct> task, Ptr<java.lang. @Unsigned Long> sp,
       String loglvl) {
     throw new MethodIsBPFRelatedFunction();
@@ -2466,7 +2467,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_taint((const struct module_attribute*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("show_taint((const struct module_attribute *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long show_taint(Ptr<module_attribute> mattr,
       Ptr<module_kobject> mk, String buffer) {
     throw new MethodIsBPFRelatedFunction();
@@ -2606,7 +2607,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_vpd_pg0($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("show_vpd_pg0($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long show_vpd_pg0(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -2614,7 +2615,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_vpd_pg80($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("show_vpd_pg80($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long show_vpd_pg80(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -2622,7 +2623,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_vpd_pg83($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("show_vpd_pg83($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long show_vpd_pg83(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -2630,7 +2631,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_vpd_pg89($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("show_vpd_pg89($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long show_vpd_pg89(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -2638,7 +2639,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_vpd_pgb0($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("show_vpd_pgb0($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long show_vpd_pgb0(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -2646,7 +2647,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_vpd_pgb1($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("show_vpd_pgb1($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long show_vpd_pgb1(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -2654,7 +2655,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_vpd_pgb2($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("show_vpd_pgb2($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long show_vpd_pgb2(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -2662,7 +2663,7 @@ public final class ShowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("show_vpd_pgb7($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("show_vpd_pgb7($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long show_vpd_pgb7(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {

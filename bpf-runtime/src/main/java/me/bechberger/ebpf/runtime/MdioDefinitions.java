@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1109,7 +1110,7 @@ public final class MdioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mdio_bus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("mdio_bus_match($arg1, (const struct device_driver *)$arg2)")
   public static int mdio_bus_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1134,7 +1135,7 @@ public final class MdioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mdio_device_bus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("mdio_device_bus_match($arg1, (const struct device_driver *)$arg2)")
   public static int mdio_device_bus_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1188,7 +1189,7 @@ public final class MdioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mdio_find_bus((const u8*)$arg1)")
+  @BuiltinBPFFunction("mdio_find_bus((const u8 *)$arg1)")
   public static Ptr<mii_bus> mdio_find_bus(String mdio_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1212,7 +1213,7 @@ public final class MdioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mdio_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mdio_uevent((const struct device *)$arg1, $arg2)")
   public static int mdio_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1129,14 +1130,14 @@ public final class ProfileDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("profile_load($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("profile_load($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long profile_load(Ptr<file> f, String buf,
       @Unsigned long size, Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("profile_onexec((const struct cred*)$arg1, $arg2, $arg3, $arg4, (const struct linux_binprm*)$arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("profile_onexec((const struct cred *)$arg1, $arg2, $arg3, $arg4, (const struct linux_binprm *)$arg5, $arg6, $arg7, $arg8)")
   public static int profile_onexec(Ptr<cred> subj_cred, Ptr<aa_profile> profile,
       Ptr<aa_label> onexec, boolean stack, Ptr<linux_binprm> bprm, String buffer,
       Ptr<path_cond> cond, Ptr<java.lang. @OriginalName("bool") Boolean> secure_exec) {
@@ -1150,14 +1151,14 @@ public final class ProfileDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("profile_path_link((const struct cred*)$arg1, $arg2, (const struct path*)$arg3, $arg4, (const struct path*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("profile_path_link((const struct cred *)$arg1, $arg2, (const struct path *)$arg3, $arg4, (const struct path *)$arg5, $arg6, $arg7)")
   public static int profile_path_link(Ptr<cred> subj_cred, Ptr<aa_profile> profile, Ptr<path> link,
       String buffer, Ptr<path> target, String buffer2, Ptr<path_cond> cond) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("profile_path_perm((const u8*)$arg1, (const struct cred*)$arg2, $arg3, (const struct path*)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("profile_path_perm((const u8 *)$arg1, (const struct cred *)$arg2, $arg3, (const struct path *)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
   public static int profile_path_perm(String op, Ptr<cred> subj_cred, Ptr<aa_profile> profile,
       Ptr<path> path, String buffer, @Unsigned int request, Ptr<path_cond> cond, int flags,
       Ptr<aa_perms> perms, Ptr<java.lang. @Unsigned Integer> allow, boolean prompt) {
@@ -1171,14 +1172,14 @@ public final class ProfileDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("profile_ptrace_perm((const struct cred*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("profile_ptrace_perm((const struct cred *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int profile_ptrace_perm(Ptr<cred> cred, Ptr<aa_profile> profile, Ptr<aa_label> peer,
       @Unsigned int request, Ptr<apparmor_audit_data> ad) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("profile_query_cb($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("profile_query_cb($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void profile_query_cb(Ptr<aa_profile> profile, Ptr<aa_perms> perms,
       String match_str, @Unsigned long match_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1193,14 +1194,14 @@ public final class ProfileDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("profile_remove($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("profile_remove($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long profile_remove(Ptr<file> f, String buf,
       @Unsigned long size, Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("profile_replace($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("profile_replace($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long profile_replace(Ptr<file> f, String buf,
       @Unsigned long size, Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1213,7 +1214,7 @@ public final class ProfileDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("profile_signal_perm((const struct cred*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("profile_signal_perm((const struct cred *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int profile_signal_perm(Ptr<cred> cred, Ptr<aa_profile> profile, Ptr<aa_label> peer,
       @Unsigned int request, Ptr<apparmor_audit_data> ad) {
     throw new MethodIsBPFRelatedFunction();
@@ -1226,7 +1227,7 @@ public final class ProfileDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("profile_transition((const struct cred*)$arg1, $arg2, (const struct linux_binprm*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("profile_transition((const struct cred *)$arg1, $arg2, (const struct linux_binprm *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<aa_label> profile_transition(Ptr<cred> subj_cred, Ptr<aa_profile> profile,
       Ptr<linux_binprm> bprm, String buffer, Ptr<path_cond> cond,
       Ptr<java.lang. @OriginalName("bool") Boolean> secure_exec) {
@@ -1234,7 +1235,7 @@ public final class ProfileDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("profile_umount((const struct cred*)$arg1, $arg2, (const struct path*)$arg3, $arg4)")
+  @BuiltinBPFFunction("profile_umount((const struct cred *)$arg1, $arg2, (const struct path *)$arg3, $arg4)")
   public static int profile_umount(Ptr<cred> subj_cred, Ptr<aa_profile> profile, Ptr<path> path,
       String buffer) {
     throw new MethodIsBPFRelatedFunction();

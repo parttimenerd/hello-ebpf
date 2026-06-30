@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1122,7 +1123,7 @@ public final class FwDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fw_add_devm_name($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fw_add_devm_name($arg1, (const u8 *)$arg2)")
   public static int fw_add_devm_name(Ptr<device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1140,21 +1141,21 @@ public final class FwDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fw_create_instance($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fw_create_instance($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<fw_sysfs> fw_create_instance(Ptr<firmware> firmware, String fw_name,
       Ptr<device> device, @Unsigned int opt_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fw_decompress_xz($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("fw_decompress_xz($arg1, $arg2, $arg3, (const void *)$arg4)")
   public static int fw_decompress_xz(Ptr<device> dev, Ptr<fw_priv> fw_priv, @Unsigned long in_size,
       Ptr<?> in_buffer) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fw_decompress_zstd($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("fw_decompress_zstd($arg1, $arg2, $arg3, (const void *)$arg4)")
   public static int fw_decompress_zstd(Ptr<device> dev, Ptr<fw_priv> fw_priv,
       @Unsigned long in_size, Ptr<?> in_buffer) {
     throw new MethodIsBPFRelatedFunction();
@@ -1264,7 +1265,7 @@ public final class FwDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fw_get_filesystem_firmware($arg1, $arg2, (const u8*)$arg3, (int (*)(struct device*, struct fw_priv*, long unsigned int, const void*))$arg4)")
+  @BuiltinBPFFunction("fw_get_filesystem_firmware($arg1, $arg2, (const u8 *)$arg3, (int (*)(struct device*, struct fw_priv*, long unsigned int, const void*))$arg4)")
   public static int fw_get_filesystem_firmware(Ptr<device> device, Ptr<fw_priv> fw_priv,
       String suffix, Ptr<?> decompress) {
     throw new MethodIsBPFRelatedFunction();

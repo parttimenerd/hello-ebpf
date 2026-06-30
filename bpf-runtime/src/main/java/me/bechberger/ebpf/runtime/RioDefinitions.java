@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1304,13 +1305,13 @@ public final class RioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rio_match_bus($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("rio_match_bus($arg1, (const struct device_driver *)$arg2)")
   public static int rio_match_bus(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct rio_device_id*)rio_match_device((const struct rio_device_id*)$arg1, (const struct rio_dev*)$arg2))")
+  @BuiltinBPFFunction("((const struct rio_device_id*)rio_match_device((const struct rio_device_id *)$arg1, (const struct rio_dev *)$arg2))")
   public static Ptr<rio_device_id> rio_match_device(Ptr<rio_device_id> id, Ptr<rio_dev> rdev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1423,7 +1424,7 @@ public final class RioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rio_read_config($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("rio_read_config($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long rio_read_config(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -1552,7 +1553,7 @@ public final class RioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rio_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("rio_uevent((const struct device *)$arg1, $arg2)")
   public static int rio_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1590,7 +1591,7 @@ public final class RioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rio_write_config($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("rio_write_config($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long rio_write_config(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {

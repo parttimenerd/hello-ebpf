@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1105,7 +1106,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_active_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_active_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_active_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1146,7 +1147,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_bytes_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_bytes_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_bytes_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1160,7 +1161,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_corrected_read_errors_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("max_corrected_read_errors_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long max_corrected_read_errors_store(Ptr<mddev> mddev,
       String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1202,7 +1203,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_freq_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_freq_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_freq_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1237,7 +1238,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_loop_param_set_int((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("max_loop_param_set_int((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int max_loop_param_set_int(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1256,7 +1257,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_medium_access_timeouts_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_medium_access_timeouts_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_medium_access_timeouts_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1284,7 +1285,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_page_sharing_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_page_sharing_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_page_sharing_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1319,7 +1320,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_ptes_none_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_ptes_none_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_ptes_none_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1333,7 +1334,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_ptes_shared_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_ptes_shared_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_ptes_shared_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1347,7 +1348,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_ptes_swap_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_ptes_swap_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_ptes_swap_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1361,7 +1362,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_ratio_fine_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_ratio_fine_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_ratio_fine_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1375,7 +1376,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_ratio_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_ratio_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_ratio_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1389,7 +1390,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_retries_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_retries_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_retries_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1421,7 +1422,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_sync_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("max_sync_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long max_sync_store(Ptr<mddev> mddev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1455,7 +1456,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_time_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_time_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_time_store(Ptr<device> kobj,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1476,7 +1477,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_user_freq_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_user_freq_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_user_freq_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1490,7 +1491,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_vclocks_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_vclocks_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_vclocks_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1504,7 +1505,7 @@ public final class MaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max_write_same_blocks_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("max_write_same_blocks_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long max_write_same_blocks_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

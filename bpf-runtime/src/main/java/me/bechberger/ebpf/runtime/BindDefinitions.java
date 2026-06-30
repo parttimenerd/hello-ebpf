@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1117,7 +1118,7 @@ public final class BindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bind_evtchn_to_irqhandler($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bind_evtchn_to_irqhandler($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int bind_evtchn_to_irqhandler(@Unsigned @OriginalName("evtchn_port_t") int evtchn,
       @OriginalName("irq_handler_t") Ptr<?> handler, @Unsigned long irqflags, String devname,
       Ptr<?> dev_id) {
@@ -1125,7 +1126,7 @@ public final class BindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bind_evtchn_to_irqhandler_lateeoi($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bind_evtchn_to_irqhandler_lateeoi($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int bind_evtchn_to_irqhandler_lateeoi(
       @Unsigned @OriginalName("evtchn_port_t") int evtchn,
       @OriginalName("irq_handler_t") Ptr<?> handler, @Unsigned long irqflags, String devname,
@@ -1141,7 +1142,7 @@ public final class BindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bind_interdomain_evtchn_to_irqhandler_lateeoi($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("bind_interdomain_evtchn_to_irqhandler_lateeoi($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int bind_interdomain_evtchn_to_irqhandler_lateeoi(Ptr<xenbus_device> dev,
       @Unsigned @OriginalName("evtchn_port_t") int remote_port,
       @OriginalName("irq_handler_t") Ptr<?> handler, @Unsigned long irqflags, String devname,
@@ -1150,7 +1151,7 @@ public final class BindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bind_ipi_to_irqhandler($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("bind_ipi_to_irqhandler($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int bind_ipi_to_irqhandler(ipi_vector ipi, @Unsigned int cpu,
       @OriginalName("irq_handler_t") Ptr<?> handler, @Unsigned long irqflags, String devname,
       Ptr<?> dev_id) {
@@ -1164,7 +1165,7 @@ public final class BindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bind_mode_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bind_mode_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long bind_mode_store(Ptr<device_driver> drv, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1177,7 +1178,7 @@ public final class BindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bind_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bind_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long bind_store(Ptr<device_driver> drv, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1196,7 +1197,7 @@ public final class BindDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bind_virq_to_irqhandler($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("bind_virq_to_irqhandler($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int bind_virq_to_irqhandler(@Unsigned int virq, @Unsigned int cpu,
       @OriginalName("irq_handler_t") Ptr<?> handler, @Unsigned long irqflags, String devname,
       Ptr<?> dev_id) {

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class MousedevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mousedev_connect($arg1, $arg2, (const struct input_device_id*)$arg3)")
+  @BuiltinBPFFunction("mousedev_connect($arg1, $arg2, (const struct input_device_id *)$arg3)")
   public static int mousedev_connect(Ptr<input_handler> handler, Ptr<input_dev> dev,
       Ptr<input_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1210,7 +1211,7 @@ public final class MousedevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mousedev_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("mousedev_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long mousedev_write(Ptr<file> file, String buffer,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,21 +1091,21 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class IntegrityDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("integrity_add_key((const unsigned int)$arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("integrity_add_key((const unsigned int)$arg1, (const void *)$arg2, $arg3, $arg4)")
   public static int integrity_add_key(@Unsigned int id, Ptr<?> data,
       @OriginalName("off_t") long size, @Unsigned @OriginalName("key_perm_t") int perm) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("integrity_audit_message($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, (const u8*)$arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("integrity_audit_message($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const u8 *)$arg5, $arg6, $arg7, $arg8)")
   public static void integrity_audit_message(int audit_msgno, Ptr<inode> inode, String fname,
       String op, String cause, int result, int audit_info, int errno) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("integrity_audit_msg($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, (const u8*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("integrity_audit_msg($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const u8 *)$arg5, $arg6, $arg7)")
   public static void integrity_audit_msg(int audit_msgno, Ptr<inode> inode, String fname, String op,
       String cause, int result, int audit_info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1117,7 +1118,7 @@ public final class IntegrityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("integrity_digsig_verify((const unsigned int)$arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("integrity_digsig_verify((const unsigned int)$arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int integrity_digsig_verify(@Unsigned int id, String sig, int siglen, String digest,
       int digestlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1149,7 +1150,7 @@ public final class IntegrityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("integrity_load_cert((const unsigned int)$arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("integrity_load_cert((const unsigned int)$arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static int integrity_load_cert(@Unsigned int id, String source, Ptr<?> data,
       @Unsigned long len, @Unsigned @OriginalName("key_perm_t") int perm) {
     throw new MethodIsBPFRelatedFunction();
@@ -1162,13 +1163,13 @@ public final class IntegrityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("integrity_load_x509((const unsigned int)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("integrity_load_x509((const unsigned int)$arg1, (const u8 *)$arg2)")
   public static int integrity_load_x509(@Unsigned int id, String path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("integrity_modsig_verify((const unsigned int)$arg1, (const struct modsig*)$arg2)")
+  @BuiltinBPFFunction("integrity_modsig_verify((const unsigned int)$arg1, (const struct modsig *)$arg2)")
   public static int integrity_modsig_verify(@Unsigned int id, Ptr<modsig> modsig) {
     throw new MethodIsBPFRelatedFunction();
   }

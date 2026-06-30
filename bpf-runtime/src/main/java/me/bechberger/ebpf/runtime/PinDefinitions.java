@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class PinDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pin_config_group_get((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pin_config_group_get((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static int pin_config_group_get(String dev_name, String pin_group,
       Ptr<java.lang. @Unsigned Long> config) {
     throw new MethodIsBPFRelatedFunction();
@@ -1111,7 +1112,7 @@ public final class PinDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pin_get_from_name($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("pin_get_from_name($arg1, (const u8 *)$arg2)")
   public static int pin_get_from_name(Ptr<pinctrl_dev> pctldev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1147,7 +1148,7 @@ public final class PinDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pin_request($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pin_request($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int pin_request(Ptr<pinctrl_dev> pctldev, int pin, String owner,
       Ptr<pinctrl_gpio_range> gpio_range) {
     throw new MethodIsBPFRelatedFunction();

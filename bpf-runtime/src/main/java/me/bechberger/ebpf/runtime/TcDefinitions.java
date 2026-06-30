@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1136,7 +1137,7 @@ public final class TcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tc_chain_fill_node((const struct tcf_proto_ops*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("tc_chain_fill_node((const struct tcf_proto_ops *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
   public static int tc_chain_fill_node(Ptr<tcf_proto_ops> tmplt_ops, Ptr<?> tmplt_priv,
       @Unsigned int chain_index, Ptr<net> net, Ptr<sk_buff> skb, Ptr<tcf_block> block,
       @Unsigned int portid, @Unsigned int seq, @Unsigned short flags, int event,
@@ -1158,34 +1159,34 @@ public final class TcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tc_cls_act_btf_struct_access($arg1, (const struct bpf_reg_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tc_cls_act_btf_struct_access($arg1, (const struct bpf_reg_state *)$arg2, $arg3, $arg4)")
   public static int tc_cls_act_btf_struct_access(Ptr<bpf_verifier_log> log, Ptr<bpf_reg_state> reg,
       int off, int size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tc_cls_act_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tc_cls_act_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int tc_cls_act_convert_ctx_access(bpf_access_type type, Ptr<bpf_insn> si,
       Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog, Ptr<java.lang. @Unsigned Integer> target_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)tc_cls_act_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)tc_cls_act_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> tc_cls_act_func_proto(bpf_func_id func_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tc_cls_act_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("tc_cls_act_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean tc_cls_act_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tc_cls_act_prologue($arg1, $arg2, (const struct bpf_prog*)$arg3)")
+  @BuiltinBPFFunction("tc_cls_act_prologue($arg1, $arg2, (const struct bpf_prog *)$arg3)")
   public static int tc_cls_act_prologue(Ptr<bpf_insn> insn_buf, boolean direct_write,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -1389,7 +1390,7 @@ public final class TcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tc_setup_offload_action($arg1, (const struct tcf_exts*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tc_setup_offload_action($arg1, (const struct tcf_exts *)$arg2, $arg3)")
   public static int tc_setup_offload_action(Ptr<flow_action> flow_action, Ptr<tcf_exts> exts,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();

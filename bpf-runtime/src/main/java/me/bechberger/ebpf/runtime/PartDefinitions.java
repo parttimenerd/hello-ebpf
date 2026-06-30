@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1164,7 +1165,7 @@ public final class PartDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("part_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("part_uevent((const struct device *)$arg1, $arg2)")
   public static int part_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }

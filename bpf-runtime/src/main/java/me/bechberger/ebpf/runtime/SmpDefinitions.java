@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class SmpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__smp_text_poke_batch_add($arg1, (const void*)$arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("__smp_text_poke_batch_add($arg1, (const void *)$arg2, $arg3, (const void *)$arg4)")
   public static void __smp_text_poke_batch_add(Ptr<?> addr, Ptr<?> opcode, @Unsigned long len,
       Ptr<?> emulate) {
     throw new MethodIsBPFRelatedFunction();
@@ -1110,21 +1111,21 @@ public final class SmpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smp_call_function_any((const struct cpumask*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smp_call_function_any((const struct cpumask *)$arg1, $arg2, $arg3, $arg4)")
   public static int smp_call_function_any(Ptr<cpumask> mask,
       @OriginalName("smp_call_func_t") Ptr<?> func, Ptr<?> info, int wait) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smp_call_function_many((const struct cpumask*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("smp_call_function_many((const struct cpumask *)$arg1, $arg2, $arg3, $arg4)")
   public static void smp_call_function_many(Ptr<cpumask> mask,
       @OriginalName("smp_call_func_t") Ptr<?> func, Ptr<?> info, boolean wait) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smp_call_function_many_cond((const struct cpumask*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("smp_call_function_many_cond((const struct cpumask *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static void smp_call_function_many_cond(Ptr<cpumask> mask,
       @OriginalName("smp_call_func_t") Ptr<?> func, Ptr<?> info, @Unsigned int scf_flags,
       @OriginalName("smp_cond_func_t") Ptr<?> cond_func) {
@@ -1224,7 +1225,7 @@ public final class SmpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smp_text_poke_batch_add($arg1, (const void*)$arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("smp_text_poke_batch_add($arg1, (const void *)$arg2, $arg3, (const void *)$arg4)")
   public static void smp_text_poke_batch_add(Ptr<?> addr, Ptr<?> opcode, @Unsigned long len,
       Ptr<?> emulate) {
     throw new MethodIsBPFRelatedFunction();
@@ -1243,7 +1244,7 @@ public final class SmpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smp_text_poke_single($arg1, (const void*)$arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("smp_text_poke_single($arg1, (const void *)$arg2, $arg3, (const void *)$arg4)")
   public static void smp_text_poke_single(Ptr<?> addr, Ptr<?> opcode, @Unsigned long len,
       Ptr<?> emulate) {
     throw new MethodIsBPFRelatedFunction();

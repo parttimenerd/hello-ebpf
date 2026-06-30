@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1148,7 +1149,7 @@ public final class PmuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pmu_features_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pmu_features_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pmu_features_store(Ptr<hyp_sysfs_attr> attr,
       String buffer, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1175,7 +1176,7 @@ public final class PmuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pmu_mode_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pmu_mode_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pmu_mode_store(Ptr<hyp_sysfs_attr> attr,
       String buffer, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();

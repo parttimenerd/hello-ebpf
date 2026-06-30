@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1231,7 +1232,7 @@ public final class PcpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcpu_chunk_slot((const struct pcpu_chunk*)$arg1)")
+  @BuiltinBPFFunction("pcpu_chunk_slot((const struct pcpu_chunk *)$arg1)")
   public static int pcpu_chunk_slot(Ptr<pcpu_chunk> chunk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1269,7 +1270,7 @@ public final class PcpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcpu_dump_alloc_info((const u8*)$arg1, (const struct pcpu_alloc_info*)$arg2)")
+  @BuiltinBPFFunction("pcpu_dump_alloc_info((const u8 *)$arg1, (const struct pcpu_alloc_info *)$arg2)")
   public static void pcpu_dump_alloc_info(String lvl, Ptr<pcpu_alloc_info> ai) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1345,7 +1346,7 @@ public final class PcpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcpu_get_vm_areas((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pcpu_get_vm_areas((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3, $arg4)")
   public static Ptr<Ptr<vm_struct>> pcpu_get_vm_areas(Ptr<java.lang. @Unsigned Long> offsets,
       Ptr<java.lang. @Unsigned Long> sizes, int nr_vms, @Unsigned long align) {
     throw new MethodIsBPFRelatedFunction();
@@ -1443,7 +1444,7 @@ public final class PcpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcpu_setup_first_chunk((const struct pcpu_alloc_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pcpu_setup_first_chunk((const struct pcpu_alloc_info *)$arg1, $arg2)")
   public static void pcpu_setup_first_chunk(Ptr<pcpu_alloc_info> ai, Ptr<?> base_addr) {
     throw new MethodIsBPFRelatedFunction();
   }

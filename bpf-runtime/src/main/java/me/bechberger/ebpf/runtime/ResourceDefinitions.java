@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class ResourceDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__resource_resize_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__resource_resize_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long __resource_resize_store(Ptr<device> dev, int n,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1104,14 +1105,14 @@ public final class ResourceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("resource_alignment_show((const struct bus_type*)$arg1, $arg2)")
+  @BuiltinBPFFunction("resource_alignment_show((const struct bus_type *)$arg1, $arg2)")
   public static @OriginalName("ssize_t") long resource_alignment_show(Ptr<bus_type> bus,
       String buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("resource_alignment_store((const struct bus_type*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("resource_alignment_store((const struct bus_type *)$arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long resource_alignment_store(Ptr<bus_type> bus,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1125,7 +1126,7 @@ public final class ResourceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("resource_init_named($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("resource_init_named($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static void resource_init_named(Ptr<resource> r,
       @Unsigned @OriginalName("resource_size_t") long start,
       @Unsigned @OriginalName("resource_size_t") long size, String name, @Unsigned int flags) {
@@ -1153,7 +1154,7 @@ public final class ResourceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("resource_or_range((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("resource_or_range((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static String resource_or_range(String fmt, String buf, String end, Ptr<?> ptr,
       printf_spec spec) {
     throw new MethodIsBPFRelatedFunction();
@@ -1174,7 +1175,7 @@ public final class ResourceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("resource_string($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("resource_string($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static String resource_string(String buf, String end, Ptr<resource> res, printf_spec spec,
       String fmt) {
     throw new MethodIsBPFRelatedFunction();

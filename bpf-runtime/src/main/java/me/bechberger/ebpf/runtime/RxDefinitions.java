@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1188,20 +1189,20 @@ public final class RxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rx_queue_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("rx_queue_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long rx_queue_attr_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rx_queue_get_ownership((const struct kobject*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("rx_queue_get_ownership((const struct kobject *)$arg1, $arg2, $arg3)")
   public static void rx_queue_get_ownership(Ptr<kobject> kobj, Ptr<kuid_t> uid, Ptr<kgid_t> gid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)rx_queue_namespace((const struct kobject*)$arg1))")
+  @BuiltinBPFFunction("((const void*)rx_queue_namespace((const struct kobject *)$arg1))")
   public static Ptr<?> rx_queue_namespace(Ptr<kobject> kobj) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1226,7 +1227,7 @@ public final class RxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rx_trig_bytes_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("rx_trig_bytes_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long rx_trig_bytes_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1111,7 +1112,7 @@ public final class SetDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("__set_current_blocked((const struct {\n"
           + "  long unsigned int sig[1];\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static void __set_current_blocked(Ptr<sigset_t> newset) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1212,13 +1213,13 @@ public final class SetDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("__set_task_blocked($arg1, (const struct {\n"
           + "  long unsigned int sig[1];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static void __set_task_blocked(Ptr<task_struct> tsk, Ptr<sigset_t> newset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__set_task_comm($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__set_task_comm($arg1, (const u8 *)$arg2, $arg3)")
   public static void __set_task_comm(Ptr<task_struct> tsk, String buf, boolean exec) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1268,7 +1269,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_set_opp_bw((const struct opp_table*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("_set_opp_bw((const struct opp_table *)$arg1, $arg2, $arg3)")
   public static int _set_opp_bw(Ptr<opp_table> opp_table, Ptr<dev_pm_opp> opp, Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1286,7 +1287,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_acpi_reboot((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_acpi_reboot((const struct dmi_system_id *)$arg1)")
   public static int set_acpi_reboot(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1299,7 +1300,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_affinity_irq($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("set_affinity_irq($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int set_affinity_irq(Ptr<irq_data> data, Ptr<cpumask> dest, boolean force) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1323,7 +1324,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_anon_vma_name($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("set_anon_vma_name($arg1, $arg2, (const u8 *)$arg3)")
   public static int set_anon_vma_name(@Unsigned long addr, @Unsigned long size, String uname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1335,7 +1336,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_attr_rdpmc($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("set_attr_rdpmc($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long set_attr_rdpmc(Ptr<device> cdev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1355,7 +1356,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_bank($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("set_bank($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long set_bank(Ptr<device> s, Ptr<device_attribute> attr,
       String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1375,7 +1376,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_bf_sort((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_bf_sort((const struct dmi_system_id *)$arg1)")
   public static int set_bf_sort(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1387,7 +1388,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_bios_reboot((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_bios_reboot((const struct dmi_system_id *)$arg1)")
   public static int set_bios_reboot(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1487,7 +1488,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_check_enable_amd_mmconf((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_check_enable_amd_mmconf((const struct dmi_system_id *)$arg1)")
   public static int set_check_enable_amd_mmconf(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1499,14 +1500,14 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_cmci_disabled($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("set_cmci_disabled($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long set_cmci_disabled(Ptr<device> s,
       Ptr<device_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_cmdline($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("set_cmdline($arg1, (const u8 *)$arg2)")
   public static void set_cmdline(int idx, String cmdline) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1520,7 +1521,7 @@ public final class SetDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("set_compat_user_sigmask((const struct {\n"
           + "  unsigned int sig[2];\n"
-          + "}*)$arg1, $arg2)")
+          + "} *)$arg1, $arg2)")
   public static int set_compat_user_sigmask(Ptr<compat_sigset_t> umask, @Unsigned long sigsetsize) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1538,7 +1539,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_consumer_device_supply($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("set_consumer_device_supply($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int set_consumer_device_supply(Ptr<regulator_dev> rdev, String consumer_dev_name,
       String supply) {
     throw new MethodIsBPFRelatedFunction();
@@ -1552,7 +1553,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_copy_dsdt((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_copy_dsdt((const struct dmi_system_id *)$arg1)")
   public static int set_copy_dsdt(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1625,7 +1626,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_cpus_allowed_ptr($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("set_cpus_allowed_ptr($arg1, (const struct cpumask *)$arg2)")
   public static int set_cpus_allowed_ptr(Ptr<task_struct> p, Ptr<cpumask> new_mask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1715,13 +1716,13 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_default_d_op($arg1, (const struct dentry_operations*)$arg2)")
+  @BuiltinBPFFunction("set_default_d_op($arg1, (const struct dentry_operations *)$arg2)")
   public static void set_default_d_op(Ptr<super_block> s, Ptr<dentry_operations> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_default_qdisc((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("set_default_qdisc((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int set_default_qdisc(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1742,7 +1743,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_dev_info((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("set_dev_info((const struct device *)$arg1, $arg2)")
   public static void set_dev_info(Ptr<device> dev, Ptr<dev_printk_info> dev_info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1797,7 +1798,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_efi_reboot((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_efi_reboot((const struct dmi_system_id *)$arg1)")
   public static int set_efi_reboot(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1816,7 +1817,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_encryption_policy($arg1, (const union fscrypt_policy*)$arg2)")
+  @BuiltinBPFFunction("set_encryption_policy($arg1, (const union fscrypt_policy *)$arg2)")
   public static int set_encryption_policy(Ptr<inode> inode, Ptr<fscrypt_policy> policy) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1872,20 +1873,20 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_freq_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("set_freq_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long set_freq_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_fs_pwd($arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("set_fs_pwd($arg1, (const struct path *)$arg2)")
   public static void set_fs_pwd(Ptr<fs_struct> fs, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_fs_root($arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("set_fs_root($arg1, (const struct path *)$arg2)")
   public static void set_fs_root(Ptr<fs_struct> fs, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1921,7 +1922,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_global_limit((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("set_global_limit((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int set_global_limit(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1976,14 +1977,14 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_ignore_ce($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("set_ignore_ce($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long set_ignore_ce(Ptr<device> s,
       Ptr<device_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_ignore_seg((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_ignore_seg((const struct dmi_system_id *)$arg1)")
   public static int set_ignore_seg(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2008,7 +2009,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_init_arg($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("set_init_arg($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int set_init_arg(String param, String val, String unused, Ptr<?> arg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2026,7 +2027,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_intr_gate($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("set_intr_gate($arg1, (const void *)$arg2)")
   public static void set_intr_gate(@Unsigned int n, Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2069,7 +2070,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_kbd_reboot((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_kbd_reboot((const struct dmi_system_id *)$arg1)")
   public static int set_kbd_reboot(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2112,7 +2113,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_lr_boolean_ace($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("set_lr_boolean_ace($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int set_lr_boolean_ace(Ptr<opal_dev> dev, @Unsigned int opal_uid, char lr,
       Ptr<java.lang.Character> users, @Unsigned long users_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -2144,7 +2145,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_max_cstate((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_max_cstate((const struct dmi_system_id *)$arg1)")
   public static int set_max_cstate(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2157,7 +2158,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_max_user_events_sysctl((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("set_max_user_events_sysctl((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int set_max_user_events_sysctl(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2195,7 +2196,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_memmap_mode((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("set_memmap_mode((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int set_memmap_mode(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2346,7 +2347,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_movable_ops((const struct movable_operations*)$arg1, $arg2)")
+  @BuiltinBPFFunction("set_movable_ops((const struct movable_operations *)$arg1, $arg2)")
   public static int set_movable_ops(Ptr<movable_operations> ops, pagetype type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2370,7 +2371,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_multi((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_multi((const struct dmi_system_id *)$arg1)")
   public static int set_multi(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2443,7 +2444,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_no_e820((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_no_e820((const struct dmi_system_id *)$arg1)")
   public static int set_no_e820(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2474,7 +2475,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_nouse_crs((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_nouse_crs((const struct dmi_system_id *)$arg1)")
   public static int set_nouse_crs(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2499,7 +2500,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_online_policy((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("set_online_policy((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int set_online_policy(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2524,7 +2525,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_overhead($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("set_overhead($arg1, (const void *)$arg2)")
   public static void set_overhead(Ptr<ext4_super_block> es, Ptr<?> arg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2633,7 +2634,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_pci_reboot((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_pci_reboot((const struct dmi_system_id *)$arg1)")
   public static int set_pci_reboot(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2651,7 +2652,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_permissions($arg1, (const struct ctl_table*)$arg2)")
+  @BuiltinBPFFunction("set_permissions($arg1, (const struct ctl_table *)$arg2)")
   public static int set_permissions(Ptr<ctl_table_header> head, Ptr<ctl_table> table) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2669,7 +2670,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_pfnblock_bit((const struct page*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("set_pfnblock_bit((const struct page *)$arg1, $arg2, $arg3)")
   public static void set_pfnblock_bit(Ptr<page> page, @Unsigned long pfn, pageblock_bits pb_bit) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2694,7 +2695,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_pkcs7_data($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("set_pkcs7_data($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static int set_pkcs7_data(Ptr<?> ctx, Ptr<?> data, @Unsigned long len,
       @Unsigned long asn1hdrlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -2757,7 +2758,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_ps_flags($arg1, (const struct folio*)$arg2, (const struct page*)$arg3)")
+  @BuiltinBPFFunction("set_ps_flags($arg1, (const struct folio *)$arg2, (const struct page *)$arg3)")
   public static void set_ps_flags(Ptr<page_snapshot> ps, Ptr<folio> folio, Ptr<page> page) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2870,7 +2871,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_ro((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("set_ro((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int set_ro(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2901,13 +2902,13 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_rtc_noop((const struct timespec64*)$arg1)")
+  @BuiltinBPFFunction("set_rtc_noop((const struct timespec64 *)$arg1)")
   public static int set_rtc_noop(Ptr<timespec64> now) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_scan_all((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_scan_all((const struct dmi_system_id *)$arg1)")
   public static int set_scan_all(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2943,7 +2944,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_security_override_from_ctx($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("set_security_override_from_ctx($arg1, (const u8 *)$arg2)")
   public static int set_security_override_from_ctx(Ptr<cred> _new, String secctx) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2968,7 +2969,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_selection_user((const struct tiocl_selection*)$arg1, $arg2)")
+  @BuiltinBPFFunction("set_selection_user((const struct tiocl_selection *)$arg1, $arg2)")
   public static int set_selection_user(Ptr<tiocl_selection> sel, Ptr<tty_struct> tty) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3000,7 +3001,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_sysctl_tfa($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("set_sysctl_tfa($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long set_sysctl_tfa(Ptr<device> cdev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -3081,7 +3082,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_tls_desc($arg1, $arg2, (const struct user_desc*)$arg3, $arg4)")
+  @BuiltinBPFFunction("set_tls_desc($arg1, $arg2, (const struct user_desc *)$arg3, $arg4)")
   public static void set_tls_desc(Ptr<task_struct> p, int idx, Ptr<user_desc> info, int n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3154,7 +3155,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_trigger($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("set_trigger($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long set_trigger(Ptr<device> s, Ptr<device_attribute> attr,
       String buf, @Unsigned long siz) {
     throw new MethodIsBPFRelatedFunction();
@@ -3205,7 +3206,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_use_crs((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("set_use_crs((const struct dmi_system_id *)$arg1)")
   public static int set_use_crs(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3226,7 +3227,7 @@ public final class SetDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("set_user_sigmask((const struct {\n"
           + "  long unsigned int sig[1];\n"
-          + "}*)$arg1, $arg2)")
+          + "} *)$arg1, $arg2)")
   public static int set_user_sigmask(Ptr<sigset_t> umask, @Unsigned long sigsetsize) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3250,7 +3251,7 @@ public final class SetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("set_worker_desc((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("set_worker_desc((const u8 *)$arg1, $arg2_)")
   public static void set_worker_desc(String fmt, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }

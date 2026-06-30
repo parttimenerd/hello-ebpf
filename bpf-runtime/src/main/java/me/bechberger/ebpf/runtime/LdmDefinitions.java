@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,20 +1091,20 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class LdmDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("_ldm_printk((const u8*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("_ldm_printk((const u8 *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4_)")
   public static void _ldm_printk(String level, String function, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ldm_create_data_partitions($arg1, (const struct ldmdb*)$arg2)")
+  @BuiltinBPFFunction("ldm_create_data_partitions($arg1, (const struct ldmdb *)$arg2)")
   public static boolean ldm_create_data_partitions(Ptr<parsed_partitions> pp, Ptr<ldmdb> ldb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ldm_frag_add((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ldm_frag_add((const u8 *)$arg1, $arg2, $arg3)")
   public static boolean ldm_frag_add(Ptr<java.lang.Character> data, int size,
       Ptr<list_head> frags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1117,13 +1118,13 @@ public final class LdmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ldm_get_vnum((const u8*)$arg1)")
+  @BuiltinBPFFunction("ldm_get_vnum((const u8 *)$arg1)")
   public static @Unsigned long ldm_get_vnum(Ptr<java.lang.Character> block) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ldm_get_vstr((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ldm_get_vstr((const u8 *)$arg1, $arg2, $arg3)")
   public static int ldm_get_vstr(Ptr<java.lang.Character> block, Ptr<java.lang.Character> buffer,
       int buflen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1136,31 +1137,31 @@ public final class LdmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ldm_parse_cmp3((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ldm_parse_cmp3((const u8 *)$arg1, $arg2, $arg3)")
   public static boolean ldm_parse_cmp3(Ptr<java.lang.Character> buffer, int buflen, Ptr<vblk> vb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ldm_parse_prt3((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ldm_parse_prt3((const u8 *)$arg1, $arg2, $arg3)")
   public static boolean ldm_parse_prt3(Ptr<java.lang.Character> buffer, int buflen, Ptr<vblk> vb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ldm_parse_tocblock((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ldm_parse_tocblock((const u8 *)$arg1, $arg2)")
   public static boolean ldm_parse_tocblock(Ptr<java.lang.Character> data, Ptr<tocblock> toc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ldm_parse_vblk((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ldm_parse_vblk((const u8 *)$arg1, $arg2, $arg3)")
   public static boolean ldm_parse_vblk(Ptr<java.lang.Character> buf, int len, Ptr<vblk> vb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ldm_parse_vol5((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ldm_parse_vol5((const u8 *)$arg1, $arg2, $arg3)")
   public static boolean ldm_parse_vol5(Ptr<java.lang.Character> buffer, int buflen, Ptr<vblk> vb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1172,7 +1173,7 @@ public final class LdmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ldm_relative((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ldm_relative((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int ldm_relative(Ptr<java.lang.Character> buffer, int buflen, int base,
       int offset) {
     throw new MethodIsBPFRelatedFunction();

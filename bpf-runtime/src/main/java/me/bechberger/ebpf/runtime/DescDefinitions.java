@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1118,19 +1119,19 @@ public final class DescDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("desc_set_label($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("desc_set_label($arg1, (const u8 *)$arg2)")
   public static int desc_set_label(Ptr<gpio_desc> desc, String label) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("desc_smp_init($arg1, $arg2, (const struct cpumask*)$arg3)")
+  @BuiltinBPFFunction("desc_smp_init($arg1, $arg2, (const struct cpumask *)$arg3)")
   public static void desc_smp_init(Ptr<irq_desc> desc, int node, Ptr<cpumask> affinity) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("desc_to_gpio((const struct gpio_desc*)$arg1)")
+  @BuiltinBPFFunction("desc_to_gpio((const struct gpio_desc *)$arg1)")
   public static int desc_to_gpio(Ptr<gpio_desc> desc) {
     throw new MethodIsBPFRelatedFunction();
   }

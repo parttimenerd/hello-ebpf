@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class WarnDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__warn_printk((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("__warn_printk((const u8 *)$arg1, $arg2_)")
   public static void __warn_printk(String fmt, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1108,14 +1109,14 @@ public final class WarnDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("warn_alloc($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("warn_alloc($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void warn_alloc(@Unsigned @OriginalName("gfp_t") int gfp_mask,
       Ptr<nodemask_t> nodemask, String fmt, java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("warn_bad_vsyscall((const u8*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("warn_bad_vsyscall((const u8 *)$arg1, $arg2, (const u8 *)$arg3)")
   public static void warn_bad_vsyscall(String level, Ptr<pt_regs> regs, String message) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1134,7 +1135,7 @@ public final class WarnDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("warn_invalid_dmar($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("warn_invalid_dmar($arg1, (const u8 *)$arg2)")
   public static void warn_invalid_dmar(@Unsigned long addr, String message) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1146,7 +1147,7 @@ public final class WarnDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("warn_unsupported($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("warn_unsupported($arg1, (const u8 *)$arg2)")
   public static int warn_unsupported(Ptr<file> file, String op) {
     throw new MethodIsBPFRelatedFunction();
   }

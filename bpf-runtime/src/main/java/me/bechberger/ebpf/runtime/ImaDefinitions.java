@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1115,14 +1116,14 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_add_template_entry($arg1, $arg2, (const u8*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("ima_add_template_entry($arg1, $arg2, (const u8 *)$arg3, $arg4, (const u8 *)$arg5)")
   public static int ima_add_template_entry(Ptr<ima_template_entry> entry, int violation, String op,
       Ptr<inode> inode, String filename) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_add_violation($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("ima_add_violation($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, (const u8 *)$arg5)")
   public static void ima_add_violation(Ptr<file> file, String filename, Ptr<ima_iint_cache> iint,
       String op, String cause) {
     throw new MethodIsBPFRelatedFunction();
@@ -1152,7 +1153,7 @@ public final class ImaDefinitions {
   @BuiltinBPFFunction("ima_alloc_rule_opt_list((const struct {\n"
           + "  u8 *from;\n"
           + "  u8 *to;\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static Ptr<ima_rule_opt_list> ima_alloc_rule_opt_list(Ptr<substring_t> src) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1164,7 +1165,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_appraise_measurement($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6, (const struct modsig*)$arg7)")
+  @BuiltinBPFFunction("ima_appraise_measurement($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6, (const struct modsig *)$arg7)")
   public static int ima_appraise_measurement(ima_hooks func, Ptr<ima_iint_cache> iint,
       Ptr<file> file, String filename, Ptr<evm_ima_xattr_data> xattr_value, int xattr_len,
       Ptr<modsig> modsig) {
@@ -1196,7 +1197,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_audit_measurement($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("ima_audit_measurement($arg1, (const u8 *)$arg2)")
   public static void ima_audit_measurement(Ptr<ima_iint_cache> iint, String filename) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1227,7 +1228,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_calc_buffer_hash((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ima_calc_buffer_hash((const void *)$arg1, $arg2, $arg3)")
   public static int ima_calc_buffer_hash(Ptr<?> buf, @OriginalName("loff_t") long len,
       Ptr<ima_digest_data> hash) {
     throw new MethodIsBPFRelatedFunction();
@@ -1268,7 +1269,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_check_blacklist($arg1, (const struct modsig*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ima_check_blacklist($arg1, (const struct modsig *)$arg2, $arg3)")
   public static int ima_check_blacklist(Ptr<ima_iint_cache> iint, Ptr<modsig> modsig, int pcr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1294,20 +1295,20 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_collect_modsig($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ima_collect_modsig($arg1, (const void *)$arg2, $arg3)")
   public static void ima_collect_modsig(Ptr<modsig> modsig, Ptr<?> buf,
       @OriginalName("loff_t") long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_creds_check($arg1, (const struct file*)$arg2)")
+  @BuiltinBPFFunction("ima_creds_check($arg1, (const struct file *)$arg2)")
   public static int ima_creds_check(Ptr<linux_binprm> bprm, Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)ima_d_path((const struct path*)$arg1, $arg2, $arg3))")
+  @BuiltinBPFFunction("((const u8*)ima_d_path((const struct path *)$arg1, $arg2, $arg3))")
   public static String ima_d_path(Ptr<path> path, Ptr<String> pathbuf, String namebuf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1340,7 +1341,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_eventdigest_init_common((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ima_eventdigest_init_common((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int ima_eventdigest_init_common(Ptr<java.lang.Character> digest,
       @Unsigned int digestsize, char digest_type, char hash_algo, Ptr<ima_field_data> field_data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1539,7 +1540,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_get_action($arg1, $arg2, (const struct cred*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, (const u8*)$arg9, $arg10)")
+  @BuiltinBPFFunction("ima_get_action($arg1, $arg2, (const struct cred *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, (const u8 *)$arg9, $arg10)")
   public static int ima_get_action(Ptr<mnt_idmap> idmap, Ptr<inode> inode, Ptr<cred> cred,
       Ptr<lsm_prop> prop, int mask, ima_hooks func, Ptr<java.lang.Integer> pcr,
       Ptr<Ptr<ima_template_desc>> template_desc, String func_data,
@@ -1566,7 +1567,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_get_hash_algo((const struct evm_ima_xattr_data*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ima_get_hash_algo((const struct evm_ima_xattr_data *)$arg1, $arg2)")
   public static hash_algo ima_get_hash_algo(Ptr<evm_ima_xattr_data> xattr_value, int xattr_len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1578,14 +1579,14 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_get_modsig_digest((const struct modsig*)$arg1, $arg2, (const u8**)$arg3, $arg4)")
+  @BuiltinBPFFunction("ima_get_modsig_digest((const struct modsig *)$arg1, $arg2, (const u8**)$arg3, $arg4)")
   public static int ima_get_modsig_digest(Ptr<modsig> modsig, Ptr<hash_algo> algo,
       Ptr<Ptr<java.lang.Character>> digest, Ptr<java.lang. @Unsigned Integer> digest_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_get_raw_modsig((const struct modsig*)$arg1, (const void**)$arg2, $arg3)")
+  @BuiltinBPFFunction("ima_get_raw_modsig((const struct modsig *)$arg1, (const void**)$arg2, $arg3)")
   public static int ima_get_raw_modsig(Ptr<modsig> modsig, Ptr<Ptr<?>> data,
       Ptr<java.lang. @Unsigned Integer> data_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1689,28 +1690,28 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_inode_remove_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("ima_inode_remove_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static int ima_inode_remove_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_inode_removexattr($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("ima_inode_removexattr($arg1, $arg2, (const u8 *)$arg3)")
   public static int ima_inode_removexattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String xattr_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_inode_set_acl($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ima_inode_set_acl($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int ima_inode_set_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String acl_name,
       Ptr<posix_acl> kacl) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_inode_setxattr($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ima_inode_setxattr($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int ima_inode_setxattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String xattr_name,
       Ptr<?> xattr_value, @Unsigned long xattr_value_len, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1723,7 +1724,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_kexec_cmdline($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ima_kexec_cmdline($arg1, (const void *)$arg2, $arg3)")
   public static void ima_kexec_cmdline(int kernel_fd, Ptr<?> buf, int size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1781,7 +1782,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_match_policy($arg1, $arg2, (const struct cred*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, (const u8*)$arg10, $arg11)")
+  @BuiltinBPFFunction("ima_match_policy($arg1, $arg2, (const struct cred *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, (const u8 *)$arg10, $arg11)")
   public static int ima_match_policy(Ptr<mnt_idmap> idmap, Ptr<inode> inode, Ptr<cred> cred,
       Ptr<lsm_prop> prop, ima_hooks func, int mask, int flags, Ptr<java.lang.Integer> pcr,
       Ptr<Ptr<ima_template_desc>> template_desc, String func_data,
@@ -1790,7 +1791,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_match_rules($arg1, $arg2, $arg3, (const struct cred*)$arg4, $arg5, $arg6, $arg7, (const u8*)$arg8)")
+  @BuiltinBPFFunction("ima_match_rules($arg1, $arg2, $arg3, (const struct cred *)$arg4, $arg5, $arg6, $arg7, (const u8 *)$arg8)")
   public static boolean ima_match_rules(Ptr<ima_rule_entry> rule, Ptr<mnt_idmap> idmap,
       Ptr<inode> inode, Ptr<cred> cred, Ptr<lsm_prop> prop, ima_hooks func, int mask,
       String func_data) {
@@ -1798,7 +1799,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_measure_critical_data((const u8*)$arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ima_measure_critical_data((const u8 *)$arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int ima_measure_critical_data(String event_label, String event_name, Ptr<?> buf,
       @Unsigned long buf_len, boolean hash, Ptr<java.lang.Character> digest,
       @Unsigned long digest_len) {
@@ -1806,7 +1807,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_measure_kexec_event((const u8*)$arg1)")
+  @BuiltinBPFFunction("ima_measure_kexec_event((const u8 *)$arg1)")
   public static void ima_measure_kexec_event(String event_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1844,7 +1845,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_modsig_verify($arg1, (const struct modsig*)$arg2)")
+  @BuiltinBPFFunction("ima_modsig_verify($arg1, (const struct modsig *)$arg2)")
   public static int ima_modsig_verify(Ptr<key> keyring, Ptr<modsig> modsig) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1889,7 +1890,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_post_key_create_or_update($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ima_post_key_create_or_update($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6)")
   public static void ima_post_key_create_or_update(Ptr<key> keyring, Ptr<key> key, Ptr<?> payload,
       @Unsigned long payload_len, @Unsigned long flags, boolean create) {
     throw new MethodIsBPFRelatedFunction();
@@ -1935,7 +1936,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_queue_key($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ima_queue_key($arg1, (const void *)$arg2, $arg3)")
   public static boolean ima_queue_key(Ptr<key> keyring, Ptr<?> payload,
       @Unsigned long payload_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1948,7 +1949,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_read_modsig($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ima_read_modsig($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static int ima_read_modsig(ima_hooks func, Ptr<?> buf,
       @OriginalName("loff_t") long buf_len, Ptr<Ptr<modsig>> modsig) {
     throw new MethodIsBPFRelatedFunction();
@@ -2088,7 +2089,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_store_measurement($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, (const struct modsig*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("ima_store_measurement($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, (const struct modsig *)$arg6, $arg7, $arg8)")
   public static void ima_store_measurement(Ptr<ima_iint_cache> iint, Ptr<file> file,
       String filename, Ptr<evm_ima_xattr_data> xattr_value, int xattr_len, Ptr<modsig> modsig,
       int pcr, Ptr<ima_template_desc> template_desc) {
@@ -2096,7 +2097,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_store_template($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ima_store_template($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int ima_store_template(Ptr<ima_template_entry> entry, int violation,
       Ptr<inode> inode, String filename, int pcr) {
     throw new MethodIsBPFRelatedFunction();
@@ -2121,7 +2122,7 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_template_has_modsig((const struct ima_template_desc*)$arg1)")
+  @BuiltinBPFFunction("ima_template_has_modsig((const struct ima_template_desc *)$arg1)")
   public static boolean ima_template_has_modsig(Ptr<ima_template_desc> ima_template) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2164,14 +2165,14 @@ public final class ImaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_write_policy($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ima_write_policy($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ima_write_policy(Ptr<file> file, String buf,
       @Unsigned long datalen, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ima_write_template_field_data((const void*)$arg1, (const unsigned int)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ima_write_template_field_data((const void *)$arg1, (const unsigned int)$arg2, $arg3, $arg4)")
   public static int ima_write_template_field_data(Ptr<?> data, @Unsigned int datalen,
       data_formats datafmt, Ptr<ima_field_data> field_data) {
     throw new MethodIsBPFRelatedFunction();
@@ -2658,7 +2659,7 @@ public final class ImaDefinitions {
 
     public @Unsigned int allowed_algos;
 
-    public AnonymousType593573025C50 @Size(6) [] lsm;
+    public AnonymousType1118969241C50 @Size(6) [] lsm;
 
     public String fsname;
 
@@ -2723,7 +2724,7 @@ public final class ImaDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType593573025C50 extends Struct {
+  public static class AnonymousType1118969241C50 extends Struct {
     public Ptr<?> rule;
 
     public String args_p;

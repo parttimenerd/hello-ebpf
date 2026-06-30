@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class TimekeepingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__timekeeping_inject_offset($arg1, (const struct timespec64*)$arg2)")
+  @BuiltinBPFFunction("__timekeeping_inject_offset($arg1, (const struct timespec64 *)$arg2)")
   public static int __timekeeping_inject_offset(Ptr<tk_data> tkd, Ptr<timespec64> ts) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1138,7 +1139,7 @@ public final class TimekeepingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("timekeeping_inject_sleeptime64((const struct timespec64*)$arg1)")
+  @BuiltinBPFFunction("timekeeping_inject_sleeptime64((const struct timespec64 *)$arg1)")
   public static void timekeeping_inject_sleeptime64(Ptr<timespec64> delta) {
     throw new MethodIsBPFRelatedFunction();
   }

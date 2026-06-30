@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1141,7 +1142,7 @@ public final class VgaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vga_arb_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vga_arb_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long vga_arb_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1208,7 +1209,7 @@ public final class VgaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vga_set_palette($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("vga_set_palette($arg1, (const u8 *)$arg2)")
   public static void vga_set_palette(Ptr<vc_data> vc, String table) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1232,7 +1233,7 @@ public final class VgaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vga_switcheroo_debugfs_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vga_switcheroo_debugfs_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long vga_switcheroo_debugfs_write(Ptr<file> filp,
       String ubuf, @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1287,21 +1288,21 @@ public final class VgaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vga_switcheroo_register_audio_client($arg1, (const struct vga_switcheroo_client_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("vga_switcheroo_register_audio_client($arg1, (const struct vga_switcheroo_client_ops *)$arg2, $arg3)")
   public static int vga_switcheroo_register_audio_client(Ptr<pci_dev> pdev,
       Ptr<vga_switcheroo_client_ops> ops, Ptr<pci_dev> vga_dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vga_switcheroo_register_client($arg1, (const struct vga_switcheroo_client_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("vga_switcheroo_register_client($arg1, (const struct vga_switcheroo_client_ops *)$arg2, $arg3)")
   public static int vga_switcheroo_register_client(Ptr<pci_dev> pdev,
       Ptr<vga_switcheroo_client_ops> ops, boolean driver_power_control) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vga_switcheroo_register_handler((const struct vga_switcheroo_handler*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vga_switcheroo_register_handler((const struct vga_switcheroo_handler *)$arg1, $arg2)")
   public static int vga_switcheroo_register_handler(Ptr<vga_switcheroo_handler> handler,
       vga_switcheroo_handler_flags_t handler_flags) {
     throw new MethodIsBPFRelatedFunction();

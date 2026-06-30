@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class TrieDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("trie_check_btf((const struct bpf_map*)$arg1, (const struct btf*)$arg2, (const struct btf_type*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("trie_check_btf((const struct bpf_map *)$arg1, (const struct btf *)$arg2, (const struct btf_type *)$arg3, (const struct btf_type *)$arg4)")
   public static int trie_check_btf(Ptr<bpf_map> map, Ptr<btf> btf, Ptr<btf_type> key_type,
       Ptr<btf_type> value_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1133,7 +1134,7 @@ public final class TrieDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("trie_mem_usage((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("trie_mem_usage((const struct bpf_map *)$arg1)")
   public static @Unsigned long trie_mem_usage(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }

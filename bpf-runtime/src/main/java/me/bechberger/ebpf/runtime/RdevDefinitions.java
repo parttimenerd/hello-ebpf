@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class RdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rdev_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("rdev_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long rdev_attr_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String page, @Unsigned long length) {
     throw new MethodIsBPFRelatedFunction();
@@ -1203,7 +1204,7 @@ public final class RdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rdev_size_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rdev_size_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long rdev_size_store(Ptr<md_rdev> rdev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();

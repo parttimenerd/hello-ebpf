@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1124,7 +1125,7 @@ public final class PercpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__percpu_init_rwsem($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__percpu_init_rwsem($arg1, (const u8 *)$arg2, $arg3)")
   public static int __percpu_init_rwsem(Ptr<percpu_rw_semaphore> sem, String name,
       Ptr<lock_class_key> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -1235,7 +1236,7 @@ public final class PercpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("percpu_pagelist_high_fraction_sysctl_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("percpu_pagelist_high_fraction_sysctl_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int percpu_pagelist_high_fraction_sysctl_handler(Ptr<ctl_table> table, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> length,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {

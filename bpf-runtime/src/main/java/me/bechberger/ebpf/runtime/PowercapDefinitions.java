@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,14 +1097,14 @@ public final class PowercapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("powercap_register_control_type($arg1, (const u8*)$arg2, (const struct powercap_control_type_ops*)$arg3)")
+  @BuiltinBPFFunction("powercap_register_control_type($arg1, (const u8 *)$arg2, (const struct powercap_control_type_ops *)$arg3)")
   public static Ptr<powercap_control_type> powercap_register_control_type(
       Ptr<powercap_control_type> control_type, String name, Ptr<powercap_control_type_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("powercap_register_zone($arg1, $arg2, (const u8*)$arg3, $arg4, (const struct powercap_zone_ops*)$arg5, $arg6, (const struct powercap_zone_constraint_ops*)$arg7)")
+  @BuiltinBPFFunction("powercap_register_zone($arg1, $arg2, (const u8 *)$arg3, $arg4, (const struct powercap_zone_ops *)$arg5, $arg6, (const struct powercap_zone_constraint_ops *)$arg7)")
   public static Ptr<powercap_zone> powercap_register_zone(Ptr<powercap_zone> power_zone,
       Ptr<powercap_control_type> control_type, String name, Ptr<powercap_zone> parent,
       Ptr<powercap_zone_ops> ops, int nr_constraints, Ptr<powercap_zone_constraint_ops> const_ops) {

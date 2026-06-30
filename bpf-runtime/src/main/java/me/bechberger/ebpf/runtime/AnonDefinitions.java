@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class AnonDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__anon_inode_getfile((const u8*)$arg1, (const struct file_operations*)$arg2, $arg3, $arg4, (const struct inode*)$arg5, $arg6)")
+  @BuiltinBPFFunction("__anon_inode_getfile((const u8 *)$arg1, (const struct file_operations *)$arg2, $arg3, $arg4, (const struct inode *)$arg5, $arg6)")
   public static Ptr<file> __anon_inode_getfile(String name, Ptr<file_operations> fops, Ptr<?> priv,
       int flags, Ptr<inode> context_inode, boolean make_inode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1131,7 +1132,7 @@ public final class AnonDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("anon_enabled_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("anon_enabled_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long anon_enabled_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1159,42 +1160,42 @@ public final class AnonDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("anon_inode_create_getfd((const u8*)$arg1, (const struct file_operations*)$arg2, $arg3, $arg4, (const struct inode*)$arg5)")
+  @BuiltinBPFFunction("anon_inode_create_getfd((const u8 *)$arg1, (const struct file_operations *)$arg2, $arg3, $arg4, (const struct inode *)$arg5)")
   public static int anon_inode_create_getfd(String name, Ptr<file_operations> fops, Ptr<?> priv,
       int flags, Ptr<inode> context_inode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("anon_inode_create_getfile((const u8*)$arg1, (const struct file_operations*)$arg2, $arg3, $arg4, (const struct inode*)$arg5)")
+  @BuiltinBPFFunction("anon_inode_create_getfile((const u8 *)$arg1, (const struct file_operations *)$arg2, $arg3, $arg4, (const struct inode *)$arg5)")
   public static Ptr<file> anon_inode_create_getfile(String name, Ptr<file_operations> fops,
       Ptr<?> priv, int flags, Ptr<inode> context_inode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("anon_inode_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("anon_inode_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int anon_inode_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("anon_inode_getfd((const u8*)$arg1, (const struct file_operations*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("anon_inode_getfd((const u8 *)$arg1, (const struct file_operations *)$arg2, $arg3, $arg4)")
   public static int anon_inode_getfd(String name, Ptr<file_operations> fops, Ptr<?> priv,
       int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("anon_inode_getfile((const u8*)$arg1, (const struct file_operations*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("anon_inode_getfile((const u8 *)$arg1, (const struct file_operations *)$arg2, $arg3, $arg4)")
   public static Ptr<file> anon_inode_getfile(String name, Ptr<file_operations> fops, Ptr<?> priv,
       int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("anon_inode_getfile_fmode((const u8*)$arg1, (const struct file_operations*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("anon_inode_getfile_fmode((const u8 *)$arg1, (const struct file_operations *)$arg2, $arg3, $arg4, $arg5)")
   public static Ptr<file> anon_inode_getfile_fmode(String name, Ptr<file_operations> fops,
       Ptr<?> priv, int flags, @Unsigned @OriginalName("fmode_t") int f_mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1207,7 +1208,7 @@ public final class AnonDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("anon_inode_make_secure_inode($arg1, (const u8*)$arg2, (const struct inode*)$arg3)")
+  @BuiltinBPFFunction("anon_inode_make_secure_inode($arg1, (const u8 *)$arg2, (const struct inode *)$arg3)")
   public static Ptr<inode> anon_inode_make_secure_inode(Ptr<super_block> sb, String name,
       Ptr<inode> context_inode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1339,7 +1340,7 @@ public final class AnonDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("anon_vma_name_alloc((const u8*)$arg1)")
+  @BuiltinBPFFunction("anon_vma_name_alloc((const u8 *)$arg1)")
   public static Ptr<anon_vma_name> anon_vma_name_alloc(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1848,7 +1849,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { struct { struct { int counter; } mm_count; }; struct maple_tree mm_mt; long unsigned int mmap_base; long unsigned int mmap_legacy_base; long unsigned int mmap_compat_base; long unsigned int mmap_compat_legacy_base; long unsigned int task_size; struct { long unsigned int pgd; } *pgd; struct { int counter; } membarrier_state; struct { int counter; } mm_users; struct mm_cid *pcpu_cid; long unsigned int mm_cid_next_scan; unsigned int nr_cpus_allowed; struct { int counter; } max_nr_cid; raw_spinlock cpus_allowed_lock; struct { long long int counter; } pgtables_bytes; int map_count; spinlock page_table_lock; struct rw_semaphore mmap_lock; struct list_head mmlist; struct rcuwait vma_writer_wait; seqcount mm_lock_seq; struct mutex futex_hash_lock; struct futex_private_hash *futex_phash; struct futex_private_hash *futex_phash_new; long unsigned int futex_batches; struct callback_head futex_rcu; struct { long long int counter; } futex_atomic; unsigned int *futex_ref; long unsigned int hiwater_rss; long unsigned int hiwater_vm; long unsigned int total_vm; long unsigned int locked_vm; struct { long long int counter; } pinned_vm; long unsigned int data_vm; long unsigned int exec_vm; long unsigned int stack_vm; long unsigned int def_flags; seqcount write_protect_seq; spinlock arg_lock; long unsigned int start_code; long unsigned int end_code; long unsigned int start_data; long unsigned int end_data; long unsigned int start_brk; long unsigned int brk; long unsigned int start_stack; long unsigned int arg_start; long unsigned int arg_end; long unsigned int env_start; long unsigned int env_end; long unsigned int saved_auxv[52]; struct percpu_counter rss_stat[4]; struct linux_binfmt *binfmt; struct { long long unsigned int ctx_id; struct { long long int counter; } tlb_gen; long unsigned int next_trim_cpumask; struct rw_semaphore ldt_usr_sem; struct ldt_struct *ldt; long unsigned int flags; struct mutex lock; void *vdso; const struct vdso_image*; struct { int counter; } perf_rdpmc_allowed; short unsigned int pkey_allocation_map; short int execute_only_pkey; short unsigned int global_asid; _Bool asid_transition; } context; long unsigned int flags; spinlock ioctx_lock; struct kioctx_table *ioctx_table; struct task_struct *owner; struct user_namespace *user_ns; struct file *exe_file; struct mmu_notifier_subscriptions *notifier_subscriptions; long unsigned int numa_next_scan; long unsigned int numa_scan_offset; int numa_scan_seq; struct { int counter; } tlb_flush_pending; struct { int counter; } tlb_flush_batched; struct uprobes_state uprobes_state; struct { long long int counter; } hugetlb_usage; struct work_struct async_put_work; struct iommu_mm_data *iommu_mm; long unsigned int ksm_merging_pages; long unsigned int ksm_rmap_items; struct { long long int counter; } ksm_zero_pages; struct { struct list_head list; long unsigned int bitmap; struct mem_cgroup *memcg; } lru_gen; unsigned int mm_id; }"
+      cType = "struct { struct { struct { int counter; } mm_count; }; struct maple_tree mm_mt; long unsigned int mmap_base; long unsigned int mmap_legacy_base; long unsigned int mmap_compat_base; long unsigned int mmap_compat_legacy_base; long unsigned int task_size; struct { long unsigned int pgd; } *pgd; struct { int counter; } membarrier_state; struct { int counter; } mm_users; struct mm_cid *pcpu_cid; long unsigned int mm_cid_next_scan; unsigned int nr_cpus_allowed; struct { int counter; } max_nr_cid; raw_spinlock cpus_allowed_lock; struct { long long int counter; } pgtables_bytes; int map_count; spinlock page_table_lock; struct rw_semaphore mmap_lock; struct list_head mmlist; struct rcuwait vma_writer_wait; seqcount mm_lock_seq; struct mutex futex_hash_lock; struct futex_private_hash *futex_phash; struct futex_private_hash *futex_phash_new; long unsigned int futex_batches; struct callback_head futex_rcu; struct { long long int counter; } futex_atomic; unsigned int *futex_ref; long unsigned int hiwater_rss; long unsigned int hiwater_vm; long unsigned int total_vm; long unsigned int locked_vm; struct { long long int counter; } pinned_vm; long unsigned int data_vm; long unsigned int exec_vm; long unsigned int stack_vm; long unsigned int def_flags; seqcount write_protect_seq; spinlock arg_lock; long unsigned int start_code; long unsigned int end_code; long unsigned int start_data; long unsigned int end_data; long unsigned int start_brk; long unsigned int brk; long unsigned int start_stack; long unsigned int arg_start; long unsigned int arg_end; long unsigned int env_start; long unsigned int env_end; long unsigned int saved_auxv[52]; struct percpu_counter rss_stat[4]; struct linux_binfmt *binfmt; struct { long long unsigned int ctx_id; struct { long long int counter; } tlb_gen; long unsigned int next_trim_cpumask; struct rw_semaphore ldt_usr_sem; struct ldt_struct *ldt; long unsigned int flags; struct mutex lock; void *vdso; const struct vdso_image *vdso_image; struct { int counter; } perf_rdpmc_allowed; short unsigned int pkey_allocation_map; short int execute_only_pkey; short unsigned int global_asid; _Bool asid_transition; } context; long unsigned int flags; spinlock ioctx_lock; struct kioctx_table *ioctx_table; struct task_struct *owner; struct user_namespace *user_ns; struct file *exe_file; struct mmu_notifier_subscriptions *notifier_subscriptions; long unsigned int numa_next_scan; long unsigned int numa_scan_offset; int numa_scan_seq; struct { int counter; } tlb_flush_pending; struct { int counter; } tlb_flush_batched; struct uprobes_state uprobes_state; struct { long long int counter; } hugetlb_usage; struct work_struct async_put_work; struct iommu_mm_data *iommu_mm; long unsigned int ksm_merging_pages; long unsigned int ksm_rmap_items; struct { long long int counter; } ksm_zero_pages; struct { struct list_head list; long unsigned int bitmap; struct mem_cgroup *memcg; } lru_gen; unsigned int mm_id; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -2008,7 +2009,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const struct ctl_table*; int ctl_table_size; int used; int count; int nreg; }"
+      cType = "struct { const struct ctl_table *ctl_table; int ctl_table_size; int used; int count; int nreg; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -2026,7 +2027,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct { const struct ctl_table*; int ctl_table_size; int used; int count; int nreg; }; struct callback_head rcu; }"
+      cType = "union { struct { const struct ctl_table *ctl_table; int ctl_table_size; int used; int count; int nreg; }; struct callback_head rcu; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -2038,7 +2039,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { const struct iovec*; const struct kvec*; const struct bio_vec*; const struct folio_queue*; struct xarray *xarray; void *ubuf; }"
+      cType = "union { const struct iovec *__iov; const struct kvec *kvec; const struct bio_vec *bvec; const struct folio_queue *folioq; struct xarray *xarray; void *ubuf; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -2058,7 +2059,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { union { const struct iovec*; const struct kvec*; const struct bio_vec*; const struct folio_queue*; struct xarray *xarray; void *ubuf; }; long unsigned int count; }"
+      cType = "struct { union { const struct iovec *__iov; const struct kvec *kvec; const struct bio_vec *bvec; const struct folio_queue *folioq; struct xarray *xarray; void *ubuf; }; long unsigned int count; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -2086,7 +2087,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct iovec __ubuf_iovec; struct { union { const struct iovec*; const struct kvec*; const struct bio_vec*; const struct folio_queue*; struct xarray *xarray; void *ubuf; }; long unsigned int count; }; }"
+      cType = "union { struct iovec __ubuf_iovec; struct { union { const struct iovec *__iov; const struct kvec *kvec; const struct bio_vec *bvec; const struct folio_queue *folioq; struct xarray *xarray; void *ubuf; }; long unsigned int count; }; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -2328,7 +2329,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { const struct bin_attribute**; const struct bin_attribute**; }"
+      cType = "union { const const struct bin_attribute *bin_attrs*; const const struct bin_attribute *bin_attrs_new*; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -2340,7 +2341,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { void *arg; const struct kparam_string*; const struct kparam_array*; }"
+      cType = "union { void *arg; const struct kparam_string *str; const struct kparam_array *arr; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -2966,7 +2967,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; const int size; const int align; const unsigned int is_signed; unsigned int needs_test; const int filter_type; const int len; }"
+      cType = "struct { const u8 *name; const int size; const int align; const unsigned int is_signed; unsigned int needs_test; const int filter_type; const int len; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -2988,7 +2989,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct { const u8*; const int size; const int align; const unsigned int is_signed; unsigned int needs_test; const int filter_type; const int len; }; int (*define_fields)(struct trace_event_call*); }"
+      cType = "union { struct { const u8 *name; const int size; const int align; const unsigned int is_signed; unsigned int needs_test; const int filter_type; const int len; }; int (*define_fields)(struct trace_event_call*); }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -3000,7 +3001,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { const u8*; struct tracepoint *tp; }"
+      cType = "union { const u8 *name; struct tracepoint *tp; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -3322,7 +3323,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct __kfifo kfifo; u8 *type; const u8*; u8 (*rectype)[0]; u8 *ptr; const u8*; }"
+      cType = "union { struct __kfifo kfifo; u8 *type; const u8 *const_type; u8 (*rectype)[0]; u8 *ptr; const u8 *ptr_const; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -3472,7 +3473,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { short unsigned int strict_start_type; const unsigned int bitfield32_valid; const unsigned int mask; const u8*; const struct nla_policy*; const struct netlink_range_validation*; const struct netlink_range_validation_signed*; struct { short int min; short int max; }; int (*validate)(const struct nlattr*, struct netlink_ext_ack*); }"
+      cType = "union { short unsigned int strict_start_type; const unsigned int bitfield32_valid; const unsigned int mask; const u8 *reject_message; const struct nla_policy *nested_policy; const struct netlink_range_validation *range; const struct netlink_range_validation_signed *range_signed; struct { short int min; short int max; }; int (*validate)(const struct nlattr*, struct netlink_ext_ack*); }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -4546,7 +4547,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct __kfifo kfifo; long long unsigned int *type; const long long unsigned int*; u8 (*rectype)[0]; long long unsigned int *ptr; const long long unsigned int*; }"
+      cType = "union { struct __kfifo kfifo; long long unsigned int *type; const long long unsigned int *const_type; u8 (*rectype)[0]; long long unsigned int *ptr; const long long unsigned int *ptr_const; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -5552,7 +5553,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { const void*; union { u8 u8_data[8]; short unsigned int u16_data[4]; unsigned int u32_data[2]; long long unsigned int u64_data[1]; const u8* str[1]; } value; }"
+      cType = "union { const void *pointer; union { u8 u8_data[8]; short unsigned int u16_data[4]; unsigned int u32_data[2]; long long unsigned int u64_data[1]; const u8* str[1]; } value; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -5694,7 +5695,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct { long unsigned int class; unsigned int classid; }; const struct tcf_proto*; }"
+      cType = "union { struct { long unsigned int class; unsigned int classid; }; const struct tcf_proto *goto_tp; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -6084,7 +6085,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { const u8*; struct folio *sfolio; }"
+      cType = "union { const u8 *src; struct folio *sfolio; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -6096,7 +6097,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct scatterlist *src; const u8*; }"
+      cType = "union { struct scatterlist *src; const u8 *svirt; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -6328,7 +6329,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct { int nargs; long int args[6]; } socketcall; struct { struct { unsigned int val; } uid; struct { unsigned int val; } gid; short unsigned int mode; struct lsm_prop oprop; int has_perm; unsigned int perm_uid; unsigned int perm_gid; short unsigned int perm_mode; long unsigned int qbytes; } ipc; struct { int mqdes; struct mq_attr mqstat; } mq_getsetattr; struct { int mqdes; int sigev_signo; } mq_notify; struct { int mqdes; long unsigned int msg_len; unsigned int msg_prio; struct timespec64 abs_timeout; } mq_sendrecv; struct { int oflag; short unsigned int mode; struct mq_attr attr; } mq_open; struct { int pid; struct audit_cap_data cap; } capset; struct { int fd; int flags; } mmap; struct open_how openat2; struct { int argc; } execve; struct { const u8*; } module; struct { struct audit_ntp_data ntp_data; struct timespec64 tk_injoffset; } time; }"
+      cType = "union { struct { int nargs; long int args[6]; } socketcall; struct { struct { unsigned int val; } uid; struct { unsigned int val; } gid; short unsigned int mode; struct lsm_prop oprop; int has_perm; unsigned int perm_uid; unsigned int perm_gid; short unsigned int perm_mode; long unsigned int qbytes; } ipc; struct { int mqdes; struct mq_attr mqstat; } mq_getsetattr; struct { int mqdes; int sigev_signo; } mq_notify; struct { int mqdes; long unsigned int msg_len; unsigned int msg_prio; struct timespec64 abs_timeout; } mq_sendrecv; struct { int oflag; short unsigned int mode; struct mq_attr attr; } mq_open; struct { int pid; struct audit_cap_data cap; } capset; struct { int fd; int flags; } mmap; struct open_how openat2; struct { int argc; } execve; struct { const u8 *name; } module; struct { struct audit_ntp_data ntp_data; struct timespec64 tk_injoffset; } time; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -6973,7 +6974,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct { unsigned int type_id; } kptr; struct { const u8*; unsigned int value_btf_id; } graph_root; }"
+      cType = "union { struct { unsigned int type_id; } kptr; struct { const u8 *node_name; unsigned int value_btf_id; } graph_root; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -7451,7 +7452,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct __kfifo kfifo; struct memory_failure_entry *type; const struct memory_failure_entry*; u8 (*rectype)[0]; struct memory_failure_entry *ptr; const struct memory_failure_entry*; }"
+      cType = "union { struct __kfifo kfifo; struct memory_failure_entry *type; const struct memory_failure_entry *const_type; u8 (*rectype)[0]; struct memory_failure_entry *ptr; const struct memory_failure_entry *ptr_const; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -7575,7 +7576,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { const void*; void *value; }"
+      cType = "union { const void *cvalue; void *value; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -7587,7 +7588,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { const struct proc_ops*; const struct file_operations*; }"
+      cType = "union { const struct proc_ops *proc_ops; const struct file_operations *proc_dir_ops; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -7783,7 +7784,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const unsigned int*; unsigned int bitmask_store[3]; enum nfs3_stable_how stable; }"
+      cType = "struct { const unsigned int *bitmask; unsigned int bitmask_store[3]; enum nfs3_stable_how stable; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -7797,7 +7798,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { unsigned int replen; struct { const unsigned int*; unsigned int bitmask_store[3]; enum nfs3_stable_how stable; }; }"
+      cType = "union { unsigned int replen; struct { const unsigned int *bitmask; unsigned int bitmask_store[3]; enum nfs3_stable_how stable; }; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -7823,7 +7824,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct { unsigned int replen; int eof; void *scratch; }; struct { struct nfs_writeverf *verf; const struct nfs_server*; }; }"
+      cType = "union { struct { unsigned int replen; int eof; void *scratch; }; struct { struct nfs_writeverf *verf; const struct nfs_server *server; }; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -8003,7 +8004,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { const void*; const struct file_operations*; const struct debugfs_short_fops*; struct vfsmount* (*automount)(struct dentry*, void*); }"
+      cType = "union { const void *raw; const struct file_operations *real_fops; const struct debugfs_short_fops *short_fops; struct vfsmount* (*automount)(struct dentry*, void*); }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -8535,7 +8536,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct { const u8*; struct { unsigned int val; } ouid; } fs; struct { int rlim; long unsigned int max; } rlim; struct { int signal; int unmappedsig; }; struct { int type; int protocol; void *addr; int addrlen; struct { void *addr; int addrlen; } peer; } net; struct { const u8*; } ns; struct { struct { unsigned int val; } ouid; } mq; }"
+      cType = "union { struct { const u8 *target; struct { unsigned int val; } ouid; } fs; struct { int rlim; long unsigned int max; } rlim; struct { int signal; int unmappedsig; }; struct { int type; int protocol; void *addr; int addrlen; struct { void *addr; int addrlen; } peer; } net; struct { const u8 *target; } ns; struct { struct { unsigned int val; } ouid; } mq; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -8555,7 +8556,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { struct aa_label *peer; union { struct { const u8*; struct { unsigned int val; } ouid; } fs; struct { int rlim; long unsigned int max; } rlim; struct { int signal; int unmappedsig; }; struct { int type; int protocol; void *addr; int addrlen; struct { void *addr; int addrlen; } peer; } net; struct { const u8*; } ns; struct { struct { unsigned int val; } ouid; } mq; }; }"
+      cType = "struct { struct aa_label *peer; union { struct { const u8 *target; struct { unsigned int val; } ouid; } fs; struct { int rlim; long unsigned int max; } rlim; struct { int signal; int unmappedsig; }; struct { int type; int protocol; void *addr; int addrlen; struct { void *addr; int addrlen; } peer; } net; struct { const u8 *target; } ns; struct { struct { unsigned int val; } ouid; } mq; }; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -8583,7 +8584,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct { struct aa_label *peer; union { struct { const u8*; struct { unsigned int val; } ouid; } fs; struct { int rlim; long unsigned int max; } rlim; struct { int signal; int unmappedsig; }; struct { int type; int protocol; void *addr; int addrlen; struct { void *addr; int addrlen; } peer; } net; struct { const u8*; } ns; struct { struct { unsigned int val; } ouid; } mq; }; }; struct { struct aa_profile *profile; const u8*; long int pos; } iface; struct { const u8*; const u8*; const u8*; const u8*; long unsigned int flags; } mnt; struct { struct aa_label *target; } uring; }"
+      cType = "union { struct { struct aa_label *peer; union { struct { const u8 *target; struct { unsigned int val; } ouid; } fs; struct { int rlim; long unsigned int max; } rlim; struct { int signal; int unmappedsig; }; struct { int type; int protocol; void *addr; int addrlen; struct { void *addr; int addrlen; } peer; } net; struct { const u8 *target; } ns; struct { struct { unsigned int val; } ouid; } mq; }; }; struct { struct aa_profile *profile; const u8 *ns; long int pos; } iface; struct { const u8 *src_name; const u8 *type; const u8 *trans; const u8 *data; long unsigned int flags; } mnt; struct { struct aa_label *target; } uring; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -8685,7 +8686,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct callback_head rcu_free; const struct landlock_object_underops*; }"
+      cType = "union { struct callback_head rcu_free; const struct landlock_object_underops *underops; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -9647,7 +9648,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct __kfifo kfifo; struct gpio_v2_line_event *type; const struct gpio_v2_line_event*; u8 (*rectype)[0]; struct gpio_v2_line_event *ptr; const struct gpio_v2_line_event*; }"
+      cType = "union { struct __kfifo kfifo; struct gpio_v2_line_event *type; const struct gpio_v2_line_event *const_type; u8 (*rectype)[0]; struct gpio_v2_line_event *ptr; const struct gpio_v2_line_event *ptr_const; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -9667,7 +9668,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct __kfifo kfifo; struct gpioevent_data *type; const struct gpioevent_data*; u8 (*rectype)[0]; struct gpioevent_data *ptr; const struct gpioevent_data*; }"
+      cType = "union { struct __kfifo kfifo; struct gpioevent_data *type; const struct gpioevent_data *const_type; u8 (*rectype)[0]; struct gpioevent_data *ptr; const struct gpioevent_data *ptr_const; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -9687,7 +9688,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct __kfifo kfifo; struct gpio_v2_line_info_changed *type; const struct gpio_v2_line_info_changed*; u8 (*rectype)[0]; struct gpio_v2_line_info_changed *ptr; const struct gpio_v2_line_info_changed*; }"
+      cType = "union { struct __kfifo kfifo; struct gpio_v2_line_info_changed *type; const struct gpio_v2_line_info_changed *const_type; u8 (*rectype)[0]; struct gpio_v2_line_info_changed *ptr; const struct gpio_v2_line_info_changed *ptr_const; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -9815,7 +9816,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct __kfifo kfifo; struct aer_err_source *type; const struct aer_err_source*; u8 (*rectype)[0]; struct aer_err_source *ptr; const struct aer_err_source*; }"
+      cType = "union { struct __kfifo kfifo; struct aer_err_source *type; const struct aer_err_source *const_type; u8 (*rectype)[0]; struct aer_err_source *ptr; const struct aer_err_source *ptr_const; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -10772,7 +10773,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct __kfifo kfifo; struct pse_ntf *type; const struct pse_ntf*; u8 (*rectype)[0]; struct pse_ntf *ptr; const struct pse_ntf*; }"
+      cType = "union { struct __kfifo kfifo; struct pse_ntf *type; const struct pse_ntf *const_type; u8 (*rectype)[0]; struct pse_ntf *ptr; const struct pse_ntf *ptr_const; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -11240,7 +11241,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct { const u8*; long unsigned int eph_key_size; u8 *sw_secret; } derive_sw_secret; struct { const u8*; long unsigned int raw_key_size; u8 *lt_key; } import_key; struct { u8 *lt_key; } generate_key; struct { const u8*; long unsigned int lt_key_size; u8 *eph_key; } prepare_key; }"
+      cType = "union { struct { const u8 *eph_key; long unsigned int eph_key_size; u8 *sw_secret; } derive_sw_secret; struct { const u8 *raw_key; long unsigned int raw_key_size; u8 *lt_key; } import_key; struct { u8 *lt_key; } generate_key; struct { const u8 *lt_key; long unsigned int lt_key_size; u8 *eph_key; } prepare_key; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -11268,7 +11269,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { const struct edac_scrub_ops*; const struct edac_ecs_ops*; const struct edac_mem_repair_ops*; }"
+      cType = "union { const struct edac_scrub_ops *scrub_ops; const struct edac_ecs_ops *ecs_ops; const struct edac_mem_repair_ops *mem_repair_ops; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -11672,7 +11673,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { const struct dsa_port*; struct dsa_lag lag; struct dsa_bridge bridge; }"
+      cType = "union { const struct dsa_port *dp; struct dsa_lag lag; struct dsa_bridge bridge; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -12642,7 +12643,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { const struct devlink_region_ops*; const struct devlink_port_region_ops*; }"
+      cType = "union { const struct devlink_region_ops *ops; const struct devlink_port_region_ops *port_ops; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -13082,7 +13083,7 @@ public final class AnonDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct { struct file *file; struct folio *folio; void *addr; long long int folio_off; _Bool may_fault; }; struct { const u8*; long long unsigned int data_sz; }; }"
+      cType = "union { struct { struct file *file; struct folio *folio; void *addr; long long int folio_off; _Bool may_fault; }; struct { const u8 *data; long long unsigned int data_sz; }; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

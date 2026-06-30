@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1129,7 +1130,7 @@ public final class MipiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_create_packet($arg1, (const struct mipi_dsi_msg*)$arg2)")
+  @BuiltinBPFFunction("mipi_dsi_create_packet($arg1, (const struct mipi_dsi_msg *)$arg2)")
   public static int mipi_dsi_create_packet(Ptr<mipi_dsi_packet> packet, Ptr<mipi_dsi_msg> msg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1338,28 +1339,28 @@ public final class MipiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_dcs_write($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("mipi_dsi_dcs_write($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long mipi_dsi_dcs_write(Ptr<mipi_dsi_device> dsi, char cmd,
       Ptr<?> data, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_dcs_write_buffer($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mipi_dsi_dcs_write_buffer($arg1, (const void *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long mipi_dsi_dcs_write_buffer(Ptr<mipi_dsi_device> dsi,
       Ptr<?> data, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_dcs_write_buffer_chatty($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mipi_dsi_dcs_write_buffer_chatty($arg1, (const void *)$arg2, $arg3)")
   public static int mipi_dsi_dcs_write_buffer_chatty(Ptr<mipi_dsi_device> dsi, Ptr<?> data,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_dcs_write_buffer_multi($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mipi_dsi_dcs_write_buffer_multi($arg1, (const void *)$arg2, $arg3)")
   public static void mipi_dsi_dcs_write_buffer_multi(Ptr<mipi_dsi_multi_context> ctx, Ptr<?> data,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1378,13 +1379,13 @@ public final class MipiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_device_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("mipi_dsi_device_match($arg1, (const struct device_driver *)$arg2)")
   public static int mipi_dsi_device_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_device_register_full($arg1, (const struct mipi_dsi_device_info*)$arg2)")
+  @BuiltinBPFFunction("mipi_dsi_device_register_full($arg1, (const struct mipi_dsi_device_info *)$arg2)")
   public static Ptr<mipi_dsi_device> mipi_dsi_device_register_full(Ptr<mipi_dsi_host> host,
       Ptr<mipi_dsi_device_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1434,28 +1435,28 @@ public final class MipiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_generic_read($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("mipi_dsi_generic_read($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static @OriginalName("ssize_t") long mipi_dsi_generic_read(Ptr<mipi_dsi_device> dsi,
       Ptr<?> params, @Unsigned long num_params, Ptr<?> data, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_generic_write($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mipi_dsi_generic_write($arg1, (const void *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long mipi_dsi_generic_write(Ptr<mipi_dsi_device> dsi,
       Ptr<?> payload, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_generic_write_chatty($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mipi_dsi_generic_write_chatty($arg1, (const void *)$arg2, $arg3)")
   public static int mipi_dsi_generic_write_chatty(Ptr<mipi_dsi_device> dsi, Ptr<?> payload,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_generic_write_multi($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mipi_dsi_generic_write_multi($arg1, (const void *)$arg2, $arg3)")
   public static void mipi_dsi_generic_write_multi(Ptr<mipi_dsi_multi_context> ctx, Ptr<?> payload,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1486,14 +1487,14 @@ public final class MipiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_picture_parameter_set($arg1, (const struct drm_dsc_picture_parameter_set*)$arg2)")
+  @BuiltinBPFFunction("mipi_dsi_picture_parameter_set($arg1, (const struct drm_dsc_picture_parameter_set *)$arg2)")
   public static int mipi_dsi_picture_parameter_set(Ptr<mipi_dsi_device> dsi,
       Ptr<drm_dsc_picture_parameter_set> pps) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_picture_parameter_set_multi($arg1, (const struct drm_dsc_picture_parameter_set*)$arg2)")
+  @BuiltinBPFFunction("mipi_dsi_picture_parameter_set_multi($arg1, (const struct drm_dsc_picture_parameter_set *)$arg2)")
   public static void mipi_dsi_picture_parameter_set_multi(Ptr<mipi_dsi_multi_context> ctx,
       Ptr<drm_dsc_picture_parameter_set> pps) {
     throw new MethodIsBPFRelatedFunction();
@@ -1531,7 +1532,7 @@ public final class MipiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mipi_dsi_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mipi_dsi_uevent((const struct device *)$arg1, $arg2)")
   public static int mipi_dsi_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }

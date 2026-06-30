@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class FsnotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__fsnotify_parent($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__fsnotify_parent($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int __fsnotify_parent(Ptr<dentry> dentry, @Unsigned int mask, Ptr<?> data,
       int data_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1142,7 +1143,7 @@ public final class FsnotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsnotify_alloc_group((const struct fsnotify_ops*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fsnotify_alloc_group((const struct fsnotify_ops *)$arg1, $arg2)")
   public static Ptr<fsnotify_group> fsnotify_alloc_group(Ptr<fsnotify_ops> ops, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1298,7 +1299,7 @@ public final class FsnotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsnotify_move($arg1, $arg2, (const struct qstr*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fsnotify_move($arg1, $arg2, (const struct qstr *)$arg3, $arg4, $arg5, $arg6)")
   public static void fsnotify_move(Ptr<inode> old_dir, Ptr<inode> new_dir, Ptr<qstr> old_name,
       int isdir, Ptr<inode> target, Ptr<dentry> moved) {
     throw new MethodIsBPFRelatedFunction();
@@ -1317,7 +1318,7 @@ public final class FsnotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsnotify_pre_content((const struct path*)$arg1, (const long long int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("fsnotify_pre_content((const struct path *)$arg1, (const long long int *)$arg2, $arg3)")
   public static int fsnotify_pre_content(Ptr<path> path,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

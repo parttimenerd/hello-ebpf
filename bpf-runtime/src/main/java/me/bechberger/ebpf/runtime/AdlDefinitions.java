@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1093,12 +1094,6 @@ public final class AdlDefinitions {
   @BuiltinBPFFunction
   public static Ptr<event_constraint> adl_get_event_constraints(Ptr<cpu_hw_events> cpuc, int idx,
       Ptr<perf_event> event) {
-    throw new MethodIsBPFRelatedFunction();
-  }
-
-  @NotUsableInJava
-  @BuiltinBPFFunction("")
-  public static void adl_get_hybrid_cpu_type() {
     throw new MethodIsBPFRelatedFunction();
   }
 

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1201,7 +1202,7 @@ public final class Max310xDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max310x_probe($arg1, (const struct max310x_devtype*)$arg2, (const struct max310x_if_cfg*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("max310x_probe($arg1, (const struct max310x_devtype *)$arg2, (const struct max310x_if_cfg *)$arg3, $arg4, $arg5)")
   public static int max310x_probe(Ptr<device> dev, Ptr<max310x_devtype> devtype,
       Ptr<max310x_if_cfg> if_cfg, Ptr<Ptr<regmap>> regmaps, int irq) {
     throw new MethodIsBPFRelatedFunction();
@@ -1276,7 +1277,7 @@ public final class Max310xDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("max310x_set_termios($arg1, $arg2, (const struct ktermios*)$arg3)")
+  @BuiltinBPFFunction("max310x_set_termios($arg1, $arg2, (const struct ktermios *)$arg3)")
   public static void max310x_set_termios(Ptr<uart_port> port, Ptr<ktermios> termios,
       Ptr<ktermios> old) {
     throw new MethodIsBPFRelatedFunction();

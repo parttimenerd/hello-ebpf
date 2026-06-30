@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class HtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__htab_map_lookup_and_delete_batch($arg1, (const union bpf_attr*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__htab_map_lookup_and_delete_batch($arg1, (const union bpf_attr *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int __htab_map_lookup_and_delete_batch(Ptr<bpf_map> map, Ptr<bpf_attr> attr,
       Ptr<bpf_attr> uattr, boolean do_delete, boolean is_lru_map, boolean is_percpu) {
     throw new MethodIsBPFRelatedFunction();
@@ -1159,7 +1160,7 @@ public final class HtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("htab_lru_map_lookup_and_delete_batch($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("htab_lru_map_lookup_and_delete_batch($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int htab_lru_map_lookup_and_delete_batch(Ptr<bpf_map> map, Ptr<bpf_attr> attr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1173,7 +1174,7 @@ public final class HtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("htab_lru_map_lookup_batch($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("htab_lru_map_lookup_batch($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int htab_lru_map_lookup_batch(Ptr<bpf_map> map, Ptr<bpf_attr> attr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1199,7 +1200,7 @@ public final class HtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("htab_lru_percpu_map_lookup_and_delete_batch($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("htab_lru_percpu_map_lookup_and_delete_batch($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int htab_lru_percpu_map_lookup_and_delete_batch(Ptr<bpf_map> map,
       Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1213,7 +1214,7 @@ public final class HtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("htab_lru_percpu_map_lookup_batch($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("htab_lru_percpu_map_lookup_batch($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int htab_lru_percpu_map_lookup_batch(Ptr<bpf_map> map, Ptr<bpf_attr> attr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1282,14 +1283,14 @@ public final class HtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("htab_map_hash((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("htab_map_hash((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned int htab_map_hash(Ptr<?> key, @Unsigned int key_len,
       @Unsigned int hashrnd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("htab_map_lookup_and_delete_batch($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("htab_map_lookup_and_delete_batch($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int htab_map_lookup_and_delete_batch(Ptr<bpf_map> map, Ptr<bpf_attr> attr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1303,7 +1304,7 @@ public final class HtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("htab_map_lookup_batch($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("htab_map_lookup_batch($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int htab_map_lookup_batch(Ptr<bpf_map> map, Ptr<bpf_attr> attr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1316,7 +1317,7 @@ public final class HtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("htab_map_mem_usage((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("htab_map_mem_usage((const struct bpf_map *)$arg1)")
   public static @Unsigned long htab_map_mem_usage(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1372,7 +1373,7 @@ public final class HtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("htab_percpu_map_lookup_and_delete_batch($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("htab_percpu_map_lookup_and_delete_batch($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int htab_percpu_map_lookup_and_delete_batch(Ptr<bpf_map> map, Ptr<bpf_attr> attr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1386,7 +1387,7 @@ public final class HtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("htab_percpu_map_lookup_batch($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("htab_percpu_map_lookup_batch($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int htab_percpu_map_lookup_batch(Ptr<bpf_map> map, Ptr<bpf_attr> attr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();

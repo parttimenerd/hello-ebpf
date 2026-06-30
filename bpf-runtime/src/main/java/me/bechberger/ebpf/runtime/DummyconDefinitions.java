@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1129,7 +1130,7 @@ public final class DummyconDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dummycon_putcs($arg1, (const short unsigned int*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("dummycon_putcs($arg1, (const short unsigned int *)$arg2, $arg3, $arg4, $arg5)")
   public static void dummycon_putcs(Ptr<vc_data> vc, Ptr<java.lang. @Unsigned Short> s,
       @Unsigned int count, @Unsigned int ypos, @Unsigned int xpos) {
     throw new MethodIsBPFRelatedFunction();

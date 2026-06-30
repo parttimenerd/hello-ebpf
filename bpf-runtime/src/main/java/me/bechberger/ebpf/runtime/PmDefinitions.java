@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class PmDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__pm_clk_add($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__pm_clk_add($arg1, (const u8 *)$arg2, $arg3)")
   public static int __pm_clk_add(Ptr<device> dev, String con_id, Ptr<clk> clk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1169,7 +1170,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_async_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pm_async_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long pm_async_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1182,7 +1183,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_clk_add($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("pm_clk_add($arg1, (const u8 *)$arg2)")
   public static int pm_clk_add(Ptr<device> dev, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1194,7 +1195,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_clk_add_notifier((const struct bus_type*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pm_clk_add_notifier((const struct bus_type *)$arg1, $arg2)")
   public static void pm_clk_add_notifier(Ptr<bus_type> bus, Ptr<pm_clk_notifier_block> clknb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1230,7 +1231,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_clk_op_lock($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("pm_clk_op_lock($arg1, $arg2, (const u8 *)$arg3)")
   public static int pm_clk_op_lock(Ptr<pm_subsys_data> psd, Ptr<java.lang. @Unsigned Long> flags,
       String fn) {
     throw new MethodIsBPFRelatedFunction();
@@ -1286,7 +1287,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_debug_messages_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pm_debug_messages_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long pm_debug_messages_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1299,14 +1300,14 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_dev_dbg($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("pm_dev_dbg($arg1, $arg2, (const u8 *)$arg3)")
   public static void pm_dev_dbg(Ptr<device> dev, @OriginalName("pm_message_t") pm_message state,
       String info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_dev_err($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pm_dev_err($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void pm_dev_err(Ptr<device> dev, @OriginalName("pm_message_t") pm_message state,
       String info, int error) {
     throw new MethodIsBPFRelatedFunction();
@@ -1326,7 +1327,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_freeze_timeout_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pm_freeze_timeout_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long pm_freeze_timeout_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1523,7 +1524,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_late_early_op((const struct dev_pm_ops*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pm_late_early_op((const struct dev_pm_ops *)$arg1, $arg2)")
   public static @OriginalName("pm_callback_t") Ptr<?> pm_late_early_op(Ptr<dev_pm_ops> ops,
       @OriginalName("pm_message_t") pm_message state) {
     throw new MethodIsBPFRelatedFunction();
@@ -1542,7 +1543,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_noirq_op((const struct dev_pm_ops*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pm_noirq_op((const struct dev_pm_ops *)$arg1, $arg2)")
   public static @OriginalName("pm_callback_t") Ptr<?> pm_noirq_op(Ptr<dev_pm_ops> ops,
       @OriginalName("pm_message_t") pm_message state) {
     throw new MethodIsBPFRelatedFunction();
@@ -1561,14 +1562,14 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_op((const struct dev_pm_ops*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pm_op((const struct dev_pm_ops *)$arg1, $arg2)")
   public static @OriginalName("pm_callback_t") Ptr<?> pm_op(Ptr<dev_pm_ops> ops,
       @OriginalName("pm_message_t") pm_message state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_ops_is_empty((const struct dev_pm_ops*)$arg1)")
+  @BuiltinBPFFunction("pm_ops_is_empty((const struct dev_pm_ops *)$arg1)")
   public static boolean pm_ops_is_empty(Ptr<dev_pm_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1593,7 +1594,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_print_times_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pm_print_times_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long pm_print_times_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1614,7 +1615,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_qos_latency_tolerance_us_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pm_qos_latency_tolerance_us_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long pm_qos_latency_tolerance_us_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1628,7 +1629,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_qos_no_power_off_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pm_qos_no_power_off_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long pm_qos_no_power_off_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1648,7 +1649,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_qos_resume_latency_us_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pm_qos_resume_latency_us_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long pm_qos_resume_latency_us_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -2024,7 +2025,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_test_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pm_test_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long pm_test_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -2051,7 +2052,7 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_trace_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pm_trace_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long pm_trace_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -2076,13 +2077,13 @@ public final class PmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_wake_lock((const u8*)$arg1)")
+  @BuiltinBPFFunction("pm_wake_lock((const u8 *)$arg1)")
   public static int pm_wake_lock(String buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pm_wake_unlock((const u8*)$arg1)")
+  @BuiltinBPFFunction("pm_wake_unlock((const u8 *)$arg1)")
   public static int pm_wake_unlock(String buf) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1110,20 +1111,20 @@ public final class NfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__nf_queue($arg1, (const struct nf_hook_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__nf_queue($arg1, (const struct nf_hook_state *)$arg2, $arg3, $arg4)")
   public static int __nf_queue(Ptr<sk_buff> skb, Ptr<nf_hook_state> state, @Unsigned int index,
       @Unsigned int queuenum) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__nf_register_net_hook($arg1, $arg2, (const struct nf_hook_ops*)$arg3)")
+  @BuiltinBPFFunction("__nf_register_net_hook($arg1, $arg2, (const struct nf_hook_ops *)$arg3)")
   public static int __nf_register_net_hook(Ptr<net> net, int pf, Ptr<nf_hook_ops> reg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__nf_unregister_net_hook($arg1, $arg2, (const struct nf_hook_ops*)$arg3)")
+  @BuiltinBPFFunction("__nf_unregister_net_hook($arg1, $arg2, (const struct nf_hook_ops *)$arg3)")
   public static void __nf_unregister_net_hook(Ptr<net> net, int pf, Ptr<nf_hook_ops> reg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1150,13 +1151,13 @@ public final class NfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_ct_attach($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("nf_ct_attach($arg1, (const struct sk_buff *)$arg2)")
   public static void nf_ct_attach(Ptr<sk_buff> _new, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_ct_get_tuple_skb($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("nf_ct_get_tuple_skb($arg1, (const struct sk_buff *)$arg2)")
   public static boolean nf_ct_get_tuple_skb(Ptr<nf_conntrack_tuple> dst_tuple, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1181,21 +1182,21 @@ public final class NfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_hook_entries_delete_raw($arg1, (const struct nf_hook_ops*)$arg2)")
+  @BuiltinBPFFunction("nf_hook_entries_delete_raw($arg1, (const struct nf_hook_ops *)$arg2)")
   public static void nf_hook_entries_delete_raw(Ptr<Ptr<nf_hook_entries>> pp,
       Ptr<nf_hook_ops> reg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_hook_entries_grow((const struct nf_hook_entries*)$arg1, (const struct nf_hook_ops*)$arg2)")
+  @BuiltinBPFFunction("nf_hook_entries_grow((const struct nf_hook_entries *)$arg1, (const struct nf_hook_ops *)$arg2)")
   public static Ptr<nf_hook_entries> nf_hook_entries_grow(Ptr<nf_hook_entries> old,
       Ptr<nf_hook_ops> reg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_hook_entries_insert_raw($arg1, (const struct nf_hook_ops*)$arg2)")
+  @BuiltinBPFFunction("nf_hook_entries_insert_raw($arg1, (const struct nf_hook_ops *)$arg2)")
   public static int nf_hook_entries_insert_raw(Ptr<Ptr<nf_hook_entries>> pp, Ptr<nf_hook_ops> reg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1208,28 +1209,28 @@ public final class NfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_hook_run_bpf($arg1, $arg2, (const struct nf_hook_state*)$arg3)")
+  @BuiltinBPFFunction("nf_hook_run_bpf($arg1, $arg2, (const struct nf_hook_state *)$arg3)")
   public static @Unsigned int nf_hook_run_bpf(Ptr<?> bpf_prog, Ptr<sk_buff> skb,
       Ptr<nf_hook_state> s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_hook_slow($arg1, $arg2, (const struct nf_hook_entries*)$arg3, $arg4)")
+  @BuiltinBPFFunction("nf_hook_slow($arg1, $arg2, (const struct nf_hook_entries *)$arg3, $arg4)")
   public static int nf_hook_slow(Ptr<sk_buff> skb, Ptr<nf_hook_state> state, Ptr<nf_hook_entries> e,
       @Unsigned int s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_hook_slow_list($arg1, $arg2, (const struct nf_hook_entries*)$arg3)")
+  @BuiltinBPFFunction("nf_hook_slow_list($arg1, $arg2, (const struct nf_hook_entries *)$arg3)")
   public static void nf_hook_slow_list(Ptr<list_head> head, Ptr<nf_hook_state> state,
       Ptr<nf_hook_entries> e) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_hooks_lwtunnel_sysctl_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("nf_hooks_lwtunnel_sysctl_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int nf_hooks_lwtunnel_sysctl_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1249,7 +1250,7 @@ public final class NfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_ip6_reroute($arg1, (const struct nf_queue_entry*)$arg2)")
+  @BuiltinBPFFunction("nf_ip6_reroute($arg1, (const struct nf_queue_entry *)$arg2)")
   public static int nf_ip6_reroute(Ptr<sk_buff> skb, Ptr<nf_queue_entry> entry) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1269,21 +1270,21 @@ public final class NfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("nf_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean nf_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_log_bind_pf($arg1, $arg2, (const struct nf_logger*)$arg3)")
+  @BuiltinBPFFunction("nf_log_bind_pf($arg1, $arg2, (const struct nf_logger *)$arg3)")
   public static int nf_log_bind_pf(Ptr<net> net, @OriginalName("u_int8_t") char pf,
       Ptr<nf_logger> logger) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_log_buf_add($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("nf_log_buf_add($arg1, (const u8 *)$arg2, $arg3_)")
   public static int nf_log_buf_add(Ptr<nf_log_buf> m, String f, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1319,7 +1320,7 @@ public final class NfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_log_packet($arg1, $arg2, $arg3, (const struct sk_buff*)$arg4, (const struct net_device*)$arg5, (const struct net_device*)$arg6, (const struct nf_loginfo*)$arg7, (const u8*)$arg8, $arg9_)")
+  @BuiltinBPFFunction("nf_log_packet($arg1, $arg2, $arg3, (const struct sk_buff *)$arg4, (const struct net_device *)$arg5, (const struct net_device *)$arg6, (const struct nf_loginfo *)$arg7, (const u8 *)$arg8, $arg9_)")
   public static void nf_log_packet(Ptr<net> net, @OriginalName("u_int8_t") char pf,
       @Unsigned int hooknum, Ptr<sk_buff> skb, Ptr<net_device> in, Ptr<net_device> out,
       Ptr<nf_loginfo> loginfo, String fmt, java.lang.Object... param8) {
@@ -1327,7 +1328,7 @@ public final class NfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_log_proc_dostring((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("nf_log_proc_dostring((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int nf_log_proc_dostring(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1340,14 +1341,14 @@ public final class NfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_log_set($arg1, $arg2, (const struct nf_logger*)$arg3)")
+  @BuiltinBPFFunction("nf_log_set($arg1, $arg2, (const struct nf_logger *)$arg3)")
   public static int nf_log_set(Ptr<net> net, @OriginalName("u_int8_t") char pf,
       Ptr<nf_logger> logger) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_log_trace($arg1, $arg2, $arg3, (const struct sk_buff*)$arg4, (const struct net_device*)$arg5, (const struct net_device*)$arg6, (const struct nf_loginfo*)$arg7, (const u8*)$arg8, $arg9_)")
+  @BuiltinBPFFunction("nf_log_trace($arg1, $arg2, $arg3, (const struct sk_buff *)$arg4, (const struct net_device *)$arg5, (const struct net_device *)$arg6, (const struct nf_loginfo *)$arg7, (const u8 *)$arg8, $arg9_)")
   public static void nf_log_trace(Ptr<net> net, @OriginalName("u_int8_t") char pf,
       @Unsigned int hooknum, Ptr<sk_buff> skb, Ptr<net_device> in, Ptr<net_device> out,
       Ptr<nf_loginfo> loginfo, String fmt, java.lang.Object... param8) {
@@ -1367,7 +1368,7 @@ public final class NfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_log_unset($arg1, (const struct nf_logger*)$arg2)")
+  @BuiltinBPFFunction("nf_log_unset($arg1, (const struct nf_logger *)$arg2)")
   public static void nf_log_unset(Ptr<net> net, Ptr<nf_logger> logger) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1428,19 +1429,19 @@ public final class NfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_register_net_hook($arg1, (const struct nf_hook_ops*)$arg2)")
+  @BuiltinBPFFunction("nf_register_net_hook($arg1, (const struct nf_hook_ops *)$arg2)")
   public static int nf_register_net_hook(Ptr<net> net, Ptr<nf_hook_ops> reg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_register_net_hooks($arg1, (const struct nf_hook_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nf_register_net_hooks($arg1, (const struct nf_hook_ops *)$arg2, $arg3)")
   public static int nf_register_net_hooks(Ptr<net> net, Ptr<nf_hook_ops> reg, @Unsigned int n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_register_queue_handler((const struct nf_queue_handler*)$arg1)")
+  @BuiltinBPFFunction("nf_register_queue_handler((const struct nf_queue_handler *)$arg1)")
   public static void nf_register_queue_handler(Ptr<nf_queue_handler> qh) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1466,13 +1467,13 @@ public final class NfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_unregister_net_hook($arg1, (const struct nf_hook_ops*)$arg2)")
+  @BuiltinBPFFunction("nf_unregister_net_hook($arg1, (const struct nf_hook_ops *)$arg2)")
   public static void nf_unregister_net_hook(Ptr<net> net, Ptr<nf_hook_ops> reg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nf_unregister_net_hooks($arg1, (const struct nf_hook_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nf_unregister_net_hooks($arg1, (const struct nf_hook_ops *)$arg2, $arg3)")
   public static void nf_unregister_net_hooks(Ptr<net> net, Ptr<nf_hook_ops> reg,
       @Unsigned int hookcount) {
     throw new MethodIsBPFRelatedFunction();

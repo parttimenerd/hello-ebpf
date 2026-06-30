@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class RadixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__radix_tree_lookup((const struct xarray*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__radix_tree_lookup((const struct xarray *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<?> __radix_tree_lookup(Ptr<xarray> root, @Unsigned long index,
       Ptr<Ptr<xa_node>> nodep, Ptr<Ptr<Ptr<?>>> slotp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1142,21 +1143,21 @@ public final class RadixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("radix_tree_gang_lookup((const struct xarray*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("radix_tree_gang_lookup((const struct xarray *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned int radix_tree_gang_lookup(Ptr<xarray> root, Ptr<Ptr<?>> results,
       @Unsigned long first_index, @Unsigned int max_items) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("radix_tree_gang_lookup_tag((const struct xarray*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("radix_tree_gang_lookup_tag((const struct xarray *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int radix_tree_gang_lookup_tag(Ptr<xarray> root, Ptr<Ptr<?>> results,
       @Unsigned long first_index, @Unsigned int max_items, @Unsigned int tag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("radix_tree_gang_lookup_tag_slot((const struct xarray*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("radix_tree_gang_lookup_tag_slot((const struct xarray *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int radix_tree_gang_lookup_tag_slot(Ptr<xarray> root,
       Ptr<Ptr<Ptr<?>>> results, @Unsigned long first_index, @Unsigned int max_items,
       @Unsigned int tag) {
@@ -1183,7 +1184,7 @@ public final class RadixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("radix_tree_iter_replace($arg1, (const struct radix_tree_iter*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("radix_tree_iter_replace($arg1, (const struct radix_tree_iter *)$arg2, $arg3, $arg4)")
   public static void radix_tree_iter_replace(Ptr<xarray> root, Ptr<radix_tree_iter> iter,
       Ptr<Ptr<?>> slot, Ptr<?> item) {
     throw new MethodIsBPFRelatedFunction();
@@ -1196,20 +1197,20 @@ public final class RadixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("radix_tree_iter_tag_clear($arg1, (const struct radix_tree_iter*)$arg2, $arg3)")
+  @BuiltinBPFFunction("radix_tree_iter_tag_clear($arg1, (const struct radix_tree_iter *)$arg2, $arg3)")
   public static void radix_tree_iter_tag_clear(Ptr<xarray> root, Ptr<radix_tree_iter> iter,
       @Unsigned int tag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("radix_tree_lookup((const struct xarray*)$arg1, $arg2)")
+  @BuiltinBPFFunction("radix_tree_lookup((const struct xarray *)$arg1, $arg2)")
   public static Ptr<?> radix_tree_lookup(Ptr<xarray> root, @Unsigned long index) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("radix_tree_lookup_slot((const struct xarray*)$arg1, $arg2)")
+  @BuiltinBPFFunction("radix_tree_lookup_slot((const struct xarray *)$arg1, $arg2)")
   public static Ptr<Ptr<?>> radix_tree_lookup_slot(Ptr<xarray> root, @Unsigned long index) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1221,7 +1222,7 @@ public final class RadixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("radix_tree_next_chunk((const struct xarray*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("radix_tree_next_chunk((const struct xarray *)$arg1, $arg2, $arg3)")
   public static Ptr<Ptr<?>> radix_tree_next_chunk(Ptr<xarray> root, Ptr<radix_tree_iter> iter,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1261,7 +1262,7 @@ public final class RadixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("radix_tree_tag_get((const struct xarray*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("radix_tree_tag_get((const struct xarray *)$arg1, $arg2, $arg3)")
   public static int radix_tree_tag_get(Ptr<xarray> root, @Unsigned long index, @Unsigned int tag) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1274,7 +1275,7 @@ public final class RadixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("radix_tree_tagged((const struct xarray*)$arg1, $arg2)")
+  @BuiltinBPFFunction("radix_tree_tagged((const struct xarray *)$arg1, $arg2)")
   public static int radix_tree_tagged(Ptr<xarray> root, @Unsigned int tag) {
     throw new MethodIsBPFRelatedFunction();
   }

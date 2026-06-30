@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1094,7 +1095,7 @@ public final class DnsDefinitions {
   public static final @Unsigned int dns_key_error = 1;
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dns_query($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, (const u8*)$arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("dns_query($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, (const u8 *)$arg5, $arg6, $arg7, $arg8)")
   public static int dns_query(Ptr<net> net, String type, String name, @Unsigned long namelen,
       String options, Ptr<String> _result, Ptr<java.lang. @OriginalName("time64_t") Long> _expiry,
       boolean invalidate) {
@@ -1102,13 +1103,13 @@ public final class DnsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dns_resolver_cmp((const struct key*)$arg1, (const struct key_match_data*)$arg2)")
+  @BuiltinBPFFunction("dns_resolver_cmp((const struct key *)$arg1, (const struct key_match_data *)$arg2)")
   public static boolean dns_resolver_cmp(Ptr<key> key, Ptr<key_match_data> match_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dns_resolver_describe((const struct key*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dns_resolver_describe((const struct key *)$arg1, $arg2)")
   public static void dns_resolver_describe(Ptr<key> key, Ptr<seq_file> m) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1132,7 +1133,7 @@ public final class DnsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dns_resolver_read((const struct key*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("dns_resolver_read((const struct key *)$arg1, $arg2, $arg3)")
   public static long dns_resolver_read(Ptr<key> key, String buffer, @Unsigned long buflen) {
     throw new MethodIsBPFRelatedFunction();
   }

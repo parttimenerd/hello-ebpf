@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class HwDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__hw_addr_add_ex($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__hw_addr_add_ex($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int __hw_addr_add_ex(Ptr<netdev_hw_addr_list> list, String addr, int addr_len,
       char addr_type, boolean global, boolean sync, int sync_count, boolean exclusive) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__hw_addr_create((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__hw_addr_create((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static Ptr<netdev_hw_addr> __hw_addr_create(String addr, int addr_len, char addr_type,
       boolean global, boolean sync) {
     throw new MethodIsBPFRelatedFunction();
@@ -1111,7 +1112,7 @@ public final class HwDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__hw_addr_del_ex($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__hw_addr_del_ex($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int __hw_addr_del_ex(Ptr<netdev_hw_addr_list> list, String addr, int addr_len,
       char addr_type, boolean global, boolean sync) {
     throw new MethodIsBPFRelatedFunction();
@@ -1187,7 +1188,7 @@ public final class HwDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__hw_protection_trigger((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__hw_protection_trigger((const u8 *)$arg1, $arg2, $arg3)")
   public static void __hw_protection_trigger(String reason, int ms_until_forced,
       hw_protection_action action) {
     throw new MethodIsBPFRelatedFunction();
@@ -1212,7 +1213,7 @@ public final class HwDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hw_breakpoint_arch_parse($arg1, (const struct perf_event_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hw_breakpoint_arch_parse($arg1, (const struct perf_event_attr *)$arg2, $arg3)")
   public static int hw_breakpoint_arch_parse(Ptr<perf_event> bp, Ptr<perf_event_attr> attr,
       Ptr<arch_hw_breakpoint> hw) {
     throw new MethodIsBPFRelatedFunction();
@@ -1310,7 +1311,7 @@ public final class HwDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hw_protection_action_parse((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("hw_protection_action_parse((const u8 *)$arg1, $arg2)")
   public static boolean hw_protection_action_parse(String str, Ptr<hw_protection_action> action) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1329,7 +1330,7 @@ public final class HwDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hw_protection_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("hw_protection_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long hw_protection_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

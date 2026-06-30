@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1224,7 +1225,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_crtc_init_with_planes($arg1, $arg2, $arg3, $arg4, (const struct drm_crtc_funcs*)$arg5, (const u8*)$arg6, $arg7)")
+  @BuiltinBPFFunction("__drm_crtc_init_with_planes($arg1, $arg2, $arg3, $arg4, (const struct drm_crtc_funcs *)$arg5, (const u8 *)$arg6, $arg7)")
   public static int __drm_crtc_init_with_planes(Ptr<drm_device> dev, Ptr<drm_crtc> crtc,
       Ptr<drm_plane> primary, Ptr<drm_plane> cursor, Ptr<drm_crtc_funcs> funcs, String name,
       Ptr<__va_list_tag> ap) {
@@ -1232,21 +1233,21 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_dev_alloc($arg1, (const struct drm_driver*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__drm_dev_alloc($arg1, (const struct drm_driver *)$arg2, $arg3, $arg4)")
   public static Ptr<?> __drm_dev_alloc(Ptr<device> parent, Ptr<drm_driver> driver,
       @Unsigned long size, @Unsigned long offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_dev_dbg($arg1, (const struct device*)$arg2, $arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("__drm_dev_dbg($arg1, (const struct device *)$arg2, $arg3, (const u8 *)$arg4, $arg5_)")
   public static void __drm_dev_dbg(Ptr<_ddebug> desc, Ptr<device> dev, drm_debug_category category,
       String format, java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_dev_vprintk((const struct device*)$arg1, (const u8*)$arg2, (const void*)$arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__drm_dev_vprintk((const struct device *)$arg1, (const u8 *)$arg2, (const void *)$arg3, (const u8 *)$arg4, $arg5)")
   public static void __drm_dev_vprintk(Ptr<device> dev, String level, Ptr<?> origin, String prefix,
       Ptr<va_format> vaf) {
     throw new MethodIsBPFRelatedFunction();
@@ -1259,14 +1260,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_encoder_init($arg1, $arg2, (const struct drm_encoder_funcs*)$arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("__drm_encoder_init($arg1, $arg2, (const struct drm_encoder_funcs *)$arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int __drm_encoder_init(Ptr<drm_device> dev, Ptr<drm_encoder> encoder,
       Ptr<drm_encoder_funcs> funcs, int encoder_type, String name, Ptr<__va_list_tag> ap) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_err((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("__drm_err((const u8 *)$arg1, $arg2_)")
   public static void __drm_err(String format, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1292,7 +1293,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_fb_xfrm($arg1, $arg2, $arg3, (const void*)$arg4, (const struct drm_framebuffer*)$arg5, (const struct drm_rect*)$arg6, $arg7, $arg8, (void (*)(void*, const void*, unsigned int))$arg9)")
+  @BuiltinBPFFunction("__drm_fb_xfrm($arg1, $arg2, $arg3, (const void *)$arg4, (const struct drm_framebuffer *)$arg5, (const struct drm_rect *)$arg6, $arg7, $arg8, (void (*)(void*, const void*, unsigned int))$arg9)")
   public static int __drm_fb_xfrm(Ptr<?> dst, @Unsigned long dst_pitch, @Unsigned long dst_pixsize,
       Ptr<?> vaddr, Ptr<drm_framebuffer> fb, Ptr<drm_rect> clip, boolean vaddr_cached_hint,
       Ptr<drm_format_conv_state> state, Ptr<?> xfrm_line) {
@@ -1300,7 +1301,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_fb_xfrm_toio($arg1, $arg2, $arg3, (const void*)$arg4, (const struct drm_framebuffer*)$arg5, (const struct drm_rect*)$arg6, $arg7, $arg8, (void (*)(void*, const void*, unsigned int))$arg9)")
+  @BuiltinBPFFunction("__drm_fb_xfrm_toio($arg1, $arg2, $arg3, (const void *)$arg4, (const struct drm_framebuffer *)$arg5, (const struct drm_rect *)$arg6, $arg7, $arg8, (void (*)(void*, const void*, unsigned int))$arg9)")
   public static int __drm_fb_xfrm_toio(Ptr<?> dst, @Unsigned long dst_pitch,
       @Unsigned long dst_pixsize, Ptr<?> vaddr, Ptr<drm_framebuffer> fb, Ptr<drm_rect> clip,
       boolean vaddr_cached_hint, Ptr<drm_format_conv_state> state, Ptr<?> xfrm_line) {
@@ -1363,13 +1364,13 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_memcpy_from_wc($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__drm_memcpy_from_wc($arg1, (const void *)$arg2, $arg3)")
   public static void __drm_memcpy_from_wc(Ptr<?> dst, Ptr<?> src, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_mm_interval_first((const struct drm_mm*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__drm_mm_interval_first((const struct drm_mm *)$arg1, $arg2, $arg3)")
   public static Ptr<drm_mm_node> __drm_mm_interval_first(Ptr<drm_mm> mm, @Unsigned long start,
       @Unsigned long last) {
     throw new MethodIsBPFRelatedFunction();
@@ -1405,7 +1406,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_plane_get_damage_clips((const struct drm_plane_state*)$arg1)")
+  @BuiltinBPFFunction("__drm_plane_get_damage_clips((const struct drm_plane_state *)$arg1)")
   public static Ptr<drm_mode_rect> __drm_plane_get_damage_clips(Ptr<drm_plane_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1447,13 +1448,13 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_puts_coredump($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__drm_puts_coredump($arg1, (const u8 *)$arg2)")
   public static void __drm_puts_coredump(Ptr<drm_printer> p, String str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_puts_seq_file($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__drm_puts_seq_file($arg1, (const u8 *)$arg2)")
   public static void __drm_puts_seq_file(Ptr<drm_printer> p, String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1465,7 +1466,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_universal_plane_alloc($arg1, $arg2, $arg3, $arg4, (const struct drm_plane_funcs*)$arg5, (const unsigned int*)$arg6, $arg7, (const long long unsigned int*)$arg8, $arg9, (const u8*)$arg10, $arg11_)")
+  @BuiltinBPFFunction("__drm_universal_plane_alloc($arg1, $arg2, $arg3, $arg4, (const struct drm_plane_funcs *)$arg5, (const unsigned int *)$arg6, $arg7, (const long long unsigned int *)$arg8, $arg9, (const u8 *)$arg10, $arg11_)")
   public static Ptr<?> __drm_universal_plane_alloc(Ptr<drm_device> dev, @Unsigned long size,
       @Unsigned long offset, @Unsigned @OriginalName("uint32_t") int possible_crtcs,
       Ptr<drm_plane_funcs> funcs,
@@ -1477,7 +1478,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_universal_plane_init($arg1, $arg2, $arg3, (const struct drm_plane_funcs*)$arg4, (const unsigned int*)$arg5, $arg6, (const long long unsigned int*)$arg7, $arg8, (const u8*)$arg9, $arg10)")
+  @BuiltinBPFFunction("__drm_universal_plane_init($arg1, $arg2, $arg3, (const struct drm_plane_funcs *)$arg4, (const unsigned int *)$arg5, $arg6, (const long long unsigned int *)$arg7, $arg8, (const u8 *)$arg9, $arg10)")
   public static int __drm_universal_plane_init(Ptr<drm_device> dev, Ptr<drm_plane> plane,
       @Unsigned @OriginalName("uint32_t") int possible_crtcs, Ptr<drm_plane_funcs> funcs,
       Ptr<java.lang. @Unsigned @OriginalName("uint32_t") Integer> formats,
@@ -1488,7 +1489,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drm_writeback_connector_init($arg1, $arg2, $arg3, (const unsigned int*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__drm_writeback_connector_init($arg1, $arg2, $arg3, (const unsigned int *)$arg4, $arg5)")
   public static int __drm_writeback_connector_init(Ptr<drm_device> dev,
       Ptr<drm_writeback_connector> wb_connector, Ptr<drm_encoder> enc,
       Ptr<java.lang. @Unsigned Integer> formats, int n_formats) {
@@ -1503,27 +1504,27 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct drm_edid*)_drm_edid_alloc((const void*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct drm_edid*)_drm_edid_alloc((const void *)$arg1, $arg2))")
   public static Ptr<drm_edid> _drm_edid_alloc(Ptr<?> edid, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_drm_edid_connector_add_modes($arg1, (const struct drm_edid*)$arg2)")
+  @BuiltinBPFFunction("_drm_edid_connector_add_modes($arg1, (const struct drm_edid *)$arg2)")
   public static int _drm_edid_connector_add_modes(Ptr<drm_connector> connector,
       Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_drm_edid_connector_property_update($arg1, (const struct drm_edid*)$arg2)")
+  @BuiltinBPFFunction("_drm_edid_connector_property_update($arg1, (const struct drm_edid *)$arg2)")
   public static int _drm_edid_connector_property_update(Ptr<drm_connector> connector,
       Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_drm_edid_to_sad((const struct drm_edid*)$arg1, $arg2)")
+  @BuiltinBPFFunction("_drm_edid_to_sad((const struct drm_edid *)$arg1, $arg2)")
   public static int _drm_edid_to_sad(Ptr<drm_edid> drm_edid, Ptr<Ptr<cea_sad>> psads) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1665,7 +1666,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_connector_get_property($arg1, (const struct drm_connector_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("drm_atomic_connector_get_property($arg1, (const struct drm_connector_state *)$arg2, $arg3, $arg4)")
   public static int drm_atomic_connector_get_property(Ptr<drm_connector> connector,
       Ptr<drm_connector_state> state, Ptr<drm_property> property,
       Ptr<java.lang. @Unsigned @OriginalName("uint64_t") Long> val) {
@@ -1673,7 +1674,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_connector_print_state($arg1, (const struct drm_connector_state*)$arg2)")
+  @BuiltinBPFFunction("drm_atomic_connector_print_state($arg1, (const struct drm_connector_state *)$arg2)")
   public static void drm_atomic_connector_print_state(Ptr<drm_printer> p,
       Ptr<drm_connector_state> state) {
     throw new MethodIsBPFRelatedFunction();
@@ -1688,21 +1689,21 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_crtc_check((const struct drm_crtc_state*)$arg1, (const struct drm_crtc_state*)$arg2)")
+  @BuiltinBPFFunction("drm_atomic_crtc_check((const struct drm_crtc_state *)$arg1, (const struct drm_crtc_state *)$arg2)")
   public static int drm_atomic_crtc_check(Ptr<drm_crtc_state> old_crtc_state,
       Ptr<drm_crtc_state> new_crtc_state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_crtc_get_property($arg1, (const struct drm_crtc_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("drm_atomic_crtc_get_property($arg1, (const struct drm_crtc_state *)$arg2, $arg3, $arg4)")
   public static int drm_atomic_crtc_get_property(Ptr<drm_crtc> crtc, Ptr<drm_crtc_state> state,
       Ptr<drm_property> property, Ptr<java.lang. @Unsigned @OriginalName("uint64_t") Long> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_crtc_print_state($arg1, (const struct drm_crtc_state*)$arg2)")
+  @BuiltinBPFFunction("drm_atomic_crtc_print_state($arg1, (const struct drm_crtc_state *)$arg2)")
   public static void drm_atomic_crtc_print_state(Ptr<drm_printer> p, Ptr<drm_crtc_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1728,7 +1729,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_get_connector_for_encoder((const struct drm_encoder*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_atomic_get_connector_for_encoder((const struct drm_encoder *)$arg1, $arg2)")
   public static Ptr<drm_connector> drm_atomic_get_connector_for_encoder(Ptr<drm_encoder> encoder,
       Ptr<drm_modeset_acquire_ctx> ctx) {
     throw new MethodIsBPFRelatedFunction();
@@ -1749,14 +1750,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_get_new_bridge_state((const struct drm_atomic_state*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_atomic_get_new_bridge_state((const struct drm_atomic_state *)$arg1, $arg2)")
   public static Ptr<drm_bridge_state> drm_atomic_get_new_bridge_state(Ptr<drm_atomic_state> state,
       Ptr<drm_bridge> bridge) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_get_new_connector_for_encoder((const struct drm_atomic_state*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_atomic_get_new_connector_for_encoder((const struct drm_atomic_state *)$arg1, $arg2)")
   public static Ptr<drm_connector> drm_atomic_get_new_connector_for_encoder(
       Ptr<drm_atomic_state> state, Ptr<drm_encoder> encoder) {
     throw new MethodIsBPFRelatedFunction();
@@ -1770,21 +1771,21 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_get_new_private_obj_state((const struct drm_atomic_state*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_atomic_get_new_private_obj_state((const struct drm_atomic_state *)$arg1, $arg2)")
   public static Ptr<drm_private_state> drm_atomic_get_new_private_obj_state(
       Ptr<drm_atomic_state> state, Ptr<drm_private_obj> obj) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_get_old_bridge_state((const struct drm_atomic_state*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_atomic_get_old_bridge_state((const struct drm_atomic_state *)$arg1, $arg2)")
   public static Ptr<drm_bridge_state> drm_atomic_get_old_bridge_state(Ptr<drm_atomic_state> state,
       Ptr<drm_bridge> bridge) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_get_old_connector_for_encoder((const struct drm_atomic_state*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_atomic_get_old_connector_for_encoder((const struct drm_atomic_state *)$arg1, $arg2)")
   public static Ptr<drm_connector> drm_atomic_get_old_connector_for_encoder(
       Ptr<drm_atomic_state> state, Ptr<drm_encoder> encoder) {
     throw new MethodIsBPFRelatedFunction();
@@ -1798,7 +1799,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_get_old_private_obj_state((const struct drm_atomic_state*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_atomic_get_old_private_obj_state((const struct drm_atomic_state *)$arg1, $arg2)")
   public static Ptr<drm_private_state> drm_atomic_get_old_private_obj_state(
       Ptr<drm_atomic_state> state, Ptr<drm_private_obj> obj) {
     throw new MethodIsBPFRelatedFunction();
@@ -1901,7 +1902,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_helper_check_plane_state($arg1, (const struct drm_crtc_state*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("drm_atomic_helper_check_plane_state($arg1, (const struct drm_crtc_state *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int drm_atomic_helper_check_plane_state(Ptr<drm_plane_state> plane_state,
       Ptr<drm_crtc_state> crtc_state, int min_scale, int max_scale, boolean can_position,
       boolean can_update_disabled) {
@@ -2060,7 +2061,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_helper_damage_iter_init($arg1, (const struct drm_plane_state*)$arg2, (const struct drm_plane_state*)$arg3)")
+  @BuiltinBPFFunction("drm_atomic_helper_damage_iter_init($arg1, (const struct drm_plane_state *)$arg2, (const struct drm_plane_state *)$arg3)")
   public static void drm_atomic_helper_damage_iter_init(Ptr<drm_atomic_helper_damage_iter> iter,
       Ptr<drm_plane_state> old_state, Ptr<drm_plane_state> state) {
     throw new MethodIsBPFRelatedFunction();
@@ -2074,7 +2075,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_helper_damage_merged((const struct drm_plane_state*)$arg1, (const struct drm_plane_state*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_atomic_helper_damage_merged((const struct drm_plane_state *)$arg1, (const struct drm_plane_state *)$arg2, $arg3)")
   public static boolean drm_atomic_helper_damage_merged(Ptr<drm_plane_state> old_state,
       Ptr<drm_plane_state> state, Ptr<drm_rect> rect) {
     throw new MethodIsBPFRelatedFunction();
@@ -2271,21 +2272,21 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_plane_check((const struct drm_plane_state*)$arg1, (const struct drm_plane_state*)$arg2)")
+  @BuiltinBPFFunction("drm_atomic_plane_check((const struct drm_plane_state *)$arg1, (const struct drm_plane_state *)$arg2)")
   public static int drm_atomic_plane_check(Ptr<drm_plane_state> old_plane_state,
       Ptr<drm_plane_state> new_plane_state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_plane_get_property($arg1, (const struct drm_plane_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("drm_atomic_plane_get_property($arg1, (const struct drm_plane_state *)$arg2, $arg3, $arg4)")
   public static int drm_atomic_plane_get_property(Ptr<drm_plane> plane, Ptr<drm_plane_state> state,
       Ptr<drm_property> property, Ptr<java.lang. @Unsigned @OriginalName("uint64_t") Long> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_plane_print_state($arg1, (const struct drm_plane_state*)$arg2)")
+  @BuiltinBPFFunction("drm_atomic_plane_print_state($arg1, (const struct drm_plane_state *)$arg2)")
   public static void drm_atomic_plane_print_state(Ptr<drm_printer> p, Ptr<drm_plane_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2299,7 +2300,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_print_new_state((const struct drm_atomic_state*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_atomic_print_new_state((const struct drm_atomic_state *)$arg1, $arg2)")
   public static void drm_atomic_print_new_state(Ptr<drm_atomic_state> state, Ptr<drm_printer> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2311,7 +2312,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_private_obj_init($arg1, $arg2, $arg3, (const struct drm_private_state_funcs*)$arg4)")
+  @BuiltinBPFFunction("drm_atomic_private_obj_init($arg1, $arg2, $arg3, (const struct drm_private_state_funcs *)$arg4)")
   public static void drm_atomic_private_obj_init(Ptr<drm_device> dev, Ptr<drm_private_obj> obj,
       Ptr<drm_private_state> state, Ptr<drm_private_state_funcs> funcs) {
     throw new MethodIsBPFRelatedFunction();
@@ -2339,7 +2340,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_set_mode_for_crtc($arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_atomic_set_mode_for_crtc($arg1, (const struct drm_display_mode *)$arg2)")
   public static int drm_atomic_set_mode_for_crtc(Ptr<drm_crtc_state> state,
       Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -2391,7 +2392,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_atomic_state_zpos_cmp((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("drm_atomic_state_zpos_cmp((const void *)$arg1, (const void *)$arg2)")
   public static int drm_atomic_state_zpos_cmp(Ptr<?> a, Ptr<?> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2403,7 +2404,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_av_sync_delay($arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_av_sync_delay($arg1, (const struct drm_display_mode *)$arg2)")
   public static int drm_av_sync_delay(Ptr<drm_connector> connector, Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2436,14 +2437,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_bridge_chain_mode_set($arg1, (const struct drm_display_mode*)$arg2, (const struct drm_display_mode*)$arg3)")
+  @BuiltinBPFFunction("drm_bridge_chain_mode_set($arg1, (const struct drm_display_mode *)$arg2, (const struct drm_display_mode *)$arg3)")
   public static void drm_bridge_chain_mode_set(Ptr<drm_bridge> bridge, Ptr<drm_display_mode> mode,
       Ptr<drm_display_mode> adjusted_mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_bridge_chain_mode_valid($arg1, (const struct drm_display_info*)$arg2, (const struct drm_display_mode*)$arg3)")
+  @BuiltinBPFFunction("drm_bridge_chain_mode_valid($arg1, (const struct drm_display_info *)$arg2, (const struct drm_display_mode *)$arg3)")
   public static drm_mode_status drm_bridge_chain_mode_valid(Ptr<drm_bridge> bridge,
       Ptr<drm_display_info> info, Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -2526,7 +2527,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_bridge_is_panel((const struct drm_bridge*)$arg1)")
+  @BuiltinBPFFunction("drm_bridge_is_panel((const struct drm_bridge *)$arg1)")
   public static boolean drm_bridge_is_panel(Ptr<drm_bridge> bridge) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2556,14 +2557,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_bus_flags_from_videomode((const struct videomode*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_bus_flags_from_videomode((const struct videomode *)$arg1, $arg2)")
   public static void drm_bus_flags_from_videomode(Ptr<videomode> vm,
       Ptr<java.lang. @Unsigned Integer> bus_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_calc_timestamping_constants($arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_calc_timestamping_constants($arg1, (const struct drm_display_mode *)$arg2)")
   public static void drm_calc_timestamping_constants(Ptr<drm_crtc> crtc,
       Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -2734,7 +2735,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_client_init($arg1, $arg2, (const u8*)$arg3, (const struct drm_client_funcs*)$arg4)")
+  @BuiltinBPFFunction("drm_client_init($arg1, $arg2, (const u8 *)$arg3, (const struct drm_client_funcs *)$arg4)")
   public static int drm_client_init(Ptr<drm_device> dev, Ptr<drm_client_dev> client, String name,
       Ptr<drm_client_funcs> funcs) {
     throw new MethodIsBPFRelatedFunction();
@@ -2825,7 +2826,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_client_setup($arg1, (const struct drm_format_info*)$arg2)")
+  @BuiltinBPFFunction("drm_client_setup($arg1, (const struct drm_format_info *)$arg2)")
   public static void drm_client_setup(Ptr<drm_device> dev, Ptr<drm_format_info> format) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2866,7 +2867,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_color_lut_check((const struct drm_property_blob*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_color_lut_check((const struct drm_property_blob *)$arg1, $arg2)")
   public static int drm_color_lut_check(Ptr<drm_property_blob> lut, @Unsigned int tests) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3022,7 +3023,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_connector_dynamic_init($arg1, $arg2, (const struct drm_connector_funcs*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("drm_connector_dynamic_init($arg1, $arg2, (const struct drm_connector_funcs *)$arg3, $arg4, $arg5)")
   public static int drm_connector_dynamic_init(Ptr<drm_device> dev, Ptr<drm_connector> connector,
       Ptr<drm_connector_funcs> funcs, int connector_type, Ptr<i2c_adapter> ddc) {
     throw new MethodIsBPFRelatedFunction();
@@ -3085,7 +3086,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_connector_helper_get_modes_fixed($arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_connector_helper_get_modes_fixed($arg1, (const struct drm_display_mode *)$arg2)")
   public static int drm_connector_helper_get_modes_fixed(Ptr<drm_connector> connector,
       Ptr<drm_display_mode> fixed_mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -3116,21 +3117,21 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_connector_init($arg1, $arg2, (const struct drm_connector_funcs*)$arg3, $arg4)")
+  @BuiltinBPFFunction("drm_connector_init($arg1, $arg2, (const struct drm_connector_funcs *)$arg3, $arg4)")
   public static int drm_connector_init(Ptr<drm_device> dev, Ptr<drm_connector> connector,
       Ptr<drm_connector_funcs> funcs, int connector_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_connector_init_only($arg1, $arg2, (const struct drm_connector_funcs*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("drm_connector_init_only($arg1, $arg2, (const struct drm_connector_funcs *)$arg3, $arg4, $arg5)")
   public static int drm_connector_init_only(Ptr<drm_device> dev, Ptr<drm_connector> connector,
       Ptr<drm_connector_funcs> funcs, int connector_type, Ptr<i2c_adapter> ddc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_connector_init_with_ddc($arg1, $arg2, (const struct drm_connector_funcs*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("drm_connector_init_with_ddc($arg1, $arg2, (const struct drm_connector_funcs *)$arg3, $arg4, $arg5)")
   public static int drm_connector_init_with_ddc(Ptr<drm_device> dev, Ptr<drm_connector> connector,
       Ptr<drm_connector_funcs> funcs, int connector_type, Ptr<i2c_adapter> ddc) {
     throw new MethodIsBPFRelatedFunction();
@@ -3162,7 +3163,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_connector_mode_valid($arg1, (const struct drm_display_mode*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("drm_connector_mode_valid($arg1, (const struct drm_display_mode *)$arg2, $arg3, $arg4)")
   public static int drm_connector_mode_valid(Ptr<drm_connector> connector,
       Ptr<drm_display_mode> mode, Ptr<drm_modeset_acquire_ctx> ctx, Ptr<drm_mode_status> status) {
     throw new MethodIsBPFRelatedFunction();
@@ -3244,7 +3245,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_connector_set_path_property($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("drm_connector_set_path_property($arg1, (const u8 *)$arg2)")
   public static int drm_connector_set_path_property(Ptr<drm_connector> connector, String path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3275,20 +3276,20 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_connector_update_edid_property($arg1, (const struct edid*)$arg2)")
+  @BuiltinBPFFunction("drm_connector_update_edid_property($arg1, (const struct edid *)$arg2)")
   public static int drm_connector_update_edid_property(Ptr<drm_connector> connector,
       Ptr<edid> edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_connector_update_privacy_screen((const struct drm_connector_state*)$arg1)")
+  @BuiltinBPFFunction("drm_connector_update_privacy_screen((const struct drm_connector_state *)$arg1)")
   public static void drm_connector_update_privacy_screen(Ptr<drm_connector_state> connector_state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_copy_field($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("drm_copy_field($arg1, $arg2, (const u8 *)$arg3)")
   public static int drm_copy_field(String buf, Ptr<java.lang. @Unsigned Long> buf_len,
       String value) {
     throw new MethodIsBPFRelatedFunction();
@@ -3335,7 +3336,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_crtc_check_viewport((const struct drm_crtc*)$arg1, $arg2, $arg3, (const struct drm_display_mode*)$arg4, (const struct drm_framebuffer*)$arg5)")
+  @BuiltinBPFFunction("drm_crtc_check_viewport((const struct drm_crtc *)$arg1, $arg2, $arg3, (const struct drm_display_mode *)$arg4, (const struct drm_framebuffer *)$arg5)")
   public static int drm_crtc_check_viewport(Ptr<drm_crtc> crtc, int x, int y,
       Ptr<drm_display_mode> mode, Ptr<drm_framebuffer> fb) {
     throw new MethodIsBPFRelatedFunction();
@@ -3453,7 +3454,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_crtc_helper_mode_valid_fixed($arg1, (const struct drm_display_mode*)$arg2, (const struct drm_display_mode*)$arg3)")
+  @BuiltinBPFFunction("drm_crtc_helper_mode_valid_fixed($arg1, (const struct drm_display_mode *)$arg2, (const struct drm_display_mode *)$arg3)")
   public static drm_mode_status drm_crtc_helper_mode_valid_fixed(Ptr<drm_crtc> crtc,
       Ptr<drm_display_mode> mode, Ptr<drm_display_mode> fixed_mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -3480,14 +3481,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_crtc_init($arg1, $arg2, (const struct drm_crtc_funcs*)$arg3)")
+  @BuiltinBPFFunction("drm_crtc_init($arg1, $arg2, (const struct drm_crtc_funcs *)$arg3)")
   public static int drm_crtc_init(Ptr<drm_device> dev, Ptr<drm_crtc> crtc,
       Ptr<drm_crtc_funcs> funcs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_crtc_init_with_planes($arg1, $arg2, $arg3, $arg4, (const struct drm_crtc_funcs*)$arg5, (const u8*)$arg6, $arg7_)")
+  @BuiltinBPFFunction("drm_crtc_init_with_planes($arg1, $arg2, $arg3, $arg4, (const struct drm_crtc_funcs *)$arg5, (const u8 *)$arg6, $arg7_)")
   public static int drm_crtc_init_with_planes(Ptr<drm_device> dev, Ptr<drm_crtc> crtc,
       Ptr<drm_plane> primary, Ptr<drm_plane> cursor, Ptr<drm_crtc_funcs> funcs, String name,
       java.lang.Object... param6) {
@@ -3503,35 +3504,35 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_crtc_load_gamma_555_from_888($arg1, (const struct drm_color_lut*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_crtc_load_gamma_555_from_888($arg1, (const struct drm_color_lut *)$arg2, $arg3)")
   public static void drm_crtc_load_gamma_555_from_888(Ptr<drm_crtc> crtc, Ptr<drm_color_lut> lut,
       @OriginalName("drm_crtc_set_lut_func") Ptr<?> set_gamma) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_crtc_load_gamma_565_from_888($arg1, (const struct drm_color_lut*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_crtc_load_gamma_565_from_888($arg1, (const struct drm_color_lut *)$arg2, $arg3)")
   public static void drm_crtc_load_gamma_565_from_888(Ptr<drm_crtc> crtc, Ptr<drm_color_lut> lut,
       @OriginalName("drm_crtc_set_lut_func") Ptr<?> set_gamma) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_crtc_load_gamma_888($arg1, (const struct drm_color_lut*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_crtc_load_gamma_888($arg1, (const struct drm_color_lut *)$arg2, $arg3)")
   public static void drm_crtc_load_gamma_888(Ptr<drm_crtc> crtc, Ptr<drm_color_lut> lut,
       @OriginalName("drm_crtc_set_lut_func") Ptr<?> set_gamma) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_crtc_load_palette_8($arg1, (const struct drm_color_lut*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_crtc_load_palette_8($arg1, (const struct drm_color_lut *)$arg2, $arg3)")
   public static void drm_crtc_load_palette_8(Ptr<drm_crtc> crtc, Ptr<drm_color_lut> lut,
       @OriginalName("drm_crtc_set_lut_func") Ptr<?> set_palette) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_crtc_mode_valid($arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_crtc_mode_valid($arg1, (const struct drm_display_mode *)$arg2)")
   public static drm_mode_status drm_crtc_mode_valid(Ptr<drm_crtc> crtc,
       Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -3632,7 +3633,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_crtc_vblank_on_config($arg1, (const struct drm_vblank_crtc_config*)$arg2)")
+  @BuiltinBPFFunction("drm_crtc_vblank_on_config($arg1, (const struct drm_vblank_crtc_config *)$arg2)")
   public static void drm_crtc_vblank_on_config(Ptr<drm_crtc> crtc,
       Ptr<drm_vblank_crtc_config> config) {
     throw new MethodIsBPFRelatedFunction();
@@ -3677,7 +3678,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_cvt_modes($arg1, (const struct detailed_timing*)$arg2)")
+  @BuiltinBPFFunction("drm_cvt_modes($arg1, (const struct detailed_timing *)$arg2)")
   public static int drm_cvt_modes(Ptr<drm_connector> connector, Ptr<detailed_timing> timing) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3689,14 +3690,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_debugfs_add_file($arg1, (const u8*)$arg2, (int (*)(struct seq_file*, void*))$arg3, $arg4)")
+  @BuiltinBPFFunction("drm_debugfs_add_file($arg1, (const u8 *)$arg2, (int (*)(struct seq_file*, void*))$arg3, $arg4)")
   public static void drm_debugfs_add_file(Ptr<drm_device> dev, String name, Ptr<?> show,
       Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_debugfs_add_files($arg1, (const struct drm_debugfs_info*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_debugfs_add_files($arg1, (const struct drm_debugfs_info *)$arg2, $arg3)")
   public static void drm_debugfs_add_files(Ptr<drm_device> dev, Ptr<drm_debugfs_info> files,
       int count) {
     throw new MethodIsBPFRelatedFunction();
@@ -3733,7 +3734,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_debugfs_create_files((const struct drm_info_list*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("drm_debugfs_create_files((const struct drm_info_list *)$arg1, $arg2, $arg3, $arg4)")
   public static void drm_debugfs_create_files(Ptr<drm_info_list> files, int count, Ptr<dentry> root,
       Ptr<drm_minor> minor) {
     throw new MethodIsBPFRelatedFunction();
@@ -3824,7 +3825,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_debugfs_remove_files((const struct drm_info_list*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("drm_debugfs_remove_files((const struct drm_info_list *)$arg1, $arg2, $arg3, $arg4)")
   public static int drm_debugfs_remove_files(Ptr<drm_info_list> files, int count, Ptr<dentry> root,
       Ptr<drm_minor> minor) {
     throw new MethodIsBPFRelatedFunction();
@@ -3843,25 +3844,25 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_default_rgb_quant_range((const struct drm_display_mode*)$arg1)")
+  @BuiltinBPFFunction("drm_default_rgb_quant_range((const struct drm_display_mode *)$arg1)")
   public static hdmi_quantization_range drm_default_rgb_quant_range(Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_detect_hdmi_monitor((const struct edid*)$arg1)")
+  @BuiltinBPFFunction("drm_detect_hdmi_monitor((const struct edid *)$arg1)")
   public static boolean drm_detect_hdmi_monitor(Ptr<edid> edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_detect_monitor_audio((const struct edid*)$arg1)")
+  @BuiltinBPFFunction("drm_detect_monitor_audio((const struct edid *)$arg1)")
   public static boolean drm_detect_monitor_audio(Ptr<edid> edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_dev_alloc((const struct drm_driver*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_dev_alloc((const struct drm_driver *)$arg1, $arg2)")
   public static Ptr<drm_device> drm_dev_alloc(Ptr<drm_driver> driver, Ptr<device> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3885,13 +3886,13 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_dev_has_vblank((const struct drm_device*)$arg1)")
+  @BuiltinBPFFunction("drm_dev_has_vblank((const struct drm_device *)$arg1)")
   public static boolean drm_dev_has_vblank(Ptr<drm_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_dev_init($arg1, (const struct drm_driver*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_dev_init($arg1, (const struct drm_driver *)$arg2, $arg3)")
   public static int drm_dev_init(Ptr<drm_device> dev, Ptr<drm_driver> driver, Ptr<device> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3909,7 +3910,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_dev_printk((const struct device*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("drm_dev_printk((const struct device *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4_)")
   public static void drm_dev_printk(Ptr<device> dev, String level, String format,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -3953,14 +3954,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_devnode((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_devnode((const struct device *)$arg1, $arg2)")
   public static String drm_devnode(Ptr<device> dev,
       Ptr<java.lang. @Unsigned @OriginalName("umode_t") Short> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_display_info_set_bus_formats($arg1, (const unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_display_info_set_bus_formats($arg1, (const unsigned int *)$arg2, $arg3)")
   public static int drm_display_info_set_bus_formats(Ptr<drm_display_info> info,
       Ptr<java.lang. @Unsigned Integer> formats, @Unsigned int num_formats) {
     throw new MethodIsBPFRelatedFunction();
@@ -3981,14 +3982,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_display_mode_from_videomode((const struct videomode*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_display_mode_from_videomode((const struct videomode *)$arg1, $arg2)")
   public static void drm_display_mode_from_videomode(Ptr<videomode> vm,
       Ptr<drm_display_mode> dmode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_display_mode_to_videomode((const struct drm_display_mode*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_display_mode_to_videomode((const struct drm_display_mode *)$arg1, $arg2)")
   public static void drm_display_mode_to_videomode(Ptr<drm_display_mode> dmode, Ptr<videomode> vm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4001,7 +4002,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_draw_blit16($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("drm_draw_blit16($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void drm_draw_blit16(Ptr<iosys_map> dmap, @Unsigned int dpitch,
       Ptr<java.lang.Character> sbuf8, @Unsigned int spitch, @Unsigned int height,
       @Unsigned int width, @Unsigned int scale, @Unsigned short fg16) {
@@ -4009,7 +4010,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_draw_blit24($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("drm_draw_blit24($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void drm_draw_blit24(Ptr<iosys_map> dmap, @Unsigned int dpitch,
       Ptr<java.lang.Character> sbuf8, @Unsigned int spitch, @Unsigned int height,
       @Unsigned int width, @Unsigned int scale, @Unsigned int fg32) {
@@ -4017,7 +4018,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_draw_blit32($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("drm_draw_blit32($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void drm_draw_blit32(Ptr<iosys_map> dmap, @Unsigned int dpitch,
       Ptr<java.lang.Character> sbuf8, @Unsigned int spitch, @Unsigned int height,
       @Unsigned int width, @Unsigned int scale, @Unsigned int fg32) {
@@ -4075,7 +4076,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct drm_edid*)drm_edid_alloc((const void*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct drm_edid*)drm_edid_alloc((const void *)$arg1, $arg2))")
   public static Ptr<drm_edid> drm_edid_alloc(Ptr<?> edid, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4095,63 +4096,63 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_connector_update($arg1, (const struct drm_edid*)$arg2)")
+  @BuiltinBPFFunction("drm_edid_connector_update($arg1, (const struct drm_edid *)$arg2)")
   public static int drm_edid_connector_update(Ptr<drm_connector> connector,
       Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_cta_sad_get((const struct cea_sad*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_edid_cta_sad_get((const struct cea_sad *)$arg1, $arg2)")
   public static void drm_edid_cta_sad_get(Ptr<cea_sad> cta_sad, Ptr<java.lang.Character> sad) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_cta_sad_set($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("drm_edid_cta_sad_set($arg1, (const u8 *)$arg2)")
   public static void drm_edid_cta_sad_set(Ptr<cea_sad> cta_sad, Ptr<java.lang.Character> sad) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct drm_edid*)drm_edid_dup((const struct drm_edid*)$arg1))")
+  @BuiltinBPFFunction("((const struct drm_edid*)drm_edid_dup((const struct drm_edid *)$arg1))")
   public static Ptr<drm_edid> drm_edid_dup(Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_duplicate((const struct edid*)$arg1)")
+  @BuiltinBPFFunction("drm_edid_duplicate((const struct edid *)$arg1)")
   public static Ptr<edid> drm_edid_duplicate(Ptr<edid> edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)drm_edid_find_extension((const struct drm_edid*)$arg1, $arg2, $arg3))")
+  @BuiltinBPFFunction("((const u8*)drm_edid_find_extension((const struct drm_edid *)$arg1, $arg2, $arg3))")
   public static Ptr<java.lang.Character> drm_edid_find_extension(Ptr<drm_edid> drm_edid, int ext_id,
       Ptr<java.lang.Integer> ext_index) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_free((const struct drm_edid*)$arg1)")
+  @BuiltinBPFFunction("drm_edid_free((const struct drm_edid *)$arg1)")
   public static void drm_edid_free(Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_get_monitor_name((const struct edid*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("drm_edid_get_monitor_name((const struct edid *)$arg1, $arg2, $arg3)")
   public static void drm_edid_get_monitor_name(Ptr<edid> edid, String name, int bufsize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_get_panel_id((const struct drm_edid*)$arg1)")
+  @BuiltinBPFFunction("drm_edid_get_panel_id((const struct drm_edid *)$arg1)")
   public static @Unsigned int drm_edid_get_panel_id(Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_get_product_id((const struct drm_edid*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_edid_get_product_id((const struct drm_edid *)$arg1, $arg2)")
   public static void drm_edid_get_product_id(Ptr<drm_edid> drm_edid, Ptr<drm_edid_product_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4163,13 +4164,13 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_header_is_valid((const void*)$arg1)")
+  @BuiltinBPFFunction("drm_edid_header_is_valid((const void *)$arg1)")
   public static int drm_edid_header_is_valid(Ptr<?> _edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_is_digital((const struct drm_edid*)$arg1)")
+  @BuiltinBPFFunction("drm_edid_is_digital((const struct drm_edid *)$arg1)")
   public static boolean drm_edid_is_digital(Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4181,7 +4182,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_iter_begin((const struct drm_edid*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_edid_iter_begin((const struct drm_edid *)$arg1, $arg2)")
   public static void drm_edid_iter_begin(Ptr<drm_edid> drm_edid, Ptr<drm_edid_iter> iter) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4193,7 +4194,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct drm_edid*)drm_edid_legacy_init($arg1, (const struct edid*)$arg2))")
+  @BuiltinBPFFunction("((const struct drm_edid*)drm_edid_legacy_init($arg1, (const struct edid *)$arg2))")
   public static Ptr<drm_edid> drm_edid_legacy_init(Ptr<drm_edid> drm_edid, Ptr<edid> edid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4205,7 +4206,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_match((const struct drm_edid*)$arg1, (const struct drm_edid_ident*)$arg2)")
+  @BuiltinBPFFunction("drm_edid_match((const struct drm_edid *)$arg1, (const struct drm_edid_ident *)$arg2)")
   public static boolean drm_edid_match(Ptr<drm_edid> drm_edid, Ptr<drm_edid_ident> ident) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4229,7 +4230,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_override_set($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_edid_override_set($arg1, (const void *)$arg2, $arg3)")
   public static int drm_edid_override_set(Ptr<drm_connector> connector, Ptr<?> edid,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -4242,14 +4243,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_print_product_id($arg1, (const struct drm_edid_product_id*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_edid_print_product_id($arg1, (const struct drm_edid_product_id *)$arg2, $arg3)")
   public static void drm_edid_print_product_id(Ptr<drm_printer> p, Ptr<drm_edid_product_id> id,
       boolean raw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct edid*)drm_edid_raw((const struct drm_edid*)$arg1))")
+  @BuiltinBPFFunction("((const struct edid*)drm_edid_raw((const struct drm_edid *)$arg1))")
   public static Ptr<edid> drm_edid_raw(Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4288,39 +4289,39 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_to_eld($arg1, (const struct drm_edid*)$arg2)")
+  @BuiltinBPFFunction("drm_edid_to_eld($arg1, (const struct drm_edid *)$arg2)")
   public static void drm_edid_to_eld(Ptr<drm_connector> connector, Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_to_sad((const struct edid*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_edid_to_sad((const struct edid *)$arg1, $arg2)")
   public static int drm_edid_to_sad(Ptr<edid> edid, Ptr<Ptr<cea_sad>> sads) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_to_speaker_allocation((const struct edid*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_edid_to_speaker_allocation((const struct edid *)$arg1, $arg2)")
   public static int drm_edid_to_speaker_allocation(Ptr<edid> edid,
       Ptr<Ptr<java.lang.Character>> sadb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_edid_valid((const struct drm_edid*)$arg1)")
+  @BuiltinBPFFunction("drm_edid_valid((const struct drm_edid *)$arg1)")
   public static boolean drm_edid_valid(Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_eld_sad_get((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("drm_eld_sad_get((const u8 *)$arg1, $arg2, $arg3)")
   public static int drm_eld_sad_get(Ptr<java.lang.Character> eld, int sad_index,
       Ptr<cea_sad> cta_sad) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_eld_sad_set($arg1, $arg2, (const struct cea_sad*)$arg3)")
+  @BuiltinBPFFunction("drm_eld_sad_set($arg1, $arg2, (const struct cea_sad *)$arg3)")
   public static int drm_eld_sad_set(Ptr<java.lang.Character> eld, int sad_index,
       Ptr<cea_sad> cta_sad) {
     throw new MethodIsBPFRelatedFunction();
@@ -4339,14 +4340,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_encoder_init($arg1, $arg2, (const struct drm_encoder_funcs*)$arg3, $arg4, (const u8*)$arg5, $arg6_)")
+  @BuiltinBPFFunction("drm_encoder_init($arg1, $arg2, (const struct drm_encoder_funcs *)$arg3, $arg4, (const u8 *)$arg5, $arg6_)")
   public static int drm_encoder_init(Ptr<drm_device> dev, Ptr<drm_encoder> encoder,
       Ptr<drm_encoder_funcs> funcs, int encoder_type, String name, java.lang.Object... param5) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_encoder_mode_valid($arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_encoder_mode_valid($arg1, (const struct drm_display_mode *)$arg2)")
   public static drm_mode_status drm_encoder_mode_valid(Ptr<drm_encoder> encoder,
       Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -4385,7 +4386,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_argb8888_to_argb4444($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_argb8888_to_argb4444($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_argb8888_to_argb4444(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4393,14 +4394,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_argb8888_to_argb4444_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_argb8888_to_argb4444_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_argb8888_to_argb4444_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_blit($arg1, (const unsigned int*)$arg2, $arg3, (const struct iosys_map*)$arg4, (const struct drm_framebuffer*)$arg5, (const struct drm_rect*)$arg6, $arg7)")
+  @BuiltinBPFFunction("drm_fb_blit($arg1, (const unsigned int *)$arg2, $arg3, (const struct iosys_map *)$arg4, (const struct drm_framebuffer *)$arg5, (const struct drm_rect *)$arg6, $arg7)")
   public static int drm_fb_blit(Ptr<iosys_map> dst, Ptr<java.lang. @Unsigned Integer> dst_pitch,
       @Unsigned @OriginalName("uint32_t") int dst_format, Ptr<iosys_map> src,
       Ptr<drm_framebuffer> fb, Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4408,7 +4409,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_clip_offset($arg1, (const struct drm_format_info*)$arg2, (const struct drm_rect*)$arg3)")
+  @BuiltinBPFFunction("drm_fb_clip_offset($arg1, (const struct drm_format_info *)$arg2, (const struct drm_rect *)$arg3)")
   public static @Unsigned int drm_fb_clip_offset(@Unsigned int pitch, Ptr<drm_format_info> format,
       Ptr<drm_rect> clip) {
     throw new MethodIsBPFRelatedFunction();
@@ -4478,7 +4479,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_helper_fill_pixel_fmt($arg1, (const struct drm_format_info*)$arg2)")
+  @BuiltinBPFFunction("drm_fb_helper_fill_pixel_fmt($arg1, (const struct drm_format_info *)$arg2)")
   public static void drm_fb_helper_fill_pixel_fmt(Ptr<fb_var_screeninfo> var,
       Ptr<drm_format_info> format) {
     throw new MethodIsBPFRelatedFunction();
@@ -4527,7 +4528,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_helper_prepare($arg1, $arg2, $arg3, (const struct drm_fb_helper_funcs*)$arg4)")
+  @BuiltinBPFFunction("drm_fb_helper_prepare($arg1, $arg2, $arg3, (const struct drm_fb_helper_funcs *)$arg4)")
   public static void drm_fb_helper_prepare(Ptr<drm_device> dev, Ptr<drm_fb_helper> helper,
       @Unsigned int preferred_bpp, Ptr<drm_fb_helper_funcs> funcs) {
     throw new MethodIsBPFRelatedFunction();
@@ -4607,7 +4608,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_memcpy($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5)")
+  @BuiltinBPFFunction("drm_fb_memcpy($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5)")
   public static void drm_fb_memcpy(Ptr<iosys_map> dst, Ptr<java.lang. @Unsigned Integer> dst_pitch,
       Ptr<iosys_map> src, Ptr<drm_framebuffer> fb, Ptr<drm_rect> clip) {
     throw new MethodIsBPFRelatedFunction();
@@ -4620,7 +4621,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_swab($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("drm_fb_swab($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6, $arg7)")
   public static void drm_fb_swab(Ptr<iosys_map> dst, Ptr<java.lang. @Unsigned Integer> dst_pitch,
       Ptr<iosys_map> src, Ptr<drm_framebuffer> fb, Ptr<drm_rect> clip, boolean cached,
       Ptr<drm_format_conv_state> state) {
@@ -4628,19 +4629,19 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_swab16_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_swab16_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_swab16_line(Ptr<?> dbuf, Ptr<?> sbuf, @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_swab32_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_swab32_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_swab32_line(Ptr<?> dbuf, Ptr<?> sbuf, @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xfrm($arg1, (const unsigned int*)$arg2, (const u8*)$arg3, (const struct iosys_map*)$arg4, (const struct drm_framebuffer*)$arg5, (const struct drm_rect*)$arg6, $arg7, $arg8, (void (*)(void*, const void*, unsigned int))$arg9)")
+  @BuiltinBPFFunction("drm_fb_xfrm($arg1, (const unsigned int *)$arg2, (const u8 *)$arg3, (const struct iosys_map *)$arg4, (const struct drm_framebuffer *)$arg5, (const struct drm_rect *)$arg6, $arg7, $arg8, (void (*)(void*, const void*, unsigned int))$arg9)")
   public static int drm_fb_xfrm(Ptr<iosys_map> dst, Ptr<java.lang. @Unsigned Integer> dst_pitch,
       Ptr<java.lang.Character> dst_pixsize, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, boolean vaddr_cached_hint, Ptr<drm_format_conv_state> state,
@@ -4649,7 +4650,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_abgr8888($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_abgr8888($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_abgr8888(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4657,14 +4658,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_abgr8888_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_abgr8888_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_abgr8888_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_argb1555($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_argb1555($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_argb1555(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4672,14 +4673,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_argb1555_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_argb1555_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_argb1555_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_argb2101010($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_argb2101010($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_argb2101010(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4687,14 +4688,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_argb2101010_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_argb2101010_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_argb2101010_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_argb8888($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_argb8888($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_argb8888(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4702,14 +4703,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_argb8888_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_argb8888_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_argb8888_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_bgr888($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_bgr888($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_bgr888(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4717,14 +4718,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_bgr888_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_bgr888_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_bgr888_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_bgrx8888($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_bgrx8888($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_bgrx8888(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4732,14 +4733,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_bgrx8888_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_bgrx8888_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_bgrx8888_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_gray8($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_gray8($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_gray8(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4747,13 +4748,13 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_gray8_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_gray8_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_gray8_line(Ptr<?> dbuf, Ptr<?> sbuf, @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_mono($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_mono($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_mono(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4761,7 +4762,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb332($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb332($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_rgb332(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4769,14 +4770,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb332_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb332_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_rgb332_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb565($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb565($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_rgb565(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4784,14 +4785,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb565_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb565_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_rgb565_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb565be($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb565be($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_rgb565be(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4799,14 +4800,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb565be_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb565be_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_rgb565be_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb888($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb888($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_rgb888(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4814,14 +4815,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb888_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgb888_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_rgb888_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgba5551($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgba5551($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_rgba5551(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4829,14 +4830,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgba5551_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_rgba5551_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_rgba5551_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_xbgr8888($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_xbgr8888($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_xbgr8888(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4844,14 +4845,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_xbgr8888_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_xbgr8888_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_xbgr8888_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_xrgb1555($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_xrgb1555($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_xrgb1555(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4859,14 +4860,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_xrgb1555_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_xrgb1555_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_xrgb1555_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_xrgb2101010($arg1, (const unsigned int*)$arg2, (const struct iosys_map*)$arg3, (const struct drm_framebuffer*)$arg4, (const struct drm_rect*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_xrgb2101010($arg1, (const unsigned int *)$arg2, (const struct iosys_map *)$arg3, (const struct drm_framebuffer *)$arg4, (const struct drm_rect *)$arg5, $arg6)")
   public static void drm_fb_xrgb8888_to_xrgb2101010(Ptr<iosys_map> dst,
       Ptr<java.lang. @Unsigned Integer> dst_pitch, Ptr<iosys_map> src, Ptr<drm_framebuffer> fb,
       Ptr<drm_rect> clip, Ptr<drm_format_conv_state> state) {
@@ -4874,7 +4875,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fb_xrgb8888_to_xrgb2101010_line($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_fb_xrgb8888_to_xrgb2101010_line($arg1, (const void *)$arg2, $arg3)")
   public static void drm_fb_xrgb8888_to_xrgb2101010_line(Ptr<?> dbuf, Ptr<?> sbuf,
       @Unsigned int pixels) {
     throw new MethodIsBPFRelatedFunction();
@@ -4900,7 +4901,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fbdev_client_setup($arg1, (const struct drm_format_info*)$arg2)")
+  @BuiltinBPFFunction("drm_fbdev_client_setup($arg1, (const struct drm_format_info *)$arg2)")
   public static int drm_fbdev_client_setup(Ptr<drm_device> dev, Ptr<drm_format_info> format) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4919,19 +4920,19 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fbdev_shmem_defio_copyarea($arg1, (const struct fb_copyarea*)$arg2)")
+  @BuiltinBPFFunction("drm_fbdev_shmem_defio_copyarea($arg1, (const struct fb_copyarea *)$arg2)")
   public static void drm_fbdev_shmem_defio_copyarea(Ptr<fb_info> info, Ptr<fb_copyarea> area) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fbdev_shmem_defio_fillrect($arg1, (const struct fb_fillrect*)$arg2)")
+  @BuiltinBPFFunction("drm_fbdev_shmem_defio_fillrect($arg1, (const struct fb_fillrect *)$arg2)")
   public static void drm_fbdev_shmem_defio_fillrect(Ptr<fb_info> info, Ptr<fb_fillrect> rect) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fbdev_shmem_defio_imageblit($arg1, (const struct fb_image*)$arg2)")
+  @BuiltinBPFFunction("drm_fbdev_shmem_defio_imageblit($arg1, (const struct fb_image *)$arg2)")
   public static void drm_fbdev_shmem_defio_imageblit(Ptr<fb_info> info, Ptr<fb_image> image) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4944,7 +4945,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fbdev_shmem_defio_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("drm_fbdev_shmem_defio_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long drm_fbdev_shmem_defio_write(Ptr<fb_info> info,
       String buf, @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -4995,7 +4996,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_fdinfo_print_size($arg1, (const u8*)$arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("drm_fdinfo_print_size($arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5)")
   public static void drm_fdinfo_print_size(Ptr<drm_printer> p, String prefix, String stat,
       String region, @Unsigned long sz) {
     throw new MethodIsBPFRelatedFunction();
@@ -5008,7 +5009,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_file_err($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("drm_file_err($arg1, (const u8 *)$arg2, $arg3_)")
   public static void drm_file_err(Ptr<drm_file> file_priv, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5044,7 +5045,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_flip_work_init($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_flip_work_init($arg1, (const u8 *)$arg2, $arg3)")
   public static void drm_flip_work_init(Ptr<drm_flip_work> work, String name,
       @OriginalName("drm_flip_func_t") Ptr<?> func) {
     throw new MethodIsBPFRelatedFunction();
@@ -5057,14 +5058,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_for_each_detailed_block((const struct drm_edid*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("drm_for_each_detailed_block((const struct drm_edid *)$arg1, $arg2, $arg3)")
   public static void drm_for_each_detailed_block(Ptr<drm_edid> drm_edid, Ptr<?> cb,
       Ptr<?> closure) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_format_conv_state_copy($arg1, (const struct drm_format_conv_state*)$arg2)")
+  @BuiltinBPFFunction("drm_format_conv_state_copy($arg1, (const struct drm_format_conv_state *)$arg2)")
   public static void drm_format_conv_state_copy(Ptr<drm_format_conv_state> state,
       Ptr<drm_format_conv_state> old_state) {
     throw new MethodIsBPFRelatedFunction();
@@ -5090,32 +5091,32 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_format_info_block_height((const struct drm_format_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_format_info_block_height((const struct drm_format_info *)$arg1, $arg2)")
   public static @Unsigned int drm_format_info_block_height(Ptr<drm_format_info> info, int plane) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_format_info_block_width((const struct drm_format_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_format_info_block_width((const struct drm_format_info *)$arg1, $arg2)")
   public static @Unsigned int drm_format_info_block_width(Ptr<drm_format_info> info, int plane) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_format_info_bpp((const struct drm_format_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_format_info_bpp((const struct drm_format_info *)$arg1, $arg2)")
   public static @Unsigned int drm_format_info_bpp(Ptr<drm_format_info> info, int plane) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_format_info_min_pitch((const struct drm_format_info*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("drm_format_info_min_pitch((const struct drm_format_info *)$arg1, $arg2, $arg3)")
   public static @Unsigned @OriginalName("uint64_t") long drm_format_info_min_pitch(
       Ptr<drm_format_info> info, int plane, @Unsigned int buffer_width) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_framebuffer_check_src_coords($arg1, $arg2, $arg3, $arg4, (const struct drm_framebuffer*)$arg5)")
+  @BuiltinBPFFunction("drm_framebuffer_check_src_coords($arg1, $arg2, $arg3, $arg4, (const struct drm_framebuffer *)$arg5)")
   public static int drm_framebuffer_check_src_coords(@Unsigned @OriginalName("uint32_t") int src_x,
       @Unsigned @OriginalName("uint32_t") int src_y, @Unsigned @OriginalName("uint32_t") int src_w,
       @Unsigned @OriginalName("uint32_t") int src_h, Ptr<drm_framebuffer> fb) {
@@ -5147,7 +5148,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_framebuffer_init($arg1, $arg2, (const struct drm_framebuffer_funcs*)$arg3)")
+  @BuiltinBPFFunction("drm_framebuffer_init($arg1, $arg2, (const struct drm_framebuffer_funcs *)$arg3)")
   public static int drm_framebuffer_init(Ptr<drm_device> dev, Ptr<drm_framebuffer> fb,
       Ptr<drm_framebuffer_funcs> funcs) {
     throw new MethodIsBPFRelatedFunction();
@@ -5161,7 +5162,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_framebuffer_print_info($arg1, $arg2, (const struct drm_framebuffer*)$arg3)")
+  @BuiltinBPFFunction("drm_framebuffer_print_info($arg1, $arg2, (const struct drm_framebuffer *)$arg3)")
   public static void drm_framebuffer_print_info(Ptr<drm_printer> p, @Unsigned int indent,
       Ptr<drm_framebuffer> fb) {
     throw new MethodIsBPFRelatedFunction();
@@ -5282,7 +5283,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_gem_fb_afbc_init($arg1, (const struct drm_format_info*)$arg2, (const struct drm_mode_fb_cmd2*)$arg3, $arg4)")
+  @BuiltinBPFFunction("drm_gem_fb_afbc_init($arg1, (const struct drm_format_info *)$arg2, (const struct drm_mode_fb_cmd2 *)$arg3, $arg4)")
   public static int drm_gem_fb_afbc_init(Ptr<drm_device> dev, Ptr<drm_format_info> info,
       Ptr<drm_mode_fb_cmd2> mode_cmd, Ptr<drm_afbc_framebuffer> afbc_fb) {
     throw new MethodIsBPFRelatedFunction();
@@ -5295,7 +5296,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_gem_fb_create($arg1, $arg2, (const struct drm_format_info*)$arg3, (const struct drm_mode_fb_cmd2*)$arg4)")
+  @BuiltinBPFFunction("drm_gem_fb_create($arg1, $arg2, (const struct drm_format_info *)$arg3, (const struct drm_mode_fb_cmd2 *)$arg4)")
   public static Ptr<drm_framebuffer> drm_gem_fb_create(Ptr<drm_device> dev, Ptr<drm_file> file,
       Ptr<drm_format_info> info, Ptr<drm_mode_fb_cmd2> mode_cmd) {
     throw new MethodIsBPFRelatedFunction();
@@ -5309,14 +5310,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_gem_fb_create_with_dirty($arg1, $arg2, (const struct drm_format_info*)$arg3, (const struct drm_mode_fb_cmd2*)$arg4)")
+  @BuiltinBPFFunction("drm_gem_fb_create_with_dirty($arg1, $arg2, (const struct drm_format_info *)$arg3, (const struct drm_mode_fb_cmd2 *)$arg4)")
   public static Ptr<drm_framebuffer> drm_gem_fb_create_with_dirty(Ptr<drm_device> dev,
       Ptr<drm_file> file, Ptr<drm_format_info> info, Ptr<drm_mode_fb_cmd2> mode_cmd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_gem_fb_create_with_funcs($arg1, $arg2, (const struct drm_format_info*)$arg3, (const struct drm_mode_fb_cmd2*)$arg4, (const struct drm_framebuffer_funcs*)$arg5)")
+  @BuiltinBPFFunction("drm_gem_fb_create_with_funcs($arg1, $arg2, (const struct drm_format_info *)$arg3, (const struct drm_mode_fb_cmd2 *)$arg4, (const struct drm_framebuffer_funcs *)$arg5)")
   public static Ptr<drm_framebuffer> drm_gem_fb_create_with_funcs(Ptr<drm_device> dev,
       Ptr<drm_file> file, Ptr<drm_format_info> info, Ptr<drm_mode_fb_cmd2> mode_cmd,
       Ptr<drm_framebuffer_funcs> funcs) {
@@ -5343,7 +5344,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_gem_fb_init_with_funcs($arg1, $arg2, $arg3, (const struct drm_format_info*)$arg4, (const struct drm_mode_fb_cmd2*)$arg5, (const struct drm_framebuffer_funcs*)$arg6)")
+  @BuiltinBPFFunction("drm_gem_fb_init_with_funcs($arg1, $arg2, $arg3, (const struct drm_format_info *)$arg4, (const struct drm_mode_fb_cmd2 *)$arg5, (const struct drm_framebuffer_funcs *)$arg6)")
   public static int drm_gem_fb_init_with_funcs(Ptr<drm_device> dev, Ptr<drm_framebuffer> fb,
       Ptr<drm_file> file, Ptr<drm_format_info> info, Ptr<drm_mode_fb_cmd2> mode_cmd,
       Ptr<drm_framebuffer_funcs> funcs) {
@@ -5635,7 +5636,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_gem_print_info($arg1, $arg2, (const struct drm_gem_object*)$arg3)")
+  @BuiltinBPFFunction("drm_gem_print_info($arg1, $arg2, (const struct drm_gem_object *)$arg3)")
   public static void drm_gem_print_info(Ptr<drm_printer> p, @Unsigned int indent,
       Ptr<drm_gem_object> obj) {
     throw new MethodIsBPFRelatedFunction();
@@ -5761,7 +5762,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_gem_shmem_object_print_info($arg1, $arg2, (const struct drm_gem_object*)$arg3)")
+  @BuiltinBPFFunction("drm_gem_shmem_object_print_info($arg1, $arg2, (const struct drm_gem_object *)$arg3)")
   public static void drm_gem_shmem_object_print_info(Ptr<drm_printer> p, @Unsigned int indent,
       Ptr<drm_gem_object> obj) {
     throw new MethodIsBPFRelatedFunction();
@@ -5812,7 +5813,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_gem_shmem_print_info((const struct drm_gem_shmem_object*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("drm_gem_shmem_print_info((const struct drm_gem_shmem_object *)$arg1, $arg2, $arg3)")
   public static void drm_gem_shmem_print_info(Ptr<drm_gem_shmem_object> shmem, Ptr<drm_printer> p,
       @Unsigned int indent) {
     throw new MethodIsBPFRelatedFunction();
@@ -6063,7 +6064,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_get_tv_mode_from_name((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_get_tv_mode_from_name((const u8 *)$arg1, $arg2)")
   public static int drm_get_tv_mode_from_name(String name, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6117,7 +6118,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_gtf2_mode($arg1, (const struct drm_edid*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("drm_gtf2_mode($arg1, (const struct drm_edid *)$arg2, $arg3, $arg4, $arg5)")
   public static Ptr<drm_display_mode> drm_gtf2_mode(Ptr<drm_device> dev, Ptr<drm_edid> drm_edid,
       int hsize, int vsize, int vrefresh_rate) {
     throw new MethodIsBPFRelatedFunction();
@@ -6157,14 +6158,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_hdmi_avi_infoframe_from_display_mode($arg1, (const struct drm_connector*)$arg2, (const struct drm_display_mode*)$arg3)")
+  @BuiltinBPFFunction("drm_hdmi_avi_infoframe_from_display_mode($arg1, (const struct drm_connector *)$arg2, (const struct drm_display_mode *)$arg3)")
   public static int drm_hdmi_avi_infoframe_from_display_mode(Ptr<hdmi_avi_infoframe> frame,
       Ptr<drm_connector> connector, Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_hdmi_avi_infoframe_quant_range($arg1, (const struct drm_connector*)$arg2, (const struct drm_display_mode*)$arg3, $arg4)")
+  @BuiltinBPFFunction("drm_hdmi_avi_infoframe_quant_range($arg1, (const struct drm_connector *)$arg2, (const struct drm_display_mode *)$arg3, $arg4)")
   public static void drm_hdmi_avi_infoframe_quant_range(Ptr<hdmi_avi_infoframe> frame,
       Ptr<drm_connector> connector, Ptr<drm_display_mode> mode,
       hdmi_quantization_range rgb_quant_range) {
@@ -6185,7 +6186,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_hdmi_vendor_infoframe_from_display_mode($arg1, (const struct drm_connector*)$arg2, (const struct drm_display_mode*)$arg3)")
+  @BuiltinBPFFunction("drm_hdmi_vendor_infoframe_from_display_mode($arg1, (const struct drm_connector *)$arg2, (const struct drm_display_mode *)$arg3)")
   public static int drm_hdmi_vendor_infoframe_from_display_mode(Ptr<hdmi_vendor_infoframe> frame,
       Ptr<drm_connector> connector, Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -6234,7 +6235,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_helper_mode_fill_fb_struct($arg1, $arg2, (const struct drm_format_info*)$arg3, (const struct drm_mode_fb_cmd2*)$arg4)")
+  @BuiltinBPFFunction("drm_helper_mode_fill_fb_struct($arg1, $arg2, (const struct drm_format_info *)$arg3, (const struct drm_mode_fb_cmd2 *)$arg4)")
   public static void drm_helper_mode_fill_fb_struct(Ptr<drm_device> dev, Ptr<drm_framebuffer> fb,
       Ptr<drm_format_info> info, Ptr<drm_mode_fb_cmd2> mode_cmd) {
     throw new MethodIsBPFRelatedFunction();
@@ -6274,7 +6275,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_internal_framebuffer_create($arg1, (const struct drm_mode_fb_cmd2*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_internal_framebuffer_create($arg1, (const struct drm_mode_fb_cmd2 *)$arg2, $arg3)")
   public static Ptr<drm_framebuffer> drm_internal_framebuffer_create(Ptr<drm_device> dev,
       Ptr<drm_mode_fb_cmd2> r, Ptr<drm_file> file_priv) {
     throw new MethodIsBPFRelatedFunction();
@@ -6439,14 +6440,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_log_draw_line($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("drm_log_draw_line($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void drm_log_draw_line(Ptr<drm_log_scanout> scanout, String s, @Unsigned int len,
       @Unsigned int prefix_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_log_draw_new_line($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("drm_log_draw_new_line($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void drm_log_draw_new_line(Ptr<drm_log_scanout> scanout, String s,
       @Unsigned int len, @Unsigned int prefix_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -6537,26 +6538,26 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_match_cea_mode((const struct drm_display_mode*)$arg1)")
+  @BuiltinBPFFunction("drm_match_cea_mode((const struct drm_display_mode *)$arg1)")
   public static char drm_match_cea_mode(Ptr<drm_display_mode> to_match) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_match_cea_mode_clock_tolerance((const struct drm_display_mode*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_match_cea_mode_clock_tolerance((const struct drm_display_mode *)$arg1, $arg2)")
   public static char drm_match_cea_mode_clock_tolerance(Ptr<drm_display_mode> to_match,
       @Unsigned int clock_tolerance) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_match_hdmi_mode((const struct drm_display_mode*)$arg1)")
+  @BuiltinBPFFunction("drm_match_hdmi_mode((const struct drm_display_mode *)$arg1)")
   public static char drm_match_hdmi_mode(Ptr<drm_display_mode> to_match) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_memcpy_from_wc($arg1, (const struct iosys_map*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_memcpy_from_wc($arg1, (const struct iosys_map *)$arg2, $arg3)")
   public static void drm_memcpy_from_wc(Ptr<iosys_map> dst, Ptr<iosys_map> src,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -6569,7 +6570,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_memory_stats_is_zero((const struct drm_memory_stats*)$arg1)")
+  @BuiltinBPFFunction("drm_memory_stats_is_zero((const struct drm_memory_stats *)$arg1)")
   public static int drm_memory_stats_is_zero(Ptr<drm_memory_stats> stats) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6650,7 +6651,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mm_print((const struct drm_mm*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_mm_print((const struct drm_mm *)$arg1, $arg2)")
   public static void drm_mm_print(Ptr<drm_mm> mm, Ptr<drm_printer> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6741,7 +6742,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_compare($arg1, (const struct list_head*)$arg2, (const struct list_head*)$arg3)")
+  @BuiltinBPFFunction("drm_mode_compare($arg1, (const struct list_head *)$arg2, (const struct list_head *)$arg3)")
   public static int drm_mode_compare(Ptr<?> priv, Ptr<list_head> lh_a, Ptr<list_head> lh_b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6783,21 +6784,21 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_convert_to_umode($arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_mode_convert_to_umode($arg1, (const struct drm_display_mode *)$arg2)")
   public static void drm_mode_convert_to_umode(Ptr<drm_mode_modeinfo> out,
       Ptr<drm_display_mode> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_convert_umode($arg1, $arg2, (const struct drm_mode_modeinfo*)$arg3)")
+  @BuiltinBPFFunction("drm_mode_convert_umode($arg1, $arg2, (const struct drm_mode_modeinfo *)$arg3)")
   public static int drm_mode_convert_umode(Ptr<drm_device> dev, Ptr<drm_display_mode> out,
       Ptr<drm_mode_modeinfo> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_copy($arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_mode_copy($arg1, (const struct drm_display_mode *)$arg2)")
   public static void drm_mode_copy(Ptr<drm_display_mode> dst, Ptr<drm_display_mode> src) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6887,7 +6888,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_create_tile_group($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("drm_mode_create_tile_group($arg1, (const u8 *)$arg2)")
   public static Ptr<drm_tile_group> drm_mode_create_tile_group(Ptr<drm_device> dev,
       String topology) {
     throw new MethodIsBPFRelatedFunction();
@@ -6907,7 +6908,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_create_tv_properties_legacy($arg1, $arg2, (const u8**)$arg3)")
+  @BuiltinBPFFunction("drm_mode_create_tv_properties_legacy($arg1, $arg2, (const const u8 **)$arg3)")
   public static int drm_mode_create_tv_properties_legacy(Ptr<drm_device> dev,
       @Unsigned int num_modes, Ptr<String> modes) {
     throw new MethodIsBPFRelatedFunction();
@@ -6962,7 +6963,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_debug_printmodeline((const struct drm_display_mode*)$arg1)")
+  @BuiltinBPFFunction("drm_mode_debug_printmodeline((const struct drm_display_mode *)$arg1)")
   public static void drm_mode_debug_printmodeline(Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6988,7 +6989,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_detailed($arg1, (const struct drm_edid*)$arg2, (const struct detailed_timing*)$arg3)")
+  @BuiltinBPFFunction("drm_mode_detailed($arg1, (const struct drm_edid *)$arg2, (const struct detailed_timing *)$arg3)")
   public static Ptr<drm_display_mode> drm_mode_detailed(Ptr<drm_connector> connector,
       Ptr<drm_edid> drm_edid, Ptr<detailed_timing> timing) {
     throw new MethodIsBPFRelatedFunction();
@@ -7002,27 +7003,27 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_duplicate($arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_mode_duplicate($arg1, (const struct drm_display_mode *)$arg2)")
   public static Ptr<drm_display_mode> drm_mode_duplicate(Ptr<drm_device> dev,
       Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_equal((const struct drm_display_mode*)$arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_mode_equal((const struct drm_display_mode *)$arg1, (const struct drm_display_mode *)$arg2)")
   public static boolean drm_mode_equal(Ptr<drm_display_mode> mode1, Ptr<drm_display_mode> mode2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_equal_no_clocks((const struct drm_display_mode*)$arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_mode_equal_no_clocks((const struct drm_display_mode *)$arg1, (const struct drm_display_mode *)$arg2)")
   public static boolean drm_mode_equal_no_clocks(Ptr<drm_display_mode> mode1,
       Ptr<drm_display_mode> mode2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_equal_no_clocks_no_stereo((const struct drm_display_mode*)$arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_mode_equal_no_clocks_no_stereo((const struct drm_display_mode *)$arg1, (const struct drm_display_mode *)$arg2)")
   public static boolean drm_mode_equal_no_clocks_no_stereo(Ptr<drm_display_mode> mode1,
       Ptr<drm_display_mode> mode2) {
     throw new MethodIsBPFRelatedFunction();
@@ -7056,7 +7057,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_get_hv_timing((const struct drm_display_mode*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("drm_mode_get_hv_timing((const struct drm_display_mode *)$arg1, $arg2, $arg3)")
   public static void drm_mode_get_hv_timing(Ptr<drm_display_mode> mode,
       Ptr<java.lang.Integer> hdisplay, Ptr<java.lang.Integer> vdisplay) {
     throw new MethodIsBPFRelatedFunction();
@@ -7070,7 +7071,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_get_tile_group($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("drm_mode_get_tile_group($arg1, (const u8 *)$arg2)")
   public static Ptr<drm_tile_group> drm_mode_get_tile_group(Ptr<drm_device> dev, String topology) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7142,26 +7143,26 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_init($arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_mode_init($arg1, (const struct drm_display_mode *)$arg2)")
   public static void drm_mode_init(Ptr<drm_display_mode> dst, Ptr<drm_display_mode> src) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_is_420((const struct drm_display_info*)$arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_mode_is_420((const struct drm_display_info *)$arg1, (const struct drm_display_mode *)$arg2)")
   public static boolean drm_mode_is_420(Ptr<drm_display_info> display, Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_is_420_also((const struct drm_display_info*)$arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_mode_is_420_also((const struct drm_display_info *)$arg1, (const struct drm_display_mode *)$arg2)")
   public static boolean drm_mode_is_420_also(Ptr<drm_display_info> display,
       Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_is_420_only((const struct drm_display_info*)$arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_mode_is_420_only((const struct drm_display_info *)$arg1, (const struct drm_display_mode *)$arg2)")
   public static boolean drm_mode_is_420_only(Ptr<drm_display_info> display,
       Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -7182,7 +7183,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_match((const struct drm_display_mode*)$arg1, (const struct drm_display_mode*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_mode_match((const struct drm_display_mode *)$arg1, (const struct drm_display_mode *)$arg2, $arg3)")
   public static boolean drm_mode_match(Ptr<drm_display_mode> mode1, Ptr<drm_display_mode> mode2,
       @Unsigned int match_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -7279,28 +7280,28 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_parse_cmdline_extra((const u8*)$arg1, $arg2, $arg3, (const struct drm_connector*)$arg4, $arg5)")
+  @BuiltinBPFFunction("drm_mode_parse_cmdline_extra((const u8 *)$arg1, $arg2, $arg3, (const struct drm_connector *)$arg4, $arg5)")
   public static int drm_mode_parse_cmdline_extra(String str, int length, boolean freestanding,
       Ptr<drm_connector> connector, Ptr<drm_cmdline_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_parse_cmdline_named_mode((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("drm_mode_parse_cmdline_named_mode((const u8 *)$arg1, $arg2, $arg3)")
   public static int drm_mode_parse_cmdline_named_mode(String name, @Unsigned int name_end,
       Ptr<drm_cmdline_mode> cmdline_mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_parse_command_line_for_connector((const u8*)$arg1, (const struct drm_connector*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_mode_parse_command_line_for_connector((const u8 *)$arg1, (const struct drm_connector *)$arg2, $arg3)")
   public static boolean drm_mode_parse_command_line_for_connector(String mode_option,
       Ptr<drm_connector> connector, Ptr<drm_cmdline_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_parse_panel_orientation((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_mode_parse_panel_orientation((const u8 *)$arg1, $arg2)")
   public static int drm_mode_parse_panel_orientation(String delim, Ptr<drm_cmdline_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7394,35 +7395,35 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_std($arg1, (const struct drm_edid*)$arg2, (const struct std_timing*)$arg3)")
+  @BuiltinBPFFunction("drm_mode_std($arg1, (const struct drm_edid *)$arg2, (const struct std_timing *)$arg3)")
   public static Ptr<drm_display_mode> drm_mode_std(Ptr<drm_connector> connector,
       Ptr<drm_edid> drm_edid, Ptr<std_timing> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_validate_driver($arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_mode_validate_driver($arg1, (const struct drm_display_mode *)$arg2)")
   public static drm_mode_status drm_mode_validate_driver(Ptr<drm_device> dev,
       Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_validate_size((const struct drm_display_mode*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("drm_mode_validate_size((const struct drm_display_mode *)$arg1, $arg2, $arg3)")
   public static drm_mode_status drm_mode_validate_size(Ptr<drm_display_mode> mode, int maxX,
       int maxY) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_validate_ycbcr420((const struct drm_display_mode*)$arg1, $arg2)")
+  @BuiltinBPFFunction("drm_mode_validate_ycbcr420((const struct drm_display_mode *)$arg1, $arg2)")
   public static drm_mode_status drm_mode_validate_ycbcr420(Ptr<drm_display_mode> mode,
       Ptr<drm_connector> connector) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_mode_vrefresh((const struct drm_display_mode*)$arg1)")
+  @BuiltinBPFFunction("drm_mode_vrefresh((const struct drm_display_mode *)$arg1)")
   public static int drm_mode_vrefresh(Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7502,7 +7503,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_monitor_supports_rb((const struct drm_edid*)$arg1)")
+  @BuiltinBPFFunction("drm_monitor_supports_rb((const struct drm_edid *)$arg1)")
   public static boolean drm_monitor_supports_rb(Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7641,7 +7642,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_panel_init($arg1, $arg2, (const struct drm_panel_funcs*)$arg3, $arg4)")
+  @BuiltinBPFFunction("drm_panel_init($arg1, $arg2, (const struct drm_panel_funcs *)$arg3, $arg4)")
   public static void drm_panel_init(Ptr<drm_panel> panel, Ptr<device> dev,
       Ptr<drm_panel_funcs> funcs, int connector_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -7739,27 +7740,27 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_parse_cea_ext($arg1, (const struct drm_edid*)$arg2)")
+  @BuiltinBPFFunction("drm_parse_cea_ext($arg1, (const struct drm_edid *)$arg2)")
   public static void drm_parse_cea_ext(Ptr<drm_connector> connector, Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_parse_hdmi_deep_color_info($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("drm_parse_hdmi_deep_color_info($arg1, (const u8 *)$arg2)")
   public static void drm_parse_hdmi_deep_color_info(Ptr<drm_connector> connector,
       Ptr<java.lang.Character> hdmi) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_parse_tiled_block($arg1, (const struct displayid_block*)$arg2)")
+  @BuiltinBPFFunction("drm_parse_tiled_block($arg1, (const struct displayid_block *)$arg2)")
   public static void drm_parse_tiled_block(Ptr<drm_connector> connector,
       Ptr<displayid_block> block) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_parse_vesa_mso_data($arg1, (const struct displayid_block*)$arg2)")
+  @BuiltinBPFFunction("drm_parse_vesa_mso_data($arg1, (const struct displayid_block *)$arg2)")
   public static void drm_parse_vesa_mso_data(Ptr<drm_connector> connector,
       Ptr<displayid_block> block) {
     throw new MethodIsBPFRelatedFunction();
@@ -7772,7 +7773,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_plane_add_size_hints_property($arg1, (const struct drm_plane_size_hint*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_plane_add_size_hints_property($arg1, (const struct drm_plane_size_hint *)$arg2, $arg3)")
   public static int drm_plane_add_size_hints_property(Ptr<drm_plane> plane,
       Ptr<drm_plane_size_hint> hints, int num_hints) {
     throw new MethodIsBPFRelatedFunction();
@@ -7852,13 +7853,13 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_plane_get_damage_clips((const struct drm_plane_state*)$arg1)")
+  @BuiltinBPFFunction("drm_plane_get_damage_clips((const struct drm_plane_state *)$arg1)")
   public static Ptr<drm_mode_rect> drm_plane_get_damage_clips(Ptr<drm_plane_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_plane_get_damage_clips_count((const struct drm_plane_state*)$arg1)")
+  @BuiltinBPFFunction("drm_plane_get_damage_clips_count((const struct drm_plane_state *)$arg1)")
   public static @Unsigned int drm_plane_get_damage_clips_count(Ptr<drm_plane_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7986,21 +7987,21 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_print_bits($arg1, $arg2, (const u8**)$arg3, $arg4)")
+  @BuiltinBPFFunction("drm_print_bits($arg1, $arg2, (const const u8 **)$arg3, $arg4)")
   public static void drm_print_bits(Ptr<drm_printer> p, @Unsigned long value, Ptr<String> bits,
       @Unsigned int nbits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_print_hex_dump($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("drm_print_hex_dump($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void drm_print_hex_dump(Ptr<drm_printer> p, String prefix,
       Ptr<java.lang.Character> buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_print_memory_stats($arg1, (const struct drm_memory_stats*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("drm_print_memory_stats($arg1, (const struct drm_memory_stats *)$arg2, $arg3, (const u8 *)$arg4)")
   public static void drm_print_memory_stats(Ptr<drm_printer> p, Ptr<drm_memory_stats> stats,
       drm_gem_object_status supported_status, String region) {
     throw new MethodIsBPFRelatedFunction();
@@ -8013,7 +8014,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_printf($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("drm_printf($arg1, (const u8 *)$arg2, $arg3_)")
   public static void drm_printf(Ptr<drm_printer> p, String f, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8031,7 +8032,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_privacy_screen_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("drm_privacy_screen_get($arg1, (const u8 *)$arg2)")
   public static Ptr<drm_privacy_screen> drm_privacy_screen_get(Ptr<device> dev, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8074,7 +8075,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_privacy_screen_register($arg1, (const struct drm_privacy_screen_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_privacy_screen_register($arg1, (const struct drm_privacy_screen_ops *)$arg2, $arg3)")
   public static Ptr<drm_privacy_screen> drm_privacy_screen_register(Ptr<device> parent,
       Ptr<drm_privacy_screen_ops> ops, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -8114,7 +8115,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_property_add_enum($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("drm_property_add_enum($arg1, $arg2, (const u8 *)$arg3)")
   public static int drm_property_add_enum(Ptr<drm_property> property,
       @Unsigned @OriginalName("uint64_t") long value, String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -8147,14 +8148,14 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_property_create($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("drm_property_create($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<drm_property> drm_property_create(Ptr<drm_device> dev, @Unsigned int flags,
       String name, int num_values) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_property_create_bitmask($arg1, $arg2, (const u8*)$arg3, (const struct drm_prop_enum_list*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("drm_property_create_bitmask($arg1, $arg2, (const u8 *)$arg3, (const struct drm_prop_enum_list *)$arg4, $arg5, $arg6)")
   public static Ptr<drm_property> drm_property_create_bitmask(Ptr<drm_device> dev,
       @Unsigned int flags, String name, Ptr<drm_prop_enum_list> props, int num_props,
       @Unsigned @OriginalName("uint64_t") long supported_bits) {
@@ -8162,35 +8163,35 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_property_create_blob($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("drm_property_create_blob($arg1, $arg2, (const void *)$arg3)")
   public static Ptr<drm_property_blob> drm_property_create_blob(Ptr<drm_device> dev,
       @Unsigned long length, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_property_create_bool($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("drm_property_create_bool($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<drm_property> drm_property_create_bool(Ptr<drm_device> dev, @Unsigned int flags,
       String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_property_create_enum($arg1, $arg2, (const u8*)$arg3, (const struct drm_prop_enum_list*)$arg4, $arg5)")
+  @BuiltinBPFFunction("drm_property_create_enum($arg1, $arg2, (const u8 *)$arg3, (const struct drm_prop_enum_list *)$arg4, $arg5)")
   public static Ptr<drm_property> drm_property_create_enum(Ptr<drm_device> dev, @Unsigned int flags,
       String name, Ptr<drm_prop_enum_list> props, int num_values) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_property_create_object($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("drm_property_create_object($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<drm_property> drm_property_create_object(Ptr<drm_device> dev,
       @Unsigned int flags, String name, @Unsigned @OriginalName("uint32_t") int type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_property_create_range($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("drm_property_create_range($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static Ptr<drm_property> drm_property_create_range(Ptr<drm_device> dev,
       @Unsigned int flags, String name, @Unsigned @OriginalName("uint64_t") long min,
       @Unsigned @OriginalName("uint64_t") long max) {
@@ -8198,7 +8199,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_property_create_signed_range($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("drm_property_create_signed_range($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static Ptr<drm_property> drm_property_create_signed_range(Ptr<drm_device> dev,
       @Unsigned int flags, String name, @OriginalName("int64_t") long min,
       @OriginalName("int64_t") long max) {
@@ -8247,7 +8248,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_property_replace_global_blob($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("drm_property_replace_global_blob($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int drm_property_replace_global_blob(Ptr<drm_device> dev,
       Ptr<Ptr<drm_property_blob>> replace, @Unsigned long length, Ptr<?> data,
       Ptr<drm_mode_object> obj_holds_id, Ptr<drm_property> prop_holds_id) {
@@ -8261,7 +8262,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_puts($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("drm_puts($arg1, (const u8 *)$arg2)")
   public static void drm_puts(Ptr<drm_printer> p, String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8281,34 +8282,34 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_rect_calc_hscale((const struct drm_rect*)$arg1, (const struct drm_rect*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("drm_rect_calc_hscale((const struct drm_rect *)$arg1, (const struct drm_rect *)$arg2, $arg3, $arg4)")
   public static int drm_rect_calc_hscale(Ptr<drm_rect> src, Ptr<drm_rect> dst, int min_hscale,
       int max_hscale) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_rect_calc_vscale((const struct drm_rect*)$arg1, (const struct drm_rect*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("drm_rect_calc_vscale((const struct drm_rect *)$arg1, (const struct drm_rect *)$arg2, $arg3, $arg4)")
   public static int drm_rect_calc_vscale(Ptr<drm_rect> src, Ptr<drm_rect> dst, int min_vscale,
       int max_vscale) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_rect_clip_scaled($arg1, $arg2, (const struct drm_rect*)$arg3)")
+  @BuiltinBPFFunction("drm_rect_clip_scaled($arg1, $arg2, (const struct drm_rect *)$arg3)")
   public static boolean drm_rect_clip_scaled(Ptr<drm_rect> src, Ptr<drm_rect> dst,
       Ptr<drm_rect> clip) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_rect_debug_print((const u8*)$arg1, (const struct drm_rect*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_rect_debug_print((const u8 *)$arg1, (const struct drm_rect *)$arg2, $arg3)")
   public static void drm_rect_debug_print(String prefix, Ptr<drm_rect> r, boolean fixed_point) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_rect_intersect($arg1, (const struct drm_rect*)$arg2)")
+  @BuiltinBPFFunction("drm_rect_intersect($arg1, (const struct drm_rect *)$arg2)")
   public static boolean drm_rect_intersect(Ptr<drm_rect> r1, Ptr<drm_rect> r2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8465,7 +8466,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_simple_display_pipe_init($arg1, $arg2, (const struct drm_simple_display_pipe_funcs*)$arg3, (const unsigned int*)$arg4, $arg5, (const long long unsigned int*)$arg6, $arg7)")
+  @BuiltinBPFFunction("drm_simple_display_pipe_init($arg1, $arg2, (const struct drm_simple_display_pipe_funcs *)$arg3, (const unsigned int *)$arg4, $arg5, (const long long unsigned int *)$arg6, $arg7)")
   public static int drm_simple_display_pipe_init(Ptr<drm_device> dev,
       Ptr<drm_simple_display_pipe> pipe, Ptr<drm_simple_display_pipe_funcs> funcs,
       Ptr<java.lang. @Unsigned @OriginalName("uint32_t") Integer> formats,
@@ -8526,7 +8527,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_simple_kms_crtc_mode_valid($arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_simple_kms_crtc_mode_valid($arg1, (const struct drm_display_mode *)$arg2)")
   public static drm_mode_status drm_simple_kms_crtc_mode_valid(Ptr<drm_crtc> crtc,
       Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -8812,7 +8813,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_sysfb_build_fourcc_list($arg1, (const unsigned int*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("drm_sysfb_build_fourcc_list($arg1, (const unsigned int *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned long drm_sysfb_build_fourcc_list(Ptr<drm_device> dev,
       Ptr<java.lang. @Unsigned Integer> native_fourccs, @Unsigned long native_nfourccs,
       Ptr<java.lang. @Unsigned Integer> fourccs_out, @Unsigned long nfourccs_out) {
@@ -8846,7 +8847,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_sysfb_crtc_helper_mode_valid($arg1, (const struct drm_display_mode*)$arg2)")
+  @BuiltinBPFFunction("drm_sysfb_crtc_helper_mode_valid($arg1, (const struct drm_display_mode *)$arg2)")
   public static drm_mode_status drm_sysfb_crtc_helper_mode_valid(Ptr<drm_crtc> crtc,
       Ptr<drm_display_mode> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -8866,55 +8867,55 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct drm_format_info*)drm_sysfb_get_format_si($arg1, (const struct drm_sysfb_format*)$arg2, $arg3, (const struct screen_info*)$arg4))")
+  @BuiltinBPFFunction("((const struct drm_format_info*)drm_sysfb_get_format_si($arg1, (const struct drm_sysfb_format *)$arg2, $arg3, (const struct screen_info *)$arg4))")
   public static Ptr<drm_format_info> drm_sysfb_get_format_si(Ptr<drm_device> dev,
       Ptr<drm_sysfb_format> formats, @Unsigned long nformats, Ptr<screen_info> si) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_sysfb_get_height_si($arg1, (const struct screen_info*)$arg2)")
+  @BuiltinBPFFunction("drm_sysfb_get_height_si($arg1, (const struct screen_info *)$arg2)")
   public static int drm_sysfb_get_height_si(Ptr<drm_device> dev, Ptr<screen_info> si) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_sysfb_get_memory_si($arg1, (const struct screen_info*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drm_sysfb_get_memory_si($arg1, (const struct screen_info *)$arg2, $arg3)")
   public static Ptr<resource> drm_sysfb_get_memory_si(Ptr<drm_device> dev, Ptr<screen_info> si,
       Ptr<resource> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_sysfb_get_stride_si($arg1, (const struct screen_info*)$arg2, (const struct drm_format_info*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("drm_sysfb_get_stride_si($arg1, (const struct screen_info *)$arg2, (const struct drm_format_info *)$arg3, $arg4, $arg5, $arg6)")
   public static int drm_sysfb_get_stride_si(Ptr<drm_device> dev, Ptr<screen_info> si,
       Ptr<drm_format_info> format, @Unsigned int width, @Unsigned int height, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_sysfb_get_validated_int($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("drm_sysfb_get_validated_int($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int drm_sysfb_get_validated_int(Ptr<drm_device> dev, String name,
       @Unsigned long value, @Unsigned int max) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_sysfb_get_validated_int0($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("drm_sysfb_get_validated_int0($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int drm_sysfb_get_validated_int0(Ptr<drm_device> dev, String name,
       @Unsigned long value, @Unsigned int max) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_sysfb_get_visible_size_si($arg1, (const struct screen_info*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("drm_sysfb_get_visible_size_si($arg1, (const struct screen_info *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned long drm_sysfb_get_visible_size_si(Ptr<drm_device> dev,
       Ptr<screen_info> si, @Unsigned int height, @Unsigned int stride, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_sysfb_get_width_si($arg1, (const struct screen_info*)$arg2)")
+  @BuiltinBPFFunction("drm_sysfb_get_width_si($arg1, (const struct screen_info *)$arg2)")
   public static int drm_sysfb_get_width_si(Ptr<drm_device> dev, Ptr<screen_info> si) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9027,7 +9028,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_universal_plane_init($arg1, $arg2, $arg3, (const struct drm_plane_funcs*)$arg4, (const unsigned int*)$arg5, $arg6, (const long long unsigned int*)$arg7, $arg8, (const u8*)$arg9, $arg10_)")
+  @BuiltinBPFFunction("drm_universal_plane_init($arg1, $arg2, $arg3, (const struct drm_plane_funcs *)$arg4, (const unsigned int *)$arg5, $arg6, (const long long unsigned int *)$arg7, $arg8, (const u8 *)$arg9, $arg10_)")
   public static int drm_universal_plane_init(Ptr<drm_device> dev, Ptr<drm_plane> plane,
       @Unsigned @OriginalName("uint32_t") int possible_crtcs, Ptr<drm_plane_funcs> funcs,
       Ptr<java.lang. @Unsigned @OriginalName("uint32_t") Integer> formats,
@@ -9233,7 +9234,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_writeback_connector_init($arg1, $arg2, (const struct drm_connector_funcs*)$arg3, (const struct drm_encoder_helper_funcs*)$arg4, (const unsigned int*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("drm_writeback_connector_init($arg1, $arg2, (const struct drm_connector_funcs *)$arg3, (const struct drm_encoder_helper_funcs *)$arg4, (const unsigned int *)$arg5, $arg6, $arg7)")
   public static int drm_writeback_connector_init(Ptr<drm_device> dev,
       Ptr<drm_writeback_connector> wb_connector, Ptr<drm_connector_funcs> con_funcs,
       Ptr<drm_encoder_helper_funcs> enc_helper_funcs, Ptr<java.lang. @Unsigned Integer> formats,
@@ -9242,7 +9243,7 @@ public final class DrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drm_writeback_connector_init_with_encoder($arg1, $arg2, $arg3, (const struct drm_connector_funcs*)$arg4, (const unsigned int*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drm_writeback_connector_init_with_encoder($arg1, $arg2, $arg3, (const struct drm_connector_funcs *)$arg4, (const unsigned int *)$arg5, $arg6)")
   public static int drm_writeback_connector_init_with_encoder(Ptr<drm_device> dev,
       Ptr<drm_writeback_connector> wb_connector, Ptr<drm_encoder> enc,
       Ptr<drm_connector_funcs> con_funcs, Ptr<java.lang. @Unsigned Integer> formats,
@@ -14801,7 +14802,7 @@ public final class DrmDefinitions {
   public static class drm_stats extends Struct {
     public @Unsigned long count;
 
-    public AnonymousType1856643544C64 @Size(15) [] data;
+    public AnonymousType2081952435C64 @Size(15) [] data;
   }
 
   @Type(
@@ -16043,7 +16044,7 @@ public final class DrmDefinitions {
   public static class drm_stats32 extends Struct {
     public @Unsigned int count;
 
-    public AnonymousType1124288521C59 @Size(15) [] data;
+    public AnonymousType1269826537C59 @Size(15) [] data;
   }
 
   @Type(
@@ -17172,7 +17173,7 @@ public final class DrmDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1124288521C59 extends Struct {
+  public static class AnonymousType1269826537C59 extends Struct {
     public @Unsigned int value;
 
     public drm_stat_type type;
@@ -17184,7 +17185,7 @@ public final class DrmDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1856643544C64 extends Struct {
+  public static class AnonymousType2081952435C64 extends Struct {
     public @Unsigned long value;
 
     public drm_stat_type type;

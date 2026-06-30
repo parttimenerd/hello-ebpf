@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class TpacketDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpacket_fill_skb($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, (const struct sockcm_cookie*)$arg11)")
+  @BuiltinBPFFunction("tpacket_fill_skb($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, (const struct sockcm_cookie *)$arg11)")
   public static int tpacket_fill_skb(Ptr<packet_sock> po, Ptr<sk_buff> skb, Ptr<?> frame,
       Ptr<net_device> dev, Ptr<?> data, int tp_len, @Unsigned @OriginalName("__be16") short proto,
       String addr, int hlen, int copylen, Ptr<sockcm_cookie> sockc) {

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1126,7 +1127,7 @@ public final class PsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("psi_cpu_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("psi_cpu_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long psi_cpu_write(Ptr<file> file, String user_buf,
       @Unsigned long nbytes, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1177,7 +1178,7 @@ public final class PsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("psi_io_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("psi_io_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long psi_io_write(Ptr<file> file, String user_buf,
       @Unsigned long nbytes, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1196,7 +1197,7 @@ public final class PsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("psi_memory_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("psi_memory_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long psi_memory_write(Ptr<file> file, String user_buf,
       @Unsigned long nbytes, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1271,7 +1272,7 @@ public final class PsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("psi_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("psi_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long psi_write(Ptr<file> file, String user_buf,
       @Unsigned long nbytes, psi_res res) {
     throw new MethodIsBPFRelatedFunction();

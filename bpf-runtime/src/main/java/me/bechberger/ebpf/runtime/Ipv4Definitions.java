@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class Ipv4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipv4_confirm_neigh((const struct dst_entry*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ipv4_confirm_neigh((const struct dst_entry *)$arg1, (const void *)$arg2)")
   public static void ipv4_confirm_neigh(Ptr<dst_entry> dst, Ptr<?> daddr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1115,13 +1116,13 @@ public final class Ipv4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipv4_default_advmss((const struct dst_entry*)$arg1)")
+  @BuiltinBPFFunction("ipv4_default_advmss((const struct dst_entry *)$arg1)")
   public static @Unsigned int ipv4_default_advmss(Ptr<dst_entry> dst) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipv4_doint_and_flush((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ipv4_doint_and_flush((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int ipv4_doint_and_flush(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1158,7 +1159,7 @@ public final class Ipv4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipv4_fwd_update_priority((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ipv4_fwd_update_priority((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int ipv4_fwd_update_priority(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1183,7 +1184,7 @@ public final class Ipv4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipv4_local_port_range((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ipv4_local_port_range((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int ipv4_local_port_range(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1202,7 +1203,7 @@ public final class Ipv4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipv4_mtu((const struct dst_entry*)$arg1)")
+  @BuiltinBPFFunction("ipv4_mtu((const struct dst_entry *)$arg1)")
   public static @Unsigned int ipv4_mtu(Ptr<dst_entry> dst) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1214,7 +1215,7 @@ public final class Ipv4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipv4_neigh_lookup((const struct dst_entry*)$arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("ipv4_neigh_lookup((const struct dst_entry *)$arg1, $arg2, (const void *)$arg3)")
   public static Ptr<neighbour> ipv4_neigh_lookup(Ptr<dst_entry> dst, Ptr<sk_buff> skb,
       Ptr<?> daddr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1227,20 +1228,20 @@ public final class Ipv4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipv4_ping_group_range((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ipv4_ping_group_range((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int ipv4_ping_group_range(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipv4_pktinfo_prepare((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ipv4_pktinfo_prepare((const struct sock *)$arg1, $arg2, $arg3)")
   public static void ipv4_pktinfo_prepare(Ptr<sock> sk, Ptr<sk_buff> skb, boolean drop_dst) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipv4_privileged_ports((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ipv4_privileged_ports((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int ipv4_privileged_ports(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1290,7 +1291,7 @@ public final class Ipv4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipv4_sysctl_rtcache_flush((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ipv4_sysctl_rtcache_flush((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int ipv4_sysctl_rtcache_flush(Ptr<ctl_table> __ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

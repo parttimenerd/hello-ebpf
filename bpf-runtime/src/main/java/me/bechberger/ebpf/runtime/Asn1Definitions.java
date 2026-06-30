@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,20 +1091,20 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class Asn1Definitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("asn1_ber_decoder((const struct asn1_decoder*)$arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("asn1_ber_decoder((const struct asn1_decoder *)$arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int asn1_ber_decoder(Ptr<asn1_decoder> decoder, Ptr<?> context, String data,
       @Unsigned long datalen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asn1_encode_boolean($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("asn1_encode_boolean($arg1, (const u8 *)$arg2, $arg3)")
   public static String asn1_encode_boolean(String data, String end_data, boolean val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asn1_encode_integer($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("asn1_encode_integer($arg1, (const u8 *)$arg2, $arg3)")
   public static String asn1_encode_integer(String data, String end_data, long integer) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1115,27 +1116,27 @@ public final class Asn1Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asn1_encode_octet_string($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("asn1_encode_octet_string($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static String asn1_encode_octet_string(String data, String end_data, String string,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asn1_encode_oid($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("asn1_encode_oid($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static String asn1_encode_oid(String data, String end_data,
       Ptr<java.lang. @Unsigned Integer> oid, int oid_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asn1_encode_sequence($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("asn1_encode_sequence($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static String asn1_encode_sequence(String data, String end_data, String seq, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("asn1_encode_tag($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("asn1_encode_tag($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static String asn1_encode_tag(String data, String end_data, @Unsigned int tag,
       String string, int len) {
     throw new MethodIsBPFRelatedFunction();

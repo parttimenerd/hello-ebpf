@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1115,7 +1116,7 @@ public final class Icmpv6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("icmpv6_flow_init((const struct sock*)$arg1, $arg2, $arg3, (const struct in6_addr*)$arg4, (const struct in6_addr*)$arg5, $arg6)")
+  @BuiltinBPFFunction("icmpv6_flow_init((const struct sock *)$arg1, $arg2, $arg3, (const struct in6_addr *)$arg4, (const struct in6_addr *)$arg5, $arg6)")
   public static void icmpv6_flow_init(Ptr<sock> sk, Ptr<flowi6> fl6, char type, Ptr<in6_addr> saddr,
       Ptr<in6_addr> daddr, int oif) {
     throw new MethodIsBPFRelatedFunction();

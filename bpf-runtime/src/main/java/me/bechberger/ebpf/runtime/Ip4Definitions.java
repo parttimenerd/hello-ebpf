@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,14 +1097,14 @@ public final class Ip4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip4_addr_string($arg1, $arg2, (const u8*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("ip4_addr_string($arg1, $arg2, (const u8 *)$arg3, $arg4, (const u8 *)$arg5)")
   public static String ip4_addr_string(String buf, String end, Ptr<java.lang.Character> addr,
       printf_spec spec, String fmt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip4_addr_string_sa($arg1, $arg2, (const struct sockaddr_in*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("ip4_addr_string_sa($arg1, $arg2, (const struct sockaddr_in *)$arg3, $arg4, (const u8 *)$arg5)")
   public static String ip4_addr_string_sa(String buf, String end, Ptr<sockaddr_in> sa,
       printf_spec spec, String fmt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1128,31 +1129,31 @@ public final class Ip4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip4_frag_init($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ip4_frag_init($arg1, (const void *)$arg2)")
   public static void ip4_frag_init(Ptr<inet_frag_queue> q, Ptr<?> a) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip4_key_hashfn((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ip4_key_hashfn((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned int ip4_key_hashfn(Ptr<?> data, @Unsigned int len, @Unsigned int seed) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip4_obj_cmpfn($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ip4_obj_cmpfn($arg1, (const void *)$arg2)")
   public static int ip4_obj_cmpfn(Ptr<rhashtable_compare_arg> arg, Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip4_obj_hashfn((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ip4_obj_hashfn((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned int ip4_obj_hashfn(Ptr<?> data, @Unsigned int len, @Unsigned int seed) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip4_string($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("ip4_string($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static String ip4_string(String p, Ptr<java.lang.Character> addr, String fmt) {
     throw new MethodIsBPFRelatedFunction();
   }

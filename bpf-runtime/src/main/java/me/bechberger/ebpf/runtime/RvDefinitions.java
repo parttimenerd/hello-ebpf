@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1144,19 +1145,19 @@ public final class RvDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rv_nop_reaction((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("rv_nop_reaction((const u8 *)$arg1, $arg2_)")
   public static void rv_nop_reaction(String msg, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rv_panic_reaction((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("rv_panic_reaction((const u8 *)$arg1, $arg2_)")
   public static void rv_panic_reaction(String msg, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rv_printk_reaction((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("rv_printk_reaction((const u8 *)$arg1, $arg2_)")
   public static void rv_printk_reaction(String msg, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }

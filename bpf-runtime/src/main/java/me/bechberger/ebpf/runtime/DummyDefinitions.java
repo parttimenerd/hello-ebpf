@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,13 +1097,13 @@ public final class DummyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dummy_cmp((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("dummy_cmp((const void *)$arg1, (const void *)$arg2)")
   public static int dummy_cmp(Ptr<?> p1, Ptr<?> p2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dummy_external_sequence_producer($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const void*)$arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("dummy_external_sequence_producer($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const void *)$arg6, $arg7, $arg8, $arg9)")
   public static @Unsigned long dummy_external_sequence_producer(Ptr<?> sequenceProducerState,
       Ptr<ZSTD_Sequence> outSeqs, @Unsigned long outSeqsCapacity, Ptr<?> src,
       @Unsigned long srcSize, Ptr<?> dict, @Unsigned long dictSize, int compressionLevel,
@@ -1129,7 +1130,7 @@ public final class DummyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dummy_ipv6_chk_addr($arg1, (const struct in6_addr*)$arg2, (const struct net_device*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dummy_ipv6_chk_addr($arg1, (const struct in6_addr *)$arg2, (const struct net_device *)$arg3, $arg4)")
   public static int dummy_ipv6_chk_addr(Ptr<net> net, Ptr<in6_addr> addr, Ptr<net_device> dev,
       int strict) {
     throw new MethodIsBPFRelatedFunction();

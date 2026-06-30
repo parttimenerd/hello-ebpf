@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class EcryptfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ecryptfs_printk((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("__ecryptfs_printk((const u8 *)$arg1, $arg2_)")
   public static void __ecryptfs_printk(String fmt, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1159,7 +1160,7 @@ public final class EcryptfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_copy_filename($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ecryptfs_copy_filename($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int ecryptfs_copy_filename(Ptr<String> copied_name,
       Ptr<java.lang. @Unsigned Long> copied_name_size, String name, @Unsigned long name_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1200,14 +1201,14 @@ public final class EcryptfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_d_revalidate($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ecryptfs_d_revalidate($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int ecryptfs_d_revalidate(Ptr<inode> dir, Ptr<qstr> name, Ptr<dentry> dentry,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_decode_and_decrypt_filename($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ecryptfs_decode_and_decrypt_filename($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int ecryptfs_decode_and_decrypt_filename(Ptr<String> plaintext_name,
       Ptr<java.lang. @Unsigned Long> plaintext_name_size, Ptr<super_block> sb, String name,
       @Unsigned long name_size) {
@@ -1315,7 +1316,7 @@ public final class EcryptfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_encrypt_and_encode_filename($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ecryptfs_encrypt_and_encode_filename($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int ecryptfs_encrypt_and_encode_filename(Ptr<String> encoded_name,
       Ptr<java.lang. @Unsigned Long> encoded_name_size,
       Ptr<ecryptfs_mount_crypt_stat> mount_crypt_stat, String name, @Unsigned long name_size) {
@@ -1373,13 +1374,13 @@ public final class EcryptfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_fill_auth_tok($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("ecryptfs_fill_auth_tok($arg1, (const u8 *)$arg2)")
   public static int ecryptfs_fill_auth_tok(Ptr<ecryptfs_auth_tok> auth_tok, String key_desc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_filldir($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ecryptfs_filldir($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static boolean ecryptfs_filldir(Ptr<dir_context> ctx, String lower_name, int lower_namelen,
       @OriginalName("loff_t") long offset, @Unsigned long ino, @Unsigned int d_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1498,28 +1499,28 @@ public final class EcryptfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ecryptfs_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int ecryptfs_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_getattr_link($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ecryptfs_getattr_link($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int ecryptfs_getattr_link(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_getxattr_lower($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ecryptfs_getxattr_lower($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static @OriginalName("ssize_t") long ecryptfs_getxattr_lower(Ptr<dentry> lower_dentry,
       Ptr<inode> lower_inode, String name, Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_i_size_init((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ecryptfs_i_size_init((const u8 *)$arg1, $arg2)")
   public static void ecryptfs_i_size_init(String page_virt, Ptr<inode> inode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1651,7 +1652,7 @@ public final class EcryptfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_miscdev_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ecryptfs_miscdev_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ecryptfs_miscdev_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1731,7 +1732,7 @@ public final class EcryptfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_privileged_open($arg1, $arg2, $arg3, (const struct cred*)$arg4)")
+  @BuiltinBPFFunction("ecryptfs_privileged_open($arg1, $arg2, $arg3, (const struct cred *)$arg4)")
   public static int ecryptfs_privileged_open(Ptr<Ptr<file>> lower_file, Ptr<dentry> lower_dentry,
       Ptr<vfsmount> lower_mnt, Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
@@ -1889,7 +1890,7 @@ public final class EcryptfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_setxattr($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ecryptfs_setxattr($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int ecryptfs_setxattr(Ptr<dentry> dentry, Ptr<inode> inode, String name,
       Ptr<?> value, @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1922,7 +1923,7 @@ public final class EcryptfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_symlink($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("ecryptfs_symlink($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int ecryptfs_symlink(Ptr<mnt_idmap> idmap, Ptr<inode> dir, Ptr<dentry> dentry,
       String symname) {
     throw new MethodIsBPFRelatedFunction();
@@ -1980,7 +1981,7 @@ public final class EcryptfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_write_begin((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ecryptfs_write_begin((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int ecryptfs_write_begin(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, Ptr<Ptr<folio>> foliop,
       Ptr<Ptr<?>> fsdata) {
@@ -1995,7 +1996,7 @@ public final class EcryptfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_write_end((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ecryptfs_write_end((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int ecryptfs_write_end(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, @Unsigned int copied, Ptr<folio> folio,
       Ptr<?> fsdata) {
@@ -2059,14 +2060,14 @@ public final class EcryptfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_xattr_get((const struct xattr_handler*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ecryptfs_xattr_get((const struct xattr_handler *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int ecryptfs_xattr_get(Ptr<xattr_handler> handler, Ptr<dentry> dentry,
       Ptr<inode> inode, String name, Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ecryptfs_xattr_set((const struct xattr_handler*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("ecryptfs_xattr_set((const struct xattr_handler *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, (const void *)$arg6, $arg7, $arg8)")
   public static int ecryptfs_xattr_set(Ptr<xattr_handler> handler, Ptr<mnt_idmap> idmap,
       Ptr<dentry> dentry, Ptr<inode> inode, String name, Ptr<?> value, @Unsigned long size,
       int flags) {

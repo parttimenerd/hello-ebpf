@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1124,13 +1125,13 @@ public final class IdrDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("idr_find((const struct idr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("idr_find((const struct idr *)$arg1, $arg2)")
   public static Ptr<?> idr_find(Ptr<idr> idr, @Unsigned long id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("idr_for_each((const struct idr*)$arg1, (int (*)(int, void*, void*))$arg2, $arg3)")
+  @BuiltinBPFFunction("idr_for_each((const struct idr *)$arg1, (int (*)(int, void*, void*))$arg2, $arg3)")
   public static int idr_for_each(Ptr<idr> idr, Ptr<?> fn, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }

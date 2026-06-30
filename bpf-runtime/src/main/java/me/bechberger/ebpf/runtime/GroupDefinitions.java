@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class GroupDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__group_cpus_evenly($arg1, $arg2, $arg3, (const struct cpumask*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__group_cpus_evenly($arg1, $arg2, $arg3, (const struct cpumask *)$arg4, $arg5, $arg6)")
   public static int __group_cpus_evenly(@Unsigned int startgrp, @Unsigned int numgrps,
       Ptr<@OriginalName("cpumask_var_t") Ptr<cpumask>> node_to_cpumask, Ptr<cpumask> cpu_mask,
       Ptr<cpumask> nmsk, Ptr<cpumask> masks) {
@@ -1155,7 +1156,7 @@ public final class GroupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("group_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("group_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long group_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();

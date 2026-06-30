@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class MountDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("mount_bdev($arg1, $arg2, (const u8*)$arg3, $arg4, (int (*)(struct super_block*, void*, int))$arg5)")
+  @BuiltinBPFFunction("mount_bdev($arg1, $arg2, (const u8 *)$arg3, $arg4, (int (*)(struct super_block*, void*, int))$arg5)")
   public static Ptr<dentry> mount_bdev(Ptr<file_system_type> fs_type, int flags, String dev_name,
       Ptr<?> data, Ptr<?> fill_super) {
     throw new MethodIsBPFRelatedFunction();
@@ -1146,13 +1147,13 @@ public final class MountDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mount_subtree($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("mount_subtree($arg1, (const u8 *)$arg2)")
   public static Ptr<dentry> mount_subtree(Ptr<vfsmount> m, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mount_too_revealing((const struct super_block*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mount_too_revealing((const struct super_block *)$arg1, $arg2)")
   public static boolean mount_too_revealing(Ptr<super_block> sb,
       Ptr<java.lang.Integer> new_mnt_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1449,7 +1450,7 @@ public final class MountDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const struct tomoyo_path_info*; const struct tomoyo_path_info*; const struct tomoyo_path_info*; long unsigned int flags; int need_dev; }"
+      cType = "struct { const struct tomoyo_path_info *type; const struct tomoyo_path_info *dir; const struct tomoyo_path_info *dev; long unsigned int flags; int need_dev; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

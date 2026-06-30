@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class DisplayidDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("displayid_iter_edid_begin((const struct drm_edid*)$arg1, $arg2)")
+  @BuiltinBPFFunction("displayid_iter_edid_begin((const struct drm_edid *)$arg1, $arg2)")
   public static void displayid_iter_edid_begin(Ptr<drm_edid> drm_edid, Ptr<displayid_iter> iter) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1108,13 +1109,13 @@ public final class DisplayidDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("displayid_primary_use((const struct displayid_iter*)$arg1)")
+  @BuiltinBPFFunction("displayid_primary_use((const struct displayid_iter *)$arg1)")
   public static char displayid_primary_use(Ptr<displayid_iter> iter) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("displayid_version((const struct displayid_iter*)$arg1)")
+  @BuiltinBPFFunction("displayid_version((const struct displayid_iter *)$arg1)")
   public static char displayid_version(Ptr<displayid_iter> iter) {
     throw new MethodIsBPFRelatedFunction();
   }

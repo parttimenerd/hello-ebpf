@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1104,7 +1105,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_aer_event($arg1, (const u8*)$arg2, (const unsigned int)$arg3, (const u8)$arg4, (const u8)$arg5, $arg6)")
+  @BuiltinBPFFunction("__traceiter_aer_event($arg1, (const u8 *)$arg2, (const unsigned int)$arg3, (const u8)$arg4, (const u8)$arg5, $arg6)")
   public static int __traceiter_aer_event(Ptr<?> __data, String dev_name, @Unsigned int status,
       char severity, char tlp_header_valid, Ptr<pcie_tlp_log> tlp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1162,7 +1163,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_arm_event($arg1, (const struct cper_sec_proc_arm*)$arg2, (const u8*)$arg3, (const unsigned int)$arg4, (const u8*)$arg5, (const unsigned int)$arg6, (const u8*)$arg7, (const unsigned int)$arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("__traceiter_arm_event($arg1, (const struct cper_sec_proc_arm *)$arg2, (const u8 *)$arg3, (const unsigned int)$arg4, (const u8 *)$arg5, (const unsigned int)$arg6, (const u8 *)$arg7, (const unsigned int)$arg8, $arg9, $arg10)")
   public static int __traceiter_arm_event(Ptr<?> __data, Ptr<cper_sec_proc_arm> proc,
       Ptr<java.lang.Character> pei_err, @Unsigned int pei_len, Ptr<java.lang.Character> ctx_err,
       @Unsigned int ctx_len, Ptr<java.lang.Character> oem, @Unsigned int oem_len, char sev,
@@ -1171,14 +1172,14 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_ata_bmdma_setup($arg1, $arg2, (const struct ata_taskfile*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_ata_bmdma_setup($arg1, $arg2, (const struct ata_taskfile *)$arg3, $arg4)")
   public static int __traceiter_ata_bmdma_setup(Ptr<?> __data, Ptr<ata_port> ap,
       Ptr<ata_taskfile> tf, @Unsigned int tag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_ata_bmdma_start($arg1, $arg2, (const struct ata_taskfile*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_ata_bmdma_start($arg1, $arg2, (const struct ata_taskfile *)$arg3, $arg4)")
   public static int __traceiter_ata_bmdma_start(Ptr<?> __data, Ptr<ata_port> ap,
       Ptr<ata_taskfile> tf, @Unsigned int tag) {
     throw new MethodIsBPFRelatedFunction();
@@ -1192,7 +1193,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_ata_bmdma_stop($arg1, $arg2, (const struct ata_taskfile*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_ata_bmdma_stop($arg1, $arg2, (const struct ata_taskfile *)$arg3, $arg4)")
   public static int __traceiter_ata_bmdma_stop(Ptr<?> __data, Ptr<ata_port> ap,
       Ptr<ata_taskfile> tf, @Unsigned int tag) {
     throw new MethodIsBPFRelatedFunction();
@@ -1226,7 +1227,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_ata_exec_command($arg1, $arg2, (const struct ata_taskfile*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_ata_exec_command($arg1, $arg2, (const struct ata_taskfile *)$arg3, $arg4)")
   public static int __traceiter_ata_exec_command(Ptr<?> __data, Ptr<ata_port> ap,
       Ptr<ata_taskfile> tf, @Unsigned int tag) {
     throw new MethodIsBPFRelatedFunction();
@@ -1371,7 +1372,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_ata_tf_load($arg1, $arg2, (const struct ata_taskfile*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_ata_tf_load($arg1, $arg2, (const struct ata_taskfile *)$arg3)")
   public static int __traceiter_ata_tf_load(Ptr<?> __data, Ptr<ata_port> ap, Ptr<ata_taskfile> tf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1566,7 +1567,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_bpf_trace_printk($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_bpf_trace_printk($arg1, (const u8 *)$arg2)")
   public static int __traceiter_bpf_trace_printk(Ptr<?> __data, String bpf_string) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1578,34 +1579,34 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_bpf_xdp_link_attach_failed($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_bpf_xdp_link_attach_failed($arg1, (const u8 *)$arg2)")
   public static int __traceiter_bpf_xdp_link_attach_failed(Ptr<?> __data, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_br_fdb_add($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__traceiter_br_fdb_add($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int __traceiter_br_fdb_add(Ptr<?> __data, Ptr<ndmsg> ndm, Ptr<net_device> dev,
       String addr, @Unsigned short vid, @Unsigned short nlh_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_br_fdb_external_learn_add($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_br_fdb_external_learn_add($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int __traceiter_br_fdb_external_learn_add(Ptr<?> __data, Ptr<net_bridge> br,
       Ptr<net_bridge_port> p, String addr, @Unsigned short vid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_br_fdb_update($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__traceiter_br_fdb_update($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int __traceiter_br_fdb_update(Ptr<?> __data, Ptr<net_bridge> br,
       Ptr<net_bridge_port> source, String addr, @Unsigned short vid, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_br_mdb_full($arg1, (const struct net_device*)$arg2, (const struct br_ip*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_br_mdb_full($arg1, (const struct net_device *)$arg2, (const struct br_ip *)$arg3)")
   public static int __traceiter_br_mdb_full(Ptr<?> __data, Ptr<net_device> dev, Ptr<br_ip> group) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1684,7 +1685,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cap_capable($arg1, (const struct cred*)$arg2, $arg3, (const struct user_namespace*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__traceiter_cap_capable($arg1, (const struct cred *)$arg2, $arg3, (const struct user_namespace *)$arg4, $arg5, $arg6)")
   public static int __traceiter_cap_capable(Ptr<?> __data, Ptr<cred> cred,
       Ptr<user_namespace> target_ns, Ptr<user_namespace> capable_ns, int cap, int ret) {
     throw new MethodIsBPFRelatedFunction();
@@ -1698,7 +1699,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cgroup_attach_task($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_cgroup_attach_task($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int __traceiter_cgroup_attach_task(Ptr<?> __data, Ptr<cgroup> dst_cgrp, String path,
       Ptr<task_struct> task, boolean threadgroup) {
     throw new MethodIsBPFRelatedFunction();
@@ -1711,33 +1712,33 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cgroup_freeze($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_cgroup_freeze($arg1, $arg2, (const u8 *)$arg3)")
   public static int __traceiter_cgroup_freeze(Ptr<?> __data, Ptr<cgroup> cgrp, String path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cgroup_mkdir($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_cgroup_mkdir($arg1, $arg2, (const u8 *)$arg3)")
   public static int __traceiter_cgroup_mkdir(Ptr<?> __data, Ptr<cgroup> cgrp, String path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cgroup_notify_frozen($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_cgroup_notify_frozen($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int __traceiter_cgroup_notify_frozen(Ptr<?> __data, Ptr<cgroup> cgrp, String path,
       int val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cgroup_notify_populated($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_cgroup_notify_populated($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int __traceiter_cgroup_notify_populated(Ptr<?> __data, Ptr<cgroup> cgrp,
       String path, int val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cgroup_release($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_cgroup_release($arg1, $arg2, (const u8 *)$arg3)")
   public static int __traceiter_cgroup_release(Ptr<?> __data, Ptr<cgroup> cgrp, String path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1749,13 +1750,13 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cgroup_rename($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_cgroup_rename($arg1, $arg2, (const u8 *)$arg3)")
   public static int __traceiter_cgroup_rename(Ptr<?> __data, Ptr<cgroup> cgrp, String path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cgroup_rmdir($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_cgroup_rmdir($arg1, $arg2, (const u8 *)$arg3)")
   public static int __traceiter_cgroup_rmdir(Ptr<?> __data, Ptr<cgroup> cgrp, String path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1788,14 +1789,14 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cgroup_transfer_tasks($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_cgroup_transfer_tasks($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int __traceiter_cgroup_transfer_tasks(Ptr<?> __data, Ptr<cgroup> dst_cgrp,
       String path, Ptr<task_struct> task, boolean threadgroup) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cgroup_unfreeze($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_cgroup_unfreeze($arg1, $arg2, (const u8 *)$arg3)")
   public static int __traceiter_cgroup_unfreeze(Ptr<?> __data, Ptr<cgroup> cgrp, String path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1937,28 +1938,28 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cma_alloc_busy_retry($arg1, (const u8*)$arg2, $arg3, (const struct page*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__traceiter_cma_alloc_busy_retry($arg1, (const u8 *)$arg2, $arg3, (const struct page *)$arg4, $arg5, $arg6)")
   public static int __traceiter_cma_alloc_busy_retry(Ptr<?> __data, String name, @Unsigned long pfn,
       Ptr<page> page, @Unsigned long count, @Unsigned int align) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cma_alloc_finish($arg1, (const u8*)$arg2, $arg3, (const struct page*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__traceiter_cma_alloc_finish($arg1, (const u8 *)$arg2, $arg3, (const struct page *)$arg4, $arg5, $arg6, $arg7)")
   public static int __traceiter_cma_alloc_finish(Ptr<?> __data, String name, @Unsigned long pfn,
       Ptr<page> page, @Unsigned long count, @Unsigned int align, int errorno) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cma_alloc_start($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_cma_alloc_start($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int __traceiter_cma_alloc_start(Ptr<?> __data, String name, @Unsigned long count,
       @Unsigned int align) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_cma_release($arg1, (const u8*)$arg2, $arg3, (const struct page*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_cma_release($arg1, (const u8 *)$arg2, $arg3, (const struct page *)$arg4, $arg5)")
   public static int __traceiter_cma_release(Ptr<?> __data, String name, @Unsigned long pfn,
       Ptr<page> page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1972,7 +1973,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_console($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_console($arg1, (const u8 *)$arg2, $arg3)")
   public static int __traceiter_console(Ptr<?> __data, String text, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2184,21 +2185,21 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_dev_pm_qos_add_request($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_dev_pm_qos_add_request($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int __traceiter_dev_pm_qos_add_request(Ptr<?> __data, String name,
       dev_pm_qos_req_type type, int new_value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_dev_pm_qos_remove_request($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_dev_pm_qos_remove_request($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int __traceiter_dev_pm_qos_remove_request(Ptr<?> __data, String name,
       dev_pm_qos_req_type type, int new_value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_dev_pm_qos_update_request($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_dev_pm_qos_update_request($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int __traceiter_dev_pm_qos_update_request(Ptr<?> __data, String name,
       dev_pm_qos_req_type type, int new_value) {
     throw new MethodIsBPFRelatedFunction();
@@ -2224,56 +2225,56 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_device_pm_callback_start($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_device_pm_callback_start($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int __traceiter_device_pm_callback_start(Ptr<?> __data, Ptr<device> dev,
       String pm_ops, int event) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_devlink_health_recover_aborted($arg1, (const struct devlink*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_devlink_health_recover_aborted($arg1, (const struct devlink *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int __traceiter_devlink_health_recover_aborted(Ptr<?> __data, Ptr<devlink> devlink,
       String reporter_name, boolean health_state, @Unsigned long time_since_last_recover) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_devlink_health_report($arg1, (const struct devlink*)$arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__traceiter_devlink_health_report($arg1, (const struct devlink *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static int __traceiter_devlink_health_report(Ptr<?> __data, Ptr<devlink> devlink,
       String reporter_name, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_devlink_health_reporter_state_update($arg1, (const struct devlink*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_devlink_health_reporter_state_update($arg1, (const struct devlink *)$arg2, (const u8 *)$arg3, $arg4)")
   public static int __traceiter_devlink_health_reporter_state_update(Ptr<?> __data,
       Ptr<devlink> devlink, String reporter_name, boolean new_state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_devlink_hwerr($arg1, (const struct devlink*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__traceiter_devlink_hwerr($arg1, (const struct devlink *)$arg2, $arg3, (const u8 *)$arg4)")
   public static int __traceiter_devlink_hwerr(Ptr<?> __data, Ptr<devlink> devlink, int err,
       String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_devlink_hwmsg($arg1, (const struct devlink*)$arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("__traceiter_devlink_hwmsg($arg1, (const struct devlink *)$arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int __traceiter_devlink_hwmsg(Ptr<?> __data, Ptr<devlink> devlink, boolean incoming,
       @Unsigned long type, Ptr<java.lang.Character> buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_devlink_trap_report($arg1, (const struct devlink*)$arg2, $arg3, (const struct devlink_trap_metadata*)$arg4)")
+  @BuiltinBPFFunction("__traceiter_devlink_trap_report($arg1, (const struct devlink *)$arg2, $arg3, (const struct devlink_trap_metadata *)$arg4)")
   public static int __traceiter_devlink_trap_report(Ptr<?> __data, Ptr<devlink> devlink,
       Ptr<sk_buff> skb, Ptr<devlink_trap_metadata> metadata) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_devres_log($arg1, $arg2, (const u8*)$arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("__traceiter_devres_log($arg1, $arg2, (const u8 *)$arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int __traceiter_devres_log(Ptr<?> __data, Ptr<device> dev, String op, Ptr<?> node,
       String name, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -2655,7 +2656,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_ext4_error($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_ext4_error($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int __traceiter_ext4_error(Ptr<?> __data, Ptr<super_block> sb, String function,
       @Unsigned int line) {
     throw new MethodIsBPFRelatedFunction();
@@ -3352,7 +3353,7 @@ public final class TraceiterDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("__traceiter_extlog_mem_event($arg1, $arg2, $arg3, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg4, (const u8*)$arg5, $arg6)")
+          + "} *)$arg4, (const u8 *)$arg5, $arg6)")
   public static int __traceiter_extlog_mem_event(Ptr<?> __data, Ptr<cper_sec_mem_err> mem,
       @Unsigned int err_seq, Ptr<@OriginalName("guid_t") uuid_t> fru_id, String fru_text,
       char sev) {
@@ -3374,14 +3375,14 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_fib6_table_lookup($arg1, (const struct net*)$arg2, (const struct fib6_result*)$arg3, $arg4, (const struct flowi6*)$arg5)")
+  @BuiltinBPFFunction("__traceiter_fib6_table_lookup($arg1, (const struct net *)$arg2, (const struct fib6_result *)$arg3, $arg4, (const struct flowi6 *)$arg5)")
   public static int __traceiter_fib6_table_lookup(Ptr<?> __data, Ptr<net> net, Ptr<fib6_result> res,
       Ptr<fib6_table> table, Ptr<flowi6> flp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_fib_table_lookup($arg1, $arg2, (const struct flowi4*)$arg3, (const struct fib_nh_common*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_fib_table_lookup($arg1, $arg2, (const struct flowi4 *)$arg3, (const struct fib_nh_common *)$arg4, $arg5)")
   public static int __traceiter_fib_table_lookup(Ptr<?> __data, @Unsigned int tb_id,
       Ptr<flowi4> flp, Ptr<fib_nh_common> nhc, int err) {
     throw new MethodIsBPFRelatedFunction();
@@ -3443,13 +3444,13 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_fuse_request_end($arg1, (const struct fuse_req*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_fuse_request_end($arg1, (const struct fuse_req *)$arg2)")
   public static int __traceiter_fuse_request_end(Ptr<?> __data, Ptr<fuse_req> req) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_fuse_request_send($arg1, (const struct fuse_req*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_fuse_request_send($arg1, (const struct fuse_req *)$arg2)")
   public static int __traceiter_fuse_request_send(Ptr<?> __data, Ptr<fuse_req> req) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3501,84 +3502,84 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_handshake_cancel($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4)")
+  @BuiltinBPFFunction("__traceiter_handshake_cancel($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4)")
   public static int __traceiter_handshake_cancel(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_handshake_cancel_busy($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4)")
+  @BuiltinBPFFunction("__traceiter_handshake_cancel_busy($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4)")
   public static int __traceiter_handshake_cancel_busy(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_handshake_cancel_none($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4)")
+  @BuiltinBPFFunction("__traceiter_handshake_cancel_none($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4)")
   public static int __traceiter_handshake_cancel_none(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_handshake_cmd_accept($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_handshake_cmd_accept($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4, $arg5)")
   public static int __traceiter_handshake_cmd_accept(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk, int fd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_handshake_cmd_accept_err($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_handshake_cmd_accept_err($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4, $arg5)")
   public static int __traceiter_handshake_cmd_accept_err(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk, int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_handshake_cmd_done($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_handshake_cmd_done($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4, $arg5)")
   public static int __traceiter_handshake_cmd_done(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk, int fd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_handshake_cmd_done_err($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_handshake_cmd_done_err($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4, $arg5)")
   public static int __traceiter_handshake_cmd_done_err(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk, int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_handshake_complete($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_handshake_complete($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4, $arg5)")
   public static int __traceiter_handshake_complete(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk, int status) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_handshake_destruct($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4)")
+  @BuiltinBPFFunction("__traceiter_handshake_destruct($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4)")
   public static int __traceiter_handshake_destruct(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_handshake_notify_err($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_handshake_notify_err($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4, $arg5)")
   public static int __traceiter_handshake_notify_err(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk, int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_handshake_submit($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4)")
+  @BuiltinBPFFunction("__traceiter_handshake_submit($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4)")
   public static int __traceiter_handshake_submit(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_handshake_submit_err($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_handshake_submit_err($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4, $arg5)")
   public static int __traceiter_handshake_submit_err(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk, int err) {
     throw new MethodIsBPFRelatedFunction();
@@ -3651,28 +3652,28 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_hwmon_attr_show($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_hwmon_attr_show($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int __traceiter_hwmon_attr_show(Ptr<?> __data, int index, String attr_name,
       long val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_hwmon_attr_show_string($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__traceiter_hwmon_attr_show_string($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static int __traceiter_hwmon_attr_show_string(Ptr<?> __data, int index, String attr_name,
       String s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_hwmon_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_hwmon_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int __traceiter_hwmon_attr_store(Ptr<?> __data, int index, String attr_name,
       long val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_hyperv_mmu_flush_tlb_multi($arg1, (const struct cpumask*)$arg2, (const struct flush_tlb_info*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_hyperv_mmu_flush_tlb_multi($arg1, (const struct cpumask *)$arg2, (const struct flush_tlb_info *)$arg3)")
   public static int __traceiter_hyperv_mmu_flush_tlb_multi(Ptr<?> __data, Ptr<cpumask> cpus,
       Ptr<flush_tlb_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -3693,7 +3694,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_hyperv_send_ipi_mask($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_hyperv_send_ipi_mask($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int __traceiter_hyperv_send_ipi_mask(Ptr<?> __data, Ptr<cpumask> cpus, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3705,34 +3706,34 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_i2c_read($arg1, (const struct i2c_adapter*)$arg2, (const struct i2c_msg*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_i2c_read($arg1, (const struct i2c_adapter *)$arg2, (const struct i2c_msg *)$arg3, $arg4)")
   public static int __traceiter_i2c_read(Ptr<?> __data, Ptr<i2c_adapter> adap, Ptr<i2c_msg> msg,
       int num) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_i2c_reply($arg1, (const struct i2c_adapter*)$arg2, (const struct i2c_msg*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_i2c_reply($arg1, (const struct i2c_adapter *)$arg2, (const struct i2c_msg *)$arg3, $arg4)")
   public static int __traceiter_i2c_reply(Ptr<?> __data, Ptr<i2c_adapter> adap, Ptr<i2c_msg> msg,
       int num) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_i2c_result($arg1, (const struct i2c_adapter*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_i2c_result($arg1, (const struct i2c_adapter *)$arg2, $arg3, $arg4)")
   public static int __traceiter_i2c_result(Ptr<?> __data, Ptr<i2c_adapter> adap, int num, int ret) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_i2c_slave($arg1, (const struct i2c_client*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_i2c_slave($arg1, (const struct i2c_client *)$arg2, $arg3, $arg4, $arg5)")
   public static int __traceiter_i2c_slave(Ptr<?> __data, Ptr<i2c_client> client,
       i2c_slave_event event, Ptr<java.lang.Character> val, int cb_ret) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_i2c_write($arg1, (const struct i2c_adapter*)$arg2, (const struct i2c_msg*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_i2c_write($arg1, (const struct i2c_adapter *)$arg2, (const struct i2c_msg *)$arg3, $arg4)")
   public static int __traceiter_i2c_write(Ptr<?> __data, Ptr<i2c_adapter> adap, Ptr<i2c_msg> msg,
       int num) {
     throw new MethodIsBPFRelatedFunction();
@@ -3752,19 +3753,19 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_icmp_send($arg1, (const struct sk_buff*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_icmp_send($arg1, (const struct sk_buff *)$arg2, $arg3, $arg4)")
   public static int __traceiter_icmp_send(Ptr<?> __data, Ptr<sk_buff> skb, int type, int code) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_inet_sk_error_report($arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_inet_sk_error_report($arg1, (const struct sock *)$arg2)")
   public static int __traceiter_inet_sk_error_report(Ptr<?> __data, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_inet_sock_set_state($arg1, (const struct sock*)$arg2, (const int)$arg3, (const int)$arg4)")
+  @BuiltinBPFFunction("__traceiter_inet_sock_set_state($arg1, (const struct sock *)$arg2, (const int)$arg3, (const int)$arg4)")
   public static int __traceiter_inet_sock_set_state(Ptr<?> __data, Ptr<sock> sk, int oldstate,
       int newstate) {
     throw new MethodIsBPFRelatedFunction();
@@ -3778,7 +3779,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_initcall_level($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_initcall_level($arg1, (const u8 *)$arg2)")
   public static int __traceiter_initcall_level(Ptr<?> __data, String level) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3900,7 +3901,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_io_uring_req_failed($arg1, (const struct io_uring_sqe*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_io_uring_req_failed($arg1, (const struct io_uring_sqe *)$arg2, $arg3, $arg4)")
   public static int __traceiter_io_uring_req_failed(Ptr<?> __data, Ptr<io_uring_sqe> sqe,
       Ptr<io_kiocb> req, int error) {
     throw new MethodIsBPFRelatedFunction();
@@ -3933,7 +3934,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_iocost_inuse_adjust($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__traceiter_iocost_inuse_adjust($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int __traceiter_iocost_inuse_adjust(Ptr<?> __data, Ptr<ioc_gq> iocg, String path,
       Ptr<ioc_now> now, @Unsigned int old_inuse, @Unsigned int new_inuse,
       @Unsigned long old_hw_inuse, @Unsigned long new_hw_inuse) {
@@ -3941,7 +3942,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_iocost_inuse_shortage($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__traceiter_iocost_inuse_shortage($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int __traceiter_iocost_inuse_shortage(Ptr<?> __data, Ptr<ioc_gq> iocg, String path,
       Ptr<ioc_now> now, @Unsigned int old_inuse, @Unsigned int new_inuse,
       @Unsigned long old_hw_inuse, @Unsigned long new_hw_inuse) {
@@ -3949,7 +3950,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_iocost_inuse_transfer($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__traceiter_iocost_inuse_transfer($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int __traceiter_iocost_inuse_transfer(Ptr<?> __data, Ptr<ioc_gq> iocg, String path,
       Ptr<ioc_now> now, @Unsigned int old_inuse, @Unsigned int new_inuse,
       @Unsigned long old_hw_inuse, @Unsigned long new_hw_inuse) {
@@ -3965,7 +3966,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_iocost_iocg_activate($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__traceiter_iocost_iocg_activate($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int __traceiter_iocost_iocg_activate(Ptr<?> __data, Ptr<ioc_gq> iocg, String path,
       Ptr<ioc_now> now, @Unsigned long last_period, @Unsigned long cur_period,
       @Unsigned long vtime) {
@@ -3973,7 +3974,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_iocost_iocg_forgive_debt($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("__traceiter_iocost_iocg_forgive_debt($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static int __traceiter_iocost_iocg_forgive_debt(Ptr<?> __data, Ptr<ioc_gq> iocg,
       String path, Ptr<ioc_now> now, @Unsigned int usage_pct, @Unsigned long old_debt,
       @Unsigned long new_debt, @Unsigned long old_delay, @Unsigned long new_delay) {
@@ -3981,7 +3982,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_iocost_iocg_idle($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__traceiter_iocost_iocg_idle($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int __traceiter_iocost_iocg_idle(Ptr<?> __data, Ptr<ioc_gq> iocg, String path,
       Ptr<ioc_now> now, @Unsigned long last_period, @Unsigned long cur_period,
       @Unsigned long vtime) {
@@ -4031,7 +4032,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_iomap_iter($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_iomap_iter($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int __traceiter_iomap_iter(Ptr<?> __data, Ptr<iomap_iter> iter, Ptr<?> ops,
       @Unsigned long caller) {
     throw new MethodIsBPFRelatedFunction();
@@ -4085,7 +4086,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_ipi_send_cpumask($arg1, (const struct cpumask*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_ipi_send_cpumask($arg1, (const struct cpumask *)$arg2, $arg3, $arg4)")
   public static int __traceiter_ipi_send_cpumask(Ptr<?> __data, Ptr<cpumask> cpumask,
       @Unsigned long callsite, Ptr<?> callback) {
     throw new MethodIsBPFRelatedFunction();
@@ -4178,7 +4179,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_irq_noise($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_irq_noise($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int __traceiter_irq_noise(Ptr<?> __data, int vector, String desc,
       @Unsigned long start, @Unsigned long duration) {
     throw new MethodIsBPFRelatedFunction();
@@ -4379,7 +4380,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_kfree($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_kfree($arg1, $arg2, (const void *)$arg3)")
   public static int __traceiter_kfree(Ptr<?> __data, @Unsigned long call_site, Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4392,7 +4393,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_kmalloc($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__traceiter_kmalloc($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int __traceiter_kmalloc(Ptr<?> __data, @Unsigned long call_site, Ptr<?> ptr,
       @Unsigned long bytes_req, @Unsigned long bytes_alloc,
       @Unsigned @OriginalName("gfp_t") int gfp_flags, int node) {
@@ -4400,14 +4401,14 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_kmem_cache_alloc($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__traceiter_kmem_cache_alloc($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6)")
   public static int __traceiter_kmem_cache_alloc(Ptr<?> __data, @Unsigned long call_site,
       Ptr<?> ptr, Ptr<kmem_cache> s, @Unsigned @OriginalName("gfp_t") int gfp_flags, int node) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_kmem_cache_free($arg1, $arg2, (const void*)$arg3, (const struct kmem_cache*)$arg4)")
+  @BuiltinBPFFunction("__traceiter_kmem_cache_free($arg1, $arg2, (const void *)$arg3, (const struct kmem_cache *)$arg4)")
   public static int __traceiter_kmem_cache_free(Ptr<?> __data, @Unsigned long call_site, Ptr<?> ptr,
       Ptr<kmem_cache> s) {
     throw new MethodIsBPFRelatedFunction();
@@ -4505,19 +4506,19 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_ma_op($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_ma_op($arg1, (const u8 *)$arg2, $arg3)")
   public static int __traceiter_ma_op(Ptr<?> __data, String fn, Ptr<ma_state> mas) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_ma_read($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_ma_read($arg1, (const u8 *)$arg2, $arg3)")
   public static int __traceiter_ma_read(Ptr<?> __data, String fn, Ptr<ma_state> mas) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_ma_write($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_ma_write($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int __traceiter_ma_write(Ptr<?> __data, String fn, Ptr<ma_state> mas,
       @Unsigned long piv, Ptr<?> val) {
     throw new MethodIsBPFRelatedFunction();
@@ -4538,7 +4539,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_mc_event($arg1, (const unsigned int)$arg2, (const u8*)$arg3, (const u8*)$arg4, (const int)$arg5, (const u8)$arg6, (const s8)$arg7, (const s8)$arg8, (const s8)$arg9, $arg10, (const u8)$arg11, $arg12, (const u8*)$arg13)")
+  @BuiltinBPFFunction("__traceiter_mc_event($arg1, (const unsigned int)$arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const int)$arg5, (const u8)$arg6, (const s8)$arg7, (const s8)$arg8, (const s8)$arg9, $arg10, (const u8)$arg11, $arg12, (const u8 *)$arg13)")
   public static int __traceiter_mc_event(Ptr<?> __data, @Unsigned int err_type, String error_msg,
       String label, int error_count, char mc_index, @OriginalName("s8") byte top_layer,
       @OriginalName("s8") byte mid_layer, @OriginalName("s8") byte low_layer,
@@ -4553,13 +4554,13 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_mctp_key_acquire($arg1, (const struct mctp_sk_key*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_mctp_key_acquire($arg1, (const struct mctp_sk_key *)$arg2)")
   public static int __traceiter_mctp_key_acquire(Ptr<?> __data, Ptr<mctp_sk_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_mctp_key_release($arg1, (const struct mctp_sk_key*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_mctp_key_release($arg1, (const struct mctp_sk_key *)$arg2, $arg3)")
   public static int __traceiter_mctp_key_release(Ptr<?> __data, Ptr<mctp_sk_key> key, int reason) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4572,14 +4573,14 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_mem_connect($arg1, (const struct xdp_mem_allocator*)$arg2, (const struct xdp_rxq_info*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_mem_connect($arg1, (const struct xdp_mem_allocator *)$arg2, (const struct xdp_rxq_info *)$arg3)")
   public static int __traceiter_mem_connect(Ptr<?> __data, Ptr<xdp_mem_allocator> xa,
       Ptr<xdp_rxq_info> rxq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_mem_disconnect($arg1, (const struct xdp_mem_allocator*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_mem_disconnect($arg1, (const struct xdp_mem_allocator *)$arg2)")
   public static int __traceiter_mem_disconnect(Ptr<?> __data, Ptr<xdp_mem_allocator> xa) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5103,7 +5104,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_napi_gro_frags_entry($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_napi_gro_frags_entry($arg1, (const struct sk_buff *)$arg2)")
   public static int __traceiter_napi_gro_frags_entry(Ptr<?> __data, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5115,7 +5116,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_napi_gro_receive_entry($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_napi_gro_receive_entry($arg1, (const struct sk_buff *)$arg2)")
   public static int __traceiter_napi_gro_receive_entry(Ptr<?> __data, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5141,7 +5142,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_neigh_create($arg1, $arg2, $arg3, (const void*)$arg4, (const struct neighbour*)$arg5, $arg6)")
+  @BuiltinBPFFunction("__traceiter_neigh_create($arg1, $arg2, $arg3, (const void *)$arg4, (const struct neighbour *)$arg5, $arg6)")
   public static int __traceiter_neigh_create(Ptr<?> __data, Ptr<neigh_table> tbl,
       Ptr<net_device> dev, Ptr<?> pkey, Ptr<neighbour> n, boolean exempt_from_gc) {
     throw new MethodIsBPFRelatedFunction();
@@ -5168,7 +5169,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_neigh_update($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__traceiter_neigh_update($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static int __traceiter_neigh_update(Ptr<?> __data, Ptr<neighbour> n,
       Ptr<java.lang.Character> lladdr, char _new, @Unsigned int flags, @Unsigned int nlmsg_pid) {
     throw new MethodIsBPFRelatedFunction();
@@ -5187,7 +5188,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_net_dev_start_xmit($arg1, (const struct sk_buff*)$arg2, (const struct net_device*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_net_dev_start_xmit($arg1, (const struct sk_buff *)$arg2, (const struct net_device *)$arg3)")
   public static int __traceiter_net_dev_start_xmit(Ptr<?> __data, Ptr<sk_buff> skb,
       Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
@@ -5214,7 +5215,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_netif_receive_skb_entry($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_netif_receive_skb_entry($arg1, (const struct sk_buff *)$arg2)")
   public static int __traceiter_netif_receive_skb_entry(Ptr<?> __data, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5226,7 +5227,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_netif_receive_skb_list_entry($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_netif_receive_skb_list_entry($arg1, (const struct sk_buff *)$arg2)")
   public static int __traceiter_netif_receive_skb_list_entry(Ptr<?> __data, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5244,7 +5245,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_netif_rx_entry($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_netif_rx_entry($arg1, (const struct sk_buff *)$arg2)")
   public static int __traceiter_netif_rx_entry(Ptr<?> __data, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5256,7 +5257,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_netlink_extack($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_netlink_extack($arg1, (const u8 *)$arg2)")
   public static int __traceiter_netlink_extack(Ptr<?> __data, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5278,9 +5279,9 @@ public final class TraceiterDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("__traceiter_non_standard_event($arg1, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg2, (const struct {\n"
+          + "} *)$arg2, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg3, (const u8*)$arg4, (const u8)$arg5, (const u8*)$arg6, (const unsigned int)$arg7)")
+          + "} *)$arg3, (const u8 *)$arg4, (const u8)$arg5, (const u8 *)$arg6, (const unsigned int)$arg7)")
   public static int __traceiter_non_standard_event(Ptr<?> __data,
       Ptr<@OriginalName("guid_t") uuid_t> sec_type, Ptr<@OriginalName("guid_t") uuid_t> fru_id,
       String fru_text, char sev, Ptr<java.lang.Character> err, @Unsigned int len) {
@@ -5332,28 +5333,28 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_page_pool_release($arg1, (const struct page_pool*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_page_pool_release($arg1, (const struct page_pool *)$arg2, $arg3, $arg4, $arg5)")
   public static int __traceiter_page_pool_release(Ptr<?> __data, Ptr<page_pool> pool, int inflight,
       @Unsigned int hold, @Unsigned int release) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_page_pool_state_hold($arg1, (const struct page_pool*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_page_pool_state_hold($arg1, (const struct page_pool *)$arg2, $arg3, $arg4)")
   public static int __traceiter_page_pool_state_hold(Ptr<?> __data, Ptr<page_pool> pool,
       @Unsigned @OriginalName("netmem_ref") long netmem, @Unsigned int hold) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_page_pool_state_release($arg1, (const struct page_pool*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_page_pool_state_release($arg1, (const struct page_pool *)$arg2, $arg3, $arg4)")
   public static int __traceiter_page_pool_state_release(Ptr<?> __data, Ptr<page_pool> pool,
       @Unsigned @OriginalName("netmem_ref") long netmem, @Unsigned int release) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_page_pool_update_nid($arg1, (const struct page_pool*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_page_pool_update_nid($arg1, (const struct page_pool *)$arg2, $arg3)")
   public static int __traceiter_page_pool_update_nid(Ptr<?> __data, Ptr<page_pool> pool,
       int new_nid) {
     throw new MethodIsBPFRelatedFunction();
@@ -5513,14 +5514,14 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_pwm_apply($arg1, $arg2, (const struct pwm_state*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_pwm_apply($arg1, $arg2, (const struct pwm_state *)$arg3, $arg4)")
   public static int __traceiter_pwm_apply(Ptr<?> __data, Ptr<pwm_device> pwm, Ptr<pwm_state> state,
       int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_pwm_get($arg1, $arg2, (const struct pwm_state*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_pwm_get($arg1, $arg2, (const struct pwm_state *)$arg3, $arg4)")
   public static int __traceiter_pwm_get(Ptr<?> __data, Ptr<pwm_device> pwm, Ptr<pwm_state> state,
       int err) {
     throw new MethodIsBPFRelatedFunction();
@@ -5534,35 +5535,35 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_pwm_round_waveform_fromhw($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_pwm_round_waveform_fromhw($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static int __traceiter_pwm_round_waveform_fromhw(Ptr<?> __data, Ptr<pwm_device> pwm,
       Ptr<?> wfhw, Ptr<pwm_waveform> wf, int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_pwm_round_waveform_tohw($arg1, $arg2, (const struct pwm_waveform*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_pwm_round_waveform_tohw($arg1, $arg2, (const struct pwm_waveform *)$arg3, $arg4, $arg5)")
   public static int __traceiter_pwm_round_waveform_tohw(Ptr<?> __data, Ptr<pwm_device> pwm,
       Ptr<pwm_waveform> wf, Ptr<?> wfhw, int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_pwm_write_waveform($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_pwm_write_waveform($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int __traceiter_pwm_write_waveform(Ptr<?> __data, Ptr<pwm_device> pwm, Ptr<?> wfhw,
       int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_qdisc_create($arg1, (const struct Qdisc_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_qdisc_create($arg1, (const struct Qdisc_ops *)$arg2, $arg3, $arg4)")
   public static int __traceiter_qdisc_create(Ptr<?> __data, Ptr<Qdisc_ops> ops, Ptr<net_device> dev,
       @Unsigned int parent) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_qdisc_dequeue($arg1, $arg2, (const struct netdev_queue*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_qdisc_dequeue($arg1, $arg2, (const struct netdev_queue *)$arg3, $arg4, $arg5)")
   public static int __traceiter_qdisc_dequeue(Ptr<?> __data, Ptr<Qdisc> qdisc,
       Ptr<netdev_queue> txq, int packets, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
@@ -5575,7 +5576,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_qdisc_enqueue($arg1, $arg2, (const struct netdev_queue*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_qdisc_enqueue($arg1, $arg2, (const struct netdev_queue *)$arg3, $arg4)")
   public static int __traceiter_qdisc_enqueue(Ptr<?> __data, Ptr<Qdisc> qdisc,
       Ptr<netdev_queue> txq, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
@@ -5595,13 +5596,13 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_rcu_stall_warning($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_rcu_stall_warning($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int __traceiter_rcu_stall_warning(Ptr<?> __data, String rcuname, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_rcu_utilization($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_rcu_utilization($arg1, (const u8 *)$arg2)")
   public static int __traceiter_rcu_utilization(Ptr<?> __data, String s) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5636,7 +5637,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regcache_sync($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__traceiter_regcache_sync($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static int __traceiter_regcache_sync(Ptr<?> __data, Ptr<regmap> map, String type,
       String status) {
     throw new MethodIsBPFRelatedFunction();
@@ -5668,14 +5669,14 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regmap_bulk_read($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_regmap_bulk_read($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int __traceiter_regmap_bulk_read(Ptr<?> __data, Ptr<regmap> map, @Unsigned int reg,
       Ptr<?> val, int val_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regmap_bulk_write($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_regmap_bulk_write($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int __traceiter_regmap_bulk_write(Ptr<?> __data, Ptr<regmap> map, @Unsigned int reg,
       Ptr<?> val, int val_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -5743,68 +5744,68 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regulator_bypass_disable($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_regulator_bypass_disable($arg1, (const u8 *)$arg2)")
   public static int __traceiter_regulator_bypass_disable(Ptr<?> __data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regulator_bypass_disable_complete($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_regulator_bypass_disable_complete($arg1, (const u8 *)$arg2)")
   public static int __traceiter_regulator_bypass_disable_complete(Ptr<?> __data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regulator_bypass_enable($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_regulator_bypass_enable($arg1, (const u8 *)$arg2)")
   public static int __traceiter_regulator_bypass_enable(Ptr<?> __data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regulator_bypass_enable_complete($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_regulator_bypass_enable_complete($arg1, (const u8 *)$arg2)")
   public static int __traceiter_regulator_bypass_enable_complete(Ptr<?> __data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regulator_disable($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_regulator_disable($arg1, (const u8 *)$arg2)")
   public static int __traceiter_regulator_disable(Ptr<?> __data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regulator_disable_complete($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_regulator_disable_complete($arg1, (const u8 *)$arg2)")
   public static int __traceiter_regulator_disable_complete(Ptr<?> __data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regulator_enable($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_regulator_enable($arg1, (const u8 *)$arg2)")
   public static int __traceiter_regulator_enable(Ptr<?> __data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regulator_enable_complete($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_regulator_enable_complete($arg1, (const u8 *)$arg2)")
   public static int __traceiter_regulator_enable_complete(Ptr<?> __data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regulator_enable_delay($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_regulator_enable_delay($arg1, (const u8 *)$arg2)")
   public static int __traceiter_regulator_enable_delay(Ptr<?> __data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regulator_set_voltage($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_regulator_set_voltage($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int __traceiter_regulator_set_voltage(Ptr<?> __data, String name, int min,
       int max) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_regulator_set_voltage_complete($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_regulator_set_voltage_complete($arg1, (const u8 *)$arg2, $arg3)")
   public static int __traceiter_regulator_set_voltage_complete(Ptr<?> __data, String name,
       @Unsigned int value) {
     throw new MethodIsBPFRelatedFunction();
@@ -6027,13 +6028,13 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_sched_ext_dump($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_sched_ext_dump($arg1, (const u8 *)$arg2)")
   public static int __traceiter_sched_ext_dump(Ptr<?> __data, String line) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_sched_ext_event($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_sched_ext_event($arg1, (const u8 *)$arg2, $arg3)")
   public static int __traceiter_sched_ext_event(Ptr<?> __data, String name, long delta) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6323,7 +6324,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_selinux_audited($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("__traceiter_selinux_audited($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static int __traceiter_selinux_audited(Ptr<?> __data, Ptr<selinux_audit_data> sad,
       String scontext, String tcontext, String tclass) {
     throw new MethodIsBPFRelatedFunction();
@@ -6358,13 +6359,13 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_sk_data_ready($arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_sk_data_ready($arg1, (const struct sock *)$arg2)")
   public static int __traceiter_sk_data_ready(Ptr<?> __data, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_skb_copy_datagram_iovec($arg1, (const struct sk_buff*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_skb_copy_datagram_iovec($arg1, (const struct sk_buff *)$arg2, $arg3)")
   public static int __traceiter_skb_copy_datagram_iovec(Ptr<?> __data, Ptr<sk_buff> skb, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6376,14 +6377,14 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_smbus_read($arg1, (const struct i2c_adapter*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__traceiter_smbus_read($arg1, (const struct i2c_adapter *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int __traceiter_smbus_read(Ptr<?> __data, Ptr<i2c_adapter> adap,
       @Unsigned short addr, @Unsigned short flags, char read_write, char command, int protocol) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_smbus_reply($arg1, (const struct i2c_adapter*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const union i2c_smbus_data*)$arg8, $arg9)")
+  @BuiltinBPFFunction("__traceiter_smbus_reply($arg1, (const struct i2c_adapter *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const union i2c_smbus_data *)$arg8, $arg9)")
   public static int __traceiter_smbus_reply(Ptr<?> __data, Ptr<i2c_adapter> adap,
       @Unsigned short addr, @Unsigned short flags, char read_write, char command, int protocol,
       Ptr<i2c_smbus_data> data, int res) {
@@ -6391,7 +6392,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_smbus_result($arg1, (const struct i2c_adapter*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__traceiter_smbus_result($arg1, (const struct i2c_adapter *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int __traceiter_smbus_result(Ptr<?> __data, Ptr<i2c_adapter> adap,
       @Unsigned short addr, @Unsigned short flags, char read_write, char command, int protocol,
       int res) {
@@ -6399,7 +6400,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_smbus_write($arg1, (const struct i2c_adapter*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const union i2c_smbus_data*)$arg8)")
+  @BuiltinBPFFunction("__traceiter_smbus_write($arg1, (const struct i2c_adapter *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const union i2c_smbus_data *)$arg8)")
   public static int __traceiter_smbus_write(Ptr<?> __data, Ptr<i2c_adapter> adap,
       @Unsigned short addr, @Unsigned short flags, char read_write, char command, int protocol,
       Ptr<i2c_smbus_data> data) {
@@ -6538,7 +6539,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_suspend_resume($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_suspend_resume($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int __traceiter_suspend_resume(Ptr<?> __data, String action, int val,
       boolean start) {
     throw new MethodIsBPFRelatedFunction();
@@ -6584,7 +6585,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_task_rename($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_task_rename($arg1, $arg2, (const u8 *)$arg3)")
   public static int __traceiter_task_rename(Ptr<?> __data, Ptr<task_struct> task, String comm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6602,63 +6603,63 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_ao_handshake_failure($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
+  @BuiltinBPFFunction("__traceiter_tcp_ao_handshake_failure($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
   public static int __traceiter_tcp_ao_handshake_failure(Ptr<?> __data, Ptr<sock> sk,
       Ptr<sk_buff> skb, char keyid, char rnext, char maclen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_ao_key_not_found($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
+  @BuiltinBPFFunction("__traceiter_tcp_ao_key_not_found($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
   public static int __traceiter_tcp_ao_key_not_found(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb,
       char keyid, char rnext, char maclen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_ao_mismatch($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
+  @BuiltinBPFFunction("__traceiter_tcp_ao_mismatch($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
   public static int __traceiter_tcp_ao_mismatch(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb,
       char keyid, char rnext, char maclen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_ao_rcv_sne_update($arg1, (const struct sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_tcp_ao_rcv_sne_update($arg1, (const struct sock *)$arg2, $arg3)")
   public static int __traceiter_tcp_ao_rcv_sne_update(Ptr<?> __data, Ptr<sock> sk,
       @Unsigned int new_sne) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_ao_rnext_request($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
+  @BuiltinBPFFunction("__traceiter_tcp_ao_rnext_request($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
   public static int __traceiter_tcp_ao_rnext_request(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb,
       char keyid, char rnext, char maclen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_ao_snd_sne_update($arg1, (const struct sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_tcp_ao_snd_sne_update($arg1, (const struct sock *)$arg2, $arg3)")
   public static int __traceiter_tcp_ao_snd_sne_update(Ptr<?> __data, Ptr<sock> sk,
       @Unsigned int new_sne) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_ao_synack_no_key($arg1, (const struct sock*)$arg2, (const u8)$arg3, (const u8)$arg4)")
+  @BuiltinBPFFunction("__traceiter_tcp_ao_synack_no_key($arg1, (const struct sock *)$arg2, (const u8)$arg3, (const u8)$arg4)")
   public static int __traceiter_tcp_ao_synack_no_key(Ptr<?> __data, Ptr<sock> sk, char keyid,
       char rnext) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_ao_wrong_maclen($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
+  @BuiltinBPFFunction("__traceiter_tcp_ao_wrong_maclen($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
   public static int __traceiter_tcp_ao_wrong_maclen(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb,
       char keyid, char rnext, char maclen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_bad_csum($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_tcp_bad_csum($arg1, (const struct sk_buff *)$arg2)")
   public static int __traceiter_tcp_bad_csum(Ptr<?> __data, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6670,7 +6671,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_cwnd_reduction_tp($arg1, (const struct sock*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_tcp_cwnd_reduction_tp($arg1, (const struct sock *)$arg2, $arg3, $arg4, $arg5)")
   public static int __traceiter_tcp_cwnd_reduction_tp(Ptr<?> __data, Ptr<sock> sk,
       int newly_acked_sacked, int newly_lost, int flag) {
     throw new MethodIsBPFRelatedFunction();
@@ -6683,41 +6684,41 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_hash_ao_required($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_tcp_hash_ao_required($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3)")
   public static int __traceiter_tcp_hash_ao_required(Ptr<?> __data, Ptr<sock> sk,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_hash_bad_header($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_tcp_hash_bad_header($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3)")
   public static int __traceiter_tcp_hash_bad_header(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_hash_md5_mismatch($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_tcp_hash_md5_mismatch($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3)")
   public static int __traceiter_tcp_hash_md5_mismatch(Ptr<?> __data, Ptr<sock> sk,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_hash_md5_required($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_tcp_hash_md5_required($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3)")
   public static int __traceiter_tcp_hash_md5_required(Ptr<?> __data, Ptr<sock> sk,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_hash_md5_unexpected($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_tcp_hash_md5_unexpected($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3)")
   public static int __traceiter_tcp_hash_md5_unexpected(Ptr<?> __data, Ptr<sock> sk,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_probe($arg1, $arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_tcp_probe($arg1, $arg2, (const struct sk_buff *)$arg3)")
   public static int __traceiter_tcp_probe(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6741,28 +6742,28 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_retransmit_skb($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_tcp_retransmit_skb($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, $arg4)")
   public static int __traceiter_tcp_retransmit_skb(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb,
       int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_retransmit_synack($arg1, (const struct sock*)$arg2, (const struct request_sock*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_tcp_retransmit_synack($arg1, (const struct sock *)$arg2, (const struct request_sock *)$arg3)")
   public static int __traceiter_tcp_retransmit_synack(Ptr<?> __data, Ptr<sock> sk,
       Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_send_reset($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, (const enum sk_rst_reason)$arg4)")
+  @BuiltinBPFFunction("__traceiter_tcp_send_reset($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, (const enum sk_rst_reason)$arg4)")
   public static int __traceiter_tcp_send_reset(Ptr<?> __data, Ptr<sock> sk,
       Ptr<sk_buff> skb__nullable, sk_rst_reason reason) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tcp_sendmsg_locked($arg1, (const struct sock*)$arg2, (const struct msghdr*)$arg3, (const struct sk_buff*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_tcp_sendmsg_locked($arg1, (const struct sock *)$arg2, (const struct msghdr *)$arg3, (const struct sk_buff *)$arg4, $arg5)")
   public static int __traceiter_tcp_sendmsg_locked(Ptr<?> __data, Ptr<sock> sk, Ptr<msghdr> msg,
       Ptr<sk_buff> skb, int size_goal) {
     throw new MethodIsBPFRelatedFunction();
@@ -6922,21 +6923,21 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tls_alert_recv($arg1, (const struct sock*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_tls_alert_recv($arg1, (const struct sock *)$arg2, $arg3, $arg4)")
   public static int __traceiter_tls_alert_recv(Ptr<?> __data, Ptr<sock> sk, char level,
       char description) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tls_alert_send($arg1, (const struct sock*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_tls_alert_send($arg1, (const struct sock *)$arg2, $arg3, $arg4)")
   public static int __traceiter_tls_alert_send(Ptr<?> __data, Ptr<sock> sk, char level,
       char description) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tls_contenttype($arg1, (const struct sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_tls_contenttype($arg1, (const struct sock *)$arg2, $arg3)")
   public static int __traceiter_tls_contenttype(Ptr<?> __data, Ptr<sock> sk, char type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7039,20 +7040,20 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tsm_mr_read($arg1, (const struct tsm_measurement_register*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_tsm_mr_read($arg1, (const struct tsm_measurement_register *)$arg2)")
   public static int __traceiter_tsm_mr_read(Ptr<?> __data, Ptr<tsm_measurement_register> mr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tsm_mr_refresh($arg1, (const struct tsm_measurement_register*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_tsm_mr_refresh($arg1, (const struct tsm_measurement_register *)$arg2, $arg3)")
   public static int __traceiter_tsm_mr_refresh(Ptr<?> __data, Ptr<tsm_measurement_register> mr,
       int rc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_tsm_mr_write($arg1, (const struct tsm_measurement_register*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__traceiter_tsm_mr_write($arg1, (const struct tsm_measurement_register *)$arg2, (const u8 *)$arg3)")
   public static int __traceiter_tsm_mr_write(Ptr<?> __data, Ptr<tsm_measurement_register> mr,
       Ptr<java.lang.Character> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -7180,14 +7181,14 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_wakeup_source_activate($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_wakeup_source_activate($arg1, (const u8 *)$arg2, $arg3)")
   public static int __traceiter_wakeup_source_activate(Ptr<?> __data, String name,
       @Unsigned int state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_wakeup_source_deactivate($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_wakeup_source_deactivate($arg1, (const u8 *)$arg2, $arg3)")
   public static int __traceiter_wakeup_source_deactivate(Ptr<?> __data, String name,
       @Unsigned int state) {
     throw new MethodIsBPFRelatedFunction();
@@ -7240,7 +7241,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_wbt_step($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__traceiter_wbt_step($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int __traceiter_wbt_step(Ptr<?> __data, Ptr<backing_dev_info> bdi, String msg,
       int step, @Unsigned long window, @Unsigned int bg, @Unsigned int normal, @Unsigned int max) {
     throw new MethodIsBPFRelatedFunction();
@@ -7480,7 +7481,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_xdp_bulk_tx($arg1, (const struct net_device*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_xdp_bulk_tx($arg1, (const struct net_device *)$arg2, $arg3, $arg4, $arg5)")
   public static int __traceiter_xdp_bulk_tx(Ptr<?> __data, Ptr<net_device> dev, int sent, int drops,
       int err) {
     throw new MethodIsBPFRelatedFunction();
@@ -7501,28 +7502,28 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_xdp_devmap_xmit($arg1, (const struct net_device*)$arg2, (const struct net_device*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__traceiter_xdp_devmap_xmit($arg1, (const struct net_device *)$arg2, (const struct net_device *)$arg3, $arg4, $arg5, $arg6)")
   public static int __traceiter_xdp_devmap_xmit(Ptr<?> __data, Ptr<net_device> from_dev,
       Ptr<net_device> to_dev, int sent, int drops, int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_xdp_exception($arg1, (const struct net_device*)$arg2, (const struct bpf_prog*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__traceiter_xdp_exception($arg1, (const struct net_device *)$arg2, (const struct bpf_prog *)$arg3, $arg4)")
   public static int __traceiter_xdp_exception(Ptr<?> __data, Ptr<net_device> dev, Ptr<bpf_prog> xdp,
       @Unsigned int act) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_xdp_redirect($arg1, (const struct net_device*)$arg2, (const struct bpf_prog*)$arg3, (const void*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__traceiter_xdp_redirect($arg1, (const struct net_device *)$arg2, (const struct bpf_prog *)$arg3, (const void *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int __traceiter_xdp_redirect(Ptr<?> __data, Ptr<net_device> dev, Ptr<bpf_prog> xdp,
       Ptr<?> tgt, int err, bpf_map_type map_type, @Unsigned int map_id, @Unsigned int index) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_xdp_redirect_err($arg1, (const struct net_device*)$arg2, (const struct bpf_prog*)$arg3, (const void*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__traceiter_xdp_redirect_err($arg1, (const struct net_device *)$arg2, (const struct bpf_prog *)$arg3, (const void *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int __traceiter_xdp_redirect_err(Ptr<?> __data, Ptr<net_device> dev,
       Ptr<bpf_prog> xdp, Ptr<?> tgt, int err, bpf_map_type map_type, @Unsigned int map_id,
       @Unsigned int index) {
@@ -7530,26 +7531,26 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_xen_cpu_load_idt($arg1, (const struct desc_ptr*)$arg2)")
+  @BuiltinBPFFunction("__traceiter_xen_cpu_load_idt($arg1, (const struct desc_ptr *)$arg2)")
   public static int __traceiter_xen_cpu_load_idt(Ptr<?> __data, Ptr<desc_ptr> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_xen_cpu_set_ldt($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__traceiter_xen_cpu_set_ldt($arg1, (const void *)$arg2, $arg3)")
   public static int __traceiter_xen_cpu_set_ldt(Ptr<?> __data, Ptr<?> addr, @Unsigned int entries) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_xen_cpu_write_gdt_entry($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_xen_cpu_write_gdt_entry($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int __traceiter_xen_cpu_write_gdt_entry(Ptr<?> __data, Ptr<desc_struct> dt,
       int entrynum, Ptr<?> desc, int type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_xen_cpu_write_idt_entry($arg1, $arg2, $arg3, (const gate_struct*)$arg4)")
+  @BuiltinBPFFunction("__traceiter_xen_cpu_write_idt_entry($arg1, $arg2, $arg3, (const gate_struct *)$arg4)")
   public static int __traceiter_xen_cpu_write_idt_entry(Ptr<?> __data,
       Ptr<@OriginalName("gate_desc") gate_struct> dt, int entrynum,
       Ptr<@OriginalName("gate_desc") gate_struct> ent) {
@@ -7623,7 +7624,7 @@ public final class TraceiterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__traceiter_xen_mmu_flush_tlb_multi($arg1, (const struct cpumask*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__traceiter_xen_mmu_flush_tlb_multi($arg1, (const struct cpumask *)$arg2, $arg3, $arg4, $arg5)")
   public static int __traceiter_xen_mmu_flush_tlb_multi(Ptr<?> __data, Ptr<cpumask> cpus,
       Ptr<mm_struct> mm, @Unsigned long addr, @Unsigned long end) {
     throw new MethodIsBPFRelatedFunction();

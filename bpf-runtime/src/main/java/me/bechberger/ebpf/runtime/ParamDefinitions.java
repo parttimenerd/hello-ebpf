@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,33 +1097,33 @@ public final class ParamDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_array_get($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_array_get($arg1, (const struct kernel_param *)$arg2)")
   public static int param_array_get(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_array_set((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_array_set((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_array_set(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_attr_show((const struct module_attribute*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("param_attr_show((const struct module_attribute *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long param_attr_show(Ptr<module_attribute> mattr,
       Ptr<module_kobject> mk, String buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_attr_store((const struct module_attribute*)$arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("param_attr_store((const struct module_attribute *)$arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long param_attr_store(Ptr<module_attribute> mattr,
       Ptr<module_kobject> mk, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_check_unsafe((const struct kernel_param*)$arg1)")
+  @BuiltinBPFFunction("param_check_unsafe((const struct kernel_param *)$arg1)")
   public static boolean param_check_unsafe(Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1134,428 +1135,428 @@ public final class ParamDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_aabool($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_aabool($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_aabool(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_aacompressionlevel($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_aacompressionlevel($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_aacompressionlevel(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_aaintbool($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_aaintbool($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_aaintbool(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_aalockpolicy($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_aalockpolicy($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_aalockpolicy(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_aauint($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_aauint($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_aauint(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_acpica_version($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_acpica_version($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_acpica_version(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_action($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_action($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_action(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_audit($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_audit($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_audit(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_bool($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_bool($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_bool(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_byte($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_byte($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_byte(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_charp($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_charp($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_charp(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_debug($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_debug($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_debug(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_debug_layer($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_debug_layer($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_debug_layer(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_debug_level($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_debug_level($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_debug_level(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_do_rcu_barrier($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_do_rcu_barrier($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_do_rcu_barrier(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_dyndbg_classes($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_dyndbg_classes($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_dyndbg_classes(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_event_clearing($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_event_clearing($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_event_clearing(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_hexint($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_hexint($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_hexint(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_int($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_int($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_int(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_invbool($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_invbool($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_invbool(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_lid_init_state($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_lid_init_state($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_lid_init_state(String buf, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_local64($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_local64($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_local64(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_long($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_long($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_long(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_mode($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_mode($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_mode(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_sample_interval($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_sample_interval($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_sample_interval(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_short($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_short($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_short(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_string($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_string($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_string(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_trace_method_name($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_trace_method_name($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_trace_method_name(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_trace_state($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_trace_state($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_trace_state(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_uint($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_uint($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_uint(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_ullong($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_ullong($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_ullong(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_ulong($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_ulong($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_ulong(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_get_ushort($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_get_ushort($arg1, (const struct kernel_param *)$arg2)")
   public static int param_get_ushort(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_aabool((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_aabool((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_aabool(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_aacompressionlevel((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_aacompressionlevel((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_aacompressionlevel(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_aaintbool((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_aaintbool((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_aaintbool(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_aalockpolicy((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_aalockpolicy((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_aalockpolicy(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_aauint((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_aauint((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_aauint(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_action((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_action((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_action(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_audit((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_audit((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_audit(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_bint((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_bint((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_bint(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_bool((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_bool((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_bool(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_bool_enable_only((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_bool_enable_only((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_bool_enable_only(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_bufsize((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_bufsize((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_bufsize(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_byte((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_byte((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_byte(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_charp((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_charp((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_charp(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_copystring((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_copystring((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_copystring(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_debug((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_debug((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_debug(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_do_rcu_barrier((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_do_rcu_barrier((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_do_rcu_barrier(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_dyndbg_classes((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_dyndbg_classes((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_dyndbg_classes(String instr, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_dyndbg_classnames((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_dyndbg_classnames((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_dyndbg_classnames(String instr, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_event_clearing((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_event_clearing((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_event_clearing(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_first_fqs_jiffies((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_first_fqs_jiffies((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_first_fqs_jiffies(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_hexint((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_hexint((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_hexint(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_int((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_int((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_int(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_invbool((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_invbool((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_invbool(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_kgdboc_var((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_kgdboc_var((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_kgdboc_var(String kmessage, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_lid_init_state((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_lid_init_state((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_lid_init_state(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_local64((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_local64((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_local64(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_long((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_long((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_long(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_mode((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_mode((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_mode(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_next_fqs_jiffies((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_next_fqs_jiffies((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_next_fqs_jiffies(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_sample_interval((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_sample_interval((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_sample_interval(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_short((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_short((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_short(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_trace_method_name((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_trace_method_name((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_trace_method_name(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_trace_state((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_trace_state((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_trace_state(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_uint((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_uint((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_uint(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_uint_minmax((const u8*)$arg1, (const struct kernel_param*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("param_set_uint_minmax((const u8 *)$arg1, (const struct kernel_param *)$arg2, $arg3, $arg4)")
   public static int param_set_uint_minmax(String val, Ptr<kernel_param> kp, @Unsigned int min,
       @Unsigned int max) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_ullong((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_ullong((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_ullong(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_ulong((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_ulong((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_ulong(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("param_set_ushort((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("param_set_ushort((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int param_set_ushort(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1604,7 +1605,7 @@ public final class ParamDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct { const struct tomoyo_path_info*; const struct tomoyo_path_info*; u8 operation; } path; struct { const struct tomoyo_path_info*; const struct tomoyo_path_info*; u8 operation; } path2; struct { const struct tomoyo_path_info*; unsigned int mode; unsigned int major; unsigned int minor; u8 operation; } mkdev; struct { const struct tomoyo_path_info*; long unsigned int number; u8 operation; } path_number; struct { const struct tomoyo_path_info*; } environ; struct { const unsigned int*; short unsigned int port; u8 protocol; u8 operation; _Bool is_ipv6; } inet_network; struct { const struct tomoyo_path_info*; u8 protocol; u8 operation; } unix_network; struct { const struct tomoyo_path_info*; const struct tomoyo_path_info*; const struct tomoyo_path_info*; long unsigned int flags; int need_dev; } mount; struct { const struct tomoyo_path_info*; } task; }"
+      cType = "union { struct { const struct tomoyo_path_info *filename; const struct tomoyo_path_info *matched_path; u8 operation; } path; struct { const struct tomoyo_path_info *filename1; const struct tomoyo_path_info *filename2; u8 operation; } path2; struct { const struct tomoyo_path_info *filename; unsigned int mode; unsigned int major; unsigned int minor; u8 operation; } mkdev; struct { const struct tomoyo_path_info *filename; long unsigned int number; u8 operation; } path_number; struct { const struct tomoyo_path_info *name; } environ; struct { const unsigned int *address; short unsigned int port; u8 protocol; u8 operation; _Bool is_ipv6; } inet_network; struct { const struct tomoyo_path_info *address; u8 protocol; u8 operation; } unix_network; struct { const struct tomoyo_path_info *type; const struct tomoyo_path_info *dir; const struct tomoyo_path_info *dev; long unsigned int flags; int need_dev; } mount; struct { const struct tomoyo_path_info *domainname; } task; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

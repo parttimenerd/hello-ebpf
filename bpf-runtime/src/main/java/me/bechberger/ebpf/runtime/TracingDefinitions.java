@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1223,7 +1224,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_clock_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_clock_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_clock_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> fpos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1243,7 +1244,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_cpumask_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_cpumask_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_cpumask_write(Ptr<file> filp, String ubuf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1263,7 +1264,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_entries_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_entries_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_entries_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1308,7 +1309,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_err_log_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_err_log_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_err_log_write(Ptr<file> file, String buffer,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1328,7 +1329,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_free_buffer_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_free_buffer_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_free_buffer_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1371,7 +1372,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_iter_filter((const struct bpf_prog*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tracing_iter_filter((const struct bpf_prog *)$arg1, $arg2)")
   public static int tracing_iter_filter(Ptr<bpf_prog> prog, @Unsigned int kfunc_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1513,7 +1514,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_map_create($arg1, $arg2, (const struct tracing_map_ops*)$arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_map_create($arg1, $arg2, (const struct tracing_map_ops *)$arg3, $arg4)")
   public static Ptr<tracing_map> tracing_map_create(@Unsigned int map_bits, @Unsigned int key_size,
       Ptr<tracing_map_ops> ops, Ptr<?> private_data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1628,7 +1629,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_mark_raw_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_mark_raw_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_mark_raw_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> fpos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1641,7 +1642,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_mark_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_mark_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_mark_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> fpos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1655,7 +1656,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_max_lat_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_max_lat_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_max_lat_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1717,14 +1718,14 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)tracing_prog_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)tracing_prog_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> tracing_prog_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_prog_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("tracing_prog_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean tracing_prog_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1845,7 +1846,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_saved_cmdlines_size_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_saved_cmdlines_size_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_saved_cmdlines_size_write(Ptr<file> filp,
       String ubuf, @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1864,7 +1865,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_set_clock($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("tracing_set_clock($arg1, (const u8 *)$arg2)")
   public static int tracing_set_clock(Ptr<trace_array> tr, String clockstr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1890,14 +1891,14 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_set_trace_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_set_trace_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_set_trace_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_set_tracer($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("tracing_set_tracer($arg1, (const u8 *)$arg2)")
   public static int tracing_set_tracer(Ptr<trace_array> tr, String buf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1970,7 +1971,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_snapshot_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_snapshot_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_snapshot_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2077,7 +2078,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_thresh_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_thresh_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_thresh_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2115,7 +2116,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_trace_options_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_trace_options_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_trace_options_write(Ptr<file> filp,
       String ubuf, @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2134,7 +2135,7 @@ public final class TracingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tracing_write_stub($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tracing_write_stub($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tracing_write_stub(Ptr<file> filp, String ubuf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

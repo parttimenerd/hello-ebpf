@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1109,47 +1110,47 @@ public final class BusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bus_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long bus_attr_store(Ptr<kobject> kobj, Ptr<attribute> attr,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_create_file((const struct bus_type*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bus_create_file((const struct bus_type *)$arg1, $arg2)")
   public static int bus_create_file(Ptr<bus_type> bus, Ptr<bus_attribute> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_find_device((const struct bus_type*)$arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bus_find_device((const struct bus_type *)$arg1, $arg2, (const void *)$arg3, $arg4)")
   public static Ptr<device> bus_find_device(Ptr<bus_type> bus, Ptr<device> start, Ptr<?> data,
       @OriginalName("device_match_t") Ptr<?> match) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_for_each_dev((const struct bus_type*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bus_for_each_dev((const struct bus_type *)$arg1, $arg2, $arg3, $arg4)")
   public static int bus_for_each_dev(Ptr<bus_type> bus, Ptr<device> start, Ptr<?> data,
       @OriginalName("device_iter_t") Ptr<?> fn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_for_each_drv((const struct bus_type*)$arg1, $arg2, $arg3, (int (*)(struct device_driver*, void*))$arg4)")
+  @BuiltinBPFFunction("bus_for_each_drv((const struct bus_type *)$arg1, $arg2, $arg3, (int (*)(struct device_driver*, void*))$arg4)")
   public static int bus_for_each_drv(Ptr<bus_type> bus, Ptr<device_driver> start, Ptr<?> data,
       Ptr<?> fn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_get_dev_root((const struct bus_type*)$arg1)")
+  @BuiltinBPFFunction("bus_get_dev_root((const struct bus_type *)$arg1)")
   public static Ptr<device> bus_get_dev_root(Ptr<bus_type> bus) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_get_kset((const struct bus_type*)$arg1)")
+  @BuiltinBPFFunction("bus_get_kset((const struct bus_type *)$arg1)")
   public static Ptr<kset> bus_get_kset(Ptr<bus_type> bus) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1161,7 +1162,7 @@ public final class BusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_is_registered((const struct bus_type*)$arg1)")
+  @BuiltinBPFFunction("bus_is_registered((const struct bus_type *)$arg1)")
   public static boolean bus_is_registered(Ptr<bus_type> bus) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1185,13 +1186,13 @@ public final class BusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_register((const struct bus_type*)$arg1)")
+  @BuiltinBPFFunction("bus_register((const struct bus_type *)$arg1)")
   public static int bus_register(Ptr<bus_type> bus) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_register_notifier((const struct bus_type*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bus_register_notifier((const struct bus_type *)$arg1, $arg2)")
   public static int bus_register_notifier(Ptr<bus_type> bus, Ptr<notifier_block> nb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1215,13 +1216,13 @@ public final class BusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_remove_file((const struct bus_type*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bus_remove_file((const struct bus_type *)$arg1, $arg2)")
   public static void bus_remove_file(Ptr<bus_type> bus, Ptr<bus_attribute> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_rescan_devices((const struct bus_type*)$arg1)")
+  @BuiltinBPFFunction("bus_rescan_devices((const struct bus_type *)$arg1)")
   public static int bus_rescan_devices(Ptr<bus_type> bus) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1233,45 +1234,45 @@ public final class BusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_rescan_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bus_rescan_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long bus_rescan_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_sort_breadthfirst((const struct bus_type*)$arg1, (int (*)(const struct device*, const struct device*))$arg2)")
+  @BuiltinBPFFunction("bus_sort_breadthfirst((const struct bus_type *)$arg1, (int (*)(const struct device*, const struct device*))$arg2)")
   public static void bus_sort_breadthfirst(Ptr<bus_type> bus, Ptr<?> compare) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_to_subsys((const struct bus_type*)$arg1)")
+  @BuiltinBPFFunction("bus_to_subsys((const struct bus_type *)$arg1)")
   public static Ptr<subsys_private> bus_to_subsys(Ptr<bus_type> bus) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_uevent_filter((const struct kobject*)$arg1)")
+  @BuiltinBPFFunction("bus_uevent_filter((const struct kobject *)$arg1)")
   public static int bus_uevent_filter(Ptr<kobject> kobj) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_uevent_store((const struct bus_type*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bus_uevent_store((const struct bus_type *)$arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long bus_uevent_store(Ptr<bus_type> bus, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_unregister((const struct bus_type*)$arg1)")
+  @BuiltinBPFFunction("bus_unregister((const struct bus_type *)$arg1)")
   public static void bus_unregister(Ptr<bus_type> bus) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bus_unregister_notifier((const struct bus_type*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bus_unregister_notifier((const struct bus_type *)$arg1, $arg2)")
   public static int bus_unregister_notifier(Ptr<bus_type> bus, Ptr<notifier_block> nb) {
     throw new MethodIsBPFRelatedFunction();
   }

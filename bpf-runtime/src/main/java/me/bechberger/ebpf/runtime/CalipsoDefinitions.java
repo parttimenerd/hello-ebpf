@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CalipsoDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("calipso_cache_add((const u8*)$arg1, (const struct netlbl_lsm_secattr*)$arg2)")
+  @BuiltinBPFFunction("calipso_cache_add((const u8 *)$arg1, (const struct netlbl_lsm_secattr *)$arg2)")
   public static int calipso_cache_add(String calipso_ptr, Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("calipso_cache_check((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("calipso_cache_check((const u8 *)$arg1, $arg2, $arg3)")
   public static int calipso_cache_check(String key, @Unsigned int key_len,
       Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1164,14 +1165,14 @@ public final class CalipsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("calipso_genopt($arg1, $arg2, $arg3, (const struct calipso_doi*)$arg4, (const struct netlbl_lsm_secattr*)$arg5)")
+  @BuiltinBPFFunction("calipso_genopt($arg1, $arg2, $arg3, (const struct calipso_doi *)$arg4, (const struct netlbl_lsm_secattr *)$arg5)")
   public static int calipso_genopt(String buf, @Unsigned int start, @Unsigned int buf_len,
       Ptr<calipso_doi> doi_def, Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("calipso_getattr((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("calipso_getattr((const u8 *)$arg1, $arg2)")
   public static int calipso_getattr(String calipso, Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1196,13 +1197,13 @@ public final class CalipsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("calipso_opt_getattr((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("calipso_opt_getattr((const u8 *)$arg1, $arg2)")
   public static int calipso_opt_getattr(String calipso, Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("calipso_opt_insert($arg1, (const struct calipso_doi*)$arg2, (const struct netlbl_lsm_secattr*)$arg3)")
+  @BuiltinBPFFunction("calipso_opt_insert($arg1, (const struct calipso_doi *)$arg2, (const struct netlbl_lsm_secattr *)$arg3)")
   public static Ptr<ipv6_opt_hdr> calipso_opt_insert(Ptr<ipv6_opt_hdr> hop,
       Ptr<calipso_doi> doi_def, Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1215,7 +1216,7 @@ public final class CalipsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("calipso_optptr((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("calipso_optptr((const struct sk_buff *)$arg1)")
   public static String calipso_optptr(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1233,7 +1234,7 @@ public final class CalipsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("calipso_req_setattr($arg1, (const struct calipso_doi*)$arg2, (const struct netlbl_lsm_secattr*)$arg3)")
+  @BuiltinBPFFunction("calipso_req_setattr($arg1, (const struct calipso_doi *)$arg2, (const struct netlbl_lsm_secattr *)$arg3)")
   public static int calipso_req_setattr(Ptr<request_sock> req, Ptr<calipso_doi> doi_def,
       Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1246,13 +1247,13 @@ public final class CalipsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("calipso_skbuff_optptr((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("calipso_skbuff_optptr((const struct sk_buff *)$arg1)")
   public static String calipso_skbuff_optptr(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("calipso_skbuff_setattr($arg1, (const struct calipso_doi*)$arg2, (const struct netlbl_lsm_secattr*)$arg3)")
+  @BuiltinBPFFunction("calipso_skbuff_setattr($arg1, (const struct calipso_doi *)$arg2, (const struct netlbl_lsm_secattr *)$arg3)")
   public static int calipso_skbuff_setattr(Ptr<sk_buff> skb, Ptr<calipso_doi> doi_def,
       Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1271,7 +1272,7 @@ public final class CalipsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("calipso_sock_setattr($arg1, (const struct calipso_doi*)$arg2, (const struct netlbl_lsm_secattr*)$arg3)")
+  @BuiltinBPFFunction("calipso_sock_setattr($arg1, (const struct calipso_doi *)$arg2, (const struct netlbl_lsm_secattr *)$arg3)")
   public static int calipso_sock_setattr(Ptr<sock> sk, Ptr<calipso_doi> doi_def,
       Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1284,7 +1285,7 @@ public final class CalipsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("calipso_validate((const struct sk_buff*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("calipso_validate((const struct sk_buff *)$arg1, (const u8 *)$arg2)")
   public static boolean calipso_validate(Ptr<sk_buff> skb, String option) {
     throw new MethodIsBPFRelatedFunction();
   }

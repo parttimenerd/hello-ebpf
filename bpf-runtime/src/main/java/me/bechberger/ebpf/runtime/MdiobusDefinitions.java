@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1247,7 +1248,7 @@ public final class MdiobusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mdiobus_register_board_info((const struct mdio_board_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mdiobus_register_board_info((const struct mdio_board_info *)$arg1, $arg2)")
   public static int mdiobus_register_board_info(Ptr<mdio_board_info> info, @Unsigned int n) {
     throw new MethodIsBPFRelatedFunction();
   }

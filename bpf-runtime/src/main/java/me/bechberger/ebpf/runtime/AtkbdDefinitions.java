@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class AtkbdDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_apply_forced_release_keylist($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("atkbd_apply_forced_release_keylist($arg1, (const void *)$arg2)")
   public static void atkbd_apply_forced_release_keylist(Ptr<atkbd> atkbd, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1115,7 +1116,7 @@ public final class AtkbdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_deactivate_fixup((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("atkbd_deactivate_fixup((const struct dmi_system_id *)$arg1)")
   public static int atkbd_deactivate_fixup(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1127,42 +1128,42 @@ public final class AtkbdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_do_set_extra($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("atkbd_do_set_extra($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long atkbd_do_set_extra(Ptr<device> d,
       Ptr<device_attribute> attr, String b, @Unsigned long s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_do_set_force_release($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("atkbd_do_set_force_release($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long atkbd_do_set_force_release(Ptr<device> d,
       Ptr<device_attribute> attr, String b, @Unsigned long s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_do_set_scroll($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("atkbd_do_set_scroll($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long atkbd_do_set_scroll(Ptr<device> d,
       Ptr<device_attribute> attr, String b, @Unsigned long s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_do_set_set($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("atkbd_do_set_set($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long atkbd_do_set_set(Ptr<device> d,
       Ptr<device_attribute> attr, String b, @Unsigned long s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_do_set_softraw($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("atkbd_do_set_softraw($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long atkbd_do_set_softraw(Ptr<device> d,
       Ptr<device_attribute> attr, String b, @Unsigned long s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_do_set_softrepeat($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("atkbd_do_set_softrepeat($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long atkbd_do_set_softrepeat(Ptr<device> d,
       Ptr<device_attribute> attr, String b, @Unsigned long s) {
     throw new MethodIsBPFRelatedFunction();
@@ -1306,14 +1307,14 @@ public final class AtkbdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_set_extra($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("atkbd_set_extra($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long atkbd_set_extra(Ptr<atkbd> atkbd, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_set_force_release($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("atkbd_set_force_release($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long atkbd_set_force_release(Ptr<atkbd> atkbd, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1338,41 +1339,41 @@ public final class AtkbdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_set_scroll($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("atkbd_set_scroll($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long atkbd_set_scroll(Ptr<atkbd> atkbd, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_set_set($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("atkbd_set_set($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long atkbd_set_set(Ptr<atkbd> atkbd, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_set_softraw($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("atkbd_set_softraw($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long atkbd_set_softraw(Ptr<atkbd> atkbd, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_set_softrepeat($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("atkbd_set_softrepeat($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long atkbd_set_softrepeat(Ptr<atkbd> atkbd, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_setup_forced_release((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("atkbd_setup_forced_release((const struct dmi_system_id *)$arg1)")
   public static int atkbd_setup_forced_release(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("atkbd_setup_scancode_fixup((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("atkbd_setup_scancode_fixup((const struct dmi_system_id *)$arg1)")
   public static int atkbd_setup_scancode_fixup(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }

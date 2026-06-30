@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,42 +1091,42 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class BqlDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("bql_set_hold_time($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bql_set_hold_time($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static @OriginalName("ssize_t") long bql_set_hold_time(Ptr<kobject> kobj,
       Ptr<attribute> attr, Ptr<netdev_queue> queue, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bql_set_limit($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bql_set_limit($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static @OriginalName("ssize_t") long bql_set_limit(Ptr<kobject> kobj, Ptr<attribute> attr,
       Ptr<netdev_queue> queue, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bql_set_limit_max($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bql_set_limit_max($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static @OriginalName("ssize_t") long bql_set_limit_max(Ptr<kobject> kobj,
       Ptr<attribute> attr, Ptr<netdev_queue> queue, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bql_set_limit_min($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bql_set_limit_min($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static @OriginalName("ssize_t") long bql_set_limit_min(Ptr<kobject> kobj,
       Ptr<attribute> attr, Ptr<netdev_queue> queue, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bql_set_stall_max($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bql_set_stall_max($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static @OriginalName("ssize_t") long bql_set_stall_max(Ptr<kobject> kobj,
       Ptr<attribute> attr, Ptr<netdev_queue> queue, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bql_set_stall_thrs($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bql_set_stall_thrs($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static @OriginalName("ssize_t") long bql_set_stall_thrs(Ptr<kobject> kobj,
       Ptr<attribute> attr, Ptr<netdev_queue> queue, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();

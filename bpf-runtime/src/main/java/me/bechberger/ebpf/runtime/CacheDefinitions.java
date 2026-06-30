@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CacheDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__cache_amd_cpumap_setup($arg1, $arg2, (const struct _cpuid4_info*)$arg3)")
+  @BuiltinBPFFunction("__cache_amd_cpumap_setup($arg1, $arg2, (const struct _cpuid4_info *)$arg3)")
   public static int __cache_amd_cpumap_setup(@Unsigned int cpu, int index, Ptr<_cpuid4_info> id4) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__cache_cpumap_setup($arg1, $arg2, (const struct _cpuid4_info*)$arg3)")
+  @BuiltinBPFFunction("__cache_cpumap_setup($arg1, $arg2, (const struct _cpuid4_info *)$arg3)")
   public static void __cache_cpumap_setup(@Unsigned int cpu, int index, Ptr<_cpuid4_info> id4) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1170,7 +1171,7 @@ public final class CacheDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cache_disable_0_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("cache_disable_0_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long cache_disable_0_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1184,7 +1185,7 @@ public final class CacheDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cache_disable_1_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("cache_disable_1_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long cache_disable_1_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1339,7 +1340,7 @@ public final class CacheDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cache_type_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("cache_type_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long cache_type_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

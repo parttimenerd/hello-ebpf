@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1127,7 +1128,7 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__xen_send_IPI_mask((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__xen_send_IPI_mask((const struct cpumask *)$arg1, $arg2)")
   public static void __xen_send_IPI_mask(Ptr<cpumask> mask, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1442,14 +1443,14 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_bind_pirq_msi_to_irq($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("xen_bind_pirq_msi_to_irq($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int xen_bind_pirq_msi_to_irq(Ptr<pci_dev> dev, Ptr<msi_desc> msidesc, int pirq,
       int nvec, String name, @Unsigned @OriginalName("domid_t") short domid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_biovec_phys_mergeable((const struct bio_vec*)$arg1, (const struct page*)$arg2)")
+  @BuiltinBPFFunction("xen_biovec_phys_mergeable((const struct bio_vec *)$arg1, (const struct page *)$arg2)")
   public static boolean xen_biovec_phys_mergeable(Ptr<bio_vec> vec1, Ptr<page> page) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1493,7 +1494,7 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_chk_is_e820_usable($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("xen_chk_is_e820_usable($arg1, $arg2, (const u8 *)$arg3)")
   public static void xen_chk_is_e820_usable(@Unsigned @OriginalName("phys_addr_t") long start,
       @Unsigned @OriginalName("phys_addr_t") long size, String component) {
     throw new MethodIsBPFRelatedFunction();
@@ -1554,7 +1555,7 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_convert_trap_info((const struct desc_ptr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("xen_convert_trap_info((const struct desc_ptr *)$arg1, $arg2, $arg3)")
   public static @Unsigned int xen_convert_trap_info(Ptr<desc_ptr> desc, Ptr<trap_info> traps,
       boolean full) {
     throw new MethodIsBPFRelatedFunction();
@@ -1764,7 +1765,7 @@ public final class XenDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("xen_efi_config_table_is_usable((const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg1, $arg2)")
+          + "} *)$arg1, $arg2)")
   public static boolean xen_efi_config_table_is_usable(Ptr<@OriginalName("efi_guid_t") uuid_t> guid,
       @Unsigned long table) {
     throw new MethodIsBPFRelatedFunction();
@@ -1975,7 +1976,7 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_extend_mmu_update((const struct mmu_update*)$arg1)")
+  @BuiltinBPFFunction("xen_extend_mmu_update((const struct mmu_update *)$arg1)")
   public static void xen_extend_mmu_update(Ptr<mmu_update> update) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2012,7 +2013,7 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_flush_tlb_multi((const struct cpumask*)$arg1, (const struct flush_tlb_info*)$arg2)")
+  @BuiltinBPFFunction("xen_flush_tlb_multi((const struct cpumask *)$arg1, (const struct flush_tlb_info *)$arg2)")
   public static void xen_flush_tlb_multi(Ptr<cpumask> cpus, Ptr<flush_tlb_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2428,7 +2429,7 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_init_vga((const struct dom0_vga_console_info*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("xen_init_vga((const struct dom0_vga_console_info *)$arg1, $arg2, $arg3)")
   public static void xen_init_vga(Ptr<dom0_vga_console_info> info, @Unsigned long size,
       Ptr<screen_info> screen_info) {
     throw new MethodIsBPFRelatedFunction();
@@ -2558,13 +2559,13 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_load_gdt((const struct desc_ptr*)$arg1)")
+  @BuiltinBPFFunction("xen_load_gdt((const struct desc_ptr *)$arg1)")
   public static void xen_load_gdt(Ptr<desc_ptr> dtr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_load_gdt_boot((const struct desc_ptr*)$arg1)")
+  @BuiltinBPFFunction("xen_load_gdt_boot((const struct desc_ptr *)$arg1)")
   public static void xen_load_gdt_boot(Ptr<desc_ptr> dtr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2576,7 +2577,7 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_load_idt((const struct desc_ptr*)$arg1)")
+  @BuiltinBPFFunction("xen_load_idt((const struct desc_ptr *)$arg1)")
   public static void xen_load_idt(Ptr<desc_ptr> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3155,13 +3156,13 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_raw_console_write((const u8*)$arg1)")
+  @BuiltinBPFFunction("xen_raw_console_write((const u8 *)$arg1)")
   public static void xen_raw_console_write(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_raw_printk((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("xen_raw_printk((const u8 *)$arg1, $arg2_)")
   public static void xen_raw_printk(String fmt, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3331,7 +3332,7 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_reset_device((const struct pci_dev*)$arg1)")
+  @BuiltinBPFFunction("xen_reset_device((const struct pci_dev *)$arg1)")
   public static int xen_reset_device(Ptr<pci_dev> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3404,13 +3405,13 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_send_IPI_mask((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xen_send_IPI_mask((const struct cpumask *)$arg1, $arg2)")
   public static void xen_send_IPI_mask(Ptr<cpumask> mask, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_send_IPI_mask_allbutself((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xen_send_IPI_mask_allbutself((const struct cpumask *)$arg1, $arg2)")
   public static void xen_send_IPI_mask_allbutself(Ptr<cpumask> mask, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3473,7 +3474,7 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_set_ldt((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xen_set_ldt((const void *)$arg1, $arg2)")
   public static void xen_set_ldt(Ptr<?> addr, @Unsigned int entries) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3539,7 +3540,7 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_set_wallclock((const struct timespec64*)$arg1)")
+  @BuiltinBPFFunction("xen_set_wallclock((const struct timespec64 *)$arg1)")
   public static int xen_set_wallclock(Ptr<timespec64> now) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3659,7 +3660,7 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_smp_send_call_function_ipi((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("xen_smp_send_call_function_ipi((const struct cpumask *)$arg1)")
   public static void xen_smp_send_call_function_ipi(Ptr<cpumask> mask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4012,27 +4013,27 @@ public final class XenDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_write_gdt_entry($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("xen_write_gdt_entry($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static void xen_write_gdt_entry(Ptr<desc_struct> dt, int entry, Ptr<?> desc, int type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_write_gdt_entry_boot($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("xen_write_gdt_entry_boot($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static void xen_write_gdt_entry_boot(Ptr<desc_struct> dt, int entry, Ptr<?> desc,
       int type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_write_idt_entry($arg1, $arg2, (const gate_struct*)$arg3)")
+  @BuiltinBPFFunction("xen_write_idt_entry($arg1, $arg2, (const gate_struct *)$arg3)")
   public static void xen_write_idt_entry(Ptr<@OriginalName("gate_desc") gate_struct> dt,
       int entrynum, Ptr<@OriginalName("gate_desc") gate_struct> g) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xen_write_ldt_entry($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("xen_write_ldt_entry($arg1, $arg2, (const void *)$arg3)")
   public static void xen_write_ldt_entry(Ptr<desc_struct> dt, int entrynum, Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }

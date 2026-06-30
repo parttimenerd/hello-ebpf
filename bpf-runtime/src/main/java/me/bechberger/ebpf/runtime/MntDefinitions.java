@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,7 +1109,7 @@ public final class MntDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mnt_clone_internal((const struct path*)$arg1)")
+  @BuiltinBPFFunction("mnt_clone_internal((const struct path *)$arg1)")
   public static Ptr<vfsmount> mnt_clone_internal(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1391,7 +1392,7 @@ public final class MntDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; const u8*; const u8*; const u8*; long unsigned int flags; }"
+      cType = "struct { const u8 *src_name; const u8 *type; const u8 *trans; const u8 *data; long unsigned int flags; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

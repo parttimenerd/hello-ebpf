@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class NeighDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("___neigh_create($arg1, (const void*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("___neigh_create($arg1, (const void *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<neighbour> ___neigh_create(Ptr<neigh_table> tbl, Ptr<?> pkey,
       Ptr<net_device> dev, @Unsigned int flags, boolean exempt_from_gc, boolean want_ref) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__neigh_create($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__neigh_create($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static Ptr<neighbour> __neigh_create(Ptr<neigh_table> tbl, Ptr<?> pkey,
       Ptr<net_device> dev, boolean want_ref) {
     throw new MethodIsBPFRelatedFunction();
@@ -1135,7 +1136,7 @@ public final class NeighDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__neigh_update($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__neigh_update($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int __neigh_update(Ptr<neighbour> neigh, Ptr<java.lang.Character> lladdr, char _new,
       @Unsigned int flags, @Unsigned int nlmsg_pid, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1265,7 +1266,7 @@ public final class NeighDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_ha_snapshot($arg1, (const struct neighbour*)$arg2, (const struct net_device*)$arg3)")
+  @BuiltinBPFFunction("neigh_ha_snapshot($arg1, (const struct neighbour *)$arg2, (const struct net_device *)$arg3)")
   public static void neigh_ha_snapshot(String dst, Ptr<neighbour> n, Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1283,7 +1284,7 @@ public final class NeighDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_hh_output((const struct hh_cache*)$arg1, $arg2)")
+  @BuiltinBPFFunction("neigh_hh_output((const struct hh_cache *)$arg1, $arg2)")
   public static int neigh_hh_output(Ptr<hh_cache> hh, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1307,7 +1308,7 @@ public final class NeighDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_lookup($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("neigh_lookup($arg1, (const void *)$arg2, $arg3)")
   public static Ptr<neighbour> neigh_lookup(Ptr<neigh_table> tbl, Ptr<?> pkey,
       Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
@@ -1344,35 +1345,35 @@ public final class NeighDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_proc_base_reachable_time((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("neigh_proc_base_reachable_time((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int neigh_proc_base_reachable_time(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_proc_dointvec((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("neigh_proc_dointvec((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int neigh_proc_dointvec(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_proc_dointvec_jiffies((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("neigh_proc_dointvec_jiffies((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int neigh_proc_dointvec_jiffies(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_proc_dointvec_ms_jiffies((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("neigh_proc_dointvec_ms_jiffies((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int neigh_proc_dointvec_ms_jiffies(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_proc_dointvec_ms_jiffies_positive((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("neigh_proc_dointvec_ms_jiffies_positive((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int neigh_proc_dointvec_ms_jiffies_positive(Ptr<ctl_table> ctl, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> lenp,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
@@ -1380,28 +1381,28 @@ public final class NeighDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_proc_dointvec_unres_qlen((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("neigh_proc_dointvec_unres_qlen((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int neigh_proc_dointvec_unres_qlen(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_proc_dointvec_userhz_jiffies((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("neigh_proc_dointvec_userhz_jiffies((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int neigh_proc_dointvec_userhz_jiffies(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_proc_dointvec_zero_intmax((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("neigh_proc_dointvec_zero_intmax((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int neigh_proc_dointvec_zero_intmax(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_proc_update((const struct ctl_table*)$arg1, $arg2)")
+  @BuiltinBPFFunction("neigh_proc_update((const struct ctl_table *)$arg1, $arg2)")
   public static void neigh_proc_update(Ptr<ctl_table> ctl, int write) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1520,28 +1521,28 @@ public final class NeighDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_update($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("neigh_update($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int neigh_update(Ptr<neighbour> neigh, Ptr<java.lang.Character> lladdr, char _new,
       @Unsigned int flags, @Unsigned int nlmsg_pid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_valid_dump_req((const struct nlmsghdr*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("neigh_valid_dump_req((const struct nlmsghdr *)$arg1, $arg2, $arg3, $arg4)")
   public static int neigh_valid_dump_req(Ptr<nlmsghdr> nlh, boolean strict_check,
       Ptr<neigh_dump_filter> filter, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_valid_get_req((const struct nlmsghdr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("neigh_valid_get_req((const struct nlmsghdr *)$arg1, $arg2, $arg3)")
   public static Ptr<ndmsg> neigh_valid_get_req(Ptr<nlmsghdr> nlh, Ptr<Ptr<nlattr>> tb,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("neigh_xmit($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("neigh_xmit($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int neigh_xmit(int index, Ptr<net_device> dev, Ptr<?> addr, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class Utf8Definitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("utf8_casefold((const struct unicode_map*)$arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("utf8_casefold((const struct unicode_map *)$arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int utf8_casefold(Ptr<unicode_map> um, Ptr<qstr> str, String dest,
       @Unsigned long dlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("utf8_casefold_hash((const struct unicode_map*)$arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("utf8_casefold_hash((const struct unicode_map *)$arg1, (const void *)$arg2, $arg3)")
   public static int utf8_casefold_hash(Ptr<unicode_map> um, Ptr<?> salt, Ptr<qstr> str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1109,7 +1110,7 @@ public final class Utf8Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("utf8_normalize((const struct unicode_map*)$arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("utf8_normalize((const struct unicode_map *)$arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int utf8_normalize(Ptr<unicode_map> um, Ptr<qstr> str, String dest,
       @Unsigned long dlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1122,25 +1123,25 @@ public final class Utf8Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("utf8_strncasecmp((const struct unicode_map*)$arg1, (const struct qstr*)$arg2, (const struct qstr*)$arg3)")
+  @BuiltinBPFFunction("utf8_strncasecmp((const struct unicode_map *)$arg1, (const struct qstr *)$arg2, (const struct qstr *)$arg3)")
   public static int utf8_strncasecmp(Ptr<unicode_map> um, Ptr<qstr> s1, Ptr<qstr> s2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("utf8_strncasecmp_folded((const struct unicode_map*)$arg1, (const struct qstr*)$arg2, (const struct qstr*)$arg3)")
+  @BuiltinBPFFunction("utf8_strncasecmp_folded((const struct unicode_map *)$arg1, (const struct qstr *)$arg2, (const struct qstr *)$arg3)")
   public static int utf8_strncasecmp_folded(Ptr<unicode_map> um, Ptr<qstr> cf, Ptr<qstr> s1) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("utf8_strncmp((const struct unicode_map*)$arg1, (const struct qstr*)$arg2, (const struct qstr*)$arg3)")
+  @BuiltinBPFFunction("utf8_strncmp((const struct unicode_map *)$arg1, (const struct qstr *)$arg2, (const struct qstr *)$arg3)")
   public static int utf8_strncmp(Ptr<unicode_map> um, Ptr<qstr> s1, Ptr<qstr> s2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("utf8_to_utf32((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("utf8_to_utf32((const u8 *)$arg1, $arg2, $arg3)")
   public static int utf8_to_utf32(Ptr<java.lang.Character> s, int inlen,
       Ptr<java.lang. @Unsigned @OriginalName("unicode_t") Integer> pu) {
     throw new MethodIsBPFRelatedFunction();
@@ -1153,7 +1154,7 @@ public final class Utf8Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("utf8_validate((const struct unicode_map*)$arg1, (const struct qstr*)$arg2)")
+  @BuiltinBPFFunction("utf8_validate((const struct unicode_map *)$arg1, (const struct qstr *)$arg2)")
   public static int utf8_validate(Ptr<unicode_map> um, Ptr<qstr> str) {
     throw new MethodIsBPFRelatedFunction();
   }

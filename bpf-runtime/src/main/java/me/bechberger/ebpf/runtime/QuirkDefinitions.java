@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1530,13 +1531,13 @@ public final class QuirkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("quirk_io($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("quirk_io($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static void quirk_io(Ptr<pci_dev> dev, int pos, @Unsigned int size, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("quirk_io_region($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("quirk_io_region($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static void quirk_io_region(Ptr<pci_dev> dev, int port, @Unsigned int size, int nr,
       String name) {
     throw new MethodIsBPFRelatedFunction();

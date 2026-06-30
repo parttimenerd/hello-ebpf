@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1188,7 +1189,7 @@ public final class SyncDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sync_file_merge((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("sync_file_merge((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<sync_file> sync_file_merge(String name, Ptr<sync_file> a, Ptr<sync_file> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1233,7 +1234,7 @@ public final class SyncDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sync_force_parallel_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sync_force_parallel_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long sync_force_parallel_store(Ptr<mddev> mddev,
       String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1312,7 +1313,7 @@ public final class SyncDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sync_io_depth_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sync_io_depth_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long sync_io_depth_store(Ptr<mddev> mddev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1338,7 +1339,7 @@ public final class SyncDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sync_max_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sync_max_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long sync_max_store(Ptr<mddev> mddev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1351,7 +1352,7 @@ public final class SyncDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sync_min_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sync_min_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long sync_min_store(Ptr<mddev> mddev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1365,7 +1366,7 @@ public final class SyncDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sync_on_suspend_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sync_on_suspend_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sync_on_suspend_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1459,7 +1460,7 @@ public final class SyncDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sync_timeline_create((const u8*)$arg1)")
+  @BuiltinBPFFunction("sync_timeline_create((const u8 *)$arg1)")
   public static Ptr<sync_timeline> sync_timeline_create(String name) {
     throw new MethodIsBPFRelatedFunction();
   }

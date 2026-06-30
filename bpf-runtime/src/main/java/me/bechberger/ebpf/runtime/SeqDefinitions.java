@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,52 +1091,52 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class SeqDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("SEQ_printf($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("SEQ_printf($arg1, (const u8 *)$arg2, $arg3_)")
   public static void SEQ_printf(Ptr<seq_file> m, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__seq_open_private($arg1, (const struct seq_operations*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__seq_open_private($arg1, (const struct seq_operations *)$arg2, $arg3)")
   public static Ptr<?> __seq_open_private(Ptr<file> f, Ptr<seq_operations> ops, int psize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__seq_puts($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__seq_puts($arg1, (const u8 *)$arg2)")
   public static void __seq_puts(Ptr<seq_file> m, String s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_bprintf($arg1, (const u8*)$arg2, (const unsigned int*)$arg3)")
+  @BuiltinBPFFunction("seq_bprintf($arg1, (const u8 *)$arg2, (const unsigned int *)$arg3)")
   public static void seq_bprintf(Ptr<seq_file> m, String f,
       Ptr<java.lang. @Unsigned Integer> binary) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_buf_bprintf($arg1, (const u8*)$arg2, (const unsigned int*)$arg3)")
+  @BuiltinBPFFunction("seq_buf_bprintf($arg1, (const u8 *)$arg2, (const unsigned int *)$arg3)")
   public static int seq_buf_bprintf(Ptr<seq_buf> s, String fmt,
       Ptr<java.lang. @Unsigned Integer> binary) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_buf_do_printk($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("seq_buf_do_printk($arg1, (const u8 *)$arg2)")
   public static void seq_buf_do_printk(Ptr<seq_buf> s, String lvl) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_buf_hex_dump($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("seq_buf_hex_dump($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, (const void *)$arg6, $arg7, $arg8)")
   public static int seq_buf_hex_dump(Ptr<seq_buf> s, String prefix_str, int prefix_type,
       int rowsize, int groupsize, Ptr<?> buf, @Unsigned long len, boolean ascii) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_buf_path($arg1, (const struct path*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("seq_buf_path($arg1, (const struct path *)$arg2, (const u8 *)$arg3)")
   public static int seq_buf_path(Ptr<seq_buf> s, Ptr<path> path, String esc) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1147,7 +1148,7 @@ public final class SeqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_buf_printf($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("seq_buf_printf($arg1, (const u8 *)$arg2, $arg3_)")
   public static int seq_buf_printf(Ptr<seq_buf> s, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1159,19 +1160,19 @@ public final class SeqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_buf_putmem($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("seq_buf_putmem($arg1, (const void *)$arg2, $arg3)")
   public static int seq_buf_putmem(Ptr<seq_buf> s, Ptr<?> mem, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_buf_putmem_hex($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("seq_buf_putmem_hex($arg1, (const void *)$arg2, $arg3)")
   public static int seq_buf_putmem_hex(Ptr<seq_buf> s, Ptr<?> mem, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_buf_puts($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("seq_buf_puts($arg1, (const u8 *)$arg2)")
   public static int seq_buf_puts(Ptr<seq_buf> s, String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1183,25 +1184,25 @@ public final class SeqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_buf_vprintf($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("seq_buf_vprintf($arg1, (const u8 *)$arg2, $arg3)")
   public static int seq_buf_vprintf(Ptr<seq_buf> s, String fmt, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_con_printf($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("seq_con_printf($arg1, (const u8 *)$arg2, $arg3_)")
   public static void seq_con_printf(Ptr<seq_file> seq, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_dentry($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("seq_dentry($arg1, $arg2, (const u8 *)$arg3)")
   public static int seq_dentry(Ptr<seq_file> m, Ptr<dentry> dentry, String esc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_escape_mem($arg1, (const u8*)$arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("seq_escape_mem($arg1, (const u8 *)$arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static void seq_escape_mem(Ptr<seq_file> m, String src, @Unsigned long len,
       @Unsigned int flags, String esc) {
     throw new MethodIsBPFRelatedFunction();
@@ -1220,13 +1221,13 @@ public final class SeqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_file_path($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("seq_file_path($arg1, $arg2, (const u8 *)$arg3)")
   public static int seq_file_path(Ptr<seq_file> m, Ptr<file> file, String esc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_hex_dump($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("seq_hex_dump($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, (const void *)$arg6, $arg7, $arg8)")
   public static void seq_hex_dump(Ptr<seq_file> m, String prefix_str, int prefix_type, int rowsize,
       int groupsize, Ptr<?> buf, @Unsigned long len, boolean ascii) {
     throw new MethodIsBPFRelatedFunction();
@@ -1417,7 +1418,7 @@ public final class SeqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_open($arg1, (const struct seq_operations*)$arg2)")
+  @BuiltinBPFFunction("seq_open($arg1, (const struct seq_operations *)$arg2)")
   public static int seq_open(Ptr<file> file, Ptr<seq_operations> op) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1429,7 +1430,7 @@ public final class SeqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_open_private($arg1, (const struct seq_operations*)$arg2, $arg3)")
+  @BuiltinBPFFunction("seq_open_private($arg1, (const struct seq_operations *)$arg2, $arg3)")
   public static int seq_open_private(Ptr<file> filp, Ptr<seq_operations> ops, int psize) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1441,19 +1442,19 @@ public final class SeqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_path($arg1, (const struct path*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("seq_path($arg1, (const struct path *)$arg2, (const u8 *)$arg3)")
   public static int seq_path(Ptr<seq_file> m, Ptr<path> path, String esc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_path_root($arg1, (const struct path*)$arg2, (const struct path*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("seq_path_root($arg1, (const struct path *)$arg2, (const struct path *)$arg3, (const u8 *)$arg4)")
   public static int seq_path_root(Ptr<seq_file> m, Ptr<path> path, Ptr<path> root, String esc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_print_delegate_opts($arg1, (const u8*)$arg2, (const struct btf*)$arg3, (const struct btf_type*)$arg4, (const u8*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("seq_print_delegate_opts($arg1, (const u8 *)$arg2, (const struct btf *)$arg3, (const struct btf_type *)$arg4, (const u8 *)$arg5, $arg6, $arg7)")
   public static void seq_print_delegate_opts(Ptr<seq_file> m, String opt_name, Ptr<btf> btf,
       Ptr<btf_type> enum_t, String prefix, @Unsigned long delegate_msk, @Unsigned long any_msk) {
     throw new MethodIsBPFRelatedFunction();
@@ -1474,7 +1475,7 @@ public final class SeqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_printf($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("seq_printf($arg1, (const u8 *)$arg2, $arg3_)")
   public static void seq_printf(Ptr<seq_file> m, String f, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1546,26 +1547,26 @@ public final class SeqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_put_decimal_ll($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("seq_put_decimal_ll($arg1, (const u8 *)$arg2, $arg3)")
   public static void seq_put_decimal_ll(Ptr<seq_file> m, String delimiter, long num) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_put_decimal_ull($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("seq_put_decimal_ull($arg1, (const u8 *)$arg2, $arg3)")
   public static void seq_put_decimal_ull(Ptr<seq_file> m, String delimiter, @Unsigned long num) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_put_decimal_ull_width($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("seq_put_decimal_ull_width($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void seq_put_decimal_ull_width(Ptr<seq_file> m, String delimiter,
       @Unsigned long num, @Unsigned int width) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_put_hex_ll($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("seq_put_hex_ll($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void seq_put_hex_ll(Ptr<seq_file> m, String delimiter, @Unsigned long v,
       @Unsigned int width) {
     throw new MethodIsBPFRelatedFunction();
@@ -1688,13 +1689,13 @@ public final class SeqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_vprintf($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("seq_vprintf($arg1, (const u8 *)$arg2, $arg3)")
   public static void seq_vprintf(Ptr<seq_file> m, String f, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seq_write($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("seq_write($arg1, (const void *)$arg2, $arg3)")
   public static int seq_write(Ptr<seq_file> seq, Ptr<?> data, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }

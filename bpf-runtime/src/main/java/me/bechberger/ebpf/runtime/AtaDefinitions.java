@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ata_ehi_push_desc($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("__ata_ehi_push_desc($arg1, (const u8 *)$arg2, $arg3_)")
   public static void __ata_ehi_push_desc(Ptr<ata_eh_info> ehi, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
@@ -1115,7 +1116,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ata_scsi_find_dev($arg1, (const struct scsi_device*)$arg2)")
+  @BuiltinBPFFunction("__ata_scsi_find_dev($arg1, (const struct scsi_device *)$arg2)")
   public static Ptr<ata_device> __ata_scsi_find_dev(Ptr<ata_port> ap, Ptr<scsi_device> scsidev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1182,14 +1183,14 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_acpi_gtf_to_tf($arg1, (const struct ata_acpi_gtf*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ata_acpi_gtf_to_tf($arg1, (const struct ata_acpi_gtf *)$arg2, $arg3)")
   public static void ata_acpi_gtf_to_tf(Ptr<ata_device> dev, Ptr<ata_acpi_gtf> gtf,
       Ptr<ata_taskfile> tf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_acpi_gtm_xfermask($arg1, (const struct ata_acpi_gtm*)$arg2)")
+  @BuiltinBPFFunction("ata_acpi_gtm_xfermask($arg1, (const struct ata_acpi_gtm *)$arg2)")
   public static @Unsigned int ata_acpi_gtm_xfermask(Ptr<ata_device> dev, Ptr<ata_acpi_gtm> gtm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1220,7 +1221,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_acpi_run_tf($arg1, (const struct ata_acpi_gtf*)$arg2, (const struct ata_acpi_gtf*)$arg3)")
+  @BuiltinBPFFunction("ata_acpi_run_tf($arg1, (const struct ata_acpi_gtf *)$arg2, (const struct ata_acpi_gtf *)$arg3)")
   public static int ata_acpi_run_tf(Ptr<ata_device> dev, Ptr<ata_acpi_gtf> gtf,
       Ptr<ata_acpi_gtf> prev_gtf) {
     throw new MethodIsBPFRelatedFunction();
@@ -1234,7 +1235,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_acpi_stm($arg1, (const struct ata_acpi_gtm*)$arg2)")
+  @BuiltinBPFFunction("ata_acpi_stm($arg1, (const struct ata_acpi_gtm *)$arg2)")
   public static int ata_acpi_stm(Ptr<ata_port> ap, Ptr<ata_acpi_gtm> stm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1271,7 +1272,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_bmdma_nodma($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("ata_bmdma_nodma($arg1, (const u8 *)$arg2)")
   public static void ata_bmdma_nodma(Ptr<ata_host> host, String reason) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1393,7 +1394,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_dev_classify((const struct ata_taskfile*)$arg1)")
+  @BuiltinBPFFunction("ata_dev_classify((const struct ata_taskfile *)$arg1)")
   public static @Unsigned int ata_dev_classify(Ptr<ata_taskfile> tf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1509,7 +1510,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_dev_quirks((const struct ata_device*)$arg1)")
+  @BuiltinBPFFunction("ata_dev_quirks((const struct ata_device *)$arg1)")
   public static @Unsigned int ata_dev_quirks(Ptr<ata_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1535,7 +1536,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_dev_same_device($arg1, $arg2, (const short unsigned int*)$arg3)")
+  @BuiltinBPFFunction("ata_dev_same_device($arg1, $arg2, (const short unsigned int *)$arg3)")
   public static int ata_dev_same_device(Ptr<ata_device> dev, @Unsigned int new_class,
       Ptr<java.lang. @Unsigned Short> new_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1852,7 +1853,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_ehi_push_desc($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("ata_ehi_push_desc($arg1, (const u8 *)$arg2, $arg3_)")
   public static void ata_ehi_push_desc(Ptr<ata_eh_info> ehi, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
@@ -1865,7 +1866,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_exec_internal($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ata_exec_internal($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static @Unsigned int ata_exec_internal(Ptr<ata_device> dev, Ptr<ata_taskfile> tf,
       Ptr<java.lang.Character> cdb, dma_data_direction dma_dir, Ptr<?> buf, @Unsigned int buflen,
       @Unsigned int timeout) {
@@ -1915,7 +1916,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_generic_init_one($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("ata_generic_init_one($arg1, (const struct pci_device_id *)$arg2)")
   public static int ata_generic_init_one(Ptr<pci_dev> dev, Ptr<pci_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1939,7 +1940,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_host_activate($arg1, $arg2, $arg3, $arg4, (const struct scsi_host_template*)$arg5)")
+  @BuiltinBPFFunction("ata_host_activate($arg1, $arg2, $arg3, $arg4, (const struct scsi_host_template *)$arg5)")
   public static int ata_host_activate(Ptr<ata_host> host, int irq,
       @OriginalName("irq_handler_t") Ptr<?> irq_handler, @Unsigned long irq_flags,
       Ptr<scsi_host_template> sht) {
@@ -1953,7 +1954,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_host_alloc_pinfo($arg1, (const struct ata_port_info**)$arg2, $arg3)")
+  @BuiltinBPFFunction("ata_host_alloc_pinfo($arg1, (const const struct ata_port_info **)$arg2, $arg3)")
   public static Ptr<ata_host> ata_host_alloc_pinfo(Ptr<device> dev, Ptr<Ptr<ata_port_info>> ppi,
       int n_ports) {
     throw new MethodIsBPFRelatedFunction();
@@ -1985,7 +1986,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_host_register($arg1, (const struct scsi_host_template*)$arg2)")
+  @BuiltinBPFFunction("ata_host_register($arg1, (const struct scsi_host_template *)$arg2)")
   public static int ata_host_register(Ptr<ata_host> host, Ptr<scsi_host_template> sht) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2034,27 +2035,27 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_id_c_string((const short unsigned int*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ata_id_c_string((const short unsigned int *)$arg1, $arg2, $arg3, $arg4)")
   public static void ata_id_c_string(Ptr<java.lang. @Unsigned Short> id, String s,
       @Unsigned int ofs, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_id_n_sectors((const short unsigned int*)$arg1)")
+  @BuiltinBPFFunction("ata_id_n_sectors((const short unsigned int *)$arg1)")
   public static @Unsigned long ata_id_n_sectors(Ptr<java.lang. @Unsigned Short> id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_id_string((const short unsigned int*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ata_id_string((const short unsigned int *)$arg1, $arg2, $arg3, $arg4)")
   public static void ata_id_string(Ptr<java.lang. @Unsigned Short> id, String s, @Unsigned int ofs,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_id_xfermask((const short unsigned int*)$arg1)")
+  @BuiltinBPFFunction("ata_id_xfermask((const short unsigned int *)$arg1)")
   public static @Unsigned int ata_id_xfermask(Ptr<java.lang. @Unsigned Short> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2133,7 +2134,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_mselect_control($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ata_mselect_control($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int ata_mselect_control(Ptr<ata_queued_cmd> qc, char spg,
       Ptr<java.lang.Character> buf, int len, Ptr<java.lang. @Unsigned Short> fp) {
     throw new MethodIsBPFRelatedFunction();
@@ -2180,7 +2181,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_ncq_prio_enable_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ata_ncq_prio_enable_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long ata_ncq_prio_enable_store(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -2240,14 +2241,14 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_pci_bmdma_init_one($arg1, (const struct ata_port_info**)$arg2, (const struct scsi_host_template*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ata_pci_bmdma_init_one($arg1, (const const struct ata_port_info **)$arg2, (const struct scsi_host_template *)$arg3, $arg4, $arg5)")
   public static int ata_pci_bmdma_init_one(Ptr<pci_dev> pdev, Ptr<Ptr<ata_port_info>> ppi,
       Ptr<scsi_host_template> sht, Ptr<?> host_priv, int hflags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_pci_bmdma_prepare_host($arg1, (const struct ata_port_info**)$arg2, $arg3)")
+  @BuiltinBPFFunction("ata_pci_bmdma_prepare_host($arg1, (const const struct ata_port_info **)$arg2, $arg3)")
   public static int ata_pci_bmdma_prepare_host(Ptr<pci_dev> pdev, Ptr<Ptr<ata_port_info>> ppi,
       Ptr<Ptr<ata_host>> r_host) {
     throw new MethodIsBPFRelatedFunction();
@@ -2280,7 +2281,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_pci_init_one($arg1, (const struct ata_port_info**)$arg2, (const struct scsi_host_template*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ata_pci_init_one($arg1, (const const struct ata_port_info **)$arg2, (const struct scsi_host_template *)$arg3, $arg4, $arg5, $arg6)")
   public static int ata_pci_init_one(Ptr<pci_dev> pdev, Ptr<Ptr<ata_port_info>> ppi,
       Ptr<scsi_host_template> sht, Ptr<?> host_priv, int hflags, boolean bmdma) {
     throw new MethodIsBPFRelatedFunction();
@@ -2293,7 +2294,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_pci_sff_activate_host($arg1, $arg2, (const struct scsi_host_template*)$arg3)")
+  @BuiltinBPFFunction("ata_pci_sff_activate_host($arg1, $arg2, (const struct scsi_host_template *)$arg3)")
   public static int ata_pci_sff_activate_host(Ptr<ata_host> host,
       @OriginalName("irq_handler_t") Ptr<?> irq_handler, Ptr<scsi_host_template> sht) {
     throw new MethodIsBPFRelatedFunction();
@@ -2306,14 +2307,14 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_pci_sff_init_one($arg1, (const struct ata_port_info**)$arg2, (const struct scsi_host_template*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ata_pci_sff_init_one($arg1, (const const struct ata_port_info **)$arg2, (const struct scsi_host_template *)$arg3, $arg4, $arg5)")
   public static int ata_pci_sff_init_one(Ptr<pci_dev> pdev, Ptr<Ptr<ata_port_info>> ppi,
       Ptr<scsi_host_template> sht, Ptr<?> host_priv, int hflag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_pci_sff_prepare_host($arg1, (const struct ata_port_info**)$arg2, $arg3)")
+  @BuiltinBPFFunction("ata_pci_sff_prepare_host($arg1, (const const struct ata_port_info **)$arg2, $arg3)")
   public static int ata_pci_sff_prepare_host(Ptr<pci_dev> pdev, Ptr<Ptr<ata_port_info>> ppi,
       Ptr<Ptr<ata_host>> r_host) {
     throw new MethodIsBPFRelatedFunction();
@@ -2338,7 +2339,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_pio_need_iordy((const struct ata_device*)$arg1)")
+  @BuiltinBPFFunction("ata_pio_need_iordy((const struct ata_device *)$arg1)")
   public static @Unsigned int ata_pio_need_iordy(Ptr<ata_device> adev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2381,13 +2382,13 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_port_classify($arg1, (const struct ata_taskfile*)$arg2)")
+  @BuiltinBPFFunction("ata_port_classify($arg1, (const struct ata_taskfile *)$arg2)")
   public static @Unsigned int ata_port_classify(Ptr<ata_port> ap, Ptr<ata_taskfile> tf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_port_desc($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("ata_port_desc($arg1, (const u8 *)$arg2, $arg3_)")
   public static void ata_port_desc(Ptr<ata_port> ap, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2411,7 +2412,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_port_pbar_desc($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("ata_port_pbar_desc($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static void ata_port_pbar_desc(Ptr<ata_port> ap, int bar,
       @OriginalName("ssize_t") long offset, String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -2586,14 +2587,14 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_scsi_activity_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ata_scsi_activity_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long ata_scsi_activity_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_scsi_add_hosts($arg1, (const struct scsi_host_template*)$arg2)")
+  @BuiltinBPFFunction("ata_scsi_add_hosts($arg1, (const struct scsi_host_template *)$arg2)")
   public static int ata_scsi_add_hosts(Ptr<ata_host> host, Ptr<scsi_host_template> sht) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2638,7 +2639,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_scsi_em_message_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ata_scsi_em_message_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long ata_scsi_em_message_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -2658,7 +2659,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_scsi_find_dev($arg1, (const struct scsi_device*)$arg2)")
+  @BuiltinBPFFunction("ata_scsi_find_dev($arg1, (const struct scsi_device *)$arg2)")
   public static Ptr<ata_device> ata_scsi_find_dev(Ptr<ata_port> ap, Ptr<scsi_device> scsidev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2695,7 +2696,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_scsi_lpm_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ata_scsi_lpm_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long ata_scsi_lpm_store(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -2740,7 +2741,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_scsi_park_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ata_scsi_park_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long ata_scsi_park_store(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3002,7 +3003,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_sff_exec_command($arg1, (const struct ata_taskfile*)$arg2)")
+  @BuiltinBPFFunction("ata_sff_exec_command($arg1, (const struct ata_taskfile *)$arg2)")
   public static void ata_sff_exec_command(Ptr<ata_port> ap, Ptr<ata_taskfile> tf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3138,7 +3139,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_sff_tf_load($arg1, (const struct ata_taskfile*)$arg2)")
+  @BuiltinBPFFunction("ata_sff_tf_load($arg1, (const struct ata_taskfile *)$arg2)")
   public static void ata_sff_tf_load(Ptr<ata_port> ap, Ptr<ata_taskfile> tf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3250,7 +3251,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_tf_from_fis((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ata_tf_from_fis((const u8 *)$arg1, $arg2)")
   public static void ata_tf_from_fis(Ptr<java.lang.Character> fis, Ptr<ata_taskfile> tf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3262,32 +3263,32 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_tf_read_block((const struct ata_taskfile*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ata_tf_read_block((const struct ata_taskfile *)$arg1, $arg2)")
   public static @Unsigned long ata_tf_read_block(Ptr<ata_taskfile> tf, Ptr<ata_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_tf_to_fis((const struct ata_taskfile*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ata_tf_to_fis((const struct ata_taskfile *)$arg1, $arg2, $arg3, $arg4)")
   public static void ata_tf_to_fis(Ptr<ata_taskfile> tf, char pmp, int is_cmd,
       Ptr<java.lang.Character> fis) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_tf_to_host($arg1, (const struct ata_taskfile*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ata_tf_to_host($arg1, (const struct ata_taskfile *)$arg2, $arg3)")
   public static void ata_tf_to_host(Ptr<ata_port> ap, Ptr<ata_taskfile> tf, @Unsigned int tag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_tf_to_lba((const struct ata_taskfile*)$arg1)")
+  @BuiltinBPFFunction("ata_tf_to_lba((const struct ata_taskfile *)$arg1)")
   public static @Unsigned long ata_tf_to_lba(Ptr<ata_taskfile> tf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_tf_to_lba48((const struct ata_taskfile*)$arg1)")
+  @BuiltinBPFFunction("ata_tf_to_lba48((const struct ata_taskfile *)$arg1)")
   public static @Unsigned long ata_tf_to_lba48(Ptr<ata_taskfile> tf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3312,7 +3313,7 @@ public final class AtaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ata_timing_merge((const struct ata_timing*)$arg1, (const struct ata_timing*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ata_timing_merge((const struct ata_timing *)$arg1, (const struct ata_timing *)$arg2, $arg3, $arg4)")
   public static void ata_timing_merge(Ptr<ata_timing> a, Ptr<ata_timing> b, Ptr<ata_timing> m,
       @Unsigned int what) {
     throw new MethodIsBPFRelatedFunction();

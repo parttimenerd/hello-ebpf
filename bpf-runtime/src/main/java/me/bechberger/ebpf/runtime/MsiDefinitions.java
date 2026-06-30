@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1104,7 +1105,7 @@ public final class MsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__msi_domain_alloc_irq_at($arg1, $arg2, $arg3, (const struct irq_affinity_desc*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__msi_domain_alloc_irq_at($arg1, $arg2, $arg3, (const struct irq_affinity_desc *)$arg4, $arg5)")
   public static msi_map __msi_domain_alloc_irq_at(Ptr<device> dev, @Unsigned int domid,
       @Unsigned int index, Ptr<irq_affinity_desc> affdesc, Ptr<msi_instance_cookie> icookie) {
     throw new MethodIsBPFRelatedFunction();
@@ -1136,7 +1137,7 @@ public final class MsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("msi_alloc_desc($arg1, $arg2, (const struct irq_affinity_desc*)$arg3)")
+  @BuiltinBPFFunction("msi_alloc_desc($arg1, $arg2, (const struct irq_affinity_desc *)$arg3)")
   public static Ptr<msi_desc> msi_alloc_desc(Ptr<device> dev, int nvec,
       Ptr<irq_affinity_desc> affinity) {
     throw new MethodIsBPFRelatedFunction();
@@ -1150,14 +1151,14 @@ public final class MsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("msi_bus_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("msi_bus_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long msi_bus_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("msi_create_device_irq_domain($arg1, $arg2, (const struct msi_domain_template*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("msi_create_device_irq_domain($arg1, $arg2, (const struct msi_domain_template *)$arg3, $arg4, $arg5, $arg6)")
   public static boolean msi_create_device_irq_domain(Ptr<device> dev, @Unsigned int domid,
       Ptr<msi_domain_template> template, @Unsigned int hwsize, Ptr<?> domain_data,
       Ptr<?> chip_data) {
@@ -1172,7 +1173,7 @@ public final class MsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("msi_create_parent_irq_domain($arg1, (const struct msi_parent_ops*)$arg2)")
+  @BuiltinBPFFunction("msi_create_parent_irq_domain($arg1, (const struct msi_parent_ops *)$arg2)")
   public static Ptr<irq_domain> msi_create_parent_irq_domain(Ptr<irq_domain_info> info,
       Ptr<msi_parent_ops> msi_parent_ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1242,7 +1243,7 @@ public final class MsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("msi_domain_alloc_irq_at($arg1, $arg2, $arg3, (const struct irq_affinity_desc*)$arg4, $arg5)")
+  @BuiltinBPFFunction("msi_domain_alloc_irq_at($arg1, $arg2, $arg3, (const struct irq_affinity_desc *)$arg4, $arg5)")
   public static msi_map msi_domain_alloc_irq_at(Ptr<device> dev, @Unsigned int domid,
       @Unsigned int index, Ptr<irq_affinity_desc> affdesc, Ptr<msi_instance_cookie> icookie) {
     throw new MethodIsBPFRelatedFunction();
@@ -1385,7 +1386,7 @@ public final class MsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("msi_domain_set_affinity($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("msi_domain_set_affinity($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int msi_domain_set_affinity(Ptr<irq_data> irq_data, Ptr<cpumask> mask,
       boolean force) {
     throw new MethodIsBPFRelatedFunction();
@@ -1473,7 +1474,7 @@ public final class MsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("msi_set_affinity($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("msi_set_affinity($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int msi_set_affinity(Ptr<irq_data> irqd, Ptr<cpumask> mask, boolean force) {
     throw new MethodIsBPFRelatedFunction();
   }

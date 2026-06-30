@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1165,7 +1166,7 @@ public final class PinctrlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinctrl_find_and_add_gpio_range((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pinctrl_find_and_add_gpio_range((const u8 *)$arg1, $arg2)")
   public static Ptr<pinctrl_dev> pinctrl_find_and_add_gpio_range(String devname,
       Ptr<pinctrl_gpio_range> range) {
     throw new MethodIsBPFRelatedFunction();
@@ -1204,7 +1205,7 @@ public final class PinctrlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinctrl_free_pindescs($arg1, (const struct pinctrl_pin_desc*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pinctrl_free_pindescs($arg1, (const struct pinctrl_pin_desc *)$arg2, $arg3)")
   public static void pinctrl_free_pindescs(Ptr<pinctrl_dev> pctldev, Ptr<pinctrl_pin_desc> pins,
       @Unsigned int num_pins) {
     throw new MethodIsBPFRelatedFunction();
@@ -1224,14 +1225,14 @@ public final class PinctrlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinctrl_get_group_pins($arg1, (const u8*)$arg2, (const unsigned int**)$arg3, $arg4)")
+  @BuiltinBPFFunction("pinctrl_get_group_pins($arg1, (const u8 *)$arg2, (const unsigned int**)$arg3, $arg4)")
   public static int pinctrl_get_group_pins(Ptr<pinctrl_dev> pctldev, String pin_group,
       Ptr<Ptr<java.lang. @Unsigned Integer>> pins, Ptr<java.lang. @Unsigned Integer> num_pins) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinctrl_get_group_selector($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("pinctrl_get_group_selector($arg1, (const u8 *)$arg2)")
   public static int pinctrl_get_group_selector(Ptr<pinctrl_dev> pctldev, String pin_group) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1310,7 +1311,7 @@ public final class PinctrlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinctrl_init_controller((const struct pinctrl_desc*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("pinctrl_init_controller((const struct pinctrl_desc *)$arg1, $arg2, $arg3)")
   public static Ptr<pinctrl_dev> pinctrl_init_controller(Ptr<pinctrl_desc> pctldesc,
       Ptr<device> dev, Ptr<?> driver_data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1329,7 +1330,7 @@ public final class PinctrlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinctrl_lookup_state($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("pinctrl_lookup_state($arg1, (const u8 *)$arg2)")
   public static Ptr<pinctrl_state> pinctrl_lookup_state(Ptr<pinctrl> p, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1395,27 +1396,27 @@ public final class PinctrlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinctrl_register((const struct pinctrl_desc*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("pinctrl_register((const struct pinctrl_desc *)$arg1, $arg2, $arg3)")
   public static Ptr<pinctrl_dev> pinctrl_register(Ptr<pinctrl_desc> pctldesc, Ptr<device> dev,
       Ptr<?> driver_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinctrl_register_and_init((const struct pinctrl_desc*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pinctrl_register_and_init((const struct pinctrl_desc *)$arg1, $arg2, $arg3, $arg4)")
   public static int pinctrl_register_and_init(Ptr<pinctrl_desc> pctldesc, Ptr<device> dev,
       Ptr<?> driver_data, Ptr<Ptr<pinctrl_dev>> pctldev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinctrl_register_mappings((const struct pinctrl_map*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pinctrl_register_mappings((const struct pinctrl_map *)$arg1, $arg2)")
   public static int pinctrl_register_mappings(Ptr<pinctrl_map> maps, @Unsigned int num_maps) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinctrl_register_pins($arg1, (const struct pinctrl_pin_desc*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pinctrl_register_pins($arg1, (const struct pinctrl_pin_desc *)$arg2, $arg3)")
   public static int pinctrl_register_pins(Ptr<pinctrl_dev> pctldev, Ptr<pinctrl_pin_desc> pins,
       @Unsigned int num_descs) {
     throw new MethodIsBPFRelatedFunction();
@@ -1453,7 +1454,7 @@ public final class PinctrlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinctrl_unregister_mappings((const struct pinctrl_map*)$arg1)")
+  @BuiltinBPFFunction("pinctrl_unregister_mappings((const struct pinctrl_map *)$arg1)")
   public static void pinctrl_unregister_mappings(Ptr<pinctrl_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1467,7 +1468,7 @@ public final class PinctrlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinctrl_utils_add_map_configs($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("pinctrl_utils_add_map_configs($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6, $arg7, $arg8)")
   public static int pinctrl_utils_add_map_configs(Ptr<pinctrl_dev> pctldev,
       Ptr<Ptr<pinctrl_map>> map, Ptr<java.lang. @Unsigned Integer> reserved_maps,
       Ptr<java.lang. @Unsigned Integer> num_maps, String group,
@@ -1476,7 +1477,7 @@ public final class PinctrlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinctrl_utils_add_map_mux($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("pinctrl_utils_add_map_mux($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, (const u8 *)$arg6)")
   public static int pinctrl_utils_add_map_mux(Ptr<pinctrl_dev> pctldev, Ptr<Ptr<pinctrl_map>> map,
       Ptr<java.lang. @Unsigned Integer> reserved_maps, Ptr<java.lang. @Unsigned Integer> num_maps,
       String group, String function) {

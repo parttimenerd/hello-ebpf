@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class EvdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evdev_connect($arg1, $arg2, (const struct input_device_id*)$arg3)")
+  @BuiltinBPFFunction("evdev_connect($arg1, $arg2, (const struct input_device_id *)$arg3)")
   public static int evdev_connect(Ptr<input_handler> handler, Ptr<input_dev> dev,
       Ptr<input_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1209,7 +1210,7 @@ public final class EvdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evdev_pass_values($arg1, (const struct input_value*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("evdev_pass_values($arg1, (const struct input_value *)$arg2, $arg3, $arg4)")
   public static void evdev_pass_values(Ptr<evdev_client> client, Ptr<input_value> vals,
       @Unsigned int count, Ptr<java.lang. @OriginalName("ktime_t") Long> ev_time) {
     throw new MethodIsBPFRelatedFunction();
@@ -1236,7 +1237,7 @@ public final class EvdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evdev_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("evdev_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long evdev_write(Ptr<file> file, String buffer,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class SfpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sfp_bus_add_upstream($arg1, $arg2, (const struct sfp_upstream_ops*)$arg3)")
+  @BuiltinBPFFunction("sfp_bus_add_upstream($arg1, $arg2, (const struct sfp_upstream_ops *)$arg3)")
   public static int sfp_bus_add_upstream(Ptr<sfp_bus> bus, Ptr<?> upstream,
       Ptr<sfp_upstream_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1109,13 +1110,13 @@ public final class SfpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sfp_bus_find_fwnode((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("sfp_bus_find_fwnode((const struct fwnode_handle *)$arg1)")
   public static Ptr<sfp_bus> sfp_bus_find_fwnode(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sfp_bus_get((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("sfp_bus_get((const struct fwnode_handle *)$arg1)")
   public static Ptr<sfp_bus> sfp_bus_get(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1134,7 +1135,7 @@ public final class SfpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sfp_get_module_eeprom_by_page($arg1, (const struct ethtool_module_eeprom*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sfp_get_module_eeprom_by_page($arg1, (const struct ethtool_module_eeprom *)$arg2, $arg3)")
   public static int sfp_get_module_eeprom_by_page(Ptr<sfp_bus> bus, Ptr<ethtool_module_eeprom> page,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1165,13 +1166,13 @@ public final class SfpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sfp_may_have_phy($arg1, (const struct sfp_eeprom_id*)$arg2)")
+  @BuiltinBPFFunction("sfp_may_have_phy($arg1, (const struct sfp_eeprom_id *)$arg2)")
   public static boolean sfp_may_have_phy(Ptr<sfp_bus> bus, Ptr<sfp_eeprom_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sfp_module_insert($arg1, (const struct sfp_eeprom_id*)$arg2, (const struct sfp_quirk*)$arg3)")
+  @BuiltinBPFFunction("sfp_module_insert($arg1, (const struct sfp_eeprom_id *)$arg2, (const struct sfp_quirk *)$arg3)")
   public static int sfp_module_insert(Ptr<sfp_bus> bus, Ptr<sfp_eeprom_id> id,
       Ptr<sfp_quirk> quirk) {
     throw new MethodIsBPFRelatedFunction();
@@ -1196,14 +1197,14 @@ public final class SfpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sfp_parse_port($arg1, (const struct sfp_eeprom_id*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sfp_parse_port($arg1, (const struct sfp_eeprom_id *)$arg2, $arg3)")
   public static int sfp_parse_port(Ptr<sfp_bus> bus, Ptr<sfp_eeprom_id> id,
       Ptr<java.lang. @Unsigned Long> support) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sfp_parse_support($arg1, (const struct sfp_eeprom_id*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sfp_parse_support($arg1, (const struct sfp_eeprom_id *)$arg2, $arg3, $arg4)")
   public static void sfp_parse_support(Ptr<sfp_bus> bus, Ptr<sfp_eeprom_id> id,
       Ptr<java.lang. @Unsigned Long> support, Ptr<java.lang. @Unsigned Long> interfaces) {
     throw new MethodIsBPFRelatedFunction();
@@ -1216,7 +1217,7 @@ public final class SfpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sfp_register_socket($arg1, $arg2, (const struct sfp_socket_ops*)$arg3)")
+  @BuiltinBPFFunction("sfp_register_socket($arg1, $arg2, (const struct sfp_socket_ops *)$arg3)")
   public static Ptr<sfp_bus> sfp_register_socket(Ptr<device> dev, @OriginalName("sfp") Ptr<?> sfp,
       Ptr<sfp_socket_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1229,7 +1230,7 @@ public final class SfpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sfp_select_interface($arg1, (const long unsigned int*)$arg2)")
+  @BuiltinBPFFunction("sfp_select_interface($arg1, (const long unsigned int *)$arg2)")
   public static @OriginalName("phy_interface_t") interface_of_phy_device_and_interface_of_phylink_link_state sfp_select_interface(
       Ptr<sfp_bus> bus, Ptr<java.lang. @Unsigned Long> link_modes) {
     throw new MethodIsBPFRelatedFunction();

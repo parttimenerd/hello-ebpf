@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class In6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("in6_dev_get((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("in6_dev_get((const struct net_device *)$arg1)")
   public static Ptr<inet6_dev> in6_dev_get(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1114,14 +1115,14 @@ public final class In6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("in6_dump_addrs((const struct inet6_dev*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("in6_dump_addrs((const struct inet6_dev *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int in6_dump_addrs(Ptr<inet6_dev> idev, Ptr<sk_buff> skb, Ptr<netlink_callback> cb,
       Ptr<java.lang.Integer> s_ip_idx, Ptr<inet6_fill_args> fillargs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("in6_pton((const u8*)$arg1, $arg2, $arg3, $arg4, (const u8**)$arg5)")
+  @BuiltinBPFFunction("in6_pton((const u8 *)$arg1, $arg2, $arg3, $arg4, (const u8**)$arg5)")
   public static int in6_pton(String src, int srclen, Ptr<java.lang.Character> dst, int delim,
       Ptr<String> end) {
     throw new MethodIsBPFRelatedFunction();

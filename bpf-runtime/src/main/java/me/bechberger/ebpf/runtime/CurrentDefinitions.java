@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1124,7 +1125,7 @@ public final class CurrentDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("current_clocksource_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("current_clocksource_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long current_clocksource_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1144,7 +1145,7 @@ public final class CurrentDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("current_cycle_duration_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("current_cycle_duration_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long current_cycle_duration_store(Ptr<device> ras_feat_dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1165,7 +1166,7 @@ public final class CurrentDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("current_in_userns((const struct user_namespace*)$arg1)")
+  @BuiltinBPFFunction("current_in_userns((const struct user_namespace *)$arg1)")
   public static boolean current_in_userns(Ptr<user_namespace> target_ns) {
     throw new MethodIsBPFRelatedFunction();
   }

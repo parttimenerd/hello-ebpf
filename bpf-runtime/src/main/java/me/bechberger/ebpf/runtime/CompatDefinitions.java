@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1190,21 +1191,21 @@ public final class CompatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("compat_filldir($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("compat_filldir($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static boolean compat_filldir(Ptr<dir_context> ctx, String name, int namlen,
       @OriginalName("loff_t") long offset, @Unsigned long ino, @Unsigned int d_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("compat_fillonedir($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("compat_fillonedir($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static boolean compat_fillonedir(Ptr<dir_context> ctx, String name, int namlen,
       @OriginalName("loff_t") long offset, @Unsigned long ino, @Unsigned int d_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("compat_get_bitmap($arg1, (const unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("compat_get_bitmap($arg1, (const unsigned int *)$arg2, $arg3)")
   public static long compat_get_bitmap(Ptr<java.lang. @Unsigned Long> mask,
       Ptr<java.lang. @Unsigned @OriginalName("compat_ulong_t") Integer> umask,
       @Unsigned long bitmap_size) {
@@ -1324,7 +1325,7 @@ public final class CompatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("compat_ksys_semtimedop($arg1, $arg2, $arg3, (const struct old_timespec32*)$arg4)")
+  @BuiltinBPFFunction("compat_ksys_semtimedop($arg1, $arg2, $arg3, (const struct old_timespec32 *)$arg4)")
   public static long compat_ksys_semtimedop(int semid, Ptr<sembuf> tsems, @Unsigned int nsops,
       Ptr<old_timespec32> timeout) {
     throw new MethodIsBPFRelatedFunction();
@@ -1337,7 +1338,7 @@ public final class CompatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("compat_only_sysfs_link_entry_to_kobj($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("compat_only_sysfs_link_entry_to_kobj($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static int compat_only_sysfs_link_entry_to_kobj(Ptr<kobject> kobj,
       Ptr<kobject> target_kobj, String target_name, String symlink_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1386,7 +1387,7 @@ public final class CompatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("compat_restore_altstack((const compat_sigaltstack*)$arg1)")
+  @BuiltinBPFFunction("compat_restore_altstack((const compat_sigaltstack *)$arg1)")
   public static int compat_restore_altstack(
       Ptr<@OriginalName("compat_stack_t") compat_sigaltstack> uss) {
     throw new MethodIsBPFRelatedFunction();

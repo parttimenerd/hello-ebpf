@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1142,7 +1143,7 @@ public final class BlkifDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blkif_queue_rq($arg1, (const struct blk_mq_queue_data*)$arg2)")
+  @BuiltinBPFFunction("blkif_queue_rq($arg1, (const struct blk_mq_queue_data *)$arg2)")
   public static @OriginalName("blk_status_t") char blkif_queue_rq(Ptr<blk_mq_hw_ctx> hctx,
       Ptr<blk_mq_queue_data> qd) {
     throw new MethodIsBPFRelatedFunction();
@@ -1173,7 +1174,7 @@ public final class BlkifDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blkif_set_queue_limits((const struct blkfront_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("blkif_set_queue_limits((const struct blkfront_info *)$arg1, $arg2)")
   public static void blkif_set_queue_limits(Ptr<blkfront_info> info, Ptr<queue_limits> lim) {
     throw new MethodIsBPFRelatedFunction();
   }

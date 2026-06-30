@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,27 +1103,27 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_addprintf($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("tomoyo_addprintf($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void tomoyo_addprintf(String buffer, int len, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_address_matches_group((const _Bool)$arg1, (const unsigned int*)$arg2, (const struct tomoyo_group*)$arg3)")
+  @BuiltinBPFFunction("tomoyo_address_matches_group((const _Bool)$arg1, (const unsigned int *)$arg2, (const struct tomoyo_group *)$arg3)")
   public static boolean tomoyo_address_matches_group(boolean is_ipv6,
       Ptr<java.lang. @Unsigned @OriginalName("__be32") Integer> address, Ptr<tomoyo_group> group) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_assign_domain((const u8*)$arg1, (const _Bool)$arg2)")
+  @BuiltinBPFFunction("tomoyo_assign_domain((const u8 *)$arg1, (const _Bool)$arg2)")
   public static Ptr<tomoyo_domain_info> tomoyo_assign_domain(String domainname, boolean transit) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_assign_namespace((const u8*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_assign_namespace((const u8 *)$arg1)")
   public static Ptr<tomoyo_policy_namespace> tomoyo_assign_namespace(String domainname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1140,7 +1141,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_bprm_committed_creds((const struct linux_binprm*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_bprm_committed_creds((const struct linux_binprm *)$arg1)")
   public static void tomoyo_bprm_committed_creds(Ptr<linux_binprm> bprm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1158,62 +1159,62 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_check_env_acl($arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_check_env_acl($arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_check_env_acl(Ptr<tomoyo_request_info> r, Ptr<tomoyo_acl_info> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_check_inet_acl($arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_check_inet_acl($arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_check_inet_acl(Ptr<tomoyo_request_info> r,
       Ptr<tomoyo_acl_info> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_check_inet_address((const struct sockaddr*)$arg1, (const unsigned int)$arg2, (const short unsigned int)$arg3, $arg4)")
+  @BuiltinBPFFunction("tomoyo_check_inet_address((const struct sockaddr *)$arg1, (const unsigned int)$arg2, (const short unsigned int)$arg3, $arg4)")
   public static int tomoyo_check_inet_address(Ptr<sockaddr> addr, @Unsigned int addr_len,
       @Unsigned short port, Ptr<tomoyo_addr_info> address) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_check_mkdev_acl($arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_check_mkdev_acl($arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_check_mkdev_acl(Ptr<tomoyo_request_info> r,
       Ptr<tomoyo_acl_info> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_check_mount_acl($arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_check_mount_acl($arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_check_mount_acl(Ptr<tomoyo_request_info> r,
       Ptr<tomoyo_acl_info> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_check_open_permission($arg1, (const struct path*)$arg2, (const int)$arg3)")
+  @BuiltinBPFFunction("tomoyo_check_open_permission($arg1, (const struct path *)$arg2, (const int)$arg3)")
   public static int tomoyo_check_open_permission(Ptr<tomoyo_domain_info> domain, Ptr<path> path,
       int flag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_check_path2_acl($arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_check_path2_acl($arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_check_path2_acl(Ptr<tomoyo_request_info> r,
       Ptr<tomoyo_acl_info> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_check_path_acl($arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_check_path_acl($arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_check_path_acl(Ptr<tomoyo_request_info> r,
       Ptr<tomoyo_acl_info> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_check_path_number_acl($arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_check_path_number_acl($arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_check_path_number_acl(Ptr<tomoyo_request_info> r,
       Ptr<tomoyo_acl_info> ptr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1226,14 +1227,14 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_check_task_acl($arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_check_task_acl($arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_check_task_acl(Ptr<tomoyo_request_info> r,
       Ptr<tomoyo_acl_info> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_check_unix_acl($arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_check_unix_acl($arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_check_unix_acl(Ptr<tomoyo_request_info> r,
       Ptr<tomoyo_acl_info> ptr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1264,14 +1265,14 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct tomoyo_path_info*)tomoyo_compare_name_union((const struct tomoyo_path_info*)$arg1, (const struct tomoyo_name_union*)$arg2))")
+  @BuiltinBPFFunction("((const struct tomoyo_path_info*)tomoyo_compare_name_union((const struct tomoyo_path_info *)$arg1, (const struct tomoyo_name_union *)$arg2))")
   public static Ptr<tomoyo_path_info> tomoyo_compare_name_union(Ptr<tomoyo_path_info> name,
       Ptr<tomoyo_name_union> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_compare_number_union((const long unsigned int)$arg1, (const struct tomoyo_number_union*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_compare_number_union((const long unsigned int)$arg1, (const struct tomoyo_number_union *)$arg2)")
   public static boolean tomoyo_compare_number_union(@Unsigned long value,
       Ptr<tomoyo_number_union> ptr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1285,44 +1286,44 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_correct_domain((const u8*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_correct_domain((const u8 *)$arg1)")
   public static boolean tomoyo_correct_domain(String domainname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_correct_path((const u8*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_correct_path((const u8 *)$arg1)")
   public static boolean tomoyo_correct_path(String filename) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_correct_path2((const u8*)$arg1, (const long unsigned int)$arg2)")
+  @BuiltinBPFFunction("tomoyo_correct_path2((const u8 *)$arg1, (const long unsigned int)$arg2)")
   public static boolean tomoyo_correct_path2(String filename, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_correct_word((const u8*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_correct_word((const u8 *)$arg1)")
   public static boolean tomoyo_correct_word(String string) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_correct_word2((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tomoyo_correct_word2((const u8 *)$arg1, $arg2)")
   public static boolean tomoyo_correct_word2(String string, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_create_entry((const u8*)$arg1, (const short unsigned int)$arg2, $arg3, (const u8)$arg4)")
+  @BuiltinBPFFunction("tomoyo_create_entry((const u8 *)$arg1, (const short unsigned int)$arg2, $arg3, (const u8)$arg4)")
   public static void tomoyo_create_entry(String name, @Unsigned @OriginalName("umode_t") short mode,
       Ptr<dentry> parent, char key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_cred_prepare($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tomoyo_cred_prepare($arg1, (const struct cred *)$arg2, $arg3)")
   public static int tomoyo_cred_prepare(Ptr<cred> _new, Ptr<cred> old,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1347,7 +1348,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_domain_def((const u8*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_domain_def((const u8 *)$arg1)")
   public static boolean tomoyo_domain_def(String buffer) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1366,19 +1367,19 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_encode((const u8*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_encode((const u8 *)$arg1)")
   public static String tomoyo_encode(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_encode2((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tomoyo_encode2((const u8 *)$arg1, $arg2)")
   public static String tomoyo_encode2(String str, int str_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_env_perm($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_env_perm($arg1, (const u8 *)$arg2)")
   public static int tomoyo_env_perm(Ptr<tomoyo_request_info> r, String env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1390,7 +1391,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_execute_permission($arg1, (const struct tomoyo_path_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_execute_permission($arg1, (const struct tomoyo_path_info *)$arg2)")
   public static int tomoyo_execute_permission(Ptr<tomoyo_request_info> r,
       Ptr<tomoyo_path_info> filename) {
     throw new MethodIsBPFRelatedFunction();
@@ -1409,14 +1410,14 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_file_matches_pattern((const u8*)$arg1, (const u8*)$arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("tomoyo_file_matches_pattern((const u8 *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static boolean tomoyo_file_matches_pattern(String filename, String filename_end,
       String pattern, String pattern_end) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_file_matches_pattern2((const u8*)$arg1, (const u8*)$arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("tomoyo_file_matches_pattern2((const u8 *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static boolean tomoyo_file_matches_pattern2(String filename, String filename_end,
       String pattern, String pattern_end) {
     throw new MethodIsBPFRelatedFunction();
@@ -1441,13 +1442,13 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_find_domain((const u8*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_find_domain((const u8 *)$arg1)")
   public static Ptr<tomoyo_domain_info> tomoyo_find_domain(String domainname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_find_namespace((const u8*)$arg1, (const unsigned int)$arg2)")
+  @BuiltinBPFFunction("tomoyo_find_namespace((const u8 *)$arg1, (const unsigned int)$arg2)")
   public static Ptr<tomoyo_policy_namespace> tomoyo_find_namespace(String name, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1459,7 +1460,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_find_yesno((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_find_yesno((const u8 *)$arg1, (const u8 *)$arg2)")
   public static @OriginalName("s8") byte tomoyo_find_yesno(String string, String find) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1519,13 +1520,13 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_get_mode((const struct tomoyo_policy_namespace*)$arg1, (const u8)$arg2, (const u8)$arg3)")
+  @BuiltinBPFFunction("tomoyo_get_mode((const struct tomoyo_policy_namespace *)$arg1, (const u8)$arg2, (const u8)$arg3)")
   public static int tomoyo_get_mode(Ptr<tomoyo_policy_namespace> ns, char profile, char index) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct tomoyo_path_info*)tomoyo_get_name((const u8*)$arg1))")
+  @BuiltinBPFFunction("((const struct tomoyo_path_info*)tomoyo_get_name((const u8 *)$arg1))")
   public static Ptr<tomoyo_path_info> tomoyo_get_name(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1537,7 +1538,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_init_log($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("tomoyo_init_log($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static String tomoyo_init_log(Ptr<tomoyo_request_info> r, int len, String fmt,
       Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
@@ -1557,7 +1558,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_inode_getattr((const struct path*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_inode_getattr((const struct path *)$arg1)")
   public static int tomoyo_inode_getattr(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1569,7 +1570,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_io_printf($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("tomoyo_io_printf($arg1, (const u8 *)$arg2, $arg3_)")
   public static void tomoyo_io_printf(Ptr<tomoyo_io_buffer> head, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
@@ -1582,7 +1583,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_load_policy((const u8*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_load_policy((const u8 *)$arg1)")
   public static void tomoyo_load_policy(String filename) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1642,7 +1643,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_mkdev_perm((const u8)$arg1, (const struct path*)$arg2, (const unsigned int)$arg3, $arg4)")
+  @BuiltinBPFFunction("tomoyo_mkdev_perm((const u8)$arg1, (const struct path *)$arg2, (const unsigned int)$arg3, $arg4)")
   public static int tomoyo_mkdev_perm(char operation, Ptr<path> path, @Unsigned int mode,
       @Unsigned int dev) {
     throw new MethodIsBPFRelatedFunction();
@@ -1655,14 +1656,14 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_mount_permission((const u8*)$arg1, (const struct path*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tomoyo_mount_permission((const u8 *)$arg1, (const struct path *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int tomoyo_mount_permission(String dev_name, Ptr<path> path, String type,
       @Unsigned long flags, Ptr<?> data_page) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_name_used_by_io_buffer((const u8*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_name_used_by_io_buffer((const u8 *)$arg1)")
   public static boolean tomoyo_name_used_by_io_buffer(String string) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1680,14 +1681,14 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_number_matches_group((const long unsigned int)$arg1, (const long unsigned int)$arg2, (const struct tomoyo_group*)$arg3)")
+  @BuiltinBPFFunction("tomoyo_number_matches_group((const long unsigned int)$arg1, (const long unsigned int)$arg2, (const struct tomoyo_group *)$arg3)")
   public static boolean tomoyo_number_matches_group(@Unsigned long min, @Unsigned long max,
       Ptr<tomoyo_group> group) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_numscan((const u8*)$arg1, (const u8*)$arg2, $arg3, (const u8)$arg4)")
+  @BuiltinBPFFunction("tomoyo_numscan((const u8 *)$arg1, (const u8 *)$arg2, $arg3, (const u8)$arg4)")
   public static boolean tomoyo_numscan(String str, String head, Ptr<java.lang.Integer> width,
       char tail) {
     throw new MethodIsBPFRelatedFunction();
@@ -1739,117 +1740,117 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path2_perm((const u8)$arg1, (const struct path*)$arg2, (const struct path*)$arg3)")
+  @BuiltinBPFFunction("tomoyo_path2_perm((const u8)$arg1, (const struct path *)$arg2, (const struct path *)$arg3)")
   public static int tomoyo_path2_perm(char operation, Ptr<path> path1, Ptr<path> path2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_chmod((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tomoyo_path_chmod((const struct path *)$arg1, $arg2)")
   public static int tomoyo_path_chmod(Ptr<path> path,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_chown((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("tomoyo_path_chown((const struct path *)$arg1, $arg2, $arg3)")
   public static int tomoyo_path_chown(Ptr<path> path, kuid_t uid, kgid_t gid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_chroot((const struct path*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_path_chroot((const struct path *)$arg1)")
   public static int tomoyo_path_chroot(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_link($arg1, (const struct path*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tomoyo_path_link($arg1, (const struct path *)$arg2, $arg3)")
   public static int tomoyo_path_link(Ptr<dentry> old_dentry, Ptr<path> new_dir,
       Ptr<dentry> new_dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct tomoyo_path_info*)tomoyo_path_matches_group((const struct tomoyo_path_info*)$arg1, (const struct tomoyo_group*)$arg2))")
+  @BuiltinBPFFunction("((const struct tomoyo_path_info*)tomoyo_path_matches_group((const struct tomoyo_path_info *)$arg1, (const struct tomoyo_group *)$arg2))")
   public static Ptr<tomoyo_path_info> tomoyo_path_matches_group(Ptr<tomoyo_path_info> pathname,
       Ptr<tomoyo_group> group) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_matches_pattern((const struct tomoyo_path_info*)$arg1, (const struct tomoyo_path_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_path_matches_pattern((const struct tomoyo_path_info *)$arg1, (const struct tomoyo_path_info *)$arg2)")
   public static boolean tomoyo_path_matches_pattern(Ptr<tomoyo_path_info> filename,
       Ptr<tomoyo_path_info> pattern) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_matches_pattern2((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_path_matches_pattern2((const u8 *)$arg1, (const u8 *)$arg2)")
   public static boolean tomoyo_path_matches_pattern2(String f, String p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_mkdir((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("tomoyo_path_mkdir((const struct path *)$arg1, $arg2, $arg3)")
   public static int tomoyo_path_mkdir(Ptr<path> parent, Ptr<dentry> dentry,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_mknod((const struct path*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tomoyo_path_mknod((const struct path *)$arg1, $arg2, $arg3, $arg4)")
   public static int tomoyo_path_mknod(Ptr<path> parent, Ptr<dentry> dentry,
       @Unsigned @OriginalName("umode_t") short mode, @Unsigned int dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_number_perm((const u8)$arg1, (const struct path*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tomoyo_path_number_perm((const u8)$arg1, (const struct path *)$arg2, $arg3)")
   public static int tomoyo_path_number_perm(char type, Ptr<path> path, @Unsigned long number) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_perm((const u8)$arg1, (const struct path*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("tomoyo_path_perm((const u8)$arg1, (const struct path *)$arg2, (const u8 *)$arg3)")
   public static int tomoyo_path_perm(char operation, Ptr<path> path, String target) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_permission($arg1, $arg2, (const struct tomoyo_path_info*)$arg3)")
+  @BuiltinBPFFunction("tomoyo_path_permission($arg1, $arg2, (const struct tomoyo_path_info *)$arg3)")
   public static int tomoyo_path_permission(Ptr<tomoyo_request_info> r, char operation,
       Ptr<tomoyo_path_info> filename) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_rename((const struct path*)$arg1, $arg2, (const struct path*)$arg3, $arg4, (const unsigned int)$arg5)")
+  @BuiltinBPFFunction("tomoyo_path_rename((const struct path *)$arg1, $arg2, (const struct path *)$arg3, $arg4, (const unsigned int)$arg5)")
   public static int tomoyo_path_rename(Ptr<path> old_parent, Ptr<dentry> old_dentry,
       Ptr<path> new_parent, Ptr<dentry> new_dentry, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_rmdir((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tomoyo_path_rmdir((const struct path *)$arg1, $arg2)")
   public static int tomoyo_path_rmdir(Ptr<path> parent, Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_symlink((const struct path*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("tomoyo_path_symlink((const struct path *)$arg1, $arg2, (const u8 *)$arg3)")
   public static int tomoyo_path_symlink(Ptr<path> parent, Ptr<dentry> dentry, String old_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_truncate((const struct path*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_path_truncate((const struct path *)$arg1)")
   public static int tomoyo_path_truncate(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_path_unlink((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tomoyo_path_unlink((const struct path *)$arg1, $arg2)")
   public static int tomoyo_path_unlink(Ptr<path> parent, Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1861,7 +1862,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_permstr((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_permstr((const u8 *)$arg1, (const u8 *)$arg2)")
   public static boolean tomoyo_permstr(String string, String keyword) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1901,7 +1902,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_print_condition($arg1, (const struct tomoyo_condition*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_print_condition($arg1, (const struct tomoyo_condition *)$arg2)")
   public static boolean tomoyo_print_condition(Ptr<tomoyo_io_buffer> head,
       Ptr<tomoyo_condition> cond) {
     throw new MethodIsBPFRelatedFunction();
@@ -1920,34 +1921,34 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_print_ip($arg1, (const unsigned int)$arg2, (const struct tomoyo_ipaddr_union*)$arg3)")
+  @BuiltinBPFFunction("tomoyo_print_ip($arg1, (const unsigned int)$arg2, (const struct tomoyo_ipaddr_union *)$arg3)")
   public static void tomoyo_print_ip(String buf, @Unsigned int size, Ptr<tomoyo_ipaddr_union> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_print_ipv6($arg1, (const unsigned int)$arg2, (const struct in6_addr*)$arg3, (const struct in6_addr*)$arg4)")
+  @BuiltinBPFFunction("tomoyo_print_ipv6($arg1, (const unsigned int)$arg2, (const struct in6_addr *)$arg3, (const struct in6_addr *)$arg4)")
   public static void tomoyo_print_ipv6(String buffer, @Unsigned int buffer_len,
       Ptr<in6_addr> min_ip, Ptr<in6_addr> max_ip) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_print_name_union($arg1, (const struct tomoyo_name_union*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_print_name_union($arg1, (const struct tomoyo_name_union *)$arg2)")
   public static void tomoyo_print_name_union(Ptr<tomoyo_io_buffer> head,
       Ptr<tomoyo_name_union> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_print_number_union($arg1, (const struct tomoyo_number_union*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_print_number_union($arg1, (const struct tomoyo_number_union *)$arg2)")
   public static void tomoyo_print_number_union(Ptr<tomoyo_io_buffer> head,
       Ptr<tomoyo_number_union> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_print_number_union_nospace($arg1, (const struct tomoyo_number_union*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_print_number_union_nospace($arg1, (const struct tomoyo_number_union *)$arg2)")
   public static void tomoyo_print_number_union_nospace(Ptr<tomoyo_io_buffer> head,
       Ptr<tomoyo_number_union> ptr) {
     throw new MethodIsBPFRelatedFunction();
@@ -2066,13 +2067,13 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_realpath_from_path((const struct path*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_realpath_from_path((const struct path *)$arg1)")
   public static String tomoyo_realpath_from_path(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_realpath_nofollow((const u8*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_realpath_nofollow((const u8 *)$arg1)")
   public static String tomoyo_realpath_nofollow(String pathname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2084,113 +2085,113 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_address_group((const struct tomoyo_acl_head*)$arg1, (const struct tomoyo_acl_head*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_address_group((const struct tomoyo_acl_head *)$arg1, (const struct tomoyo_acl_head *)$arg2)")
   public static boolean tomoyo_same_address_group(Ptr<tomoyo_acl_head> a, Ptr<tomoyo_acl_head> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_aggregator((const struct tomoyo_acl_head*)$arg1, (const struct tomoyo_acl_head*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_aggregator((const struct tomoyo_acl_head *)$arg1, (const struct tomoyo_acl_head *)$arg2)")
   public static boolean tomoyo_same_aggregator(Ptr<tomoyo_acl_head> a, Ptr<tomoyo_acl_head> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_env_acl((const struct tomoyo_acl_info*)$arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_env_acl((const struct tomoyo_acl_info *)$arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_same_env_acl(Ptr<tomoyo_acl_info> a, Ptr<tomoyo_acl_info> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_inet_acl((const struct tomoyo_acl_info*)$arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_inet_acl((const struct tomoyo_acl_info *)$arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_same_inet_acl(Ptr<tomoyo_acl_info> a, Ptr<tomoyo_acl_info> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_manager((const struct tomoyo_acl_head*)$arg1, (const struct tomoyo_acl_head*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_manager((const struct tomoyo_acl_head *)$arg1, (const struct tomoyo_acl_head *)$arg2)")
   public static boolean tomoyo_same_manager(Ptr<tomoyo_acl_head> a, Ptr<tomoyo_acl_head> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_mkdev_acl((const struct tomoyo_acl_info*)$arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_mkdev_acl((const struct tomoyo_acl_info *)$arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_same_mkdev_acl(Ptr<tomoyo_acl_info> a, Ptr<tomoyo_acl_info> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_mount_acl((const struct tomoyo_acl_info*)$arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_mount_acl((const struct tomoyo_acl_info *)$arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_same_mount_acl(Ptr<tomoyo_acl_info> a, Ptr<tomoyo_acl_info> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_number_group((const struct tomoyo_acl_head*)$arg1, (const struct tomoyo_acl_head*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_number_group((const struct tomoyo_acl_head *)$arg1, (const struct tomoyo_acl_head *)$arg2)")
   public static boolean tomoyo_same_number_group(Ptr<tomoyo_acl_head> a, Ptr<tomoyo_acl_head> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_number_union((const struct tomoyo_number_union*)$arg1, (const struct tomoyo_number_union*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_number_union((const struct tomoyo_number_union *)$arg1, (const struct tomoyo_number_union *)$arg2)")
   public static boolean tomoyo_same_number_union(Ptr<tomoyo_number_union> a,
       Ptr<tomoyo_number_union> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_path2_acl((const struct tomoyo_acl_info*)$arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_path2_acl((const struct tomoyo_acl_info *)$arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_same_path2_acl(Ptr<tomoyo_acl_info> a, Ptr<tomoyo_acl_info> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_path_acl((const struct tomoyo_acl_info*)$arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_path_acl((const struct tomoyo_acl_info *)$arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_same_path_acl(Ptr<tomoyo_acl_info> a, Ptr<tomoyo_acl_info> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_path_group((const struct tomoyo_acl_head*)$arg1, (const struct tomoyo_acl_head*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_path_group((const struct tomoyo_acl_head *)$arg1, (const struct tomoyo_acl_head *)$arg2)")
   public static boolean tomoyo_same_path_group(Ptr<tomoyo_acl_head> a, Ptr<tomoyo_acl_head> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_path_number_acl((const struct tomoyo_acl_info*)$arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_path_number_acl((const struct tomoyo_acl_info *)$arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_same_path_number_acl(Ptr<tomoyo_acl_info> a,
       Ptr<tomoyo_acl_info> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_task_acl((const struct tomoyo_acl_info*)$arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_task_acl((const struct tomoyo_acl_info *)$arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_same_task_acl(Ptr<tomoyo_acl_info> a, Ptr<tomoyo_acl_info> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_transition_control((const struct tomoyo_acl_head*)$arg1, (const struct tomoyo_acl_head*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_transition_control((const struct tomoyo_acl_head *)$arg1, (const struct tomoyo_acl_head *)$arg2)")
   public static boolean tomoyo_same_transition_control(Ptr<tomoyo_acl_head> a,
       Ptr<tomoyo_acl_head> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_same_unix_acl((const struct tomoyo_acl_info*)$arg1, (const struct tomoyo_acl_info*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_same_unix_acl((const struct tomoyo_acl_info *)$arg1, (const struct tomoyo_acl_info *)$arg2)")
   public static boolean tomoyo_same_unix_acl(Ptr<tomoyo_acl_info> a, Ptr<tomoyo_acl_info> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_sb_mount((const u8*)$arg1, (const struct path*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tomoyo_sb_mount((const u8 *)$arg1, (const struct path *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int tomoyo_sb_mount(String dev_name, Ptr<path> path, String type,
       @Unsigned long flags, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_sb_pivotroot((const struct path*)$arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_sb_pivotroot((const struct path *)$arg1, (const struct path *)$arg2)")
   public static int tomoyo_sb_pivotroot(Ptr<path> old_path, Ptr<path> new_path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2202,26 +2203,26 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_scan_bprm($arg1, (const short unsigned int)$arg2, (const struct tomoyo_argv*)$arg3, (const short unsigned int)$arg4, (const struct tomoyo_envp*)$arg5)")
+  @BuiltinBPFFunction("tomoyo_scan_bprm($arg1, (const short unsigned int)$arg2, (const struct tomoyo_argv *)$arg3, (const short unsigned int)$arg4, (const struct tomoyo_envp *)$arg5)")
   public static boolean tomoyo_scan_bprm(Ptr<tomoyo_execve> ee, @Unsigned short argc,
       Ptr<tomoyo_argv> argv, @Unsigned short envc, Ptr<tomoyo_envp> envp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_select_domain($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_select_domain($arg1, (const u8 *)$arg2)")
   public static boolean tomoyo_select_domain(Ptr<tomoyo_io_buffer> head, String data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_set_group($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_set_group($arg1, (const u8 *)$arg2)")
   public static void tomoyo_set_group(Ptr<tomoyo_io_buffer> head, String category) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_set_mode($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tomoyo_set_mode($arg1, (const u8 *)$arg2, $arg3)")
   public static int tomoyo_set_mode(String name, String value, Ptr<tomoyo_profile> profile) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2277,13 +2278,13 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_str_starts($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("tomoyo_str_starts($arg1, (const u8 *)$arg2)")
   public static boolean tomoyo_str_starts(Ptr<String> src, String find) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_supervisor($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("tomoyo_supervisor($arg1, (const u8 *)$arg2, $arg3_)")
   public static int tomoyo_supervisor(Ptr<tomoyo_request_info> r, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
@@ -2320,7 +2321,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_unix_entry((const struct tomoyo_addr_info*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_unix_entry((const struct tomoyo_addr_info *)$arg1)")
   public static int tomoyo_unix_entry(Ptr<tomoyo_addr_info> address) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2358,13 +2359,13 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_warn_oom((const u8*)$arg1)")
+  @BuiltinBPFFunction("tomoyo_warn_oom((const u8 *)$arg1)")
   public static void tomoyo_warn_oom(String function) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tomoyo_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tomoyo_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2383,7 +2384,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_write_control($arg1, (const u8*)$arg2, (const int)$arg3)")
+  @BuiltinBPFFunction("tomoyo_write_control($arg1, (const u8 *)$arg2, (const int)$arg3)")
   public static @OriginalName("ssize_t") long tomoyo_write_control(Ptr<tomoyo_io_buffer> head,
       String buffer, int buffer_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -2427,14 +2428,14 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_write_log($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("tomoyo_write_log($arg1, (const u8 *)$arg2, $arg3_)")
   public static void tomoyo_write_log(Ptr<tomoyo_request_info> r, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_write_log2($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("tomoyo_write_log2($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void tomoyo_write_log2(Ptr<tomoyo_request_info> r, int len, String fmt,
       Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
@@ -2465,7 +2466,7 @@ public final class TomoyoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tomoyo_write_self($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tomoyo_write_self($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tomoyo_write_self(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_add_property_($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fdt_add_property_($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int fdt_add_property_(Ptr<?> fdt, int nodeoffset, String name, int len,
       Ptr<Ptr<fdt_property>> prop) {
     throw new MethodIsBPFRelatedFunction();
@@ -1112,38 +1113,38 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_add_string_($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fdt_add_string_($arg1, (const u8 *)$arg2)")
   public static int fdt_add_string_(Ptr<?> fdt, String s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_add_subnode($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("fdt_add_subnode($arg1, $arg2, (const u8 *)$arg3)")
   public static int fdt_add_subnode(Ptr<?> fdt, int parentoffset, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_add_subnode_namelen($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("fdt_add_subnode_namelen($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int fdt_add_subnode_namelen(Ptr<?> fdt, int parentoffset, String name,
       int namelen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_address_cells((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_address_cells((const void *)$arg1, $arg2)")
   public static int fdt_address_cells(Ptr<?> fdt, int nodeoffset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_appendprop($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("fdt_appendprop($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5)")
   public static int fdt_appendprop(Ptr<?> fdt, int nodeoffset, String name, Ptr<?> val, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_appendprop_addrrange($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fdt_appendprop_addrrange($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int fdt_appendprop_addrrange(Ptr<?> fdt, int parent, int nodeoffset, String name,
       @Unsigned @OriginalName("uint64_t") long addr,
       @Unsigned @OriginalName("uint64_t") long size) {
@@ -1151,31 +1152,31 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_begin_node($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fdt_begin_node($arg1, (const u8 *)$arg2)")
   public static int fdt_begin_node(Ptr<?> fdt, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_blocks_misordered_((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("fdt_blocks_misordered_((const void *)$arg1, $arg2, $arg3)")
   public static int fdt_blocks_misordered_(Ptr<?> fdt, int mem_rsv_size, int struct_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_check_header((const void*)$arg1)")
+  @BuiltinBPFFunction("fdt_check_header((const void *)$arg1)")
   public static int fdt_check_header(Ptr<?> fdt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_check_node_offset_((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_check_node_offset_((const void *)$arg1, $arg2)")
   public static int fdt_check_node_offset_(Ptr<?> fdt, int offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_check_prop_offset_((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_check_prop_offset_((const void *)$arg1, $arg2)")
   public static int fdt_check_prop_offset_(Ptr<?> fdt, int offset) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1212,7 +1213,7 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_delprop($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("fdt_delprop($arg1, $arg2, (const u8 *)$arg3)")
   public static int fdt_delprop(Ptr<?> fdt, int nodeoffset, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1224,20 +1225,20 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_find_add_string_($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("fdt_find_add_string_($arg1, (const u8 *)$arg2, $arg3)")
   public static int fdt_find_add_string_(Ptr<?> fdt, String s, Ptr<java.lang.Integer> allocated) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_find_max_phandle((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_find_max_phandle((const void *)$arg1, $arg2)")
   public static int fdt_find_max_phandle(Ptr<?> fdt,
       Ptr<java.lang. @Unsigned @OriginalName("uint32_t") Integer> phandle) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)fdt_find_string_((const u8*)$arg1, $arg2, (const u8*)$arg3))")
+  @BuiltinBPFFunction("((const u8*)fdt_find_string_((const u8 *)$arg1, $arg2, (const u8 *)$arg3))")
   public static String fdt_find_string_(String strtab, int tabsize, String s) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1255,38 +1256,38 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_first_property_offset((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_first_property_offset((const void *)$arg1, $arg2)")
   public static int fdt_first_property_offset(Ptr<?> fdt, int nodeoffset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_first_subnode((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_first_subnode((const void *)$arg1, $arg2)")
   public static int fdt_first_subnode(Ptr<?> fdt, int offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_generate_phandle((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_generate_phandle((const void *)$arg1, $arg2)")
   public static int fdt_generate_phandle(Ptr<?> fdt,
       Ptr<java.lang. @Unsigned @OriginalName("uint32_t") Integer> phandle) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)fdt_get_alias((const void*)$arg1, (const u8*)$arg2))")
+  @BuiltinBPFFunction("((const u8*)fdt_get_alias((const void *)$arg1, (const u8 *)$arg2))")
   public static String fdt_get_alias(Ptr<?> fdt, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)fdt_get_alias_namelen((const void*)$arg1, (const u8*)$arg2, $arg3))")
+  @BuiltinBPFFunction("((const u8*)fdt_get_alias_namelen((const void *)$arg1, (const u8 *)$arg2, $arg3))")
   public static String fdt_get_alias_namelen(Ptr<?> fdt, String name, int namelen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_get_mem_rsv((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fdt_get_mem_rsv((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static int fdt_get_mem_rsv(Ptr<?> fdt, int n,
       Ptr<java.lang. @Unsigned @OriginalName("uint64_t") Long> address,
       Ptr<java.lang. @Unsigned @OriginalName("uint64_t") Long> size) {
@@ -1294,93 +1295,93 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)fdt_get_name((const void*)$arg1, $arg2, $arg3))")
+  @BuiltinBPFFunction("((const u8*)fdt_get_name((const void *)$arg1, $arg2, $arg3))")
   public static String fdt_get_name(Ptr<?> fdt, int nodeoffset, Ptr<java.lang.Integer> len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_get_path((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fdt_get_path((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static int fdt_get_path(Ptr<?> fdt, int nodeoffset, String buf, int buflen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_get_phandle((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_get_phandle((const void *)$arg1, $arg2)")
   public static @Unsigned @OriginalName("uint32_t") int fdt_get_phandle(Ptr<?> fdt,
       int nodeoffset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct fdt_property*)fdt_get_property((const void*)$arg1, $arg2, (const u8*)$arg3, $arg4))")
+  @BuiltinBPFFunction("((const struct fdt_property*)fdt_get_property((const void *)$arg1, $arg2, (const u8 *)$arg3, $arg4))")
   public static Ptr<fdt_property> fdt_get_property(Ptr<?> fdt, int nodeoffset, String name,
       Ptr<java.lang.Integer> lenp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct fdt_property*)fdt_get_property_by_offset((const void*)$arg1, $arg2, $arg3))")
+  @BuiltinBPFFunction("((const struct fdt_property*)fdt_get_property_by_offset((const void *)$arg1, $arg2, $arg3))")
   public static Ptr<fdt_property> fdt_get_property_by_offset(Ptr<?> fdt, int offset,
       Ptr<java.lang.Integer> lenp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct fdt_property*)fdt_get_property_by_offset_((const void*)$arg1, $arg2, $arg3))")
+  @BuiltinBPFFunction("((const struct fdt_property*)fdt_get_property_by_offset_((const void *)$arg1, $arg2, $arg3))")
   public static Ptr<fdt_property> fdt_get_property_by_offset_(Ptr<?> fdt, int offset,
       Ptr<java.lang.Integer> lenp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct fdt_property*)fdt_get_property_namelen((const void*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5))")
+  @BuiltinBPFFunction("((const struct fdt_property*)fdt_get_property_namelen((const void *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5))")
   public static Ptr<fdt_property> fdt_get_property_namelen(Ptr<?> fdt, int offset, String name,
       int namelen, Ptr<java.lang.Integer> lenp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct fdt_property*)fdt_get_property_namelen_((const void*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6))")
+  @BuiltinBPFFunction("((const struct fdt_property*)fdt_get_property_namelen_((const void *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6))")
   public static Ptr<fdt_property> fdt_get_property_namelen_(Ptr<?> fdt, int offset, String name,
       int namelen, Ptr<java.lang.Integer> lenp, Ptr<java.lang.Integer> poffset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)fdt_get_string((const void*)$arg1, $arg2, $arg3))")
+  @BuiltinBPFFunction("((const u8*)fdt_get_string((const void *)$arg1, $arg2, $arg3))")
   public static String fdt_get_string(Ptr<?> fdt, int stroffset, Ptr<java.lang.Integer> lenp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)fdt_get_symbol((const void*)$arg1, (const u8*)$arg2))")
+  @BuiltinBPFFunction("((const u8*)fdt_get_symbol((const void *)$arg1, (const u8 *)$arg2))")
   public static String fdt_get_symbol(Ptr<?> fdt, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)fdt_get_symbol_namelen((const void*)$arg1, (const u8*)$arg2, $arg3))")
+  @BuiltinBPFFunction("((const u8*)fdt_get_symbol_namelen((const void *)$arg1, (const u8 *)$arg2, $arg3))")
   public static String fdt_get_symbol_namelen(Ptr<?> fdt, String name, int namelen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)fdt_getprop((const void*)$arg1, $arg2, (const u8*)$arg3, $arg4))")
+  @BuiltinBPFFunction("((const void*)fdt_getprop((const void *)$arg1, $arg2, (const u8 *)$arg3, $arg4))")
   public static Ptr<?> fdt_getprop(Ptr<?> fdt, int nodeoffset, String name,
       Ptr<java.lang.Integer> lenp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)fdt_getprop_by_offset((const void*)$arg1, $arg2, (const u8**)$arg3, $arg4))")
+  @BuiltinBPFFunction("((const void*)fdt_getprop_by_offset((const void *)$arg1, $arg2, (const u8**)$arg3, $arg4))")
   public static Ptr<?> fdt_getprop_by_offset(Ptr<?> fdt, int offset, Ptr<String> namep,
       Ptr<java.lang.Integer> lenp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)fdt_getprop_namelen((const void*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5))")
+  @BuiltinBPFFunction("((const void*)fdt_getprop_namelen((const void *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5))")
   public static Ptr<?> fdt_getprop_namelen(Ptr<?> fdt, int nodeoffset, String name, int namelen,
       Ptr<java.lang.Integer> lenp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1393,7 +1394,7 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_header_size((const void*)$arg1)")
+  @BuiltinBPFFunction("fdt_header_size((const void *)$arg1)")
   public static @Unsigned long fdt_header_size(Ptr<?> fdt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1405,50 +1406,50 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct fdt_reserve_entry*)fdt_mem_rsv((const void*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct fdt_reserve_entry*)fdt_mem_rsv((const void *)$arg1, $arg2))")
   public static Ptr<fdt_reserve_entry> fdt_mem_rsv(Ptr<?> fdt, int n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_move((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("fdt_move((const void *)$arg1, $arg2, $arg3)")
   public static int fdt_move(Ptr<?> fdt, Ptr<?> buf, int bufsize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_next_node((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("fdt_next_node((const void *)$arg1, $arg2, $arg3)")
   public static int fdt_next_node(Ptr<?> fdt, int offset, Ptr<java.lang.Integer> depth) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_next_property_offset((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_next_property_offset((const void *)$arg1, $arg2)")
   public static int fdt_next_property_offset(Ptr<?> fdt, int offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_next_subnode((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_next_subnode((const void *)$arg1, $arg2)")
   public static int fdt_next_subnode(Ptr<?> fdt, int offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_next_tag((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("fdt_next_tag((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned @OriginalName("uint32_t") int fdt_next_tag(Ptr<?> fdt, int startoffset,
       Ptr<java.lang.Integer> nextoffset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_node_check_compatible((const void*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("fdt_node_check_compatible((const void *)$arg1, $arg2, (const u8 *)$arg3)")
   public static int fdt_node_check_compatible(Ptr<?> fdt, int nodeoffset, String compatible) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_node_depth((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_node_depth((const void *)$arg1, $arg2)")
   public static int fdt_node_depth(Ptr<?> fdt, int nodeoffset) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1460,27 +1461,27 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_node_offset_by_compatible((const void*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("fdt_node_offset_by_compatible((const void *)$arg1, $arg2, (const u8 *)$arg3)")
   public static int fdt_node_offset_by_compatible(Ptr<?> fdt, int startoffset, String compatible) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_node_offset_by_phandle((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_node_offset_by_phandle((const void *)$arg1, $arg2)")
   public static int fdt_node_offset_by_phandle(Ptr<?> fdt,
       @Unsigned @OriginalName("uint32_t") int phandle) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_node_offset_by_prop_value((const void*)$arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("fdt_node_offset_by_prop_value((const void *)$arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5)")
   public static int fdt_node_offset_by_prop_value(Ptr<?> fdt, int startoffset, String propname,
       Ptr<?> propval, int proplen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_nodename_eq_((const void*)$arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("fdt_nodename_eq_((const void *)$arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int fdt_nodename_eq_(Ptr<?> fdt, int offset, String s, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1492,25 +1493,25 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_nop_property($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("fdt_nop_property($arg1, $arg2, (const u8 *)$arg3)")
   public static int fdt_nop_property(Ptr<?> fdt, int nodeoffset, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_num_mem_rsv((const void*)$arg1)")
+  @BuiltinBPFFunction("fdt_num_mem_rsv((const void *)$arg1)")
   public static int fdt_num_mem_rsv(Ptr<?> fdt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)fdt_offset_ptr((const void*)$arg1, $arg2, $arg3))")
+  @BuiltinBPFFunction("((const void*)fdt_offset_ptr((const void *)$arg1, $arg2, $arg3))")
   public static Ptr<?> fdt_offset_ptr(Ptr<?> fdt, int offset, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_open_into((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("fdt_open_into((const void *)$arg1, $arg2, $arg3)")
   public static int fdt_open_into(Ptr<?> fdt, Ptr<?> buf, int bufsize) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1522,32 +1523,32 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_packblocks_((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fdt_packblocks_((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static void fdt_packblocks_(String old, String _new, int mem_rsv_size, int struct_size,
       int strings_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_parent_offset((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_parent_offset((const void *)$arg1, $arg2)")
   public static int fdt_parent_offset(Ptr<?> fdt, int nodeoffset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_path_offset((const void*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fdt_path_offset((const void *)$arg1, (const u8 *)$arg2)")
   public static int fdt_path_offset(Ptr<?> fdt, String path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_path_offset_namelen((const void*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("fdt_path_offset_namelen((const void *)$arg1, (const u8 *)$arg2, $arg3)")
   public static int fdt_path_offset_namelen(Ptr<?> fdt, String path, int namelen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_property_placeholder($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fdt_property_placeholder($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int fdt_property_placeholder(Ptr<?> fdt, String name, int len, Ptr<Ptr<?>> valp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1559,7 +1560,7 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_ro_probe_((const void*)$arg1)")
+  @BuiltinBPFFunction("fdt_ro_probe_((const void *)$arg1)")
   public static @OriginalName("int32_t") int fdt_ro_probe_(Ptr<?> fdt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1571,40 +1572,40 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_set_name($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("fdt_set_name($arg1, $arg2, (const u8 *)$arg3)")
   public static int fdt_set_name(Ptr<?> fdt, int nodeoffset, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_setprop($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("fdt_setprop($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5)")
   public static int fdt_setprop(Ptr<?> fdt, int nodeoffset, String name, Ptr<?> val, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_setprop_inplace($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("fdt_setprop_inplace($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5)")
   public static int fdt_setprop_inplace(Ptr<?> fdt, int nodeoffset, String name, Ptr<?> val,
       int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_setprop_inplace_namelen_partial($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, (const void*)$arg6, $arg7)")
+  @BuiltinBPFFunction("fdt_setprop_inplace_namelen_partial($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, (const void *)$arg6, $arg7)")
   public static int fdt_setprop_inplace_namelen_partial(Ptr<?> fdt, int nodeoffset, String name,
       int namelen, @Unsigned @OriginalName("uint32_t") int idx, Ptr<?> val, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_setprop_placeholder($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fdt_setprop_placeholder($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int fdt_setprop_placeholder(Ptr<?> fdt, int nodeoffset, String name, int len,
       Ptr<Ptr<?>> prop_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_size_cells((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fdt_size_cells((const void *)$arg1, $arg2)")
   public static int fdt_size_cells(Ptr<?> fdt, int nodeoffset) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1634,51 +1635,51 @@ public final class FdtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)fdt_string((const void*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const u8*)fdt_string((const void *)$arg1, $arg2))")
   public static String fdt_string(Ptr<?> fdt, int stroffset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_stringlist_contains((const u8*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("fdt_stringlist_contains((const u8 *)$arg1, $arg2, (const u8 *)$arg3)")
   public static int fdt_stringlist_contains(String strlist, int listlen, String str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_stringlist_count((const void*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("fdt_stringlist_count((const void *)$arg1, $arg2, (const u8 *)$arg3)")
   public static int fdt_stringlist_count(Ptr<?> fdt, int nodeoffset, String property) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)fdt_stringlist_get((const void*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5))")
+  @BuiltinBPFFunction("((const u8*)fdt_stringlist_get((const void *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5))")
   public static String fdt_stringlist_get(Ptr<?> fdt, int nodeoffset, String property, int idx,
       Ptr<java.lang.Integer> lenp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_stringlist_search((const void*)$arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("fdt_stringlist_search((const void *)$arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static int fdt_stringlist_search(Ptr<?> fdt, int nodeoffset, String property,
       String string) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_subnode_offset((const void*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("fdt_subnode_offset((const void *)$arg1, $arg2, (const u8 *)$arg3)")
   public static int fdt_subnode_offset(Ptr<?> fdt, int parentoffset, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_subnode_offset_namelen((const void*)$arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("fdt_subnode_offset_namelen((const void *)$arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int fdt_subnode_offset_namelen(Ptr<?> fdt, int offset, String name, int namelen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fdt_supernode_atdepth_offset((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fdt_supernode_atdepth_offset((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static int fdt_supernode_atdepth_offset(Ptr<?> fdt, int nodeoffset, int supernodedepth,
       Ptr<java.lang.Integer> nodedepth) {
     throw new MethodIsBPFRelatedFunction();

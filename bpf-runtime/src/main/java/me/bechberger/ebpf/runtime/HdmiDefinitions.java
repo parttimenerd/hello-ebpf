@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class HdmiDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_audio_infoframe_check((const struct hdmi_audio_infoframe*)$arg1)")
+  @BuiltinBPFFunction("hdmi_audio_infoframe_check((const struct hdmi_audio_infoframe *)$arg1)")
   public static int hdmi_audio_infoframe_check(Ptr<hdmi_audio_infoframe> frame) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1102,7 +1103,7 @@ public final class HdmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_audio_infoframe_log((const u8*)$arg1, $arg2, (const struct hdmi_audio_infoframe*)$arg3)")
+  @BuiltinBPFFunction("hdmi_audio_infoframe_log((const u8 *)$arg1, $arg2, (const struct hdmi_audio_infoframe *)$arg3)")
   public static void hdmi_audio_infoframe_log(String level, Ptr<device> dev,
       Ptr<hdmi_audio_infoframe> frame) {
     throw new MethodIsBPFRelatedFunction();
@@ -1116,21 +1117,21 @@ public final class HdmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_audio_infoframe_pack_for_dp((const struct hdmi_audio_infoframe*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("hdmi_audio_infoframe_pack_for_dp((const struct hdmi_audio_infoframe *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long hdmi_audio_infoframe_pack_for_dp(
       Ptr<hdmi_audio_infoframe> frame, Ptr<dp_sdp> sdp, char dp_version) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_audio_infoframe_pack_only((const struct hdmi_audio_infoframe*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("hdmi_audio_infoframe_pack_only((const struct hdmi_audio_infoframe *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long hdmi_audio_infoframe_pack_only(
       Ptr<hdmi_audio_infoframe> frame, Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_audio_infoframe_pack_payload((const struct hdmi_audio_infoframe*)$arg1, $arg2)")
+  @BuiltinBPFFunction("hdmi_audio_infoframe_pack_payload((const struct hdmi_audio_infoframe *)$arg1, $arg2)")
   public static void hdmi_audio_infoframe_pack_payload(Ptr<hdmi_audio_infoframe> frame,
       Ptr<java.lang.Character> buffer) {
     throw new MethodIsBPFRelatedFunction();
@@ -1149,7 +1150,7 @@ public final class HdmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_avi_infoframe_log((const u8*)$arg1, $arg2, (const struct hdmi_avi_infoframe*)$arg3)")
+  @BuiltinBPFFunction("hdmi_avi_infoframe_log((const u8 *)$arg1, $arg2, (const struct hdmi_avi_infoframe *)$arg3)")
   public static void hdmi_avi_infoframe_log(String level, Ptr<device> dev,
       Ptr<hdmi_avi_infoframe> frame) {
     throw new MethodIsBPFRelatedFunction();
@@ -1163,14 +1164,14 @@ public final class HdmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_avi_infoframe_pack_only((const struct hdmi_avi_infoframe*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("hdmi_avi_infoframe_pack_only((const struct hdmi_avi_infoframe *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long hdmi_avi_infoframe_pack_only(
       Ptr<hdmi_avi_infoframe> frame, Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_avi_infoframe_unpack($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hdmi_avi_infoframe_unpack($arg1, (const void *)$arg2, $arg3)")
   public static int hdmi_avi_infoframe_unpack(Ptr<hdmi_avi_infoframe> frame, Ptr<?> buffer,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1196,27 +1197,27 @@ public final class HdmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_drm_infoframe_pack_only((const struct hdmi_drm_infoframe*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("hdmi_drm_infoframe_pack_only((const struct hdmi_drm_infoframe *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long hdmi_drm_infoframe_pack_only(
       Ptr<hdmi_drm_infoframe> frame, Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_drm_infoframe_unpack_only($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hdmi_drm_infoframe_unpack_only($arg1, (const void *)$arg2, $arg3)")
   public static int hdmi_drm_infoframe_unpack_only(Ptr<hdmi_drm_infoframe> frame, Ptr<?> buffer,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_infoframe_log((const u8*)$arg1, $arg2, (const union hdmi_infoframe*)$arg3)")
+  @BuiltinBPFFunction("hdmi_infoframe_log((const u8 *)$arg1, $arg2, (const union hdmi_infoframe *)$arg3)")
   public static void hdmi_infoframe_log(String level, Ptr<device> dev, Ptr<hdmi_infoframe> frame) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_infoframe_log_header((const u8*)$arg1, $arg2, (const struct hdmi_any_infoframe*)$arg3)")
+  @BuiltinBPFFunction("hdmi_infoframe_log_header((const u8 *)$arg1, $arg2, (const struct hdmi_any_infoframe *)$arg3)")
   public static void hdmi_infoframe_log_header(String level, Ptr<device> dev,
       Ptr<hdmi_any_infoframe> frame) {
     throw new MethodIsBPFRelatedFunction();
@@ -1230,14 +1231,14 @@ public final class HdmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_infoframe_pack_only((const union hdmi_infoframe*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("hdmi_infoframe_pack_only((const union hdmi_infoframe *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long hdmi_infoframe_pack_only(Ptr<hdmi_infoframe> frame,
       Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_infoframe_unpack($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hdmi_infoframe_unpack($arg1, (const void *)$arg2, $arg3)")
   public static int hdmi_infoframe_unpack(Ptr<hdmi_infoframe> frame, Ptr<?> buffer,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1257,7 +1258,7 @@ public final class HdmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_spd_infoframe_init($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("hdmi_spd_infoframe_init($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int hdmi_spd_infoframe_init(Ptr<hdmi_spd_infoframe> frame, String vendor,
       String product) {
     throw new MethodIsBPFRelatedFunction();
@@ -1271,7 +1272,7 @@ public final class HdmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_spd_infoframe_pack_only((const struct hdmi_spd_infoframe*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("hdmi_spd_infoframe_pack_only((const struct hdmi_spd_infoframe *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long hdmi_spd_infoframe_pack_only(
       Ptr<hdmi_spd_infoframe> frame, Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1284,7 +1285,7 @@ public final class HdmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_vendor_infoframe_check_only((const struct hdmi_vendor_infoframe*)$arg1)")
+  @BuiltinBPFFunction("hdmi_vendor_infoframe_check_only((const struct hdmi_vendor_infoframe *)$arg1)")
   public static int hdmi_vendor_infoframe_check_only(Ptr<hdmi_vendor_infoframe> frame) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1303,7 +1304,7 @@ public final class HdmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hdmi_vendor_infoframe_pack_only((const struct hdmi_vendor_infoframe*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("hdmi_vendor_infoframe_pack_only((const struct hdmi_vendor_infoframe *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long hdmi_vendor_infoframe_pack_only(
       Ptr<hdmi_vendor_infoframe> frame, Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();

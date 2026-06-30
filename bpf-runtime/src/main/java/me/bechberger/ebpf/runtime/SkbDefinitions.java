@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1116,7 +1117,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__skb_datagram_iter((const struct sk_buff*)$arg1, $arg2, $arg3, $arg4, $arg5, (long unsigned int (*)(const void*, long unsigned int, void*, struct iov_iter*))$arg6, $arg7)")
+  @BuiltinBPFFunction("__skb_datagram_iter((const struct sk_buff *)$arg1, $arg2, $arg3, $arg4, $arg5, (long unsigned int (*)(const void*, long unsigned int, void*, struct iov_iter*))$arg6, $arg7)")
   public static int __skb_datagram_iter(Ptr<sk_buff> skb, int offset, Ptr<iov_iter> to, int len,
       boolean fault_short, Ptr<?> cb, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1147,14 +1148,14 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__skb_flow_bpf_to_target((const struct bpf_flow_keys*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__skb_flow_bpf_to_target((const struct bpf_flow_keys *)$arg1, $arg2, $arg3)")
   public static void __skb_flow_bpf_to_target(Ptr<bpf_flow_keys> flow_keys,
       Ptr<flow_dissector> flow_dissector, Ptr<?> target_container) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__skb_flow_dissect((const struct net*)$arg1, (const struct sk_buff*)$arg2, $arg3, $arg4, (const void*)$arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("__skb_flow_dissect((const struct net *)$arg1, (const struct sk_buff *)$arg2, $arg3, $arg4, (const void *)$arg5, $arg6, $arg7, $arg8, $arg9)")
   public static boolean __skb_flow_dissect(Ptr<net> net, Ptr<sk_buff> skb,
       Ptr<flow_dissector> flow_dissector, Ptr<?> target_container, Ptr<?> data,
       @Unsigned @OriginalName("__be16") short proto, int nhoff, int hlen, @Unsigned int flags) {
@@ -1162,7 +1163,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__skb_flow_dissect_arp((const struct sk_buff*)$arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__skb_flow_dissect_arp((const struct sk_buff *)$arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static flow_dissect_ret __skb_flow_dissect_arp(Ptr<sk_buff> skb,
       Ptr<flow_dissector> flow_dissector, Ptr<?> target_container, Ptr<?> data, int nhoff,
       int hlen) {
@@ -1170,7 +1171,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__skb_flow_dissect_gre((const struct sk_buff*)$arg1, $arg2, $arg3, $arg4, (const void*)$arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("__skb_flow_dissect_gre((const struct sk_buff *)$arg1, $arg2, $arg3, $arg4, (const void *)$arg5, $arg6, $arg7, $arg8, $arg9)")
   public static flow_dissect_ret __skb_flow_dissect_gre(Ptr<sk_buff> skb,
       Ptr<flow_dissector_key_control> key_control, Ptr<flow_dissector> flow_dissector,
       Ptr<?> target_container, Ptr<?> data,
@@ -1180,19 +1181,19 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__skb_get_hash_net((const struct net*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__skb_get_hash_net((const struct net *)$arg1, $arg2)")
   public static void __skb_get_hash_net(Ptr<net> net, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__skb_get_hash_symmetric_net((const struct net*)$arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("__skb_get_hash_symmetric_net((const struct net *)$arg1, (const struct sk_buff *)$arg2)")
   public static @Unsigned int __skb_get_hash_symmetric_net(Ptr<net> net, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__skb_get_poff((const struct sk_buff*)$arg1, (const void*)$arg2, (const struct flow_keys_basic*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__skb_get_poff((const struct sk_buff *)$arg1, (const void *)$arg2, (const struct flow_keys_basic *)$arg3, $arg4)")
   public static @Unsigned int __skb_get_poff(Ptr<sk_buff> skb, Ptr<?> data,
       Ptr<flow_keys_basic> keys, int hlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1262,7 +1263,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__skb_tstamp_tx($arg1, (const struct sk_buff*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__skb_tstamp_tx($arg1, (const struct sk_buff *)$arg2, $arg3, $arg4, $arg5)")
   public static void __skb_tstamp_tx(Ptr<sk_buff> orig_skb, Ptr<sk_buff> ack_skb,
       Ptr<skb_shared_hwtstamps> hwtstamps, Ptr<sock> sk, int tstype) {
     throw new MethodIsBPFRelatedFunction();
@@ -1290,14 +1291,14 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__skb_wait_for_more_packets($arg1, $arg2, $arg3, $arg4, (const struct sk_buff*)$arg5)")
+  @BuiltinBPFFunction("__skb_wait_for_more_packets($arg1, $arg2, $arg3, $arg4, (const struct sk_buff *)$arg5)")
   public static int __skb_wait_for_more_packets(Ptr<sock> sk, Ptr<sk_buff_head> queue,
       Ptr<java.lang.Integer> err, Ptr<java.lang.Long> timeo_p, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__skb_warn_lro_forwarding((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("__skb_warn_lro_forwarding((const struct sk_buff *)$arg1)")
   public static void __skb_warn_lro_forwarding(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1342,7 +1343,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_checksum((const struct sk_buff*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("skb_checksum((const struct sk_buff *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned @OriginalName("__wsum") int skb_checksum(Ptr<sk_buff> skb, int offset,
       int len, @Unsigned @OriginalName("__wsum") int csum) {
     throw new MethodIsBPFRelatedFunction();
@@ -1438,21 +1439,21 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_copy((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("skb_copy((const struct sk_buff *)$arg1, $arg2)")
   public static Ptr<sk_buff> skb_copy(Ptr<sk_buff> skb,
       @Unsigned @OriginalName("gfp_t") int gfp_mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_copy_and_crc32c_datagram_iter((const struct sk_buff*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("skb_copy_and_crc32c_datagram_iter((const struct sk_buff *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int skb_copy_and_crc32c_datagram_iter(Ptr<sk_buff> skb, int offset,
       Ptr<iov_iter> to, int len, Ptr<java.lang. @Unsigned Integer> crcp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_copy_and_csum_bits((const struct sk_buff*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("skb_copy_and_csum_bits((const struct sk_buff *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned @OriginalName("__wsum") int skb_copy_and_csum_bits(Ptr<sk_buff> skb,
       int offset, Ptr<java.lang.Character> to, int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1465,13 +1466,13 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_copy_and_csum_dev((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("skb_copy_and_csum_dev((const struct sk_buff *)$arg1, $arg2)")
   public static void skb_copy_and_csum_dev(Ptr<sk_buff> skb, Ptr<java.lang.Character> to) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_copy_bits((const struct sk_buff*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("skb_copy_bits((const struct sk_buff *)$arg1, $arg2, $arg3, $arg4)")
   public static int skb_copy_bits(Ptr<sk_buff> skb, int offset, Ptr<?> to, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1491,21 +1492,21 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_copy_datagram_iter((const struct sk_buff*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("skb_copy_datagram_iter((const struct sk_buff *)$arg1, $arg2, $arg3, $arg4)")
   public static int skb_copy_datagram_iter(Ptr<sk_buff> skb, int offset, Ptr<iov_iter> to,
       int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_copy_expand((const struct sk_buff*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("skb_copy_expand((const struct sk_buff *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<sk_buff> skb_copy_expand(Ptr<sk_buff> skb, int newheadroom, int newtailroom,
       @Unsigned @OriginalName("gfp_t") int gfp_mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_copy_header($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("skb_copy_header($arg1, (const struct sk_buff *)$arg2)")
   public static void skb_copy_header(Ptr<sk_buff> _new, Ptr<sk_buff> old) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1517,7 +1518,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_copy_to_linear_data($arg1, (const void*)$arg2, (const unsigned int)$arg3)")
+  @BuiltinBPFFunction("skb_copy_to_linear_data($arg1, (const void *)$arg2, (const unsigned int)$arg3)")
   public static void skb_copy_to_linear_data(Ptr<sk_buff> skb, Ptr<?> from, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1536,14 +1537,14 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_cow_data_for_xdp($arg1, $arg2, (const struct bpf_prog*)$arg3)")
+  @BuiltinBPFFunction("skb_cow_data_for_xdp($arg1, $arg2, (const struct bpf_prog *)$arg3)")
   public static int skb_cow_data_for_xdp(Ptr<page_pool> pool, Ptr<Ptr<sk_buff>> pskb,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_crc32c((const struct sk_buff*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("skb_crc32c((const struct sk_buff *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned int skb_crc32c(Ptr<sk_buff> skb, int offset, int len, @Unsigned int crc) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1599,7 +1600,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_dump((const u8*)$arg1, (const struct sk_buff*)$arg2, $arg3)")
+  @BuiltinBPFFunction("skb_dump((const u8 *)$arg1, (const struct sk_buff *)$arg2, $arg3)")
   public static void skb_dump(String level, Ptr<sk_buff> skb, boolean full_pkt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1637,7 +1638,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_eth_push($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("skb_eth_push($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int skb_eth_push(Ptr<sk_buff> skb, String dst, String src) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1674,7 +1675,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_flow_dissect_ct((const struct sk_buff*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("skb_flow_dissect_ct((const struct sk_buff *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static void skb_flow_dissect_ct(Ptr<sk_buff> skb, Ptr<flow_dissector> flow_dissector,
       Ptr<?> target_container, Ptr<java.lang. @Unsigned Short> ctinfo_map, @Unsigned long mapsize,
       boolean post_ct, @Unsigned short zone) {
@@ -1682,42 +1683,42 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_flow_dissect_hash((const struct sk_buff*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("skb_flow_dissect_hash((const struct sk_buff *)$arg1, $arg2, $arg3)")
   public static void skb_flow_dissect_hash(Ptr<sk_buff> skb, Ptr<flow_dissector> flow_dissector,
       Ptr<?> target_container) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_flow_dissect_meta((const struct sk_buff*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("skb_flow_dissect_meta((const struct sk_buff *)$arg1, $arg2, $arg3)")
   public static void skb_flow_dissect_meta(Ptr<sk_buff> skb, Ptr<flow_dissector> flow_dissector,
       Ptr<?> target_container) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_flow_dissect_tunnel_info((const struct sk_buff*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("skb_flow_dissect_tunnel_info((const struct sk_buff *)$arg1, $arg2, $arg3)")
   public static void skb_flow_dissect_tunnel_info(Ptr<sk_buff> skb,
       Ptr<flow_dissector> flow_dissector, Ptr<?> target_container) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_flow_dissector_init($arg1, (const struct flow_dissector_key*)$arg2, $arg3)")
+  @BuiltinBPFFunction("skb_flow_dissector_init($arg1, (const struct flow_dissector_key *)$arg2, $arg3)")
   public static void skb_flow_dissector_init(Ptr<flow_dissector> flow_dissector,
       Ptr<flow_dissector_key> key, @Unsigned int key_count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_flow_get_icmp_tci((const struct sk_buff*)$arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("skb_flow_get_icmp_tci((const struct sk_buff *)$arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static void skb_flow_get_icmp_tci(Ptr<sk_buff> skb, Ptr<flow_dissector_key_icmp> key_icmp,
       Ptr<?> data, int thoff, int hlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_flow_get_ports((const struct sk_buff*)$arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("skb_flow_get_ports((const struct sk_buff *)$arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned @OriginalName("__be32") int skb_flow_get_ports(Ptr<sk_buff> skb,
       int thoff, char ip_proto, Ptr<?> data, int hlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1736,15 +1737,15 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_get_hash_perturb((const struct sk_buff*)$arg1, (const struct {\n"
+  @BuiltinBPFFunction("skb_get_hash_perturb((const struct sk_buff *)$arg1, (const struct {\n"
           + "  long long unsigned int key[2];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static @Unsigned int skb_get_hash_perturb(Ptr<sk_buff> skb, Ptr<siphash_key_t> perturb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_get_poff((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("skb_get_poff((const struct sk_buff *)$arg1)")
   public static @Unsigned int skb_get_poff(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1768,25 +1769,25 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_gso_transport_seglen((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("skb_gso_transport_seglen((const struct sk_buff *)$arg1)")
   public static @Unsigned int skb_gso_transport_seglen(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_gso_validate_mac_len((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("skb_gso_validate_mac_len((const struct sk_buff *)$arg1, $arg2)")
   public static boolean skb_gso_validate_mac_len(Ptr<sk_buff> skb, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_gso_validate_network_len((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("skb_gso_validate_network_len((const struct sk_buff *)$arg1, $arg2)")
   public static boolean skb_gso_validate_network_len(Ptr<sk_buff> skb, @Unsigned int mtu) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_has_tx_timestamp($arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("skb_has_tx_timestamp($arg1, (const struct sock *)$arg2)")
   public static boolean skb_has_tx_timestamp(Ptr<sk_buff> skb, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1817,7 +1818,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_metadata_dst_cmp((const struct sk_buff*)$arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("skb_metadata_dst_cmp((const struct sk_buff *)$arg1, (const struct sk_buff *)$arg2)")
   public static int skb_metadata_dst_cmp(Ptr<sk_buff> skb_a, Ptr<sk_buff> skb_b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1876,7 +1877,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_panic($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("skb_panic($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static void skb_panic(Ptr<sk_buff> skb, @Unsigned int sz, Ptr<?> addr, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1933,7 +1934,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_put_data($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("skb_put_data($arg1, (const void *)$arg2, $arg3)")
   public static Ptr<?> skb_put_data(Ptr<sk_buff> skb, Ptr<?> data, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2078,13 +2079,13 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_still_in_host_queue($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("skb_still_in_host_queue($arg1, (const struct sk_buff *)$arg2)")
   public static boolean skb_still_in_host_queue(Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_store_bits($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("skb_store_bits($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int skb_store_bits(Ptr<sk_buff> skb, int offset, Ptr<?> from, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2181,7 +2182,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_warn_bad_offload((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("skb_warn_bad_offload((const struct sk_buff *)$arg1)")
   public static void skb_warn_bad_offload(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2206,7 +2207,7 @@ public final class SkbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("skb_zerocopy_headlen((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("skb_zerocopy_headlen((const struct sk_buff *)$arg1)")
   public static @Unsigned int skb_zerocopy_headlen(Ptr<sk_buff> from) {
     throw new MethodIsBPFRelatedFunction();
   }

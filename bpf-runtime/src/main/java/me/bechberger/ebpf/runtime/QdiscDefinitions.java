@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1121,7 +1122,7 @@ public final class QdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__qdisc_calculate_pkt_len($arg1, (const struct qdisc_size_table*)$arg2)")
+  @BuiltinBPFFunction("__qdisc_calculate_pkt_len($arg1, (const struct qdisc_size_table *)$arg2)")
   public static void __qdisc_calculate_pkt_len(Ptr<sk_buff> skb, Ptr<qdisc_size_table> stab) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1139,7 +1140,7 @@ public final class QdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("qdisc_alloc($arg1, (const struct Qdisc_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("qdisc_alloc($arg1, (const struct Qdisc_ops *)$arg2, $arg3)")
   public static Ptr<Qdisc> qdisc_alloc(Ptr<netdev_queue> dev_queue, Ptr<Qdisc_ops> ops,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1192,7 +1193,7 @@ public final class QdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("qdisc_create_dflt($arg1, (const struct Qdisc_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("qdisc_create_dflt($arg1, (const struct Qdisc_ops *)$arg2, $arg3, $arg4)")
   public static Ptr<Qdisc> qdisc_create_dflt(Ptr<netdev_queue> dev_queue, Ptr<Qdisc_ops> ops,
       @Unsigned int parentid, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1275,7 +1276,7 @@ public final class QdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("qdisc_lookup_default((const u8*)$arg1)")
+  @BuiltinBPFFunction("qdisc_lookup_default((const u8 *)$arg1)")
   public static Ptr<Qdisc_ops> qdisc_lookup_default(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1388,7 +1389,7 @@ public final class QdiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("qdisc_set_default((const u8*)$arg1)")
+  @BuiltinBPFFunction("qdisc_set_default((const u8 *)$arg1)")
   public static int qdisc_set_default(String name) {
     throw new MethodIsBPFRelatedFunction();
   }

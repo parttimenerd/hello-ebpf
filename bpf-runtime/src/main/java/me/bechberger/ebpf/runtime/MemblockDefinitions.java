@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class MemblockDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__memblock_alloc_or_panic($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__memblock_alloc_or_panic($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<?> __memblock_alloc_or_panic(@Unsigned @OriginalName("phys_addr_t") long size,
       @Unsigned @OriginalName("phys_addr_t") long align, String func) {
     throw new MethodIsBPFRelatedFunction();

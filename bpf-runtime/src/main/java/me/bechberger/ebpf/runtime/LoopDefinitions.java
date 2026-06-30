@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1163,7 +1164,7 @@ public final class LoopDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("loop_configure($arg1, $arg2, $arg3, (const struct loop_config*)$arg4)")
+  @BuiltinBPFFunction("loop_configure($arg1, $arg2, $arg3, (const struct loop_config *)$arg4)")
   public static int loop_configure(Ptr<loop_device> lo,
       @Unsigned @OriginalName("blk_mode_t") int mode, Ptr<block_device> bdev,
       Ptr<loop_config> config) {
@@ -1219,25 +1220,25 @@ public final class LoopDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("loop_info64_from_compat((const struct compat_loop_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("loop_info64_from_compat((const struct compat_loop_info *)$arg1, $arg2)")
   public static int loop_info64_from_compat(Ptr<compat_loop_info> arg, Ptr<loop_info64> info64) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("loop_info64_from_old((const struct loop_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("loop_info64_from_old((const struct loop_info *)$arg1, $arg2)")
   public static void loop_info64_from_old(Ptr<loop_info> info, Ptr<loop_info64> info64) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("loop_info64_to_compat((const struct loop_info64*)$arg1, $arg2)")
+  @BuiltinBPFFunction("loop_info64_to_compat((const struct loop_info64 *)$arg1, $arg2)")
   public static int loop_info64_to_compat(Ptr<loop_info64> info64, Ptr<compat_loop_info> arg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("loop_info64_to_old((const struct loop_info64*)$arg1, $arg2)")
+  @BuiltinBPFFunction("loop_info64_to_old((const struct loop_info64 *)$arg1, $arg2)")
   public static int loop_info64_to_old(Ptr<loop_info64> info64, Ptr<loop_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1268,7 +1269,7 @@ public final class LoopDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("loop_queue_rq($arg1, (const struct blk_mq_queue_data*)$arg2)")
+  @BuiltinBPFFunction("loop_queue_rq($arg1, (const struct blk_mq_queue_data *)$arg2)")
   public static @OriginalName("blk_status_t") char loop_queue_rq(Ptr<blk_mq_hw_ctx> hctx,
       Ptr<blk_mq_queue_data> bd) {
     throw new MethodIsBPFRelatedFunction();
@@ -1313,31 +1314,31 @@ public final class LoopDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("loop_set_hw_queue_depth((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("loop_set_hw_queue_depth((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int loop_set_hw_queue_depth(String s, Ptr<kernel_param> p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("loop_set_status($arg1, (const struct loop_info64*)$arg2)")
+  @BuiltinBPFFunction("loop_set_status($arg1, (const struct loop_info64 *)$arg2)")
   public static int loop_set_status(Ptr<loop_device> lo, Ptr<loop_info64> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("loop_set_status_compat($arg1, (const struct compat_loop_info*)$arg2)")
+  @BuiltinBPFFunction("loop_set_status_compat($arg1, (const struct compat_loop_info *)$arg2)")
   public static int loop_set_status_compat(Ptr<loop_device> lo, Ptr<compat_loop_info> arg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("loop_set_status_from_info($arg1, (const struct loop_info64*)$arg2)")
+  @BuiltinBPFFunction("loop_set_status_from_info($arg1, (const struct loop_info64 *)$arg2)")
   public static int loop_set_status_from_info(Ptr<loop_device> lo, Ptr<loop_info64> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("loop_set_status_old($arg1, (const struct loop_info*)$arg2)")
+  @BuiltinBPFFunction("loop_set_status_old($arg1, (const struct loop_info *)$arg2)")
   public static int loop_set_status_old(Ptr<loop_device> lo, Ptr<loop_info> arg) {
     throw new MethodIsBPFRelatedFunction();
   }

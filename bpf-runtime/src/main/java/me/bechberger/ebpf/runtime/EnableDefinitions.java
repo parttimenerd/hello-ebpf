@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class EnableDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("enable_background_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("enable_background_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long enable_background_store(Ptr<device> ras_feat_dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1123,7 +1124,7 @@ public final class EnableDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("enable_c02_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("enable_c02_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long enable_c02_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1276,7 +1277,7 @@ public final class EnableDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("enable_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("enable_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long enable_store(Ptr<device> pwm_dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1307,7 +1308,7 @@ public final class EnableDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("enable_verity($arg1, (const struct fsverity_enable_arg*)$arg2)")
+  @BuiltinBPFFunction("enable_verity($arg1, (const struct fsverity_enable_arg *)$arg2)")
   public static int enable_verity(Ptr<file> filp, Ptr<fsverity_enable_arg> arg) {
     throw new MethodIsBPFRelatedFunction();
   }

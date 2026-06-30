@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,13 +1097,13 @@ public final class NfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nfs_ssc_register((const struct nfs_ssc_client_ops*)$arg1)")
+  @BuiltinBPFFunction("nfs_ssc_register((const struct nfs_ssc_client_ops *)$arg1)")
   public static void nfs_ssc_register(Ptr<nfs_ssc_client_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nfs_ssc_unregister((const struct nfs_ssc_client_ops*)$arg1)")
+  @BuiltinBPFFunction("nfs_ssc_unregister((const struct nfs_ssc_client_ops *)$arg1)")
   public static void nfs_ssc_unregister(Ptr<nfs_ssc_client_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,42 +1098,42 @@ public final class Sha512Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__sha512_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__sha512_update($arg1, (const u8 *)$arg2, $arg3)")
   public static void __sha512_update(Ptr<__sha512_ctx> ctx, Ptr<java.lang.Character> data,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha512_block_generic($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("sha512_block_generic($arg1, (const u8 *)$arg2)")
   public static void sha512_block_generic(Ptr<sha512_block_state> state,
       Ptr<java.lang.Character> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha512_blocks_avx($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sha512_blocks_avx($arg1, (const u8 *)$arg2, $arg3)")
   public static void sha512_blocks_avx(Ptr<sha512_block_state> state, Ptr<java.lang.Character> data,
       @Unsigned long nblocks) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha512_blocks_avx2($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sha512_blocks_avx2($arg1, (const u8 *)$arg2, $arg3)")
   public static void sha512_blocks_avx2(Ptr<sha512_block_state> state,
       Ptr<java.lang.Character> data, @Unsigned long nblocks) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha512_blocks_generic($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sha512_blocks_generic($arg1, (const u8 *)$arg2, $arg3)")
   public static void sha512_blocks_generic(Ptr<sha512_block_state> state,
       Ptr<java.lang.Character> data, @Unsigned long nblocks) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha512_blocks_ssse3($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sha512_blocks_ssse3($arg1, (const u8 *)$arg2, $arg3)")
   public static void sha512_blocks_ssse3(Ptr<sha512_block_state> state,
       Ptr<java.lang.Character> data, @Unsigned long nblocks) {
     throw new MethodIsBPFRelatedFunction();

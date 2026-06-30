@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1123,7 +1124,7 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__page_pool_dma_sync_for_device((const struct page_pool*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__page_pool_dma_sync_for_device((const struct page_pool *)$arg1, $arg2, $arg3)")
   public static void __page_pool_dma_sync_for_device(Ptr<page_pool> pool,
       @Unsigned @OriginalName("netmem_ref") long netmem, @Unsigned int dma_sync_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1136,7 +1137,7 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_address_in_vma((const struct folio*)$arg1, (const struct page*)$arg2, (const struct vm_area_struct*)$arg3)")
+  @BuiltinBPFFunction("page_address_in_vma((const struct folio *)$arg1, (const struct page *)$arg2, (const struct vm_area_struct *)$arg3)")
   public static @Unsigned long page_address_in_vma(Ptr<folio> folio, Ptr<page> page,
       Ptr<vm_area_struct> vma) {
     throw new MethodIsBPFRelatedFunction();
@@ -1245,7 +1246,7 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_count((const struct page*)$arg1)")
+  @BuiltinBPFFunction("page_count((const struct page *)$arg1)")
   public static int page_count(Ptr<page> page) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1270,7 +1271,7 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_counter_memparse((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("page_counter_memparse((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static int page_counter_memparse(String buf, String max,
       Ptr<java.lang. @Unsigned Long> nr_pages) {
     throw new MethodIsBPFRelatedFunction();
@@ -1356,7 +1357,7 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_idle_bitmap_read($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("page_idle_bitmap_read($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long page_idle_bitmap_read(Ptr<file> file,
       Ptr<kobject> kobj, Ptr<bin_attribute> attr, String buf, @OriginalName("loff_t") long pos,
       @Unsigned long count) {
@@ -1364,7 +1365,7 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_idle_bitmap_write($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("page_idle_bitmap_write($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long page_idle_bitmap_write(Ptr<file> file,
       Ptr<kobject> kobj, Ptr<bin_attribute> attr, String buf, @OriginalName("loff_t") long pos,
       @Unsigned long count) {
@@ -1409,7 +1410,7 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_mapped_in_vma((const struct page*)$arg1, $arg2)")
+  @BuiltinBPFFunction("page_mapped_in_vma((const struct page *)$arg1, $arg2)")
   public static @Unsigned long page_mapped_in_vma(Ptr<page> page, Ptr<vm_area_struct> vma) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1446,13 +1447,13 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_order_update_notify((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("page_order_update_notify((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int page_order_update_notify(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_pgmap((const struct page*)$arg1)")
+  @BuiltinBPFFunction("page_pgmap((const struct page *)$arg1)")
   public static Ptr<dev_pagemap> page_pgmap(Ptr<page> page) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1500,13 +1501,13 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_pool_create((const struct page_pool_params*)$arg1)")
+  @BuiltinBPFFunction("page_pool_create((const struct page_pool_params *)$arg1)")
   public static Ptr<page_pool> page_pool_create(Ptr<page_pool_params> params) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_pool_create_percpu((const struct page_pool_params*)$arg1, $arg2)")
+  @BuiltinBPFFunction("page_pool_create_percpu((const struct page_pool_params *)$arg1, $arg2)")
   public static Ptr<page_pool> page_pool_create_percpu(Ptr<page_pool_params> params, int cpuid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1543,7 +1544,7 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_pool_ethtool_stats_get($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("page_pool_ethtool_stats_get($arg1, (const void *)$arg2)")
   public static Ptr<java.lang. @Unsigned Long> page_pool_ethtool_stats_get(
       Ptr<java.lang. @Unsigned Long> data, Ptr<?> stats) {
     throw new MethodIsBPFRelatedFunction();
@@ -1563,19 +1564,19 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_pool_get_stats((const struct page_pool*)$arg1, $arg2)")
+  @BuiltinBPFFunction("page_pool_get_stats((const struct page_pool *)$arg1, $arg2)")
   public static boolean page_pool_get_stats(Ptr<page_pool> pool, Ptr<page_pool_stats> stats) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_pool_inflight((const struct page_pool*)$arg1, $arg2)")
+  @BuiltinBPFFunction("page_pool_inflight((const struct page_pool *)$arg1, $arg2)")
   public static int page_pool_inflight(Ptr<page_pool> pool, boolean strict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_pool_init($arg1, (const struct page_pool_params*)$arg2, $arg3)")
+  @BuiltinBPFFunction("page_pool_init($arg1, (const struct page_pool_params *)$arg2, $arg3)")
   public static int page_pool_init(Ptr<page_pool> pool, Ptr<page_pool_params> params, int cpuid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1594,13 +1595,13 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_pool_nl_fill($arg1, (const struct page_pool*)$arg2, (const struct genl_info*)$arg3)")
+  @BuiltinBPFFunction("page_pool_nl_fill($arg1, (const struct page_pool *)$arg2, (const struct genl_info *)$arg3)")
   public static int page_pool_nl_fill(Ptr<sk_buff> rsp, Ptr<page_pool> pool, Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_pool_nl_stats_fill($arg1, (const struct page_pool*)$arg2, (const struct genl_info*)$arg3)")
+  @BuiltinBPFFunction("page_pool_nl_stats_fill($arg1, (const struct page_pool *)$arg2, (const struct genl_info *)$arg3)")
   public static int page_pool_nl_stats_fill(Ptr<sk_buff> rsp, Ptr<page_pool> pool,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1700,7 +1701,7 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_pool_use_xdp_mem($arg1, (void (*)(void*))$arg2, (const struct xdp_mem_info*)$arg3)")
+  @BuiltinBPFFunction("page_pool_use_xdp_mem($arg1, (void (*)(void*))$arg2, (const struct xdp_mem_info *)$arg3)")
   public static void page_pool_use_xdp_mem(Ptr<page_pool> pool, Ptr<?> disconnect,
       Ptr<xdp_mem_info> mem) {
     throw new MethodIsBPFRelatedFunction();
@@ -1757,7 +1758,7 @@ public final class PageDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("page_symlink($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("page_symlink($arg1, (const u8 *)$arg2, $arg3)")
   public static int page_symlink(Ptr<inode> inode, String symname, int len) {
     throw new MethodIsBPFRelatedFunction();
   }

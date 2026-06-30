@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1155,7 +1156,7 @@ public final class PortDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("port_fops_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("port_fops_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long port_fops_write(Ptr<file> filp, String ubuf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> offp) {
     throw new MethodIsBPFRelatedFunction();

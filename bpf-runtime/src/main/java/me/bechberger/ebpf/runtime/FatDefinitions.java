@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class FatDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__fat_fs_error($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("__fat_fs_error($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void __fat_fs_error(Ptr<super_block> sb, int report, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1139,7 +1140,7 @@ public final class FatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_fat_msg($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("_fat_msg($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4_)")
   public static void _fat_msg(Ptr<super_block> sb, String level, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1268,7 +1269,7 @@ public final class FatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fat_compat_ioctl_filldir($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fat_compat_ioctl_filldir($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static boolean fat_compat_ioctl_filldir(Ptr<dir_context> ctx, String name, int name_len,
       @OriginalName("loff_t") long offset, @Unsigned long ino, @Unsigned int d_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1522,7 +1523,7 @@ public final class FatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fat_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fat_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int fat_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1541,7 +1542,7 @@ public final class FatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fat_ioctl_filldir($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fat_ioctl_filldir($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static boolean fat_ioctl_filldir(Ptr<dir_context> ctx, String name, int name_len,
       @OriginalName("loff_t") long offset, @Unsigned long ino, @Unsigned int d_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1589,7 +1590,7 @@ public final class FatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fat_parse_short($arg1, (const struct msdos_dir_entry*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fat_parse_short($arg1, (const struct msdos_dir_entry *)$arg2, $arg3, $arg4)")
   public static int fat_parse_short(Ptr<super_block> sb, Ptr<msdos_dir_entry> de, String name,
       int dot_hidden) {
     throw new MethodIsBPFRelatedFunction();
@@ -1659,7 +1660,7 @@ public final class FatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fat_scan($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("fat_scan($arg1, (const u8 *)$arg2, $arg3)")
   public static int fat_scan(Ptr<inode> dir, String name, Ptr<fat_slot_info> sinfo) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1671,7 +1672,7 @@ public final class FatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fat_search_long($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fat_search_long($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int fat_search_long(Ptr<inode> inode, String name, int name_len,
       Ptr<fat_slot_info> sinfo) {
     throw new MethodIsBPFRelatedFunction();
@@ -1743,7 +1744,7 @@ public final class FatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fat_truncate_atime((const struct msdos_sb_info*)$arg1, (const struct timespec64*)$arg2)")
+  @BuiltinBPFFunction("fat_truncate_atime((const struct msdos_sb_info *)$arg1, (const struct timespec64 *)$arg2)")
   public static timespec64 fat_truncate_atime(Ptr<msdos_sb_info> sbi, Ptr<timespec64> ts) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1755,7 +1756,7 @@ public final class FatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fat_truncate_mtime((const struct msdos_sb_info*)$arg1, (const struct timespec64*)$arg2)")
+  @BuiltinBPFFunction("fat_truncate_mtime((const struct msdos_sb_info *)$arg1, (const struct timespec64 *)$arg2)")
   public static timespec64 fat_truncate_mtime(Ptr<msdos_sb_info> sbi, Ptr<timespec64> ts) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1773,7 +1774,7 @@ public final class FatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fat_write_begin((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fat_write_begin((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int fat_write_begin(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, Ptr<Ptr<folio>> foliop,
       Ptr<Ptr<?>> fsdata) {
@@ -1781,7 +1782,7 @@ public final class FatDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fat_write_end((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("fat_write_end((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int fat_write_end(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, @Unsigned int copied, Ptr<folio> folio,
       Ptr<?> fsdata) {

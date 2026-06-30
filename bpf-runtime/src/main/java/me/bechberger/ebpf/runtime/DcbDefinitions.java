@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DcbDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("dcb_app_add($arg1, (const struct dcb_app*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dcb_app_add($arg1, (const struct dcb_app *)$arg2, $arg3)")
   public static int dcb_app_add(Ptr<list_head> list, Ptr<dcb_app> app, int ifindex) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dcb_app_lookup((const struct dcb_app*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("dcb_app_lookup((const struct dcb_app *)$arg1, $arg2, $arg3)")
   public static Ptr<dcb_app_type> dcb_app_lookup(Ptr<dcb_app> app, int ifindex, int prio) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1126,14 +1127,14 @@ public final class DcbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dcb_getrewr_prio_dscp_mask_map((const struct net_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dcb_getrewr_prio_dscp_mask_map((const struct net_device *)$arg1, $arg2)")
   public static void dcb_getrewr_prio_dscp_mask_map(Ptr<net_device> dev,
       Ptr<dcb_ieee_app_prio_map> p_map) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dcb_getrewr_prio_pcp_mask_map((const struct net_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dcb_getrewr_prio_pcp_mask_map((const struct net_device *)$arg1, $arg2)")
   public static void dcb_getrewr_prio_pcp_mask_map(Ptr<net_device> dev,
       Ptr<dcb_rewr_prio_pcp_map> p_map) {
     throw new MethodIsBPFRelatedFunction();
@@ -1146,13 +1147,13 @@ public final class DcbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dcb_ieee_getapp_default_prio_mask((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("dcb_ieee_getapp_default_prio_mask((const struct net_device *)$arg1)")
   public static char dcb_ieee_getapp_default_prio_mask(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dcb_ieee_getapp_dscp_prio_mask_map((const struct net_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dcb_ieee_getapp_dscp_prio_mask_map((const struct net_device *)$arg1, $arg2)")
   public static void dcb_ieee_getapp_dscp_prio_mask_map(Ptr<net_device> dev,
       Ptr<dcb_ieee_app_dscp_map> p_map) {
     throw new MethodIsBPFRelatedFunction();
@@ -1165,7 +1166,7 @@ public final class DcbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dcb_ieee_getapp_prio_dscp_mask_map((const struct net_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dcb_ieee_getapp_prio_dscp_mask_map((const struct net_device *)$arg1, $arg2)")
   public static void dcb_ieee_getapp_prio_dscp_mask_map(Ptr<net_device> dev,
       Ptr<dcb_ieee_app_prio_map> p_map) {
     throw new MethodIsBPFRelatedFunction();
@@ -1178,7 +1179,7 @@ public final class DcbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dcb_rewr_lookup((const struct dcb_app*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("dcb_rewr_lookup((const struct dcb_app *)$arg1, $arg2, $arg3)")
   public static Ptr<dcb_app_type> dcb_rewr_lookup(Ptr<dcb_app> app, int ifindex, int proto) {
     throw new MethodIsBPFRelatedFunction();
   }

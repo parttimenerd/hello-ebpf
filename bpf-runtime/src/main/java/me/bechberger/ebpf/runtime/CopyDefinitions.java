@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1130,26 +1131,26 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__copy_siginfo_from_user32($arg1, $arg2, (const struct compat_siginfo*)$arg3)")
+  @BuiltinBPFFunction("__copy_siginfo_from_user32($arg1, $arg2, (const struct compat_siginfo *)$arg3)")
   public static int __copy_siginfo_from_user32(int signo, Ptr<kernel_siginfo> to,
       Ptr<compat_siginfo> ufrom) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__copy_siginfo_to_user32($arg1, (const struct kernel_siginfo*)$arg2)")
+  @BuiltinBPFFunction("__copy_siginfo_to_user32($arg1, (const struct kernel_siginfo *)$arg2)")
   public static int __copy_siginfo_to_user32(Ptr<compat_siginfo> to, Ptr<kernel_siginfo> from) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__copy_skb_header($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("__copy_skb_header($arg1, (const struct sk_buff *)$arg2)")
   public static void __copy_skb_header(Ptr<sk_buff> _new, Ptr<sk_buff> old) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__copy_user_flushcache($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__copy_user_flushcache($arg1, (const void *)$arg2, $arg3)")
   public static long __copy_user_flushcache(Ptr<?> dst, Ptr<?> src, @Unsigned int size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1188,26 +1189,26 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_copy_from_user($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("_copy_from_user($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long _copy_from_user(Ptr<?> to, Ptr<?> from, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_copy_mc_to_iter((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("_copy_mc_to_iter((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned long _copy_mc_to_iter(Ptr<?> addr, @Unsigned long bytes,
       Ptr<iov_iter> i) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_copy_to_iter((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("_copy_to_iter((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned long _copy_to_iter(Ptr<?> addr, @Unsigned long bytes, Ptr<iov_iter> i) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_copy_to_user($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("_copy_to_user($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long _copy_to_user(Ptr<?> to, Ptr<?> from, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1270,7 +1271,7 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_compat_iovec_from_user($arg1, (const struct iovec*)$arg2, $arg3)")
+  @BuiltinBPFFunction("copy_compat_iovec_from_user($arg1, (const struct iovec *)$arg2, $arg3)")
   public static int copy_compat_iovec_from_user(Ptr<iovec> iov, Ptr<iovec> uvec,
       @Unsigned int nr_segs) {
     throw new MethodIsBPFRelatedFunction();
@@ -1335,7 +1336,7 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_fid_info_to_user($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("copy_fid_info_to_user($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6, $arg7)")
   public static int copy_fid_info_to_user(Ptr<__kernel_fsid_t> fsid, Ptr<fanotify_fh> fh,
       int info_type, String name, @Unsigned long name_len, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1349,7 +1350,7 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_folio_from_user($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("copy_folio_from_user($arg1, (const void *)$arg2, $arg3)")
   public static long copy_folio_from_user(Ptr<folio> dst_folio, Ptr<?> usr_src,
       boolean allow_pagefault) {
     throw new MethodIsBPFRelatedFunction();
@@ -1363,7 +1364,7 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_from_buffer($arg1, $arg2, $arg3, (const void*)$arg4, (const void*)$arg5)")
+  @BuiltinBPFFunction("copy_from_buffer($arg1, $arg2, $arg3, (const void *)$arg4, (const void *)$arg5)")
   public static int copy_from_buffer(Ptr<?> dst, @Unsigned int offset, @Unsigned int size,
       Ptr<?> kbuf, Ptr<?> ubuf) {
     throw new MethodIsBPFRelatedFunction();
@@ -1377,13 +1378,13 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_from_kernel_nofault($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("copy_from_kernel_nofault($arg1, (const void *)$arg2, $arg3)")
   public static long copy_from_kernel_nofault(Ptr<?> dst, Ptr<?> src, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_from_kernel_nofault_allowed((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("copy_from_kernel_nofault_allowed((const void *)$arg1, $arg2)")
   public static boolean copy_from_kernel_nofault_allowed(Ptr<?> unsafe_src, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1395,7 +1396,7 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_from_read_buf((const struct tty_struct*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("copy_from_read_buf((const struct tty_struct *)$arg1, $arg2, $arg3)")
   public static boolean copy_from_read_buf(Ptr<tty_struct> tty, Ptr<Ptr<java.lang.Character>> kbp,
       Ptr<java.lang. @Unsigned Long> nr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1409,13 +1410,13 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_from_user_nmi($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("copy_from_user_nmi($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long copy_from_user_nmi(Ptr<?> to, Ptr<?> from, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_from_user_nofault($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("copy_from_user_nofault($arg1, (const void *)$arg2, $arg3)")
   public static long copy_from_user_nofault(Ptr<?> dst, Ptr<?> src, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1433,13 +1434,13 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_fsxattr_to_user((const struct file_kattr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("copy_fsxattr_to_user((const struct file_kattr *)$arg1, $arg2)")
   public static int copy_fsxattr_to_user(Ptr<file_kattr> fa, Ptr<fsxattr> ufa) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_func_state($arg1, (const struct bpf_func_state*)$arg2)")
+  @BuiltinBPFFunction("copy_func_state($arg1, (const struct bpf_func_state *)$arg2)")
   public static int copy_func_state(Ptr<bpf_func_state> dst, Ptr<bpf_func_state> src) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1481,7 +1482,7 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_iovec_from_user($arg1, (const struct iovec*)$arg2, $arg3)")
+  @BuiltinBPFFunction("copy_iovec_from_user($arg1, (const struct iovec *)$arg2, $arg3)")
   public static int copy_iovec_from_user(Ptr<iovec> iov, Ptr<iovec> uiov, @Unsigned long nr_segs) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1532,19 +1533,19 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_mc_to_kernel($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("copy_mc_to_kernel($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long copy_mc_to_kernel(Ptr<?> dst, Ptr<?> src, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_mc_to_user($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("copy_mc_to_user($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long copy_mc_to_user(Ptr<?> dst, Ptr<?> src, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_mnt_id_req((const struct mnt_id_req*)$arg1, $arg2)")
+  @BuiltinBPFFunction("copy_mnt_id_req((const struct mnt_id_req *)$arg1, $arg2)")
   public static int copy_mnt_id_req(Ptr<mnt_id_req> req, Ptr<mnt_id_req> kreq) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1569,7 +1570,7 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_mount_options((const void*)$arg1)")
+  @BuiltinBPFFunction("copy_mount_options((const void *)$arg1)")
   public static Ptr<?> copy_mount_options(Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1628,7 +1629,7 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_ns_info_to_user((const struct mnt_namespace*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("copy_ns_info_to_user((const struct mnt_namespace *)$arg1, $arg2, $arg3, $arg4)")
   public static int copy_ns_info_to_user(Ptr<mnt_namespace> mnt_ns, Ptr<mnt_ns_info> uinfo,
       @Unsigned long usize, Ptr<mnt_ns_info> kinfo) {
     throw new MethodIsBPFRelatedFunction();
@@ -1738,7 +1739,7 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_regset_to_user($arg1, (const struct user_regset_view*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("copy_regset_to_user($arg1, (const struct user_regset_view *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int copy_regset_to_user(Ptr<task_struct> target, Ptr<user_regset_view> view,
       @Unsigned int setno, @Unsigned int offset, @Unsigned int size, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1770,7 +1771,7 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_sigframe_from_user_to_xstate($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("copy_sigframe_from_user_to_xstate($arg1, (const void *)$arg2)")
   public static int copy_sigframe_from_user_to_xstate(Ptr<task_struct> tsk, Ptr<?> ubuf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1782,40 +1783,40 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_siginfo($arg1, (const kernel_siginfo*)$arg2)")
+  @BuiltinBPFFunction("copy_siginfo($arg1, (const kernel_siginfo *)$arg2)")
   public static void copy_siginfo(Ptr<@OriginalName("kernel_siginfo_t") kernel_siginfo> to,
       Ptr<@OriginalName("kernel_siginfo_t") kernel_siginfo> from) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_siginfo_from_user($arg1, (const siginfo*)$arg2)")
+  @BuiltinBPFFunction("copy_siginfo_from_user($arg1, (const siginfo *)$arg2)")
   public static int copy_siginfo_from_user(Ptr<@OriginalName("kernel_siginfo_t") kernel_siginfo> to,
       Ptr<@OriginalName("siginfo_t") siginfo> from) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_siginfo_from_user32($arg1, (const struct compat_siginfo*)$arg2)")
+  @BuiltinBPFFunction("copy_siginfo_from_user32($arg1, (const struct compat_siginfo *)$arg2)")
   public static int copy_siginfo_from_user32(Ptr<kernel_siginfo> to, Ptr<compat_siginfo> ufrom) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_siginfo_to_external($arg1, (const kernel_siginfo*)$arg2)")
+  @BuiltinBPFFunction("copy_siginfo_to_external($arg1, (const kernel_siginfo *)$arg2)")
   public static void copy_siginfo_to_external(Ptr<@OriginalName("siginfo_t") siginfo> to,
       Ptr<@OriginalName("kernel_siginfo_t") kernel_siginfo> from) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_siginfo_to_external32($arg1, (const struct kernel_siginfo*)$arg2)")
+  @BuiltinBPFFunction("copy_siginfo_to_external32($arg1, (const struct kernel_siginfo *)$arg2)")
   public static void copy_siginfo_to_external32(Ptr<compat_siginfo> to, Ptr<kernel_siginfo> from) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_siginfo_to_user($arg1, (const kernel_siginfo*)$arg2)")
+  @BuiltinBPFFunction("copy_siginfo_to_user($arg1, (const kernel_siginfo *)$arg2)")
   public static int copy_siginfo_to_user(Ptr<@OriginalName("siginfo_t") siginfo> to,
       Ptr<@OriginalName("kernel_siginfo_t") kernel_siginfo> from) {
     throw new MethodIsBPFRelatedFunction();
@@ -1842,13 +1843,13 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_string_kernel((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("copy_string_kernel((const u8 *)$arg1, $arg2)")
   public static int copy_string_kernel(String arg, Ptr<linux_binprm> bprm) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_strings_kernel($arg1, (const u8**)$arg2, $arg3)")
+  @BuiltinBPFFunction("copy_strings_kernel($arg1, (const const u8 **)$arg2, $arg3)")
   public static int copy_strings_kernel(int argc, Ptr<String> argv, Ptr<linux_binprm> bprm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1874,7 +1875,7 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_thread($arg1, (const struct kernel_clone_args*)$arg2)")
+  @BuiltinBPFFunction("copy_thread($arg1, (const struct kernel_clone_args *)$arg2)")
   public static int copy_thread(Ptr<task_struct> p, Ptr<kernel_clone_args> args) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1893,19 +1894,19 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_to_kernel_nofault($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("copy_to_kernel_nofault($arg1, (const void *)$arg2, $arg3)")
   public static long copy_to_kernel_nofault(Ptr<?> dst, Ptr<?> src, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_to_page($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("copy_to_page($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static void copy_to_page(Ptr<page> page, @Unsigned long vaddr, Ptr<?> src, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_to_user_nofault($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("copy_to_user_nofault($arg1, (const void *)$arg2, $arg3)")
   public static long copy_to_user_nofault(Ptr<?> dst, Ptr<?> src, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1930,14 +1931,14 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_uabi_from_kernel_to_xstate($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("copy_uabi_from_kernel_to_xstate($arg1, (const void *)$arg2, $arg3)")
   public static int copy_uabi_from_kernel_to_xstate(Ptr<fpstate> fpstate, Ptr<?> kbuf,
       Ptr<java.lang. @Unsigned Integer> pkru) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_uabi_to_xstate($arg1, (const void*)$arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("copy_uabi_to_xstate($arg1, (const void *)$arg2, (const void *)$arg3, $arg4)")
   public static int copy_uabi_to_xstate(Ptr<fpstate> fpstate, Ptr<?> kbuf, Ptr<?> ubuf,
       Ptr<java.lang. @Unsigned Integer> pkru) {
     throw new MethodIsBPFRelatedFunction();
@@ -1964,7 +1965,7 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_verifier_state($arg1, (const struct bpf_verifier_state*)$arg2)")
+  @BuiltinBPFFunction("copy_verifier_state($arg1, (const struct bpf_verifier_state *)$arg2)")
   public static int copy_verifier_state(Ptr<bpf_verifier_state> dst_state,
       Ptr<bpf_verifier_state> src) {
     throw new MethodIsBPFRelatedFunction();
@@ -1986,7 +1987,7 @@ public final class CopyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("copy_workqueue_attrs($arg1, (const struct workqueue_attrs*)$arg2)")
+  @BuiltinBPFFunction("copy_workqueue_attrs($arg1, (const struct workqueue_attrs *)$arg2)")
   public static void copy_workqueue_attrs(Ptr<workqueue_attrs> to, Ptr<workqueue_attrs> from) {
     throw new MethodIsBPFRelatedFunction();
   }

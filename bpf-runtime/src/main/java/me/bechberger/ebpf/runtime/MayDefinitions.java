@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,21 +1091,21 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class MayDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("may_access_direct_pkt_data($arg1, (const struct bpf_call_arg_meta*)$arg2, $arg3)")
+  @BuiltinBPFFunction("may_access_direct_pkt_data($arg1, (const struct bpf_call_arg_meta *)$arg2, $arg3)")
   public static boolean may_access_direct_pkt_data(Ptr<bpf_verifier_env> env,
       Ptr<bpf_call_arg_meta> meta, bpf_access_type t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("may_change_ptraced_domain((const struct cred*)$arg1, $arg2, (const u8**)$arg3)")
+  @BuiltinBPFFunction("may_change_ptraced_domain((const struct cred *)$arg1, $arg2, (const u8**)$arg3)")
   public static int may_change_ptraced_domain(Ptr<cred> to_cred, Ptr<aa_label> to_label,
       Ptr<String> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("may_context_mount_inode_relabel($arg1, $arg2, (const struct cred*)$arg3)")
+  @BuiltinBPFFunction("may_context_mount_inode_relabel($arg1, $arg2, (const struct cred *)$arg3)")
   public static int may_context_mount_inode_relabel(@Unsigned int sid,
       Ptr<superblock_security_struct> sbsec, Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
@@ -1138,7 +1139,7 @@ public final class MayDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("may_linkat($arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("may_linkat($arg1, (const struct path *)$arg2)")
   public static int may_linkat(Ptr<mnt_idmap> idmap, Ptr<path> link) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1150,13 +1151,13 @@ public final class MayDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("may_open($arg1, (const struct path*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("may_open($arg1, (const struct path *)$arg2, $arg3, $arg4)")
   public static int may_open(Ptr<mnt_idmap> idmap, Ptr<path> path, int acc_mode, int flag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("may_open_dev((const struct path*)$arg1)")
+  @BuiltinBPFFunction("may_open_dev((const struct path *)$arg1)")
   public static boolean may_open_dev(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }

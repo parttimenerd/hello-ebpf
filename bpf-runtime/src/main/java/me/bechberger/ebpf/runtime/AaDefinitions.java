@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__aa_create_ns($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__aa_create_ns($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<aa_ns> __aa_create_ns(Ptr<aa_ns> parent, String name, Ptr<dentry> dir) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1108,7 +1109,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__aa_find_or_create_ns($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__aa_find_or_create_ns($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<aa_ns> __aa_find_or_create_ns(Ptr<aa_ns> parent, String name, Ptr<dentry> dir) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1145,13 +1146,13 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__aa_lookupn_ns($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__aa_lookupn_ns($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<aa_ns> __aa_lookupn_ns(Ptr<aa_ns> view, String hname, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__aa_path_perm((const u8*)$arg1, (const struct cred*)$arg2, $arg3, (const u8*)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("__aa_path_perm((const u8 *)$arg1, (const struct cred *)$arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static int __aa_path_perm(String op, Ptr<cred> subj_cred, Ptr<aa_profile> profile,
       String name, @Unsigned int request, Ptr<path_cond> cond, int flags, Ptr<aa_perms> perms,
       boolean prompt) {
@@ -1183,14 +1184,14 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_af_perm((const struct cred*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("aa_af_perm((const struct cred *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int aa_af_perm(Ptr<cred> subj_cred, Ptr<aa_label> label, String op,
       @Unsigned int request, @Unsigned short family, int type, int protocol) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_alloc_null($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("aa_alloc_null($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<aa_profile> aa_alloc_null(Ptr<aa_profile> parent, String name,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1203,7 +1204,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_alloc_profile((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("aa_alloc_profile((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<aa_profile> aa_alloc_profile(String hname, Ptr<aa_proxy> proxy,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1281,7 +1282,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_audit_file((const struct cred*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, (const u8*)$arg6, (const u8*)$arg7, $arg8, $arg9, (const u8*)$arg10, $arg11, $arg12)")
+  @BuiltinBPFFunction("aa_audit_file((const struct cred *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, (const u8 *)$arg6, (const u8 *)$arg7, $arg8, $arg9, (const u8 *)$arg10, $arg11, $arg12)")
   public static int aa_audit_file(Ptr<cred> subj_cred, Ptr<aa_profile> profile, Ptr<aa_perms> perms,
       String op, @Unsigned int request, String name, String target, Ptr<aa_label> tlabel,
       kuid_t ouid, String info, int error, boolean prompt) {
@@ -1301,21 +1302,21 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_audit_perm_mask($arg1, $arg2, (const u8*)$arg3, $arg4, (const u8**)$arg5, $arg6)")
+  @BuiltinBPFFunction("aa_audit_perm_mask($arg1, $arg2, (const u8 *)$arg3, $arg4, (const const u8 **)$arg5, $arg6)")
   public static void aa_audit_perm_mask(Ptr<audit_buffer> ab, @Unsigned int mask, String chrs,
       @Unsigned int chrsmask, Ptr<String> names, @Unsigned int namesmask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_audit_perm_names($arg1, (const u8**)$arg2, $arg3)")
+  @BuiltinBPFFunction("aa_audit_perm_names($arg1, (const const u8 **)$arg2, $arg3)")
   public static void aa_audit_perm_names(Ptr<audit_buffer> ab, Ptr<String> names,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_audit_perms($arg1, $arg2, (const u8*)$arg3, $arg4, (const u8**)$arg5, $arg6)")
+  @BuiltinBPFFunction("aa_audit_perms($arg1, $arg2, (const u8 *)$arg3, $arg4, (const const u8 **)$arg5, $arg6)")
   public static void aa_audit_perms(Ptr<audit_buffer> ab, Ptr<apparmor_audit_data> ad, String chrs,
       @Unsigned int chrsmask, Ptr<String> names, @Unsigned int namesmask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1348,7 +1349,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_bind_mount((const struct cred*)$arg1, $arg2, (const struct path*)$arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("aa_bind_mount((const struct cred *)$arg1, $arg2, (const struct path *)$arg3, (const u8 *)$arg4, $arg5)")
   public static int aa_bind_mount(Ptr<cred> subj_cred, Ptr<aa_label> label, Ptr<path> path,
       String dev_name, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1368,7 +1369,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_capable((const struct cred*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("aa_capable((const struct cred *)$arg1, $arg2, $arg3, $arg4)")
   public static int aa_capable(Ptr<cred> subj_cred, Ptr<aa_label> label, int cap,
       @Unsigned int opts) {
     throw new MethodIsBPFRelatedFunction();
@@ -1381,7 +1382,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_change_profile((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("aa_change_profile((const u8 *)$arg1, $arg2)")
   public static int aa_change_profile(String fqname, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1473,34 +1474,34 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_dfa_leftmatch($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("aa_dfa_leftmatch($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @Unsigned int aa_dfa_leftmatch(Ptr<aa_dfa> dfa, @Unsigned int start, String str,
       Ptr<java.lang. @Unsigned Integer> count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_dfa_match($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("aa_dfa_match($arg1, $arg2, (const u8 *)$arg3)")
   public static @Unsigned int aa_dfa_match(Ptr<aa_dfa> dfa, @Unsigned int start, String str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_dfa_match_len($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("aa_dfa_match_len($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @Unsigned int aa_dfa_match_len(Ptr<aa_dfa> dfa, @Unsigned int start, String str,
       int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_dfa_match_until($arg1, $arg2, (const u8*)$arg3, (const u8**)$arg4)")
+  @BuiltinBPFFunction("aa_dfa_match_until($arg1, $arg2, (const u8 *)$arg3, (const u8**)$arg4)")
   public static @Unsigned int aa_dfa_match_until(Ptr<aa_dfa> dfa, @Unsigned int start, String str,
       Ptr<String> retpos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_dfa_matchn_until($arg1, $arg2, (const u8*)$arg3, $arg4, (const u8**)$arg5)")
+  @BuiltinBPFFunction("aa_dfa_matchn_until($arg1, $arg2, (const u8 *)$arg3, $arg4, (const u8**)$arg5)")
   public static @Unsigned int aa_dfa_matchn_until(Ptr<aa_dfa> dfa, @Unsigned int start, String str,
       int n, Ptr<String> retpos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1525,7 +1526,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_disconnect((const struct path*)$arg1, $arg2, $arg3, $arg4, $arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("aa_disconnect((const struct path *)$arg1, $arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6)")
   public static int aa_disconnect(Ptr<path> path, String buf, Ptr<String> name, int flags,
       int flags_match, String disconnected) {
     throw new MethodIsBPFRelatedFunction();
@@ -1552,20 +1553,20 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_file_perm((const u8*)$arg1, (const struct cred*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("aa_file_perm((const u8 *)$arg1, (const struct cred *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int aa_file_perm(String op, Ptr<cred> subj_cred, Ptr<aa_label> label,
       Ptr<file> file, @Unsigned int request, boolean in_atomic) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_find_child($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("aa_find_child($arg1, (const u8 *)$arg2)")
   public static Ptr<aa_profile> aa_find_child(Ptr<aa_profile> parent, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_fqlookupn_profile($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("aa_fqlookupn_profile($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<aa_profile> aa_fqlookupn_profile(Ptr<aa_label> base, String fqname,
       @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1692,7 +1693,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_inet_file_perm((const struct cred*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_inet_file_perm((const struct cred *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int aa_inet_file_perm(Ptr<cred> subj_cred, Ptr<aa_label> label, String op,
       @Unsigned int request, Ptr<socket> sock) {
     throw new MethodIsBPFRelatedFunction();
@@ -1705,33 +1706,33 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_inet_msg_perm((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_inet_msg_perm((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int aa_inet_msg_perm(String op, @Unsigned int request, Ptr<socket> sock,
       Ptr<msghdr> msg, int size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_inet_opt_perm((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_inet_opt_perm((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int aa_inet_opt_perm(String op, @Unsigned int request, Ptr<socket> sock, int level,
       int optname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_inet_sock_perm((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("aa_inet_sock_perm((const u8 *)$arg1, $arg2, $arg3)")
   public static int aa_inet_sock_perm(String op, @Unsigned int request, Ptr<socket> sock) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_info_message((const u8*)$arg1)")
+  @BuiltinBPFFunction("aa_info_message((const u8 *)$arg1)")
   public static void aa_info_message(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_inherit_files((const struct cred*)$arg1, $arg2)")
+  @BuiltinBPFFunction("aa_inherit_files((const struct cred *)$arg1, $arg2)")
   public static void aa_inherit_files(Ptr<cred> cred, Ptr<files_struct> files) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1841,7 +1842,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_label_parse($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_label_parse($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static Ptr<aa_label> aa_label_parse(Ptr<aa_label> base, String str,
       @Unsigned @OriginalName("gfp_t") int gfp, boolean create, boolean force_stack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1874,7 +1875,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_label_sk_perm((const struct cred*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_label_sk_perm((const struct cred *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int aa_label_sk_perm(Ptr<cred> subj_cred, Ptr<aa_label> label, String op,
       @Unsigned int request, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
@@ -1888,7 +1889,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_label_strn_parse($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("aa_label_strn_parse($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<aa_label> aa_label_strn_parse(Ptr<aa_label> base, String str, @Unsigned long n,
       @Unsigned @OriginalName("gfp_t") int gfp, boolean create, boolean force_stack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1979,13 +1980,13 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_lookupn_ns($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("aa_lookupn_ns($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<aa_ns> aa_lookupn_ns(Ptr<aa_ns> view, String name, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_lookupn_profile($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("aa_lookupn_profile($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<aa_profile> aa_lookupn_profile(Ptr<aa_ns> ns, String hname, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2005,56 +2006,56 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_may_manage_policy((const struct cred*)$arg1, $arg2, $arg3, (const struct cred*)$arg4, $arg5)")
+  @BuiltinBPFFunction("aa_may_manage_policy((const struct cred *)$arg1, $arg2, $arg3, (const struct cred *)$arg4, $arg5)")
   public static int aa_may_manage_policy(Ptr<cred> subj_cred, Ptr<aa_label> label, Ptr<aa_ns> ns,
       Ptr<cred> ocred, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_may_ptrace((const struct cred*)$arg1, $arg2, (const struct cred*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_may_ptrace((const struct cred *)$arg1, $arg2, (const struct cred *)$arg3, $arg4, $arg5)")
   public static int aa_may_ptrace(Ptr<cred> tracer_cred, Ptr<aa_label> tracer,
       Ptr<cred> tracee_cred, Ptr<aa_label> tracee, @Unsigned int request) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_may_signal((const struct cred*)$arg1, $arg2, (const struct cred*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_may_signal((const struct cred *)$arg1, $arg2, (const struct cred *)$arg3, $arg4, $arg5)")
   public static int aa_may_signal(Ptr<cred> subj_cred, Ptr<aa_label> sender, Ptr<cred> target_cred,
       Ptr<aa_label> target, int sig) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_mount_change_type((const struct cred*)$arg1, $arg2, (const struct path*)$arg3, $arg4)")
+  @BuiltinBPFFunction("aa_mount_change_type((const struct cred *)$arg1, $arg2, (const struct path *)$arg3, $arg4)")
   public static int aa_mount_change_type(Ptr<cred> subj_cred, Ptr<aa_label> label, Ptr<path> path,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_move_mount((const struct cred*)$arg1, $arg2, (const struct path*)$arg3, (const struct path*)$arg4)")
+  @BuiltinBPFFunction("aa_move_mount((const struct cred *)$arg1, $arg2, (const struct path *)$arg3, (const struct path *)$arg4)")
   public static int aa_move_mount(Ptr<cred> subj_cred, Ptr<aa_label> label, Ptr<path> from_path,
       Ptr<path> to_path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_move_mount_old((const struct cred*)$arg1, $arg2, (const struct path*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("aa_move_mount_old((const struct cred *)$arg1, $arg2, (const struct path *)$arg3, (const u8 *)$arg4)")
   public static int aa_move_mount_old(Ptr<cred> subj_cred, Ptr<aa_label> label, Ptr<path> path,
       String orig_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_mqueue_perm((const u8*)$arg1, (const struct cred*)$arg2, $arg3, (const struct path*)$arg4, $arg5)")
+  @BuiltinBPFFunction("aa_mqueue_perm((const u8 *)$arg1, (const struct cred *)$arg2, $arg3, (const struct path *)$arg4, $arg5)")
   public static int aa_mqueue_perm(String op, Ptr<cred> subj_cred, Ptr<aa_label> label,
       Ptr<path> path, @Unsigned int request) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_new_learning_profile($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("aa_new_learning_profile($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<aa_profile> aa_new_learning_profile(Ptr<aa_profile> parent, boolean hat,
       String base, @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
@@ -2075,7 +2076,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_new_mount((const struct cred*)$arg1, $arg2, (const u8*)$arg3, (const struct path*)$arg4, (const u8*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("aa_new_mount((const struct cred *)$arg1, $arg2, (const u8 *)$arg3, (const struct path *)$arg4, (const u8 *)$arg5, $arg6, $arg7)")
   public static int aa_new_mount(Ptr<cred> subj_cred, Ptr<aa_label> label, String dev_name,
       Ptr<path> path, String type, @Unsigned long flags, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -2100,27 +2101,27 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_parse_debug_params((const u8*)$arg1)")
+  @BuiltinBPFFunction("aa_parse_debug_params((const u8 *)$arg1)")
   public static int aa_parse_debug_params(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_path_link((const struct cred*)$arg1, $arg2, $arg3, (const struct path*)$arg4, $arg5)")
+  @BuiltinBPFFunction("aa_path_link((const struct cred *)$arg1, $arg2, $arg3, (const struct path *)$arg4, $arg5)")
   public static int aa_path_link(Ptr<cred> subj_cred, Ptr<aa_label> label, Ptr<dentry> old_dentry,
       Ptr<path> new_dir, Ptr<dentry> new_dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_path_name((const struct path*)$arg1, $arg2, $arg3, (const u8**)$arg4, (const u8**)$arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("aa_path_name((const struct path *)$arg1, $arg2, $arg3, (const u8**)$arg4, (const u8**)$arg5, (const u8 *)$arg6)")
   public static int aa_path_name(Ptr<path> path, int flags, String buffer, Ptr<String> name,
       Ptr<String> info, String disconnected) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_path_perm((const u8*)$arg1, (const struct cred*)$arg2, $arg3, (const struct path*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("aa_path_perm((const u8 *)$arg1, (const struct cred *)$arg2, $arg3, (const struct path *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int aa_path_perm(String op, Ptr<cred> subj_cred, Ptr<aa_label> label,
       Ptr<path> path, int flags, @Unsigned int request, Ptr<path_cond> cond,
       Ptr<java.lang. @Unsigned Integer> allow) {
@@ -2134,14 +2135,14 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_perm_mask_to_str($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("aa_perm_mask_to_str($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void aa_perm_mask_to_str(String str, @Unsigned long str_size, String chrs,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_pivotroot((const struct cred*)$arg1, $arg2, (const struct path*)$arg3, (const struct path*)$arg4)")
+  @BuiltinBPFFunction("aa_pivotroot((const struct cred *)$arg1, $arg2, (const struct path *)$arg3, (const struct path *)$arg4)")
   public static int aa_pivotroot(Ptr<cred> subj_cred, Ptr<aa_label> label, Ptr<path> old_path,
       Ptr<path> new_path) {
     throw new MethodIsBPFRelatedFunction();
@@ -2154,7 +2155,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_policy_admin_capable((const struct cred*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("aa_policy_admin_capable((const struct cred *)$arg1, $arg2, $arg3)")
   public static boolean aa_policy_admin_capable(Ptr<cred> subj_cred, Ptr<aa_label> label,
       Ptr<aa_ns> ns) {
     throw new MethodIsBPFRelatedFunction();
@@ -2167,21 +2168,21 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_policy_init($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("aa_policy_init($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static boolean aa_policy_init(Ptr<aa_policy> policy, String prefix, String name,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_policy_view_capable((const struct cred*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("aa_policy_view_capable((const struct cred *)$arg1, $arg2, $arg3)")
   public static boolean aa_policy_view_capable(Ptr<cred> subj_cred, Ptr<aa_label> label,
       Ptr<aa_ns> ns) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_prepare_ns($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("aa_prepare_ns($arg1, (const u8 *)$arg2)")
   public static Ptr<aa_ns> aa_prepare_ns(Ptr<aa_ns> parent, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2213,7 +2214,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_profile_mqueue_perm($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_profile_mqueue_perm($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int aa_profile_mqueue_perm(Ptr<aa_profile> profile, Ptr<path> path,
       @Unsigned int request, String buffer, Ptr<apparmor_audit_data> ad) {
     throw new MethodIsBPFRelatedFunction();
@@ -2270,7 +2271,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_remount((const struct cred*)$arg1, $arg2, (const struct path*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_remount((const struct cred *)$arg1, $arg2, (const struct path *)$arg3, $arg4, $arg5)")
   public static int aa_remount(Ptr<cred> subj_cred, Ptr<aa_label> label, Ptr<path> path,
       @Unsigned long flags, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -2346,7 +2347,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_simple_write_to_buffer((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("aa_simple_write_to_buffer((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<aa_loaddata> aa_simple_write_to_buffer(String userbuf,
       @Unsigned long alloc_size, @Unsigned long copy_size,
       Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
@@ -2354,20 +2355,20 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_sk_perm((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("aa_sk_perm((const u8 *)$arg1, $arg2, $arg3)")
   public static int aa_sk_perm(String op, @Unsigned int request, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_sock_file_perm((const struct cred*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_sock_file_perm((const struct cred *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int aa_sock_file_perm(Ptr<cred> subj_cred, Ptr<aa_label> label, String op,
       @Unsigned int request, Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)aa_splitn_fqname((const u8*)$arg1, $arg2, (const u8**)$arg3, $arg4))")
+  @BuiltinBPFFunction("((const u8*)aa_splitn_fqname((const u8 *)$arg1, $arg2, (const u8**)$arg3, $arg4))")
   public static String aa_splitn_fqname(String fqname, @Unsigned long n, Ptr<String> ns_name,
       Ptr<java.lang. @Unsigned Long> ns_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -2386,27 +2387,27 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_str_perms($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_str_perms($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static @Unsigned int aa_str_perms(Ptr<aa_policydb> file_rules, @Unsigned int start,
       String name, Ptr<path_cond> cond, Ptr<aa_perms> perms) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_sunaddr((const struct unix_sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("aa_sunaddr((const struct unix_sock *)$arg1, $arg2)")
   public static Ptr<sockaddr_un> aa_sunaddr(Ptr<unix_sock> u, Ptr<java.lang.Integer> addrlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_task_setrlimit((const struct cred*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_task_setrlimit((const struct cred *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int aa_task_setrlimit(Ptr<cred> subj_cred, Ptr<aa_label> label,
       Ptr<task_struct> task, @Unsigned int resource, Ptr<rlimit> new_rlim) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_umount((const struct cred*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("aa_umount((const struct cred *)$arg1, $arg2, $arg3, $arg4)")
   public static int aa_umount(Ptr<cred> subj_cred, Ptr<aa_label> label, Ptr<vfsmount> mnt,
       int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2431,14 +2432,14 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_unix_file_perm((const struct cred*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_unix_file_perm((const struct cred *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int aa_unix_file_perm(Ptr<cred> subj_cred, Ptr<aa_label> label, String op,
       @Unsigned int request, Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_unix_label_sk_perm((const struct cred*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("aa_unix_label_sk_perm((const struct cred *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static int aa_unix_label_sk_perm(Ptr<cred> subj_cred, Ptr<aa_label> label, String op,
       @Unsigned int request, Ptr<sock> sk, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
@@ -2451,21 +2452,21 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_unix_opt_perm((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("aa_unix_opt_perm((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int aa_unix_opt_perm(String op, @Unsigned int request, Ptr<socket> sock, int level,
       int optname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_unix_peer_perm((const struct cred*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("aa_unix_peer_perm((const struct cred *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int aa_unix_peer_perm(Ptr<cred> subj_cred, Ptr<aa_label> label, String op,
       @Unsigned int request, Ptr<sock> sk, Ptr<sock> peer_sk, Ptr<aa_label> peer_label) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_unix_sock_perm((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("aa_unix_sock_perm((const u8 *)$arg1, $arg2, $arg3)")
   public static int aa_unix_sock_perm(String op, @Unsigned int request, Ptr<socket> sock) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2477,50 +2478,50 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_unpack_array($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("aa_unpack_array($arg1, (const u8 *)$arg2, $arg3)")
   public static boolean aa_unpack_array(Ptr<aa_ext> e, String name,
       Ptr<java.lang. @Unsigned Short> size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_unpack_blob($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("aa_unpack_blob($arg1, $arg2, (const u8 *)$arg3)")
   public static @Unsigned long aa_unpack_blob(Ptr<aa_ext> e, Ptr<String> blob, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_unpack_cap_high($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("aa_unpack_cap_high($arg1, $arg2, (const u8 *)$arg3)")
   public static boolean aa_unpack_cap_high(Ptr<aa_ext> e, Ptr<kernel_cap_t> data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_unpack_cap_low($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("aa_unpack_cap_low($arg1, $arg2, (const u8 *)$arg3)")
   public static boolean aa_unpack_cap_low(Ptr<aa_ext> e, Ptr<kernel_cap_t> data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_unpack_nameX($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("aa_unpack_nameX($arg1, $arg2, (const u8 *)$arg3)")
   public static boolean aa_unpack_nameX(Ptr<aa_ext> e, aa_code code, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_unpack_str($arg1, (const u8**)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("aa_unpack_str($arg1, (const u8**)$arg2, (const u8 *)$arg3)")
   public static int aa_unpack_str(Ptr<aa_ext> e, Ptr<String> string, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_unpack_strdup($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("aa_unpack_strdup($arg1, $arg2, (const u8 *)$arg3)")
   public static int aa_unpack_strdup(Ptr<aa_ext> e, Ptr<String> string, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_unpack_u32($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("aa_unpack_u32($arg1, $arg2, (const u8 *)$arg3)")
   public static boolean aa_unpack_u32(Ptr<aa_ext> e, Ptr<java.lang. @Unsigned Integer> data,
       String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -2547,7 +2548,7 @@ public final class AaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aa_write_access($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("aa_write_access($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long aa_write_access(Ptr<file> file, String ubuf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

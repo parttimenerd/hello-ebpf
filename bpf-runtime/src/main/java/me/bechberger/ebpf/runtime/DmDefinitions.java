@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1211,7 +1212,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_attr_rq_based_seq_io_merge_deadline_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dm_attr_rq_based_seq_io_merge_deadline_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long dm_attr_rq_based_seq_io_merge_deadline_store(
       Ptr<mapped_device> md, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1225,7 +1226,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dm_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long dm_attr_store(Ptr<kobject> kobj, Ptr<attribute> attr,
       String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1252,14 +1253,14 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_audit_log_bio((const u8*)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("dm_audit_log_bio((const u8 *)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static void dm_audit_log_bio(String dm_msg_prefix, String op, Ptr<bio> bio,
       @Unsigned @OriginalName("sector_t") long sector, int result) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_audit_log_ti($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("dm_audit_log_ti($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void dm_audit_log_ti(int audit_type, String dm_msg_prefix, String op,
       Ptr<dm_target> ti, int result) {
     throw new MethodIsBPFRelatedFunction();
@@ -1272,7 +1273,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_bio_get_target_bio_nr((const struct bio*)$arg1)")
+  @BuiltinBPFFunction("dm_bio_get_target_bio_nr((const struct bio *)$arg1)")
   public static @Unsigned int dm_bio_get_target_bio_nr(Ptr<bio> bio) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1402,7 +1403,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_derive_sw_secret($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("dm_derive_sw_secret($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int dm_derive_sw_secret(Ptr<blk_crypto_profile> profile,
       Ptr<java.lang.Character> eph_key, @Unsigned long eph_key_size,
       Ptr<java.lang.Character> sw_secret) {
@@ -1440,7 +1441,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_devt_from_path((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dm_devt_from_path((const u8 *)$arg1, $arg2)")
   public static int dm_devt_from_path(String path,
       Ptr<java.lang. @Unsigned @OriginalName("dev_t") Integer> dev_p) {
     throw new MethodIsBPFRelatedFunction();
@@ -1498,7 +1499,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_get_device($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("dm_get_device($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int dm_get_device(Ptr<dm_target> ti, String path,
       @Unsigned @OriginalName("blk_mode_t") int mode, Ptr<Ptr<dm_dev>> result) {
     throw new MethodIsBPFRelatedFunction();
@@ -1574,13 +1575,13 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_get_target_type((const u8*)$arg1)")
+  @BuiltinBPFFunction("dm_get_target_type((const u8 *)$arg1)")
   public static Ptr<target_type> dm_get_target_type(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_hash_insert((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dm_hash_insert((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static int dm_hash_insert(String name, String uuid, Ptr<mapped_device> md) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1593,7 +1594,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_hash_rename($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("dm_hash_rename($arg1, (const u8 *)$arg2)")
   public static Ptr<mapped_device> dm_hash_rename(Ptr<dm_ioctl> param, String _new) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1655,7 +1656,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_import_key($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("dm_import_key($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int dm_import_key(Ptr<blk_crypto_profile> profile, Ptr<java.lang.Character> raw_key,
       @Unsigned long raw_key_size, Ptr<java.lang.Character> lt_key) {
     throw new MethodIsBPFRelatedFunction();
@@ -1829,7 +1830,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_keyslot_evict($arg1, (const struct blk_crypto_key*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dm_keyslot_evict($arg1, (const struct blk_crypto_key *)$arg2, $arg3)")
   public static int dm_keyslot_evict(Ptr<blk_crypto_profile> profile, Ptr<blk_crypto_key> key,
       @Unsigned int slot) {
     throw new MethodIsBPFRelatedFunction();
@@ -1919,7 +1920,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_mq_queue_rq($arg1, (const struct blk_mq_queue_data*)$arg2)")
+  @BuiltinBPFFunction("dm_mq_queue_rq($arg1, (const struct blk_mq_queue_data *)$arg2)")
   public static @OriginalName("blk_status_t") char dm_mq_queue_rq(Ptr<blk_mq_hw_ctx> hctx,
       Ptr<blk_mq_queue_data> bd) {
     throw new MethodIsBPFRelatedFunction();
@@ -1962,7 +1963,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_path_uevent($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dm_path_uevent($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void dm_path_uevent(dm_uevent_type event_type, Ptr<dm_target> ti, String path,
       @Unsigned int nr_valid_paths) {
     throw new MethodIsBPFRelatedFunction();
@@ -2047,7 +2048,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_prepare_key($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("dm_prepare_key($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int dm_prepare_key(Ptr<blk_crypto_profile> profile, Ptr<java.lang.Character> lt_key,
       @Unsigned long lt_key_size, Ptr<java.lang.Character> eph_key) {
     throw new MethodIsBPFRelatedFunction();
@@ -2084,14 +2085,14 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_read_arg((const struct dm_arg*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("dm_read_arg((const struct dm_arg *)$arg1, $arg2, $arg3, $arg4)")
   public static int dm_read_arg(Ptr<dm_arg> arg, Ptr<dm_arg_set> arg_set,
       Ptr<java.lang. @Unsigned Integer> value, Ptr<String> error) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_read_arg_group((const struct dm_arg*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("dm_read_arg_group((const struct dm_arg *)$arg1, $arg2, $arg3, $arg4)")
   public static int dm_read_arg_group(Ptr<dm_arg> arg, Ptr<dm_arg_set> arg_set,
       Ptr<java.lang. @Unsigned Integer> value, Ptr<String> error) {
     throw new MethodIsBPFRelatedFunction();
@@ -2304,7 +2305,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_stats_list($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("dm_stats_list($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int dm_stats_list(Ptr<dm_stats> stats, String program, String result,
       @Unsigned int maxlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -2403,7 +2404,7 @@ public final class DmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dm_table_add_target($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("dm_table_add_target($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int dm_table_add_target(Ptr<dm_table> t, String type,
       @Unsigned @OriginalName("sector_t") long start, @Unsigned @OriginalName("sector_t") long len,
       String params) {

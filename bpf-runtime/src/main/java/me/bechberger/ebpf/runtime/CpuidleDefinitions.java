@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1165,7 +1166,7 @@ public final class CpuidleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpuidle_find_governor((const u8*)$arg1)")
+  @BuiltinBPFFunction("cpuidle_find_governor((const u8 *)$arg1)")
   public static Ptr<cpuidle_governor> cpuidle_find_governor(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1330,7 +1331,7 @@ public final class CpuidleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpuidle_state_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("cpuidle_state_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long cpuidle_state_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1343,7 +1344,7 @@ public final class CpuidleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpuidle_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("cpuidle_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long cpuidle_store(Ptr<kobject> kobj, Ptr<attribute> attr,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

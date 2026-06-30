@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1144,6 +1145,9 @@ public final class HidDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct hid_bpf_ctx* hid_bpf_allocate_context(unsigned int hid_id)"
+  )
   public static Ptr<hid_bpf_ctx> hid_bpf_allocate_context(@Unsigned int hid_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1180,6 +1184,9 @@ public final class HidDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction("hid_bpf_get_data($arg1, $arg2, (const long unsigned int)$arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "u8* hid_bpf_get_data(struct hid_bpf_ctx *ctx, unsigned int offset, const long unsigned int rdwr_buf_size)"
+  )
   public static Ptr<java.lang.Character> hid_bpf_get_data(Ptr<hid_bpf_ctx> ctx,
       @Unsigned int offset, @Unsigned long rdwr_buf_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1187,6 +1194,9 @@ public final class HidDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int hid_bpf_hw_output_report(struct hid_bpf_ctx *ctx, u8 *buf, long unsigned int buf__sz)"
+  )
   public static int hid_bpf_hw_output_report(Ptr<hid_bpf_ctx> ctx, Ptr<java.lang.Character> buf,
       @Unsigned long buf__sz) {
     throw new MethodIsBPFRelatedFunction();
@@ -1194,6 +1204,9 @@ public final class HidDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int hid_bpf_hw_request(struct hid_bpf_ctx *ctx, u8 *buf, long unsigned int buf__sz, enum hid_report_type rtype, enum hid_class_request reqtype)"
+  )
   public static int hid_bpf_hw_request(Ptr<hid_bpf_ctx> ctx, Ptr<java.lang.Character> buf,
       @Unsigned long buf__sz, hid_report_type rtype, hid_class_request reqtype) {
     throw new MethodIsBPFRelatedFunction();
@@ -1207,20 +1220,23 @@ public final class HidDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction("hid_bpf_input_report($arg1, $arg2, $arg3, (const long unsigned int)$arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int hid_bpf_input_report(struct hid_bpf_ctx *ctx, enum hid_report_type type, u8 *buf, const long unsigned int buf__sz)"
+  )
   public static int hid_bpf_input_report(Ptr<hid_bpf_ctx> ctx, hid_report_type type,
       Ptr<java.lang.Character> buf, @Unsigned long buf__sz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hid_bpf_ops_btf_struct_access($arg1, (const struct bpf_reg_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("hid_bpf_ops_btf_struct_access($arg1, (const struct bpf_reg_state *)$arg2, $arg3, $arg4)")
   public static int hid_bpf_ops_btf_struct_access(Ptr<bpf_verifier_log> log, Ptr<bpf_reg_state> reg,
       int off, int size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hid_bpf_ops_check_member((const struct btf_type*)$arg1, (const struct btf_member*)$arg2, (const struct bpf_prog*)$arg3)")
+  @BuiltinBPFFunction("hid_bpf_ops_check_member((const struct btf_type *)$arg1, (const struct btf_member *)$arg2, (const struct bpf_prog *)$arg3)")
   public static int hid_bpf_ops_check_member(Ptr<btf_type> t, Ptr<btf_member> member,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -1233,14 +1249,14 @@ public final class HidDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hid_bpf_ops_init_member((const struct btf_type*)$arg1, (const struct btf_member*)$arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("hid_bpf_ops_init_member((const struct btf_type *)$arg1, (const struct btf_member *)$arg2, $arg3, (const void *)$arg4)")
   public static int hid_bpf_ops_init_member(Ptr<btf_type> t, Ptr<btf_member> member, Ptr<?> kdata,
       Ptr<?> udata) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hid_bpf_ops_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("hid_bpf_ops_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean hid_bpf_ops_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1260,6 +1276,9 @@ public final class HidDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void hid_bpf_release_context(struct hid_bpf_ctx *ctx)"
+  )
   public static void hid_bpf_release_context(Ptr<hid_bpf_ctx> ctx) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1272,6 +1291,9 @@ public final class HidDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction("hid_bpf_try_input_report($arg1, $arg2, $arg3, (const long unsigned int)$arg4)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int hid_bpf_try_input_report(struct hid_bpf_ctx *ctx, enum hid_report_type type, u8 *buf, const long unsigned int buf__sz)"
+  )
   public static int hid_bpf_try_input_report(Ptr<hid_bpf_ctx> ctx, hid_report_type type,
       Ptr<java.lang.Character> buf, @Unsigned long buf__sz) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1114,7 +1115,7 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_add_driver($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("module_add_driver($arg1, (const struct device_driver *)$arg2)")
   public static int module_add_driver(Ptr<module> mod, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1153,7 +1154,7 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("module_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long module_attr_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1172,14 +1173,14 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_bug_finalize((const elf64_hdr*)$arg1, (const elf64_shdr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("module_bug_finalize((const elf64_hdr *)$arg1, (const elf64_shdr *)$arg2, $arg3)")
   public static void module_bug_finalize(Ptr<@OriginalName("Elf64_Ehdr") elf64_hdr> hdr,
       Ptr<@OriginalName("Elf64_Shdr") elf64_shdr> sechdrs, Ptr<module> mod) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_decompress($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("module_decompress($arg1, (const void *)$arg2, $arg3)")
   public static int module_decompress(Ptr<load_info> info, Ptr<?> buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1203,31 +1204,31 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_enable_data_nx((const struct module*)$arg1)")
+  @BuiltinBPFFunction("module_enable_data_nx((const struct module *)$arg1)")
   public static int module_enable_data_nx(Ptr<module> mod) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_enable_rodata_ro((const struct module*)$arg1)")
+  @BuiltinBPFFunction("module_enable_rodata_ro((const struct module *)$arg1)")
   public static int module_enable_rodata_ro(Ptr<module> mod) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_enable_rodata_ro_after_init((const struct module*)$arg1)")
+  @BuiltinBPFFunction("module_enable_rodata_ro_after_init((const struct module *)$arg1)")
   public static int module_enable_rodata_ro_after_init(Ptr<module> mod) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_enable_text_rox((const struct module*)$arg1)")
+  @BuiltinBPFFunction("module_enable_text_rox((const struct module *)$arg1)")
   public static int module_enable_text_rox(Ptr<module> mod) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_enforce_rwx_sections((const elf64_hdr*)$arg1, (const elf64_shdr*)$arg2, (const u8*)$arg3, (const struct module*)$arg4)")
+  @BuiltinBPFFunction("module_enforce_rwx_sections((const elf64_hdr *)$arg1, (const elf64_shdr *)$arg2, (const u8 *)$arg3, (const struct module *)$arg4)")
   public static int module_enforce_rwx_sections(Ptr<@OriginalName("Elf64_Ehdr") elf64_hdr> hdr,
       Ptr<@OriginalName("Elf64_Shdr") elf64_shdr> sechdrs, String secstrings, Ptr<module> mod) {
     throw new MethodIsBPFRelatedFunction();
@@ -1240,13 +1241,13 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_exists((const u8*)$arg1)")
+  @BuiltinBPFFunction("module_exists((const u8 *)$arg1)")
   public static boolean module_exists(String module) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_exit_section((const u8*)$arg1)")
+  @BuiltinBPFFunction("module_exit_section((const u8 *)$arg1)")
   public static boolean module_exit_section(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1258,14 +1259,14 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_fill_reply($arg1, (const struct ethnl_req_info*)$arg2, (const struct ethnl_reply_data*)$arg3)")
+  @BuiltinBPFFunction("module_fill_reply($arg1, (const struct ethnl_req_info *)$arg2, (const struct ethnl_reply_data *)$arg3)")
   public static int module_fill_reply(Ptr<sk_buff> skb, Ptr<ethnl_req_info> req_base,
       Ptr<ethnl_reply_data> reply_base) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_finalize((const elf64_hdr*)$arg1, (const elf64_shdr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("module_finalize((const elf64_hdr *)$arg1, (const elf64_shdr *)$arg2, $arg3)")
   public static int module_finalize(Ptr<@OriginalName("Elf64_Ehdr") elf64_hdr> hdr,
       Ptr<@OriginalName("Elf64_Shdr") elf64_shdr> sechdrs, Ptr<module> me) {
     throw new MethodIsBPFRelatedFunction();
@@ -1284,7 +1285,7 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_flash_fw_schedule($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("module_flash_fw_schedule($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int module_flash_fw_schedule(Ptr<net_device> dev, String file_name,
       Ptr<ethtool_module_fw_flash_params> params, Ptr<sk_buff> skb, Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1324,13 +1325,13 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_init_layout_section((const u8*)$arg1)")
+  @BuiltinBPFFunction("module_init_layout_section((const u8 *)$arg1)")
   public static boolean module_init_layout_section(String sname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_init_section((const u8*)$arg1)")
+  @BuiltinBPFFunction("module_init_section((const u8 *)$arg1)")
   public static boolean module_init_section(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1342,13 +1343,13 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_kallsyms_lookup_name((const u8*)$arg1)")
+  @BuiltinBPFFunction("module_kallsyms_lookup_name((const u8 *)$arg1)")
   public static @Unsigned long module_kallsyms_lookup_name(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_kallsyms_on_each_symbol((const u8*)$arg1, (int (*)(void*, const u8*, long unsigned int))$arg2, $arg3)")
+  @BuiltinBPFFunction("module_kallsyms_on_each_symbol((const u8 *)$arg1, (int (*)(void*, const u8*, long unsigned int))$arg2, $arg3)")
   public static int module_kallsyms_on_each_symbol(String modname, Ptr<?> fn, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1367,7 +1368,7 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_mark_ro_after_init((const elf64_hdr*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("module_mark_ro_after_init((const elf64_hdr *)$arg1, $arg2, (const u8 *)$arg3)")
   public static void module_mark_ro_after_init(Ptr<@OriginalName("Elf64_Ehdr") elf64_hdr> hdr,
       Ptr<@OriginalName("Elf64_Shdr") elf64_shdr> sechdrs, String secstrings) {
     throw new MethodIsBPFRelatedFunction();
@@ -1392,20 +1393,20 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_param_sysfs_setup($arg1, (const struct kernel_param*)$arg2, $arg3)")
+  @BuiltinBPFFunction("module_param_sysfs_setup($arg1, (const struct kernel_param *)$arg2, $arg3)")
   public static int module_param_sysfs_setup(Ptr<module> mod, Ptr<kernel_param> kparam,
       @Unsigned int num_params) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_patient_check_exists((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("module_patient_check_exists((const u8 *)$arg1, $arg2)")
   public static int module_patient_check_exists(String name, fail_dup_mod_reason reason) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_prepare_data((const struct ethnl_req_info*)$arg1, $arg2, (const struct genl_info*)$arg3)")
+  @BuiltinBPFFunction("module_prepare_data((const struct ethnl_req_info *)$arg1, $arg2, (const struct genl_info *)$arg3)")
   public static int module_prepare_data(Ptr<ethnl_req_info> req_base,
       Ptr<ethnl_reply_data> reply_base, Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1424,7 +1425,7 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_remove_driver((const struct device_driver*)$arg1)")
+  @BuiltinBPFFunction("module_remove_driver((const struct device_driver *)$arg1)")
   public static void module_remove_driver(Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1436,14 +1437,14 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_reply_size((const struct ethnl_req_info*)$arg1, (const struct ethnl_reply_data*)$arg2)")
+  @BuiltinBPFFunction("module_reply_size((const struct ethnl_req_info *)$arg1, (const struct ethnl_reply_data *)$arg2)")
   public static int module_reply_size(Ptr<ethnl_req_info> req_base,
       Ptr<ethnl_reply_data> reply_base) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_sect_read($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("module_sect_read($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long module_sect_read(Ptr<file> file, Ptr<kobject> kobj,
       Ptr<bin_attribute> battr, String buf, @OriginalName("loff_t") long pos,
       @Unsigned long count) {
@@ -1451,7 +1452,7 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_set_memory((const struct module*)$arg1, $arg2, (int (*)(long unsigned int, int))$arg3)")
+  @BuiltinBPFFunction("module_set_memory((const struct module *)$arg1, $arg2, (int (*)(long unsigned int, int))$arg3)")
   public static int module_set_memory(Ptr<module> mod, mod_mem_type type, Ptr<?> set_memory) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1476,7 +1477,7 @@ public final class ModuleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("module_zstd_decompress($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("module_zstd_decompress($arg1, (const void *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long module_zstd_decompress(Ptr<load_info> info,
       Ptr<?> buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1670,7 +1671,7 @@ public final class ModuleDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; }"
+      cType = "struct { const u8 *name; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

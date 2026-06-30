@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1121,7 +1122,7 @@ public final class PropagateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("propagate_liveness($arg1, (const struct bpf_verifier_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("propagate_liveness($arg1, (const struct bpf_verifier_state *)$arg2, $arg3, $arg4)")
   public static int propagate_liveness(Ptr<bpf_verifier_env> env, Ptr<bpf_verifier_state> vstate,
       Ptr<bpf_verifier_state> vparent, Ptr<java.lang. @OriginalName("bool") Boolean> changed) {
     throw new MethodIsBPFRelatedFunction();
@@ -1147,7 +1148,7 @@ public final class PropagateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("propagate_precision($arg1, (const struct bpf_verifier_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("propagate_precision($arg1, (const struct bpf_verifier_state *)$arg2, $arg3, $arg4)")
   public static int propagate_precision(Ptr<bpf_verifier_env> env, Ptr<bpf_verifier_state> old,
       Ptr<bpf_verifier_state> cur, Ptr<java.lang. @OriginalName("bool") Boolean> changed) {
     throw new MethodIsBPFRelatedFunction();

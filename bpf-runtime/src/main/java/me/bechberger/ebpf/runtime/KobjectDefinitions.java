@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,14 +1097,14 @@ public final class KobjectDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobject_action_args((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kobject_action_args((const u8 *)$arg1, $arg2, $arg3)")
   public static int kobject_action_args(String buf, @Unsigned long count,
       Ptr<Ptr<kobj_uevent_env>> ret_env) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobject_add($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("kobject_add($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static int kobject_add(Ptr<kobject> kobj, Ptr<kobject> parent, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1122,7 +1123,7 @@ public final class KobjectDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobject_create_and_add((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kobject_create_and_add((const u8 *)$arg1, $arg2)")
   public static Ptr<kobject> kobject_create_and_add(String name, Ptr<kobject> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1140,13 +1141,13 @@ public final class KobjectDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobject_get_ownership((const struct kobject*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kobject_get_ownership((const struct kobject *)$arg1, $arg2, $arg3)")
   public static void kobject_get_ownership(Ptr<kobject> kobj, Ptr<kuid_t> uid, Ptr<kgid_t> gid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobject_get_path((const struct kobject*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kobject_get_path((const struct kobject *)$arg1, $arg2)")
   public static String kobject_get_path(Ptr<kobject> kobj,
       @Unsigned @OriginalName("gfp_t") int gfp_mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1159,13 +1160,13 @@ public final class KobjectDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobject_init($arg1, (const struct kobj_type*)$arg2)")
+  @BuiltinBPFFunction("kobject_init($arg1, (const struct kobj_type *)$arg2)")
   public static void kobject_init(Ptr<kobject> kobj, Ptr<kobj_type> ktype) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobject_init_and_add($arg1, (const struct kobj_type*)$arg2, $arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("kobject_init_and_add($arg1, (const struct kobj_type *)$arg2, $arg3, (const u8 *)$arg4, $arg5_)")
   public static int kobject_init_and_add(Ptr<kobject> kobj, Ptr<kobj_type> ktype,
       Ptr<kobject> parent, String fmt, java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
@@ -1178,7 +1179,7 @@ public final class KobjectDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)kobject_namespace((const struct kobject*)$arg1))")
+  @BuiltinBPFFunction("((const void*)kobject_namespace((const struct kobject *)$arg1))")
   public static Ptr<?> kobject_namespace(Ptr<kobject> kobj) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1190,26 +1191,26 @@ public final class KobjectDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobject_rename($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("kobject_rename($arg1, (const u8 *)$arg2)")
   public static int kobject_rename(Ptr<kobject> kobj, String new_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobject_set_name($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("kobject_set_name($arg1, (const u8 *)$arg2, $arg3_)")
   public static int kobject_set_name(Ptr<kobject> kobj, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobject_set_name_vargs($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("kobject_set_name_vargs($arg1, (const u8 *)$arg2, $arg3)")
   public static int kobject_set_name_vargs(Ptr<kobject> kobj, String fmt,
       Ptr<__va_list_tag> vargs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobject_synth_uevent($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("kobject_synth_uevent($arg1, (const u8 *)$arg2, $arg3)")
   public static int kobject_synth_uevent(Ptr<kobject> kobj, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1234,7 +1235,7 @@ public final class KobjectDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kobject_uevent_net_broadcast($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("kobject_uevent_net_broadcast($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static int kobject_uevent_net_broadcast(Ptr<kobject> kobj, Ptr<kobj_uevent_env> env,
       String action_string, String devpath) {
     throw new MethodIsBPFRelatedFunction();

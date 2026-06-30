@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,13 +1097,13 @@ public final class LookupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__lookup_profile($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__lookup_profile($arg1, (const u8 *)$arg2)")
   public static Ptr<aa_profile> __lookup_profile(Ptr<aa_policy> base, String hname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__lookup_slow((const struct qstr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__lookup_slow((const struct qstr *)$arg1, $arg2, $arg3)")
   public static Ptr<dentry> __lookup_slow(Ptr<qstr> name, Ptr<dentry> dir, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1138,7 +1139,7 @@ public final class LookupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lookup_bdev((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("lookup_bdev((const u8 *)$arg1, $arg2)")
   public static int lookup_bdev(String pathname,
       Ptr<java.lang. @Unsigned @OriginalName("dev_t") Integer> dev) {
     throw new MethodIsBPFRelatedFunction();
@@ -1152,13 +1153,13 @@ public final class LookupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lookup_constant((const struct constant_table*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("lookup_constant((const struct constant_table *)$arg1, (const u8 *)$arg2, $arg3)")
   public static int lookup_constant(Ptr<constant_table> tbl, String name, int not_found) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lookup_dcache((const struct qstr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("lookup_dcache((const struct qstr *)$arg1, $arg2, $arg3)")
   public static Ptr<dentry> lookup_dcache(Ptr<qstr> name, Ptr<dentry> dir, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1189,7 +1190,7 @@ public final class LookupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lookup_mnt((const struct path*)$arg1)")
+  @BuiltinBPFFunction("lookup_mnt((const struct path *)$arg1)")
   public static Ptr<vfsmount> lookup_mnt(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1251,7 +1252,7 @@ public final class LookupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lookup_one_qstr_excl((const struct qstr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("lookup_one_qstr_excl((const struct qstr *)$arg1, $arg2, $arg3)")
   public static Ptr<dentry> lookup_one_qstr_excl(Ptr<qstr> name, Ptr<dentry> base,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1265,7 +1266,7 @@ public final class LookupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lookup_or_create_module_kobject((const u8*)$arg1)")
+  @BuiltinBPFFunction("lookup_or_create_module_kobject((const u8 *)$arg1)")
   public static Ptr<module_kobject> lookup_or_create_module_kobject(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1296,7 +1297,7 @@ public final class LookupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lookup_template_desc((const u8*)$arg1)")
+  @BuiltinBPFFunction("lookup_template_desc((const u8 *)$arg1)")
   public static Ptr<ima_template_desc> lookup_template_desc(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1315,7 +1316,7 @@ public final class LookupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lookup_user_key_possessed((const struct key*)$arg1, (const struct key_match_data*)$arg2)")
+  @BuiltinBPFFunction("lookup_user_key_possessed((const struct key *)$arg1, (const struct key_match_data *)$arg2)")
   public static boolean lookup_user_key_possessed(Ptr<key> key, Ptr<key_match_data> match_data) {
     throw new MethodIsBPFRelatedFunction();
   }

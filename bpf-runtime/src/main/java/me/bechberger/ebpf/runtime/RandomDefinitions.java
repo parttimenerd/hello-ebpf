@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,7 +1109,7 @@ public final class RandomDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("random_init_early((const u8*)$arg1)")
+  @BuiltinBPFFunction("random_init_early((const u8 *)$arg1)")
   public static void random_init_early(String command_line) {
     throw new MethodIsBPFRelatedFunction();
   }

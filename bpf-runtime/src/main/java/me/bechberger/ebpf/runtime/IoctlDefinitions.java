@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1135,7 +1136,7 @@ public final class IoctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ioctl_private_iw_point($arg1, $arg2, (const struct iw_priv_args*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ioctl_private_iw_point($arg1, $arg2, (const struct iw_priv_args *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int ioctl_private_iw_point(Ptr<iw_point> iwp, @Unsigned int cmd,
       Ptr<iw_priv_args> descr, @OriginalName("iw_handler") Ptr<?> handler, Ptr<net_device> dev,
       Ptr<iw_request_info> info, int extra_size) {
@@ -1162,7 +1163,7 @@ public final class IoctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ioctl_standard_iw_point($arg1, $arg2, (const struct iw_ioctl_description*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ioctl_standard_iw_point($arg1, $arg2, (const struct iw_ioctl_description *)$arg3, $arg4, $arg5, $arg6)")
   public static int ioctl_standard_iw_point(Ptr<iw_point> iwp, @Unsigned int cmd,
       Ptr<iw_ioctl_description> descr, @OriginalName("iw_handler") Ptr<?> handler,
       Ptr<net_device> dev, Ptr<iw_request_info> info) {

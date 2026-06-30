@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class ZswapDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__zswap_param_set((const u8*)$arg1, (const struct kernel_param*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__zswap_param_set((const u8 *)$arg1, (const struct kernel_param *)$arg2, $arg3, $arg4)")
   public static int __zswap_param_set(String val, Ptr<kernel_param> kp, String type,
       String compressor) {
     throw new MethodIsBPFRelatedFunction();
@@ -1128,7 +1129,7 @@ public final class ZswapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zswap_compressor_param_set((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("zswap_compressor_param_set((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int zswap_compressor_param_set(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1164,7 +1165,7 @@ public final class ZswapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zswap_enabled_param_set((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("zswap_enabled_param_set((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int zswap_enabled_param_set(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1312,7 +1313,7 @@ public final class ZswapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zswap_zpool_param_set((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("zswap_zpool_param_set((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int zswap_zpool_param_set(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }

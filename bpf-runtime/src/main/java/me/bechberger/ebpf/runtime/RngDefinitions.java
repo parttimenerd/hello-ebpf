@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1104,14 +1105,14 @@ public final class RngDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rng_current_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("rng_current_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long rng_current_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rng_default_set_ent($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rng_default_set_ent($arg1, (const u8 *)$arg2, $arg3)")
   public static void rng_default_set_ent(Ptr<crypto_rng> tfm, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1144,7 +1145,7 @@ public final class RngDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rng_quality_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("rng_quality_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long rng_quality_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();

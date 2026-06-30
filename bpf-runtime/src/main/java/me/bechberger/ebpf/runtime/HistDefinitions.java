@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class HistDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("HIST_add($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("HIST_add($arg1, (const void *)$arg2, $arg3)")
   public static void HIST_add(Ptr<java.lang. @Unsigned Integer> count, Ptr<?> src,
       @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HIST_countFast_wksp($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("HIST_countFast_wksp($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned long HIST_countFast_wksp(Ptr<java.lang. @Unsigned Integer> count,
       Ptr<java.lang. @Unsigned Integer> maxSymbolValuePtr, Ptr<?> source, @Unsigned long sourceSize,
       Ptr<?> workSpace, @Unsigned long workSpaceSize) {
@@ -1105,7 +1106,7 @@ public final class HistDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HIST_count_parallel_wksp($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, (const unsigned int*)$arg6)")
+  @BuiltinBPFFunction("HIST_count_parallel_wksp($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, (const unsigned int*)$arg6)")
   public static @Unsigned long HIST_count_parallel_wksp(Ptr<java.lang. @Unsigned Integer> count,
       Ptr<java.lang. @Unsigned Integer> maxSymbolValuePtr, Ptr<?> source, @Unsigned long sourceSize,
       HIST_checkInput_e check, Ptr<java.lang. @Unsigned Integer> workSpace) {
@@ -1113,14 +1114,14 @@ public final class HistDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HIST_count_simple($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("HIST_count_simple($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static @Unsigned int HIST_count_simple(Ptr<java.lang. @Unsigned Integer> count,
       Ptr<java.lang. @Unsigned Integer> maxSymbolValuePtr, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HIST_count_wksp($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("HIST_count_wksp($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned long HIST_count_wksp(Ptr<java.lang. @Unsigned Integer> count,
       Ptr<java.lang. @Unsigned Integer> maxSymbolValuePtr, Ptr<?> source, @Unsigned long sourceSize,
       Ptr<?> workSpace, @Unsigned long workSpaceSize) {

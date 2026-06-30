@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DevmDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_add_action($arg1, (void (*)(void*))$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__devm_add_action($arg1, (void (*)(void*))$arg2, $arg3, (const u8 *)$arg4)")
   public static int __devm_add_action(Ptr<device> dev, Ptr<?> action, Ptr<?> data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1103,7 +1104,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_auxiliary_device_create($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__devm_auxiliary_device_create($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static Ptr<auxiliary_device> __devm_auxiliary_device_create(Ptr<device> dev,
       String modname, String devname, Ptr<?> platform_data, int id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1117,14 +1118,14 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_clk_get($arg1, (const u8*)$arg2, (struct clk* (*)(struct device*, const u8*))$arg3, (int (*)(struct clk*))$arg4, (void (*)(struct clk*))$arg5)")
+  @BuiltinBPFFunction("__devm_clk_get($arg1, (const u8 *)$arg2, (struct clk* (*)(struct device*, const u8*))$arg3, (int (*)(struct clk*))$arg4, (void (*)(struct clk*))$arg5)")
   public static Ptr<clk> __devm_clk_get(Ptr<device> dev, String id, Ptr<?> get, Ptr<?> init,
       Ptr<?> exit) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_clk_hw_register_divider($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, (const struct clk_hw*)$arg5, (const struct clk_parent_data*)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11, (const struct clk_div_table*)$arg12, $arg13)")
+  @BuiltinBPFFunction("__devm_clk_hw_register_divider($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const struct clk_hw *)$arg5, (const struct clk_parent_data *)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11, (const struct clk_div_table *)$arg12, $arg13)")
   public static Ptr<clk_hw> __devm_clk_hw_register_divider(Ptr<device> dev, Ptr<device_node> np,
       String name, String parent_name, Ptr<clk_hw> parent_hw, Ptr<clk_parent_data> parent_data,
       @Unsigned long flags, Ptr<?> reg, char shift, char width, @Unsigned long clk_divider_flags,
@@ -1133,7 +1134,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_clk_hw_register_gate($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, (const struct clk_hw*)$arg5, (const struct clk_parent_data*)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("__devm_clk_hw_register_gate($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const struct clk_hw *)$arg5, (const struct clk_parent_data *)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
   public static Ptr<clk_hw> __devm_clk_hw_register_gate(Ptr<device> dev, Ptr<device_node> np,
       String name, String parent_name, Ptr<clk_hw> parent_hw, Ptr<clk_parent_data> parent_data,
       @Unsigned long flags, Ptr<?> reg, char bit_idx, char clk_gate_flags,
@@ -1142,7 +1143,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_clk_hw_register_mux($arg1, $arg2, (const u8*)$arg3, $arg4, (const u8**)$arg5, (const struct clk_hw**)$arg6, (const struct clk_parent_data*)$arg7, $arg8, $arg9, $arg10, $arg11, $arg12, (const unsigned int*)$arg13, $arg14)")
+  @BuiltinBPFFunction("__devm_clk_hw_register_mux($arg1, $arg2, (const u8 *)$arg3, $arg4, (const const u8 **)$arg5, (const struct clk_hw**)$arg6, (const struct clk_parent_data *)$arg7, $arg8, $arg9, $arg10, $arg11, $arg12, (const unsigned int *)$arg13, $arg14)")
   public static Ptr<clk_hw> __devm_clk_hw_register_mux(Ptr<device> dev, Ptr<device_node> np,
       String name, char num_parents, Ptr<String> parent_names, Ptr<Ptr<clk_hw>> parent_hws,
       Ptr<clk_parent_data> parent_data, @Unsigned long flags, Ptr<?> reg, char shift,
@@ -1158,21 +1159,21 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_drm_bridge_alloc($arg1, $arg2, $arg3, (const struct drm_bridge_funcs*)$arg4)")
+  @BuiltinBPFFunction("__devm_drm_bridge_alloc($arg1, $arg2, $arg3, (const struct drm_bridge_funcs *)$arg4)")
   public static Ptr<?> __devm_drm_bridge_alloc(Ptr<device> dev, @Unsigned long size,
       @Unsigned long offset, Ptr<drm_bridge_funcs> funcs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_drm_dev_alloc($arg1, (const struct drm_driver*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__devm_drm_dev_alloc($arg1, (const struct drm_driver *)$arg2, $arg3, $arg4)")
   public static Ptr<?> __devm_drm_dev_alloc(Ptr<device> parent, Ptr<drm_driver> driver,
       @Unsigned long size, @Unsigned long offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_drm_panel_alloc($arg1, $arg2, $arg3, (const struct drm_panel_funcs*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__devm_drm_panel_alloc($arg1, $arg2, $arg3, (const struct drm_panel_funcs *)$arg4, $arg5)")
   public static Ptr<?> __devm_drm_panel_alloc(Ptr<device> dev, @Unsigned long size,
       @Unsigned long offset, Ptr<drm_panel_funcs> funcs, int connector_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1185,7 +1186,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_intel_scu_ipc_register($arg1, (const struct intel_scu_ipc_data*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__devm_intel_scu_ipc_register($arg1, (const struct intel_scu_ipc_data *)$arg2, $arg3)")
   public static Ptr<intel_scu_ipc_dev> __devm_intel_scu_ipc_register(Ptr<device> parent,
       Ptr<intel_scu_ipc_data> scu_data, Ptr<module> owner) {
     throw new MethodIsBPFRelatedFunction();
@@ -1200,14 +1201,14 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_ioremap_resource($arg1, (const struct resource*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__devm_ioremap_resource($arg1, (const struct resource *)$arg2, $arg3)")
   public static Ptr<?> __devm_ioremap_resource(Ptr<device> dev, Ptr<resource> res,
       devm_ioremap_type type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_irq_alloc_descs($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct irq_affinity_desc*)$arg7)")
+  @BuiltinBPFFunction("__devm_irq_alloc_descs($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct irq_affinity_desc *)$arg7)")
   public static int __devm_irq_alloc_descs(Ptr<device> dev, int irq, @Unsigned int from,
       @Unsigned int cnt, int node, Ptr<module> owner, Ptr<irq_affinity_desc> affinity) {
     throw new MethodIsBPFRelatedFunction();
@@ -1233,7 +1234,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_pci_epc_create($arg1, (const struct pci_epc_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__devm_pci_epc_create($arg1, (const struct pci_epc_ops *)$arg2, $arg3)")
   public static Ptr<pci_epc> __devm_pci_epc_create(Ptr<device> dev, Ptr<pci_epc_ops> ops,
       Ptr<module> owner) {
     throw new MethodIsBPFRelatedFunction();
@@ -1246,7 +1247,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_regmap_init($arg1, (const struct regmap_bus*)$arg2, $arg3, (const struct regmap_config*)$arg4, $arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("__devm_regmap_init($arg1, (const struct regmap_bus *)$arg2, $arg3, (const struct regmap_config *)$arg4, $arg5, (const u8 *)$arg6)")
   public static Ptr<regmap> __devm_regmap_init(Ptr<device> dev, Ptr<regmap_bus> bus,
       Ptr<?> bus_context, Ptr<regmap_config> config, Ptr<lock_class_key> lock_key,
       String lock_name) {
@@ -1254,21 +1255,21 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_regmap_init_i2c($arg1, (const struct regmap_config*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__devm_regmap_init_i2c($arg1, (const struct regmap_config *)$arg2, $arg3, (const u8 *)$arg4)")
   public static Ptr<regmap> __devm_regmap_init_i2c(Ptr<i2c_client> i2c, Ptr<regmap_config> config,
       Ptr<lock_class_key> lock_key, String lock_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_regmap_init_mmio_clk($arg1, (const u8*)$arg2, $arg3, (const struct regmap_config*)$arg4, $arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("__devm_regmap_init_mmio_clk($arg1, (const u8 *)$arg2, $arg3, (const struct regmap_config *)$arg4, $arg5, (const u8 *)$arg6)")
   public static Ptr<regmap> __devm_regmap_init_mmio_clk(Ptr<device> dev, String clk_id, Ptr<?> regs,
       Ptr<regmap_config> config, Ptr<lock_class_key> lock_key, String lock_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_regmap_init_spi($arg1, (const struct regmap_config*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__devm_regmap_init_spi($arg1, (const struct regmap_config *)$arg2, $arg3, (const u8 *)$arg4)")
   public static Ptr<regmap> __devm_regmap_init_spi(Ptr<spi_device> spi, Ptr<regmap_config> config,
       Ptr<lock_class_key> lock_key, String lock_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1283,7 +1284,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_request_region($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("__devm_request_region($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static Ptr<resource> __devm_request_region(Ptr<device> dev, Ptr<resource> parent,
       @Unsigned @OriginalName("resource_size_t") long start,
       @Unsigned @OriginalName("resource_size_t") long n, String name) {
@@ -1298,7 +1299,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devm_reset_control_get($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__devm_reset_control_get($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<reset_control> __devm_reset_control_get(Ptr<device> dev, String id, int index,
       reset_control_flags flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1325,19 +1326,19 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_devm_regulator_get($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("_devm_regulator_get($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<regulator> _devm_regulator_get(Ptr<device> dev, String id, int get_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_devm_regulator_get_enable($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("_devm_regulator_get_enable($arg1, (const u8 *)$arg2, $arg3)")
   public static int _devm_regulator_get_enable(Ptr<device> dev, String id, int get_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_acpi_dev_add_driver_gpios($arg1, (const struct acpi_gpio_mapping*)$arg2)")
+  @BuiltinBPFFunction("devm_acpi_dev_add_driver_gpios($arg1, (const struct acpi_gpio_mapping *)$arg2)")
   public static int devm_acpi_dev_add_driver_gpios(Ptr<device> dev, Ptr<acpi_gpio_mapping> gpios) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1434,7 +1435,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_backlight_device_register($arg1, (const u8*)$arg2, $arg3, $arg4, (const struct backlight_ops*)$arg5, (const struct backlight_properties*)$arg6)")
+  @BuiltinBPFFunction("devm_backlight_device_register($arg1, (const u8 *)$arg2, $arg3, $arg4, (const struct backlight_ops *)$arg5, (const struct backlight_properties *)$arg6)")
   public static Ptr<backlight_device> devm_backlight_device_register(Ptr<device> dev, String name,
       Ptr<device> parent, Ptr<?> devdata, Ptr<backlight_ops> ops, Ptr<backlight_properties> props) {
     throw new MethodIsBPFRelatedFunction();
@@ -1535,50 +1536,50 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_clk_get($arg1, (const u8 *)$arg2)")
   public static Ptr<clk> devm_clk_get(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_get_enabled($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_clk_get_enabled($arg1, (const u8 *)$arg2)")
   public static Ptr<clk> devm_clk_get_enabled(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_get_optional($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_clk_get_optional($arg1, (const u8 *)$arg2)")
   public static Ptr<clk> devm_clk_get_optional(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_get_optional_enabled($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_clk_get_optional_enabled($arg1, (const u8 *)$arg2)")
   public static Ptr<clk> devm_clk_get_optional_enabled(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_get_optional_enabled_with_rate($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devm_clk_get_optional_enabled_with_rate($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<clk> devm_clk_get_optional_enabled_with_rate(Ptr<device> dev, String id,
       @Unsigned long rate) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_get_optional_prepared($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_clk_get_optional_prepared($arg1, (const u8 *)$arg2)")
   public static Ptr<clk> devm_clk_get_optional_prepared(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_get_prepared($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_clk_get_prepared($arg1, (const u8 *)$arg2)")
   public static Ptr<clk> devm_clk_get_prepared(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_hw_get_clk($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("devm_clk_hw_get_clk($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<clk> devm_clk_hw_get_clk(Ptr<device> dev, Ptr<clk_hw> hw, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1590,14 +1591,14 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_hw_register_clkdev($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("devm_clk_hw_register_clkdev($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static int devm_clk_hw_register_clkdev(Ptr<device> dev, Ptr<clk_hw> hw, String con_id,
       String dev_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_hw_register_composite_pdata($arg1, (const u8*)$arg2, (const struct clk_parent_data*)$arg3, $arg4, $arg5, (const struct clk_ops*)$arg6, $arg7, (const struct clk_ops*)$arg8, $arg9, (const struct clk_ops*)$arg10, $arg11)")
+  @BuiltinBPFFunction("devm_clk_hw_register_composite_pdata($arg1, (const u8 *)$arg2, (const struct clk_parent_data *)$arg3, $arg4, $arg5, (const struct clk_ops *)$arg6, $arg7, (const struct clk_ops *)$arg8, $arg9, (const struct clk_ops *)$arg10, $arg11)")
   public static Ptr<clk_hw> devm_clk_hw_register_composite_pdata(Ptr<device> dev, String name,
       Ptr<clk_parent_data> parent_data, int num_parents, Ptr<clk_hw> mux_hw, Ptr<clk_ops> mux_ops,
       Ptr<clk_hw> rate_hw, Ptr<clk_ops> rate_ops, Ptr<clk_hw> gate_hw, Ptr<clk_ops> gate_ops,
@@ -1606,14 +1607,14 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_hw_register_fixed_factor($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("devm_clk_hw_register_fixed_factor($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<clk_hw> devm_clk_hw_register_fixed_factor(Ptr<device> dev, String name,
       String parent_name, @Unsigned long flags, @Unsigned int mult, @Unsigned int div) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_hw_register_fixed_factor_fwname($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("devm_clk_hw_register_fixed_factor_fwname($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5, $arg6, $arg7)")
   public static Ptr<clk_hw> devm_clk_hw_register_fixed_factor_fwname(Ptr<device> dev,
       Ptr<device_node> np, String name, String fw_name, @Unsigned long flags, @Unsigned int mult,
       @Unsigned int div) {
@@ -1621,14 +1622,14 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_hw_register_fixed_factor_index($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("devm_clk_hw_register_fixed_factor_index($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<clk_hw> devm_clk_hw_register_fixed_factor_index(Ptr<device> dev, String name,
       @Unsigned int index, @Unsigned long flags, @Unsigned int mult, @Unsigned int div) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_hw_register_fixed_factor_parent_hw($arg1, (const u8*)$arg2, (const struct clk_hw*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("devm_clk_hw_register_fixed_factor_parent_hw($arg1, (const u8 *)$arg2, (const struct clk_hw *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<clk_hw> devm_clk_hw_register_fixed_factor_parent_hw(Ptr<device> dev,
       String name, Ptr<clk_hw> parent_hw, @Unsigned long flags, @Unsigned int mult,
       @Unsigned int div) {
@@ -1642,7 +1643,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_clk_hw_register_fixed_factor_with_accuracy_fwname($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("devm_clk_hw_register_fixed_factor_with_accuracy_fwname($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static Ptr<clk_hw> devm_clk_hw_register_fixed_factor_with_accuracy_fwname(Ptr<device> dev,
       Ptr<device_node> np, String name, String fw_name, @Unsigned long flags, @Unsigned int mult,
       @Unsigned int div, @Unsigned long acc) {
@@ -1759,7 +1760,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_devfreq_add_device($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("devm_devfreq_add_device($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<devfreq> devm_devfreq_add_device(Ptr<device> dev,
       Ptr<devfreq_dev_profile> profile, String governor_name, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1859,13 +1860,13 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_device_add_group($arg1, (const struct attribute_group*)$arg2)")
+  @BuiltinBPFFunction("devm_device_add_group($arg1, (const struct attribute_group *)$arg2)")
   public static int devm_device_add_group(Ptr<device> dev, Ptr<attribute_group> grp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_dma_request_chan($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_dma_request_chan($arg1, (const u8 *)$arg2)")
   public static Ptr<dma_chan> devm_dma_request_chan(Ptr<device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1915,7 +1916,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_extcon_dev_allocate($arg1, (const unsigned int*)$arg2)")
+  @BuiltinBPFFunction("devm_extcon_dev_allocate($arg1, (const unsigned int *)$arg2)")
   public static Ptr<extcon_dev> devm_extcon_dev_allocate(Ptr<device> dev,
       Ptr<java.lang. @Unsigned Integer> supported_cable) {
     throw new MethodIsBPFRelatedFunction();
@@ -2022,21 +2023,21 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_fwnode_gpiod_get_index($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("devm_fwnode_gpiod_get_index($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, (const u8 *)$arg6)")
   public static Ptr<gpio_desc> devm_fwnode_gpiod_get_index(Ptr<device> dev,
       Ptr<fwnode_handle> fwnode, String con_id, int index, gpiod_flags flags, String label) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_fwnode_pwm_get($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("devm_fwnode_pwm_get($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<pwm_device> devm_fwnode_pwm_get(Ptr<device> dev, Ptr<fwnode_handle> fwnode,
       String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_gen_pool_create($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("devm_gen_pool_create($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static Ptr<gen_pool> devm_gen_pool_create(Ptr<device> dev, int min_alloc_order, int nid,
       String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -2055,7 +2056,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_get_clk_from_child($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("devm_get_clk_from_child($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<clk> devm_get_clk_from_child(Ptr<device> dev, Ptr<device_node> np,
       String con_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -2081,7 +2082,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_gpio_request_one($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("devm_gpio_request_one($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int devm_gpio_request_one(Ptr<device> dev, @Unsigned int gpio, @Unsigned long flags,
       String label) {
     throw new MethodIsBPFRelatedFunction();
@@ -2095,41 +2096,41 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_gpiod_get($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devm_gpiod_get($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<gpio_desc> devm_gpiod_get(Ptr<device> dev, String con_id, gpiod_flags flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_gpiod_get_array($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devm_gpiod_get_array($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<gpio_descs> devm_gpiod_get_array(Ptr<device> dev, String con_id,
       gpiod_flags flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_gpiod_get_array_optional($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devm_gpiod_get_array_optional($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<gpio_descs> devm_gpiod_get_array_optional(Ptr<device> dev, String con_id,
       gpiod_flags flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_gpiod_get_index($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("devm_gpiod_get_index($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<gpio_desc> devm_gpiod_get_index(Ptr<device> dev, String con_id,
       @Unsigned int idx, gpiod_flags flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_gpiod_get_index_optional($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("devm_gpiod_get_index_optional($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<gpio_desc> devm_gpiod_get_index_optional(Ptr<device> dev, String con_id,
       @Unsigned int index, gpiod_flags flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_gpiod_get_optional($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devm_gpiod_get_optional($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<gpio_desc> devm_gpiod_get_optional(Ptr<device> dev, String con_id,
       gpiod_flags flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2180,14 +2181,14 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_hwmon_device_register_with_groups($arg1, (const u8*)$arg2, $arg3, (const struct attribute_group**)$arg4)")
+  @BuiltinBPFFunction("devm_hwmon_device_register_with_groups($arg1, (const u8 *)$arg2, $arg3, (const struct attribute_group**)$arg4)")
   public static Ptr<device> devm_hwmon_device_register_with_groups(Ptr<device> dev, String name,
       Ptr<?> drvdata, Ptr<Ptr<attribute_group>> groups) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_hwmon_device_register_with_info($arg1, (const u8*)$arg2, $arg3, (const struct hwmon_chip_info*)$arg4, (const struct attribute_group**)$arg5)")
+  @BuiltinBPFFunction("devm_hwmon_device_register_with_info($arg1, (const u8 *)$arg2, $arg3, (const struct hwmon_chip_info *)$arg4, (const struct attribute_group**)$arg5)")
   public static Ptr<device> devm_hwmon_device_register_with_info(Ptr<device> dev, String name,
       Ptr<?> drvdata, Ptr<hwmon_chip_info> chip, Ptr<Ptr<attribute_group>> extra_groups) {
     throw new MethodIsBPFRelatedFunction();
@@ -2200,7 +2201,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_hwmon_sanitize_name($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_hwmon_sanitize_name($arg1, (const u8 *)$arg2)")
   public static String devm_hwmon_sanitize_name(Ptr<device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2248,7 +2249,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_hwspin_lock_register($arg1, $arg2, (const struct hwspinlock_ops*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("devm_hwspin_lock_register($arg1, $arg2, (const struct hwspinlock_ops *)$arg3, $arg4, $arg5)")
   public static int devm_hwspin_lock_register(Ptr<device> dev, Ptr<hwspinlock_device> bank,
       Ptr<hwspinlock_ops> ops, int base_id, int num_locks) {
     throw new MethodIsBPFRelatedFunction();
@@ -2409,13 +2410,13 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_ioremap_resource($arg1, (const struct resource*)$arg2)")
+  @BuiltinBPFFunction("devm_ioremap_resource($arg1, (const struct resource *)$arg2)")
   public static Ptr<?> devm_ioremap_resource(Ptr<device> dev, Ptr<resource> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_ioremap_resource_wc($arg1, (const struct resource*)$arg2)")
+  @BuiltinBPFFunction("devm_ioremap_resource_wc($arg1, (const struct resource *)$arg2)")
   public static Ptr<?> devm_ioremap_resource_wc(Ptr<device> dev, Ptr<resource> res) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2443,7 +2444,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_irq_alloc_generic_chip($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("devm_irq_alloc_generic_chip($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<irq_chip_generic> devm_irq_alloc_generic_chip(Ptr<device> dev, String name,
       int num_ct, @Unsigned int irq_base, Ptr<?> reg_base,
       @OriginalName("irq_flow_handler_t") Ptr<?> handler) {
@@ -2464,14 +2465,14 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_irq_domain_create_sim_full($arg1, $arg2, $arg3, (const struct irq_sim_ops*)$arg4, $arg5)")
+  @BuiltinBPFFunction("devm_irq_domain_create_sim_full($arg1, $arg2, $arg3, (const struct irq_sim_ops *)$arg4, $arg5)")
   public static Ptr<irq_domain> devm_irq_domain_create_sim_full(Ptr<device> dev,
       Ptr<fwnode_handle> fwnode, @Unsigned int num_irqs, Ptr<irq_sim_ops> ops, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_irq_domain_instantiate($arg1, (const struct irq_domain_info*)$arg2)")
+  @BuiltinBPFFunction("devm_irq_domain_instantiate($arg1, (const struct irq_domain_info *)$arg2)")
   public static Ptr<irq_domain> devm_irq_domain_instantiate(Ptr<device> dev,
       Ptr<irq_domain_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -2521,21 +2522,21 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_kasprintf($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("devm_kasprintf($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static String devm_kasprintf(Ptr<device> dev, @Unsigned @OriginalName("gfp_t") int gfp,
       String fmt, java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_kasprintf_strarray($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devm_kasprintf_strarray($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<String> devm_kasprintf_strarray(Ptr<device> dev, String prefix,
       @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_kfree($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("devm_kfree($arg1, (const void *)$arg2)")
   public static void devm_kfree(Ptr<device> dev, Ptr<?> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2566,7 +2567,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_kmemdup($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("devm_kmemdup($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static Ptr<?> devm_kmemdup(Ptr<device> dev, Ptr<?> src, @Unsigned long len,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
@@ -2580,21 +2581,21 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_kstrdup($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devm_kstrdup($arg1, (const u8 *)$arg2, $arg3)")
   public static String devm_kstrdup(Ptr<device> dev, String s,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)devm_kstrdup_const($arg1, (const u8*)$arg2, $arg3))")
+  @BuiltinBPFFunction("((const u8*)devm_kstrdup_const($arg1, (const u8 *)$arg2, $arg3))")
   public static String devm_kstrdup_const(Ptr<device> dev, String s,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_kvasprintf($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("devm_kvasprintf($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static String devm_kvasprintf(Ptr<device> dev, @Unsigned @OriginalName("gfp_t") int gfp,
       String fmt, Ptr<__va_list_tag> ap) {
     throw new MethodIsBPFRelatedFunction();
@@ -2718,7 +2719,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_mfd_add_devices($arg1, $arg2, (const struct mfd_cell*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("devm_mfd_add_devices($arg1, $arg2, (const struct mfd_cell *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int devm_mfd_add_devices(Ptr<device> dev, int id, Ptr<mfd_cell> cells, int n_devs,
       Ptr<resource> mem_base, int irq_base, Ptr<irq_domain> domain) {
     throw new MethodIsBPFRelatedFunction();
@@ -2743,7 +2744,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_mipi_dsi_device_register_full($arg1, $arg2, (const struct mipi_dsi_device_info*)$arg3)")
+  @BuiltinBPFFunction("devm_mipi_dsi_device_register_full($arg1, $arg2, (const struct mipi_dsi_device_info *)$arg3)")
   public static Ptr<mipi_dsi_device> devm_mipi_dsi_device_register_full(Ptr<device> dev,
       Ptr<mipi_dsi_host> host, Ptr<mipi_dsi_device_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -2808,7 +2809,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_nvmem_cell_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_nvmem_cell_get($arg1, (const u8 *)$arg2)")
   public static Ptr<nvmem_cell> devm_nvmem_cell_get(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2832,7 +2833,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_nvmem_device_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_nvmem_device_get($arg1, (const u8 *)$arg2)")
   public static Ptr<nvmem_device> devm_nvmem_device_get(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2856,7 +2857,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_nvmem_register($arg1, (const struct nvmem_config*)$arg2)")
+  @BuiltinBPFFunction("devm_nvmem_register($arg1, (const struct nvmem_config *)$arg2)")
   public static Ptr<nvmem_device> devm_nvmem_register(Ptr<device> dev, Ptr<nvmem_config> config) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2880,7 +2881,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_of_icc_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_of_icc_get($arg1, (const u8 *)$arg2)")
   public static Ptr<icc_path> devm_of_icc_get(Ptr<device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2905,7 +2906,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_of_phy_get($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("devm_of_phy_get($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<phy> devm_of_phy_get(Ptr<device> dev, Ptr<device_node> np, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2917,7 +2918,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_of_phy_optional_get($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("devm_of_phy_optional_get($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<phy> devm_of_phy_optional_get(Ptr<device> dev, Ptr<device_node> np,
       String con_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -2976,7 +2977,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_pci_remap_iospace($arg1, (const struct resource*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devm_pci_remap_iospace($arg1, (const struct resource *)$arg2, $arg3)")
   public static int devm_pci_remap_iospace(Ptr<device> dev, Ptr<resource> res,
       @Unsigned @OriginalName("phys_addr_t") long phys_addr) {
     throw new MethodIsBPFRelatedFunction();
@@ -3007,7 +3008,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_phy_create($arg1, $arg2, (const struct phy_ops*)$arg3)")
+  @BuiltinBPFFunction("devm_phy_create($arg1, $arg2, (const struct phy_ops *)$arg3)")
   public static Ptr<phy> devm_phy_create(Ptr<device> dev, Ptr<device_node> node, Ptr<phy_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3019,7 +3020,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_phy_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_phy_get($arg1, (const u8 *)$arg2)")
   public static Ptr<phy> devm_phy_get(Ptr<device> dev, String string) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3031,7 +3032,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_phy_optional_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_phy_optional_get($arg1, (const u8 *)$arg2)")
   public static Ptr<phy> devm_phy_optional_get(Ptr<device> dev, String string) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3085,21 +3086,21 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_pinctrl_register($arg1, (const struct pinctrl_desc*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devm_pinctrl_register($arg1, (const struct pinctrl_desc *)$arg2, $arg3)")
   public static Ptr<pinctrl_dev> devm_pinctrl_register(Ptr<device> dev, Ptr<pinctrl_desc> pctldesc,
       Ptr<?> driver_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_pinctrl_register_and_init($arg1, (const struct pinctrl_desc*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("devm_pinctrl_register_and_init($arg1, (const struct pinctrl_desc *)$arg2, $arg3, $arg4)")
   public static int devm_pinctrl_register_and_init(Ptr<device> dev, Ptr<pinctrl_desc> pctldesc,
       Ptr<?> driver_data, Ptr<Ptr<pinctrl_dev>> pctldev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_pinctrl_register_mappings($arg1, (const struct pinctrl_map*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devm_pinctrl_register_mappings($arg1, (const struct pinctrl_map *)$arg2, $arg3)")
   public static int devm_pinctrl_register_mappings(Ptr<device> dev, Ptr<pinctrl_map> maps,
       @Unsigned int num_maps) {
     throw new MethodIsBPFRelatedFunction();
@@ -3152,7 +3153,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_platform_ioremap_resource_byname($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_platform_ioremap_resource_byname($arg1, (const u8 *)$arg2)")
   public static Ptr<?> devm_platform_ioremap_resource_byname(Ptr<platform_device> pdev,
       String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -3171,7 +3172,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_pm_domain_attach_list($arg1, (const struct dev_pm_domain_attach_data*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devm_pm_domain_attach_list($arg1, (const struct dev_pm_domain_attach_data *)$arg2, $arg3)")
   public static int devm_pm_domain_attach_list(Ptr<device> dev, Ptr<dev_pm_domain_attach_data> data,
       Ptr<Ptr<dev_pm_domain_list>> list) {
     throw new MethodIsBPFRelatedFunction();
@@ -3220,7 +3221,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_power_supply_get_by_reference($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_power_supply_get_by_reference($arg1, (const u8 *)$arg2)")
   public static Ptr<power_supply> devm_power_supply_get_by_reference(Ptr<device> dev,
       String property) {
     throw new MethodIsBPFRelatedFunction();
@@ -3233,7 +3234,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_power_supply_register($arg1, (const struct power_supply_desc*)$arg2, (const struct power_supply_config*)$arg3)")
+  @BuiltinBPFFunction("devm_power_supply_register($arg1, (const struct power_supply_desc *)$arg2, (const struct power_supply_config *)$arg3)")
   public static Ptr<power_supply> devm_power_supply_register(Ptr<device> parent,
       Ptr<power_supply_desc> desc, Ptr<power_supply_config> cfg) {
     throw new MethodIsBPFRelatedFunction();
@@ -3258,20 +3259,20 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_pse_irq_helper($arg1, $arg2, $arg3, (const struct pse_irq_desc*)$arg4)")
+  @BuiltinBPFFunction("devm_pse_irq_helper($arg1, $arg2, $arg3, (const struct pse_irq_desc *)$arg4)")
   public static int devm_pse_irq_helper(Ptr<pse_controller_dev> pcdev, int irq, int irq_flags,
       Ptr<pse_irq_desc> d) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_pwm_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_pwm_get($arg1, (const u8 *)$arg2)")
   public static Ptr<pwm_device> devm_pwm_get(Ptr<device> dev, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_pwm_lpss_probe($arg1, $arg2, (const struct pwm_lpss_boardinfo*)$arg3)")
+  @BuiltinBPFFunction("devm_pwm_lpss_probe($arg1, $arg2, (const struct pwm_lpss_boardinfo *)$arg3)")
   public static Ptr<pwm_chip> devm_pwm_lpss_probe(Ptr<device> dev, Ptr<?> base,
       Ptr<pwm_lpss_boardinfo> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -3366,14 +3367,14 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regmap_add_irq_chip($arg1, $arg2, $arg3, $arg4, $arg5, (const struct regmap_irq_chip*)$arg6, $arg7)")
+  @BuiltinBPFFunction("devm_regmap_add_irq_chip($arg1, $arg2, $arg3, $arg4, $arg5, (const struct regmap_irq_chip *)$arg6, $arg7)")
   public static int devm_regmap_add_irq_chip(Ptr<device> dev, Ptr<regmap> map, int irq,
       int irq_flags, int irq_base, Ptr<regmap_irq_chip> chip, Ptr<Ptr<regmap_irq_chip_data>> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regmap_add_irq_chip_fwnode($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct regmap_irq_chip*)$arg7, $arg8)")
+  @BuiltinBPFFunction("devm_regmap_add_irq_chip_fwnode($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct regmap_irq_chip *)$arg7, $arg8)")
   public static int devm_regmap_add_irq_chip_fwnode(Ptr<device> dev, Ptr<fwnode_handle> fwnode,
       Ptr<regmap> map, int irq, int irq_flags, int irq_base, Ptr<regmap_irq_chip> chip,
       Ptr<Ptr<regmap_irq_chip_data>> data) {
@@ -3395,7 +3396,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regmap_field_bulk_alloc($arg1, $arg2, $arg3, (const struct reg_field*)$arg4, $arg5)")
+  @BuiltinBPFFunction("devm_regmap_field_bulk_alloc($arg1, $arg2, $arg3, (const struct reg_field *)$arg4, $arg5)")
   public static int devm_regmap_field_bulk_alloc(Ptr<device> dev, Ptr<regmap> regmap,
       Ptr<Ptr<regmap_field>> rm_field, Ptr<reg_field> reg_field, int num_fields) {
     throw new MethodIsBPFRelatedFunction();
@@ -3445,14 +3446,14 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regulator_bulk_get_const($arg1, $arg2, (const struct regulator_bulk_data*)$arg3, $arg4)")
+  @BuiltinBPFFunction("devm_regulator_bulk_get_const($arg1, $arg2, (const struct regulator_bulk_data *)$arg3, $arg4)")
   public static int devm_regulator_bulk_get_const(Ptr<device> dev, int num_consumers,
       Ptr<regulator_bulk_data> in_consumers, Ptr<Ptr<regulator_bulk_data>> out_consumers) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regulator_bulk_get_enable($arg1, $arg2, (const u8**)$arg3)")
+  @BuiltinBPFFunction("devm_regulator_bulk_get_enable($arg1, $arg2, (const const u8 **)$arg3)")
   public static int devm_regulator_bulk_get_enable(Ptr<device> dev, int num_consumers,
       Ptr<String> id) {
     throw new MethodIsBPFRelatedFunction();
@@ -3478,7 +3479,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regulator_bulk_register_supply_alias($arg1, (const u8**)$arg2, $arg3, (const u8**)$arg4, $arg5)")
+  @BuiltinBPFFunction("devm_regulator_bulk_register_supply_alias($arg1, (const const u8 **)$arg2, $arg3, (const const u8 **)$arg4, $arg5)")
   public static int devm_regulator_bulk_register_supply_alias(Ptr<device> dev, Ptr<String> id,
       Ptr<device> alias_dev, Ptr<String> alias_id, int num_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -3503,43 +3504,43 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regulator_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_regulator_get($arg1, (const u8 *)$arg2)")
   public static Ptr<regulator> devm_regulator_get(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regulator_get_enable($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_regulator_get_enable($arg1, (const u8 *)$arg2)")
   public static int devm_regulator_get_enable(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regulator_get_enable_optional($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_regulator_get_enable_optional($arg1, (const u8 *)$arg2)")
   public static int devm_regulator_get_enable_optional(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regulator_get_enable_read_voltage($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_regulator_get_enable_read_voltage($arg1, (const u8 *)$arg2)")
   public static int devm_regulator_get_enable_read_voltage(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regulator_get_exclusive($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_regulator_get_exclusive($arg1, (const u8 *)$arg2)")
   public static Ptr<regulator> devm_regulator_get_exclusive(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regulator_get_optional($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devm_regulator_get_optional($arg1, (const u8 *)$arg2)")
   public static Ptr<regulator> devm_regulator_get_optional(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regulator_irq_helper($arg1, (const struct regulator_irq_desc*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("devm_regulator_irq_helper($arg1, (const struct regulator_irq_desc *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static Ptr<?> devm_regulator_irq_helper(Ptr<device> dev, Ptr<regulator_irq_desc> d,
       int irq, int irq_flags, int common_errs, Ptr<java.lang.Integer> per_rdev_errs,
       Ptr<Ptr<regulator_dev>> rdev, int rdev_amount) {
@@ -3571,7 +3572,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regulator_register($arg1, (const struct regulator_desc*)$arg2, (const struct regulator_config*)$arg3)")
+  @BuiltinBPFFunction("devm_regulator_register($arg1, (const struct regulator_desc *)$arg2, (const struct regulator_config *)$arg3)")
   public static Ptr<regulator_dev> devm_regulator_register(Ptr<device> dev,
       Ptr<regulator_desc> regulator_desc, Ptr<regulator_config> config) {
     throw new MethodIsBPFRelatedFunction();
@@ -3585,7 +3586,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_regulator_register_supply_alias($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("devm_regulator_register_supply_alias($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4)")
   public static int devm_regulator_register_supply_alias(Ptr<device> dev, String id,
       Ptr<device> alias_dev, String alias_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -3623,7 +3624,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_request_any_context_irq($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("devm_request_any_context_irq($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int devm_request_any_context_irq(Ptr<device> dev, @Unsigned int irq,
       @OriginalName("irq_handler_t") Ptr<?> handler, @Unsigned long irqflags, String devname,
       Ptr<?> dev_id) {
@@ -3650,7 +3651,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_request_threaded_irq($arg1, $arg2, $arg3, $arg4, $arg5, (const u8*)$arg6, $arg7)")
+  @BuiltinBPFFunction("devm_request_threaded_irq($arg1, $arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6, $arg7)")
   public static int devm_request_threaded_irq(Ptr<device> dev, @Unsigned int irq,
       @OriginalName("irq_handler_t") Ptr<?> handler,
       @OriginalName("irq_handler_t") Ptr<?> thread_fn, @Unsigned long irqflags, String devname,
@@ -3721,7 +3722,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_rproc_alloc($arg1, (const u8*)$arg2, (const struct rproc_ops*)$arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("devm_rproc_alloc($arg1, (const u8 *)$arg2, (const struct rproc_ops *)$arg3, (const u8 *)$arg4, $arg5)")
   public static Ptr<rproc> devm_rproc_alloc(Ptr<device> dev, String name, Ptr<rproc_ops> ops,
       String firmware, int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3746,7 +3747,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_rtc_device_register($arg1, (const u8*)$arg2, (const struct rtc_class_ops*)$arg3, $arg4)")
+  @BuiltinBPFFunction("devm_rtc_device_register($arg1, (const u8 *)$arg2, (const struct rtc_class_ops *)$arg3, $arg4)")
   public static Ptr<rtc_device> devm_rtc_device_register(Ptr<device> dev, String name,
       Ptr<rtc_class_ops> ops, Ptr<module> owner) {
     throw new MethodIsBPFRelatedFunction();
@@ -3783,7 +3784,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_spi_mem_dirmap_create($arg1, $arg2, (const struct spi_mem_dirmap_info*)$arg3)")
+  @BuiltinBPFFunction("devm_spi_mem_dirmap_create($arg1, $arg2, (const struct spi_mem_dirmap_info *)$arg3)")
   public static Ptr<spi_mem_dirmap_desc> devm_spi_mem_dirmap_create(Ptr<device> dev,
       Ptr<spi_mem> mem, Ptr<spi_mem_dirmap_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -3814,7 +3815,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_spi_offload_get($arg1, $arg2, (const struct spi_offload_config*)$arg3)")
+  @BuiltinBPFFunction("devm_spi_offload_get($arg1, $arg2, (const struct spi_offload_config *)$arg3)")
   public static Ptr<spi_offload> devm_spi_offload_get(Ptr<device> dev, Ptr<spi_device> spi,
       Ptr<spi_offload_config> config) {
     throw new MethodIsBPFRelatedFunction();
@@ -3892,7 +3893,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_thermal_of_cooling_device_register($arg1, $arg2, (const u8*)$arg3, $arg4, (const struct thermal_cooling_device_ops*)$arg5)")
+  @BuiltinBPFFunction("devm_thermal_of_cooling_device_register($arg1, $arg2, (const u8 *)$arg3, $arg4, (const struct thermal_cooling_device_ops *)$arg5)")
   public static Ptr<thermal_cooling_device> devm_thermal_of_cooling_device_register(Ptr<device> dev,
       Ptr<device_node> np, String type, Ptr<?> devdata, Ptr<thermal_cooling_device_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -3936,7 +3937,7 @@ public final class DevmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devm_usb_get_phy_by_phandle($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devm_usb_get_phy_by_phandle($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<usb_phy> devm_usb_get_phy_by_phandle(Ptr<device> dev, String phandle,
       char index) {
     throw new MethodIsBPFRelatedFunction();

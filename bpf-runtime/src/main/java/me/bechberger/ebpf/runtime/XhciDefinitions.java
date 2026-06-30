@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1159,7 +1160,7 @@ public final class XhciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xhci_alloc_dbc($arg1, $arg2, (const struct dbc_driver*)$arg3)")
+  @BuiltinBPFFunction("xhci_alloc_dbc($arg1, $arg2, (const struct dbc_driver *)$arg3)")
   public static Ptr<xhci_dbc> xhci_alloc_dbc(Ptr<device> dev, Ptr<?> base, Ptr<dbc_driver> driver) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1271,7 +1272,7 @@ public final class XhciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xhci_check_args($arg1, $arg2, $arg3, $arg4, $arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("xhci_check_args($arg1, $arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6)")
   public static int xhci_check_args(Ptr<usb_hcd> hcd, Ptr<usb_device> udev,
       Ptr<usb_host_endpoint> ep, int check_ep, boolean check_virt_dev, String func) {
     throw new MethodIsBPFRelatedFunction();
@@ -1523,7 +1524,7 @@ public final class XhciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xhci_dbg_trace($arg1, (void (*)(struct va_format*))$arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("xhci_dbg_trace($arg1, (void (*)(struct va_format*))$arg2, (const u8 *)$arg3, $arg4_)")
   public static void xhci_dbg_trace(Ptr<xhci_hcd> xhci, Ptr<?> trace, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1562,7 +1563,7 @@ public final class XhciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xhci_debugfs_extcap_regset($arg1, $arg2, (const struct debugfs_reg32*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("xhci_debugfs_extcap_regset($arg1, $arg2, (const struct debugfs_reg32 *)$arg3, $arg4, (const u8 *)$arg5)")
   public static void xhci_debugfs_extcap_regset(Ptr<xhci_hcd> xhci, int cap_id,
       Ptr<debugfs_reg32> regs, @Unsigned long n, String cap_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1575,7 +1576,7 @@ public final class XhciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xhci_debugfs_regset($arg1, $arg2, (const struct debugfs_reg32*)$arg3, $arg4, $arg5, (const u8*)$arg6, $arg7_)")
+  @BuiltinBPFFunction("xhci_debugfs_regset($arg1, $arg2, (const struct debugfs_reg32 *)$arg3, $arg4, $arg5, (const u8 *)$arg6, $arg7_)")
   public static void xhci_debugfs_regset(Ptr<xhci_hcd> xhci, @Unsigned int base,
       Ptr<debugfs_reg32> regs, @Unsigned long nregs, Ptr<dentry> parent, String fmt,
       java.lang.Object... param6) {
@@ -2082,7 +2083,7 @@ public final class XhciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xhci_init_driver($arg1, (const struct xhci_driver_overrides*)$arg2)")
+  @BuiltinBPFFunction("xhci_init_driver($arg1, (const struct xhci_driver_overrides *)$arg2)")
   public static void xhci_init_driver(Ptr<hc_driver> drv, Ptr<xhci_driver_overrides> over) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2195,7 +2196,7 @@ public final class XhciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xhci_pci_common_probe($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("xhci_pci_common_probe($arg1, (const struct pci_device_id *)$arg2)")
   public static int xhci_pci_common_probe(Ptr<pci_dev> dev, Ptr<pci_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2219,7 +2220,7 @@ public final class XhciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xhci_pci_probe($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("xhci_pci_probe($arg1, (const struct pci_device_id *)$arg2)")
   public static int xhci_pci_probe(Ptr<pci_dev> dev, Ptr<pci_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2312,7 +2313,7 @@ public final class XhciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xhci_port_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("xhci_port_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long xhci_port_write(Ptr<file> file, String ubuf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2815,7 +2816,7 @@ public final class XhciDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xhci_stream_id_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("xhci_stream_id_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long xhci_stream_id_write(Ptr<file> file, String ubuf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

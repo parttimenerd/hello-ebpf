@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1164,7 +1165,7 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_add_software_node($arg1, (const struct software_node*)$arg2)")
+  @BuiltinBPFFunction("device_add_software_node($arg1, (const struct software_node *)$arg2)")
   public static int device_add_software_node(Ptr<device> dev, Ptr<software_node> node) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1214,7 +1215,7 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_create((const struct class*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6_)")
+  @BuiltinBPFFunction("device_create((const struct class *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6_)")
   public static Ptr<device> device_create(Ptr<_class> _class, Ptr<device> parent,
       @Unsigned @OriginalName("dev_t") int devt, Ptr<?> drvdata, String fmt,
       java.lang.Object... param5) {
@@ -1222,19 +1223,19 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_create_bin_file($arg1, (const struct bin_attribute*)$arg2)")
+  @BuiltinBPFFunction("device_create_bin_file($arg1, (const struct bin_attribute *)$arg2)")
   public static int device_create_bin_file(Ptr<device> dev, Ptr<bin_attribute> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_create_file($arg1, (const struct device_attribute*)$arg2)")
+  @BuiltinBPFFunction("device_create_file($arg1, (const struct device_attribute *)$arg2)")
   public static int device_create_file(Ptr<device> dev, Ptr<device_attribute> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_create_groups_vargs((const struct class*)$arg1, $arg2, $arg3, $arg4, (const struct attribute_group**)$arg5, (const u8*)$arg6, $arg7)")
+  @BuiltinBPFFunction("device_create_groups_vargs((const struct class *)$arg1, $arg2, $arg3, $arg4, (const struct attribute_group**)$arg5, (const u8 *)$arg6, $arg7)")
   public static Ptr<device> device_create_groups_vargs(Ptr<_class> _class, Ptr<device> parent,
       @Unsigned @OriginalName("dev_t") int devt, Ptr<?> drvdata, Ptr<Ptr<attribute_group>> groups,
       String fmt, Ptr<__va_list_tag> args) {
@@ -1242,7 +1243,7 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_create_managed_software_node($arg1, (const struct property_entry*)$arg2, (const struct software_node*)$arg3)")
+  @BuiltinBPFFunction("device_create_managed_software_node($arg1, (const struct property_entry *)$arg2, (const struct software_node *)$arg3)")
   public static int device_create_managed_software_node(Ptr<device> dev,
       Ptr<property_entry> properties, Ptr<software_node> parent) {
     throw new MethodIsBPFRelatedFunction();
@@ -1255,7 +1256,7 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_create_with_groups((const struct class*)$arg1, $arg2, $arg3, $arg4, (const struct attribute_group**)$arg5, (const u8*)$arg6, $arg7_)")
+  @BuiltinBPFFunction("device_create_with_groups((const struct class *)$arg1, $arg2, $arg3, $arg4, (const struct attribute_group**)$arg5, (const u8 *)$arg6, $arg7_)")
   public static Ptr<device> device_create_with_groups(Ptr<_class> _class, Ptr<device> parent,
       @Unsigned @OriginalName("dev_t") int devt, Ptr<?> drvdata, Ptr<Ptr<attribute_group>> groups,
       String fmt, java.lang.Object... param6) {
@@ -1283,19 +1284,19 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_destroy((const struct class*)$arg1, $arg2)")
+  @BuiltinBPFFunction("device_destroy((const struct class *)$arg1, $arg2)")
   public static void device_destroy(Ptr<_class> _class, @Unsigned @OriginalName("dev_t") int devt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_dma_supported((const struct device*)$arg1)")
+  @BuiltinBPFFunction("device_dma_supported((const struct device *)$arg1)")
   public static boolean device_dma_supported(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_driver_attach((const struct device_driver*)$arg1, $arg2)")
+  @BuiltinBPFFunction("device_driver_attach((const struct device_driver *)$arg1, $arg2)")
   public static int device_driver_attach(Ptr<device_driver> drv, Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1307,7 +1308,7 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_find_child($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("device_find_child($arg1, (const void *)$arg2, $arg3)")
   public static Ptr<device> device_find_child(Ptr<device> parent, Ptr<?> data,
       @OriginalName("device_match_t") Ptr<?> match) {
     throw new MethodIsBPFRelatedFunction();
@@ -1347,7 +1348,7 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)device_get_devnode((const struct device*)$arg1, $arg2, $arg3, $arg4, (const u8**)$arg5))")
+  @BuiltinBPFFunction("((const u8*)device_get_devnode((const struct device *)$arg1, $arg2, $arg3, $arg4, (const u8**)$arg5))")
   public static String device_get_devnode(Ptr<device> dev,
       Ptr<java.lang. @Unsigned @OriginalName("umode_t") Short> mode, Ptr<kuid_t> uid,
       Ptr<kgid_t> gid, Ptr<String> tmp) {
@@ -1355,7 +1356,7 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_get_dma_attr((const struct device*)$arg1)")
+  @BuiltinBPFFunction("device_get_dma_attr((const struct device *)$arg1)")
   public static dev_dma_attr device_get_dma_attr(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1373,26 +1374,26 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)device_get_match_data((const struct device*)$arg1))")
+  @BuiltinBPFFunction("((const void*)device_get_match_data((const struct device *)$arg1))")
   public static Ptr<?> device_get_match_data(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_get_named_child_node((const struct device*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("device_get_named_child_node((const struct device *)$arg1, (const u8 *)$arg2)")
   public static Ptr<fwnode_handle> device_get_named_child_node(Ptr<device> dev, String childname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_get_next_child_node((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("device_get_next_child_node((const struct device *)$arg1, $arg2)")
   public static Ptr<fwnode_handle> device_get_next_child_node(Ptr<device> dev,
       Ptr<fwnode_handle> child) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_get_ownership((const struct kobject*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("device_get_ownership((const struct kobject *)$arg1, $arg2, $arg3)")
   public static void device_get_ownership(Ptr<kobject> kobj, Ptr<kuid_t> uid, Ptr<kgid_t> gid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1632,55 +1633,55 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_match_acpi_dev($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("device_match_acpi_dev($arg1, (const void *)$arg2)")
   public static int device_match_acpi_dev(Ptr<device> dev, Ptr<?> adev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_match_acpi_handle($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("device_match_acpi_handle($arg1, (const void *)$arg2)")
   public static int device_match_acpi_handle(Ptr<device> dev, Ptr<?> handle) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_match_any($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("device_match_any($arg1, (const void *)$arg2)")
   public static int device_match_any(Ptr<device> dev, Ptr<?> unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_match_devt($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("device_match_devt($arg1, (const void *)$arg2)")
   public static int device_match_devt(Ptr<device> dev, Ptr<?> pdevt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_match_fwnode($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("device_match_fwnode($arg1, (const void *)$arg2)")
   public static int device_match_fwnode(Ptr<device> dev, Ptr<?> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_match_id($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("device_match_id($arg1, (const void *)$arg2)")
   public static int device_match_id(Ptr<device> dev, Ptr<?> id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_match_name($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("device_match_name($arg1, (const void *)$arg2)")
   public static int device_match_name(Ptr<device> dev, Ptr<?> name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_match_of_node($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("device_match_of_node($arg1, (const void *)$arg2)")
   public static int device_match_of_node(Ptr<device> dev, Ptr<?> np) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_match_type($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("device_match_type($arg1, (const void *)$arg2)")
   public static int device_match_type(Ptr<device> dev, Ptr<?> type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1692,7 +1693,7 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)device_namespace((const struct kobject*)$arg1))")
+  @BuiltinBPFFunction("((const void*)device_namespace((const struct kobject *)$arg1))")
   public static Ptr<?> device_namespace(Ptr<kobject> kobj) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1880,59 +1881,59 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_property_match_string((const struct device*)$arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("device_property_match_string((const struct device *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int device_property_match_string(Ptr<device> dev, String propname, String string) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_property_present((const struct device*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("device_property_present((const struct device *)$arg1, (const u8 *)$arg2)")
   public static boolean device_property_present(Ptr<device> dev, String propname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_property_read_bool((const struct device*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("device_property_read_bool((const struct device *)$arg1, (const u8 *)$arg2)")
   public static boolean device_property_read_bool(Ptr<device> dev, String propname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_property_read_string((const struct device*)$arg1, (const u8*)$arg2, (const u8**)$arg3)")
+  @BuiltinBPFFunction("device_property_read_string((const struct device *)$arg1, (const u8 *)$arg2, (const u8**)$arg3)")
   public static int device_property_read_string(Ptr<device> dev, String propname, Ptr<String> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_property_read_string_array((const struct device*)$arg1, (const u8*)$arg2, (const u8**)$arg3, $arg4)")
+  @BuiltinBPFFunction("device_property_read_string_array((const struct device *)$arg1, (const u8 *)$arg2, (const u8**)$arg3, $arg4)")
   public static int device_property_read_string_array(Ptr<device> dev, String propname,
       Ptr<String> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_property_read_u16_array((const struct device*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("device_property_read_u16_array((const struct device *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int device_property_read_u16_array(Ptr<device> dev, String propname,
       Ptr<java.lang. @Unsigned Short> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_property_read_u32_array((const struct device*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("device_property_read_u32_array((const struct device *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int device_property_read_u32_array(Ptr<device> dev, String propname,
       Ptr<java.lang. @Unsigned Integer> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_property_read_u64_array((const struct device*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("device_property_read_u64_array((const struct device *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int device_property_read_u64_array(Ptr<device> dev, String propname,
       Ptr<java.lang. @Unsigned Long> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_property_read_u8_array((const struct device*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("device_property_read_u8_array((const struct device *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int device_property_read_u8_array(Ptr<device> dev, String propname,
       Ptr<java.lang.Character> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
@@ -1975,7 +1976,7 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_release_driver_internal($arg1, (const struct device_driver*)$arg2, $arg3)")
+  @BuiltinBPFFunction("device_release_driver_internal($arg1, (const struct device_driver *)$arg2, $arg3)")
   public static void device_release_driver_internal(Ptr<device> dev, Ptr<device_driver> drv,
       Ptr<device> parent) {
     throw new MethodIsBPFRelatedFunction();
@@ -1994,7 +1995,7 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_remove_bin_file($arg1, (const struct bin_attribute*)$arg2)")
+  @BuiltinBPFFunction("device_remove_bin_file($arg1, (const struct bin_attribute *)$arg2)")
   public static void device_remove_bin_file(Ptr<device> dev, Ptr<bin_attribute> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2006,13 +2007,13 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_remove_file($arg1, (const struct device_attribute*)$arg2)")
+  @BuiltinBPFFunction("device_remove_file($arg1, (const struct device_attribute *)$arg2)")
   public static void device_remove_file(Ptr<device> dev, Ptr<device_attribute> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_remove_file_self($arg1, (const struct device_attribute*)$arg2)")
+  @BuiltinBPFFunction("device_remove_file_self($arg1, (const struct device_attribute *)$arg2)")
   public static boolean device_remove_file_self(Ptr<device> dev, Ptr<device_attribute> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2036,7 +2037,7 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_rename($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("device_rename($arg1, (const u8 *)$arg2)")
   public static int device_rename(Ptr<device> dev, String new_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2088,7 +2089,7 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_set_deferred_probe_reason((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("device_set_deferred_probe_reason((const struct device *)$arg1, $arg2)")
   public static void device_set_deferred_probe_reason(Ptr<device> dev, Ptr<va_format> vaf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2100,7 +2101,7 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_set_of_node_from_dev($arg1, (const struct device*)$arg2)")
+  @BuiltinBPFFunction("device_set_of_node_from_dev($arg1, (const struct device *)$arg2)")
   public static void device_set_of_node_from_dev(Ptr<device> dev, Ptr<device> dev2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2159,21 +2160,21 @@ public final class DeviceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_store_bool($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("device_store_bool($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long device_store_bool(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_store_int($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("device_store_int($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long device_store_int(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("device_store_ulong($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("device_store_ulong($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long device_store_ulong(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();

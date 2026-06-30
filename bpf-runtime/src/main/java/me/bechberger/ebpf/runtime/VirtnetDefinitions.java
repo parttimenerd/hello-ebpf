@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1173,7 +1174,7 @@ public final class VirtnetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtnet_fill_stats($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("virtnet_fill_stats($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static void virtnet_fill_stats(Ptr<virtnet_info> vi, @Unsigned int qid,
       Ptr<virtnet_stats_ctx> ctx, Ptr<java.lang.Character> base, boolean drv_stats,
       char reply_type) {
@@ -1181,7 +1182,7 @@ public final class VirtnetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtnet_fill_stats_qstat($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("virtnet_fill_stats_qstat($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static void virtnet_fill_stats_qstat(Ptr<virtnet_info> vi, @Unsigned int qid,
       Ptr<virtnet_stats_ctx> ctx, Ptr<java.lang.Character> base, boolean drv_stats,
       char reply_type) {
@@ -1537,14 +1538,14 @@ public final class VirtnetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtnet_set_hashflow($arg1, (const struct ethtool_rxfh_fields*)$arg2, $arg3)")
+  @BuiltinBPFFunction("virtnet_set_hashflow($arg1, (const struct ethtool_rxfh_fields *)$arg2, $arg3)")
   public static int virtnet_set_hashflow(Ptr<net_device> dev, Ptr<ethtool_rxfh_fields> info,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtnet_set_link_ksettings($arg1, (const struct ethtool_link_ksettings*)$arg2)")
+  @BuiltinBPFFunction("virtnet_set_link_ksettings($arg1, (const struct ethtool_link_ksettings *)$arg2)")
   public static int virtnet_set_link_ksettings(Ptr<net_device> dev,
       Ptr<ethtool_link_ksettings> cmd) {
     throw new MethodIsBPFRelatedFunction();
@@ -1693,7 +1694,7 @@ public final class VirtnetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtnet_xdp_rx_hash((const struct xdp_md*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("virtnet_xdp_rx_hash((const struct xdp_md *)$arg1, $arg2, $arg3)")
   public static int virtnet_xdp_rx_hash(Ptr<xdp_md> _ctx, Ptr<java.lang. @Unsigned Integer> hash,
       Ptr<xdp_rss_hash_type> rss_type) {
     throw new MethodIsBPFRelatedFunction();

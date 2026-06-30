@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class KeyDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__key_create_or_update($arg1, (const u8*)$arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__key_create_or_update($arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> __key_create_or_update(
       @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> keyring_ref,
       String type, String description, Ptr<?> payload, @Unsigned long plen,
@@ -1112,7 +1113,7 @@ public final class KeyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__key_link_begin($arg1, (const struct keyring_index_key*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__key_link_begin($arg1, (const struct keyring_index_key *)$arg2, $arg3)")
   public static int __key_link_begin(Ptr<key> keyring, Ptr<keyring_index_key> index_key,
       Ptr<Ptr<assoc_array_edit>> _edit) {
     throw new MethodIsBPFRelatedFunction();
@@ -1125,27 +1126,27 @@ public final class KeyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__key_link_end($arg1, (const struct keyring_index_key*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__key_link_end($arg1, (const struct keyring_index_key *)$arg2, $arg3)")
   public static void __key_link_end(Ptr<key> keyring, Ptr<keyring_index_key> index_key,
       Ptr<assoc_array_edit> edit) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__key_link_lock($arg1, (const struct keyring_index_key*)$arg2)")
+  @BuiltinBPFFunction("__key_link_lock($arg1, (const struct keyring_index_key *)$arg2)")
   public static int __key_link_lock(Ptr<key> keyring, Ptr<keyring_index_key> index_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__key_move_lock($arg1, $arg2, (const struct keyring_index_key*)$arg3)")
+  @BuiltinBPFFunction("__key_move_lock($arg1, $arg2, (const struct keyring_index_key *)$arg3)")
   public static int __key_move_lock(Ptr<key> l_keyring, Ptr<key> u_keyring,
       Ptr<keyring_index_key> index_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("key_alloc($arg1, (const u8*)$arg2, $arg3, $arg4, (const struct cred*)$arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("key_alloc($arg1, (const u8 *)$arg2, $arg3, $arg4, (const struct cred *)$arg5, $arg6, $arg7, $arg8)")
   public static Ptr<key> key_alloc(Ptr<key_type> type, String desc, kuid_t uid, kgid_t gid,
       Ptr<cred> cred, @Unsigned @OriginalName("key_perm_t") int perm, @Unsigned long flags,
       Ptr<key_restriction> restrict_link) {
@@ -1159,7 +1160,7 @@ public final class KeyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("key_create($arg1, (const u8*)$arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("key_create($arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6, $arg7)")
   public static @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> key_create(
       @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> keyring_ref,
       String type, String description, Ptr<?> payload, @Unsigned long plen,
@@ -1168,7 +1169,7 @@ public final class KeyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("key_create_or_update($arg1, (const u8*)$arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("key_create_or_update($arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6, $arg7)")
   public static @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> key_create_or_update(
       @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> keyring_ref,
       String type, String description, Ptr<?> payload, @Unsigned long plen,
@@ -1177,7 +1178,7 @@ public final class KeyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("key_default_cmp((const struct key*)$arg1, (const struct key_match_data*)$arg2)")
+  @BuiltinBPFFunction("key_default_cmp((const struct key *)$arg1, (const struct key_match_data *)$arg2)")
   public static boolean key_default_cmp(Ptr<key> key, Ptr<key_match_data> match_data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1245,7 +1246,7 @@ public final class KeyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("key_instantiate_and_link($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("key_instantiate_and_link($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static int key_instantiate_and_link(Ptr<key> key, Ptr<?> data, @Unsigned long datalen,
       Ptr<key> keyring, Ptr<key> authkey) {
     throw new MethodIsBPFRelatedFunction();
@@ -1277,7 +1278,7 @@ public final class KeyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("key_or_keyring_common($arg1, (const struct key_type*)$arg2, (const union key_payload*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("key_or_keyring_common($arg1, (const struct key_type *)$arg2, (const union key_payload *)$arg3, $arg4, $arg5)")
   public static int key_or_keyring_common(Ptr<key> dest_keyring, Ptr<key_type> type,
       Ptr<key_payload> payload, Ptr<key> trusted, boolean check_dest) {
     throw new MethodIsBPFRelatedFunction();
@@ -1357,7 +1358,7 @@ public final class KeyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("key_task_permission((const __key_reference_with_attributes*)$arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("key_task_permission((const __key_reference_with_attributes*)$arg1, (const struct cred *)$arg2, $arg3)")
   public static int key_task_permission(
       @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> key_ref,
       Ptr<cred> cred, key_need_perm need_perm) {
@@ -1365,7 +1366,7 @@ public final class KeyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("key_type_lookup((const u8*)$arg1)")
+  @BuiltinBPFFunction("key_type_lookup((const u8 *)$arg1)")
   public static Ptr<key_type> key_type_lookup(String type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1383,7 +1384,7 @@ public final class KeyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("key_update($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("key_update($arg1, (const void *)$arg2, $arg3)")
   public static int key_update(
       @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> key_ref,
       Ptr<?> payload, @Unsigned long plen) {
@@ -1403,7 +1404,7 @@ public final class KeyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("key_validate((const struct key*)$arg1)")
+  @BuiltinBPFFunction("key_validate((const struct key *)$arg1)")
   public static int key_validate(Ptr<key> key) {
     throw new MethodIsBPFRelatedFunction();
   }

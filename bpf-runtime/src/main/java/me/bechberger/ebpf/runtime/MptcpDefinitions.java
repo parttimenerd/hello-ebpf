@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1235,14 +1236,14 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__mptcp_subflow_connect($arg1, (const struct mptcp_pm_local*)$arg2, (const struct mptcp_addr_info*)$arg3)")
+  @BuiltinBPFFunction("__mptcp_subflow_connect($arg1, (const struct mptcp_pm_local *)$arg2, (const struct mptcp_addr_info *)$arg3)")
   public static int __mptcp_subflow_connect(Ptr<sock> sk, Ptr<mptcp_pm_local> local,
       Ptr<mptcp_addr_info> remote) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__mptcp_subflow_fully_established($arg1, $arg2, (const struct mptcp_options_received*)$arg3)")
+  @BuiltinBPFFunction("__mptcp_subflow_fully_established($arg1, $arg2, (const struct mptcp_options_received *)$arg3)")
   public static void __mptcp_subflow_fully_established(Ptr<mptcp_sock> msk,
       Ptr<mptcp_subflow_context> subflow, Ptr<mptcp_options_received> mp_opt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1309,14 +1310,14 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_addresses_equal((const struct mptcp_addr_info*)$arg1, (const struct mptcp_addr_info*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mptcp_addresses_equal((const struct mptcp_addr_info *)$arg1, (const struct mptcp_addr_info *)$arg2, $arg3)")
   public static boolean mptcp_addresses_equal(Ptr<mptcp_addr_info> a, Ptr<mptcp_addr_info> b,
       boolean use_port) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_allow_join_id0((const struct net*)$arg1)")
+  @BuiltinBPFFunction("mptcp_allow_join_id0((const struct net *)$arg1)")
   public static int mptcp_allow_join_id0(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1334,7 +1335,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_can_accept_new_subflow((const struct mptcp_sock*)$arg1)")
+  @BuiltinBPFFunction("mptcp_can_accept_new_subflow((const struct mptcp_sock *)$arg1)")
   public static boolean mptcp_can_accept_new_subflow(Ptr<mptcp_sock> msk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1389,7 +1390,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_close_timeout((const struct sock*)$arg1)")
+  @BuiltinBPFFunction("mptcp_close_timeout((const struct sock *)$arg1)")
   public static @Unsigned int mptcp_close_timeout(Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1407,7 +1408,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_copy_inaddrs($arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("mptcp_copy_inaddrs($arg1, (const struct sock *)$arg2)")
   public static void mptcp_copy_inaddrs(Ptr<sock> msk, Ptr<sock> ssk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1521,39 +1522,39 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_event($arg1, (const struct mptcp_sock*)$arg2, (const struct sock*)$arg3, $arg4)")
+  @BuiltinBPFFunction("mptcp_event($arg1, (const struct mptcp_sock *)$arg2, (const struct sock *)$arg3, $arg4)")
   public static void mptcp_event(mptcp_event_type type, Ptr<mptcp_sock> msk, Ptr<sock> ssk,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_event_add_subflow($arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("mptcp_event_add_subflow($arg1, (const struct sock *)$arg2)")
   public static int mptcp_event_add_subflow(Ptr<sk_buff> skb, Ptr<sock> ssk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_event_addr_announced((const struct sock*)$arg1, (const struct mptcp_addr_info*)$arg2)")
+  @BuiltinBPFFunction("mptcp_event_addr_announced((const struct sock *)$arg1, (const struct mptcp_addr_info *)$arg2)")
   public static void mptcp_event_addr_announced(Ptr<sock> ssk, Ptr<mptcp_addr_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_event_addr_removed((const struct mptcp_sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mptcp_event_addr_removed((const struct mptcp_sock *)$arg1, $arg2)")
   public static void mptcp_event_addr_removed(Ptr<mptcp_sock> msk,
       @OriginalName("uint8_t") char id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_event_pm_listener((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mptcp_event_pm_listener((const struct sock *)$arg1, $arg2)")
   public static void mptcp_event_pm_listener(Ptr<sock> ssk, mptcp_event_type event) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_event_put_token_and_ssk($arg1, (const struct mptcp_sock*)$arg2, (const struct sock*)$arg3)")
+  @BuiltinBPFFunction("mptcp_event_put_token_and_ssk($arg1, (const struct mptcp_sock *)$arg2, (const struct sock *)$arg3)")
   public static int mptcp_event_put_token_and_ssk(Ptr<sk_buff> skb, Ptr<mptcp_sock> msk,
       Ptr<sock> ssk) {
     throw new MethodIsBPFRelatedFunction();
@@ -1579,7 +1580,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_get_add_addr_timeout((const struct net*)$arg1)")
+  @BuiltinBPFFunction("mptcp_get_add_addr_timeout((const struct net *)$arg1)")
   public static @Unsigned int mptcp_get_add_addr_timeout(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1591,19 +1592,19 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_get_options((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mptcp_get_options((const struct sk_buff *)$arg1, $arg2)")
   public static void mptcp_get_options(Ptr<sk_buff> skb, Ptr<mptcp_options_received> mp_opt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)mptcp_get_path_manager((const struct net*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)mptcp_get_path_manager((const struct net *)$arg1))")
   public static String mptcp_get_path_manager(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_get_pm_type((const struct net*)$arg1)")
+  @BuiltinBPFFunction("mptcp_get_pm_type((const struct net *)$arg1)")
   public static int mptcp_get_pm_type(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1615,19 +1616,19 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_get_reset_option((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("mptcp_get_reset_option((const struct sk_buff *)$arg1)")
   public static @Unsigned @OriginalName("__be32") int mptcp_get_reset_option(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)mptcp_get_scheduler((const struct net*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)mptcp_get_scheduler((const struct net *)$arg1))")
   public static String mptcp_get_scheduler(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_get_sub_addrs((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mptcp_get_sub_addrs((const struct sock *)$arg1, $arg2)")
   public static void mptcp_get_sub_addrs(Ptr<sock> sk, Ptr<mptcp_subflow_addrs> a) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1687,7 +1688,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_info2sockaddr((const struct mptcp_addr_info*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("mptcp_info2sockaddr((const struct mptcp_addr_info *)$arg1, $arg2, $arg3)")
   public static void mptcp_info2sockaddr(Ptr<mptcp_addr_info> info,
       Ptr<__kernel_sockaddr_storage> addr, @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
@@ -1718,19 +1719,19 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_ioctl_outq((const struct mptcp_sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mptcp_ioctl_outq((const struct mptcp_sock *)$arg1, $arg2)")
   public static int mptcp_ioctl_outq(Ptr<mptcp_sock> msk, @Unsigned long v) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_is_checksum_enabled((const struct net*)$arg1)")
+  @BuiltinBPFFunction("mptcp_is_checksum_enabled((const struct net *)$arg1)")
   public static int mptcp_is_checksum_enabled(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_is_enabled((const struct net*)$arg1)")
+  @BuiltinBPFFunction("mptcp_is_enabled((const struct net *)$arg1)")
   public static int mptcp_is_enabled(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1754,13 +1755,13 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_local_address((const struct sock_common*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mptcp_local_address((const struct sock_common *)$arg1, $arg2)")
   public static void mptcp_local_address(Ptr<sock_common> skc, Ptr<mptcp_addr_info> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_lookup_subflow_by_saddr((const struct list_head*)$arg1, (const struct mptcp_addr_info*)$arg2)")
+  @BuiltinBPFFunction("mptcp_lookup_subflow_by_saddr((const struct list_head *)$arg1, (const struct mptcp_addr_info *)$arg2)")
   public static boolean mptcp_lookup_subflow_by_saddr(Ptr<list_head> list,
       Ptr<mptcp_addr_info> saddr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1810,14 +1811,14 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_nl_remove_subflow_and_signal_addr($arg1, (const struct mptcp_pm_addr_entry*)$arg2)")
+  @BuiltinBPFFunction("mptcp_nl_remove_subflow_and_signal_addr($arg1, (const struct mptcp_pm_addr_entry *)$arg2)")
   public static int mptcp_nl_remove_subflow_and_signal_addr(Ptr<net> net,
       Ptr<mptcp_pm_addr_entry> entry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_parse_option((const struct sk_buff*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("mptcp_parse_option((const struct sk_buff *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void mptcp_parse_option(Ptr<sk_buff> skb, String ptr, int opsize,
       Ptr<mptcp_options_received> mp_opt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1830,13 +1831,13 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_add_addr_echoed($arg1, (const struct mptcp_addr_info*)$arg2)")
+  @BuiltinBPFFunction("mptcp_pm_add_addr_echoed($arg1, (const struct mptcp_addr_info *)$arg2)")
   public static void mptcp_pm_add_addr_echoed(Ptr<mptcp_sock> msk, Ptr<mptcp_addr_info> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_add_addr_received((const struct sock*)$arg1, (const struct mptcp_addr_info*)$arg2)")
+  @BuiltinBPFFunction("mptcp_pm_add_addr_received((const struct sock *)$arg1, (const struct mptcp_addr_info *)$arg2)")
   public static void mptcp_pm_add_addr_received(Ptr<sock> ssk, Ptr<mptcp_addr_info> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1848,7 +1849,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_add_addr_signal($arg1, (const struct sk_buff*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("mptcp_pm_add_addr_signal($arg1, (const struct sk_buff *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static boolean mptcp_pm_add_addr_signal(Ptr<mptcp_sock> msk, Ptr<sk_buff> skb,
       @Unsigned int opt_size, @Unsigned int remaining, Ptr<mptcp_addr_info> addr,
       Ptr<java.lang. @OriginalName("bool") Boolean> echo,
@@ -1863,7 +1864,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_addr_families_match((const struct sock*)$arg1, (const struct mptcp_addr_info*)$arg2, (const struct mptcp_addr_info*)$arg3)")
+  @BuiltinBPFFunction("mptcp_pm_addr_families_match((const struct sock *)$arg1, (const struct mptcp_addr_info *)$arg2, (const struct mptcp_addr_info *)$arg3)")
   public static boolean mptcp_pm_addr_families_match(Ptr<sock> sk, Ptr<mptcp_addr_info> loc,
       Ptr<mptcp_addr_info> rem) {
     throw new MethodIsBPFRelatedFunction();
@@ -1876,7 +1877,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_alloc_anno_list($arg1, (const struct mptcp_addr_info*)$arg2)")
+  @BuiltinBPFFunction("mptcp_pm_alloc_anno_list($arg1, (const struct mptcp_addr_info *)$arg2)")
   public static boolean mptcp_pm_alloc_anno_list(Ptr<mptcp_sock> msk, Ptr<mptcp_addr_info> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1888,7 +1889,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_announce_addr($arg1, (const struct mptcp_addr_info*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mptcp_pm_announce_addr($arg1, (const struct mptcp_addr_info *)$arg2, $arg3)")
   public static int mptcp_pm_announce_addr(Ptr<mptcp_sock> msk, Ptr<mptcp_addr_info> addr,
       boolean echo) {
     throw new MethodIsBPFRelatedFunction();
@@ -1919,7 +1920,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_del_add_timer($arg1, (const struct mptcp_addr_info*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mptcp_pm_del_add_timer($arg1, (const struct mptcp_addr_info *)$arg2, $arg3)")
   public static Ptr<mptcp_pm_add_entry> mptcp_pm_del_add_timer(Ptr<mptcp_sock> msk,
       Ptr<mptcp_addr_info> addr, boolean check_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1932,7 +1933,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_find((const u8*)$arg1)")
+  @BuiltinBPFFunction("mptcp_pm_find((const u8 *)$arg1)")
   public static Ptr<mptcp_pm_ops> mptcp_pm_find(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1945,7 +1946,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_fully_established($arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("mptcp_pm_fully_established($arg1, (const struct sock *)$arg2)")
   public static void mptcp_pm_fully_established(Ptr<mptcp_sock> msk, Ptr<sock> ssk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1958,13 +1959,13 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_get_add_addr_accept_max((const struct mptcp_sock*)$arg1)")
+  @BuiltinBPFFunction("mptcp_pm_get_add_addr_accept_max((const struct mptcp_sock *)$arg1)")
   public static @Unsigned int mptcp_pm_get_add_addr_accept_max(Ptr<mptcp_sock> msk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_get_add_addr_signal_max((const struct mptcp_sock*)$arg1)")
+  @BuiltinBPFFunction("mptcp_pm_get_add_addr_signal_max((const struct mptcp_sock *)$arg1)")
   public static @Unsigned int mptcp_pm_get_add_addr_signal_max(Ptr<mptcp_sock> msk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1976,7 +1977,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_get_local_addr_max((const struct mptcp_sock*)$arg1)")
+  @BuiltinBPFFunction("mptcp_pm_get_local_addr_max((const struct mptcp_sock *)$arg1)")
   public static @Unsigned int mptcp_pm_get_local_addr_max(Ptr<mptcp_sock> msk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1988,13 +1989,13 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_get_subflows_max((const struct mptcp_sock*)$arg1)")
+  @BuiltinBPFFunction("mptcp_pm_get_subflows_max((const struct mptcp_sock *)$arg1)")
   public static @Unsigned int mptcp_pm_get_subflows_max(Ptr<mptcp_sock> msk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_has_addr_attr_id((const struct nlattr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mptcp_pm_has_addr_attr_id((const struct nlattr *)$arg1, $arg2)")
   public static boolean mptcp_pm_has_addr_attr_id(Ptr<nlattr> attr, Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2037,7 +2038,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_new_connection($arg1, (const struct sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mptcp_pm_new_connection($arg1, (const struct sock *)$arg2, $arg3)")
   public static void mptcp_pm_new_connection(Ptr<mptcp_sock> msk, Ptr<sock> ssk, int server_side) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2197,7 +2198,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_parse_pm_addr_attr($arg1, (const struct nlattr*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("mptcp_pm_parse_pm_addr_attr($arg1, (const struct nlattr *)$arg2, $arg3, $arg4, $arg5)")
   public static int mptcp_pm_parse_pm_addr_attr(Ptr<Ptr<nlattr>> tb, Ptr<nlattr> attr,
       Ptr<genl_info> info, Ptr<mptcp_addr_info> addr, boolean require_family) {
     throw new MethodIsBPFRelatedFunction();
@@ -2210,7 +2211,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_remove_addr($arg1, (const struct mptcp_rm_list*)$arg2)")
+  @BuiltinBPFFunction("mptcp_pm_remove_addr($arg1, (const struct mptcp_rm_list *)$arg2)")
   public static int mptcp_pm_remove_addr(Ptr<mptcp_sock> msk, Ptr<mptcp_rm_list> rm_list) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2223,14 +2224,14 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_rm_addr_or_subflow($arg1, (const struct mptcp_rm_list*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mptcp_pm_rm_addr_or_subflow($arg1, (const struct mptcp_rm_list *)$arg2, $arg3)")
   public static void mptcp_pm_rm_addr_or_subflow(Ptr<mptcp_sock> msk, Ptr<mptcp_rm_list> rm_list,
       linux_mptcp_mib_field rm_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_rm_addr_received($arg1, (const struct mptcp_rm_list*)$arg2)")
+  @BuiltinBPFFunction("mptcp_pm_rm_addr_received($arg1, (const struct mptcp_rm_list *)$arg2)")
   public static void mptcp_pm_rm_addr_received(Ptr<mptcp_sock> msk, Ptr<mptcp_rm_list> rm_list) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2243,7 +2244,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_rm_subflow($arg1, (const struct mptcp_rm_list*)$arg2)")
+  @BuiltinBPFFunction("mptcp_pm_rm_subflow($arg1, (const struct mptcp_rm_list *)$arg2)")
   public static void mptcp_pm_rm_subflow(Ptr<mptcp_sock> msk, Ptr<mptcp_rm_list> rm_list) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2262,20 +2263,20 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_sport_in_anno_list($arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("mptcp_pm_sport_in_anno_list($arg1, (const struct sock *)$arg2)")
   public static boolean mptcp_pm_sport_in_anno_list(Ptr<mptcp_sock> msk, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_subflow_check_next($arg1, (const struct mptcp_subflow_context*)$arg2)")
+  @BuiltinBPFFunction("mptcp_pm_subflow_check_next($arg1, (const struct mptcp_subflow_context *)$arg2)")
   public static void mptcp_pm_subflow_check_next(Ptr<mptcp_sock> msk,
       Ptr<mptcp_subflow_context> subflow) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_pm_subflow_chk_stale((const struct mptcp_sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mptcp_pm_subflow_chk_stale((const struct mptcp_sock *)$arg1, $arg2)")
   public static void mptcp_pm_subflow_chk_stale(Ptr<mptcp_sock> msk, Ptr<sock> ssk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2318,7 +2319,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_propagate_state($arg1, $arg2, $arg3, (const struct mptcp_options_received*)$arg4)")
+  @BuiltinBPFFunction("mptcp_propagate_state($arg1, $arg2, $arg3, (const struct mptcp_options_received *)$arg4)")
   public static void mptcp_propagate_state(Ptr<sock> sk, Ptr<sock> ssk,
       Ptr<mptcp_subflow_context> subflow, Ptr<mptcp_options_received> mp_opt) {
     throw new MethodIsBPFRelatedFunction();
@@ -2350,7 +2351,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_rcv_space_init($arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("mptcp_rcv_space_init($arg1, (const struct sock *)$arg2)")
   public static void mptcp_rcv_space_init(Ptr<mptcp_sock> msk, Ptr<sock> ssk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2381,13 +2382,13 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_remote_address((const struct sock_common*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mptcp_remote_address((const struct sock_common *)$arg1, $arg2)")
   public static void mptcp_remote_address(Ptr<sock_common> skc, Ptr<mptcp_addr_info> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_remove_anno_list_by_saddr($arg1, (const struct mptcp_addr_info*)$arg2)")
+  @BuiltinBPFFunction("mptcp_remove_anno_list_by_saddr($arg1, (const struct mptcp_addr_info *)$arg2)")
   public static boolean mptcp_remove_anno_list_by_saddr(Ptr<mptcp_sock> msk,
       Ptr<mptcp_addr_info> addr) {
     throw new MethodIsBPFRelatedFunction();
@@ -2418,7 +2419,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_sched_find((const u8*)$arg1)")
+  @BuiltinBPFFunction("mptcp_sched_find((const u8 *)$arg1)")
   public static Ptr<mptcp_sched_ops> mptcp_sched_find(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2473,7 +2474,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_set_path_manager($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("mptcp_set_path_manager($arg1, (const u8 *)$arg2)")
   public static int mptcp_set_path_manager(String path_manager, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2485,7 +2486,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_set_scheduler($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("mptcp_set_scheduler($arg1, (const u8 *)$arg2)")
   public static int mptcp_set_scheduler(String scheduler, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2558,7 +2559,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_sk_clone_init((const struct sock*)$arg1, (const struct mptcp_options_received*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("mptcp_sk_clone_init((const struct sock *)$arg1, (const struct mptcp_options_received *)$arg2, $arg3, $arg4)")
   public static Ptr<sock> mptcp_sk_clone_init(Ptr<sock> sk, Ptr<mptcp_options_received> mp_opt,
       Ptr<sock> ssk, Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
@@ -2583,14 +2584,14 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_space((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("mptcp_space((const struct sock *)$arg1, $arg2, $arg3)")
   public static void mptcp_space(Ptr<sock> ssk, Ptr<java.lang.Integer> space,
       Ptr<java.lang.Integer> full_space) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_stale_loss_cnt((const struct net*)$arg1)")
+  @BuiltinBPFFunction("mptcp_stale_loss_cnt((const struct net *)$arg1)")
   public static @Unsigned int mptcp_stale_loss_cnt(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2603,7 +2604,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_stream_memory_free((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mptcp_stream_memory_free((const struct sock *)$arg1, $arg2)")
   public static boolean mptcp_stream_memory_free(Ptr<sock> sk, int wake) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2652,7 +2653,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_subflow_init_cookie_req($arg1, (const struct sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mptcp_subflow_init_cookie_req($arg1, (const struct sock *)$arg2, $arg3)")
   public static int mptcp_subflow_init_cookie_req(Ptr<request_sock> req, Ptr<sock> sk_listener,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
@@ -2671,7 +2672,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_subflow_reqsk_alloc((const struct request_sock_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("mptcp_subflow_reqsk_alloc((const struct request_sock_ops *)$arg1, $arg2, $arg3)")
   public static Ptr<request_sock> mptcp_subflow_reqsk_alloc(Ptr<request_sock_ops> ops,
       Ptr<sock> sk_listener, boolean attach_listener) {
     throw new MethodIsBPFRelatedFunction();
@@ -2709,14 +2710,14 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_syn_options($arg1, (const struct sk_buff*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("mptcp_syn_options($arg1, (const struct sk_buff *)$arg2, $arg3, $arg4)")
   public static boolean mptcp_syn_options(Ptr<sock> sk, Ptr<sk_buff> skb,
       Ptr<java.lang. @Unsigned Integer> size, Ptr<mptcp_out_options> opts) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_synack_options((const struct request_sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("mptcp_synack_options((const struct request_sock *)$arg1, $arg2, $arg3)")
   public static boolean mptcp_synack_options(Ptr<request_sock> req,
       Ptr<java.lang. @Unsigned Integer> size, Ptr<mptcp_out_options> opts) {
     throw new MethodIsBPFRelatedFunction();
@@ -2765,7 +2766,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_token_iter_next((const struct net*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("mptcp_token_iter_next((const struct net *)$arg1, $arg2, $arg3)")
   public static Ptr<mptcp_sock> mptcp_token_iter_next(Ptr<net> net, Ptr<java.lang.Long> s_slot,
       Ptr<java.lang.Long> s_num) {
     throw new MethodIsBPFRelatedFunction();
@@ -2828,7 +2829,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_userspace_pm_active((const struct mptcp_sock*)$arg1)")
+  @BuiltinBPFFunction("mptcp_userspace_pm_active((const struct mptcp_sock *)$arg1)")
   public static boolean mptcp_userspace_pm_active(Ptr<mptcp_sock> msk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2874,7 +2875,7 @@ public final class MptcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mptcp_userspace_pm_get_sock((const struct genl_info*)$arg1)")
+  @BuiltinBPFFunction("mptcp_userspace_pm_get_sock((const struct genl_info *)$arg1)")
   public static Ptr<mptcp_sock> mptcp_userspace_pm_get_sock(Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }

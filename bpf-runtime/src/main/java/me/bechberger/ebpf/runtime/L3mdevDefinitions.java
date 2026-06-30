@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class L3mdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("l3mdev_fib_table_rcu((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("l3mdev_fib_table_rcu((const struct net_device *)$arg1)")
   public static @Unsigned int l3mdev_fib_table_rcu(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1121,7 +1122,7 @@ public final class L3mdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("l3mdev_master_ifindex_rcu((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("l3mdev_master_ifindex_rcu((const struct net_device *)$arg1)")
   public static int l3mdev_master_ifindex_rcu(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }

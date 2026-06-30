@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1120,7 +1121,7 @@ public final class CondDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cond_bools_copy($arg1, (const struct hashtab_node*)$arg2, $arg3)")
+  @BuiltinBPFFunction("cond_bools_copy($arg1, (const struct hashtab_node *)$arg2, $arg3)")
   public static int cond_bools_copy(Ptr<hashtab_node> _new, Ptr<hashtab_node> orig, Ptr<?> args) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1158,7 +1159,7 @@ public final class CondDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cond_dup_av_list($arg1, (const struct cond_av_list*)$arg2, $arg3)")
+  @BuiltinBPFFunction("cond_dup_av_list($arg1, (const struct cond_av_list *)$arg2, $arg3)")
   public static int cond_dup_av_list(Ptr<cond_av_list> _new, Ptr<cond_av_list> orig,
       Ptr<avtab> avtab) {
     throw new MethodIsBPFRelatedFunction();
@@ -1183,7 +1184,7 @@ public final class CondDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cond_insertf($arg1, (const struct avtab_key*)$arg2, (const struct avtab_datum*)$arg3, $arg4)")
+  @BuiltinBPFFunction("cond_insertf($arg1, (const struct avtab_key *)$arg2, (const struct avtab_datum *)$arg3, $arg4)")
   public static int cond_insertf(Ptr<avtab> a, Ptr<avtab_key> k, Ptr<avtab_datum> d, Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1207,7 +1208,7 @@ public final class CondDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cond_policydb_dup($arg1, (const struct policydb*)$arg2)")
+  @BuiltinBPFFunction("cond_policydb_dup($arg1, (const struct policydb *)$arg2)")
   public static int cond_policydb_dup(Ptr<policydb> _new, Ptr<policydb> orig) {
     throw new MethodIsBPFRelatedFunction();
   }

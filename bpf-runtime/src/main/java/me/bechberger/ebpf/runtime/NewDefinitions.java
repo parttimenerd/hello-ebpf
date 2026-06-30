@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,21 +1098,21 @@ public final class NewDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("new_dev_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("new_dev_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long new_dev_store(Ptr<mddev> mddev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("new_device_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("new_device_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long new_device_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("new_dir($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("new_dir($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<ctl_dir> new_dir(Ptr<ctl_table_set> set, String name, int namelen) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1129,14 +1130,14 @@ public final class NewDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("new_id_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("new_id_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long new_id_store(Ptr<device_driver> driver, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("new_idmap_permitted((const struct file*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("new_idmap_permitted((const struct file *)$arg1, $arg2, $arg3, $arg4)")
   public static boolean new_idmap_permitted(Ptr<file> file, Ptr<user_namespace> ns, int cap_setid,
       Ptr<uid_gid_map> new_map) {
     throw new MethodIsBPFRelatedFunction();
@@ -1161,7 +1162,7 @@ public final class NewDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("new_level_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("new_level_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long new_level_store(Ptr<mddev> mddev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1180,14 +1181,14 @@ public final class NewDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("new_offset_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("new_offset_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long new_offset_store(Ptr<md_rdev> rdev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("new_policy($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("new_policy($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long new_policy(Ptr<file> f, String data,
       @Unsigned long len, Ptr<java.lang. @OriginalName("loff_t") Long> offset) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1110,7 +1111,7 @@ public final class RssDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rss_fill_reply($arg1, (const struct ethnl_req_info*)$arg2, (const struct ethnl_reply_data*)$arg3)")
+  @BuiltinBPFFunction("rss_fill_reply($arg1, (const struct ethnl_req_info *)$arg2, (const struct ethnl_reply_data *)$arg3)")
   public static int rss_fill_reply(Ptr<sk_buff> skb, Ptr<ethnl_req_info> req_base,
       Ptr<ethnl_reply_data> reply_base) {
     throw new MethodIsBPFRelatedFunction();
@@ -1130,21 +1131,21 @@ public final class RssDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rss_prepare((const struct rss_req_info*)$arg1, $arg2, $arg3, (const struct genl_info*)$arg4)")
+  @BuiltinBPFFunction("rss_prepare((const struct rss_req_info *)$arg1, $arg2, $arg3, (const struct genl_info *)$arg4)")
   public static int rss_prepare(Ptr<rss_req_info> request, Ptr<net_device> dev,
       Ptr<rss_reply_data> data, Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rss_prepare_data((const struct ethnl_req_info*)$arg1, $arg2, (const struct genl_info*)$arg3)")
+  @BuiltinBPFFunction("rss_prepare_data((const struct ethnl_req_info *)$arg1, $arg2, (const struct genl_info *)$arg3)")
   public static int rss_prepare_data(Ptr<ethnl_req_info> req_base, Ptr<ethnl_reply_data> reply_base,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rss_reply_size((const struct ethnl_req_info*)$arg1, (const struct ethnl_reply_data*)$arg2)")
+  @BuiltinBPFFunction("rss_reply_size((const struct ethnl_req_info *)$arg1, (const struct ethnl_reply_data *)$arg2)")
   public static int rss_reply_size(Ptr<ethnl_req_info> req_base, Ptr<ethnl_reply_data> reply_base) {
     throw new MethodIsBPFRelatedFunction();
   }

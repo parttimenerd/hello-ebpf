@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class FilenameDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__filename_parentat($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct path*)$arg7)")
+  @BuiltinBPFFunction("__filename_parentat($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct path *)$arg7)")
   public static int __filename_parentat(int dfd, Ptr<filename> name, @Unsigned int flags,
       Ptr<path> parent, Ptr<qstr> last, Ptr<java.lang.Integer> type, Ptr<path> root) {
     throw new MethodIsBPFRelatedFunction();

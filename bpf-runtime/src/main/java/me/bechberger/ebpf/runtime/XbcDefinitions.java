@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1153,14 +1154,14 @@ public final class XbcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xbc_init((const u8*)$arg1, $arg2, (const u8**)$arg3, $arg4)")
+  @BuiltinBPFFunction("xbc_init((const u8 *)$arg1, $arg2, (const u8**)$arg3, $arg4)")
   public static int xbc_init(String data, @Unsigned long size, Ptr<String> emsg,
       Ptr<java.lang.Integer> epos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xbc_make_cmdline((const u8*)$arg1)")
+  @BuiltinBPFFunction("xbc_make_cmdline((const u8 *)$arg1)")
   public static String xbc_make_cmdline(String key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1185,13 +1186,13 @@ public final class XbcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xbc_node_find_subkey($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("xbc_node_find_subkey($arg1, (const u8 *)$arg2)")
   public static Ptr<xbc_node> xbc_node_find_subkey(Ptr<xbc_node> parent, String key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)xbc_node_find_value($arg1, (const u8*)$arg2, $arg3))")
+  @BuiltinBPFFunction("((const u8*)xbc_node_find_value($arg1, (const u8 *)$arg2, $arg3))")
   public static String xbc_node_find_value(Ptr<xbc_node> parent, String key,
       Ptr<Ptr<xbc_node>> vnode) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1439,14 +1440,14 @@ public final class SquashfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("squashfs_xattr_get($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("squashfs_xattr_get($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int squashfs_xattr_get(Ptr<inode> inode, int name_index, String name, Ptr<?> buffer,
       @Unsigned long buffer_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("squashfs_xattr_handler_get((const struct xattr_handler*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("squashfs_xattr_handler_get((const struct xattr_handler *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int squashfs_xattr_handler_get(Ptr<xattr_handler> handler, Ptr<dentry> unused,
       Ptr<inode> inode, String name, Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();

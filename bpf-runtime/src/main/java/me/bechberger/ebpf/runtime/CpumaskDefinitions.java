@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,25 +1091,25 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CpumaskDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__cpumask_to_vpset($arg1, (const struct cpumask*)$arg2, (_Bool (*)(int))$arg3)")
+  @BuiltinBPFFunction("__cpumask_to_vpset($arg1, (const struct cpumask *)$arg2, (_Bool (*)(int))$arg3)")
   public static int __cpumask_to_vpset(Ptr<hv_vpset> vpset, Ptr<cpumask> cpus, Ptr<?> func) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpumask_any_and_distribute((const struct cpumask*)$arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("cpumask_any_and_distribute((const struct cpumask *)$arg1, (const struct cpumask *)$arg2)")
   public static @Unsigned int cpumask_any_and_distribute(Ptr<cpumask> src1p, Ptr<cpumask> src2p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpumask_any_distribute((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("cpumask_any_distribute((const struct cpumask *)$arg1)")
   public static @Unsigned int cpumask_any_distribute(Ptr<cpumask> srcp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpumask_any_housekeeping((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cpumask_any_housekeeping((const struct cpumask *)$arg1, $arg2)")
   public static @Unsigned int cpumask_any_housekeeping(Ptr<cpumask> mask, int exclude_cpu) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1147,7 +1148,7 @@ public final class CpumaskDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpumask_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("cpumask_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long cpumask_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

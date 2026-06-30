@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1114,7 +1115,7 @@ public final class VtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vt_console_print($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("vt_console_print($arg1, (const u8 *)$arg2, $arg3)")
   public static void vt_console_print(Ptr<console> co, String b, @Unsigned int count) {
     throw new MethodIsBPFRelatedFunction();
   }

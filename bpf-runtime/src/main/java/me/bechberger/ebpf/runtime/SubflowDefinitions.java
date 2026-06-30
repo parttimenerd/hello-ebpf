@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1109,7 +1110,7 @@ public final class SubflowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("subflow_check_req($arg1, (const struct sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("subflow_check_req($arg1, (const struct sock *)$arg2, $arg3)")
   public static int subflow_check_req(Ptr<request_sock> req, Ptr<sock> sk_listener,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
@@ -1135,7 +1136,7 @@ public final class SubflowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("subflow_finish_connect($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("subflow_finish_connect($arg1, (const struct sk_buff *)$arg2)")
   public static void subflow_finish_connect(Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1147,13 +1148,13 @@ public final class SubflowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("subflow_get_info_size((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("subflow_get_info_size((const struct sock *)$arg1, $arg2)")
   public static @Unsigned long subflow_get_info_size(Ptr<sock> sk, boolean net_admin) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("subflow_init_req_cookie_join_save((const struct mptcp_subflow_request_sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("subflow_init_req_cookie_join_save((const struct mptcp_subflow_request_sock *)$arg1, $arg2)")
   public static void subflow_init_req_cookie_join_save(Ptr<mptcp_subflow_request_sock> subflow_req,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
@@ -1190,7 +1191,7 @@ public final class SubflowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("subflow_syn_recv_sock((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("subflow_syn_recv_sock((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<sock> subflow_syn_recv_sock(Ptr<sock> sk, Ptr<sk_buff> skb,
       Ptr<request_sock> req, Ptr<dst_entry> dst, Ptr<request_sock> req_unhash,
       Ptr<java.lang. @OriginalName("bool") Boolean> own_req) {
@@ -1198,7 +1199,7 @@ public final class SubflowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("subflow_ulp_clone((const struct request_sock*)$arg1, $arg2, (const unsigned int)$arg3)")
+  @BuiltinBPFFunction("subflow_ulp_clone((const struct request_sock *)$arg1, $arg2, (const unsigned int)$arg3)")
   public static void subflow_ulp_clone(Ptr<request_sock> req, Ptr<sock> newsk,
       @Unsigned @OriginalName("gfp_t") int priority) {
     throw new MethodIsBPFRelatedFunction();
@@ -1229,14 +1230,14 @@ public final class SubflowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("subflow_v4_route_req((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("subflow_v4_route_req((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static Ptr<dst_entry> subflow_v4_route_req(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<flowi> fl,
       Ptr<request_sock> req, @Unsigned int tw_isn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("subflow_v4_send_synack((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("subflow_v4_send_synack((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int subflow_v4_send_synack(Ptr<sock> sk, Ptr<dst_entry> dst, Ptr<flowi> fl,
       Ptr<request_sock> req, Ptr<tcp_fastopen_cookie> foc, tcp_synack_type synack_type,
       Ptr<sk_buff> syn_skb) {
@@ -1262,14 +1263,14 @@ public final class SubflowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("subflow_v6_route_req((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("subflow_v6_route_req((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static Ptr<dst_entry> subflow_v6_route_req(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<flowi> fl,
       Ptr<request_sock> req, @Unsigned int tw_isn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("subflow_v6_send_synack((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("subflow_v6_send_synack((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int subflow_v6_send_synack(Ptr<sock> sk, Ptr<dst_entry> dst, Ptr<flowi> fl,
       Ptr<request_sock> req, Ptr<tcp_fastopen_cookie> foc, tcp_synack_type synack_type,
       Ptr<sk_buff> syn_skb) {

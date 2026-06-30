@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1156,14 +1157,14 @@ public final class BdiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bdi_register($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("bdi_register($arg1, (const u8 *)$arg2, $arg3_)")
   public static int bdi_register(Ptr<backing_dev_info> bdi, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bdi_register_va($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bdi_register_va($arg1, (const u8 *)$arg2, $arg3)")
   public static int bdi_register_va(Ptr<backing_dev_info> bdi, String fmt,
       Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();

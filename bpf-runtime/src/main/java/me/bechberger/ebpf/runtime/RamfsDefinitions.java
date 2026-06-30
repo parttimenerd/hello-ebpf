@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1109,7 +1110,7 @@ public final class RamfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ramfs_get_inode($arg1, (const struct inode*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ramfs_get_inode($arg1, (const struct inode *)$arg2, $arg3, $arg4)")
   public static Ptr<inode> ramfs_get_inode(Ptr<super_block> sb, Ptr<inode> dir,
       @Unsigned @OriginalName("umode_t") short mode, @Unsigned @OriginalName("dev_t") int dev) {
     throw new MethodIsBPFRelatedFunction();
@@ -1167,7 +1168,7 @@ public final class RamfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ramfs_symlink($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("ramfs_symlink($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int ramfs_symlink(Ptr<mnt_idmap> idmap, Ptr<inode> dir, Ptr<dentry> dentry,
       String symname) {
     throw new MethodIsBPFRelatedFunction();

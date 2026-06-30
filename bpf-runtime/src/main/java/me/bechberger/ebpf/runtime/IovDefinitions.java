@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1104,13 +1105,13 @@ public final class IovDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iov_iter_alignment((const struct iov_iter*)$arg1)")
+  @BuiltinBPFFunction("iov_iter_alignment((const struct iov_iter *)$arg1)")
   public static @Unsigned long iov_iter_alignment(Ptr<iov_iter> i) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iov_iter_bvec($arg1, $arg2, (const struct bio_vec*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("iov_iter_bvec($arg1, $arg2, (const struct bio_vec *)$arg3, $arg4, $arg5)")
   public static void iov_iter_bvec(Ptr<iov_iter> i, @Unsigned int direction, Ptr<bio_vec> bvec,
       @Unsigned long nr_segs, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1133,7 +1134,7 @@ public final class IovDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iov_iter_folio_queue($arg1, $arg2, (const struct folio_queue*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("iov_iter_folio_queue($arg1, $arg2, (const struct folio_queue *)$arg3, $arg4, $arg5, $arg6)")
   public static void iov_iter_folio_queue(Ptr<iov_iter> i, @Unsigned int direction,
       Ptr<folio_queue> folioq, @Unsigned int first_slot, @Unsigned int offset,
       @Unsigned long count) {
@@ -1141,7 +1142,7 @@ public final class IovDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iov_iter_gap_alignment((const struct iov_iter*)$arg1)")
+  @BuiltinBPFFunction("iov_iter_gap_alignment((const struct iov_iter *)$arg1)")
   public static @Unsigned long iov_iter_gap_alignment(Ptr<iov_iter> i) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1162,28 +1163,28 @@ public final class IovDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iov_iter_init($arg1, $arg2, (const struct iovec*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("iov_iter_init($arg1, $arg2, (const struct iovec *)$arg3, $arg4, $arg5)")
   public static void iov_iter_init(Ptr<iov_iter> i, @Unsigned int direction, Ptr<iovec> iov,
       @Unsigned long nr_segs, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iov_iter_is_aligned((const struct iov_iter*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("iov_iter_is_aligned((const struct iov_iter *)$arg1, $arg2, $arg3)")
   public static boolean iov_iter_is_aligned(Ptr<iov_iter> i, @Unsigned int addr_mask,
       @Unsigned int len_mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iov_iter_kvec($arg1, $arg2, (const struct kvec*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("iov_iter_kvec($arg1, $arg2, (const struct kvec *)$arg3, $arg4, $arg5)")
   public static void iov_iter_kvec(Ptr<iov_iter> i, @Unsigned int direction, Ptr<kvec> kvec,
       @Unsigned long nr_segs, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iov_iter_npages((const struct iov_iter*)$arg1, $arg2)")
+  @BuiltinBPFFunction("iov_iter_npages((const struct iov_iter *)$arg1, $arg2)")
   public static int iov_iter_npages(Ptr<iov_iter> i, int maxpages) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1201,7 +1202,7 @@ public final class IovDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iov_iter_single_seg_count((const struct iov_iter*)$arg1)")
+  @BuiltinBPFFunction("iov_iter_single_seg_count((const struct iov_iter *)$arg1)")
   public static @Unsigned long iov_iter_single_seg_count(Ptr<iov_iter> i) {
     throw new MethodIsBPFRelatedFunction();
   }

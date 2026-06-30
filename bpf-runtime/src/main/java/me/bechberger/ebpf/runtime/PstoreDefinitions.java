@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class PstoreDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("pstore_compress((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pstore_compress((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static int pstore_compress(Ptr<?> in, Ptr<?> out, @Unsigned int inlen,
       @Unsigned int outlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1233,7 +1234,7 @@ public final class PstoreDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pstore_name_to_type((const u8*)$arg1)")
+  @BuiltinBPFFunction("pstore_name_to_type((const u8 *)$arg1)")
   public static pstore_type_id pstore_name_to_type(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1305,7 +1306,7 @@ public final class PstoreDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pstore_write_user_compat($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("pstore_write_user_compat($arg1, (const u8 *)$arg2)")
   public static int pstore_write_user_compat(Ptr<pstore_record> record, String buf) {
     throw new MethodIsBPFRelatedFunction();
   }

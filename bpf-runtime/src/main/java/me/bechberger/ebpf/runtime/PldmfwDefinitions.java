@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class PldmfwDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("pldmfw_flash_image($arg1, (const struct firmware*)$arg2)")
+  @BuiltinBPFFunction("pldmfw_flash_image($arg1, (const struct firmware *)$arg2)")
   public static int pldmfw_flash_image(Ptr<pldmfw> context, Ptr<firmware> fw) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class ParseDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__parse_crashkernel($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("__parse_crashkernel($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static int __parse_crashkernel(String cmdline, @Unsigned long system_ram,
       Ptr<java.lang. @Unsigned Long> crash_size, Ptr<java.lang. @Unsigned Long> crash_base,
       String suffix) {
@@ -1106,21 +1107,21 @@ public final class ParseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_parse_integer((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("_parse_integer((const u8 *)$arg1, $arg2, $arg3)")
   public static @Unsigned int _parse_integer(String s, @Unsigned int base,
       Ptr<java.lang. @Unsigned Long> p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)_parse_integer_fixup_radix((const u8*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const u8*)_parse_integer_fixup_radix((const u8 *)$arg1, $arg2))")
   public static String _parse_integer_fixup_radix(String s,
       Ptr<java.lang. @Unsigned Integer> base) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_parse_integer_limit((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("_parse_integer_limit((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned int _parse_integer_limit(String s, @Unsigned int base,
       Ptr<java.lang. @Unsigned Long> p, @Unsigned long max_chars) {
     throw new MethodIsBPFRelatedFunction();
@@ -1163,7 +1164,7 @@ public final class ParseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_affn_scope((const u8*)$arg1)")
+  @BuiltinBPFFunction("parse_affn_scope((const u8 *)$arg1)")
   public static int parse_affn_scope(String val) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1205,7 +1206,7 @@ public final class ParseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_args((const u8*)$arg1, $arg2, (const struct kernel_param*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("parse_args((const u8 *)$arg1, $arg2, (const struct kernel_param *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static String parse_args(String doing, String args, Ptr<kernel_param> params,
       @Unsigned int num, short min_level, short max_level, Ptr<?> arg,
       @OriginalName("parse_unknown_fn") Ptr<?> unknown) {
@@ -1244,7 +1245,7 @@ public final class ParseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_btf_field($arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("parse_btf_field($arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5)")
   public static int parse_btf_field(String fieldname, Ptr<btf_type> type,
       Ptr<Ptr<fetch_insn>> pcode, Ptr<fetch_insn> end, Ptr<traceprobe_parse_context> ctx) {
     throw new MethodIsBPFRelatedFunction();
@@ -1319,7 +1320,7 @@ public final class ParseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_crashkernel_suffix($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("parse_crashkernel_suffix($arg1, $arg2, (const u8 *)$arg3)")
   public static int parse_crashkernel_suffix(String cmdline,
       Ptr<java.lang. @Unsigned Long> crash_size, String suffix) {
     throw new MethodIsBPFRelatedFunction();
@@ -1381,7 +1382,7 @@ public final class ParseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_efi_signature_list((const u8*)$arg1, (const void*)$arg2, $arg3, (void (const u8*, const void*, long unsigned int)* (*)(const struct {\n"
+  @BuiltinBPFFunction("parse_efi_signature_list((const u8 *)$arg1, (const void *)$arg2, $arg3, (void (const u8*, const void*, long unsigned int)* (*)(const struct {\n"
           + "  u8 b[16];\n"
           + "}*))$arg4)")
   public static int parse_efi_signature_list(String source, Ptr<?> data, @Unsigned long size,
@@ -1426,7 +1427,7 @@ public final class ParseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_grep((const u8*)$arg1)")
+  @BuiltinBPFFunction("parse_grep((const u8 *)$arg1)")
   public static void parse_grep(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1445,21 +1446,21 @@ public final class ParseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_histogram((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("parse_histogram((const u8 *)$arg1, $arg2, $arg3)")
   public static int parse_histogram(String h, Ptr<java.lang. @Unsigned Integer> n_histogram_entries,
       Ptr<Ptr<java.lang. @Unsigned Long>> histogram_boundaries) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_int_array((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("parse_int_array((const u8 *)$arg1, $arg2, $arg3)")
   public static int parse_int_array(String buf, @Unsigned long count,
       Ptr<Ptr<java.lang.Integer>> array) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_int_array_user((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("parse_int_array_user((const u8 *)$arg1, $arg2, $arg3)")
   public static int parse_int_array_user(String from, @Unsigned long count,
       Ptr<Ptr<java.lang.Integer>> array) {
     throw new MethodIsBPFRelatedFunction();
@@ -1515,7 +1516,7 @@ public final class ParseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_linerange($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("parse_linerange($arg1, (const u8 *)$arg2)")
   public static int parse_linerange(Ptr<ddebug_query> query, String first) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1728,7 +1729,7 @@ public final class ParseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_one($arg1, $arg2, (const u8*)$arg3, (const struct kernel_param*)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("parse_one($arg1, $arg2, (const u8 *)$arg3, (const struct kernel_param *)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static int parse_one(String param, String val, String doing, Ptr<kernel_param> params,
       @Unsigned int num_params, short min_level, short max_level, Ptr<?> arg,
       @OriginalName("parse_unknown_fn") Ptr<?> handle_unknown) {
@@ -1744,7 +1745,7 @@ public final class ParseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_option_str((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("parse_option_str((const u8 *)$arg1, (const u8 *)$arg2)")
   public static boolean parse_option_str(String str, String option) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1774,7 +1775,7 @@ public final class ParseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("parse_pred((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("parse_pred((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int parse_pred(String str, Ptr<?> data, int pos, Ptr<filter_parse_error> pe,
       Ptr<Ptr<filter_pred>> pred_ptr) {
     throw new MethodIsBPFRelatedFunction();

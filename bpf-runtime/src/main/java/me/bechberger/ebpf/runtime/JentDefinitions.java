@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1178,14 +1179,14 @@ public final class JentDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("jent_kcapi_random($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("jent_kcapi_random($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int jent_kcapi_random(Ptr<crypto_rng> tfm, Ptr<java.lang.Character> src,
       @Unsigned int slen, Ptr<java.lang.Character> rdata, @Unsigned int dlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("jent_kcapi_reset($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("jent_kcapi_reset($arg1, (const u8 *)$arg2, $arg3)")
   public static int jent_kcapi_reset(Ptr<crypto_rng> tfm, Ptr<java.lang.Character> seed,
       @Unsigned int slen) {
     throw new MethodIsBPFRelatedFunction();

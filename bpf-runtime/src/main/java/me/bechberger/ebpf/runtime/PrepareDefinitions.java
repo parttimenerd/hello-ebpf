@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class PrepareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("prepare_arg_info($arg1, (const u8*)$arg2, (const u8*)$arg3, (const struct btf_type*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("prepare_arg_info($arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const struct btf_type *)$arg4, $arg5, $arg6)")
   public static int prepare_arg_info(Ptr<btf> btf, String st_ops_name, String member_name,
       Ptr<btf_type> func_proto, Ptr<?> stub_func_addr, Ptr<bpf_struct_ops_arg_info> arg_info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1309,7 +1310,7 @@ public final class PrepareDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; long unsigned int lt_key_size; u8 *eph_key; }"
+      cType = "struct { const u8 *lt_key; long unsigned int lt_key_size; u8 *eph_key; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

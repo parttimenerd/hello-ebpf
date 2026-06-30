@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class MctpDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__mctp_dev_get((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("__mctp_dev_get((const struct net_device *)$arg1)")
   public static Ptr<mctp_dev> __mctp_dev_get(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1167,7 +1168,7 @@ public final class MctpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mctp_dev_get_rtnl((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("mctp_dev_get_rtnl((const struct net_device *)$arg1)")
   public static Ptr<mctp_dev> mctp_dev_get_rtnl(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1228,7 +1229,7 @@ public final class MctpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mctp_dst_from_extaddr($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("mctp_dst_from_extaddr($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static int mctp_dst_from_extaddr(Ptr<mctp_dst> dst, Ptr<net> net, int ifindex, char halen,
       String haddr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1279,7 +1280,7 @@ public final class MctpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mctp_fill_link_af($arg1, (const struct net_device*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mctp_fill_link_af($arg1, (const struct net_device *)$arg2, $arg3)")
   public static int mctp_fill_link_af(Ptr<sk_buff> skb, Ptr<net_device> dev,
       @Unsigned int ext_filter_mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1292,7 +1293,7 @@ public final class MctpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mctp_get_link_af_size((const struct net_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mctp_get_link_af_size((const struct net_device *)$arg1, $arg2)")
   public static @Unsigned long mctp_get_link_af_size(Ptr<net_device> dev,
       @Unsigned int ext_filter_mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1428,7 +1429,7 @@ public final class MctpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mctp_register_netdev($arg1, (const struct mctp_netdev_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mctp_register_netdev($arg1, (const struct mctp_netdev_ops *)$arg2, $arg3)")
   public static int mctp_register_netdev(Ptr<net_device> dev, Ptr<mctp_netdev_ops> ops,
       mctp_phys_binding binding) {
     throw new MethodIsBPFRelatedFunction();
@@ -1582,7 +1583,7 @@ public final class MctpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mctp_set_link_af($arg1, (const struct nlattr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("mctp_set_link_af($arg1, (const struct nlattr *)$arg2, $arg3)")
   public static int mctp_set_link_af(Ptr<net_device> dev, Ptr<nlattr> attr,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();

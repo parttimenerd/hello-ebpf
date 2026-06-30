@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1105,7 +1106,7 @@ public final class DmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__dma_async_device_channel_register($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__dma_async_device_channel_register($arg1, $arg2, (const u8 *)$arg3)")
   public static int __dma_async_device_channel_register(Ptr<dma_device> device, Ptr<dma_chan> chan,
       String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1176,7 +1177,7 @@ public final class DmaDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("__dma_request_channel((const struct {\n"
           + "  long unsigned int bits[1];\n"
-          + "}*)$arg1, $arg2, $arg3, $arg4)")
+          + "} *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<dma_chan> __dma_request_channel(Ptr<dma_cap_mask_t> mask,
       @OriginalName("dma_filter_fn") Ptr<?> fn, Ptr<?> fn_param, Ptr<device_node> np) {
     throw new MethodIsBPFRelatedFunction();
@@ -1275,7 +1276,7 @@ public final class DmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dma_async_device_channel_register($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("dma_async_device_channel_register($arg1, $arg2, (const u8 *)$arg3)")
   public static int dma_async_device_channel_register(Ptr<dma_device> device, Ptr<dma_chan> chan,
       String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1350,7 +1351,7 @@ public final class DmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dma_buf_dynamic_attach($arg1, $arg2, (const struct dma_buf_attach_ops*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dma_buf_dynamic_attach($arg1, $arg2, (const struct dma_buf_attach_ops *)$arg3, $arg4)")
   public static Ptr<dma_buf_attachment> dma_buf_dynamic_attach(Ptr<dma_buf> dmabuf, Ptr<device> dev,
       Ptr<dma_buf_attach_ops> importer_ops, Ptr<?> importer_priv) {
     throw new MethodIsBPFRelatedFunction();
@@ -1363,7 +1364,7 @@ public final class DmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dma_buf_export((const struct dma_buf_export_info*)$arg1)")
+  @BuiltinBPFFunction("dma_buf_export((const struct dma_buf_export_info *)$arg1)")
   public static Ptr<dma_buf> dma_buf_export(Ptr<dma_buf_export_info> exp_info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1596,7 +1597,7 @@ public final class DmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dma_common_contiguous_remap($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("dma_common_contiguous_remap($arg1, $arg2, $arg3, (const void *)$arg4)")
   public static Ptr<?> dma_common_contiguous_remap(Ptr<page> page, @Unsigned long size,
       @OriginalName("pgprot_t") pgprot prot, Ptr<?> caller) {
     throw new MethodIsBPFRelatedFunction();
@@ -1638,7 +1639,7 @@ public final class DmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dma_common_pages_remap($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("dma_common_pages_remap($arg1, $arg2, $arg3, (const void *)$arg4)")
   public static Ptr<?> dma_common_pages_remap(Ptr<Ptr<page>> pages, @Unsigned long size,
       @OriginalName("pgprot_t") pgprot prot, Ptr<?> caller) {
     throw new MethodIsBPFRelatedFunction();
@@ -2079,7 +2080,7 @@ public final class DmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dma_fence_init($arg1, (const struct dma_fence_ops*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("dma_fence_init($arg1, (const struct dma_fence_ops *)$arg2, $arg3, $arg4, $arg5)")
   public static void dma_fence_init(Ptr<dma_fence> fence, Ptr<dma_fence_ops> ops,
       Ptr<@OriginalName("spinlock_t") spinlock> lock, @Unsigned long context,
       @Unsigned long seqno) {
@@ -2087,7 +2088,7 @@ public final class DmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dma_fence_init64($arg1, (const struct dma_fence_ops*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("dma_fence_init64($arg1, (const struct dma_fence_ops *)$arg2, $arg3, $arg4, $arg5)")
   public static void dma_fence_init64(Ptr<dma_fence> fence, Ptr<dma_fence_ops> ops,
       Ptr<@OriginalName("spinlock_t") spinlock> lock, @Unsigned long context,
       @Unsigned long seqno) {
@@ -2274,13 +2275,13 @@ public final class DmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dma_heap_add((const struct dma_heap_export_info*)$arg1)")
+  @BuiltinBPFFunction("dma_heap_add((const struct dma_heap_export_info *)$arg1)")
   public static Ptr<dma_heap> dma_heap_add(Ptr<dma_heap_export_info> exp_info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dma_heap_devnode((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dma_heap_devnode((const struct device *)$arg1, $arg2)")
   public static String dma_heap_devnode(Ptr<device> dev,
       Ptr<java.lang. @Unsigned @OriginalName("umode_t") Short> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -2475,7 +2476,7 @@ public final class DmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dma_pool_create_node((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("dma_pool_create_node((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<dma_pool> dma_pool_create_node(String name, Ptr<device> dev,
       @Unsigned long size, @Unsigned long align, @Unsigned long boundary, int node) {
     throw new MethodIsBPFRelatedFunction();
@@ -2529,7 +2530,7 @@ public final class DmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dma_request_chan($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("dma_request_chan($arg1, (const u8 *)$arg2)")
   public static Ptr<dma_chan> dma_request_chan(Ptr<device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2537,7 +2538,7 @@ public final class DmaDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("dma_request_chan_by_mask((const struct {\n"
           + "  long unsigned int bits[1];\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static Ptr<dma_chan> dma_request_chan_by_mask(Ptr<dma_cap_mask_t> mask) {
     throw new MethodIsBPFRelatedFunction();
   }

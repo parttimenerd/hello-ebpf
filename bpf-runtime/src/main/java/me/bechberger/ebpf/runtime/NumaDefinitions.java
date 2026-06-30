@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1195,14 +1196,14 @@ public final class NumaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("numa_node_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("numa_node_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long numa_node_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("numa_nodemask_from_meminfo($arg1, (const struct numa_meminfo*)$arg2)")
+  @BuiltinBPFFunction("numa_nodemask_from_meminfo($arg1, (const struct numa_meminfo *)$arg2)")
   public static void numa_nodemask_from_meminfo(Ptr<nodemask_t> nodemask, Ptr<numa_meminfo> mi) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1250,7 +1251,7 @@ public final class NumaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("numa_zonelist_order_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("numa_zonelist_order_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int numa_zonelist_order_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> length, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

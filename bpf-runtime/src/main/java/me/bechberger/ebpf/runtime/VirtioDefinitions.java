@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1165,7 +1166,7 @@ public final class VirtioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtio_check_driver_offered_feature((const struct virtio_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("virtio_check_driver_offered_feature((const struct virtio_device *)$arg1, $arg2)")
   public static void virtio_check_driver_offered_feature(Ptr<virtio_device> vdev,
       @Unsigned int fbit) {
     throw new MethodIsBPFRelatedFunction();
@@ -1208,7 +1209,7 @@ public final class VirtioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtio_dev_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("virtio_dev_match($arg1, (const struct device_driver *)$arg2)")
   public static int virtio_dev_match(Ptr<device> _dv, Ptr<device_driver> _dr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1268,7 +1269,7 @@ public final class VirtioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtio_features_copy($arg1, (const long long unsigned int*)$arg2)")
+  @BuiltinBPFFunction("virtio_features_copy($arg1, (const long long unsigned int *)$arg2)")
   public static void virtio_features_copy(Ptr<java.lang. @Unsigned Long> to,
       Ptr<java.lang. @Unsigned Long> from) {
     throw new MethodIsBPFRelatedFunction();
@@ -1281,7 +1282,7 @@ public final class VirtioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtio_features_test_bit((const long long unsigned int*)$arg1, $arg2)")
+  @BuiltinBPFFunction("virtio_features_test_bit((const long long unsigned int *)$arg1, $arg2)")
   public static boolean virtio_features_test_bit(Ptr<java.lang. @Unsigned Long> features,
       @Unsigned int bit) {
     throw new MethodIsBPFRelatedFunction();
@@ -1312,7 +1313,7 @@ public final class VirtioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtio_max_dma_size((const struct virtio_device*)$arg1)")
+  @BuiltinBPFFunction("virtio_max_dma_size((const struct virtio_device *)$arg1)")
   public static @Unsigned long virtio_max_dma_size(Ptr<virtio_device> vdev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1372,7 +1373,7 @@ public final class VirtioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtio_net_hdr_tnl_to_skb($arg1, (const struct virtio_net_hdr_v1_hash_tunnel*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("virtio_net_hdr_tnl_to_skb($arg1, (const struct virtio_net_hdr_v1_hash_tunnel *)$arg2, $arg3, $arg4, $arg5)")
   public static int virtio_net_hdr_tnl_to_skb(Ptr<sk_buff> skb,
       Ptr<virtio_net_hdr_v1_hash_tunnel> vhdr, boolean tnl_hdr_negotiated,
       boolean tnl_csum_negotiated, boolean little_endian) {
@@ -1557,7 +1558,7 @@ public final class VirtioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtio_pci_probe($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("virtio_pci_probe($arg1, (const struct pci_device_id *)$arg2)")
   public static int virtio_pci_probe(Ptr<pci_dev> pci_dev, Ptr<pci_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1617,7 +1618,7 @@ public final class VirtioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtio_queue_rq($arg1, (const struct blk_mq_queue_data*)$arg2)")
+  @BuiltinBPFFunction("virtio_queue_rq($arg1, (const struct blk_mq_queue_data *)$arg2)")
   public static @OriginalName("blk_status_t") char virtio_queue_rq(Ptr<blk_mq_hw_ctx> hctx,
       Ptr<blk_mq_queue_data> bd) {
     throw new MethodIsBPFRelatedFunction();
@@ -1654,7 +1655,7 @@ public final class VirtioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virtio_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("virtio_uevent((const struct device *)$arg1, $arg2)")
   public static int virtio_uevent(Ptr<device> _dv, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3391,7 +3392,7 @@ public final class VirtioDefinitions {
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
   public static class virtio_net_ctrl_queue_stats extends Struct {
-    public AnonymousType1872417052C117 @Size(1) [] stats;
+    public AnonymousType1047873000C117 @Size(1) [] stats;
   }
 
   @Type(
@@ -3438,7 +3439,7 @@ public final class VirtioDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1872417052C117 extends Struct {
+  public static class AnonymousType1047873000C117 extends Struct {
     public @Unsigned @OriginalName("__le16") short vq_index;
 
     public @Unsigned @OriginalName("__le16") short @Size(3) [] reserved;

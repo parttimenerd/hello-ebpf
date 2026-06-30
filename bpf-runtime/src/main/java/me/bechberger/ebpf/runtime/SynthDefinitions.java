@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class SynthDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__synth_event_add_val((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__synth_event_add_val((const u8 *)$arg1, $arg2, $arg3)")
   public static int __synth_event_add_val(String field_name, @Unsigned long val,
       Ptr<synth_event_trace_state> trace_state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__synth_event_gen_cmd_start($arg1, (const u8*)$arg2, $arg3, $arg4_)")
+  @BuiltinBPFFunction("__synth_event_gen_cmd_start($arg1, (const u8 *)$arg2, $arg3, $arg4_)")
   public static int __synth_event_gen_cmd_start(Ptr<dynevent_cmd> cmd, String name, Ptr<module> mod,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1110,13 +1111,13 @@ public final class SynthDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("synth_event_add_field($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("synth_event_add_field($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int synth_event_add_field(Ptr<dynevent_cmd> cmd, String type, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("synth_event_add_field_str($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("synth_event_add_field_str($arg1, (const u8 *)$arg2)")
   public static int synth_event_add_field_str(Ptr<dynevent_cmd> cmd, String type_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1136,7 +1137,7 @@ public final class SynthDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("synth_event_add_val((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("synth_event_add_val((const u8 *)$arg1, $arg2, $arg3)")
   public static int synth_event_add_val(String field_name, @Unsigned long val,
       Ptr<synth_event_trace_state> trace_state) {
     throw new MethodIsBPFRelatedFunction();
@@ -1155,7 +1156,7 @@ public final class SynthDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("synth_event_create((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("synth_event_create((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int synth_event_create(String name, Ptr<synth_field_desc> fields,
       @Unsigned int n_fields, Ptr<module> mod) {
     throw new MethodIsBPFRelatedFunction();
@@ -1168,13 +1169,13 @@ public final class SynthDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("synth_event_delete((const u8*)$arg1)")
+  @BuiltinBPFFunction("synth_event_delete((const u8 *)$arg1)")
   public static int synth_event_delete(String event_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("synth_event_gen_cmd_array_start($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("synth_event_gen_cmd_array_start($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int synth_event_gen_cmd_array_start(Ptr<dynevent_cmd> cmd, String name,
       Ptr<module> mod, Ptr<synth_field_desc> fields, @Unsigned int n_fields) {
     throw new MethodIsBPFRelatedFunction();
@@ -1187,7 +1188,7 @@ public final class SynthDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("synth_event_match((const u8*)$arg1, (const u8*)$arg2, $arg3, (const u8**)$arg4, $arg5)")
+  @BuiltinBPFFunction("synth_event_match((const u8 *)$arg1, (const u8 *)$arg2, $arg3, (const u8**)$arg4, $arg5)")
   public static boolean synth_event_match(String system, String event, int argc, Ptr<String> argv,
       Ptr<dyn_event> ev) {
     throw new MethodIsBPFRelatedFunction();
@@ -1257,7 +1258,7 @@ public final class SynthDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("synth_events_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("synth_events_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long synth_events_write(Ptr<file> file, String buffer,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

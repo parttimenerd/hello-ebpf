@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1109,13 +1110,13 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__acpi_device_modalias((const struct acpi_device*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__acpi_device_modalias((const struct acpi_device *)$arg1, $arg2, $arg3)")
   public static int __acpi_device_modalias(Ptr<acpi_device> adev, String buf, int size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__acpi_device_uevent_modalias((const struct acpi_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__acpi_device_uevent_modalias((const struct acpi_device *)$arg1, $arg2)")
   public static int __acpi_device_uevent_modalias(Ptr<acpi_device> adev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1133,7 +1134,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__acpi_find_gpio($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__acpi_find_gpio($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static Ptr<gpio_desc> __acpi_find_gpio(Ptr<fwnode_handle> fwnode, String con_id,
       @Unsigned int idx, boolean can_fallback, Ptr<acpi_gpio_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1148,7 +1149,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__acpi_handle_debug($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("__acpi_handle_debug($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void __acpi_handle_debug(Ptr<_ddebug> descriptor,
       @OriginalName("acpi_handle") Ptr<?> handle, String fmt, java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1161,7 +1162,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__acpi_match_device((const struct acpi_device*)$arg1, (const struct acpi_device_id*)$arg2, (const struct of_device_id*)$arg3, (const struct acpi_device_id**)$arg4, (const struct of_device_id**)$arg5)")
+  @BuiltinBPFFunction("__acpi_match_device((const struct acpi_device *)$arg1, (const struct acpi_device_id *)$arg2, (const struct of_device_id *)$arg3, (const struct acpi_device_id**)$arg4, (const struct of_device_id**)$arg5)")
   public static boolean __acpi_match_device(Ptr<acpi_device> device, Ptr<acpi_device_id> acpi_ids,
       Ptr<of_device_id> of_ids, Ptr<Ptr<acpi_device_id>> acpi_id, Ptr<Ptr<of_device_id>> of_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1175,7 +1176,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__acpi_node_get_property_reference((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__acpi_node_get_property_reference((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int __acpi_node_get_property_reference(Ptr<fwnode_handle> fwnode, String propname,
       @Unsigned long index, @Unsigned long num_args, Ptr<fwnode_reference_args> args) {
     throw new MethodIsBPFRelatedFunction();
@@ -1309,7 +1310,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_add_id($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("acpi_add_id($arg1, (const u8 *)$arg2)")
   public static void acpi_add_id(Ptr<acpi_device_pnp> pnp, String dev_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1468,20 +1469,20 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_aml_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_aml_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long acpi_aml_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_aml_write_kern((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_aml_write_kern((const u8 *)$arg1, $arg2)")
   public static int acpi_aml_write_kern(String buf, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_aml_write_log((const u8*)$arg1)")
+  @BuiltinBPFFunction("acpi_aml_write_log((const u8 *)$arg1)")
   public static @OriginalName("ssize_t") long acpi_aml_write_log(String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1499,7 +1500,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_apd_create_device($arg1, (const struct acpi_device_id*)$arg2)")
+  @BuiltinBPFFunction("acpi_apd_create_device($arg1, (const struct acpi_device_id *)$arg2)")
   public static int acpi_apd_create_device(Ptr<acpi_device> adev, Ptr<acpi_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1571,7 +1572,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_battery_alarm_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_battery_alarm_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long acpi_battery_alarm_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1670,14 +1671,14 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_bios_error((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("acpi_bios_error((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void acpi_bios_error(String module_name, @Unsigned int line_number, String format,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_bios_exception((const u8*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("acpi_bios_exception((const u8 *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5_)")
   public static void acpi_bios_exception(String module_name, @Unsigned int line_number,
       @Unsigned @OriginalName("acpi_status") int status, String format,
       java.lang.Object... param4) {
@@ -1685,7 +1686,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_bios_warning((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("acpi_bios_warning((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void acpi_bios_warning(String module_name, @Unsigned int line_number, String format,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1761,7 +1762,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_bus_decode_usb_osc((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_bus_decode_usb_osc((const u8 *)$arg1, $arg2)")
   public static void acpi_bus_decode_usb_osc(String msg, @Unsigned int bits) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1785,7 +1786,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_bus_generate_netlink_event((const u8*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_bus_generate_netlink_event((const u8 *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int acpi_bus_generate_netlink_event(String device_class, String bus_id, char type,
       int data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1837,7 +1838,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_bus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("acpi_bus_match($arg1, (const struct device_driver *)$arg2)")
   public static int acpi_bus_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2025,7 +2026,7 @@ public final class AcpiDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("acpi_check_dsm($arg1, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg2, $arg3, $arg4)")
+          + "} *)$arg2, $arg3, $arg4)")
   public static boolean acpi_check_dsm(@OriginalName("acpi_handle") Ptr<?> handle,
       Ptr<@OriginalName("guid_t") uuid_t> guid, @Unsigned long rev, @Unsigned long funcs) {
     throw new MethodIsBPFRelatedFunction();
@@ -2038,14 +2039,14 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_check_region($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("acpi_check_region($arg1, $arg2, (const u8 *)$arg3)")
   public static int acpi_check_region(@Unsigned @OriginalName("resource_size_t") long start,
       @Unsigned @OriginalName("resource_size_t") long n, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_check_resource_conflict((const struct resource*)$arg1)")
+  @BuiltinBPFFunction("acpi_check_resource_conflict((const struct resource *)$arg1)")
   public static int acpi_check_resource_conflict(Ptr<resource> res) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2076,7 +2077,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_cmos_rtc_attach_handler($arg1, (const struct acpi_device_id*)$arg2)")
+  @BuiltinBPFFunction("acpi_cmos_rtc_attach_handler($arg1, (const struct acpi_device_id *)$arg2)")
   public static int acpi_cmos_rtc_attach_handler(Ptr<acpi_device> adev, Ptr<acpi_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2103,7 +2104,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct acpi_device*)acpi_companion_match((const struct device*)$arg1))")
+  @BuiltinBPFFunction("((const struct acpi_device*)acpi_companion_match((const struct device *)$arg1))")
   public static Ptr<acpi_device> acpi_companion_match(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2206,7 +2207,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_create_platform_device($arg1, (const struct property_entry*)$arg2)")
+  @BuiltinBPFFunction("acpi_create_platform_device($arg1, (const struct property_entry *)$arg2)")
   public static Ptr<platform_device> acpi_create_platform_device(Ptr<acpi_device> adev,
       Ptr<property_entry> properties) {
     throw new MethodIsBPFRelatedFunction();
@@ -2229,14 +2230,14 @@ public final class AcpiDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("acpi_data_add_props($arg1, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg2, $arg3)")
+          + "} *)$arg2, $arg3)")
   public static Ptr<acpi_device_properties> acpi_data_add_props(Ptr<acpi_device_data> data,
       Ptr<@OriginalName("guid_t") uuid_t> guid, Ptr<acpi_object> properties) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_data_get_property((const struct acpi_device_data*)$arg1, (const u8*)$arg2, $arg3, (const union acpi_object**)$arg4)")
+  @BuiltinBPFFunction("acpi_data_get_property((const struct acpi_device_data *)$arg1, (const u8 *)$arg2, $arg3, (const union acpi_object**)$arg4)")
   public static int acpi_data_get_property(Ptr<acpi_device_data> data, String name,
       @Unsigned @OriginalName("acpi_object_type") int type, Ptr<Ptr<acpi_object>> obj) {
     throw new MethodIsBPFRelatedFunction();
@@ -2256,14 +2257,14 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_data_prop_read((const struct acpi_device_data*)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("acpi_data_prop_read((const struct acpi_device_data *)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int acpi_data_prop_read(Ptr<acpi_device_data> data, String propname,
       dev_prop_type proptype, Ptr<?> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_data_show($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("acpi_data_show($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long acpi_data_show(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long offset,
       @Unsigned long count) {
@@ -2417,7 +2418,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_db_display_command_info((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_db_display_command_info((const u8 *)$arg1, $arg2)")
   public static void acpi_db_display_command_info(String command, char display_all) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2901,7 +2902,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_debug_print($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5, (const u8*)$arg6, $arg7_)")
+  @BuiltinBPFFunction("acpi_debug_print($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5, (const u8 *)$arg6, $arg7_)")
   public static void acpi_debug_print(@Unsigned int requested_debug_level,
       @Unsigned int line_number, String function_name, String module_name,
       @Unsigned int component_id, String format, java.lang.Object... param6) {
@@ -2909,7 +2910,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_debug_print_raw($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5, (const u8*)$arg6, $arg7_)")
+  @BuiltinBPFFunction("acpi_debug_print_raw($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5, (const u8 *)$arg6, $arg7_)")
   public static void acpi_debug_print_raw(@Unsigned int requested_debug_level,
       @Unsigned int line_number, String function_name, String module_name,
       @Unsigned int component_id, String format, java.lang.Object... param6) {
@@ -2917,7 +2918,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_debug_trace((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_debug_trace((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned @OriginalName("acpi_status") int acpi_debug_trace(String name,
       @Unsigned int debug_level, @Unsigned int debug_layer, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2962,7 +2963,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_debugger_write_log((const u8*)$arg1)")
+  @BuiltinBPFFunction("acpi_debugger_write_log((const u8 *)$arg1)")
   public static @OriginalName("ssize_t") long acpi_debugger_write_log(String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2997,7 +2998,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_dev_add_driver_gpios($arg1, (const struct acpi_gpio_mapping*)$arg2)")
+  @BuiltinBPFFunction("acpi_dev_add_driver_gpios($arg1, (const struct acpi_gpio_mapping *)$arg2)")
   public static int acpi_dev_add_driver_gpios(Ptr<acpi_device> adev, Ptr<acpi_gpio_mapping> gpios) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3039,7 +3040,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_dev_found((const u8*)$arg1)")
+  @BuiltinBPFFunction("acpi_dev_found((const u8 *)$arg1)")
   public static boolean acpi_dev_found(String hid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3057,7 +3058,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_dev_get_first_match_dev((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("acpi_dev_get_first_match_dev((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<acpi_device> acpi_dev_get_first_match_dev(String hid, String uid, long hrv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3089,14 +3090,14 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_dev_get_next_match_dev($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_dev_get_next_match_dev($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<acpi_device> acpi_dev_get_next_match_dev(Ptr<acpi_device> adev, String hid,
       String uid, long hrv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_dev_get_property((const struct acpi_device*)$arg1, (const u8*)$arg2, $arg3, (const union acpi_object**)$arg4)")
+  @BuiltinBPFFunction("acpi_dev_get_property((const struct acpi_device *)$arg1, (const u8 *)$arg2, $arg3, (const union acpi_object**)$arg4)")
   public static int acpi_dev_get_property(Ptr<acpi_device> adev, String name,
       @Unsigned @OriginalName("acpi_object_type") int type, Ptr<Ptr<acpi_object>> obj) {
     throw new MethodIsBPFRelatedFunction();
@@ -3110,7 +3111,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_dev_gpio_irq_wake_get_by($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_dev_gpio_irq_wake_get_by($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int acpi_dev_gpio_irq_wake_get_by(Ptr<acpi_device> adev, String con_id, int index,
       Ptr<java.lang. @OriginalName("bool") Boolean> wake_capable) {
     throw new MethodIsBPFRelatedFunction();
@@ -3139,7 +3140,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_dev_match_cb($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("acpi_dev_match_cb($arg1, (const void *)$arg2)")
   public static int acpi_dev_match_cb(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3189,7 +3190,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_dev_present((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("acpi_dev_present((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static boolean acpi_dev_present(String hid, String uid, long hrv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3202,7 +3203,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_dev_ready_for_enumeration((const struct acpi_device*)$arg1)")
+  @BuiltinBPFFunction("acpi_dev_ready_for_enumeration((const struct acpi_device *)$arg1)")
   public static boolean acpi_dev_ready_for_enumeration(Ptr<acpi_device> device) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3334,7 +3335,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)acpi_device_get_match_data((const struct device*)$arg1))")
+  @BuiltinBPFFunction("((const void*)acpi_device_get_match_data((const struct device *)$arg1))")
   public static Ptr<?> acpi_device_get_match_data(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3364,19 +3365,19 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_device_is_enabled((const struct acpi_device*)$arg1)")
+  @BuiltinBPFFunction("acpi_device_is_enabled((const struct acpi_device *)$arg1)")
   public static boolean acpi_device_is_enabled(Ptr<acpi_device> adev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_device_is_first_physical_node($arg1, (const struct device*)$arg2)")
+  @BuiltinBPFFunction("acpi_device_is_first_physical_node($arg1, (const struct device *)$arg2)")
   public static boolean acpi_device_is_first_physical_node(Ptr<acpi_device> adev, Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_device_is_present((const struct acpi_device*)$arg1)")
+  @BuiltinBPFFunction("acpi_device_is_present((const struct acpi_device *)$arg1)")
   public static boolean acpi_device_is_present(Ptr<acpi_device> adev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3462,13 +3463,13 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_device_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_device_uevent((const struct device *)$arg1, $arg2)")
   public static int acpi_device_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_device_uevent_modalias((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_device_uevent_modalias((const struct device *)$arg1, $arg2)")
   public static int acpi_device_uevent_modalias(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3541,7 +3542,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_dma_configure_id($arg1, $arg2, (const unsigned int*)$arg3)")
+  @BuiltinBPFFunction("acpi_dma_configure_id($arg1, $arg2, (const unsigned int *)$arg3)")
   public static int acpi_dma_configure_id(Ptr<device> dev, dev_dma_attr attr,
       Ptr<java.lang. @Unsigned Integer> input_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -3573,7 +3574,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_dma_parse_resource_group((const struct acpi_csrt_group*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("acpi_dma_parse_resource_group((const struct acpi_csrt_group *)$arg1, $arg2, $arg3)")
   public static int acpi_dma_parse_resource_group(Ptr<acpi_csrt_group> grp, Ptr<acpi_device> adev,
       Ptr<acpi_dma> adma) {
     throw new MethodIsBPFRelatedFunction();
@@ -3587,7 +3588,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_dma_request_slave_chan_by_name($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("acpi_dma_request_slave_chan_by_name($arg1, (const u8 *)$arg2)")
   public static Ptr<dma_chan> acpi_dma_request_slave_chan_by_name(Ptr<device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3600,7 +3601,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_dma_supported((const struct acpi_device*)$arg1)")
+  @BuiltinBPFFunction("acpi_dma_supported((const struct acpi_device *)$arg1)")
   public static boolean acpi_dma_supported(Ptr<acpi_device> adev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3618,7 +3619,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_driver_match_device($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("acpi_driver_match_device($arg1, (const struct device_driver *)$arg2)")
   public static boolean acpi_driver_match_device(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4093,7 +4094,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ds_print_node_pathname($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("acpi_ds_print_node_pathname($arg1, (const u8 *)$arg2)")
   public static void acpi_ds_print_node_pathname(Ptr<acpi_namespace_node> node, String message) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4532,7 +4533,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_error((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("acpi_error((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void acpi_error(String module_name, @Unsigned int line_number, String format,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -4986,7 +4987,7 @@ public final class AcpiDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("acpi_evaluate_dsm($arg1, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg2, $arg3, $arg4, $arg5)")
+          + "} *)$arg2, $arg3, $arg4, $arg5)")
   public static Ptr<acpi_object> acpi_evaluate_dsm(@OriginalName("acpi_handle") Ptr<?> handle,
       Ptr<@OriginalName("guid_t") uuid_t> guid, @Unsigned long rev, @Unsigned long func,
       Ptr<acpi_object> argv4) {
@@ -5056,7 +5057,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_evaluation_failure_warn($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("acpi_evaluation_failure_warn($arg1, (const u8 *)$arg2, $arg3)")
   public static void acpi_evaluation_failure_warn(@OriginalName("acpi_handle") Ptr<?> handle,
       String name, @Unsigned @OriginalName("acpi_status") int status) {
     throw new MethodIsBPFRelatedFunction();
@@ -5308,7 +5309,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ex_dump_operands($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("acpi_ex_dump_operands($arg1, (const u8 *)$arg2, $arg3)")
   public static void acpi_ex_dump_operands(Ptr<Ptr<acpi_operand_object>> operands,
       String opcode_name, @Unsigned int num_operands) {
     throw new MethodIsBPFRelatedFunction();
@@ -5858,7 +5859,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_exception((const u8*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("acpi_exception((const u8 *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5_)")
   public static void acpi_exception(String module_name, @Unsigned int line_number,
       @Unsigned @OriginalName("acpi_status") int status, String format,
       java.lang.Object... param4) {
@@ -5945,7 +5946,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_fan_hwmon_is_visible((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_fan_hwmon_is_visible((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned @OriginalName("umode_t") short acpi_fan_hwmon_is_visible(Ptr<?> drvdata,
       hwmon_sensor_types type, @Unsigned int attr, int channel) {
     throw new MethodIsBPFRelatedFunction();
@@ -5977,7 +5978,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_fan_speed_cmp((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("acpi_fan_speed_cmp((const void *)$arg1, (const void *)$arg2)")
   public static int acpi_fan_speed_cmp(Ptr<?> a, Ptr<?> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6040,7 +6041,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_find_gpio($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("acpi_find_gpio($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static Ptr<gpio_desc> acpi_find_gpio(Ptr<fwnode_handle> fwnode, String con_id,
       @Unsigned int idx, Ptr<gpiod_flags> dflags, Ptr<java.lang. @Unsigned Long> lookupflags) {
     throw new MethodIsBPFRelatedFunction();
@@ -6103,44 +6104,44 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_fwnode_device_dma_supported((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("acpi_fwnode_device_dma_supported((const struct fwnode_handle *)$arg1)")
   public static boolean acpi_fwnode_device_dma_supported(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_fwnode_device_get_dma_attr((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("acpi_fwnode_device_get_dma_attr((const struct fwnode_handle *)$arg1)")
   public static dev_dma_attr acpi_fwnode_device_get_dma_attr(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)acpi_fwnode_device_get_match_data((const struct fwnode_handle*)$arg1, (const struct device*)$arg2))")
+  @BuiltinBPFFunction("((const void*)acpi_fwnode_device_get_match_data((const struct fwnode_handle *)$arg1, (const struct device *)$arg2))")
   public static Ptr<?> acpi_fwnode_device_get_match_data(Ptr<fwnode_handle> fwnode,
       Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_fwnode_device_is_available((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("acpi_fwnode_device_is_available((const struct fwnode_handle *)$arg1)")
   public static boolean acpi_fwnode_device_is_available(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)acpi_fwnode_get_name((const struct fwnode_handle*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)acpi_fwnode_get_name((const struct fwnode_handle *)$arg1))")
   public static String acpi_fwnode_get_name(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)acpi_fwnode_get_name_prefix((const struct fwnode_handle*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)acpi_fwnode_get_name_prefix((const struct fwnode_handle *)$arg1))")
   public static String acpi_fwnode_get_name_prefix(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_fwnode_get_named_child_node((const struct fwnode_handle*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("acpi_fwnode_get_named_child_node((const struct fwnode_handle *)$arg1, (const u8 *)$arg2)")
   public static Ptr<fwnode_handle> acpi_fwnode_get_named_child_node(Ptr<fwnode_handle> fwnode,
       String childname) {
     throw new MethodIsBPFRelatedFunction();
@@ -6153,7 +6154,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_fwnode_get_reference_args((const struct fwnode_handle*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("acpi_fwnode_get_reference_args((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static int acpi_fwnode_get_reference_args(Ptr<fwnode_handle> fwnode, String prop,
       String nargs_prop, @Unsigned int args_count, @Unsigned int index,
       Ptr<fwnode_reference_args> args) {
@@ -6161,33 +6162,33 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_fwnode_graph_parse_endpoint((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_fwnode_graph_parse_endpoint((const struct fwnode_handle *)$arg1, $arg2)")
   public static int acpi_fwnode_graph_parse_endpoint(Ptr<fwnode_handle> fwnode,
       Ptr<fwnode_endpoint> endpoint) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_fwnode_irq_get((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_fwnode_irq_get((const struct fwnode_handle *)$arg1, $arg2)")
   public static int acpi_fwnode_irq_get(Ptr<fwnode_handle> fwnode, @Unsigned int index) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_fwnode_property_present((const struct fwnode_handle*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("acpi_fwnode_property_present((const struct fwnode_handle *)$arg1, (const u8 *)$arg2)")
   public static boolean acpi_fwnode_property_present(Ptr<fwnode_handle> fwnode, String propname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_fwnode_property_read_int_array((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("acpi_fwnode_property_read_int_array((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int acpi_fwnode_property_read_int_array(Ptr<fwnode_handle> fwnode, String propname,
       @Unsigned int elem_size, Ptr<?> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_fwnode_property_read_string_array((const struct fwnode_handle*)$arg1, (const u8*)$arg2, (const u8**)$arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_fwnode_property_read_string_array((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, (const u8**)$arg3, $arg4)")
   public static int acpi_fwnode_property_read_string_array(Ptr<fwnode_handle> fwnode,
       String propname, Ptr<String> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
@@ -6207,7 +6208,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_generic_device_attach($arg1, (const struct acpi_device_id*)$arg2)")
+  @BuiltinBPFFunction("acpi_generic_device_attach($arg1, (const struct acpi_device_id *)$arg2)")
   public static int acpi_generic_device_attach(Ptr<acpi_device> adev,
       Ptr<acpi_device_id> not_used) {
     throw new MethodIsBPFRelatedFunction();
@@ -6256,7 +6257,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_get_devices((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_get_devices((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned @OriginalName("acpi_status") int acpi_get_devices(String HID,
       @OriginalName("acpi_walk_callback") Ptr<?> user_function, Ptr<?> context,
       Ptr<Ptr<?>> return_value) {
@@ -6312,7 +6313,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_get_handle($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("acpi_get_handle($arg1, (const u8 *)$arg2, $arg3)")
   public static @Unsigned @OriginalName("acpi_status") int acpi_get_handle(
       @OriginalName("acpi_handle") Ptr<?> parent, String pathname,
       Ptr<@OriginalName("acpi_handle") Ptr<?>> ret_handle) {
@@ -6383,14 +6384,14 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_get_next_present_subnode((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_get_next_present_subnode((const struct fwnode_handle *)$arg1, $arg2)")
   public static Ptr<fwnode_handle> acpi_get_next_present_subnode(Ptr<fwnode_handle> fwnode,
       Ptr<fwnode_handle> child) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_get_next_subnode((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_get_next_subnode((const struct fwnode_handle *)$arg1, $arg2)")
   public static Ptr<fwnode_handle> acpi_get_next_subnode(Ptr<fwnode_handle> fwnode,
       Ptr<fwnode_handle> child) {
     throw new MethodIsBPFRelatedFunction();
@@ -6471,7 +6472,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_get_ref_args($arg1, $arg2, (const union acpi_object**)$arg3, (const union acpi_object*)$arg4, $arg5)")
+  @BuiltinBPFFunction("acpi_get_ref_args($arg1, $arg2, (const union acpi_object**)$arg3, (const union acpi_object *)$arg4, $arg5)")
   public static int acpi_get_ref_args(Ptr<fwnode_reference_args> args,
       Ptr<fwnode_handle> ref_fwnode, Ptr<Ptr<acpi_object>> element, Ptr<acpi_object> end,
       @Unsigned long num_args) {
@@ -6589,7 +6590,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_gpio_count((const struct fwnode_handle*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("acpi_gpio_count((const struct fwnode_handle *)$arg1, (const u8 *)$arg2)")
   public static int acpi_gpio_count(Ptr<fwnode_handle> fwnode, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6615,7 +6616,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_gpio_in_ignore_list($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("acpi_gpio_in_ignore_list($arg1, (const u8 *)$arg2, $arg3)")
   public static boolean acpi_gpio_in_ignore_list(acpi_gpio_ignore_list list, String controller_in,
       @Unsigned int pin_in) {
     throw new MethodIsBPFRelatedFunction();
@@ -6647,7 +6648,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_gpio_property_lookup($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("acpi_gpio_property_lookup($arg1, (const u8 *)$arg2, $arg3)")
   public static int acpi_gpio_property_lookup(Ptr<fwnode_handle> fwnode, String propname,
       Ptr<acpi_gpio_lookup> lookup) {
     throw new MethodIsBPFRelatedFunction();
@@ -6666,7 +6667,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_gpio_to_gpiod_flags((const struct acpi_resource_gpio*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_gpio_to_gpiod_flags((const struct acpi_resource_gpio *)$arg1, $arg2)")
   public static gpiod_flags acpi_gpio_to_gpiod_flags(Ptr<acpi_resource_gpio> agpio, int polarity) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6691,7 +6692,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_gpiochip_find($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("acpi_gpiochip_find($arg1, (const void *)$arg2)")
   public static int acpi_gpiochip_find(Ptr<gpio_chip> gc, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6727,21 +6728,21 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_graph_get_child_prop_value((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("acpi_graph_get_child_prop_value((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<fwnode_handle> acpi_graph_get_child_prop_value(Ptr<fwnode_handle> fwnode,
       String prop_name, @Unsigned int val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_graph_get_next_endpoint((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_graph_get_next_endpoint((const struct fwnode_handle *)$arg1, $arg2)")
   public static Ptr<fwnode_handle> acpi_graph_get_next_endpoint(Ptr<fwnode_handle> fwnode,
       Ptr<fwnode_handle> prev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_graph_get_remote_endpoint((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("acpi_graph_get_remote_endpoint((const struct fwnode_handle *)$arg1)")
   public static Ptr<fwnode_handle> acpi_graph_get_remote_endpoint(Ptr<fwnode_handle> __fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6799,7 +6800,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_handle_printk((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("acpi_handle_printk((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void acpi_handle_printk(String level, @OriginalName("acpi_handle") Ptr<?> handle,
       String fmt, java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -7226,13 +7227,13 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_info((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("acpi_info((const u8 *)$arg1, $arg2_)")
   public static void acpi_info(String format, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_info_matches_ids($arg1, (const u8**)$arg2)")
+  @BuiltinBPFFunction("acpi_info_matches_ids($arg1, (const const u8 **)$arg2)")
   public static boolean acpi_info_matches_ids(Ptr<acpi_device_info> info, Ptr<String> ids) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7684,7 +7685,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_lpss_create_device($arg1, (const struct acpi_device_id*)$arg2)")
+  @BuiltinBPFFunction("acpi_lpss_create_device($arg1, (const struct acpi_device_id *)$arg2)")
   public static int acpi_lpss_create_device(Ptr<acpi_device> adev, Ptr<acpi_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7854,20 +7855,20 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct acpi_device_id*)acpi_match_acpi_device((const struct acpi_device_id*)$arg1, (const struct acpi_device*)$arg2))")
+  @BuiltinBPFFunction("((const struct acpi_device_id*)acpi_match_acpi_device((const struct acpi_device_id *)$arg1, (const struct acpi_device *)$arg2))")
   public static Ptr<acpi_device_id> acpi_match_acpi_device(Ptr<acpi_device_id> ids,
       Ptr<acpi_device> adev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct acpi_device_id*)acpi_match_device((const struct acpi_device_id*)$arg1, (const struct device*)$arg2))")
+  @BuiltinBPFFunction("((const struct acpi_device_id*)acpi_match_device((const struct acpi_device_id *)$arg1, (const struct device *)$arg2))")
   public static Ptr<acpi_device_id> acpi_match_device(Ptr<acpi_device_id> ids, Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_match_device_ids($arg1, (const struct acpi_device_id*)$arg2)")
+  @BuiltinBPFFunction("acpi_match_device_ids($arg1, (const struct acpi_device_id *)$arg2)")
   public static int acpi_match_device_ids(Ptr<acpi_device> device, Ptr<acpi_device_id> ids) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7879,13 +7880,13 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_match_platform_list((const struct acpi_platform_list*)$arg1)")
+  @BuiltinBPFFunction("acpi_match_platform_list((const struct acpi_platform_list *)$arg1)")
   public static int acpi_match_platform_list(Ptr<acpi_platform_list> plat) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_memory_device_add($arg1, (const struct acpi_device_id*)$arg2)")
+  @BuiltinBPFFunction("acpi_memory_device_add($arg1, (const struct acpi_device_id *)$arg2)")
   public static int acpi_memory_device_add(Ptr<acpi_device> device, Ptr<acpi_device_id> not_used) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7996,7 +7997,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_nhlt_endpoint_find_fmtcfg((const struct acpi_nhlt_endpoint*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("acpi_nhlt_endpoint_find_fmtcfg((const struct acpi_nhlt_endpoint *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static Ptr<acpi_nhlt_format_config> acpi_nhlt_endpoint_find_fmtcfg(
       Ptr<acpi_nhlt_endpoint> ep, @Unsigned short ch, @Unsigned int rate, @Unsigned short vbps,
       @Unsigned short bps) {
@@ -8004,14 +8005,14 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_nhlt_endpoint_match((const struct acpi_nhlt_endpoint*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("acpi_nhlt_endpoint_match((const struct acpi_nhlt_endpoint *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static boolean acpi_nhlt_endpoint_match(Ptr<acpi_nhlt_endpoint> ep, int link_type,
       int dev_type, int dir, int bus_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_nhlt_endpoint_mic_count((const struct acpi_nhlt_endpoint*)$arg1)")
+  @BuiltinBPFFunction("acpi_nhlt_endpoint_mic_count((const struct acpi_nhlt_endpoint *)$arg1)")
   public static int acpi_nhlt_endpoint_mic_count(Ptr<acpi_nhlt_endpoint> ep) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8044,14 +8045,14 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_nhlt_tb_find_endpoint((const struct acpi_table_nhlt*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("acpi_nhlt_tb_find_endpoint((const struct acpi_table_nhlt *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static Ptr<acpi_nhlt_endpoint> acpi_nhlt_tb_find_endpoint(Ptr<acpi_table_nhlt> tb,
       int link_type, int dev_type, int dir, int bus_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_nhlt_tb_find_fmtcfg((const struct acpi_table_nhlt*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("acpi_nhlt_tb_find_fmtcfg((const struct acpi_table_nhlt *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static Ptr<acpi_nhlt_format_config> acpi_nhlt_tb_find_fmtcfg(Ptr<acpi_table_nhlt> tb,
       int link_type, int dev_type, int dir, int bus_id, @Unsigned short ch, @Unsigned int rate,
       @Unsigned short vbps, @Unsigned short bps) {
@@ -8077,20 +8078,20 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_node_get_parent((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("acpi_node_get_parent((const struct fwnode_handle *)$arg1)")
   public static Ptr<fwnode_handle> acpi_node_get_parent(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_node_prop_get((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("acpi_node_prop_get((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3)")
   public static int acpi_node_prop_get(Ptr<fwnode_handle> fwnode, String propname,
       Ptr<Ptr<?>> valptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_nondev_subnode_extract($arg1, $arg2, (const union acpi_object*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("acpi_nondev_subnode_extract($arg1, $arg2, (const union acpi_object *)$arg3, $arg4, $arg5)")
   public static boolean acpi_nondev_subnode_extract(Ptr<acpi_object> desc,
       @OriginalName("acpi_handle") Ptr<?> handle, Ptr<acpi_object> link, Ptr<list_head> list,
       Ptr<fwnode_handle> parent) {
@@ -8149,21 +8150,21 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ns_build_prefixed_pathname($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("acpi_ns_build_prefixed_pathname($arg1, (const u8 *)$arg2)")
   public static String acpi_ns_build_prefixed_pathname(Ptr<acpi_generic_state> prefix_scope,
       String internal_path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ns_check_acpi_compliance($arg1, $arg2, (const union acpi_predefined_info*)$arg3)")
+  @BuiltinBPFFunction("acpi_ns_check_acpi_compliance($arg1, $arg2, (const union acpi_predefined_info *)$arg3)")
   public static void acpi_ns_check_acpi_compliance(String pathname, Ptr<acpi_namespace_node> node,
       Ptr<acpi_predefined_info> predefined) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ns_check_argument_count($arg1, $arg2, $arg3, (const union acpi_predefined_info*)$arg4)")
+  @BuiltinBPFFunction("acpi_ns_check_argument_count($arg1, $arg2, $arg3, (const union acpi_predefined_info *)$arg4)")
   public static void acpi_ns_check_argument_count(String pathname, Ptr<acpi_namespace_node> node,
       @Unsigned int user_param_count, Ptr<acpi_predefined_info> predefined) {
     throw new MethodIsBPFRelatedFunction();
@@ -8199,7 +8200,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ns_check_package_list($arg1, (const union acpi_predefined_info*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_ns_check_package_list($arg1, (const union acpi_predefined_info *)$arg2, $arg3, $arg4)")
   public static @Unsigned @OriginalName("acpi_status") int acpi_ns_check_package_list(
       Ptr<acpi_evaluate_info> info, Ptr<acpi_predefined_info> _package,
       Ptr<Ptr<acpi_operand_object>> elements, @Unsigned int count) {
@@ -8383,7 +8384,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ns_externalize_name($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_ns_externalize_name($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @Unsigned @OriginalName("acpi_status") int acpi_ns_externalize_name(
       @Unsigned int internal_name_length, String internal_name,
       Ptr<java.lang. @Unsigned Integer> converted_name_length, Ptr<String> converted_name) {
@@ -8457,7 +8458,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ns_get_node($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_ns_get_node($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @Unsigned @OriginalName("acpi_status") int acpi_ns_get_node(
       Ptr<acpi_namespace_node> prefix_node, String pathname, @Unsigned int flags,
       Ptr<Ptr<acpi_namespace_node>> return_node) {
@@ -8465,7 +8466,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ns_get_node_unlocked($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_ns_get_node_unlocked($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @Unsigned @OriginalName("acpi_status") int acpi_ns_get_node_unlocked(
       Ptr<acpi_namespace_node> prefix_node, String pathname, @Unsigned int flags,
       Ptr<Ptr<acpi_namespace_node>> return_node) {
@@ -8561,7 +8562,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ns_internalize_name((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_ns_internalize_name((const u8 *)$arg1, $arg2)")
   public static @Unsigned @OriginalName("acpi_status") int acpi_ns_internalize_name(
       String external_name, Ptr<String> converted_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -8618,13 +8619,13 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ns_print_node_pathname($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("acpi_ns_print_node_pathname($arg1, (const u8 *)$arg2)")
   public static void acpi_ns_print_node_pathname(Ptr<acpi_namespace_node> node, String message) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ns_print_pathname($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("acpi_ns_print_pathname($arg1, (const u8 *)$arg2)")
   public static void acpi_ns_print_pathname(@Unsigned int num_segments, String pathname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -8823,7 +8824,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_of_match_device((const struct acpi_device*)$arg1, (const struct of_device_id*)$arg2, (const struct of_device_id**)$arg3)")
+  @BuiltinBPFFunction("acpi_of_match_device((const struct acpi_device *)$arg1, (const struct of_device_id *)$arg2, (const struct of_device_id**)$arg3)")
   public static boolean acpi_of_match_device(Ptr<acpi_device> adev,
       Ptr<of_device_id> of_match_table, Ptr<Ptr<of_device_id>> of_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -8992,7 +8993,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_os_predefined_override((const struct acpi_predefined_names*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_os_predefined_override((const struct acpi_predefined_names *)$arg1, $arg2)")
   public static @Unsigned @OriginalName("acpi_status") int acpi_os_predefined_override(
       Ptr<acpi_predefined_names> init_val, Ptr<@OriginalName("acpi_string") String> new_val) {
     throw new MethodIsBPFRelatedFunction();
@@ -9013,7 +9014,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_os_printf((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("acpi_os_printf((const u8 *)$arg1, $arg2_)")
   public static void acpi_os_printf(String fmt, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9149,7 +9150,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_os_vprintf((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("acpi_os_vprintf((const u8 *)$arg1, $arg2)")
   public static void acpi_os_vprintf(String fmt, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9405,7 +9406,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_parse_string_ref((const struct fwnode_handle*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("acpi_parse_string_ref((const struct fwnode_handle *)$arg1, (const u8 *)$arg2)")
   public static Ptr<fwnode_handle> acpi_parse_string_ref(Ptr<fwnode_handle> fwnode,
       String refstring) {
     throw new MethodIsBPFRelatedFunction();
@@ -9560,7 +9561,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_pci_link_add($arg1, (const struct acpi_device_id*)$arg2)")
+  @BuiltinBPFFunction("acpi_pci_link_add($arg1, (const struct acpi_device_id *)$arg2)")
   public static int acpi_pci_link_add(Ptr<acpi_device> device, Ptr<acpi_device_id> not_used) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9663,7 +9664,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_pci_root_add($arg1, (const struct acpi_device_id*)$arg2)")
+  @BuiltinBPFFunction("acpi_pci_root_add($arg1, (const struct acpi_device_id *)$arg2)")
   public static int acpi_pci_root_add(Ptr<acpi_device> device, Ptr<acpi_device_id> not_used) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9714,7 +9715,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_pci_run_osc($arg1, (const unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_pci_run_osc($arg1, (const unsigned int *)$arg2, $arg3, $arg4)")
   public static @Unsigned @OriginalName("acpi_status") int acpi_pci_run_osc(Ptr<acpi_pci_root> root,
       Ptr<java.lang. @Unsigned Integer> capbuf, Ptr<java.lang. @Unsigned Integer> pci_control,
       Ptr<java.lang. @Unsigned Integer> cxl_control) {
@@ -9939,7 +9940,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_pnp_attach($arg1, (const struct acpi_device_id*)$arg2)")
+  @BuiltinBPFFunction("acpi_pnp_attach($arg1, (const struct acpi_device_id *)$arg2)")
   public static int acpi_pnp_attach(Ptr<acpi_device> adev, Ptr<acpi_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9951,7 +9952,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_pnp_match((const u8*)$arg1, (const struct acpi_device_id**)$arg2)")
+  @BuiltinBPFFunction("acpi_pnp_match((const u8 *)$arg1, (const struct acpi_device_id**)$arg2)")
   public static boolean acpi_pnp_match(String idstr, Ptr<Ptr<acpi_device_id>> matchid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -9969,7 +9970,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_power_expose_list($arg1, $arg2, (const struct attribute_group*)$arg3)")
+  @BuiltinBPFFunction("acpi_power_expose_list($arg1, $arg2, (const struct attribute_group *)$arg3)")
   public static void acpi_power_expose_list(Ptr<acpi_device> adev, Ptr<list_head> resources,
       Ptr<attribute_group> attr_group) {
     throw new MethodIsBPFRelatedFunction();
@@ -9983,7 +9984,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_power_hide_list($arg1, $arg2, (const struct attribute_group*)$arg3)")
+  @BuiltinBPFFunction("acpi_power_hide_list($arg1, $arg2, (const struct attribute_group *)$arg3)")
   public static void acpi_power_hide_list(Ptr<acpi_device> adev, Ptr<list_head> resources,
       Ptr<attribute_group> attr_group) {
     throw new MethodIsBPFRelatedFunction();
@@ -10083,13 +10084,13 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_proc_quirk_set_no_mwait((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("acpi_proc_quirk_set_no_mwait((const struct dmi_system_id *)$arg1)")
   public static int acpi_proc_quirk_set_no_mwait(Ptr<dmi_system_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_processor_add($arg1, (const struct acpi_device_id*)$arg2)")
+  @BuiltinBPFFunction("acpi_processor_add($arg1, (const struct acpi_device_id *)$arg2)")
   public static int acpi_processor_add(Ptr<acpi_device> device, Ptr<acpi_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10107,7 +10108,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_processor_container_attach($arg1, (const struct acpi_device_id*)$arg2)")
+  @BuiltinBPFFunction("acpi_processor_container_attach($arg1, (const struct acpi_device_id *)$arg2)")
   public static int acpi_processor_container_attach(Ptr<acpi_device> dev, Ptr<acpi_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10824,7 +10825,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_pwm_get((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("acpi_pwm_get((const struct fwnode_handle *)$arg1)")
   public static Ptr<pwm_device> acpi_pwm_get(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -10905,7 +10906,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_register_debugger($arg1, (const struct acpi_debugger_ops*)$arg2)")
+  @BuiltinBPFFunction("acpi_register_debugger($arg1, (const struct acpi_debugger_ops *)$arg2)")
   public static int acpi_register_debugger(Ptr<module> owner, Ptr<acpi_debugger_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11066,7 +11067,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_request_own_gpiod($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("acpi_request_own_gpiod($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static Ptr<gpio_desc> acpi_request_own_gpiod(Ptr<gpio_chip> chip,
       Ptr<acpi_resource_gpio> agpio, @Unsigned int index, String label) {
     throw new MethodIsBPFRelatedFunction();
@@ -11261,7 +11262,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_rs_get_method_data($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("acpi_rs_get_method_data($arg1, (const u8 *)$arg2, $arg3)")
   public static @Unsigned @OriginalName("acpi_status") int acpi_rs_get_method_data(
       @OriginalName("acpi_handle") Ptr<?> handle, String path, Ptr<acpi_buffer> ret_buffer) {
     throw new MethodIsBPFRelatedFunction();
@@ -11463,7 +11464,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_scan_add_handler_with_hotplug($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("acpi_scan_add_handler_with_hotplug($arg1, (const u8 *)$arg2)")
   public static int acpi_scan_add_handler_with_hotplug(Ptr<acpi_scan_handler> handler,
       String hotplug_profile_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -11621,7 +11622,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_set_modalias($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_set_modalias($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void acpi_set_modalias(Ptr<acpi_device> adev, String default_id, String modalias,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -11643,7 +11644,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_show_attr($arg1, (const struct device_attribute*)$arg2)")
+  @BuiltinBPFFunction("acpi_show_attr($arg1, (const struct device_attribute *)$arg2)")
   public static boolean acpi_show_attr(Ptr<acpi_device> dev, Ptr<device_attribute> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -11882,7 +11883,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_sysfs_add_hotplug_profile($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("acpi_sysfs_add_hotplug_profile($arg1, (const u8 *)$arg2)")
   public static void acpi_sysfs_add_hotplug_profile(Ptr<acpi_hotplug_profile> hotplug,
       String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -11914,7 +11915,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_system_write_wakeup_device($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_system_write_wakeup_device($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long acpi_system_write_wakeup_device(Ptr<file> file,
       String buffer, @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -12002,7 +12003,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_table_show($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("acpi_table_show($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long acpi_table_show(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long offset,
       @Unsigned long count) {
@@ -12406,7 +12407,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_thermal_should_bind_cdev($arg1, (const struct thermal_trip*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_thermal_should_bind_cdev($arg1, (const struct thermal_trip *)$arg2, $arg3, $arg4)")
   public static boolean acpi_thermal_should_bind_cdev(Ptr<thermal_zone_device> thermal,
       Ptr<thermal_trip> trip, Ptr<thermal_cooling_device> cdev, Ptr<cooling_spec> c) {
     throw new MethodIsBPFRelatedFunction();
@@ -12501,7 +12502,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_unregister_debugger((const struct acpi_debugger_ops*)$arg1)")
+  @BuiltinBPFFunction("acpi_unregister_debugger((const struct acpi_debugger_ops *)$arg1)")
   public static void acpi_unregister_debugger(Ptr<acpi_debugger_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -12592,7 +12593,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_allocate_object_desc_dbg((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("acpi_ut_allocate_object_desc_dbg((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<?> acpi_ut_allocate_object_desc_dbg(String module_name,
       @Unsigned int line_number, @Unsigned int component_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -12763,7 +12764,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_create_internal_object_dbg((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_ut_create_internal_object_dbg((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<acpi_operand_object> acpi_ut_create_internal_object_dbg(String module_name,
       @Unsigned int line_number, @Unsigned int component_id,
       @Unsigned @OriginalName("acpi_object_type") int type) {
@@ -12880,7 +12881,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_display_init_pathname($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("acpi_ut_display_init_pathname($arg1, $arg2, (const u8 *)$arg3)")
   public static void acpi_ut_display_init_pathname(char type, Ptr<acpi_namespace_node> obj_handle,
       String path) {
     throw new MethodIsBPFRelatedFunction();
@@ -12908,7 +12909,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_evaluate_numeric_object((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("acpi_ut_evaluate_numeric_object((const u8 *)$arg1, $arg2, $arg3)")
   public static @Unsigned @OriginalName("acpi_status") int acpi_ut_evaluate_numeric_object(
       String object_name, Ptr<acpi_namespace_node> device_node,
       Ptr<java.lang. @Unsigned Long> value) {
@@ -12916,7 +12917,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_evaluate_object($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_ut_evaluate_object($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @Unsigned @OriginalName("acpi_status") int acpi_ut_evaluate_object(
       Ptr<acpi_namespace_node> prefix_node, String path, @Unsigned int expected_return_btypes,
       Ptr<Ptr<acpi_operand_object>> return_desc) {
@@ -12967,7 +12968,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_exit($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_ut_exit($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void acpi_ut_exit(@Unsigned int line_number, String function_name,
       String module_name, @Unsigned int component_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -13047,7 +13048,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const union acpi_predefined_info*)acpi_ut_get_next_predefined_method((const union acpi_predefined_info*)$arg1))")
+  @BuiltinBPFFunction("((const union acpi_predefined_info*)acpi_ut_get_next_predefined_method((const union acpi_predefined_info *)$arg1))")
   public static Ptr<acpi_predefined_info> acpi_ut_get_next_predefined_method(
       Ptr<acpi_predefined_info> this_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -13201,7 +13202,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_method_error((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("acpi_ut_method_error((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static void acpi_ut_method_error(String module_name, @Unsigned int line_number,
       String message, Ptr<acpi_namespace_node> prefix_node, String path,
       @Unsigned @OriginalName("acpi_status") int method_status) {
@@ -13235,28 +13236,28 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_predefined_bios_error((const u8*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6_)")
+  @BuiltinBPFFunction("acpi_ut_predefined_bios_error((const u8 *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6_)")
   public static void acpi_ut_predefined_bios_error(String module_name, @Unsigned int line_number,
       String pathname, @Unsigned short node_flags, String format, java.lang.Object... param5) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_predefined_info((const u8*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6_)")
+  @BuiltinBPFFunction("acpi_ut_predefined_info((const u8 *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6_)")
   public static void acpi_ut_predefined_info(String module_name, @Unsigned int line_number,
       String pathname, @Unsigned short node_flags, String format, java.lang.Object... param5) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_predefined_warning((const u8*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6_)")
+  @BuiltinBPFFunction("acpi_ut_predefined_warning((const u8 *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6_)")
   public static void acpi_ut_predefined_warning(String module_name, @Unsigned int line_number,
       String pathname, @Unsigned short node_flags, String format, java.lang.Object... param5) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_prefixed_namespace_error((const u8*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("acpi_ut_prefixed_namespace_error((const u8 *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static void acpi_ut_prefixed_namespace_error(String module_name, @Unsigned int line_number,
       Ptr<acpi_generic_state> prefix_scope, String internal_path,
       @Unsigned @OriginalName("acpi_status") int lookup_status) {
@@ -13270,7 +13271,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_ptr_exit($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("acpi_ut_ptr_exit($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void acpi_ut_ptr_exit(@Unsigned int line_number, String function_name,
       String module_name, @Unsigned int component_id, Ptr<java.lang.Character> ptr) {
     throw new MethodIsBPFRelatedFunction();
@@ -13421,7 +13422,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_status_exit($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("acpi_ut_status_exit($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void acpi_ut_status_exit(@Unsigned int line_number, String function_name,
       String module_name, @Unsigned int component_id,
       @Unsigned @OriginalName("acpi_status") int status) {
@@ -13429,7 +13430,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_str_exit($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("acpi_ut_str_exit($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, (const u8 *)$arg5)")
   public static void acpi_ut_str_exit(@Unsigned int line_number, String function_name,
       String module_name, @Unsigned int component_id, String string) {
     throw new MethodIsBPFRelatedFunction();
@@ -13467,28 +13468,28 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_trace($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("acpi_ut_trace($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void acpi_ut_trace(@Unsigned int line_number, String function_name,
       String module_name, @Unsigned int component_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_trace_ptr($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, (const void*)$arg5)")
+  @BuiltinBPFFunction("acpi_ut_trace_ptr($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, (const void *)$arg5)")
   public static void acpi_ut_trace_ptr(@Unsigned int line_number, String function_name,
       String module_name, @Unsigned int component_id, Ptr<?> pointer) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_trace_str($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("acpi_ut_trace_str($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, (const u8 *)$arg5)")
   public static void acpi_ut_trace_str(@Unsigned int line_number, String function_name,
       String module_name, @Unsigned int component_id, String string) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_trace_u32($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("acpi_ut_trace_u32($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void acpi_ut_trace_u32(@Unsigned int line_number, String function_name,
       String module_name, @Unsigned int component_id, @Unsigned int integer) {
     throw new MethodIsBPFRelatedFunction();
@@ -13567,7 +13568,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_ut_value_exit($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("acpi_ut_value_exit($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void acpi_ut_value_exit(@Unsigned int line_number, String function_name,
       String module_name, @Unsigned int component_id, @Unsigned long value) {
     throw new MethodIsBPFRelatedFunction();
@@ -13657,7 +13658,7 @@ public final class AcpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("acpi_warning((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("acpi_warning((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void acpi_warning(String module_name, @Unsigned int line_number, String format,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();

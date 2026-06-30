@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class BlkcgDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("blkcg_activate_policy($arg1, (const struct blkcg_policy*)$arg2)")
+  @BuiltinBPFFunction("blkcg_activate_policy($arg1, (const struct blkcg_policy *)$arg2)")
   public static int blkcg_activate_policy(Ptr<gendisk> disk, Ptr<blkcg_policy> pol) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1126,7 +1127,7 @@ public final class BlkcgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blkcg_deactivate_policy($arg1, (const struct blkcg_policy*)$arg2)")
+  @BuiltinBPFFunction("blkcg_deactivate_policy($arg1, (const struct blkcg_policy *)$arg2)")
   public static void blkcg_deactivate_policy(Ptr<gendisk> disk, Ptr<blkcg_policy> pol) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1211,7 +1212,7 @@ public final class BlkcgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blkcg_print_blkgs($arg1, $arg2, (long long unsigned int (*)(struct seq_file*, struct blkg_policy_data*, int))$arg3, (const struct blkcg_policy*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("blkcg_print_blkgs($arg1, $arg2, (long long unsigned int (*)(struct seq_file*, struct blkg_policy_data*, int))$arg3, (const struct blkcg_policy *)$arg4, $arg5, $arg6)")
   public static void blkcg_print_blkgs(Ptr<seq_file> sf, Ptr<blkcg> blkcg, Ptr<?> prfill,
       Ptr<blkcg_policy> pol, int data, boolean show_total) {
     throw new MethodIsBPFRelatedFunction();

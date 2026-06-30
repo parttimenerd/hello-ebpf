@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1116,7 +1117,7 @@ public final class SelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sel_commit_bools_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sel_commit_bools_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sel_commit_bools_write(Ptr<file> filep, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1194,7 +1195,7 @@ public final class SelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sel_make_dir($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sel_make_dir($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<dentry> sel_make_dir(Ptr<dentry> dir, String name,
       Ptr<java.lang. @Unsigned Long> ino) {
     throw new MethodIsBPFRelatedFunction();
@@ -1257,7 +1258,7 @@ public final class SelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sel_netnode_find((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("sel_netnode_find((const void *)$arg1, $arg2)")
   public static Ptr<sel_netnode> sel_netnode_find(Ptr<?> addr, @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1275,14 +1276,14 @@ public final class SelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sel_netnode_sid((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("sel_netnode_sid((const void *)$arg1, $arg2, $arg3)")
   public static int sel_netnode_sid(Ptr<?> addr, @Unsigned short family,
       Ptr<java.lang. @Unsigned Integer> sid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sel_netnode_sid_slow((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("sel_netnode_sid_slow((const void *)$arg1, $arg2, $arg3)")
   public static int sel_netnode_sid_slow(Ptr<?> addr, @Unsigned short family,
       Ptr<java.lang. @Unsigned Integer> sid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1457,21 +1458,21 @@ public final class SelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sel_write_avc_cache_threshold($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sel_write_avc_cache_threshold($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sel_write_avc_cache_threshold(Ptr<file> file,
       String buf, @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sel_write_bool($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sel_write_bool($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sel_write_bool(Ptr<file> filep, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sel_write_checkreqprot($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sel_write_checkreqprot($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sel_write_checkreqprot(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1492,21 +1493,21 @@ public final class SelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sel_write_disable($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sel_write_disable($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sel_write_disable(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sel_write_enforce($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sel_write_enforce($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sel_write_enforce(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sel_write_load($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sel_write_load($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sel_write_load(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1534,7 +1535,7 @@ public final class SelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sel_write_validatetrans($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sel_write_validatetrans($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sel_write_validatetrans(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

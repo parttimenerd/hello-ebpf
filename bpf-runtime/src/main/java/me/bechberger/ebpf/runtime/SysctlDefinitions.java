@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,20 +1091,20 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class SysctlDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_check_table((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("sysctl_check_table((const u8 *)$arg1, $arg2)")
   public static int sysctl_check_table(String path, Ptr<ctl_table_header> header) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_compaction_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_compaction_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sysctl_compaction_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> length, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int sysctl_convert_ctx_access(bpf_access_type type, Ptr<bpf_insn> si,
       Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog, Ptr<java.lang. @Unsigned Integer> target_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1128,21 +1129,21 @@ public final class SysctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_cpy_dir((const struct ctl_dir*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("sysctl_cpy_dir((const struct ctl_dir *)$arg1, $arg2, $arg3)")
   public static @OriginalName("ssize_t") long sysctl_cpy_dir(Ptr<ctl_dir> dir, Ptr<String> bufp,
       Ptr<java.lang. @Unsigned Long> lenp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_delayacct((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_delayacct((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sysctl_delayacct(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_err((const u8*)$arg1, (const struct ctl_table*)$arg2, $arg3, $arg4_)")
+  @BuiltinBPFFunction("sysctl_err((const u8 *)$arg1, (const struct ctl_table *)$arg2, $arg3, $arg4_)")
   public static int sysctl_err(String path, Ptr<ctl_table> table, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1156,7 +1157,7 @@ public final class SysctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)sysctl_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)sysctl_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> sysctl_func_proto(bpf_func_id func_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1180,28 +1181,28 @@ public final class SysctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean sysctl_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_latencytop((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_latencytop((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sysctl_latencytop(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_max_threads((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_max_threads((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sysctl_max_threads(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_min_slab_ratio_sysctl_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_min_slab_ratio_sysctl_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sysctl_min_slab_ratio_sysctl_handler(Ptr<ctl_table> table, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> length,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
@@ -1209,7 +1210,7 @@ public final class SysctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_min_unmapped_ratio_sysctl_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_min_unmapped_ratio_sysctl_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sysctl_min_unmapped_ratio_sysctl_handler(Ptr<ctl_table> table, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> length,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
@@ -1217,7 +1218,7 @@ public final class SysctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_mkdir_p($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("sysctl_mkdir_p($arg1, (const u8 *)$arg2)")
   public static Ptr<ctl_dir> sysctl_mkdir_p(Ptr<ctl_dir> dir, String path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1235,21 +1236,21 @@ public final class SysctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_numa_balancing((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_numa_balancing((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sysctl_numa_balancing(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_panic_print_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_panic_print_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sysctl_panic_print_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_perm($arg1, (const struct ctl_table*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sysctl_perm($arg1, (const struct ctl_table *)$arg2, $arg3)")
   public static int sysctl_perm(Ptr<ctl_table_header> head, Ptr<ctl_table> table, int op) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1273,28 +1274,28 @@ public final class SysctlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_sched_uclamp_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_sched_uclamp_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sysctl_sched_uclamp_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_schedstats((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_schedstats((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sysctl_schedstats(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_sys_info_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_sys_info_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sysctl_sys_info_handler(Ptr<ctl_table> ro_table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysctl_vm_numa_stat_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysctl_vm_numa_stat_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sysctl_vm_numa_stat_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> length, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1130,7 +1131,7 @@ public final class CanDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("can_clear_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("can_clear_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long can_clear_store(Ptr<mddev> mddev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1156,7 +1157,7 @@ public final class CanDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("can_map_frag((const skb_frag*)$arg1)")
+  @BuiltinBPFFunction("can_map_frag((const skb_frag *)$arg1)")
   public static boolean can_map_frag(Ptr<@OriginalName("skb_frag_t") skb_frag> frag) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1168,7 +1169,7 @@ public final class CanDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("can_nice((const struct task_struct*)$arg1, (const int)$arg2)")
+  @BuiltinBPFFunction("can_nice((const struct task_struct *)$arg1, (const int)$arg2)")
   public static int can_nice(Ptr<task_struct> p, int nice) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1192,13 +1193,13 @@ public final class CanDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("can_skip_alu_sanitation((const struct bpf_verifier_env*)$arg1, (const struct bpf_insn*)$arg2)")
+  @BuiltinBPFFunction("can_skip_alu_sanitation((const struct bpf_verifier_env *)$arg1, (const struct bpf_insn *)$arg2)")
   public static boolean can_skip_alu_sanitation(Ptr<bpf_verifier_env> env, Ptr<bpf_insn> insn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("can_skip_ioresource_align((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("can_skip_ioresource_align((const struct dmi_system_id *)$arg1)")
   public static int can_skip_ioresource_align(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }

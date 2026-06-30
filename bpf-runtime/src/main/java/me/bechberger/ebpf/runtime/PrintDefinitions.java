@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1130,13 +1131,13 @@ public final class PrintDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_bool($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("print_bool($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void print_bool(String str, String pfx, @Unsigned long check, @Unsigned long bit) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_bpf_insn((const struct bpf_insn_cbs*)$arg1, (const struct bpf_insn*)$arg2, $arg3)")
+  @BuiltinBPFFunction("print_bpf_insn((const struct bpf_insn_cbs *)$arg1, (const struct bpf_insn *)$arg2, $arg3)")
   public static void print_bpf_insn(Ptr<bpf_insn_cbs> cbs, Ptr<bpf_insn> insn,
       boolean allow_ptr_leaks) {
     throw new MethodIsBPFRelatedFunction();
@@ -1270,7 +1271,7 @@ public final class PrintDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_err_info((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("print_err_info((const u8 *)$arg1, $arg2, $arg3)")
   public static void print_err_info(String pfx, char err_type, @Unsigned long check) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1308,13 +1309,13 @@ public final class PrintDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_filtered($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("print_filtered($arg1, $arg2, (const u8 *)$arg3)")
   public static int print_filtered(String buf, @Unsigned long len, String info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_fixed($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("print_fixed($arg1, $arg2, (const u8 *)$arg3)")
   public static void print_fixed(@Unsigned int base, @Unsigned int step,
       Ptr<java.lang. @OriginalName("mtrr_type") Character> types) {
     throw new MethodIsBPFRelatedFunction();
@@ -1423,21 +1424,21 @@ public final class PrintDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_hex_dump((const u8*)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("print_hex_dump((const u8 *)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, (const void *)$arg6, $arg7, $arg8)")
   public static void print_hex_dump(String level, String prefix_str, int prefix_type, int rowsize,
       int groupsize, Ptr<?> buf, @Unsigned long len, boolean ascii) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_insn_state($arg1, (const struct bpf_verifier_state*)$arg2, $arg3)")
+  @BuiltinBPFFunction("print_insn_state($arg1, (const struct bpf_verifier_state *)$arg2, $arg3)")
   public static void print_insn_state(Ptr<bpf_verifier_env> env, Ptr<bpf_verifier_state> vstate,
       @Unsigned int frameno) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_ip_ins((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("print_ip_ins((const u8 *)$arg1, (const u8 *)$arg2)")
   public static void print_ip_ins(String fmt, String p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1548,7 +1549,7 @@ public final class PrintDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_reg_state($arg1, (const struct bpf_func_state*)$arg2, (const struct bpf_reg_state*)$arg3)")
+  @BuiltinBPFFunction("print_reg_state($arg1, (const struct bpf_func_state *)$arg2, (const struct bpf_reg_state *)$arg3)")
   public static void print_reg_state(Ptr<bpf_verifier_env> env, Ptr<bpf_func_state> state,
       Ptr<bpf_reg_state> reg) {
     throw new MethodIsBPFRelatedFunction();
@@ -1573,14 +1574,14 @@ public final class PrintDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_scalar_ranges($arg1, (const struct bpf_reg_state*)$arg2, (const u8**)$arg3)")
+  @BuiltinBPFFunction("print_scalar_ranges($arg1, (const struct bpf_reg_state *)$arg2, (const u8**)$arg3)")
   public static void print_scalar_ranges(Ptr<bpf_verifier_env> env, Ptr<bpf_reg_state> reg,
       Ptr<String> sep) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_scx_info((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("print_scx_info((const u8 *)$arg1, $arg2)")
   public static void print_scx_info(String log_lvl, Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1593,13 +1594,13 @@ public final class PrintDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_slab_info((const struct slab*)$arg1)")
+  @BuiltinBPFFunction("print_slab_info((const struct slab *)$arg1)")
   public static void print_slab_info(Ptr<slab> slab) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_stop_info((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("print_stop_info((const u8 *)$arg1, $arg2)")
   public static void print_stop_info(String log_lvl, Ptr<task_struct> task) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1801,7 +1802,7 @@ public final class PrintDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_verifier_state($arg1, (const struct bpf_verifier_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("print_verifier_state($arg1, (const struct bpf_verifier_state *)$arg2, $arg3, $arg4)")
   public static void print_verifier_state(Ptr<bpf_verifier_env> env, Ptr<bpf_verifier_state> vstate,
       @Unsigned int frameno, boolean print_all) {
     throw new MethodIsBPFRelatedFunction();
@@ -1820,7 +1821,7 @@ public final class PrintDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("print_worker_info((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("print_worker_info((const u8 *)$arg1, $arg2)")
   public static void print_worker_info(String log_lvl, Ptr<task_struct> task) {
     throw new MethodIsBPFRelatedFunction();
   }

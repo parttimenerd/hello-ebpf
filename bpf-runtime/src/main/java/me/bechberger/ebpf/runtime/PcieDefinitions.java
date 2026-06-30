@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1150,7 +1151,7 @@ public final class PcieDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcie_aspm_get_policy($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("pcie_aspm_get_policy($arg1, (const struct kernel_param *)$arg2)")
   public static int pcie_aspm_get_policy(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1174,7 +1175,7 @@ public final class PcieDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcie_aspm_set_policy((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("pcie_aspm_set_policy((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int pcie_aspm_set_policy(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1247,19 +1248,19 @@ public final class PcieDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcie_cap_has_lnkctl((const struct pci_dev*)$arg1)")
+  @BuiltinBPFFunction("pcie_cap_has_lnkctl((const struct pci_dev *)$arg1)")
   public static boolean pcie_cap_has_lnkctl(Ptr<pci_dev> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcie_cap_has_lnkctl2((const struct pci_dev*)$arg1)")
+  @BuiltinBPFFunction("pcie_cap_has_lnkctl2((const struct pci_dev *)$arg1)")
   public static boolean pcie_cap_has_lnkctl2(Ptr<pci_dev> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcie_cap_has_rtctl((const struct pci_dev*)$arg1)")
+  @BuiltinBPFFunction("pcie_cap_has_rtctl((const struct pci_dev *)$arg1)")
   public static boolean pcie_cap_has_rtctl(Ptr<pci_dev> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1600,7 +1601,7 @@ public final class PcieDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcie_port_bus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("pcie_port_bus_match($arg1, (const struct device_driver *)$arg2)")
   public static int pcie_port_bus_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1723,7 +1724,7 @@ public final class PcieDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcie_portdrv_probe($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("pcie_portdrv_probe($arg1, (const struct pci_device_id *)$arg2)")
   public static int pcie_portdrv_probe(Ptr<pci_dev> dev, Ptr<pci_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1754,14 +1755,14 @@ public final class PcieDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcie_print_tlp_log((const struct pci_dev*)$arg1, (const struct pcie_tlp_log*)$arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("pcie_print_tlp_log((const struct pci_dev *)$arg1, (const struct pcie_tlp_log *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static void pcie_print_tlp_log(Ptr<pci_dev> dev, Ptr<pcie_tlp_log> log, String level,
       String pfx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcie_ptm_create_debugfs($arg1, $arg2, (const struct pcie_ptm_ops*)$arg3)")
+  @BuiltinBPFFunction("pcie_ptm_create_debugfs($arg1, $arg2, (const struct pcie_ptm_ops *)$arg3)")
   public static Ptr<pci_ptm_debugfs> pcie_ptm_create_debugfs(Ptr<device> dev, Ptr<?> pdata,
       Ptr<pcie_ptm_ops> ops) {
     throw new MethodIsBPFRelatedFunction();

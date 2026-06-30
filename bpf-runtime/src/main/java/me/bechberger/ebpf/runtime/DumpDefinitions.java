@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DumpDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__dump_emit($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__dump_emit($arg1, (const void *)$arg2, $arg3)")
   public static int __dump_emit(Ptr<coredump_params> cprm, Ptr<?> addr, int nr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1103,14 +1104,14 @@ public final class DumpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__dump_mmp_msg($arg1, $arg2, (const u8*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("__dump_mmp_msg($arg1, $arg2, (const u8 *)$arg3, $arg4, (const u8 *)$arg5)")
   public static void __dump_mmp_msg(Ptr<super_block> sb, Ptr<mmp_struct> mmp, String function,
       @Unsigned int line, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__dump_page((const struct page*)$arg1)")
+  @BuiltinBPFFunction("__dump_page((const struct page *)$arg1)")
   public static void __dump_page(Ptr<page> page) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1134,7 +1135,7 @@ public final class DumpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dump_common_audit_data($arg1, (const struct common_audit_data*)$arg2)")
+  @BuiltinBPFFunction("dump_common_audit_data($arg1, (const struct common_audit_data *)$arg2)")
   public static void dump_common_audit_data(Ptr<audit_buffer> ab, Ptr<common_audit_data> a) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1153,7 +1154,7 @@ public final class DumpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dump_emit($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dump_emit($arg1, (const void *)$arg2, $arg3)")
   public static int dump_emit(Ptr<coredump_params> cprm, Ptr<?> addr, int nr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1165,13 +1166,13 @@ public final class DumpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dump_hmem_attrs($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("dump_hmem_attrs($arg1, (const u8 *)$arg2)")
   public static void dump_hmem_attrs(Ptr<access_coordinate> coord, String prefix) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dump_inode($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("dump_inode($arg1, (const u8 *)$arg2)")
   public static void dump_inode(Ptr<inode> inode, String reason) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1195,13 +1196,13 @@ public final class DumpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dump_line($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("dump_line($arg1, (const u8 *)$arg2, $arg3_)")
   public static void dump_line(Ptr<seq_buf> s, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dump_mapping((const struct address_space*)$arg1)")
+  @BuiltinBPFFunction("dump_mapping((const struct address_space *)$arg1)")
   public static void dump_mapping(Ptr<address_space> mapping) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1219,7 +1220,7 @@ public final class DumpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dump_page((const struct page*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("dump_page((const struct page *)$arg1, (const u8 *)$arg2)")
   public static void dump_page(Ptr<page> page, String reason) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1249,13 +1250,13 @@ public final class DumpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dump_security_xattr((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dump_security_xattr((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static void dump_security_xattr(String name, String value, @Unsigned long value_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dump_security_xattr_l((const u8*)$arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dump_security_xattr_l((const u8 *)$arg1, (const void *)$arg2, $arg3)")
   public static void dump_security_xattr_l(String prefix, Ptr<?> src, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1286,19 +1287,19 @@ public final class DumpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dump_stack_lvl((const u8*)$arg1)")
+  @BuiltinBPFFunction("dump_stack_lvl((const u8 *)$arg1)")
   public static void dump_stack_lvl(String log_lvl) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dump_stack_print_info((const u8*)$arg1)")
+  @BuiltinBPFFunction("dump_stack_print_info((const u8 *)$arg1)")
   public static void dump_stack_print_info(String log_lvl) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dump_stack_set_arch_desc((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("dump_stack_set_arch_desc((const u8 *)$arg1, $arg2_)")
   public static void dump_stack_set_arch_desc(String fmt, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }

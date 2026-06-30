@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class AvtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("avtab_alloc_dup($arg1, (const struct avtab*)$arg2)")
+  @BuiltinBPFFunction("avtab_alloc_dup($arg1, (const struct avtab *)$arg2)")
   public static int avtab_alloc_dup(Ptr<avtab> _new, Ptr<avtab> orig) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1120,21 +1121,21 @@ public final class AvtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("avtab_insert_node($arg1, $arg2, (const struct avtab_key*)$arg3, (const struct avtab_datum*)$arg4)")
+  @BuiltinBPFFunction("avtab_insert_node($arg1, $arg2, (const struct avtab_key *)$arg3, (const struct avtab_datum *)$arg4)")
   public static Ptr<avtab_node> avtab_insert_node(Ptr<avtab> h, Ptr<Ptr<avtab_node>> dst,
       Ptr<avtab_key> key, Ptr<avtab_datum> datum) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("avtab_insert_nonunique($arg1, (const struct avtab_key*)$arg2, (const struct avtab_datum*)$arg3)")
+  @BuiltinBPFFunction("avtab_insert_nonunique($arg1, (const struct avtab_key *)$arg2, (const struct avtab_datum *)$arg3)")
   public static Ptr<avtab_node> avtab_insert_nonunique(Ptr<avtab> h, Ptr<avtab_key> key,
       Ptr<avtab_datum> datum) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("avtab_insertf($arg1, (const struct avtab_key*)$arg2, (const struct avtab_datum*)$arg3, $arg4)")
+  @BuiltinBPFFunction("avtab_insertf($arg1, (const struct avtab_key *)$arg2, (const struct avtab_datum *)$arg3, $arg4)")
   public static int avtab_insertf(Ptr<avtab> a, Ptr<avtab_key> k, Ptr<avtab_datum> d, Ptr<?> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1153,7 +1154,7 @@ public final class AvtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("avtab_search_node($arg1, (const struct avtab_key*)$arg2)")
+  @BuiltinBPFFunction("avtab_search_node($arg1, (const struct avtab_key *)$arg2)")
   public static Ptr<avtab_node> avtab_search_node(Ptr<avtab> h, Ptr<avtab_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1172,7 +1173,7 @@ public final class AvtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("avtab_write_item($arg1, (const struct avtab_node*)$arg2, $arg3)")
+  @BuiltinBPFFunction("avtab_write_item($arg1, (const struct avtab_node *)$arg2, $arg3)")
   public static int avtab_write_item(Ptr<policydb> p, Ptr<avtab_node> cur, Ptr<policy_file> fp) {
     throw new MethodIsBPFRelatedFunction();
   }

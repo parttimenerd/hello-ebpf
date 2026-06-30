@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1197,7 +1198,7 @@ public final class Tpm2Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm2_get_tpm_pt($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("tpm2_get_tpm_pt($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static @OriginalName("ssize_t") long tpm2_get_tpm_pt(Ptr<tpm_chip> chip,
       @Unsigned int property_id, Ptr<java.lang. @Unsigned Integer> value, String desc) {
     throw new MethodIsBPFRelatedFunction();
@@ -1224,28 +1225,28 @@ public final class Tpm2Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm2_key_parent($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("tpm2_key_parent($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int tpm2_key_parent(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm2_key_priv($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("tpm2_key_priv($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int tpm2_key_priv(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm2_key_pub($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("tpm2_key_pub($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int tpm2_key_pub(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm2_key_type($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("tpm2_key_type($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int tpm2_key_type(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();

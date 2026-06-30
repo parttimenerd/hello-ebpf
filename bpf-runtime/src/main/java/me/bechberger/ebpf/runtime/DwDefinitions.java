@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1418,7 +1419,7 @@ public final class DwDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dw_pcie_find_vsec_capability($arg1, (const struct dwc_pcie_vsec_id*)$arg2)")
+  @BuiltinBPFFunction("dw_pcie_find_vsec_capability($arg1, (const struct dwc_pcie_vsec_id *)$arg2)")
   public static @Unsigned short dw_pcie_find_vsec_capability(Ptr<dw_pcie> pci,
       Ptr<dwc_pcie_vsec_id> vsec_ids) {
     throw new MethodIsBPFRelatedFunction();
@@ -1512,7 +1513,7 @@ public final class DwDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dw_pcie_parent_bus_offset($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dw_pcie_parent_bus_offset($arg1, (const u8 *)$arg2, $arg3)")
   public static @Unsigned @OriginalName("resource_size_t") long dw_pcie_parent_bus_offset(
       Ptr<dw_pcie> pci, String reg_name,
       @Unsigned @OriginalName("resource_size_t") long cpu_phys_addr) {
@@ -1534,7 +1535,7 @@ public final class DwDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dw_pcie_prog_outbound_atu($arg1, (const struct dw_pcie_ob_atu_cfg*)$arg2)")
+  @BuiltinBPFFunction("dw_pcie_prog_outbound_atu($arg1, (const struct dw_pcie_ob_atu_cfg *)$arg2)")
   public static int dw_pcie_prog_outbound_atu(Ptr<dw_pcie> pci, Ptr<dw_pcie_ob_atu_cfg> atu) {
     throw new MethodIsBPFRelatedFunction();
   }

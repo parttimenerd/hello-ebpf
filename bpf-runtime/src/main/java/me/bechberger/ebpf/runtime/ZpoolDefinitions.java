@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class ZpoolDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("zpool_create_pool((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("zpool_create_pool((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<zpool> zpool_create_pool(String type, String name,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1109,7 +1110,7 @@ public final class ZpoolDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zpool_get_driver((const u8*)$arg1)")
+  @BuiltinBPFFunction("zpool_get_driver((const u8 *)$arg1)")
   public static Ptr<zpool_driver> zpool_get_driver(String type) {
     throw new MethodIsBPFRelatedFunction();
   }

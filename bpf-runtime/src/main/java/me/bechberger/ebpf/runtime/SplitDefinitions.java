@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1209,7 +1210,7 @@ public final class SplitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("split_huge_pages_in_file((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("split_huge_pages_in_file((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int split_huge_pages_in_file(String file_path, @Unsigned long off_start,
       @Unsigned long off_end, @Unsigned int new_order, long in_folio_offset) {
     throw new MethodIsBPFRelatedFunction();
@@ -1223,7 +1224,7 @@ public final class SplitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("split_huge_pages_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("split_huge_pages_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long split_huge_pages_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1302,7 +1303,7 @@ public final class SplitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("split_underused_thp_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("split_underused_thp_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long split_underused_thp_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1156,7 +1157,7 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__sched_setscheduler($arg1, (const struct sched_attr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__sched_setscheduler($arg1, (const struct sched_attr *)$arg2, $arg3, $arg4)")
   public static int __sched_setscheduler(Ptr<task_struct> p, Ptr<sched_attr> attr, boolean user,
       boolean pi) {
     throw new MethodIsBPFRelatedFunction();
@@ -1205,7 +1206,7 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_autogroup_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sched_autogroup_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sched_autogroup_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> offset) {
     throw new MethodIsBPFRelatedFunction();
@@ -1615,7 +1616,7 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_dl_overflow($arg1, $arg2, (const struct sched_attr*)$arg3)")
+  @BuiltinBPFFunction("sched_dl_overflow($arg1, $arg2, (const struct sched_attr *)$arg3)")
   public static int sched_dl_overflow(Ptr<task_struct> p, int policy, Ptr<sched_attr> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1658,7 +1659,7 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_dynamic_mode((const u8*)$arg1)")
+  @BuiltinBPFFunction("sched_dynamic_mode((const u8 *)$arg1)")
   public static int sched_dynamic_mode(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1682,14 +1683,14 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_dynamic_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sched_dynamic_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sched_dynamic_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_energy_aware_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sched_energy_aware_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sched_energy_aware_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1893,7 +1894,7 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_ext_ops__set_cpumask($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("sched_ext_ops__set_cpumask($arg1, (const struct cpumask *)$arg2)")
   public static void sched_ext_ops__set_cpumask(Ptr<task_struct> p, Ptr<cpumask> mask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1941,7 +1942,7 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_fair_server_period_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sched_fair_server_period_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sched_fair_server_period_write(Ptr<file> filp,
       String ubuf, @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1960,7 +1961,7 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_fair_server_runtime_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sched_fair_server_runtime_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sched_fair_server_runtime_write(Ptr<file> filp,
       String ubuf, @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1985,7 +1986,7 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_feat_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sched_feat_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sched_feat_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2065,7 +2066,7 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_init_domains((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("sched_init_domains((const struct cpumask *)$arg1)")
   public static int sched_init_domains(Ptr<cpumask> cpu_map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2089,13 +2090,13 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_is_eas_possible((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("sched_is_eas_possible((const struct cpumask *)$arg1)")
   public static boolean sched_is_eas_possible(Ptr<cpumask> cpu_mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_itmt_enabled_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sched_itmt_enabled_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sched_itmt_enabled_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2150,13 +2151,13 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_numa_find_closest((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("sched_numa_find_closest((const struct cpumask *)$arg1, $arg2)")
   public static int sched_numa_find_closest(Ptr<cpumask> cpus, int cpu) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_numa_find_nth_cpu((const struct cpumask*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("sched_numa_find_nth_cpu((const struct cpumask *)$arg1, $arg2, $arg3)")
   public static int sched_numa_find_nth_cpu(Ptr<cpumask> cpus, int cpu, int node) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2168,7 +2169,7 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_numa_warn((const u8*)$arg1)")
+  @BuiltinBPFFunction("sched_numa_warn((const u8 *)$arg1)")
   public static void sched_numa_warn(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2204,7 +2205,7 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_rq_cmp($arg1, (const struct list_head*)$arg2, (const struct list_head*)$arg3)")
+  @BuiltinBPFFunction("sched_rq_cmp($arg1, (const struct list_head *)$arg2, (const struct list_head *)$arg3)")
   public static int sched_rq_cmp(Ptr<?> priv, Ptr<list_head> a, Ptr<list_head> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2216,14 +2217,14 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_rr_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sched_rr_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sched_rr_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_rt_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sched_rt_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sched_rt_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2248,7 +2249,7 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_scaling_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sched_scaling_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sched_scaling_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2297,19 +2298,19 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_setaffinity($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("sched_setaffinity($arg1, (const struct cpumask *)$arg2)")
   public static long sched_setaffinity(@OriginalName("pid_t") int pid, Ptr<cpumask> in_mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_setattr($arg1, (const struct sched_attr*)$arg2)")
+  @BuiltinBPFFunction("sched_setattr($arg1, (const struct sched_attr *)$arg2)")
   public static int sched_setattr(Ptr<task_struct> p, Ptr<sched_attr> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_setattr_nocheck($arg1, (const struct sched_attr*)$arg2)")
+  @BuiltinBPFFunction("sched_setattr_nocheck($arg1, (const struct sched_attr *)$arg2)")
   public static int sched_setattr_nocheck(Ptr<task_struct> p, Ptr<sched_attr> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2321,13 +2322,13 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_setscheduler($arg1, $arg2, (const struct sched_param*)$arg3)")
+  @BuiltinBPFFunction("sched_setscheduler($arg1, $arg2, (const struct sched_param *)$arg3)")
   public static int sched_setscheduler(Ptr<task_struct> p, int policy, Ptr<sched_param> param) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_setscheduler_nocheck($arg1, $arg2, (const struct sched_param*)$arg3)")
+  @BuiltinBPFFunction("sched_setscheduler_nocheck($arg1, $arg2, (const struct sched_param *)$arg3)")
   public static int sched_setscheduler_nocheck(Ptr<task_struct> p, int policy,
       Ptr<sched_param> param) {
     throw new MethodIsBPFRelatedFunction();
@@ -2430,14 +2431,14 @@ public final class SchedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_verbose_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sched_verbose_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sched_verbose_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sched_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sched_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sched_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> offset) {
     throw new MethodIsBPFRelatedFunction();

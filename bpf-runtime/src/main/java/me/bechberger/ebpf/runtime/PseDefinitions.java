@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1140,7 +1141,7 @@ public final class PseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pse_ethtool_set_config($arg1, $arg2, (const struct pse_control_config*)$arg3)")
+  @BuiltinBPFFunction("pse_ethtool_set_config($arg1, $arg2, (const struct pse_control_config *)$arg3)")
   public static int pse_ethtool_set_config(Ptr<pse_control> psec, Ptr<netlink_ext_ack> extack,
       Ptr<pse_control_config> config) {
     throw new MethodIsBPFRelatedFunction();
@@ -1161,7 +1162,7 @@ public final class PseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pse_fill_reply($arg1, (const struct ethnl_req_info*)$arg2, (const struct ethnl_reply_data*)$arg3)")
+  @BuiltinBPFFunction("pse_fill_reply($arg1, (const struct ethnl_req_info *)$arg2, (const struct ethnl_reply_data *)$arg3)")
   public static int pse_fill_reply(Ptr<sk_buff> skb, Ptr<ethnl_req_info> req_base,
       Ptr<ethnl_reply_data> reply_base) {
     throw new MethodIsBPFRelatedFunction();
@@ -1236,7 +1237,7 @@ public final class PseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pse_prepare_data((const struct ethnl_req_info*)$arg1, $arg2, (const struct genl_info*)$arg3)")
+  @BuiltinBPFFunction("pse_prepare_data((const struct ethnl_req_info *)$arg1, $arg2, (const struct genl_info *)$arg3)")
   public static int pse_prepare_data(Ptr<ethnl_req_info> req_base, Ptr<ethnl_reply_data> reply_base,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1256,7 +1257,7 @@ public final class PseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pse_reply_size((const struct ethnl_req_info*)$arg1, (const struct ethnl_reply_data*)$arg2)")
+  @BuiltinBPFFunction("pse_reply_size((const struct ethnl_req_info *)$arg1, (const struct ethnl_reply_data *)$arg2)")
   public static int pse_reply_size(Ptr<ethnl_req_info> req_base, Ptr<ethnl_reply_data> reply_base) {
     throw new MethodIsBPFRelatedFunction();
   }

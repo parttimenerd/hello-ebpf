@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1131,7 +1132,7 @@ public final class ValidateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("validate_dsm($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("validate_dsm($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int validate_dsm(@OriginalName("acpi_handle") Ptr<?> handle, String uuid, int rev,
       Ptr<@OriginalName("guid_t") uuid_t> dsm_guid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1179,7 +1180,7 @@ public final class ValidateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("validate_nla((const struct nlattr*)$arg1, $arg2, (const struct nla_policy*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("validate_nla((const struct nlattr *)$arg1, $arg2, (const struct nla_policy *)$arg3, $arg4, $arg5, $arg6)")
   public static int validate_nla(Ptr<nlattr> nla, int maxtype, Ptr<nla_policy> policy,
       @Unsigned int validate, Ptr<netlink_ext_ack> extack, @Unsigned int depth) {
     throw new MethodIsBPFRelatedFunction();
@@ -1235,7 +1236,7 @@ public final class ValidateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("validate_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("validate_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long validate_store(Ptr<kmem_cache> s, String buf,
       @Unsigned long length) {
     throw new MethodIsBPFRelatedFunction();

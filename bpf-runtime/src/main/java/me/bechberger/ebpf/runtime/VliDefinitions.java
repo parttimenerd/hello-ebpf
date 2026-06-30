@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,34 +1091,34 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class VliDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_cmp((const long long unsigned int*)$arg1, (const long long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("vli_cmp((const long long unsigned int *)$arg1, (const long long unsigned int *)$arg2, $arg3)")
   public static int vli_cmp(Ptr<java.lang. @Unsigned Long> left,
       Ptr<java.lang. @Unsigned Long> right, @Unsigned int ndigits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_from_be64($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("vli_from_be64($arg1, (const void *)$arg2, $arg3)")
   public static void vli_from_be64(Ptr<java.lang. @Unsigned Long> dest, Ptr<?> src,
       @Unsigned int ndigits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_from_le64($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("vli_from_le64($arg1, (const void *)$arg2, $arg3)")
   public static void vli_from_le64(Ptr<java.lang. @Unsigned Long> dest, Ptr<?> src,
       @Unsigned int ndigits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_is_zero((const long long unsigned int*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vli_is_zero((const long long unsigned int *)$arg1, $arg2)")
   public static boolean vli_is_zero(Ptr<java.lang. @Unsigned Long> vli, @Unsigned int ndigits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mmod_barrett($arg1, $arg2, (const long long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vli_mmod_barrett($arg1, $arg2, (const long long unsigned int *)$arg3, $arg4)")
   public static void vli_mmod_barrett(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> product, Ptr<java.lang. @Unsigned Long> mod,
       @Unsigned int ndigits) {
@@ -1125,14 +1126,14 @@ public final class VliDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mmod_fast($arg1, $arg2, (const struct ecc_curve*)$arg3)")
+  @BuiltinBPFFunction("vli_mmod_fast($arg1, $arg2, (const struct ecc_curve *)$arg3)")
   public static boolean vli_mmod_fast(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> product, Ptr<ecc_curve> curve) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mmod_fast_256($arg1, (const long long unsigned int*)$arg2, (const long long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vli_mmod_fast_256($arg1, (const long long unsigned int *)$arg2, (const long long unsigned int *)$arg3, $arg4)")
   public static void vli_mmod_fast_256(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> product, Ptr<java.lang. @Unsigned Long> curve_prime,
       Ptr<java.lang. @Unsigned Long> tmp) {
@@ -1140,7 +1141,7 @@ public final class VliDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mmod_fast_384($arg1, (const long long unsigned int*)$arg2, (const long long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vli_mmod_fast_384($arg1, (const long long unsigned int *)$arg2, (const long long unsigned int *)$arg3, $arg4)")
   public static void vli_mmod_fast_384(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> product, Ptr<java.lang. @Unsigned Long> curve_prime,
       Ptr<java.lang. @Unsigned Long> tmp) {
@@ -1148,7 +1149,7 @@ public final class VliDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mmod_slow($arg1, $arg2, (const long long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vli_mmod_slow($arg1, $arg2, (const long long unsigned int *)$arg3, $arg4)")
   public static void vli_mmod_slow(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> product, Ptr<java.lang. @Unsigned Long> mod,
       @Unsigned int ndigits) {
@@ -1156,7 +1157,7 @@ public final class VliDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mmod_special($arg1, (const long long unsigned int*)$arg2, (const long long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vli_mmod_special($arg1, (const long long unsigned int *)$arg2, (const long long unsigned int *)$arg3, $arg4)")
   public static void vli_mmod_special(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> product, Ptr<java.lang. @Unsigned Long> mod,
       @Unsigned int ndigits) {
@@ -1164,7 +1165,7 @@ public final class VliDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mmod_special2($arg1, (const long long unsigned int*)$arg2, (const long long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vli_mmod_special2($arg1, (const long long unsigned int *)$arg2, (const long long unsigned int *)$arg3, $arg4)")
   public static void vli_mmod_special2(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> product, Ptr<java.lang. @Unsigned Long> mod,
       @Unsigned int ndigits) {
@@ -1172,7 +1173,7 @@ public final class VliDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mod_add($arg1, (const long long unsigned int*)$arg2, (const long long unsigned int*)$arg3, (const long long unsigned int*)$arg4, $arg5)")
+  @BuiltinBPFFunction("vli_mod_add($arg1, (const long long unsigned int *)$arg2, (const long long unsigned int *)$arg3, (const long long unsigned int *)$arg4, $arg5)")
   public static void vli_mod_add(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> left, Ptr<java.lang. @Unsigned Long> right,
       Ptr<java.lang. @Unsigned Long> mod, @Unsigned int ndigits) {
@@ -1180,7 +1181,7 @@ public final class VliDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mod_inv($arg1, (const long long unsigned int*)$arg2, (const long long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vli_mod_inv($arg1, (const long long unsigned int *)$arg2, (const long long unsigned int *)$arg3, $arg4)")
   public static void vli_mod_inv(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> input, Ptr<java.lang. @Unsigned Long> mod,
       @Unsigned int ndigits) {
@@ -1188,7 +1189,7 @@ public final class VliDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mod_mult_fast($arg1, (const long long unsigned int*)$arg2, (const long long unsigned int*)$arg3, (const struct ecc_curve*)$arg4)")
+  @BuiltinBPFFunction("vli_mod_mult_fast($arg1, (const long long unsigned int *)$arg2, (const long long unsigned int *)$arg3, (const struct ecc_curve *)$arg4)")
   public static void vli_mod_mult_fast(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> left, Ptr<java.lang. @Unsigned Long> right,
       Ptr<ecc_curve> curve) {
@@ -1196,7 +1197,7 @@ public final class VliDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mod_mult_slow($arg1, (const long long unsigned int*)$arg2, (const long long unsigned int*)$arg3, (const long long unsigned int*)$arg4, $arg5)")
+  @BuiltinBPFFunction("vli_mod_mult_slow($arg1, (const long long unsigned int *)$arg2, (const long long unsigned int *)$arg3, (const long long unsigned int *)$arg4, $arg5)")
   public static void vli_mod_mult_slow(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> left, Ptr<java.lang. @Unsigned Long> right,
       Ptr<java.lang. @Unsigned Long> mod, @Unsigned int ndigits) {
@@ -1204,14 +1205,14 @@ public final class VliDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mod_square_fast($arg1, (const long long unsigned int*)$arg2, (const struct ecc_curve*)$arg3)")
+  @BuiltinBPFFunction("vli_mod_square_fast($arg1, (const long long unsigned int *)$arg2, (const struct ecc_curve *)$arg3)")
   public static void vli_mod_square_fast(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> left, Ptr<ecc_curve> curve) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mod_sub($arg1, (const long long unsigned int*)$arg2, (const long long unsigned int*)$arg3, (const long long unsigned int*)$arg4, $arg5)")
+  @BuiltinBPFFunction("vli_mod_sub($arg1, (const long long unsigned int *)$arg2, (const long long unsigned int *)$arg3, (const long long unsigned int *)$arg4, $arg5)")
   public static void vli_mod_sub(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> left, Ptr<java.lang. @Unsigned Long> right,
       Ptr<java.lang. @Unsigned Long> mod, @Unsigned int ndigits) {
@@ -1219,7 +1220,7 @@ public final class VliDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_mult($arg1, (const long long unsigned int*)$arg2, (const long long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vli_mult($arg1, (const long long unsigned int *)$arg2, (const long long unsigned int *)$arg3, $arg4)")
   public static void vli_mult(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> left, Ptr<java.lang. @Unsigned Long> right,
       @Unsigned int ndigits) {
@@ -1227,14 +1228,14 @@ public final class VliDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_num_bits((const long long unsigned int*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vli_num_bits((const long long unsigned int *)$arg1, $arg2)")
   public static @Unsigned int vli_num_bits(Ptr<java.lang. @Unsigned Long> vli,
       @Unsigned int ndigits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_sub($arg1, (const long long unsigned int*)$arg2, (const long long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vli_sub($arg1, (const long long unsigned int *)$arg2, (const long long unsigned int *)$arg3, $arg4)")
   public static @Unsigned long vli_sub(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> left, Ptr<java.lang. @Unsigned Long> right,
       @Unsigned int ndigits) {
@@ -1242,7 +1243,7 @@ public final class VliDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vli_umult($arg1, (const long long unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vli_umult($arg1, (const long long unsigned int *)$arg2, $arg3, $arg4)")
   public static void vli_umult(Ptr<java.lang. @Unsigned Long> result,
       Ptr<java.lang. @Unsigned Long> left, @Unsigned int right, @Unsigned int ndigits) {
     throw new MethodIsBPFRelatedFunction();

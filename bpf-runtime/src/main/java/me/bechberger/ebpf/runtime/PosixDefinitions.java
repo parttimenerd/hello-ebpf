@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1126,7 +1127,7 @@ public final class PosixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("posix_acl_clone((const struct posix_acl*)$arg1, $arg2)")
+  @BuiltinBPFFunction("posix_acl_clone((const struct posix_acl *)$arg1, $arg2)")
   public static Ptr<posix_acl> posix_acl_clone(Ptr<posix_acl> acl,
       @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1148,7 +1149,7 @@ public final class PosixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("posix_acl_equiv_mode((const struct posix_acl*)$arg1, $arg2)")
+  @BuiltinBPFFunction("posix_acl_equiv_mode((const struct posix_acl *)$arg1, $arg2)")
   public static int posix_acl_equiv_mode(Ptr<posix_acl> acl,
       Ptr<java.lang. @Unsigned @OriginalName("umode_t") Short> mode_p) {
     throw new MethodIsBPFRelatedFunction();
@@ -1162,7 +1163,7 @@ public final class PosixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("posix_acl_from_xattr($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("posix_acl_from_xattr($arg1, (const void *)$arg2, $arg3)")
   public static Ptr<posix_acl> posix_acl_from_xattr(Ptr<user_namespace> userns, Ptr<?> value,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1182,14 +1183,14 @@ public final class PosixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("posix_acl_permission($arg1, $arg2, (const struct posix_acl*)$arg3, $arg4)")
+  @BuiltinBPFFunction("posix_acl_permission($arg1, $arg2, (const struct posix_acl *)$arg3, $arg4)")
   public static int posix_acl_permission(Ptr<mnt_idmap> idmap, Ptr<inode> inode, Ptr<posix_acl> acl,
       int want) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("posix_acl_to_xattr($arg1, (const struct posix_acl*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("posix_acl_to_xattr($arg1, (const struct posix_acl *)$arg2, $arg3, $arg4)")
   public static int posix_acl_to_xattr(Ptr<user_namespace> user_ns, Ptr<posix_acl> acl,
       Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1203,7 +1204,7 @@ public final class PosixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("posix_acl_valid($arg1, (const struct posix_acl*)$arg2)")
+  @BuiltinBPFFunction("posix_acl_valid($arg1, (const struct posix_acl *)$arg2)")
   public static int posix_acl_valid(Ptr<user_namespace> user_ns, Ptr<posix_acl> acl) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1248,7 +1249,7 @@ public final class PosixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("posix_clock_realtime_set((const int)$arg1, (const struct timespec64*)$arg2)")
+  @BuiltinBPFFunction("posix_clock_realtime_set((const int)$arg1, (const struct timespec64 *)$arg2)")
   public static int posix_clock_realtime_set(@OriginalName("clockid_t") int which_clock,
       Ptr<timespec64> tp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1286,13 +1287,13 @@ public final class PosixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("posix_cpu_clock_set((const int)$arg1, (const struct timespec64*)$arg2)")
+  @BuiltinBPFFunction("posix_cpu_clock_set((const int)$arg1, (const struct timespec64 *)$arg2)")
   public static int posix_cpu_clock_set(@OriginalName("clockid_t") int clock, Ptr<timespec64> tp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("posix_cpu_nsleep((const int)$arg1, $arg2, (const struct timespec64*)$arg3)")
+  @BuiltinBPFFunction("posix_cpu_nsleep((const int)$arg1, $arg2, (const struct timespec64 *)$arg3)")
   public static int posix_cpu_nsleep(@OriginalName("clockid_t") int which_clock, int flags,
       Ptr<timespec64> rqtp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1527,7 +1528,7 @@ public final class PosixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("posix_xattr_acl((const u8*)$arg1)")
+  @BuiltinBPFFunction("posix_xattr_acl((const u8 *)$arg1)")
   public static int posix_xattr_acl(String xattr) {
     throw new MethodIsBPFRelatedFunction();
   }

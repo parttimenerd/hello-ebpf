@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1222,7 +1223,7 @@ public final class StackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stack_map_mem_usage((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("stack_map_mem_usage((const struct bpf_map *)$arg1)")
   public static @Unsigned long stack_map_mem_usage(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1254,7 +1255,7 @@ public final class StackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stack_max_size_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("stack_max_size_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long stack_max_size_write(Ptr<file> filp, String ubuf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1268,7 +1269,7 @@ public final class StackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stack_slot_obj_get_spi($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("stack_slot_obj_get_spi($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int stack_slot_obj_get_spi(Ptr<bpf_verifier_env> env, Ptr<bpf_reg_state> reg,
       String obj_kind, int nr_slots) {
     throw new MethodIsBPFRelatedFunction();
@@ -1312,7 +1313,7 @@ public final class StackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stack_trace_print((const long unsigned int*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("stack_trace_print((const long unsigned int *)$arg1, $arg2, $arg3)")
   public static void stack_trace_print(Ptr<java.lang. @Unsigned Long> entries,
       @Unsigned int nr_entries, int spaces) {
     throw new MethodIsBPFRelatedFunction();
@@ -1354,14 +1355,14 @@ public final class StackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stack_trace_snprint($arg1, $arg2, (const long unsigned int*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("stack_trace_snprint($arg1, $arg2, (const long unsigned int *)$arg3, $arg4, $arg5)")
   public static int stack_trace_snprint(String buf, @Unsigned long size,
       Ptr<java.lang. @Unsigned Long> entries, @Unsigned int nr_entries, int spaces) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stack_trace_sysctl((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("stack_trace_sysctl((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int stack_trace_sysctl(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

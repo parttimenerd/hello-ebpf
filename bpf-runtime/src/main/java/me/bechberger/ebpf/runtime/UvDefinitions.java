@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1482,13 +1483,13 @@ public final class UvDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uv_send_IPI_mask((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("uv_send_IPI_mask((const struct cpumask *)$arg1, $arg2)")
   public static void uv_send_IPI_mask(Ptr<cpumask> mask, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uv_send_IPI_mask_allbutself((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("uv_send_IPI_mask_allbutself((const struct cpumask *)$arg1, $arg2)")
   public static void uv_send_IPI_mask_allbutself(Ptr<cpumask> mask, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1506,7 +1507,7 @@ public final class UvDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uv_set_irq_affinity($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("uv_set_irq_affinity($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int uv_set_irq_affinity(Ptr<irq_data> data, Ptr<cpumask> mask, boolean force) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1774,7 +1775,7 @@ public final class UvDefinitions {
 
     public @Unsigned int size;
 
-    public AnonymousType666312528C54 @Size(1) [] entry;
+    public AnonymousType320850799C54 @Size(1) [] entry;
   }
 
   @Type(
@@ -1939,7 +1940,7 @@ public final class UvDefinitions {
 
     public int ncpus;
 
-    public AnonymousType142103421C56 @Size(0) [] cpu;
+    public AnonymousType1292570580C56 @Size(0) [] cpu;
   }
 
   @Type(
@@ -1990,7 +1991,7 @@ public final class UvDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType142103421C56 extends Struct {
+  public static class AnonymousType1292570580C56 extends Struct {
     public int lcpu;
 
     public @Unsigned long expires;
@@ -2002,7 +2003,7 @@ public final class UvDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType666312528C54 extends Struct {
+  public static class AnonymousType320850799C54 extends Struct {
     public @Unsigned int type;
 
     public @Unsigned int offset;

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class SerioDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__serio_register_driver($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__serio_register_driver($arg1, $arg2, (const u8 *)$arg3)")
   public static int __serio_register_driver(Ptr<serio_driver> drv, Ptr<module> owner,
       String mod_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1103,7 +1104,7 @@ public final class SerioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("serio_bus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("serio_bus_match($arg1, (const struct device_driver *)$arg2)")
   public static int serio_bus_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1176,7 +1177,7 @@ public final class SerioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("serio_match_port((const struct serio_device_id*)$arg1, $arg2)")
+  @BuiltinBPFFunction("serio_match_port((const struct serio_device_id *)$arg1, $arg2)")
   public static int serio_match_port(Ptr<serio_device_id> ids, Ptr<serio> serio) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1237,7 +1238,7 @@ public final class SerioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("serio_set_bind_mode($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("serio_set_bind_mode($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long serio_set_bind_mode(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1270,7 +1271,7 @@ public final class SerioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("serio_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("serio_uevent((const struct device *)$arg1, $arg2)")
   public static int serio_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }

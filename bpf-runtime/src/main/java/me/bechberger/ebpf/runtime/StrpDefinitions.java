@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1127,7 +1128,7 @@ public final class StrpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("strp_init($arg1, $arg2, (const struct strp_callbacks*)$arg3)")
+  @BuiltinBPFFunction("strp_init($arg1, $arg2, (const struct strp_callbacks *)$arg3)")
   public static int strp_init(Ptr<strparser> strp, Ptr<sock> sk, Ptr<strp_callbacks> cb) {
     throw new MethodIsBPFRelatedFunction();
   }

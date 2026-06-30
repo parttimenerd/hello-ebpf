@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,14 +1097,14 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__tcp_ao_do_lookup((const struct sock*)$arg1, $arg2, (const union tcp_ao_addr*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__tcp_ao_do_lookup((const struct sock *)$arg1, $arg2, (const union tcp_ao_addr *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static Ptr<tcp_ao_key> __tcp_ao_do_lookup(Ptr<sock> sk, int l3index, Ptr<tcp_ao_addr> addr,
       int family, char prefix, int sndid, int rcvid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__tcp_ao_key_cmp((const struct tcp_ao_key*)$arg1, $arg2, (const union tcp_ao_addr*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__tcp_ao_key_cmp((const struct tcp_ao_key *)$arg1, $arg2, (const union tcp_ao_addr *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int __tcp_ao_key_cmp(Ptr<tcp_ao_key> key, int l3index, Ptr<tcp_ao_addr> addr,
       char prefixlen, int family, int sndid, int rcvid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1122,14 +1123,14 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__tcp_get_metrics((const struct inetpeer_addr*)$arg1, (const struct inetpeer_addr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__tcp_get_metrics((const struct inetpeer_addr *)$arg1, (const struct inetpeer_addr *)$arg2, $arg3, $arg4)")
   public static Ptr<tcp_metrics_block> __tcp_get_metrics(Ptr<inetpeer_addr> saddr,
       Ptr<inetpeer_addr> daddr, Ptr<net> net, @Unsigned int hash) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__tcp_md5_do_add($arg1, (const union tcp_ao_addr*)$arg2, $arg3, $arg4, $arg5, $arg6, (const u8*)$arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("__tcp_md5_do_add($arg1, (const union tcp_ao_addr *)$arg2, $arg3, $arg4, $arg5, $arg6, (const u8 *)$arg7, $arg8, $arg9)")
   public static int __tcp_md5_do_add(Ptr<sock> sk, Ptr<tcp_ao_addr> addr, int family,
       char prefixlen, int l3index, char flags, Ptr<java.lang.Character> newkey, char newkeylen,
       @Unsigned @OriginalName("gfp_t") int gfp) {
@@ -1137,7 +1138,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__tcp_md5_do_lookup((const struct sock*)$arg1, $arg2, (const union tcp_ao_addr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__tcp_md5_do_lookup((const struct sock *)$arg1, $arg2, (const union tcp_ao_addr *)$arg3, $arg4, $arg5)")
   public static Ptr<tcp_md5sig_key> __tcp_md5_do_lookup(Ptr<sock> sk, int l3index,
       Ptr<tcp_ao_addr> addr, int family, boolean any_l3index) {
     throw new MethodIsBPFRelatedFunction();
@@ -1220,13 +1221,13 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ack($arg1, (const struct sk_buff*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tcp_ack($arg1, (const struct sk_buff *)$arg2, $arg3)")
   public static int tcp_ack(Ptr<sock> sk, Ptr<sk_buff> skb, int flag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ack_tstamp($arg1, $arg2, (const struct sk_buff*)$arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_ack_tstamp($arg1, $arg2, (const struct sk_buff *)$arg3, $arg4)")
   public static void tcp_ack_tstamp(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<sk_buff> ack_skb,
       @Unsigned int prior_snd_una) {
     throw new MethodIsBPFRelatedFunction();
@@ -1253,7 +1254,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_adjust_pcount($arg1, (const struct sk_buff*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tcp_adjust_pcount($arg1, (const struct sk_buff *)$arg2, $arg3)")
   public static void tcp_adjust_pcount(Ptr<sock> sk, Ptr<sk_buff> skb, int decr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1272,14 +1273,14 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ao_cache_traffic_keys((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("tcp_ao_cache_traffic_keys((const struct sock *)$arg1, $arg2, $arg3)")
   public static int tcp_ao_cache_traffic_keys(Ptr<sock> sk, Ptr<tcp_ao_info> ao,
       Ptr<tcp_ao_key> ao_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ao_calc_key_skb($arg1, $arg2, (const struct sk_buff*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_ao_calc_key_skb($arg1, $arg2, (const struct sk_buff *)$arg3, $arg4, $arg5, $arg6)")
   public static int tcp_ao_calc_key_skb(Ptr<tcp_ao_key> mkt, Ptr<java.lang.Character> key,
       Ptr<sk_buff> skb, @Unsigned @OriginalName("__be32") int sisn,
       @Unsigned @OriginalName("__be32") int disn, int family) {
@@ -1307,7 +1308,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ao_copy_all_matching((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tcp_ao_copy_all_matching((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int tcp_ao_copy_all_matching(Ptr<sock> sk, Ptr<sock> newsk, Ptr<request_sock> req,
       Ptr<sk_buff> skb, int family) {
     throw new MethodIsBPFRelatedFunction();
@@ -1327,7 +1328,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ao_do_lookup((const struct sock*)$arg1, $arg2, (const union tcp_ao_addr*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_ao_do_lookup((const struct sock *)$arg1, $arg2, (const union tcp_ao_addr *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<tcp_ao_key> tcp_ao_do_lookup(Ptr<sock> sk, int l3index, Ptr<tcp_ao_addr> addr,
       int family, int sndid, int rcvid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1340,7 +1341,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ao_established_key((const struct sock*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_ao_established_key((const struct sock *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<tcp_ao_key> tcp_ao_established_key(Ptr<sock> sk, Ptr<tcp_ao_info> ao, int sndid,
       int rcvid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1371,7 +1372,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ao_hash_hdr($arg1, $arg2, $arg3, (const u8*)$arg4, (const union tcp_ao_addr*)$arg5, (const union tcp_ao_addr*)$arg6, (const struct tcphdr*)$arg7, $arg8)")
+  @BuiltinBPFFunction("tcp_ao_hash_hdr($arg1, $arg2, $arg3, (const u8 *)$arg4, (const union tcp_ao_addr *)$arg5, (const union tcp_ao_addr *)$arg6, (const struct tcphdr *)$arg7, $arg8)")
   public static int tcp_ao_hash_hdr(@Unsigned short family, String ao_hash, Ptr<tcp_ao_key> key,
       Ptr<java.lang.Character> tkey, Ptr<tcp_ao_addr> daddr, Ptr<tcp_ao_addr> saddr, Ptr<tcphdr> th,
       @Unsigned int sne) {
@@ -1379,7 +1380,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ao_hash_skb($arg1, $arg2, $arg3, (const struct sock*)$arg4, (const struct sk_buff*)$arg5, (const u8*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("tcp_ao_hash_skb($arg1, $arg2, $arg3, (const struct sock *)$arg4, (const struct sk_buff *)$arg5, (const u8 *)$arg6, $arg7, $arg8)")
   public static int tcp_ao_hash_skb(@Unsigned short family, String ao_hash, Ptr<tcp_ao_key> key,
       Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<java.lang.Character> tkey, int hash_offset,
       @Unsigned int sne) {
@@ -1387,13 +1388,13 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ao_ignore_icmp((const struct sock*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_ao_ignore_icmp((const struct sock *)$arg1, $arg2, $arg3, $arg4)")
   public static boolean tcp_ao_ignore_icmp(Ptr<sock> sk, int family, int type, int code) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ao_inbound_lookup($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_ao_inbound_lookup($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<tcp_ao_key> tcp_ao_inbound_lookup(@Unsigned short family, Ptr<sock> sk,
       Ptr<sk_buff> skb, int sndid, int rcvid, int l3index) {
     throw new MethodIsBPFRelatedFunction();
@@ -1406,7 +1407,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ao_key_cmp((const struct tcp_ao_key*)$arg1, $arg2, (const union tcp_ao_addr*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("tcp_ao_key_cmp((const struct tcp_ao_key *)$arg1, $arg2, (const union tcp_ao_addr *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int tcp_ao_key_cmp(Ptr<tcp_ao_key> key, int l3index, Ptr<tcp_ao_addr> addr,
       char prefixlen, int family, int sndid, int rcvid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1425,7 +1426,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ao_prepare_reset((const struct sock*)$arg1, $arg2, (const struct tcp_ao_hdr*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("tcp_ao_prepare_reset((const struct sock *)$arg1, $arg2, (const struct tcp_ao_hdr *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10)")
   public static int tcp_ao_prepare_reset(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<tcp_ao_hdr> aoh,
       int l3index, @Unsigned int seq, Ptr<Ptr<tcp_ao_key>> key, Ptr<String> traffic_key,
       Ptr<java.lang. @OriginalName("bool") Boolean> allocated_traffic_key,
@@ -1440,7 +1441,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ao_syncookie($arg1, (const struct sk_buff*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_ao_syncookie($arg1, (const struct sk_buff *)$arg2, $arg3, $arg4)")
   public static void tcp_ao_syncookie(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<request_sock> req,
       @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
@@ -1460,7 +1461,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ao_verify_hash((const struct sock*)$arg1, (const struct sk_buff*)$arg2, $arg3, $arg4, (const struct tcp_ao_hdr*)$arg5, $arg6, $arg7, $arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("tcp_ao_verify_hash((const struct sock *)$arg1, (const struct sk_buff *)$arg2, $arg3, $arg4, (const struct tcp_ao_hdr *)$arg5, $arg6, $arg7, $arg8, $arg9, $arg10)")
   public static skb_drop_reason tcp_ao_verify_hash(Ptr<sock> sk, Ptr<sk_buff> skb,
       @Unsigned short family, Ptr<tcp_ao_info> info, Ptr<tcp_ao_hdr> aoh, Ptr<tcp_ao_key> key,
       Ptr<java.lang.Character> traffic_key, Ptr<java.lang.Character> phash, @Unsigned int sne,
@@ -1488,7 +1489,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_bpf_clone((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcp_bpf_clone((const struct sock *)$arg1, $arg2)")
   public static void tcp_bpf_clone(Ptr<sock> sk, Ptr<sock> newsk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1554,13 +1555,13 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ca_find((const u8*)$arg1)")
+  @BuiltinBPFFunction("tcp_ca_find((const u8 *)$arg1)")
   public static Ptr<tcp_congestion_ops> tcp_ca_find(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ca_find_autoload((const u8*)$arg1)")
+  @BuiltinBPFFunction("tcp_ca_find_autoload((const u8 *)$arg1)")
   public static Ptr<tcp_congestion_ops> tcp_ca_find_autoload(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1572,7 +1573,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ca_get_key_by_name((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcp_ca_get_key_by_name((const u8 *)$arg1, $arg2)")
   public static @Unsigned int tcp_ca_get_key_by_name(String name,
       Ptr<java.lang. @OriginalName("bool") Boolean> ecn_ca) {
     throw new MethodIsBPFRelatedFunction();
@@ -1585,19 +1586,19 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_ca_openreq_child($arg1, (const struct dst_entry*)$arg2)")
+  @BuiltinBPFFunction("tcp_ca_openreq_child($arg1, (const struct dst_entry *)$arg2)")
   public static void tcp_ca_openreq_child(Ptr<sock> sk, Ptr<dst_entry> dst) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_can_repair_sock((const struct sock*)$arg1)")
+  @BuiltinBPFFunction("tcp_can_repair_sock((const struct sock *)$arg1)")
   public static boolean tcp_can_repair_sock(Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_check_dsack($arg1, (const struct sk_buff*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_check_dsack($arg1, (const struct sk_buff *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static boolean tcp_check_dsack(Ptr<sock> sk, Ptr<sk_buff> ack_skb,
       Ptr<tcp_sack_block_wire> sp, int num_sacks, @Unsigned int prior_snd_una,
       Ptr<tcp_sacktag_state> state) {
@@ -1605,7 +1606,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_check_oom((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcp_check_oom((const struct sock *)$arg1, $arg2)")
   public static boolean tcp_check_oom(Ptr<sock> sk, int shift) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1650,13 +1651,13 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_clamp_probe0_to_user_timeout((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcp_clamp_probe0_to_user_timeout((const struct sock *)$arg1, $arg2)")
   public static @Unsigned int tcp_clamp_probe0_to_user_timeout(Ptr<sock> sk, @Unsigned int when) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_clean_rtx_queue($arg1, (const struct sk_buff*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_clean_rtx_queue($arg1, (const struct sk_buff *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int tcp_clean_rtx_queue(Ptr<sock> sk, Ptr<sk_buff> ack_skb,
       @Unsigned int prior_fack, @Unsigned int prior_snd_una, Ptr<tcp_sacktag_state> sack,
       boolean ece_ack) {
@@ -1733,6 +1734,9 @@ public final class TcpDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void tcp_cong_avoid_ai(struct tcp_sock *tp, unsigned int w, unsigned int acked)"
+  )
   public static void tcp_cong_avoid_ai(Ptr<tcp_sock> tp, @Unsigned int w, @Unsigned int acked) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1744,7 +1748,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_conn_request($arg1, (const struct tcp_request_sock_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_conn_request($arg1, (const struct tcp_request_sock_ops *)$arg2, $arg3, $arg4)")
   public static int tcp_conn_request(Ptr<request_sock_ops> rsk_ops,
       Ptr<tcp_request_sock_ops> af_ops, Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
@@ -1769,7 +1773,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_create_openreq_child((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("tcp_create_openreq_child((const struct sock *)$arg1, $arg2, $arg3)")
   public static Ptr<sock> tcp_create_openreq_child(Ptr<sock> sk, Ptr<request_sock> req,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
@@ -1801,7 +1805,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_data_ecn_check($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("tcp_data_ecn_check($arg1, (const struct sk_buff *)$arg2)")
   public static void tcp_data_ecn_check(Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1825,7 +1829,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_delack_max((const struct sock*)$arg1)")
+  @BuiltinBPFFunction("tcp_delack_max((const struct sock *)$arg1)")
   public static @Unsigned int tcp_delack_max(Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1849,7 +1853,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_do_parse_auth_options((const struct tcphdr*)$arg1, (const u8**)$arg2, (const u8**)$arg3)")
+  @BuiltinBPFFunction("tcp_do_parse_auth_options((const struct tcphdr *)$arg1, (const u8**)$arg2, (const u8**)$arg3)")
   public static int tcp_do_parse_auth_options(Ptr<tcphdr> th,
       Ptr<Ptr<java.lang.Character>> md5_hash, Ptr<Ptr<java.lang.Character>> ao_hash) {
     throw new MethodIsBPFRelatedFunction();
@@ -2137,7 +2141,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_get_info_chrono_stats((const struct tcp_sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcp_get_info_chrono_stats((const struct tcp_sock *)$arg1, $arg2)")
   public static void tcp_get_info_chrono_stats(Ptr<tcp_sock> tp, Ptr<tcp_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2150,14 +2154,14 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_get_syncookie_mss($arg1, (const struct tcp_request_sock_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_get_syncookie_mss($arg1, (const struct tcp_request_sock_ops *)$arg2, $arg3, $arg4)")
   public static @Unsigned short tcp_get_syncookie_mss(Ptr<request_sock_ops> rsk_ops,
       Ptr<tcp_request_sock_ops> af_ops, Ptr<sock> sk, Ptr<tcphdr> th) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_get_timestamping_opt_stats((const struct sock*)$arg1, (const struct sk_buff*)$arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("tcp_get_timestamping_opt_stats((const struct sock *)$arg1, (const struct sk_buff *)$arg2, (const struct sk_buff *)$arg3)")
   public static Ptr<sk_buff> tcp_get_timestamping_opt_stats(Ptr<sock> sk, Ptr<sk_buff> orig_skb,
       Ptr<sk_buff> ack_skb) {
     throw new MethodIsBPFRelatedFunction();
@@ -2196,7 +2200,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_grow_window($arg1, (const struct sk_buff*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tcp_grow_window($arg1, (const struct sk_buff *)$arg2, $arg3)")
   public static void tcp_grow_window(Ptr<sock> sk, Ptr<sk_buff> skb, boolean adjust) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2221,14 +2225,14 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_inbound_ao_hash($arg1, (const struct sk_buff*)$arg2, $arg3, (const struct request_sock*)$arg4, $arg5, (const struct tcp_ao_hdr*)$arg6)")
+  @BuiltinBPFFunction("tcp_inbound_ao_hash($arg1, (const struct sk_buff *)$arg2, $arg3, (const struct request_sock *)$arg4, $arg5, (const struct tcp_ao_hdr *)$arg6)")
   public static skb_drop_reason tcp_inbound_ao_hash(Ptr<sock> sk, Ptr<sk_buff> skb,
       @Unsigned short family, Ptr<request_sock> req, int l3index, Ptr<tcp_ao_hdr> aoh) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_inbound_hash($arg1, (const struct request_sock*)$arg2, (const struct sk_buff*)$arg3, (const void*)$arg4, (const void*)$arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("tcp_inbound_hash($arg1, (const struct request_sock *)$arg2, (const struct sk_buff *)$arg3, (const void *)$arg4, (const void *)$arg5, $arg6, $arg7, $arg8)")
   public static skb_drop_reason tcp_inbound_hash(Ptr<sock> sk, Ptr<request_sock> req,
       Ptr<sk_buff> skb, Ptr<?> saddr, Ptr<?> daddr, int family, int dif, int sdif) {
     throw new MethodIsBPFRelatedFunction();
@@ -2247,7 +2251,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_init_cwnd((const struct tcp_sock*)$arg1, (const struct dst_entry*)$arg2)")
+  @BuiltinBPFFunction("tcp_init_cwnd((const struct tcp_sock *)$arg1, (const struct dst_entry *)$arg2)")
   public static @Unsigned int tcp_init_cwnd(Ptr<tcp_sock> tp, Ptr<dst_entry> dst) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2325,7 +2329,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_make_synack((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_make_synack((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<sk_buff> tcp_make_synack(Ptr<sock> sk, Ptr<dst_entry> dst,
       Ptr<request_sock> req, Ptr<tcp_fastopen_cookie> foc, tcp_synack_type synack_type,
       Ptr<sk_buff> syn_skb) {
@@ -2364,34 +2368,34 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_md5_do_add($arg1, (const union tcp_ao_addr*)$arg2, $arg3, $arg4, $arg5, $arg6, (const u8*)$arg7, $arg8)")
+  @BuiltinBPFFunction("tcp_md5_do_add($arg1, (const union tcp_ao_addr *)$arg2, $arg3, $arg4, $arg5, $arg6, (const u8 *)$arg7, $arg8)")
   public static int tcp_md5_do_add(Ptr<sock> sk, Ptr<tcp_ao_addr> addr, int family, char prefixlen,
       int l3index, char flags, Ptr<java.lang.Character> newkey, char newkeylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_md5_do_del($arg1, (const union tcp_ao_addr*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_md5_do_del($arg1, (const union tcp_ao_addr *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int tcp_md5_do_del(Ptr<sock> sk, Ptr<tcp_ao_addr> addr, int family, char prefixlen,
       int l3index, char flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_md5_do_lookup_exact((const struct sock*)$arg1, (const union tcp_ao_addr*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_md5_do_lookup_exact((const struct sock *)$arg1, (const union tcp_ao_addr *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<tcp_md5sig_key> tcp_md5_do_lookup_exact(Ptr<sock> sk, Ptr<tcp_ao_addr> addr,
       int family, char prefixlen, int l3index, char flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_md5_hash_key($arg1, (const struct tcp_md5sig_key*)$arg2)")
+  @BuiltinBPFFunction("tcp_md5_hash_key($arg1, (const struct tcp_md5sig_key *)$arg2)")
   public static int tcp_md5_hash_key(Ptr<tcp_sigpool> hp, Ptr<tcp_md5sig_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_md5_key_copy($arg1, (const union tcp_ao_addr*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_md5_key_copy($arg1, (const union tcp_ao_addr *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int tcp_md5_key_copy(Ptr<sock> sk, Ptr<tcp_ao_addr> addr, int family,
       char prefixlen, int l3index, Ptr<tcp_md5sig_key> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -2416,7 +2420,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_measure_rcv_mss($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("tcp_measure_rcv_mss($arg1, (const struct sk_buff *)$arg2)")
   public static void tcp_measure_rcv_mss(Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2531,21 +2535,21 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_oow_rate_limited($arg1, (const struct sk_buff*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_oow_rate_limited($arg1, (const struct sk_buff *)$arg2, $arg3, $arg4)")
   public static boolean tcp_oow_rate_limited(Ptr<net> net, Ptr<sk_buff> skb, int mib_idx,
       Ptr<java.lang. @Unsigned Integer> last_oow_ack_time) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_openreq_init_rwin($arg1, (const struct sock*)$arg2, (const struct dst_entry*)$arg3)")
+  @BuiltinBPFFunction("tcp_openreq_init_rwin($arg1, (const struct sock *)$arg2, (const struct dst_entry *)$arg3)")
   public static void tcp_openreq_init_rwin(Ptr<request_sock> req, Ptr<sock> sk_listener,
       Ptr<dst_entry> dst) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_options_write($arg1, $arg2, (const struct tcp_request_sock*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tcp_options_write($arg1, $arg2, (const struct tcp_request_sock *)$arg3, $arg4, $arg5)")
   public static void tcp_options_write(Ptr<tcphdr> th, Ptr<tcp_sock> tp,
       Ptr<tcp_request_sock> tcprsk, Ptr<tcp_out_options> opts, Ptr<tcp_key> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -2583,20 +2587,20 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_parse_fastopen_option($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tcp_parse_fastopen_option($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static void tcp_parse_fastopen_option(int len, String cookie, boolean syn,
       Ptr<tcp_fastopen_cookie> foc, boolean exp_opt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_parse_mss_option((const struct tcphdr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcp_parse_mss_option((const struct tcphdr *)$arg1, $arg2)")
   public static @Unsigned short tcp_parse_mss_option(Ptr<tcphdr> th, @Unsigned short user_mss) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_parse_options((const struct net*)$arg1, (const struct sk_buff*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tcp_parse_options((const struct net *)$arg1, (const struct sk_buff *)$arg2, $arg3, $arg4, $arg5)")
   public static void tcp_parse_options(Ptr<net> net, Ptr<sk_buff> skb,
       Ptr<tcp_options_received> opt_rx, int estab, Ptr<tcp_fastopen_cookie> foc) {
     throw new MethodIsBPFRelatedFunction();
@@ -2621,7 +2625,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_plb_update_state((const struct sock*)$arg1, $arg2, (const int)$arg3)")
+  @BuiltinBPFFunction("tcp_plb_update_state((const struct sock *)$arg1, $arg2, (const int)$arg3)")
   public static void tcp_plb_update_state(Ptr<sock> sk, Ptr<tcp_plb_state> plb, int cong_ratio) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2652,13 +2656,13 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_prune_ofo_queue($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("tcp_prune_ofo_queue($arg1, (const struct sk_buff *)$arg2)")
   public static boolean tcp_prune_ofo_queue(Ptr<sock> sk, Ptr<sk_buff> in_skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_prune_queue($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("tcp_prune_queue($arg1, (const struct sk_buff *)$arg2)")
   public static int tcp_prune_queue(Ptr<sock> sk, Ptr<sk_buff> in_skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2778,7 +2782,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_rcv_spurious_retrans($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("tcp_rcv_spurious_retrans($arg1, (const struct sk_buff *)$arg2)")
   public static void tcp_rcv_spurious_retrans(Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2796,7 +2800,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_rcv_synsent_state_process($arg1, $arg2, (const struct tcphdr*)$arg3)")
+  @BuiltinBPFFunction("tcp_rcv_synsent_state_process($arg1, $arg2, (const struct tcphdr *)$arg3)")
   public static int tcp_rcv_synsent_state_process(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<tcphdr> th) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2849,7 +2853,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_recv_timestamp($arg1, (const struct sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tcp_recv_timestamp($arg1, (const struct sock *)$arg2, $arg3)")
   public static void tcp_recv_timestamp(Ptr<msghdr> msg, Ptr<sock> sk,
       Ptr<scm_timestamping_internal> tss) {
     throw new MethodIsBPFRelatedFunction();
@@ -2863,7 +2867,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_recvmsg_dmabuf($arg1, (const struct sk_buff*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tcp_recvmsg_dmabuf($arg1, (const struct sk_buff *)$arg2, $arg3, $arg4, $arg5)")
   public static int tcp_recvmsg_dmabuf(Ptr<sock> sk, Ptr<sk_buff> skb, @Unsigned int offset,
       Ptr<msghdr> msg, int remaining_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -2908,18 +2912,27 @@ public final class TcpDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void tcp_reno_cong_avoid(struct sock *sk, unsigned int ack, unsigned int acked)"
+  )
   public static void tcp_reno_cong_avoid(Ptr<sock> sk, @Unsigned int ack, @Unsigned int acked) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int tcp_reno_ssthresh(struct sock *sk)"
+  )
   public static @Unsigned int tcp_reno_ssthresh(Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int tcp_reno_undo_cwnd(struct sock *sk)"
+  )
   public static @Unsigned int tcp_reno_undo_cwnd(Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2937,7 +2950,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_reqsk_record_syn((const struct sock*)$arg1, $arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("tcp_reqsk_record_syn((const struct sock *)$arg1, $arg2, (const struct sk_buff *)$arg3)")
   public static void tcp_reqsk_record_syn(Ptr<sock> sk, Ptr<request_sock> req, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2979,7 +2992,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_rtx_synack((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcp_rtx_synack((const struct sock *)$arg1, $arg2)")
   public static int tcp_rtx_synack(Ptr<sock> sk, Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3013,7 +3026,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_sacktag_write_queue($arg1, (const struct sk_buff*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_sacktag_write_queue($arg1, (const struct sk_buff *)$arg2, $arg3, $arg4)")
   public static int tcp_sacktag_write_queue(Ptr<sock> sk, Ptr<sk_buff> ack_skb,
       @Unsigned int prior_snd_una, Ptr<tcp_sacktag_state> state) {
     throw new MethodIsBPFRelatedFunction();
@@ -3026,7 +3039,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_select_initial_window((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("tcp_select_initial_window((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void tcp_select_initial_window(Ptr<sock> sk, int __space, @Unsigned int mss,
       Ptr<java.lang. @Unsigned Integer> rcv_wnd, Ptr<java.lang. @Unsigned Integer> __window_clamp,
       int wscale_ok, Ptr<java.lang.Character> rcv_wscale, @Unsigned int init_rcv_wnd) {
@@ -3059,7 +3072,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_send_dupack($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("tcp_send_dupack($arg1, (const struct sk_buff *)$arg2)")
   public static void tcp_send_dupack(Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3164,14 +3177,14 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_set_congestion_control($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_set_congestion_control($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int tcp_set_congestion_control(Ptr<sock> sk, String name, boolean load,
       boolean cap_net_admin) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_set_default_congestion_control($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("tcp_set_default_congestion_control($arg1, (const u8 *)$arg2)")
   public static int tcp_set_default_congestion_control(Ptr<net> net, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3195,7 +3208,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_set_ulp($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("tcp_set_ulp($arg1, (const u8 *)$arg2)")
   public static int tcp_set_ulp(Ptr<sock> sk, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3242,7 +3255,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_sigpool_alloc_ahash((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcp_sigpool_alloc_ahash((const u8 *)$arg1, $arg2)")
   public static int tcp_sigpool_alloc_ahash(String alg, @Unsigned long scratch_size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3260,7 +3273,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_sigpool_hash_skb_data($arg1, (const struct sk_buff*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tcp_sigpool_hash_skb_data($arg1, (const struct sk_buff *)$arg2, $arg3)")
   public static int tcp_sigpool_hash_skb_data(Ptr<tcp_sigpool> hp, Ptr<sk_buff> skb,
       @Unsigned int header_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -3303,13 +3316,13 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_skb_can_collapse((const struct sk_buff*)$arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("tcp_skb_can_collapse((const struct sk_buff *)$arg1, (const struct sk_buff *)$arg2)")
   public static boolean tcp_skb_can_collapse(Ptr<sk_buff> to, Ptr<sk_buff> from) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_skb_collapse_tstamp($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("tcp_skb_collapse_tstamp($arg1, (const struct sk_buff *)$arg2)")
   public static void tcp_skb_collapse_tstamp(Ptr<sk_buff> skb, Ptr<sk_buff> next_skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3328,6 +3341,9 @@ public final class TcpDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int tcp_slow_start(struct tcp_sock *tp, unsigned int acked)"
+  )
   public static @Unsigned int tcp_slow_start(Ptr<tcp_sock> tp, @Unsigned int acked) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3427,19 +3443,19 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_stream_memory_free((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcp_stream_memory_free((const struct sock *)$arg1, $arg2)")
   public static boolean tcp_stream_memory_free(Ptr<sock> sk, int wake) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_syn_ack_timeout((const struct request_sock*)$arg1)")
+  @BuiltinBPFFunction("tcp_syn_ack_timeout((const struct request_sock *)$arg1)")
   public static void tcp_syn_ack_timeout(Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_syn_flood_action($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("tcp_syn_flood_action($arg1, (const u8 *)$arg2)")
   public static boolean tcp_syn_flood_action(Ptr<sock> sk, String proto) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3452,7 +3468,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_synack_options((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5, (const struct tcp_key*)$arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("tcp_synack_options((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5, (const struct tcp_key *)$arg6, $arg7, $arg8, $arg9)")
   public static @Unsigned int tcp_synack_options(Ptr<sock> sk, Ptr<request_sock> req,
       @Unsigned int mss, Ptr<sk_buff> skb, Ptr<tcp_out_options> opts, Ptr<tcp_key> key,
       Ptr<tcp_fastopen_cookie> foc, tcp_synack_type synack_type, Ptr<sk_buff> syn_skb) {
@@ -3484,7 +3500,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_timewait_state_process($arg1, $arg2, (const struct tcphdr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tcp_timewait_state_process($arg1, $arg2, (const struct tcphdr *)$arg3, $arg4, $arg5)")
   public static tcp_tw_status tcp_timewait_state_process(Ptr<inet_timewait_sock> tw,
       Ptr<sk_buff> skb, Ptr<tcphdr> th, Ptr<java.lang. @Unsigned Integer> tw_isn,
       Ptr<skb_drop_reason> drop_reason) {
@@ -3505,7 +3521,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_try_fastopen($arg1, $arg2, $arg3, $arg4, (const struct dst_entry*)$arg5)")
+  @BuiltinBPFFunction("tcp_try_fastopen($arg1, $arg2, $arg3, $arg4, (const struct dst_entry *)$arg5)")
   public static Ptr<sock> tcp_try_fastopen(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<request_sock> req,
       Ptr<tcp_fastopen_cookie> foc, Ptr<dst_entry> dst) {
     throw new MethodIsBPFRelatedFunction();
@@ -3518,7 +3534,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_try_rmem_schedule($arg1, (const struct sk_buff*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tcp_try_rmem_schedule($arg1, (const struct sk_buff *)$arg2, $arg3)")
   public static int tcp_try_rmem_schedule(Ptr<sock> sk, Ptr<sk_buff> skb, @Unsigned int size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3648,7 +3664,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_urg($arg1, $arg2, (const struct tcphdr*)$arg3)")
+  @BuiltinBPFFunction("tcp_urg($arg1, $arg2, (const struct tcphdr *)$arg3)")
   public static void tcp_urg(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<tcphdr> th) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3670,7 +3686,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_ao_calc_key_sk($arg1, $arg2, (const struct sock*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_v4_ao_calc_key_sk($arg1, $arg2, (const struct sock *)$arg3, $arg4, $arg5, $arg6)")
   public static int tcp_v4_ao_calc_key_sk(Ptr<tcp_ao_key> mkt, Ptr<java.lang.Character> key,
       Ptr<sock> sk, @Unsigned @OriginalName("__be32") int sisn,
       @Unsigned @OriginalName("__be32") int disn, boolean send) {
@@ -3678,28 +3694,28 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_ao_hash_skb($arg1, $arg2, (const struct sock*)$arg3, (const struct sk_buff*)$arg4, (const u8*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("tcp_v4_ao_hash_skb($arg1, $arg2, (const struct sock *)$arg3, (const struct sk_buff *)$arg4, (const u8 *)$arg5, $arg6, $arg7)")
   public static int tcp_v4_ao_hash_skb(String ao_hash, Ptr<tcp_ao_key> key, Ptr<sock> sk,
       Ptr<sk_buff> skb, Ptr<java.lang.Character> tkey, int hash_offset, @Unsigned int sne) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_ao_lookup((const struct sock*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_v4_ao_lookup((const struct sock *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<tcp_ao_key> tcp_v4_ao_lookup(Ptr<sock> sk, Ptr<sock> addr_sk, int sndid,
       int rcvid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_ao_lookup_rsk((const struct sock*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_v4_ao_lookup_rsk((const struct sock *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<tcp_ao_key> tcp_v4_ao_lookup_rsk(Ptr<sock> sk, Ptr<request_sock> req, int sndid,
       int rcvid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_ao_sign_reset((const struct sock*)$arg1, $arg2, (const struct tcp_ao_hdr*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_v4_ao_sign_reset((const struct sock *)$arg1, $arg2, (const struct tcp_ao_hdr *)$arg3, $arg4, $arg5, $arg6)")
   public static boolean tcp_v4_ao_sign_reset(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<tcp_ao_hdr> aoh,
       Ptr<ip_reply_arg> arg, Ptr<tcphdr> reply,
       Ptr<java.lang. @Unsigned @OriginalName("__be32") Integer> reply_options) {
@@ -3707,7 +3723,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_ao_synack_hash($arg1, $arg2, $arg3, (const struct sk_buff*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_v4_ao_synack_hash($arg1, $arg2, $arg3, (const struct sk_buff *)$arg4, $arg5, $arg6)")
   public static int tcp_v4_ao_synack_hash(String ao_hash, Ptr<tcp_ao_key> ao_key,
       Ptr<request_sock> req, Ptr<sk_buff> skb, int hash_offset, @Unsigned int sne) {
     throw new MethodIsBPFRelatedFunction();
@@ -3750,7 +3766,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_fill_cb($arg1, (const struct iphdr*)$arg2, (const struct tcphdr*)$arg3)")
+  @BuiltinBPFFunction("tcp_v4_fill_cb($arg1, (const struct iphdr *)$arg2, (const struct tcphdr *)$arg3)")
   public static void tcp_v4_fill_cb(Ptr<sk_buff> skb, Ptr<iphdr> iph, Ptr<tcphdr> th) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3769,7 +3785,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_init_seq((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("tcp_v4_init_seq((const struct sk_buff *)$arg1)")
   public static @Unsigned int tcp_v4_init_seq(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3781,13 +3797,13 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_init_ts_off((const struct net*)$arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("tcp_v4_init_ts_off((const struct net *)$arg1, (const struct sk_buff *)$arg2)")
   public static @Unsigned int tcp_v4_init_ts_off(Ptr<net> net, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_md5_hash_hdr($arg1, (const struct tcp_md5sig_key*)$arg2, $arg3, $arg4, (const struct tcphdr*)$arg5)")
+  @BuiltinBPFFunction("tcp_v4_md5_hash_hdr($arg1, (const struct tcp_md5sig_key *)$arg2, $arg3, $arg4, (const struct tcphdr *)$arg5)")
   public static int tcp_v4_md5_hash_hdr(String md5_hash, Ptr<tcp_md5sig_key> key,
       @Unsigned @OriginalName("__be32") int daddr, @Unsigned @OriginalName("__be32") int saddr,
       Ptr<tcphdr> th) {
@@ -3795,7 +3811,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_md5_hash_headers($arg1, $arg2, $arg3, (const struct tcphdr*)$arg4, $arg5)")
+  @BuiltinBPFFunction("tcp_v4_md5_hash_headers($arg1, $arg2, $arg3, (const struct tcphdr *)$arg4, $arg5)")
   public static int tcp_v4_md5_hash_headers(Ptr<tcp_sigpool> hp,
       @Unsigned @OriginalName("__be32") int daddr, @Unsigned @OriginalName("__be32") int saddr,
       Ptr<tcphdr> th, int nbytes) {
@@ -3803,14 +3819,14 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_md5_hash_skb($arg1, (const struct tcp_md5sig_key*)$arg2, (const struct sock*)$arg3, (const struct sk_buff*)$arg4)")
+  @BuiltinBPFFunction("tcp_v4_md5_hash_skb($arg1, (const struct tcp_md5sig_key *)$arg2, (const struct sock *)$arg3, (const struct sk_buff *)$arg4)")
   public static int tcp_v4_md5_hash_skb(String md5_hash, Ptr<tcp_md5sig_key> key, Ptr<sock> sk,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_md5_lookup((const struct sock*)$arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("tcp_v4_md5_lookup((const struct sock *)$arg1, (const struct sock *)$arg2)")
   public static Ptr<tcp_md5sig_key> tcp_v4_md5_lookup(Ptr<sock> sk, Ptr<sock> addr_sk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3852,7 +3868,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_reqsk_send_ack((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("tcp_v4_reqsk_send_ack((const struct sock *)$arg1, $arg2, $arg3)")
   public static void tcp_v4_reqsk_send_ack(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3864,14 +3880,14 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_route_req((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tcp_v4_route_req((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static Ptr<dst_entry> tcp_v4_route_req(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<flowi> fl,
       Ptr<request_sock> req, @Unsigned int tw_isn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_send_ack((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11, $arg12)")
+  @BuiltinBPFFunction("tcp_v4_send_ack((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11, $arg12)")
   public static void tcp_v4_send_ack(Ptr<sock> sk, Ptr<sk_buff> skb, @Unsigned int seq,
       @Unsigned int ack, @Unsigned int win, @Unsigned int tsval, @Unsigned int tsecr, int oif,
       Ptr<tcp_key> key, int reply_flags, char tos, @Unsigned int txhash) {
@@ -3885,13 +3901,13 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_send_reset((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("tcp_v4_send_reset((const struct sock *)$arg1, $arg2, $arg3)")
   public static void tcp_v4_send_reset(Ptr<sock> sk, Ptr<sk_buff> skb, sk_rst_reason reason) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_send_synack((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("tcp_v4_send_synack((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int tcp_v4_send_synack(Ptr<sock> sk, Ptr<dst_entry> dst, Ptr<flowi> fl,
       Ptr<request_sock> req, Ptr<tcp_fastopen_cookie> foc, tcp_synack_type synack_type,
       Ptr<sk_buff> syn_skb) {
@@ -3899,7 +3915,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v4_syn_recv_sock((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_v4_syn_recv_sock((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<sock> tcp_v4_syn_recv_sock(Ptr<sock> sk, Ptr<sk_buff> skb,
       Ptr<request_sock> req, Ptr<dst_entry> dst, Ptr<request_sock> req_unhash,
       Ptr<java.lang. @OriginalName("bool") Boolean> own_req) {
@@ -3913,7 +3929,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_ao_calc_key($arg1, $arg2, (const struct in6_addr*)$arg3, (const struct in6_addr*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("tcp_v6_ao_calc_key($arg1, $arg2, (const struct in6_addr *)$arg3, (const struct in6_addr *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int tcp_v6_ao_calc_key(Ptr<tcp_ao_key> mkt, Ptr<java.lang.Character> key,
       Ptr<in6_addr> saddr, Ptr<in6_addr> daddr, @Unsigned @OriginalName("__be16") short sport,
       @Unsigned @OriginalName("__be16") short dport, @Unsigned @OriginalName("__be32") int sisn,
@@ -3929,7 +3945,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_ao_calc_key_sk($arg1, $arg2, (const struct sock*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_v6_ao_calc_key_sk($arg1, $arg2, (const struct sock *)$arg3, $arg4, $arg5, $arg6)")
   public static int tcp_v6_ao_calc_key_sk(Ptr<tcp_ao_key> mkt, Ptr<java.lang.Character> key,
       Ptr<sock> sk, @Unsigned @OriginalName("__be32") int sisn,
       @Unsigned @OriginalName("__be32") int disn, boolean send) {
@@ -3937,7 +3953,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_ao_calc_key_skb($arg1, $arg2, (const struct sk_buff*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tcp_v6_ao_calc_key_skb($arg1, $arg2, (const struct sk_buff *)$arg3, $arg4, $arg5)")
   public static int tcp_v6_ao_calc_key_skb(Ptr<tcp_ao_key> mkt, Ptr<java.lang.Character> key,
       Ptr<sk_buff> skb, @Unsigned @OriginalName("__be32") int sisn,
       @Unsigned @OriginalName("__be32") int disn) {
@@ -3945,35 +3961,35 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_ao_hash_pseudoheader($arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_v6_ao_hash_pseudoheader($arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3, $arg4)")
   public static int tcp_v6_ao_hash_pseudoheader(Ptr<tcp_sigpool> hp, Ptr<in6_addr> daddr,
       Ptr<in6_addr> saddr, int nbytes) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_ao_hash_skb($arg1, $arg2, (const struct sock*)$arg3, (const struct sk_buff*)$arg4, (const u8*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("tcp_v6_ao_hash_skb($arg1, $arg2, (const struct sock *)$arg3, (const struct sk_buff *)$arg4, (const u8 *)$arg5, $arg6, $arg7)")
   public static int tcp_v6_ao_hash_skb(String ao_hash, Ptr<tcp_ao_key> key, Ptr<sock> sk,
       Ptr<sk_buff> skb, Ptr<java.lang.Character> tkey, int hash_offset, @Unsigned int sne) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_ao_lookup((const struct sock*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_v6_ao_lookup((const struct sock *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<tcp_ao_key> tcp_v6_ao_lookup(Ptr<sock> sk, Ptr<sock> addr_sk, int sndid,
       int rcvid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_ao_lookup_rsk((const struct sock*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_v6_ao_lookup_rsk((const struct sock *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<tcp_ao_key> tcp_v6_ao_lookup_rsk(Ptr<sock> sk, Ptr<request_sock> req, int sndid,
       int rcvid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_ao_synack_hash($arg1, $arg2, $arg3, (const struct sk_buff*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_v6_ao_synack_hash($arg1, $arg2, $arg3, (const struct sk_buff *)$arg4, $arg5, $arg6)")
   public static int tcp_v6_ao_synack_hash(String ao_hash, Ptr<tcp_ao_key> ao_key,
       Ptr<request_sock> req, Ptr<sk_buff> skb, int hash_offset, @Unsigned int sne) {
     throw new MethodIsBPFRelatedFunction();
@@ -4011,7 +4027,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_fill_cb($arg1, (const struct ipv6hdr*)$arg2, (const struct tcphdr*)$arg3)")
+  @BuiltinBPFFunction("tcp_v6_fill_cb($arg1, (const struct ipv6hdr *)$arg2, (const struct tcphdr *)$arg3)")
   public static void tcp_v6_fill_cb(Ptr<sk_buff> skb, Ptr<ipv6hdr> hdr, Ptr<tcphdr> th) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4024,7 +4040,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_init_seq((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("tcp_v6_init_seq((const struct sk_buff *)$arg1)")
   public static @Unsigned int tcp_v6_init_seq(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4036,27 +4052,27 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_init_ts_off((const struct net*)$arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("tcp_v6_init_ts_off((const struct net *)$arg1, (const struct sk_buff *)$arg2)")
   public static @Unsigned int tcp_v6_init_ts_off(Ptr<net> net, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_md5_hash_hdr($arg1, (const struct tcp_md5sig_key*)$arg2, (const struct in6_addr*)$arg3, $arg4, (const struct tcphdr*)$arg5)")
+  @BuiltinBPFFunction("tcp_v6_md5_hash_hdr($arg1, (const struct tcp_md5sig_key *)$arg2, (const struct in6_addr *)$arg3, $arg4, (const struct tcphdr *)$arg5)")
   public static int tcp_v6_md5_hash_hdr(String md5_hash, Ptr<tcp_md5sig_key> key,
       Ptr<in6_addr> daddr, Ptr<in6_addr> saddr, Ptr<tcphdr> th) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_md5_hash_skb($arg1, (const struct tcp_md5sig_key*)$arg2, (const struct sock*)$arg3, (const struct sk_buff*)$arg4)")
+  @BuiltinBPFFunction("tcp_v6_md5_hash_skb($arg1, (const struct tcp_md5sig_key *)$arg2, (const struct sock *)$arg3, (const struct sk_buff *)$arg4)")
   public static int tcp_v6_md5_hash_skb(String md5_hash, Ptr<tcp_md5sig_key> key, Ptr<sock> sk,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_md5_lookup((const struct sock*)$arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("tcp_v6_md5_lookup((const struct sock *)$arg1, (const struct sock *)$arg2)")
   public static Ptr<tcp_md5sig_key> tcp_v6_md5_lookup(Ptr<sock> sk, Ptr<sock> addr_sk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4098,7 +4114,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_reqsk_send_ack((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("tcp_v6_reqsk_send_ack((const struct sock *)$arg1, $arg2, $arg3)")
   public static void tcp_v6_reqsk_send_ack(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4110,7 +4126,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_route_req((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tcp_v6_route_req((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static Ptr<dst_entry> tcp_v6_route_req(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<flowi> fl,
       Ptr<request_sock> req, @Unsigned int tw_isn) {
     throw new MethodIsBPFRelatedFunction();
@@ -4123,13 +4139,13 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_send_reset((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("tcp_v6_send_reset((const struct sock *)$arg1, $arg2, $arg3)")
   public static void tcp_v6_send_reset(Ptr<sock> sk, Ptr<sk_buff> skb, sk_rst_reason reason) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_send_response((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11, $arg12, $arg13, $arg14)")
+  @BuiltinBPFFunction("tcp_v6_send_response((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11, $arg12, $arg13, $arg14)")
   public static void tcp_v6_send_response(Ptr<sock> sk, Ptr<sk_buff> skb, @Unsigned int seq,
       @Unsigned int ack, @Unsigned int win, @Unsigned int tsval, @Unsigned int tsecr, int oif,
       int rst, char tclass, @Unsigned @OriginalName("__be32") int label, @Unsigned int priority,
@@ -4138,7 +4154,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_send_synack((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("tcp_v6_send_synack((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int tcp_v6_send_synack(Ptr<sock> sk, Ptr<dst_entry> dst, Ptr<flowi> fl,
       Ptr<request_sock> req, Ptr<tcp_fastopen_cookie> foc, tcp_synack_type synack_type,
       Ptr<sk_buff> syn_skb) {
@@ -4146,7 +4162,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_v6_syn_recv_sock((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("tcp_v6_syn_recv_sock((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<sock> tcp_v6_syn_recv_sock(Ptr<sock> sk, Ptr<sk_buff> skb,
       Ptr<request_sock> req, Ptr<dst_entry> dst, Ptr<request_sock> req_unhash,
       Ptr<java.lang. @OriginalName("bool") Boolean> own_req) {
@@ -4166,7 +4182,7 @@ public final class TcpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcp_validate_incoming($arg1, $arg2, (const struct tcphdr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("tcp_validate_incoming($arg1, $arg2, (const struct tcphdr *)$arg3, $arg4)")
   public static boolean tcp_validate_incoming(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<tcphdr> th,
       int syn_inerr) {
     throw new MethodIsBPFRelatedFunction();

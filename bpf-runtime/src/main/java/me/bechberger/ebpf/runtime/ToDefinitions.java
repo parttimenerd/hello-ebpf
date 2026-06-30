@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1120,7 +1121,7 @@ public final class ToDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("to_nd_device_type((const struct device*)$arg1)")
+  @BuiltinBPFFunction("to_nd_device_type((const struct device *)$arg1)")
   public static int to_nd_device_type(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1180,7 +1181,7 @@ public final class ToDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct software_node*)to_software_node((const struct fwnode_handle*)$arg1))")
+  @BuiltinBPFFunction("((const struct software_node*)to_software_node((const struct fwnode_handle *)$arg1))")
   public static Ptr<software_node> to_software_node(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }

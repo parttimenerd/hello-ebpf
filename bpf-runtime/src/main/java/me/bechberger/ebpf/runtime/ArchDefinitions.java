@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class ArchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__arch_prepare_bpf_trampoline($arg1, $arg2, $arg3, $arg4, (const struct btf_func_model*)$arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__arch_prepare_bpf_trampoline($arg1, $arg2, $arg3, $arg4, (const struct btf_func_model *)$arg5, $arg6, $arg7, $arg8)")
   public static int __arch_prepare_bpf_trampoline(Ptr<bpf_tramp_image> im, Ptr<?> rw_image,
       Ptr<?> rw_image_end, Ptr<?> image, Ptr<btf_func_model> m, @Unsigned int flags,
       Ptr<bpf_tramp_links> tlinks, Ptr<?> func_addr) {
@@ -1181,7 +1182,7 @@ public final class ArchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("arch_bpf_trampoline_size((const struct btf_func_model*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("arch_bpf_trampoline_size((const struct btf_func_model *)$arg1, $arg2, $arg3, $arg4)")
   public static int arch_bpf_trampoline_size(Ptr<btf_func_model> m, @Unsigned int flags,
       Ptr<bpf_tramp_links> tlinks, Ptr<?> func_addr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1404,7 +1405,7 @@ public final class ArchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("arch_ftrace_match_adjust($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("arch_ftrace_match_adjust($arg1, (const u8 *)$arg2)")
   public static String arch_ftrace_match_adjust(String str, String search) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1660,7 +1661,7 @@ public final class ArchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("arch_kexec_apply_relocations_add($arg1, $arg2, (const elf64_shdr*)$arg3, (const elf64_shdr*)$arg4)")
+  @BuiltinBPFFunction("arch_kexec_apply_relocations_add($arg1, $arg2, (const elf64_shdr *)$arg3, (const elf64_shdr *)$arg4)")
   public static int arch_kexec_apply_relocations_add(Ptr<purgatory_info> pi,
       Ptr<@OriginalName("Elf64_Shdr") elf64_shdr> section,
       Ptr<@OriginalName("Elf64_Shdr") elf64_shdr> relsec,
@@ -1858,7 +1859,7 @@ public final class ArchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("arch_prepare_bpf_trampoline($arg1, $arg2, $arg3, (const struct btf_func_model*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("arch_prepare_bpf_trampoline($arg1, $arg2, $arg3, (const struct btf_func_model *)$arg4, $arg5, $arg6, $arg7)")
   public static int arch_prepare_bpf_trampoline(Ptr<bpf_tramp_image> im, Ptr<?> image,
       Ptr<?> image_end, Ptr<btf_func_model> m, @Unsigned int flags, Ptr<bpf_tramp_links> tlinks,
       Ptr<?> func_addr) {
@@ -2084,7 +2085,7 @@ public final class ArchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("arch_stack_walk_user($arg1, $arg2, (const struct pt_regs*)$arg3)")
+  @BuiltinBPFFunction("arch_stack_walk_user($arg1, $arg2, (const struct pt_regs *)$arg3)")
   public static void arch_stack_walk_user(
       @OriginalName("stack_trace_consume_fn") Ptr<?> consume_entry, Ptr<?> cookie,
       Ptr<pt_regs> regs) {
@@ -2129,7 +2130,7 @@ public final class ArchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("arch_syscall_match_sym_name((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("arch_syscall_match_sym_name((const u8 *)$arg1, (const u8 *)$arg2)")
   public static boolean arch_syscall_match_sym_name(String sym, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2171,7 +2172,7 @@ public final class ArchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("arch_trigger_cpumask_backtrace((const cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("arch_trigger_cpumask_backtrace((const cpumask *)$arg1, $arg2)")
   public static void arch_trigger_cpumask_backtrace(Ptr<@OriginalName("cpumask_t") cpumask> mask,
       int exclude_cpu) {
     throw new MethodIsBPFRelatedFunction();

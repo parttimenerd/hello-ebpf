@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CnDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("cn_add_callback((const struct cb_id*)$arg1, (const u8*)$arg2, (void (*)(struct cn_msg*, struct netlink_skb_parms*))$arg3)")
+  @BuiltinBPFFunction("cn_add_callback((const struct cb_id *)$arg1, (const u8 *)$arg2, (void (*)(struct cn_msg*, struct netlink_skb_parms*))$arg3)")
   public static int cn_add_callback(Ptr<cb_id> id, String name, Ptr<?> callback) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1102,19 +1103,19 @@ public final class CnDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cn_cb_equal((const struct cb_id*)$arg1, (const struct cb_id*)$arg2)")
+  @BuiltinBPFFunction("cn_cb_equal((const struct cb_id *)$arg1, (const struct cb_id *)$arg2)")
   public static int cn_cb_equal(Ptr<cb_id> i1, Ptr<cb_id> i2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cn_del_callback((const struct cb_id*)$arg1)")
+  @BuiltinBPFFunction("cn_del_callback((const struct cb_id *)$arg1)")
   public static void cn_del_callback(Ptr<cb_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cn_esc_printf($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("cn_esc_printf($arg1, (const u8 *)$arg2, $arg3_)")
   public static int cn_esc_printf(Ptr<core_name> cn, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1159,7 +1160,7 @@ public final class CnDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cn_printf($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("cn_printf($arg1, (const u8 *)$arg2, $arg3_)")
   public static int cn_printf(Ptr<core_name> cn, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1183,27 +1184,27 @@ public final class CnDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cn_queue_add_callback($arg1, (const u8*)$arg2, (const struct cb_id*)$arg3, (void (*)(struct cn_msg*, struct netlink_skb_parms*))$arg4)")
+  @BuiltinBPFFunction("cn_queue_add_callback($arg1, (const u8 *)$arg2, (const struct cb_id *)$arg3, (void (*)(struct cn_msg*, struct netlink_skb_parms*))$arg4)")
   public static int cn_queue_add_callback(Ptr<cn_queue_dev> dev, String name, Ptr<cb_id> id,
       Ptr<?> callback) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cn_queue_alloc_callback_entry($arg1, (const u8*)$arg2, (const struct cb_id*)$arg3, (void (*)(struct cn_msg*, struct netlink_skb_parms*))$arg4)")
+  @BuiltinBPFFunction("cn_queue_alloc_callback_entry($arg1, (const u8 *)$arg2, (const struct cb_id *)$arg3, (void (*)(struct cn_msg*, struct netlink_skb_parms*))$arg4)")
   public static Ptr<cn_callback_entry> cn_queue_alloc_callback_entry(Ptr<cn_queue_dev> dev,
       String name, Ptr<cb_id> id, Ptr<?> callback) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cn_queue_alloc_dev((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cn_queue_alloc_dev((const u8 *)$arg1, $arg2)")
   public static Ptr<cn_queue_dev> cn_queue_alloc_dev(String name, Ptr<sock> nls) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cn_queue_del_callback($arg1, (const struct cb_id*)$arg2)")
+  @BuiltinBPFFunction("cn_queue_del_callback($arg1, (const struct cb_id *)$arg2)")
   public static void cn_queue_del_callback(Ptr<cn_queue_dev> dev, Ptr<cb_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1233,7 +1234,7 @@ public final class CnDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cn_vprintf($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("cn_vprintf($arg1, (const u8 *)$arg2, $arg3)")
   public static int cn_vprintf(Ptr<core_name> cn, String fmt, Ptr<__va_list_tag> arg) {
     throw new MethodIsBPFRelatedFunction();
   }

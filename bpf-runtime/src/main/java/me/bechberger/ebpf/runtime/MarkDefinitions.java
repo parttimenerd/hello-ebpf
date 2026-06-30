@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1188,7 +1189,7 @@ public final class MarkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mark_hash_blacklisted((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("mark_hash_blacklisted((const u8 *)$arg1, $arg2, $arg3)")
   public static int mark_hash_blacklisted(Ptr<java.lang.Character> hash, @Unsigned long hash_len,
       blacklist_hash_type hash_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1232,13 +1233,13 @@ public final class MarkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mark_raw_hash_blacklisted((const u8*)$arg1)")
+  @BuiltinBPFFunction("mark_raw_hash_blacklisted((const u8 *)$arg1)")
   public static int mark_raw_hash_blacklisted(String hash) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mark_reg_invalid((const struct bpf_verifier_env*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mark_reg_invalid((const struct bpf_verifier_env *)$arg1, $arg2)")
   public static void mark_reg_invalid(Ptr<bpf_verifier_env> env, Ptr<bpf_reg_state> reg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1258,7 +1259,7 @@ public final class MarkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mark_reg_read($arg1, (const struct bpf_reg_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("mark_reg_read($arg1, (const struct bpf_reg_state *)$arg2, $arg3, $arg4)")
   public static int mark_reg_read(Ptr<bpf_verifier_env> env, Ptr<bpf_reg_state> state,
       Ptr<bpf_reg_state> parent, char flag) {
     throw new MethodIsBPFRelatedFunction();

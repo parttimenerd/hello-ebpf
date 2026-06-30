@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1121,7 +1122,7 @@ public final class RoleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("role_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("role_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long role_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1134,13 +1135,13 @@ public final class RoleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("role_trans_cmp((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("role_trans_cmp((const void *)$arg1, (const void *)$arg2)")
   public static int role_trans_cmp(Ptr<?> k1, Ptr<?> k2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("role_trans_hash((const void*)$arg1)")
+  @BuiltinBPFFunction("role_trans_hash((const void *)$arg1)")
   public static @Unsigned int role_trans_hash(Ptr<?> k) {
     throw new MethodIsBPFRelatedFunction();
   }

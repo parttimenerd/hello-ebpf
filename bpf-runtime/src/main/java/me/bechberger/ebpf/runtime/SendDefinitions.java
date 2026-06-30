@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1110,7 +1111,7 @@ public final class SendDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__send_ipi_mask_ex((const struct cpumask*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__send_ipi_mask_ex((const struct cpumask *)$arg1, $arg2, $arg3)")
   public static boolean __send_ipi_mask_ex(Ptr<cpumask> mask, int vector, boolean exclude_self) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1248,7 +1249,7 @@ public final class SendDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("send_to_group($arg1, (const void*)$arg2, $arg3, $arg4, (const struct qstr*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("send_to_group($arg1, (const void *)$arg2, $arg3, $arg4, (const struct qstr *)$arg5, $arg6, $arg7)")
   public static int send_to_group(@Unsigned int mask, Ptr<?> data, int data_type, Ptr<inode> dir,
       Ptr<qstr> file_name, @Unsigned int cookie, Ptr<fsnotify_iter_info> iter_info) {
     throw new MethodIsBPFRelatedFunction();

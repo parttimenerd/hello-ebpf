@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class HugetlbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__hugetlb_vmemmap_optimize_folio((const struct hstate*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__hugetlb_vmemmap_optimize_folio((const struct hstate *)$arg1, $arg2, $arg3, $arg4)")
   public static int __hugetlb_vmemmap_optimize_folio(Ptr<hstate> h, Ptr<folio> folio,
       Ptr<list_head> vmemmap_pages, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1111,7 +1112,7 @@ public final class HugetlbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__hugetlb_vmemmap_restore_folio((const struct hstate*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__hugetlb_vmemmap_restore_folio((const struct hstate *)$arg1, $arg2, $arg3)")
   public static int __hugetlb_vmemmap_restore_folio(Ptr<hstate> h, Ptr<folio> folio,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1443,7 +1444,7 @@ public final class HugetlbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hugetlb_file_setup((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("hugetlb_file_setup((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static Ptr<file> hugetlb_file_setup(String name, @Unsigned long size,
       @Unsigned @OriginalName("vm_flags_t") long acctflag, int creat_flags, int page_size_log) {
     throw new MethodIsBPFRelatedFunction();
@@ -1500,7 +1501,7 @@ public final class HugetlbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hugetlb_mempolicy_sysctl_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("hugetlb_mempolicy_sysctl_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int hugetlb_mempolicy_sysctl_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> length, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1528,7 +1529,7 @@ public final class HugetlbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hugetlb_overcommit_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("hugetlb_overcommit_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int hugetlb_overcommit_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> length, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1585,14 +1586,14 @@ public final class HugetlbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hugetlb_sysctl_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("hugetlb_sysctl_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int hugetlb_sysctl_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> length, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hugetlb_sysctl_handler_common($arg1, (const struct ctl_table*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("hugetlb_sysctl_handler_common($arg1, (const struct ctl_table *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int hugetlb_sysctl_handler_common(boolean obey_mempolicy, Ptr<ctl_table> table,
       int write, Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> length,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
@@ -1600,7 +1601,7 @@ public final class HugetlbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hugetlb_sysfs_add_hstate($arg1, $arg2, $arg3, (const struct attribute_group*)$arg4)")
+  @BuiltinBPFFunction("hugetlb_sysfs_add_hstate($arg1, $arg2, $arg3, (const struct attribute_group *)$arg4)")
   public static int hugetlb_sysfs_add_hstate(Ptr<hstate> h, Ptr<kobject> parent,
       Ptr<Ptr<kobject>> hstate_kobjs, Ptr<attribute_group> hstate_attr_group) {
     throw new MethodIsBPFRelatedFunction();
@@ -1761,7 +1762,7 @@ public final class HugetlbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hugetlb_vmemmap_optimizable((const struct hstate*)$arg1)")
+  @BuiltinBPFFunction("hugetlb_vmemmap_optimizable((const struct hstate *)$arg1)")
   public static boolean hugetlb_vmemmap_optimizable(Ptr<hstate> h) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1774,7 +1775,7 @@ public final class HugetlbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hugetlb_vmemmap_optimize_folio((const struct hstate*)$arg1, $arg2)")
+  @BuiltinBPFFunction("hugetlb_vmemmap_optimize_folio((const struct hstate *)$arg1, $arg2)")
   public static void hugetlb_vmemmap_optimize_folio(Ptr<hstate> h, Ptr<folio> folio) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1792,13 +1793,13 @@ public final class HugetlbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hugetlb_vmemmap_restore_folio((const struct hstate*)$arg1, $arg2)")
+  @BuiltinBPFFunction("hugetlb_vmemmap_restore_folio((const struct hstate *)$arg1, $arg2)")
   public static int hugetlb_vmemmap_restore_folio(Ptr<hstate> h, Ptr<folio> folio) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hugetlb_vmemmap_restore_folios((const struct hstate*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("hugetlb_vmemmap_restore_folios((const struct hstate *)$arg1, $arg2, $arg3)")
   public static long hugetlb_vmemmap_restore_folios(Ptr<hstate> h, Ptr<list_head> folio_list,
       Ptr<list_head> non_hvo_folios) {
     throw new MethodIsBPFRelatedFunction();

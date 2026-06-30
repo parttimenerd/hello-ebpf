@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1292,7 +1293,7 @@ public final class ErstDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("erst_read_record($arg1, $arg2, $arg3, $arg4, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg5)")
+          + "} *)$arg5)")
   public static @OriginalName("ssize_t") long erst_read_record(@Unsigned long record_id,
       Ptr<cper_record_header> record, @Unsigned long buflen, @Unsigned long recordlen,
       Ptr<@OriginalName("guid_t") uuid_t> creatorid) {
@@ -1306,7 +1307,7 @@ public final class ErstDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("erst_write((const struct cper_record_header*)$arg1)")
+  @BuiltinBPFFunction("erst_write((const struct cper_record_header *)$arg1)")
   public static int erst_write(Ptr<cper_record_header> record) {
     throw new MethodIsBPFRelatedFunction();
   }

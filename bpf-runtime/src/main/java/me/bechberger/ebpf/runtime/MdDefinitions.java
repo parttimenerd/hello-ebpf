@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1151,7 +1152,7 @@ public final class MdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("md_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("md_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long md_attr_store(Ptr<kobject> kobj, Ptr<attribute> attr,
       String page, @Unsigned long length) {
     throw new MethodIsBPFRelatedFunction();
@@ -1470,7 +1471,7 @@ public final class MdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("md_register_thread((void (*)(struct md_thread*))$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("md_register_thread((void (*)(struct md_thread*))$arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<md_thread> md_register_thread(Ptr<?> run, Ptr<mddev> mddev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1651,7 +1652,7 @@ public final class MdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("md_sync_action_by_name((const u8*)$arg1)")
+  @BuiltinBPFFunction("md_sync_action_by_name((const u8 *)$arg1)")
   public static sync_action md_sync_action_by_name(String page) {
     throw new MethodIsBPFRelatedFunction();
   }

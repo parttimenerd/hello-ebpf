@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1176,7 +1177,7 @@ public final class DpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpm_run_callback($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("dpm_run_callback($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int dpm_run_callback(@OriginalName("pm_callback_t") Ptr<?> cb, Ptr<device> dev,
       @OriginalName("pm_message_t") pm_message state, String info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1189,7 +1190,7 @@ public final class DpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpm_save_failed_dev((const u8*)$arg1)")
+  @BuiltinBPFFunction("dpm_save_failed_dev((const u8 *)$arg1)")
   public static void dpm_save_failed_dev(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1201,7 +1202,7 @@ public final class DpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpm_show_time($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("dpm_show_time($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static void dpm_show_time(@OriginalName("ktime_t") long starttime,
       @OriginalName("pm_message_t") pm_message state, int error, String info) {
     throw new MethodIsBPFRelatedFunction();

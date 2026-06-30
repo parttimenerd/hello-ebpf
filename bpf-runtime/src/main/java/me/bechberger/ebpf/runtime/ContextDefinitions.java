@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class ContextDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("context_compute_hash((const struct context*)$arg1)")
+  @BuiltinBPFFunction("context_compute_hash((const struct context *)$arg1)")
   public static @Unsigned int context_compute_hash(Ptr<context> c) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1157,7 +1158,7 @@ public final class ContextDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("context_update_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("context_update_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long context_update_write(Ptr<file> file, String ubuf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

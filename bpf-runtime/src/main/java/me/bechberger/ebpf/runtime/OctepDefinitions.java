@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1152,7 +1153,7 @@ public final class OctepDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("octep_hp_pci_probe($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("octep_hp_pci_probe($arg1, (const struct pci_device_id *)$arg2)")
   public static int octep_hp_pci_probe(Ptr<pci_dev> pdev, Ptr<pci_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }

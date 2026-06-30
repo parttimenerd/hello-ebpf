@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class HandshakeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("handshake_genl_notify($arg1, (const struct handshake_proto*)$arg2, $arg3)")
+  @BuiltinBPFFunction("handshake_genl_notify($arg1, (const struct handshake_proto *)$arg2, $arg3)")
   public static int handshake_genl_notify(Ptr<net> net, Ptr<handshake_proto> proto,
       @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1152,7 +1153,7 @@ public final class HandshakeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("handshake_req_alloc((const struct handshake_proto*)$arg1, $arg2)")
+  @BuiltinBPFFunction("handshake_req_alloc((const struct handshake_proto *)$arg1, $arg2)")
   public static Ptr<handshake_req> handshake_req_alloc(Ptr<handshake_proto> proto,
       @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1114,7 +1115,7 @@ public final class XasDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xas_clear_mark((const struct xa_state*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xas_clear_mark((const struct xa_state *)$arg1, $arg2)")
   public static void xas_clear_mark(Ptr<xa_state> xas,
       @Unsigned @OriginalName("xa_mark_t") int mark) {
     throw new MethodIsBPFRelatedFunction();
@@ -1170,7 +1171,7 @@ public final class XasDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xas_get_mark((const struct xa_state*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xas_get_mark((const struct xa_state *)$arg1, $arg2)")
   public static boolean xas_get_mark(Ptr<xa_state> xas,
       @Unsigned @OriginalName("xa_mark_t") int mark) {
     throw new MethodIsBPFRelatedFunction();
@@ -1183,7 +1184,7 @@ public final class XasDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xas_init_marks((const struct xa_state*)$arg1)")
+  @BuiltinBPFFunction("xas_init_marks((const struct xa_state *)$arg1)")
   public static void xas_init_marks(Ptr<xa_state> xas) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1219,7 +1220,7 @@ public final class XasDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xas_set_mark((const struct xa_state*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xas_set_mark((const struct xa_state *)$arg1, $arg2)")
   public static void xas_set_mark(Ptr<xa_state> xas,
       @Unsigned @OriginalName("xa_mark_t") int mark) {
     throw new MethodIsBPFRelatedFunction();
@@ -1239,7 +1240,7 @@ public final class XasDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xas_squash_marks((const struct xa_state*)$arg1)")
+  @BuiltinBPFFunction("xas_squash_marks((const struct xa_state *)$arg1)")
   public static void xas_squash_marks(Ptr<xa_state> xas) {
     throw new MethodIsBPFRelatedFunction();
   }

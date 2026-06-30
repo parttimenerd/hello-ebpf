@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class ScxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_allow_ttwu_queue((const struct task_struct*)$arg1)")
+  @BuiltinBPFFunction("scx_allow_ttwu_queue((const struct task_struct *)$arg1)")
   public static boolean scx_allow_ttwu_queue(Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1158,60 +1159,90 @@ public final class ScxDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int scx_bpf_cpu_node(int cpu)"
+  )
   public static int scx_bpf_cpu_node(int cpu) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct rq* scx_bpf_cpu_rq(int cpu)"
+  )
   public static Ptr<rq> scx_bpf_cpu_rq(int cpu) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int scx_bpf_cpuperf_cap(int cpu)"
+  )
   public static @Unsigned int scx_bpf_cpuperf_cap(int cpu) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int scx_bpf_cpuperf_cur(int cpu)"
+  )
   public static @Unsigned int scx_bpf_cpuperf_cur(int cpu) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_cpuperf_set(int cpu, unsigned int perf)"
+  )
   public static void scx_bpf_cpuperf_set(int cpu, @Unsigned int perf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int scx_bpf_create_dsq(long long unsigned int dsq_id, int node)"
+  )
   public static int scx_bpf_create_dsq(@Unsigned long dsq_id, int node) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_destroy_dsq(long long unsigned int dsq_id)"
+  )
   public static void scx_bpf_destroy_dsq(@Unsigned long dsq_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_dispatch_cancel()"
+  )
   public static void scx_bpf_dispatch_cancel() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int scx_bpf_dispatch_nr_slots()"
+  )
   public static @Unsigned int scx_bpf_dispatch_nr_slots() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_dsq_insert(struct task_struct *p, long long unsigned int dsq_id, long long unsigned int slice, long long unsigned int enq_flags)"
+  )
   public static void scx_bpf_dsq_insert(Ptr<task_struct> p, @Unsigned long dsq_id,
       @Unsigned long slice, @Unsigned long enq_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1219,6 +1250,9 @@ public final class ScxDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_dsq_insert_vtime(struct task_struct *p, long long unsigned int dsq_id, long long unsigned int slice, long long unsigned int vtime, long long unsigned int enq_flags)"
+  )
   public static void scx_bpf_dsq_insert_vtime(Ptr<task_struct> p, @Unsigned long dsq_id,
       @Unsigned long slice, @Unsigned long vtime, @Unsigned long enq_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1226,6 +1260,9 @@ public final class ScxDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool scx_bpf_dsq_move(struct bpf_iter_scx_dsq *it__iter, struct task_struct *p, long long unsigned int dsq_id, long long unsigned int enq_flags)"
+  )
   public static boolean scx_bpf_dsq_move(Ptr<bpf_iter_scx_dsq> it__iter, Ptr<task_struct> p,
       @Unsigned long dsq_id, @Unsigned long enq_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1233,6 +1270,9 @@ public final class ScxDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_dsq_move_set_slice(struct bpf_iter_scx_dsq *it__iter, long long unsigned int slice)"
+  )
   public static void scx_bpf_dsq_move_set_slice(Ptr<bpf_iter_scx_dsq> it__iter,
       @Unsigned long slice) {
     throw new MethodIsBPFRelatedFunction();
@@ -1240,6 +1280,9 @@ public final class ScxDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_dsq_move_set_vtime(struct bpf_iter_scx_dsq *it__iter, long long unsigned int vtime)"
+  )
   public static void scx_bpf_dsq_move_set_vtime(Ptr<bpf_iter_scx_dsq> it__iter,
       @Unsigned long vtime) {
     throw new MethodIsBPFRelatedFunction();
@@ -1247,12 +1290,18 @@ public final class ScxDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool scx_bpf_dsq_move_to_local(long long unsigned int dsq_id)"
+  )
   public static boolean scx_bpf_dsq_move_to_local(@Unsigned long dsq_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool scx_bpf_dsq_move_vtime(struct bpf_iter_scx_dsq *it__iter, struct task_struct *p, long long unsigned int dsq_id, long long unsigned int enq_flags)"
+  )
   public static boolean scx_bpf_dsq_move_vtime(Ptr<bpf_iter_scx_dsq> it__iter, Ptr<task_struct> p,
       @Unsigned long dsq_id, @Unsigned long enq_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1260,12 +1309,18 @@ public final class ScxDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int scx_bpf_dsq_nr_queued(long long unsigned int dsq_id)"
+  )
   public static int scx_bpf_dsq_nr_queued(@Unsigned long dsq_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_dump_bstr(u8 *fmt, long long unsigned int *data, unsigned int data__sz)"
+  )
   public static void scx_bpf_dump_bstr(String fmt, Ptr<java.lang. @Unsigned Long> data,
       @Unsigned int data__sz) {
     throw new MethodIsBPFRelatedFunction();
@@ -1273,6 +1328,9 @@ public final class ScxDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_error_bstr(u8 *fmt, long long unsigned int *data, unsigned int data__sz)"
+  )
   public static void scx_bpf_error_bstr(String fmt, Ptr<java.lang. @Unsigned Long> data,
       @Unsigned int data__sz) {
     throw new MethodIsBPFRelatedFunction();
@@ -1280,12 +1338,18 @@ public final class ScxDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_events(struct scx_event_stats *events, long unsigned int events__sz)"
+  )
   public static void scx_bpf_events(Ptr<scx_event_stats> events, @Unsigned long events__sz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_exit_bstr(long long int exit_code, u8 *fmt, long long unsigned int *data, unsigned int data__sz)"
+  )
   public static void scx_bpf_exit_bstr(long exit_code, String fmt,
       Ptr<java.lang. @Unsigned Long> data, @Unsigned int data__sz) {
     throw new MethodIsBPFRelatedFunction();
@@ -1293,117 +1357,176 @@ public final class ScxDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction("((const struct cpumask*)scx_bpf_get_idle_cpumask())")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "const struct cpumask* scx_bpf_get_idle_cpumask()"
+  )
   public static Ptr<cpumask> scx_bpf_get_idle_cpumask() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction("((const struct cpumask*)scx_bpf_get_idle_cpumask_node($arg1))")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "const struct cpumask* scx_bpf_get_idle_cpumask_node(int node)"
+  )
   public static Ptr<cpumask> scx_bpf_get_idle_cpumask_node(int node) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction("((const struct cpumask*)scx_bpf_get_idle_smtmask())")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "const struct cpumask* scx_bpf_get_idle_smtmask()"
+  )
   public static Ptr<cpumask> scx_bpf_get_idle_smtmask() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction("((const struct cpumask*)scx_bpf_get_idle_smtmask_node($arg1))")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "const struct cpumask* scx_bpf_get_idle_smtmask_node(int node)"
+  )
   public static Ptr<cpumask> scx_bpf_get_idle_smtmask_node(int node) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction("((const struct cpumask*)scx_bpf_get_online_cpumask())")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "const struct cpumask* scx_bpf_get_online_cpumask()"
+  )
   public static Ptr<cpumask> scx_bpf_get_online_cpumask() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction("((const struct cpumask*)scx_bpf_get_possible_cpumask())")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "const struct cpumask* scx_bpf_get_possible_cpumask()"
+  )
   public static Ptr<cpumask> scx_bpf_get_possible_cpumask() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_kick_cpu(int cpu, long long unsigned int flags)"
+  )
   public static void scx_bpf_kick_cpu(int cpu, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "long long unsigned int scx_bpf_now()"
+  )
   public static @Unsigned long scx_bpf_now() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int scx_bpf_nr_cpu_ids()"
+  )
   public static @Unsigned int scx_bpf_nr_cpu_ids() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int scx_bpf_nr_node_ids()"
+  )
   public static @Unsigned int scx_bpf_nr_node_ids() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_bpf_pick_any_cpu((const struct cpumask*)$arg1, $arg2)")
-  public static int scx_bpf_pick_any_cpu(Ptr<cpumask> cpus_allowed, @Unsigned long flags) {
-    throw new MethodIsBPFRelatedFunction();
-  }
-
-  @NotUsableInJava
-  @BuiltinBPFFunction("scx_bpf_pick_any_cpu_node((const struct cpumask*)$arg1, $arg2, $arg3)")
-  public static int scx_bpf_pick_any_cpu_node(Ptr<cpumask> cpus_allowed, int node,
+  @BuiltinBPFFunction("scx_bpf_pick_any_cpu((const struct cpumask *)$arg1, $arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int scx_bpf_pick_any_cpu(const struct cpumask *cpus_allowed, long long unsigned int flags)"
+  )
+  public static int scx_bpf_pick_any_cpu(@TrustedPtr Ptr<cpumask> cpus_allowed,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_bpf_pick_idle_cpu((const struct cpumask*)$arg1, $arg2)")
-  public static int scx_bpf_pick_idle_cpu(Ptr<cpumask> cpus_allowed, @Unsigned long flags) {
-    throw new MethodIsBPFRelatedFunction();
-  }
-
-  @NotUsableInJava
-  @BuiltinBPFFunction("scx_bpf_pick_idle_cpu_node((const struct cpumask*)$arg1, $arg2, $arg3)")
-  public static int scx_bpf_pick_idle_cpu_node(Ptr<cpumask> cpus_allowed, int node,
+  @BuiltinBPFFunction("scx_bpf_pick_any_cpu_node((const struct cpumask *)$arg1, $arg2, $arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int scx_bpf_pick_any_cpu_node(const struct cpumask *cpus_allowed, int node, long long unsigned int flags)"
+  )
+  public static int scx_bpf_pick_any_cpu_node(@TrustedPtr Ptr<cpumask> cpus_allowed, int node,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_bpf_put_cpumask((const struct cpumask*)$arg1)")
-  public static void scx_bpf_put_cpumask(Ptr<cpumask> cpumask) {
+  @BuiltinBPFFunction("scx_bpf_pick_idle_cpu((const struct cpumask *)$arg1, $arg2)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int scx_bpf_pick_idle_cpu(const struct cpumask *cpus_allowed, long long unsigned int flags)"
+  )
+  public static int scx_bpf_pick_idle_cpu(@TrustedPtr Ptr<cpumask> cpus_allowed,
+      @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_bpf_put_idle_cpumask((const struct cpumask*)$arg1)")
-  public static void scx_bpf_put_idle_cpumask(Ptr<cpumask> idle_mask) {
+  @BuiltinBPFFunction("scx_bpf_pick_idle_cpu_node((const struct cpumask *)$arg1, $arg2, $arg3)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int scx_bpf_pick_idle_cpu_node(const struct cpumask *cpus_allowed, int node, long long unsigned int flags)"
+  )
+  public static int scx_bpf_pick_idle_cpu_node(@TrustedPtr Ptr<cpumask> cpus_allowed, int node,
+      @Unsigned long flags) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("scx_bpf_put_cpumask((const struct cpumask *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_put_cpumask(const struct cpumask *cpumask)"
+  )
+  public static void scx_bpf_put_cpumask(@TrustedPtr Ptr<cpumask> cpumask) {
+    throw new MethodIsBPFRelatedFunction();
+  }
+
+  @NotUsableInJava
+  @BuiltinBPFFunction("scx_bpf_put_idle_cpumask((const struct cpumask *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_put_idle_cpumask(const struct cpumask *idle_mask)"
+  )
+  public static void scx_bpf_put_idle_cpumask(@TrustedPtr Ptr<cpumask> idle_mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "unsigned int scx_bpf_reenqueue_local()"
+  )
   public static @Unsigned int scx_bpf_reenqueue_local() {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_bpf_select_cpu_and($arg1, $arg2, $arg3, (const struct cpumask*)$arg4, $arg5)")
+  @BuiltinBPFFunction("scx_bpf_select_cpu_and($arg1, $arg2, $arg3, (const struct cpumask *)$arg4, $arg5)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int scx_bpf_select_cpu_and(struct task_struct *p, int prev_cpu, long long unsigned int wake_flags, const struct cpumask *cpus_allowed, long long unsigned int flags)"
+  )
   public static int scx_bpf_select_cpu_and(Ptr<task_struct> p, int prev_cpu,
-      @Unsigned long wake_flags, Ptr<cpumask> cpus_allowed, @Unsigned long flags) {
+      @Unsigned long wake_flags, @TrustedPtr Ptr<cpumask> cpus_allowed, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int scx_bpf_select_cpu_dfl(struct task_struct *p, int prev_cpu, long long unsigned int wake_flags, _Bool *is_idle)"
+  )
   public static int scx_bpf_select_cpu_dfl(Ptr<task_struct> p, int prev_cpu,
       @Unsigned long wake_flags, Ptr<java.lang. @OriginalName("bool") Boolean> is_idle) {
     throw new MethodIsBPFRelatedFunction();
@@ -1411,24 +1534,36 @@ public final class ScxDefinitions {
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "struct cgroup* scx_bpf_task_cgroup(struct task_struct *p)"
+  )
   public static Ptr<cgroup> scx_bpf_task_cgroup(Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_bpf_task_cpu((const struct task_struct*)$arg1)")
+  @BuiltinBPFFunction("scx_bpf_task_cpu((const struct task_struct *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "int scx_bpf_task_cpu(const struct task_struct *p)"
+  )
   public static int scx_bpf_task_cpu(Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_bpf_task_running((const struct task_struct*)$arg1)")
+  @BuiltinBPFFunction("scx_bpf_task_running((const struct task_struct *)$arg1)")
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool scx_bpf_task_running(const struct task_struct *p)"
+  )
   public static boolean scx_bpf_task_running(Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool scx_bpf_test_and_clear_cpu_idle(int cpu)"
+  )
   public static boolean scx_bpf_test_and_clear_cpu_idle(int cpu) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1557,7 +1692,7 @@ public final class ScxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_exit($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("scx_exit($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5_)")
   public static void scx_exit(Ptr<scx_sched> sch, scx_exit_kind kind, long exit_code, String fmt,
       java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
@@ -1643,7 +1778,7 @@ public final class ScxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_kf_exit($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("scx_kf_exit($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void scx_kf_exit(scx_exit_kind kind, long exit_code, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1674,7 +1809,7 @@ public final class ScxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_prio_less((const struct task_struct*)$arg1, (const struct task_struct*)$arg2, $arg3)")
+  @BuiltinBPFFunction("scx_prio_less((const struct task_struct *)$arg1, (const struct task_struct *)$arg2, $arg3)")
   public static boolean scx_prio_less(Ptr<task_struct> a, Ptr<task_struct> b, boolean in_fi) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1710,7 +1845,7 @@ public final class ScxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_select_cpu_dfl($arg1, $arg2, $arg3, (const struct cpumask*)$arg4, $arg5)")
+  @BuiltinBPFFunction("scx_select_cpu_dfl($arg1, $arg2, $arg3, (const struct cpumask *)$arg4, $arg5)")
   public static int scx_select_cpu_dfl(Ptr<task_struct> p, int prev_cpu, @Unsigned long wake_flags,
       Ptr<cpumask> cpus_allowed, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1765,13 +1900,13 @@ public final class ScxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_uevent((const struct kobject*)$arg1, $arg2)")
+  @BuiltinBPFFunction("scx_uevent((const struct kobject *)$arg1, $arg2)")
   public static int scx_uevent(Ptr<kobject> kobj, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scx_vexit($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("scx_vexit($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static void scx_vexit(Ptr<scx_sched> sch, scx_exit_kind kind, long exit_code, String fmt,
       Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
@@ -1788,6 +1923,9 @@ public final class ScxDefinitions {
    */
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_dispatch(struct task_struct *p, long long unsigned int dsq_id, long long unsigned int slice, long long unsigned int enq_flags)"
+  )
   @java.lang.Deprecated
   public static void scx_bpf_dispatch(Ptr<task_struct> p, @Unsigned long dsq_id,
       @Unsigned long slice, @Unsigned long enq_flags) {
@@ -1799,6 +1937,9 @@ public final class ScxDefinitions {
    */
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "_Bool scx_bpf_dispatch_from_dsq(struct bpf_iter_scx_dsq *it__iter, struct task_struct *p, long long unsigned int dsq_id, long long unsigned int enq_flags)"
+  )
   @java.lang.Deprecated
   public static boolean scx_bpf_dispatch_from_dsq(Ptr<bpf_iter_scx_dsq> it__iter,
       Ptr<task_struct> p, @Unsigned long dsq_id, @Unsigned long enq_flags) {
@@ -1810,6 +1951,9 @@ public final class ScxDefinitions {
    */
   @NotUsableInJava
   @BuiltinBPFFunction
+  @me.bechberger.ebpf.annotations.bpf.KFunc(
+      signature = "void scx_bpf_dispatch_vtime(struct task_struct *p, long long unsigned int dsq_id, long long unsigned int slice, long long unsigned int vtime, long long unsigned int enq_flags)"
+  )
   @java.lang.Deprecated
   public static void scx_bpf_dispatch_vtime(Ptr<task_struct> p, @Unsigned long dsq_id,
       @Unsigned long slice, @Unsigned long vtime, @Unsigned long enq_flags) {

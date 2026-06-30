@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class Udp4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__udp4_lib_lookup((const struct net*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("__udp4_lib_lookup((const struct net *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static Ptr<sock> __udp4_lib_lookup(Ptr<net> net,
       @Unsigned @OriginalName("__be32") int saddr, @Unsigned @OriginalName("__be16") short sport,
       @Unsigned @OriginalName("__be32") int daddr, @Unsigned @OriginalName("__be16") short dport,
@@ -1150,7 +1151,7 @@ public final class Udp4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("udp4_lib_lookup((const struct net*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("udp4_lib_lookup((const struct net *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<sock> udp4_lib_lookup(Ptr<net> net, @Unsigned @OriginalName("__be32") int saddr,
       @Unsigned @OriginalName("__be16") short sport, @Unsigned @OriginalName("__be32") int daddr,
       @Unsigned @OriginalName("__be16") short dport, int dif) {
@@ -1158,7 +1159,7 @@ public final class Udp4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("udp4_lib_lookup2((const struct net*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("udp4_lib_lookup2((const struct net *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static Ptr<sock> udp4_lib_lookup2(Ptr<net> net,
       @Unsigned @OriginalName("__be32") int saddr, @Unsigned @OriginalName("__be16") short sport,
       @Unsigned @OriginalName("__be32") int daddr, @Unsigned int hnum, int dif, int sdif,
@@ -1167,7 +1168,7 @@ public final class Udp4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("udp4_lib_lookup_skb((const struct sk_buff*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("udp4_lib_lookup_skb((const struct sk_buff *)$arg1, $arg2, $arg3)")
   public static Ptr<sock> udp4_lib_lookup_skb(Ptr<sk_buff> skb,
       @Unsigned @OriginalName("__be16") short sport,
       @Unsigned @OriginalName("__be16") short dport) {

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,45 +1091,45 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DdebugDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("ddebug_add_module($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("ddebug_add_module($arg1, (const u8 *)$arg2)")
   public static int ddebug_add_module(Ptr<_ddebug_info> di, String modname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ddebug_apply_class_bitmap((const struct ddebug_class_param*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ddebug_apply_class_bitmap((const struct ddebug_class_param *)$arg1, $arg2, $arg3)")
   public static int ddebug_apply_class_bitmap(Ptr<ddebug_class_param> dcp,
       Ptr<java.lang. @Unsigned Long> new_bits, Ptr<java.lang. @Unsigned Long> old_bits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ddebug_change((const struct ddebug_query*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ddebug_change((const struct ddebug_query *)$arg1, $arg2)")
   public static int ddebug_change(Ptr<ddebug_query> query, Ptr<flag_settings> modifiers) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ddebug_dyndbg_boot_param_cb($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ddebug_dyndbg_boot_param_cb($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int ddebug_dyndbg_boot_param_cb(String param, String val, String unused,
       Ptr<?> arg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ddebug_dyndbg_module_param_cb($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("ddebug_dyndbg_module_param_cb($arg1, $arg2, (const u8 *)$arg3)")
   public static int ddebug_dyndbg_module_param_cb(String param, String val, String module) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ddebug_exec_queries($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("ddebug_exec_queries($arg1, (const u8 *)$arg2)")
   public static int ddebug_exec_queries(String query, String modname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ddebug_exec_query($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("ddebug_exec_query($arg1, (const u8 *)$arg2)")
   public static int ddebug_exec_query(String query_string, String modname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1141,7 +1142,7 @@ public final class DdebugDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ddebug_parse_query($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("ddebug_parse_query($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int ddebug_parse_query(Ptr<String> words, int nwords, Ptr<ddebug_query> query,
       String modname) {
     throw new MethodIsBPFRelatedFunction();
@@ -1180,7 +1181,7 @@ public final class DdebugDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ddebug_proc_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ddebug_proc_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ddebug_proc_write(Ptr<file> file, String ubuf,
       @Unsigned long len, Ptr<java.lang. @OriginalName("loff_t") Long> offp) {
     throw new MethodIsBPFRelatedFunction();

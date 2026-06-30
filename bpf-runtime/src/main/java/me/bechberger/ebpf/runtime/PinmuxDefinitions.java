@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,13 +1103,13 @@ public final class PinmuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinmux_disable_setting((const struct pinctrl_setting*)$arg1)")
+  @BuiltinBPFFunction("pinmux_disable_setting((const struct pinctrl_setting *)$arg1)")
   public static void pinmux_disable_setting(Ptr<pinctrl_setting> setting) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinmux_enable_setting((const struct pinctrl_setting*)$arg1)")
+  @BuiltinBPFFunction("pinmux_enable_setting((const struct pinctrl_setting *)$arg1)")
   public static int pinmux_enable_setting(Ptr<pinctrl_setting> setting) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1121,13 +1122,13 @@ public final class PinmuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinmux_free_setting((const struct pinctrl_setting*)$arg1)")
+  @BuiltinBPFFunction("pinmux_free_setting((const struct pinctrl_setting *)$arg1)")
   public static void pinmux_free_setting(Ptr<pinctrl_setting> setting) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinmux_func_name_to_selector($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("pinmux_func_name_to_selector($arg1, (const u8 *)$arg2)")
   public static int pinmux_func_name_to_selector(Ptr<pinctrl_dev> pctldev, String function) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1158,7 +1159,7 @@ public final class PinmuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinmux_map_to_setting((const struct pinctrl_map*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pinmux_map_to_setting((const struct pinctrl_map *)$arg1, $arg2)")
   public static int pinmux_map_to_setting(Ptr<pinctrl_map> map, Ptr<pinctrl_setting> setting) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1195,26 +1196,26 @@ public final class PinmuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinmux_select_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pinmux_select_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long pinmux_select_write(Ptr<file> file, String user_buf,
       @Unsigned long len, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinmux_show_map($arg1, (const struct pinctrl_map*)$arg2)")
+  @BuiltinBPFFunction("pinmux_show_map($arg1, (const struct pinctrl_map *)$arg2)")
   public static void pinmux_show_map(Ptr<seq_file> s, Ptr<pinctrl_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinmux_show_setting($arg1, (const struct pinctrl_setting*)$arg2)")
+  @BuiltinBPFFunction("pinmux_show_setting($arg1, (const struct pinctrl_setting *)$arg2)")
   public static void pinmux_show_setting(Ptr<seq_file> s, Ptr<pinctrl_setting> setting) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinmux_validate_map((const struct pinctrl_map*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pinmux_validate_map((const struct pinctrl_map *)$arg1, $arg2)")
   public static int pinmux_validate_map(Ptr<pinctrl_map> map, int i) {
     throw new MethodIsBPFRelatedFunction();
   }

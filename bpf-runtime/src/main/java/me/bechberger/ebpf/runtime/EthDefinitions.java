@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class EthDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eth_get_headlen((const struct net_device*)$arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("eth_get_headlen((const struct net_device *)$arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned int eth_get_headlen(Ptr<net_device> dev, Ptr<?> data, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1114,33 +1115,33 @@ public final class EthDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eth_header($arg1, $arg2, $arg3, (const void*)$arg4, (const void*)$arg5, $arg6)")
+  @BuiltinBPFFunction("eth_header($arg1, $arg2, $arg3, (const void *)$arg4, (const void *)$arg5, $arg6)")
   public static int eth_header(Ptr<sk_buff> skb, Ptr<net_device> dev, @Unsigned short type,
       Ptr<?> daddr, Ptr<?> saddr, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eth_header_cache((const struct neighbour*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("eth_header_cache((const struct neighbour *)$arg1, $arg2, $arg3)")
   public static int eth_header_cache(Ptr<neighbour> neigh, Ptr<hh_cache> hh,
       @Unsigned @OriginalName("__be16") short type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eth_header_cache_update($arg1, (const struct net_device*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("eth_header_cache_update($arg1, (const struct net_device *)$arg2, (const u8 *)$arg3)")
   public static void eth_header_cache_update(Ptr<hh_cache> hh, Ptr<net_device> dev, String haddr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eth_header_parse((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("eth_header_parse((const struct sk_buff *)$arg1, $arg2)")
   public static int eth_header_parse(Ptr<sk_buff> skb, String haddr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eth_header_parse_protocol((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("eth_header_parse_protocol((const struct sk_buff *)$arg1)")
   public static @Unsigned @OriginalName("__be16") short eth_header_parse_protocol(
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();

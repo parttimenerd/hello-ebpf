@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class ReadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__read_extent_tree_block((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__read_extent_tree_block((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<buffer_head> __read_extent_tree_block(String function, @Unsigned int line,
       Ptr<inode> inode, Ptr<ext4_extent_idx> idx, int depth, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1150,7 +1151,7 @@ public final class ReadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("read_actions_logged((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("read_actions_logged((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4)")
   public static int read_actions_logged(Ptr<ctl_table> ro_table, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1171,7 +1172,7 @@ public final class ReadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("read_ahead_kb_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("read_ahead_kb_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long read_ahead_kb_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1283,7 +1284,7 @@ public final class ReadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("read_dmi_type_b1((const struct dmi_header*)$arg1, $arg2)")
+  @BuiltinBPFFunction("read_dmi_type_b1((const struct dmi_header *)$arg1, $arg2)")
   public static void read_dmi_type_b1(Ptr<dmi_header> dm, Ptr<?> private_data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1469,7 +1470,7 @@ public final class ReadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("read_only_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("read_only_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long read_only_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1613,7 +1614,7 @@ public final class ReadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("read_verify_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("read_verify_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long read_verify_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1104,7 +1105,7 @@ public final class DbcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dbc_bInterfaceProtocol_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dbc_bInterfaceProtocol_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long dbc_bInterfaceProtocol_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1118,7 +1119,7 @@ public final class DbcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dbc_bcdDevice_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dbc_bcdDevice_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long dbc_bcdDevice_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1156,7 +1157,7 @@ public final class DbcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dbc_idProduct_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dbc_idProduct_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long dbc_idProduct_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1170,7 +1171,7 @@ public final class DbcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dbc_idVendor_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dbc_idVendor_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long dbc_idVendor_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1184,7 +1185,7 @@ public final class DbcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dbc_poll_interval_ms_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dbc_poll_interval_ms_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long dbc_poll_interval_ms_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1234,7 +1235,7 @@ public final class DbcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dbc_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dbc_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long dbc_store(Ptr<device> dev, Ptr<device_attribute> attr,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1295,7 +1296,7 @@ public final class DbcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dbc_tty_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dbc_tty_write($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long dbc_tty_write(Ptr<tty_struct> tty,
       Ptr<java.lang.Character> buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class ImsttfbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("imsttfb_copyarea($arg1, (const struct fb_copyarea*)$arg2)")
+  @BuiltinBPFFunction("imsttfb_copyarea($arg1, (const struct fb_copyarea *)$arg2)")
   public static void imsttfb_copyarea(Ptr<fb_info> info, Ptr<fb_copyarea> area) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1114,7 +1115,7 @@ public final class ImsttfbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("imsttfb_fillrect($arg1, (const struct fb_fillrect*)$arg2)")
+  @BuiltinBPFFunction("imsttfb_fillrect($arg1, (const struct fb_fillrect *)$arg2)")
   public static void imsttfb_fillrect(Ptr<fb_info> info, Ptr<fb_fillrect> rect) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1139,7 +1140,7 @@ public final class ImsttfbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("imsttfb_probe($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("imsttfb_probe($arg1, (const struct pci_device_id *)$arg2)")
   public static int imsttfb_probe(Ptr<pci_dev> pdev, Ptr<pci_device_id> ent) {
     throw new MethodIsBPFRelatedFunction();
   }

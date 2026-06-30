@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,14 +1097,14 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__net_mp_close_rxq($arg1, $arg2, (const struct pp_memory_provider_params*)$arg3)")
+  @BuiltinBPFFunction("__net_mp_close_rxq($arg1, $arg2, (const struct pp_memory_provider_params *)$arg3)")
   public static void __net_mp_close_rxq(Ptr<net_device> dev, @Unsigned int ifq_idx,
       Ptr<pp_memory_provider_params> old_p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__net_mp_open_rxq($arg1, $arg2, (const struct pp_memory_provider_params*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__net_mp_open_rxq($arg1, $arg2, (const struct pp_memory_provider_params *)$arg3, $arg4)")
   public static int __net_mp_open_rxq(Ptr<net_device> dev, @Unsigned int rxq_idx,
       Ptr<pp_memory_provider_params> p, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1148,7 +1149,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_ctl_permissions($arg1, (const struct ctl_table*)$arg2)")
+  @BuiltinBPFFunction("net_ctl_permissions($arg1, (const struct ctl_table *)$arg2)")
   public static int net_ctl_permissions(Ptr<ctl_table_header> head, Ptr<ctl_table> table) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1258,7 +1259,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_dim($arg1, (const struct dim_sample*)$arg2)")
+  @BuiltinBPFFunction("net_dim($arg1, (const struct dim_sample *)$arg2)")
   public static void net_dim(Ptr<dim> dim, Ptr<dim_sample> end_sample) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1362,7 +1363,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_dm_hw_packet_report_size($arg1, (const struct devlink_trap_metadata*)$arg2)")
+  @BuiltinBPFFunction("net_dm_hw_packet_report_size($arg1, (const struct devlink_trap_metadata *)$arg2)")
   public static @Unsigned long net_dm_hw_packet_report_size(@Unsigned long payload_len,
       Ptr<devlink_trap_metadata> hw_metadata) {
     throw new MethodIsBPFRelatedFunction();
@@ -1381,7 +1382,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_dm_hw_summary_report_fill($arg1, (const struct net_dm_hw_entries*)$arg2)")
+  @BuiltinBPFFunction("net_dm_hw_summary_report_fill($arg1, (const struct net_dm_hw_entries *)$arg2)")
   public static int net_dm_hw_summary_report_fill(Ptr<sk_buff> msg,
       Ptr<net_dm_hw_entries> hw_entries) {
     throw new MethodIsBPFRelatedFunction();
@@ -1394,28 +1395,28 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_dm_hw_trap_packet_probe($arg1, (const struct devlink*)$arg2, $arg3, (const struct devlink_trap_metadata*)$arg4)")
+  @BuiltinBPFFunction("net_dm_hw_trap_packet_probe($arg1, (const struct devlink *)$arg2, $arg3, (const struct devlink_trap_metadata *)$arg4)")
   public static void net_dm_hw_trap_packet_probe(Ptr<?> ignore, Ptr<devlink> devlink,
       Ptr<sk_buff> skb, Ptr<devlink_trap_metadata> metadata) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_dm_hw_trap_summary_probe($arg1, (const struct devlink*)$arg2, $arg3, (const struct devlink_trap_metadata*)$arg4)")
+  @BuiltinBPFFunction("net_dm_hw_trap_summary_probe($arg1, (const struct devlink *)$arg2, $arg3, (const struct devlink_trap_metadata *)$arg4)")
   public static void net_dm_hw_trap_summary_probe(Ptr<?> ignore, Ptr<devlink> devlink,
       Ptr<sk_buff> skb, Ptr<devlink_trap_metadata> metadata) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_dm_nl_post_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("net_dm_nl_post_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static void net_dm_nl_post_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_dm_nl_pre_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("net_dm_nl_pre_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static int net_dm_nl_pre_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1429,7 +1430,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_dm_packet_report_in_port_put($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("net_dm_packet_report_in_port_put($arg1, $arg2, (const u8 *)$arg3)")
   public static int net_dm_packet_report_in_port_put(Ptr<sk_buff> msg, int ifindex, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1521,7 +1522,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_failover_fold_stats($arg1, (const struct rtnl_link_stats64*)$arg2, (const struct rtnl_link_stats64*)$arg3)")
+  @BuiltinBPFFunction("net_failover_fold_stats($arg1, (const struct rtnl_link_stats64 *)$arg2, (const struct rtnl_link_stats64 *)$arg3)")
   public static void net_failover_fold_stats(Ptr<rtnl_link_stats64> _res,
       Ptr<rtnl_link_stats64> _new, Ptr<rtnl_link_stats64> _old) {
     throw new MethodIsBPFRelatedFunction();
@@ -1642,7 +1643,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_get_ownership((const struct device*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("net_get_ownership((const struct device *)$arg1, $arg2, $arg3)")
   public static void net_get_ownership(Ptr<device> d, Ptr<kuid_t> uid, Ptr<kgid_t> gid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1654,7 +1655,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_hwtstamp_validate((const struct kernel_hwtstamp_config*)$arg1)")
+  @BuiltinBPFFunction("net_hwtstamp_validate((const struct kernel_hwtstamp_config *)$arg1)")
   public static int net_hwtstamp_validate(Ptr<kernel_hwtstamp_config> cfg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1723,7 +1724,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)net_namespace((const struct device*)$arg1))")
+  @BuiltinBPFFunction("((const void*)net_namespace((const struct device *)$arg1))")
   public static Ptr<?> net_namespace(Ptr<device> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1741,7 +1742,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_ns_get_ownership((const struct net*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("net_ns_get_ownership((const struct net *)$arg1, $arg2, $arg3)")
   public static void net_ns_get_ownership(Ptr<net> net, Ptr<kuid_t> uid, Ptr<kgid_t> gid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1826,35 +1827,35 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_cap_fill_one($arg1, $arg2, $arg3, $arg4, (const struct genl_info*)$arg5)")
+  @BuiltinBPFFunction("net_shaper_cap_fill_one($arg1, $arg2, $arg3, $arg4, (const struct genl_info *)$arg5)")
   public static int net_shaper_cap_fill_one(Ptr<sk_buff> msg, Ptr<net_shaper_binding> binding,
       net_shaper_scope scope, @Unsigned long flags, Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_commit($arg1, $arg2, (const struct net_shaper*)$arg3)")
+  @BuiltinBPFFunction("net_shaper_commit($arg1, $arg2, (const struct net_shaper *)$arg3)")
   public static void net_shaper_commit(Ptr<net_shaper_binding> binding, int nr_shapers,
       Ptr<net_shaper> shapers) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_ctx_setup((const struct genl_info*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("net_shaper_ctx_setup((const struct genl_info *)$arg1, $arg2, $arg3)")
   public static int net_shaper_ctx_setup(Ptr<genl_info> info, int type,
       Ptr<net_shaper_nl_ctx> ctx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_fill_handle($arg1, (const struct net_shaper_handle*)$arg2, $arg3)")
+  @BuiltinBPFFunction("net_shaper_fill_handle($arg1, (const struct net_shaper_handle *)$arg2, $arg3)")
   public static int net_shaper_fill_handle(Ptr<sk_buff> msg, Ptr<net_shaper_handle> handle,
       @Unsigned int type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_fill_one($arg1, (const struct net_shaper_binding*)$arg2, (const struct net_shaper*)$arg3, (const struct genl_info*)$arg4)")
+  @BuiltinBPFFunction("net_shaper_fill_one($arg1, (const struct net_shaper_binding *)$arg2, (const struct net_shaper *)$arg3, (const struct genl_info *)$arg4)")
   public static int net_shaper_fill_one(Ptr<sk_buff> msg, Ptr<net_shaper_binding> binding,
       Ptr<net_shaper> shaper, Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1867,7 +1868,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_handle_cmp((const struct net_shaper_handle*)$arg1, (const struct net_shaper_handle*)$arg2)")
+  @BuiltinBPFFunction("net_shaper_handle_cmp((const struct net_shaper_handle *)$arg1, (const struct net_shaper_handle *)$arg2)")
   public static int net_shaper_handle_cmp(Ptr<net_shaper_handle> a, Ptr<net_shaper_handle> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1880,7 +1881,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_lookup($arg1, (const struct net_shaper_handle*)$arg2)")
+  @BuiltinBPFFunction("net_shaper_lookup($arg1, (const struct net_shaper_handle *)$arg2)")
   public static Ptr<net_shaper> net_shaper_lookup(Ptr<net_shaper_binding> binding,
       Ptr<net_shaper_handle> handle) {
     throw new MethodIsBPFRelatedFunction();
@@ -1899,7 +1900,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_nl_cap_post_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("net_shaper_nl_cap_post_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static void net_shaper_nl_cap_post_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1912,7 +1913,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_nl_cap_pre_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("net_shaper_nl_cap_pre_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static int net_shaper_nl_cap_pre_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1949,7 +1950,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_nl_post_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("net_shaper_nl_post_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static void net_shaper_nl_post_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1962,7 +1963,7 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_nl_pre_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("net_shaper_nl_pre_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static int net_shaper_nl_pre_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1981,14 +1982,14 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_parse_handle((const struct nlattr*)$arg1, (const struct genl_info*)$arg2, $arg3)")
+  @BuiltinBPFFunction("net_shaper_parse_handle((const struct nlattr *)$arg1, (const struct genl_info *)$arg2, $arg3)")
   public static int net_shaper_parse_handle(Ptr<nlattr> attr, Ptr<genl_info> info,
       Ptr<net_shaper_handle> handle) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_parse_info($arg1, $arg2, (const struct genl_info*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("net_shaper_parse_info($arg1, $arg2, (const struct genl_info *)$arg3, $arg4, $arg5)")
   public static int net_shaper_parse_info(Ptr<net_shaper_binding> binding, Ptr<Ptr<nlattr>> tb,
       Ptr<genl_info> info, Ptr<net_shaper> shaper,
       Ptr<java.lang. @OriginalName("bool") Boolean> exists) {
@@ -1996,14 +1997,14 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_parse_leaf($arg1, (const struct nlattr*)$arg2, (const struct genl_info*)$arg3, (const struct net_shaper*)$arg4, $arg5)")
+  @BuiltinBPFFunction("net_shaper_parse_leaf($arg1, (const struct nlattr *)$arg2, (const struct genl_info *)$arg3, (const struct net_shaper *)$arg4, $arg5)")
   public static int net_shaper_parse_leaf(Ptr<net_shaper_binding> binding, Ptr<nlattr> attr,
       Ptr<genl_info> info, Ptr<net_shaper> node, Ptr<net_shaper> shaper) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_pre_del_node($arg1, (const struct net_shaper*)$arg2, $arg3)")
+  @BuiltinBPFFunction("net_shaper_pre_del_node($arg1, (const struct net_shaper *)$arg2, $arg3)")
   public static int net_shaper_pre_del_node(Ptr<net_shaper_binding> binding, Ptr<net_shaper> shaper,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -2029,14 +2030,14 @@ public final class NetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_validate_caps($arg1, $arg2, (const struct genl_info*)$arg3, $arg4)")
+  @BuiltinBPFFunction("net_shaper_validate_caps($arg1, $arg2, (const struct genl_info *)$arg3, $arg4)")
   public static int net_shaper_validate_caps(Ptr<net_shaper_binding> binding, Ptr<Ptr<nlattr>> tb,
       Ptr<genl_info> info, Ptr<net_shaper> shaper) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("net_shaper_validate_nesting($arg1, (const struct net_shaper*)$arg2, $arg3)")
+  @BuiltinBPFFunction("net_shaper_validate_nesting($arg1, (const struct net_shaper *)$arg2, $arg3)")
   public static int net_shaper_validate_nesting(Ptr<net_shaper_binding> binding,
       Ptr<net_shaper> shaper, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -2794,7 +2795,7 @@ public final class NetDefinitions {
 
     public int num_vlans;
 
-    public AnonymousType877804870C63 @Size(2) [] vlan;
+    public AnonymousType2017393480C63 @Size(2) [] vlan;
   }
 
   @Type(
@@ -4582,7 +4583,7 @@ public final class NetDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType877804870C63 extends Struct {
+  public static class AnonymousType2017393480C63 extends Struct {
     public @Unsigned short id;
 
     public @Unsigned @OriginalName("__be16") short proto;

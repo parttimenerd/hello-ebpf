@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1127,7 +1128,7 @@ public final class BackingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("backing_file_open((const struct path*)$arg1, $arg2, (const struct path*)$arg3, (const struct cred*)$arg4)")
+  @BuiltinBPFFunction("backing_file_open((const struct path *)$arg1, $arg2, (const struct path *)$arg3, (const struct cred *)$arg4)")
   public static Ptr<file> backing_file_open(Ptr<path> user_path, int flags, Ptr<path> real_path,
       Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
@@ -1141,7 +1142,7 @@ public final class BackingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("backing_file_set_user_path($arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("backing_file_set_user_path($arg1, (const struct path *)$arg2)")
   public static void backing_file_set_user_path(Ptr<file> f, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1163,7 +1164,7 @@ public final class BackingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("backing_file_user_path((const struct file*)$arg1)")
+  @BuiltinBPFFunction("backing_file_user_path((const struct file *)$arg1)")
   public static Ptr<path> backing_file_user_path(Ptr<file> f) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1176,7 +1177,7 @@ public final class BackingDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("backing_tmpfile_open((const struct path*)$arg1, $arg2, (const struct path*)$arg3, $arg4, (const struct cred*)$arg5)")
+  @BuiltinBPFFunction("backing_tmpfile_open((const struct path *)$arg1, $arg2, (const struct path *)$arg3, $arg4, (const struct cred *)$arg5)")
   public static Ptr<file> backing_tmpfile_open(Ptr<path> user_path, int flags,
       Ptr<path> real_parentpath, @Unsigned @OriginalName("umode_t") short mode, Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();

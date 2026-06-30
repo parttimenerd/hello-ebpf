@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1109,7 +1110,7 @@ public final class NdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__nd_driver_register($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__nd_driver_register($arg1, $arg2, (const u8 *)$arg3)")
   public static int __nd_driver_register(Ptr<nd_device_driver> nd_drv, Ptr<module> owner,
       String mod_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1204,14 +1205,14 @@ public final class NdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nd_cmd_in_size($arg1, $arg2, (const struct nd_cmd_desc*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("nd_cmd_in_size($arg1, $arg2, (const struct nd_cmd_desc *)$arg3, $arg4, $arg5)")
   public static @Unsigned int nd_cmd_in_size(Ptr<nvdimm> nvdimm, int cmd, Ptr<nd_cmd_desc> desc,
       int idx, Ptr<?> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nd_cmd_out_size($arg1, $arg2, (const struct nd_cmd_desc*)$arg3, $arg4, (const unsigned int*)$arg5, (const unsigned int*)$arg6, $arg7)")
+  @BuiltinBPFFunction("nd_cmd_out_size($arg1, $arg2, (const struct nd_cmd_desc *)$arg3, $arg4, (const unsigned int *)$arg5, (const unsigned int *)$arg6, $arg7)")
   public static @Unsigned int nd_cmd_out_size(Ptr<nvdimm> nvdimm, int cmd, Ptr<nd_cmd_desc> desc,
       int idx, Ptr<java.lang. @Unsigned Integer> in_field,
       Ptr<java.lang. @Unsigned Integer> out_field, @Unsigned long remainder) {
@@ -1300,7 +1301,7 @@ public final class NdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nd_jump_link((const struct path*)$arg1)")
+  @BuiltinBPFFunction("nd_jump_link((const struct path *)$arg1)")
   public static int nd_jump_link(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1351,7 +1352,7 @@ public final class NdDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("nd_label_gen_id($arg1, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg2, $arg3)")
+          + "} *)$arg2, $arg3)")
   public static String nd_label_gen_id(Ptr<nd_label_id> label_id, Ptr<uuid_t> uuid,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1402,7 +1403,7 @@ public final class NdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nd_namespace_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("nd_namespace_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long nd_namespace_store(Ptr<device> dev,
       Ptr<Ptr<nd_namespace_common>> _ndns, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1470,7 +1471,7 @@ public final class NdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nd_pfn_validate($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("nd_pfn_validate($arg1, (const u8 *)$arg2)")
   public static int nd_pfn_validate(Ptr<nd_pfn> nd_pfn, String sig) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1535,7 +1536,7 @@ public final class NdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nd_region_create($arg1, $arg2, (const struct device_type*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("nd_region_create($arg1, $arg2, (const struct device_type *)$arg3, (const u8 *)$arg4)")
   public static Ptr<nd_region> nd_region_create(Ptr<nvdimm_bus> nvdimm_bus,
       Ptr<nd_region_desc> ndr_desc, Ptr<device_type> dev_type, String caller) {
     throw new MethodIsBPFRelatedFunction();
@@ -1652,14 +1653,14 @@ public final class NdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nd_size_select_show($arg1, (const long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nd_size_select_show($arg1, (const long unsigned int *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long nd_size_select_show(@Unsigned long current_size,
       Ptr<java.lang. @Unsigned Long> supported, String buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nd_size_select_store($arg1, (const u8*)$arg2, $arg3, (const long unsigned int*)$arg4)")
+  @BuiltinBPFFunction("nd_size_select_store($arg1, (const u8 *)$arg2, $arg3, (const long unsigned int *)$arg4)")
   public static @OriginalName("ssize_t") long nd_size_select_store(Ptr<device> dev, String buf,
       Ptr<java.lang. @Unsigned Long> current_size, Ptr<java.lang. @Unsigned Long> supported) {
     throw new MethodIsBPFRelatedFunction();
@@ -1672,7 +1673,7 @@ public final class NdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nd_uuid_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("nd_uuid_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int nd_uuid_store(Ptr<device> dev, Ptr<Ptr<uuid_t>> uuid_out, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();

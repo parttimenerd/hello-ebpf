@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,13 +1097,13 @@ public final class IccDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("icc_bulk_disable($arg1, (const struct icc_bulk_data*)$arg2)")
+  @BuiltinBPFFunction("icc_bulk_disable($arg1, (const struct icc_bulk_data *)$arg2)")
   public static void icc_bulk_disable(int num_paths, Ptr<icc_bulk_data> paths) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("icc_bulk_enable($arg1, (const struct icc_bulk_data*)$arg2)")
+  @BuiltinBPFFunction("icc_bulk_enable($arg1, (const struct icc_bulk_data *)$arg2)")
   public static int icc_bulk_enable(int num_paths, Ptr<icc_bulk_data> paths) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1114,7 +1115,7 @@ public final class IccDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("icc_bulk_set_bw($arg1, (const struct icc_bulk_data*)$arg2)")
+  @BuiltinBPFFunction("icc_bulk_set_bw($arg1, (const struct icc_bulk_data *)$arg2)")
   public static int icc_bulk_set_bw(int num_paths, Ptr<icc_bulk_data> paths) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1138,7 +1139,7 @@ public final class IccDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("icc_get($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("icc_get($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static Ptr<icc_path> icc_get(Ptr<device> dev, String src, String dst) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1216,7 +1217,7 @@ public final class IccDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("icc_node_set_name($arg1, (const struct icc_provider*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("icc_node_set_name($arg1, (const struct icc_provider *)$arg2, (const u8 *)$arg3)")
   public static int icc_node_set_name(Ptr<icc_node> node, Ptr<icc_provider> provider, String name) {
     throw new MethodIsBPFRelatedFunction();
   }

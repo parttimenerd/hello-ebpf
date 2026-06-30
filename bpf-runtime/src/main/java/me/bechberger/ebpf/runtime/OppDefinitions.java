@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1217,7 +1218,7 @@ public final class OppDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("opp_set_dev_name((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("opp_set_dev_name((const struct device *)$arg1, $arg2)")
   public static void opp_set_dev_name(Ptr<device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }

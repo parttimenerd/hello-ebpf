@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class ConfigDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("config_group_find_item($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("config_group_find_item($arg1, (const u8 *)$arg2)")
   public static Ptr<config_item> config_group_find_item(Ptr<config_group> group, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1102,7 +1103,7 @@ public final class ConfigDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("config_group_init_type_name($arg1, (const u8*)$arg2, (const struct config_item_type*)$arg3)")
+  @BuiltinBPFFunction("config_group_init_type_name($arg1, (const u8 *)$arg2, (const struct config_item_type *)$arg3)")
   public static void config_group_init_type_name(Ptr<config_group> group, String name,
       Ptr<config_item_type> type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1133,7 +1134,7 @@ public final class ConfigDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("config_item_init_type_name($arg1, (const u8*)$arg2, (const struct config_item_type*)$arg3)")
+  @BuiltinBPFFunction("config_item_init_type_name($arg1, (const u8 *)$arg2, (const struct config_item_type *)$arg3)")
   public static void config_item_init_type_name(Ptr<config_item> item, String name,
       Ptr<config_item_type> type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1146,7 +1147,7 @@ public final class ConfigDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("config_item_set_name($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("config_item_set_name($arg1, (const u8 *)$arg2, $arg3_)")
   public static int config_item_set_name(Ptr<config_item> item, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
@@ -1160,7 +1161,7 @@ public final class ConfigDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("config_key_description_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("config_key_description_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long config_key_description_store(Ptr<config_item> item,
       String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1180,7 +1181,7 @@ public final class ConfigDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("config_keys_make_item($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("config_keys_make_item($arg1, (const u8 *)$arg2)")
   public static Ptr<config_item> config_keys_make_item(Ptr<config_group> group, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1193,7 +1194,7 @@ public final class ConfigDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("config_keys_restore_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("config_keys_restore_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long config_keys_restore_store(Ptr<config_item> item,
       String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1207,7 +1208,7 @@ public final class ConfigDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("config_keys_reuse_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("config_keys_reuse_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long config_keys_reuse_store(Ptr<config_item> item,
       String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

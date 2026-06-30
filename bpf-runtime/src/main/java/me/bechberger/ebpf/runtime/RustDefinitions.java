@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,13 +1103,13 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_IS_ERR((const void*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_IS_ERR((const void *)$arg1)")
   public static boolean rust_helper_IS_ERR(Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_PTR_ERR((const void*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_PTR_ERR((const void *)$arg1)")
   public static long rust_helper_PTR_ERR(Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1138,14 +1139,14 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper___mutex_init($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rust_helper___mutex_init($arg1, (const u8 *)$arg2, $arg3)")
   public static void rust_helper___mutex_init(Ptr<mutex> mutex, String name,
       Ptr<lock_class_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper___spin_lock_init($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rust_helper___spin_lock_init($arg1, (const u8 *)$arg2, $arg3)")
   public static void rust_helper___spin_lock_init(Ptr<@OriginalName("spinlock_t") spinlock> lock,
       String name, Ptr<lock_class_key> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -1197,7 +1198,7 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_clk_get_optional($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("rust_helper_clk_get_optional($arg1, (const u8 *)$arg2)")
   public static Ptr<clk> rust_helper_clk_get_optional(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1209,14 +1210,14 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_copy_from_user($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rust_helper_copy_from_user($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long rust_helper_copy_from_user(Ptr<?> to, Ptr<?> from,
       @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_copy_to_user($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rust_helper_copy_to_user($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long rust_helper_copy_to_user(Ptr<?> to, Ptr<?> from, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1234,7 +1235,7 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_cpumask_copy($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("rust_helper_cpumask_copy($arg1, (const struct cpumask *)$arg2)")
   public static void rust_helper_cpumask_copy(Ptr<cpumask> dstp, Ptr<cpumask> srcp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1288,19 +1289,19 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_dev_get_drvdata((const struct device*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_dev_get_drvdata((const struct device *)$arg1)")
   public static Ptr<?> rust_helper_dev_get_drvdata(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_dev_is_pci((const struct device*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_dev_is_pci((const struct device *)$arg1)")
   public static boolean rust_helper_dev_is_pci(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_dev_is_platform((const struct device*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_dev_is_platform((const struct device *)$arg1)")
   public static boolean rust_helper_dev_is_platform(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1408,7 +1409,7 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct cred*)rust_helper_get_cred((const struct cred*)$arg1))")
+  @BuiltinBPFFunction("((const struct cred*)rust_helper_get_cred((const struct cred *)$arg1))")
   public static Ptr<cred> rust_helper_get_cred(Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1450,7 +1451,7 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_init_work_with_key($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("rust_helper_init_work_with_key($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static void rust_helper_init_work_with_key(Ptr<work_struct> work,
       @OriginalName("work_func_t") Ptr<?> func, boolean onstack, String name,
       Ptr<lock_class_key> key) {
@@ -1478,7 +1479,7 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_is_of_node((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_is_of_node((const struct fwnode_handle *)$arg1)")
   public static boolean rust_helper_is_of_node(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1490,7 +1491,7 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_krealloc((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("rust_helper_krealloc((const void *)$arg1, $arg2, $arg3)")
   public static Ptr<?> rust_helper_krealloc(Ptr<?> objp, @Unsigned long new_size,
       @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1533,13 +1534,13 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_kunmap_local((const void*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_kunmap_local((const void *)$arg1)")
   public static void rust_helper_kunmap_local(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_kvrealloc((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("rust_helper_kvrealloc((const void *)$arg1, $arg2, $arg3)")
   public static Ptr<?> rust_helper_kvrealloc(Ptr<?> p, @Unsigned long size,
       @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1645,7 +1646,7 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_put_cred((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_put_cred((const struct cred *)$arg1)")
   public static void rust_helper_put_cred(Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1688,49 +1689,49 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_readb((const void*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_readb((const void *)$arg1)")
   public static char rust_helper_readb(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_readb_relaxed((const void*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_readb_relaxed((const void *)$arg1)")
   public static char rust_helper_readb_relaxed(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_readl((const void*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_readl((const void *)$arg1)")
   public static @Unsigned int rust_helper_readl(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_readl_relaxed((const void*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_readl_relaxed((const void *)$arg1)")
   public static @Unsigned int rust_helper_readl_relaxed(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_readq((const void*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_readq((const void *)$arg1)")
   public static @Unsigned long rust_helper_readq(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_readq_relaxed((const void*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_readq_relaxed((const void *)$arg1)")
   public static @Unsigned long rust_helper_readq_relaxed(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_readw((const void*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_readw((const void *)$arg1)")
   public static @Unsigned short rust_helper_readw(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_readw_relaxed((const void*)$arg1)")
+  @BuiltinBPFFunction("rust_helper_readw_relaxed((const void *)$arg1)")
   public static @Unsigned short rust_helper_readw_relaxed(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1765,7 +1766,7 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_request_mem_region($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("rust_helper_request_mem_region($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<resource> rust_helper_request_mem_region(
       @Unsigned @OriginalName("resource_size_t") long start,
       @Unsigned @OriginalName("resource_size_t") long n, String name) {
@@ -1773,7 +1774,7 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_request_muxed_region($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("rust_helper_request_muxed_region($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<resource> rust_helper_request_muxed_region(
       @Unsigned @OriginalName("resource_size_t") long start,
       @Unsigned @OriginalName("resource_size_t") long n, String name) {
@@ -1781,7 +1782,7 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_request_region($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("rust_helper_request_region($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<resource> rust_helper_request_region(
       @Unsigned @OriginalName("resource_size_t") long start,
       @Unsigned @OriginalName("resource_size_t") long n, String name) {
@@ -1870,7 +1871,7 @@ public final class RustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rust_helper_vrealloc((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("rust_helper_vrealloc((const void *)$arg1, $arg2, $arg3)")
   public static Ptr<?> rust_helper_vrealloc(Ptr<?> p, @Unsigned long size,
       @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();

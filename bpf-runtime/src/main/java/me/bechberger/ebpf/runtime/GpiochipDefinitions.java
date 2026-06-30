@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1104,14 +1105,14 @@ public final class GpiochipDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiochip_add_pin_range($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("gpiochip_add_pin_range($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int gpiochip_add_pin_range(Ptr<gpio_chip> gc, String pinctl_name,
       @Unsigned int gpio_offset, @Unsigned int pin_offset, @Unsigned int npins) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiochip_add_pingroup_range($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("gpiochip_add_pingroup_range($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int gpiochip_add_pingroup_range(Ptr<gpio_chip> gc, Ptr<pinctrl_dev> pctldev,
       @Unsigned int gpio_offset, String pin_group) {
     throw new MethodIsBPFRelatedFunction();
@@ -1330,7 +1331,7 @@ public final class GpiochipDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiochip_line_is_valid((const struct gpio_chip*)$arg1, $arg2)")
+  @BuiltinBPFFunction("gpiochip_line_is_valid((const struct gpio_chip *)$arg1, $arg2)")
   public static boolean gpiochip_line_is_valid(Ptr<gpio_chip> gc, @Unsigned int offset) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1362,7 +1363,7 @@ public final class GpiochipDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const long unsigned int*)gpiochip_query_valid_mask((const struct gpio_chip*)$arg1))")
+  @BuiltinBPFFunction("((const long unsigned int*)gpiochip_query_valid_mask((const struct gpio_chip *)$arg1))")
   public static Ptr<java.lang. @Unsigned Long> gpiochip_query_valid_mask(Ptr<gpio_chip> gc) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1392,7 +1393,7 @@ public final class GpiochipDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiochip_request_own_desc($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("gpiochip_request_own_desc($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static Ptr<gpio_desc> gpiochip_request_own_desc(Ptr<gpio_chip> gc, @Unsigned int hwnum,
       String label, gpio_lookup_flags lflags, gpiod_flags dflags) {
     throw new MethodIsBPFRelatedFunction();

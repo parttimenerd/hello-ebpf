@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1204,7 +1205,7 @@ public final class TunDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tun_fill_info($arg1, (const struct net_device*)$arg2)")
+  @BuiltinBPFFunction("tun_fill_info($arg1, (const struct net_device *)$arg2)")
   public static int tun_fill_info(Ptr<sk_buff> skb, Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1285,7 +1286,7 @@ public final class TunDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tun_get_size((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("tun_get_size((const struct net_device *)$arg1)")
   public static @Unsigned long tun_get_size(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1316,7 +1317,7 @@ public final class TunDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tun_napi_alloc_frags($arg1, $arg2, (const struct iov_iter*)$arg3)")
+  @BuiltinBPFFunction("tun_napi_alloc_frags($arg1, $arg2, (const struct iov_iter *)$arg3)")
   public static Ptr<sk_buff> tun_napi_alloc_frags(Ptr<tun_file> tfile, @Unsigned long len,
       Ptr<iov_iter> it) {
     throw new MethodIsBPFRelatedFunction();
@@ -1460,7 +1461,7 @@ public final class TunDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tun_set_link_ksettings($arg1, (const struct ethtool_link_ksettings*)$arg2)")
+  @BuiltinBPFFunction("tun_set_link_ksettings($arg1, (const struct ethtool_link_ksettings *)$arg2)")
   public static int tun_set_link_ksettings(Ptr<net_device> dev, Ptr<ethtool_link_ksettings> cmd) {
     throw new MethodIsBPFRelatedFunction();
   }

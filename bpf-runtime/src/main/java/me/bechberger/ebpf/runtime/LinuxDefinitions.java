@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1304,7 +1305,7 @@ public final class LinuxDefinitions {
 
     public @Unsigned @OriginalName("phys_addr_t") long next;
 
-    public AnonymousType924393200C72 @Size(0) [] entry;
+    public AnonymousType81505591C72 @Size(0) [] entry;
   }
 
   @Type(
@@ -2033,7 +2034,7 @@ public final class LinuxDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType924393200C72 extends Struct {
+  public static class AnonymousType81505591C72 extends Struct {
     public @Unsigned @OriginalName("phys_addr_t") long base;
 
     public @Unsigned @OriginalName("phys_addr_t") long size;

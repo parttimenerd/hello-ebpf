@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class RegDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("reg_bounds_sanity_check($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("reg_bounds_sanity_check($arg1, $arg2, (const u8 *)$arg3)")
   public static int reg_bounds_sanity_check(Ptr<bpf_verifier_env> env, Ptr<bpf_reg_state> reg,
       String ctx) {
     throw new MethodIsBPFRelatedFunction();
@@ -1109,7 +1110,7 @@ public final class RegDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("reg_btf_record((const struct bpf_reg_state*)$arg1)")
+  @BuiltinBPFFunction("reg_btf_record((const struct bpf_reg_state *)$arg1)")
   public static Ptr<btf_record> reg_btf_record(Ptr<bpf_reg_state> reg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1121,7 +1122,7 @@ public final class RegDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("reg_generate_netlink_event((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("reg_generate_netlink_event((const u8 *)$arg1, $arg2)")
   public static int reg_generate_netlink_event(String reg_name, @Unsigned long event) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1141,7 +1142,7 @@ public final class RegDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("reg_vif_get_iflink((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("reg_vif_get_iflink((const struct net_device *)$arg1)")
   public static int reg_vif_get_iflink(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }

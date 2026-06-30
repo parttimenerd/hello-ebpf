@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class SecurityDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__security_genfs_sid($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__security_genfs_sid($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int __security_genfs_sid(Ptr<selinux_policy> policy, String fstype, String path,
       @Unsigned short orig_sclass, Ptr<java.lang. @Unsigned Integer> sid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_add_hooks($arg1, $arg2, (const struct lsm_id*)$arg3)")
+  @BuiltinBPFFunction("security_add_hooks($arg1, $arg2, (const struct lsm_id *)$arg3)")
   public static void security_add_hooks(Ptr<security_hook_list> hooks, int count,
       Ptr<lsm_id> lsmid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1142,32 +1143,32 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_bdev_setintegrity($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("security_bdev_setintegrity($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int security_bdev_setintegrity(Ptr<block_device> bdev, lsm_integrity_type type,
       Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_binder_set_context_mgr((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("security_binder_set_context_mgr((const struct cred *)$arg1)")
   public static int security_binder_set_context_mgr(Ptr<cred> mgr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_binder_transaction((const struct cred*)$arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("security_binder_transaction((const struct cred *)$arg1, (const struct cred *)$arg2)")
   public static int security_binder_transaction(Ptr<cred> from, Ptr<cred> to) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_binder_transfer_binder((const struct cred*)$arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("security_binder_transfer_binder((const struct cred *)$arg1, (const struct cred *)$arg2)")
   public static int security_binder_transfer_binder(Ptr<cred> from, Ptr<cred> to) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_binder_transfer_file((const struct cred*)$arg1, (const struct cred*)$arg2, (const struct file*)$arg3)")
+  @BuiltinBPFFunction("security_binder_transfer_file((const struct cred *)$arg1, (const struct cred *)$arg2, (const struct file *)$arg3)")
   public static int security_binder_transfer_file(Ptr<cred> from, Ptr<cred> to, Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1224,19 +1225,19 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_bpf_token_capable((const struct bpf_token*)$arg1, $arg2)")
+  @BuiltinBPFFunction("security_bpf_token_capable((const struct bpf_token *)$arg1, $arg2)")
   public static int security_bpf_token_capable(Ptr<bpf_token> token, int cap) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_bpf_token_cmd((const struct bpf_token*)$arg1, $arg2)")
+  @BuiltinBPFFunction("security_bpf_token_cmd((const struct bpf_token *)$arg1, $arg2)")
   public static int security_bpf_token_cmd(Ptr<bpf_token> token, bpf_cmd cmd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_bpf_token_create($arg1, $arg2, (const struct path*)$arg3)")
+  @BuiltinBPFFunction("security_bpf_token_create($arg1, $arg2, (const struct path *)$arg3)")
   public static int security_bpf_token_create(Ptr<bpf_token> token, Ptr<bpf_attr> attr,
       Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
@@ -1255,13 +1256,13 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_bprm_committed_creds((const struct linux_binprm*)$arg1)")
+  @BuiltinBPFFunction("security_bprm_committed_creds((const struct linux_binprm *)$arg1)")
   public static void security_bprm_committed_creds(Ptr<linux_binprm> bprm) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_bprm_committing_creds((const struct linux_binprm*)$arg1)")
+  @BuiltinBPFFunction("security_bprm_committing_creds((const struct linux_binprm *)$arg1)")
   public static void security_bprm_committing_creds(Ptr<linux_binprm> bprm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1273,33 +1274,33 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_bprm_creds_from_file($arg1, (const struct file*)$arg2)")
+  @BuiltinBPFFunction("security_bprm_creds_from_file($arg1, (const struct file *)$arg2)")
   public static int security_bprm_creds_from_file(Ptr<linux_binprm> bprm, Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_capable((const struct cred*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("security_capable((const struct cred *)$arg1, $arg2, $arg3, $arg4)")
   public static int security_capable(Ptr<cred> cred, Ptr<user_namespace> ns, int cap,
       @Unsigned int opts) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_capget((const struct task_struct*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("security_capget((const struct task_struct *)$arg1, $arg2, $arg3, $arg4)")
   public static int security_capget(Ptr<task_struct> target, Ptr<kernel_cap_t> effective,
       Ptr<kernel_cap_t> inheritable, Ptr<kernel_cap_t> permitted) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_capset($arg1, (const struct cred*)$arg2, (const struct {\n"
+  @BuiltinBPFFunction("security_capset($arg1, (const struct cred *)$arg2, (const struct {\n"
           + "  long long unsigned int val;\n"
-          + "}*)$arg3, (const struct {\n"
+          + "} *)$arg3, (const struct {\n"
           + "  long long unsigned int val;\n"
-          + "}*)$arg4, (const struct {\n"
+          + "} *)$arg4, (const struct {\n"
           + "  long long unsigned int val;\n"
-          + "}*)$arg5)")
+          + "} *)$arg5)")
   public static int security_capset(Ptr<cred> _new, Ptr<cred> old, Ptr<kernel_cap_t> effective,
       Ptr<kernel_cap_t> inheritable, Ptr<kernel_cap_t> permitted) {
     throw new MethodIsBPFRelatedFunction();
@@ -1327,7 +1328,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_compute_sid($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("security_compute_sid($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6, $arg7)")
   public static int security_compute_sid(@Unsigned int ssid, @Unsigned int tsid,
       @Unsigned short orig_tclass, @Unsigned short specified, String objname,
       Ptr<java.lang. @Unsigned Integer> out_sid, boolean kern) {
@@ -1350,21 +1351,21 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_context_str_to_sid((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("security_context_str_to_sid((const u8 *)$arg1, $arg2, $arg3)")
   public static int security_context_str_to_sid(String scontext,
       Ptr<java.lang. @Unsigned Integer> sid, @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_context_to_sid((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("security_context_to_sid((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int security_context_to_sid(String scontext, @Unsigned int scontext_len,
       Ptr<java.lang. @Unsigned Integer> sid, @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_context_to_sid_core((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("security_context_to_sid_core((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int security_context_to_sid_core(String scontext, @Unsigned int scontext_len,
       Ptr<java.lang. @Unsigned Integer> sid, @Unsigned int def_sid,
       @Unsigned @OriginalName("gfp_t") int gfp_flags, int force) {
@@ -1372,7 +1373,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_context_to_sid_default((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("security_context_to_sid_default((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int security_context_to_sid_default(String scontext, @Unsigned int scontext_len,
       Ptr<java.lang. @Unsigned Integer> sid, @Unsigned int def_sid,
       @Unsigned @OriginalName("gfp_t") int gfp_flags) {
@@ -1380,14 +1381,14 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_context_to_sid_force((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("security_context_to_sid_force((const u8 *)$arg1, $arg2, $arg3)")
   public static int security_context_to_sid_force(String scontext, @Unsigned int scontext_len,
       Ptr<java.lang. @Unsigned Integer> sid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_create_user_ns((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("security_create_user_ns((const struct cred *)$arg1)")
   public static int security_create_user_ns(Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1406,13 +1407,13 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_cred_getlsmprop((const struct cred*)$arg1, $arg2)")
+  @BuiltinBPFFunction("security_cred_getlsmprop((const struct cred *)$arg1, $arg2)")
   public static void security_cred_getlsmprop(Ptr<cred> c, Ptr<lsm_prop> prop) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_cred_getsecid((const struct cred*)$arg1, $arg2)")
+  @BuiltinBPFFunction("security_cred_getsecid((const struct cred *)$arg1, $arg2)")
   public static void security_cred_getsecid(Ptr<cred> c, Ptr<java.lang. @Unsigned Integer> secid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1430,14 +1431,14 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_dentry_create_files_as($arg1, $arg2, $arg3, (const struct cred*)$arg4, $arg5)")
+  @BuiltinBPFFunction("security_dentry_create_files_as($arg1, $arg2, $arg3, (const struct cred *)$arg4, $arg5)")
   public static int security_dentry_create_files_as(Ptr<dentry> dentry, int mode, Ptr<qstr> name,
       Ptr<cred> old, Ptr<cred> _new) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_dentry_init_security($arg1, $arg2, (const struct qstr*)$arg3, (const u8**)$arg4, $arg5)")
+  @BuiltinBPFFunction("security_dentry_init_security($arg1, $arg2, (const struct qstr *)$arg3, (const u8**)$arg4, $arg5)")
   public static int security_dentry_init_security(Ptr<dentry> dentry, int mode, Ptr<qstr> name,
       Ptr<String> xattr_name, Ptr<lsm_context> lsmctx) {
     throw new MethodIsBPFRelatedFunction();
@@ -1451,7 +1452,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_dump_masked_av($arg1, $arg2, $arg3, $arg4, $arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("security_dump_masked_av($arg1, $arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6)")
   public static void security_dump_masked_av(Ptr<policydb> policydb, Ptr<context> scontext,
       Ptr<context> tcontext, @Unsigned short tclass, @Unsigned int permissions, String reason) {
     throw new MethodIsBPFRelatedFunction();
@@ -1588,7 +1589,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_genfs_sid((const u8*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("security_genfs_sid((const u8 *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int security_genfs_sid(String fstype, String path, @Unsigned short orig_sclass,
       Ptr<java.lang. @Unsigned Integer> sid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1628,7 +1629,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_get_permissions($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("security_get_permissions($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int security_get_permissions(Ptr<selinux_policy> policy, String _class,
       Ptr<Ptr<String>> perms, Ptr<java.lang. @Unsigned Integer> nperms) {
     throw new MethodIsBPFRelatedFunction();
@@ -1641,14 +1642,14 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_get_user_sids($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("security_get_user_sids($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int security_get_user_sids(@Unsigned int fromsid, String username,
       Ptr<Ptr<java.lang. @Unsigned Integer>> sids, Ptr<java.lang. @Unsigned Integer> nel) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_getprocattr($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("security_getprocattr($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int security_getprocattr(Ptr<task_struct> p, int lsmid, String name,
       Ptr<String> value) {
     throw new MethodIsBPFRelatedFunction();
@@ -1668,13 +1669,13 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_ib_endport_manage_subnet($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("security_ib_endport_manage_subnet($arg1, (const u8 *)$arg2, $arg3)")
   public static int security_ib_endport_manage_subnet(Ptr<?> sec, String dev_name, char port_num) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_ib_endport_sid((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("security_ib_endport_sid((const u8 *)$arg1, $arg2, $arg3)")
   public static int security_ib_endport_sid(String dev_name, char port_num,
       Ptr<java.lang. @Unsigned Integer> out_sid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1707,14 +1708,14 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inet_conn_request((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("security_inet_conn_request((const struct sock *)$arg1, $arg2, $arg3)")
   public static int security_inet_conn_request(Ptr<sock> sk, Ptr<sk_buff> skb,
       Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inet_csk_clone($arg1, (const struct request_sock*)$arg2)")
+  @BuiltinBPFFunction("security_inet_csk_clone($arg1, (const struct request_sock *)$arg2)")
   public static void security_inet_csk_clone(Ptr<sock> newsk, Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1745,7 +1746,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_copy_up_xattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("security_inode_copy_up_xattr($arg1, (const u8 *)$arg2)")
   public static int security_inode_copy_up_xattr(Ptr<dentry> src, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1782,14 +1783,14 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_get_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("security_inode_get_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static int security_inode_get_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_getattr((const struct path*)$arg1)")
+  @BuiltinBPFFunction("security_inode_getattr((const struct path *)$arg1)")
   public static int security_inode_getattr(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1807,27 +1808,27 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_getsecurity($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("security_inode_getsecurity($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int security_inode_getsecurity(Ptr<mnt_idmap> idmap, Ptr<inode> inode, String name,
       Ptr<Ptr<?>> buffer, boolean alloc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_getxattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("security_inode_getxattr($arg1, (const u8 *)$arg2)")
   public static int security_inode_getxattr(Ptr<dentry> dentry, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_init_security($arg1, $arg2, (const struct qstr*)$arg3, (const int (struct inode*, const struct xattr*, void*)*)$arg4, $arg5)")
+  @BuiltinBPFFunction("security_inode_init_security($arg1, $arg2, (const struct qstr *)$arg3, (const int (struct inode*, const struct xattr*, void*)*)$arg4, $arg5)")
   public static int security_inode_init_security(Ptr<inode> inode, Ptr<inode> dir, Ptr<qstr> qstr,
       @OriginalName("initxattrs") Ptr<?> initxattrs, Ptr<?> fs_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_init_security_anon($arg1, (const struct qstr*)$arg2, (const struct inode*)$arg3)")
+  @BuiltinBPFFunction("security_inode_init_security_anon($arg1, (const struct qstr *)$arg2, (const struct inode *)$arg3)")
   public static int security_inode_init_security_anon(Ptr<inode> inode, Ptr<qstr> name,
       Ptr<inode> context_inode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1905,20 +1906,20 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_post_remove_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("security_inode_post_remove_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static void security_inode_post_remove_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_post_removexattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("security_inode_post_removexattr($arg1, (const u8 *)$arg2)")
   public static void security_inode_post_removexattr(Ptr<dentry> dentry, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_post_set_acl($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("security_inode_post_set_acl($arg1, (const u8 *)$arg2, $arg3)")
   public static void security_inode_post_set_acl(Ptr<dentry> dentry, String acl_name,
       Ptr<posix_acl> kacl) {
     throw new MethodIsBPFRelatedFunction();
@@ -1932,7 +1933,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_post_setxattr($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("security_inode_post_setxattr($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static void security_inode_post_setxattr(Ptr<dentry> dentry, String name, Ptr<?> value,
       @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1945,14 +1946,14 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_remove_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("security_inode_remove_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static int security_inode_remove_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_removexattr($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("security_inode_removexattr($arg1, $arg2, (const u8 *)$arg3)")
   public static int security_inode_removexattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1972,7 +1973,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_set_acl($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("security_inode_set_acl($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int security_inode_set_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name, Ptr<posix_acl> kacl) {
     throw new MethodIsBPFRelatedFunction();
@@ -1986,7 +1987,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_setintegrity((const struct inode*)$arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("security_inode_setintegrity((const struct inode *)$arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int security_inode_setintegrity(Ptr<inode> inode, lsm_integrity_type type,
       Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1999,21 +2000,21 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_setsecurity($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("security_inode_setsecurity($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static int security_inode_setsecurity(Ptr<inode> inode, String name, Ptr<?> value,
       @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_setxattr($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("security_inode_setxattr($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int security_inode_setxattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name,
       Ptr<?> value, @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_inode_symlink($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("security_inode_symlink($arg1, $arg2, (const u8 *)$arg3)")
   public static int security_inode_symlink(Ptr<inode> dir, Ptr<dentry> dentry, String old_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2037,7 +2038,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_ismaclabel((const u8*)$arg1)")
+  @BuiltinBPFFunction("security_ismaclabel((const u8 *)$arg1)")
   public static int security_ismaclabel(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2094,7 +2095,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_key_alloc($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("security_key_alloc($arg1, (const struct cred *)$arg2, $arg3)")
   public static int security_key_alloc(Ptr<key> key, Ptr<cred> cred, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2112,7 +2113,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_key_permission($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("security_key_permission($arg1, (const struct cred *)$arg2, $arg3)")
   public static int security_key_permission(
       @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> key_ref,
       Ptr<cred> cred, key_need_perm need_perm) {
@@ -2120,7 +2121,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_key_post_create_or_update($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("security_key_post_create_or_update($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6)")
   public static void security_key_post_create_or_update(Ptr<key> keyring, Ptr<key> key,
       Ptr<?> payload, @Unsigned long payload_len, @Unsigned long flags, boolean create) {
     throw new MethodIsBPFRelatedFunction();
@@ -2134,7 +2135,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_lock_kernel_down((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("security_lock_kernel_down((const u8 *)$arg1, $arg2)")
   public static int security_lock_kernel_down(String where, lockdown_reason level) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2177,7 +2178,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_move_mount((const struct path*)$arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("security_move_mount((const struct path *)$arg1, (const struct path *)$arg2)")
   public static int security_move_mount(Ptr<path> from_path, Ptr<path> to_path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2246,7 +2247,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_netif_sid((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("security_netif_sid((const u8 *)$arg1, $arg2)")
   public static int security_netif_sid(String name, Ptr<java.lang. @Unsigned Integer> if_sid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2272,7 +2273,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_node_sid($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("security_node_sid($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static int security_node_sid(@Unsigned short domain, Ptr<?> addrp, @Unsigned int addrlen,
       Ptr<java.lang. @Unsigned Integer> out_sid) {
     throw new MethodIsBPFRelatedFunction();
@@ -2285,47 +2286,47 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_path_chmod((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("security_path_chmod((const struct path *)$arg1, $arg2)")
   public static int security_path_chmod(Ptr<path> path,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_path_chown((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("security_path_chown((const struct path *)$arg1, $arg2, $arg3)")
   public static int security_path_chown(Ptr<path> path, kuid_t uid, kgid_t gid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_path_chroot((const struct path*)$arg1)")
+  @BuiltinBPFFunction("security_path_chroot((const struct path *)$arg1)")
   public static int security_path_chroot(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_path_link($arg1, (const struct path*)$arg2, $arg3)")
+  @BuiltinBPFFunction("security_path_link($arg1, (const struct path *)$arg2, $arg3)")
   public static int security_path_link(Ptr<dentry> old_dentry, Ptr<path> new_dir,
       Ptr<dentry> new_dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_path_mkdir((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("security_path_mkdir((const struct path *)$arg1, $arg2, $arg3)")
   public static int security_path_mkdir(Ptr<path> dir, Ptr<dentry> dentry,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_path_mknod((const struct path*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("security_path_mknod((const struct path *)$arg1, $arg2, $arg3, $arg4)")
   public static int security_path_mknod(Ptr<path> dir, Ptr<dentry> dentry,
       @Unsigned @OriginalName("umode_t") short mode, @Unsigned int dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_path_notify((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("security_path_notify((const struct path *)$arg1, $arg2, $arg3)")
   public static int security_path_notify(Ptr<path> path, @Unsigned long mask,
       @Unsigned int obj_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -2338,32 +2339,32 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_path_rename((const struct path*)$arg1, $arg2, (const struct path*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("security_path_rename((const struct path *)$arg1, $arg2, (const struct path *)$arg3, $arg4, $arg5)")
   public static int security_path_rename(Ptr<path> old_dir, Ptr<dentry> old_dentry,
       Ptr<path> new_dir, Ptr<dentry> new_dentry, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_path_rmdir((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("security_path_rmdir((const struct path *)$arg1, $arg2)")
   public static int security_path_rmdir(Ptr<path> dir, Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_path_symlink((const struct path*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("security_path_symlink((const struct path *)$arg1, $arg2, (const u8 *)$arg3)")
   public static int security_path_symlink(Ptr<path> dir, Ptr<dentry> dentry, String old_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_path_truncate((const struct path*)$arg1)")
+  @BuiltinBPFFunction("security_path_truncate((const struct path *)$arg1)")
   public static int security_path_truncate(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_path_unlink((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("security_path_unlink((const struct path *)$arg1, $arg2)")
   public static int security_path_unlink(Ptr<path> dir, Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2412,14 +2413,14 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_post_notification((const struct cred*)$arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("security_post_notification((const struct cred *)$arg1, (const struct cred *)$arg2, $arg3)")
   public static int security_post_notification(Ptr<cred> w_cred, Ptr<cred> cred,
       Ptr<watch_notification> n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_prepare_creds($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("security_prepare_creds($arg1, (const struct cred *)$arg2, $arg3)")
   public static int security_prepare_creds(Ptr<cred> _new, Ptr<cred> old,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
@@ -2444,7 +2445,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_quotactl($arg1, $arg2, $arg3, (const struct super_block*)$arg4)")
+  @BuiltinBPFFunction("security_quotactl($arg1, $arg2, $arg3, (const struct super_block *)$arg4)")
   public static int security_quotactl(int cmds, int type, int id, Ptr<super_block> sb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2469,7 +2470,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_req_classify_flow((const struct request_sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("security_req_classify_flow((const struct request_sock *)$arg1, $arg2)")
   public static void security_req_classify_flow(Ptr<request_sock> req, Ptr<flowi_common> flic) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2481,7 +2482,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_sb_clone_mnt_opts((const struct super_block*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("security_sb_clone_mnt_opts((const struct super_block *)$arg1, $arg2, $arg3, $arg4)")
   public static int security_sb_clone_mnt_opts(Ptr<super_block> oldsb, Ptr<super_block> newsb,
       @Unsigned long kern_flags, Ptr<java.lang. @Unsigned Long> set_kern_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2506,7 +2507,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_sb_kern_mount((const struct super_block*)$arg1)")
+  @BuiltinBPFFunction("security_sb_kern_mount((const struct super_block *)$arg1)")
   public static int security_sb_kern_mount(Ptr<super_block> sb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2518,14 +2519,14 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_sb_mount((const u8*)$arg1, (const struct path*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("security_sb_mount((const u8 *)$arg1, (const struct path *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int security_sb_mount(String dev_name, Ptr<path> path, String type,
       @Unsigned long flags, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_sb_pivotroot((const struct path*)$arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("security_sb_pivotroot((const struct path *)$arg1, (const struct path *)$arg2)")
   public static int security_sb_pivotroot(Ptr<path> old_path, Ptr<path> new_path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2588,7 +2589,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_secctx_to_secid((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("security_secctx_to_secid((const u8 *)$arg1, $arg2, $arg3)")
   public static int security_secctx_to_secid(String secdata, @Unsigned int seclen,
       Ptr<java.lang. @Unsigned Integer> secid) {
     throw new MethodIsBPFRelatedFunction();
@@ -2650,13 +2651,13 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_set_bools($arg1, (const int*)$arg2)")
+  @BuiltinBPFFunction("security_set_bools($arg1, (const int *)$arg2)")
   public static int security_set_bools(@Unsigned int len, Ptr<java.lang.Integer> values) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_setprocattr($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("security_setprocattr($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int security_setprocattr(int lsmid, String name, Ptr<?> value,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -2670,7 +2671,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_settime64((const struct timespec64*)$arg1, (const struct timezone*)$arg2)")
+  @BuiltinBPFFunction("security_settime64((const struct timespec64 *)$arg1, (const struct timezone *)$arg2)")
   public static int security_settime64(Ptr<timespec64> ts, Ptr<timezone> tz) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2761,13 +2762,13 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_sk_classify_flow((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("security_sk_classify_flow((const struct sock *)$arg1, $arg2)")
   public static void security_sk_classify_flow(Ptr<sock> sk, Ptr<flowi_common> flic) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_sk_clone((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("security_sk_clone((const struct sock *)$arg1, $arg2)")
   public static void security_sk_clone(Ptr<sock> sk, Ptr<sock> newsk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2897,7 +2898,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("security_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long security_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -2916,19 +2917,19 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_task_fix_setgid($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("security_task_fix_setgid($arg1, (const struct cred *)$arg2, $arg3)")
   public static int security_task_fix_setgid(Ptr<cred> _new, Ptr<cred> old, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_task_fix_setgroups($arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("security_task_fix_setgroups($arg1, (const struct cred *)$arg2)")
   public static int security_task_fix_setgroups(Ptr<cred> _new, Ptr<cred> old) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_task_fix_setuid($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("security_task_fix_setuid($arg1, (const struct cred *)$arg2, $arg3)")
   public static int security_task_fix_setuid(Ptr<cred> _new, Ptr<cred> old, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2970,7 +2971,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_task_kill($arg1, $arg2, $arg3, (const struct cred*)$arg4)")
+  @BuiltinBPFFunction("security_task_kill($arg1, $arg2, $arg3, (const struct cred *)$arg4)")
   public static int security_task_kill(Ptr<task_struct> p, Ptr<kernel_siginfo> info, int sig,
       Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
@@ -2990,7 +2991,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_task_prlimit((const struct cred*)$arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("security_task_prlimit((const struct cred *)$arg1, (const struct cred *)$arg2, $arg3)")
   public static int security_task_prlimit(Ptr<cred> cred, Ptr<cred> tcred, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3033,20 +3034,20 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_transfer_creds($arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("security_transfer_creds($arg1, (const struct cred *)$arg2)")
   public static void security_transfer_creds(Ptr<cred> _new, Ptr<cred> old) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_transition_sid($arg1, $arg2, $arg3, (const struct qstr*)$arg4, $arg5)")
+  @BuiltinBPFFunction("security_transition_sid($arg1, $arg2, $arg3, (const struct qstr *)$arg4, $arg5)")
   public static int security_transition_sid(@Unsigned int ssid, @Unsigned int tsid,
       @Unsigned short tclass, Ptr<qstr> qstr, Ptr<java.lang. @Unsigned Integer> out_sid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_transition_sid_user($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("security_transition_sid_user($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int security_transition_sid_user(@Unsigned int ssid, @Unsigned int tsid,
       @Unsigned short tclass, String objname, Ptr<java.lang. @Unsigned Integer> out_sid) {
     throw new MethodIsBPFRelatedFunction();
@@ -3120,7 +3121,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_uring_override_creds((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("security_uring_override_creds((const struct cred *)$arg1)")
   public static int security_uring_override_creds(Ptr<cred> _new) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3222,7 +3223,7 @@ public final class SecurityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("security_xfrm_state_pol_flow_match($arg1, $arg2, (const struct flowi_common*)$arg3)")
+  @BuiltinBPFFunction("security_xfrm_state_pol_flow_match($arg1, $arg2, (const struct flowi_common *)$arg3)")
   public static int security_xfrm_state_pol_flow_match(Ptr<xfrm_state> x, Ptr<xfrm_policy> xp,
       Ptr<flowi_common> flic) {
     throw new MethodIsBPFRelatedFunction();

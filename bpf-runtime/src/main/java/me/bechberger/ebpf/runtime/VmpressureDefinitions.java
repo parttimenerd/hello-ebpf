@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1116,7 +1117,7 @@ public final class VmpressureDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vmpressure_register_event($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("vmpressure_register_event($arg1, $arg2, (const u8 *)$arg3)")
   public static int vmpressure_register_event(Ptr<mem_cgroup> memcg, Ptr<eventfd_ctx> eventfd,
       String args) {
     throw new MethodIsBPFRelatedFunction();

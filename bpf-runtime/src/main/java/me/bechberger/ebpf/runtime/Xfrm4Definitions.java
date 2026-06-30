@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class Xfrm4Definitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__xfrm4_dst_lookup($arg1, (const struct xfrm_dst_lookup_params*)$arg2)")
+  @BuiltinBPFFunction("__xfrm4_dst_lookup($arg1, (const struct xfrm_dst_lookup_params *)$arg2)")
   public static Ptr<dst_entry> __xfrm4_dst_lookup(Ptr<flowi4> fl4,
       Ptr<xfrm_dst_lookup_params> params) {
     throw new MethodIsBPFRelatedFunction();
@@ -1133,7 +1134,7 @@ public final class Xfrm4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm4_dst_lookup((const struct xfrm_dst_lookup_params*)$arg1)")
+  @BuiltinBPFFunction("xfrm4_dst_lookup((const struct xfrm_dst_lookup_params *)$arg1)")
   public static Ptr<dst_entry> xfrm4_dst_lookup(Ptr<xfrm_dst_lookup_params> params) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1151,13 +1152,13 @@ public final class Xfrm4Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm4_fill_dst($arg1, $arg2, (const struct flowi*)$arg3)")
+  @BuiltinBPFFunction("xfrm4_fill_dst($arg1, $arg2, (const struct flowi *)$arg3)")
   public static int xfrm4_fill_dst(Ptr<xfrm_dst> xdst, Ptr<net_device> dev, Ptr<flowi> fl) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm4_get_saddr($arg1, (const struct xfrm_dst_lookup_params*)$arg2)")
+  @BuiltinBPFFunction("xfrm4_get_saddr($arg1, (const struct xfrm_dst_lookup_params *)$arg2)")
   public static int xfrm4_get_saddr(Ptr<xfrm_address_t> saddr, Ptr<xfrm_dst_lookup_params> params) {
     throw new MethodIsBPFRelatedFunction();
   }

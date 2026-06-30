@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DynDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("dyn_event_create((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dyn_event_create((const u8 *)$arg1, $arg2)")
   public static int dyn_event_create(String raw_command, Ptr<dyn_event_operations> type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1108,7 +1109,7 @@ public final class DynDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dyn_event_release((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dyn_event_release((const u8 *)$arg1, $arg2)")
   public static int dyn_event_release(String raw_command, Ptr<dyn_event_operations> type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1140,7 +1141,7 @@ public final class DynDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dyn_event_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("dyn_event_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long dyn_event_write(Ptr<file> file, String buffer,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class FbDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_add_videomode((const struct fb_videomode*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fb_add_videomode((const struct fb_videomode *)$arg1, $arg2)")
   public static int fb_add_videomode(Ptr<fb_videomode> mode, Ptr<list_head> head) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1109,7 +1110,7 @@ public final class FbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_bitmap4x_imageblit((const struct fb_image*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("fb_bitmap4x_imageblit((const struct fb_image *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static void fb_bitmap4x_imageblit(Ptr<fb_image> image, Ptr<fb_address> dst,
       @Unsigned long fgcolor, @Unsigned long bgcolor, int bpp, @Unsigned int bits_per_line,
       fb_reverse reverse) {
@@ -1147,13 +1148,13 @@ public final class FbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_cmap_to_user((const struct fb_cmap*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fb_cmap_to_user((const struct fb_cmap *)$arg1, $arg2)")
   public static int fb_cmap_to_user(Ptr<fb_cmap> from, Ptr<fb_cmap_user> to) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_color_imageblit((const struct fb_image*)$arg1, $arg2, $arg3, (const unsigned int*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fb_color_imageblit((const struct fb_image *)$arg1, $arg2, $arg3, (const unsigned int *)$arg4, $arg5, $arg6)")
   public static void fb_color_imageblit(Ptr<fb_image> image, Ptr<fb_address> dst,
       @Unsigned int bits_per_line, Ptr<java.lang. @Unsigned Integer> palette, int bpp,
       fb_reverse reverse) {
@@ -1179,27 +1180,27 @@ public final class FbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_copy_aligned_fwd((const struct fb_address*)$arg1, (const struct fb_address*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fb_copy_aligned_fwd((const struct fb_address *)$arg1, (const struct fb_address *)$arg2, $arg3, $arg4)")
   public static void fb_copy_aligned_fwd(Ptr<fb_address> dst, Ptr<fb_address> src, int end,
       fb_reverse reverse) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_copy_aligned_rev((const struct fb_address*)$arg1, (const struct fb_address*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fb_copy_aligned_rev((const struct fb_address *)$arg1, (const struct fb_address *)$arg2, $arg3, $arg4)")
   public static void fb_copy_aligned_rev(Ptr<fb_address> dst, Ptr<fb_address> src, int end,
       fb_reverse reverse) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_copy_cmap((const struct fb_cmap*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fb_copy_cmap((const struct fb_cmap *)$arg1, $arg2)")
   public static int fb_copy_cmap(Ptr<fb_cmap> from, Ptr<fb_cmap> to) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_create_modedb($arg1, $arg2, (const struct fb_monspecs*)$arg3)")
+  @BuiltinBPFFunction("fb_create_modedb($arg1, $arg2, (const struct fb_monspecs *)$arg3)")
   public static Ptr<fb_videomode> fb_create_modedb(String edid, Ptr<java.lang.Integer> dbsize,
       Ptr<fb_monspecs> specs) {
     throw new MethodIsBPFRelatedFunction();
@@ -1287,7 +1288,7 @@ public final class FbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_delete_videomode((const struct fb_videomode*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fb_delete_videomode((const struct fb_videomode *)$arg1, $arg2)")
   public static void fb_delete_videomode(Ptr<fb_videomode> mode, Ptr<list_head> head) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1323,28 +1324,28 @@ public final class FbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_fillrect_static((const struct fb_fillrect*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fb_fillrect_static((const struct fb_fillrect *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static void fb_fillrect_static(Ptr<fb_fillrect> rect, int bpp, Ptr<fb_address> dst,
       Ptr<fb_pattern> pattern, @Unsigned int bits_per_line) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct fb_videomode*)fb_find_best_display((const struct fb_monspecs*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct fb_videomode*)fb_find_best_display((const struct fb_monspecs *)$arg1, $arg2))")
   public static Ptr<fb_videomode> fb_find_best_display(Ptr<fb_monspecs> specs,
       Ptr<list_head> head) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct fb_videomode*)fb_find_best_mode((const struct fb_var_screeninfo*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct fb_videomode*)fb_find_best_mode((const struct fb_var_screeninfo *)$arg1, $arg2))")
   public static Ptr<fb_videomode> fb_find_best_mode(Ptr<fb_var_screeninfo> var,
       Ptr<list_head> head) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_find_mode($arg1, $arg2, (const u8*)$arg3, (const struct fb_videomode*)$arg4, $arg5, (const struct fb_videomode*)$arg6, $arg7)")
+  @BuiltinBPFFunction("fb_find_mode($arg1, $arg2, (const u8 *)$arg3, (const struct fb_videomode *)$arg4, $arg5, (const struct fb_videomode *)$arg6, $arg7)")
   public static int fb_find_mode(Ptr<fb_var_screeninfo> var, Ptr<fb_info> info, String mode_option,
       Ptr<fb_videomode> db, @Unsigned int dbsize, Ptr<fb_videomode> default_mode,
       @Unsigned int default_bpp) {
@@ -1358,7 +1359,7 @@ public final class FbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct fb_videomode*)fb_find_nearest_mode((const struct fb_videomode*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct fb_videomode*)fb_find_nearest_mode((const struct fb_videomode *)$arg1, $arg2))")
   public static Ptr<fb_videomode> fb_find_nearest_mode(Ptr<fb_videomode> mode,
       Ptr<list_head> head) {
     throw new MethodIsBPFRelatedFunction();
@@ -1403,7 +1404,7 @@ public final class FbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_get_options((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fb_get_options((const u8 *)$arg1, $arg2)")
   public static int fb_get_options(String name, Ptr<String> option) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1440,7 +1441,7 @@ public final class FbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_io_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fb_io_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long fb_io_write(Ptr<fb_info> info, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1453,7 +1454,7 @@ public final class FbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct fb_videomode*)fb_match_mode((const struct fb_var_screeninfo*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct fb_videomode*)fb_match_mode((const struct fb_var_screeninfo *)$arg1, $arg2))")
   public static Ptr<fb_videomode> fb_match_mode(Ptr<fb_var_screeninfo> var, Ptr<list_head> head) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1465,13 +1466,13 @@ public final class FbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_mode_is_equal((const struct fb_videomode*)$arg1, (const struct fb_videomode*)$arg2)")
+  @BuiltinBPFFunction("fb_mode_is_equal((const struct fb_videomode *)$arg1, (const struct fb_videomode *)$arg2)")
   public static int fb_mode_is_equal(Ptr<fb_videomode> mode1, Ptr<fb_videomode> mode2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_modesetting_disabled((const u8*)$arg1)")
+  @BuiltinBPFFunction("fb_modesetting_disabled((const u8 *)$arg1)")
   public static boolean fb_modesetting_disabled(String drvname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1604,7 +1605,7 @@ public final class FbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_sys_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fb_sys_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long fb_sys_write(Ptr<fb_info> info, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1629,7 +1630,7 @@ public final class FbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_try_mode($arg1, $arg2, (const struct fb_videomode*)$arg3, $arg4)")
+  @BuiltinBPFFunction("fb_try_mode($arg1, $arg2, (const struct fb_videomode *)$arg3, $arg4)")
   public static int fb_try_mode(Ptr<fb_var_screeninfo> var, Ptr<fb_info> info,
       Ptr<fb_videomode> mode, @Unsigned int bpp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1654,38 +1655,38 @@ public final class FbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_validate_mode((const struct fb_var_screeninfo*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fb_validate_mode((const struct fb_var_screeninfo *)$arg1, $arg2)")
   public static int fb_validate_mode(Ptr<fb_var_screeninfo> var, Ptr<fb_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_var_to_videomode($arg1, (const struct fb_var_screeninfo*)$arg2)")
+  @BuiltinBPFFunction("fb_var_to_videomode($arg1, (const struct fb_var_screeninfo *)$arg2)")
   public static void fb_var_to_videomode(Ptr<fb_videomode> mode, Ptr<fb_var_screeninfo> var) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_videomode_from_videomode((const struct videomode*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fb_videomode_from_videomode((const struct videomode *)$arg1, $arg2)")
   public static int fb_videomode_from_videomode(Ptr<videomode> vm, Ptr<fb_videomode> fbmode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_videomode_to_modelist((const struct fb_videomode*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("fb_videomode_to_modelist((const struct fb_videomode *)$arg1, $arg2, $arg3)")
   public static void fb_videomode_to_modelist(Ptr<fb_videomode> modedb, int num,
       Ptr<list_head> head) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_videomode_to_var($arg1, (const struct fb_videomode*)$arg2)")
+  @BuiltinBPFFunction("fb_videomode_to_var($arg1, (const struct fb_videomode *)$arg2)")
   public static void fb_videomode_to_var(Ptr<fb_var_screeninfo> var, Ptr<fb_videomode> mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fb_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fb_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long fb_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

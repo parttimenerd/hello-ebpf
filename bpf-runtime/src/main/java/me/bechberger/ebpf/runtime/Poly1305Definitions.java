@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,7 +1109,7 @@ public final class Poly1305Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("poly1305_blocks_arch($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("poly1305_blocks_arch($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void poly1305_blocks_arch(Ptr<poly1305_block_state> state,
       Ptr<java.lang.Character> inp, @Unsigned int len, @Unsigned int padbit) {
     throw new MethodIsBPFRelatedFunction();
@@ -1139,7 +1140,7 @@ public final class Poly1305Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("poly1305_emit_arch((const struct poly1305_state*)$arg1, $arg2, (const unsigned int*)$arg3)")
+  @BuiltinBPFFunction("poly1305_emit_arch((const struct poly1305_state *)$arg1, $arg2, (const unsigned int *)$arg3)")
   public static void poly1305_emit_arch(Ptr<poly1305_state> ctx, Ptr<java.lang.Character> mac,
       Ptr<java.lang. @Unsigned Integer> nonce) {
     throw new MethodIsBPFRelatedFunction();
@@ -1164,7 +1165,7 @@ public final class Poly1305Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("poly1305_init($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("poly1305_init($arg1, (const u8 *)$arg2)")
   public static void poly1305_init(Ptr<poly1305_desc_ctx> desc, Ptr<java.lang.Character> key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1188,7 +1189,7 @@ public final class Poly1305Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("poly1305_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("poly1305_update($arg1, (const u8 *)$arg2, $arg3)")
   public static void poly1305_update(Ptr<poly1305_desc_ctx> desc, Ptr<java.lang.Character> src,
       @Unsigned int nbytes) {
     throw new MethodIsBPFRelatedFunction();
@@ -1283,7 +1284,7 @@ public final class Poly1305Definitions {
 
     public @Unsigned long pad;
 
-    public AnonymousType299783910C86 @Size(9) [] rn;
+    public AnonymousType523794808C86 @Size(9) [] rn;
   }
 
   @Type(
@@ -1292,7 +1293,7 @@ public final class Poly1305Definitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType299783910C86 extends Struct {
+  public static class AnonymousType523794808C86 extends Struct {
     public @Unsigned int r2;
 
     public @Unsigned int r1;

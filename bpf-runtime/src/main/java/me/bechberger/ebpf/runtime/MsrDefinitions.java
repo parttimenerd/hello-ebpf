@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class MsrDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("msr_build_context((const unsigned int*)$arg1, (const int)$arg2)")
+  @BuiltinBPFFunction("msr_build_context((const unsigned int *)$arg1, (const int)$arg2)")
   public static int msr_build_context(Ptr<java.lang. @Unsigned Integer> msr_id, int num) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1162,7 +1163,7 @@ public final class MsrDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("msr_initialize_bdw((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("msr_initialize_bdw((const struct dmi_system_id *)$arg1)")
   public static int msr_initialize_bdw(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1180,7 +1181,7 @@ public final class MsrDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("msr_save_cpuid_features((const struct x86_cpu_id*)$arg1)")
+  @BuiltinBPFFunction("msr_save_cpuid_features((const struct x86_cpu_id *)$arg1)")
   public static int msr_save_cpuid_features(Ptr<x86_cpu_id> c) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class DropDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drop_caches_sysctl_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("drop_caches_sysctl_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int drop_caches_sysctl_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> length, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1139,7 +1140,7 @@ public final class DropDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drop_reasons_register_subsys($arg1, (const struct drop_reason_list*)$arg2)")
+  @BuiltinBPFFunction("drop_reasons_register_subsys($arg1, (const struct drop_reason_list *)$arg2)")
   public static void drop_reasons_register_subsys(skb_drop_reason_subsys subsys,
       Ptr<drop_reason_list> list) {
     throw new MethodIsBPFRelatedFunction();

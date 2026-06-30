@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1120,7 +1121,7 @@ public final class UartDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uart_change_line_settings($arg1, $arg2, (const struct ktermios*)$arg3)")
+  @BuiltinBPFFunction("uart_change_line_settings($arg1, $arg2, (const struct ktermios *)$arg3)")
   public static void uart_change_line_settings(Ptr<tty_struct> tty, Ptr<uart_state> state,
       Ptr<ktermios> old_termios) {
     throw new MethodIsBPFRelatedFunction();
@@ -1151,7 +1152,7 @@ public final class UartDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uart_console_write($arg1, (const u8*)$arg2, $arg3, (void (*)(struct uart_port*, u8))$arg4)")
+  @BuiltinBPFFunction("uart_console_write($arg1, (const u8 *)$arg2, $arg3, (void (*)(struct uart_port*, u8))$arg4)")
   public static void uart_console_write(Ptr<uart_port> port, String s, @Unsigned int count,
       Ptr<?> putchar) {
     throw new MethodIsBPFRelatedFunction();
@@ -1182,7 +1183,7 @@ public final class UartDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uart_get_baud_rate($arg1, $arg2, (const struct ktermios*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("uart_get_baud_rate($arg1, $arg2, (const struct ktermios *)$arg3, $arg4, $arg5)")
   public static @Unsigned int uart_get_baud_rate(Ptr<uart_port> port, Ptr<ktermios> termios,
       Ptr<ktermios> old, @Unsigned int min, @Unsigned int max) {
     throw new MethodIsBPFRelatedFunction();
@@ -1262,7 +1263,7 @@ public final class UartDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uart_match_port((const struct uart_port*)$arg1, (const struct uart_port*)$arg2)")
+  @BuiltinBPFFunction("uart_match_port((const struct uart_port *)$arg1, (const struct uart_port *)$arg2)")
   public static boolean uart_match_port(Ptr<uart_port> port1, Ptr<uart_port> port2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1281,7 +1282,7 @@ public final class UartDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uart_parse_options((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("uart_parse_options((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static void uart_parse_options(String options, Ptr<java.lang.Integer> baud,
       Ptr<java.lang.Integer> parity, Ptr<java.lang.Integer> bits, Ptr<java.lang.Integer> flow) {
     throw new MethodIsBPFRelatedFunction();
@@ -1431,7 +1432,7 @@ public final class UartDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uart_set_termios($arg1, (const struct ktermios*)$arg2)")
+  @BuiltinBPFFunction("uart_set_termios($arg1, (const struct ktermios *)$arg2)")
   public static void uart_set_termios(Ptr<tty_struct> tty, Ptr<ktermios> old_termios) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1535,7 +1536,7 @@ public final class UartDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uart_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("uart_write($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long uart_write(Ptr<tty_struct> tty,
       Ptr<java.lang.Character> buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

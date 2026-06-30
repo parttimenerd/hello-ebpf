@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,83 +1091,83 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class Lz4Definitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("LZ4_decompress_fast((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("LZ4_decompress_fast((const u8 *)$arg1, $arg2, $arg3)")
   public static int LZ4_decompress_fast(String source, String dest, int originalSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("LZ4_decompress_fast_continue($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("LZ4_decompress_fast_continue($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int LZ4_decompress_fast_continue(Ptr<LZ4_streamDecode_t> LZ4_streamDecode,
       String source, String dest, int originalSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("LZ4_decompress_fast_extDict((const u8*)$arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("LZ4_decompress_fast_extDict((const u8 *)$arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int LZ4_decompress_fast_extDict(String source, String dest, int originalSize,
       Ptr<?> dictStart, @Unsigned long dictSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("LZ4_decompress_fast_usingDict((const u8*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("LZ4_decompress_fast_usingDict((const u8 *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int LZ4_decompress_fast_usingDict(String source, String dest, int originalSize,
       String dictStart, int dictSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("LZ4_decompress_safe((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("LZ4_decompress_safe((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int LZ4_decompress_safe(String source, String dest, int compressedSize,
       int maxDecompressedSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("LZ4_decompress_safe_continue($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("LZ4_decompress_safe_continue($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int LZ4_decompress_safe_continue(Ptr<LZ4_streamDecode_t> LZ4_streamDecode,
       String source, String dest, int compressedSize, int maxOutputSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("LZ4_decompress_safe_forceExtDict((const u8*)$arg1, $arg2, $arg3, $arg4, (const void*)$arg5, $arg6)")
+  @BuiltinBPFFunction("LZ4_decompress_safe_forceExtDict((const u8 *)$arg1, $arg2, $arg3, $arg4, (const void *)$arg5, $arg6)")
   public static int LZ4_decompress_safe_forceExtDict(String source, String dest, int compressedSize,
       int maxOutputSize, Ptr<?> dictStart, @Unsigned long dictSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("LZ4_decompress_safe_partial((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("LZ4_decompress_safe_partial((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int LZ4_decompress_safe_partial(String src, String dst, int compressedSize,
       int targetOutputSize, int dstCapacity) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("LZ4_decompress_safe_usingDict((const u8*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("LZ4_decompress_safe_usingDict((const u8 *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int LZ4_decompress_safe_usingDict(String source, String dest, int compressedSize,
       int maxOutputSize, String dictStart, int dictSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("LZ4_decompress_safe_withPrefix64k((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("LZ4_decompress_safe_withPrefix64k((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int LZ4_decompress_safe_withPrefix64k(String source, String dest,
       int compressedSize, int maxOutputSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("LZ4_decompress_safe_withSmallPrefix((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("LZ4_decompress_safe_withSmallPrefix((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int LZ4_decompress_safe_withSmallPrefix(String source, String dest,
       int compressedSize, int maxOutputSize, @Unsigned long prefixSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("LZ4_setStreamDecode($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("LZ4_setStreamDecode($arg1, (const u8 *)$arg2, $arg3)")
   public static int LZ4_setStreamDecode(Ptr<LZ4_streamDecode_t> LZ4_streamDecode, String dictionary,
       int dictSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -1205,7 +1206,7 @@ public final class Lz4Definitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; long unsigned int extDictSize; const u8*; long unsigned int prefixSize; }"
+      cType = "struct { const u8 *externalDict; long unsigned int extDictSize; const u8 *prefixEnd; long unsigned int prefixSize; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -1221,7 +1222,7 @@ public final class Lz4Definitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { long long unsigned int table[4]; struct { const u8*; long unsigned int extDictSize; const u8*; long unsigned int prefixSize; } internal_donotuse; }"
+      cType = "union { long long unsigned int table[4]; struct { const u8 *externalDict; long unsigned int extDictSize; const u8 *prefixEnd; long unsigned int prefixSize; } internal_donotuse; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

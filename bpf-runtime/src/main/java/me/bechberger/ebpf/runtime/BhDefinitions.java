@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1104,7 +1105,7 @@ public final class BhDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bh_get_inode_and_lblk_num((const struct buffer_head*)$arg1, (const struct inode**)$arg2, $arg3)")
+  @BuiltinBPFFunction("bh_get_inode_and_lblk_num((const struct buffer_head *)$arg1, (const struct inode**)$arg2, $arg3)")
   public static boolean bh_get_inode_and_lblk_num(Ptr<buffer_head> bh, Ptr<Ptr<inode>> inode_ret,
       Ptr<java.lang. @Unsigned Long> lblk_num_ret) {
     throw new MethodIsBPFRelatedFunction();

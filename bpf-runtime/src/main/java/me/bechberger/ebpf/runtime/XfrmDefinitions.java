@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1101,18 +1102,18 @@ public final class XfrmDefinitions {
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg1, (const union {\n"
+          + "} *)$arg1, (const union {\n"
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg2, $arg3, $arg4, $arg5)")
+          + "} *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int __xfrm_dst_hash(Ptr<xfrm_address_t> daddr, Ptr<xfrm_address_t> saddr,
       @Unsigned int reqid, @Unsigned short family, @Unsigned int hmask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__xfrm_dst_lookup($arg1, (const struct xfrm_dst_lookup_params*)$arg2)")
+  @BuiltinBPFFunction("__xfrm_dst_lookup($arg1, (const struct xfrm_dst_lookup_params *)$arg2)")
   public static Ptr<dst_entry> __xfrm_dst_lookup(int family, Ptr<xfrm_dst_lookup_params> params) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1170,7 +1171,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__xfrm_sk_clone_policy($arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("__xfrm_sk_clone_policy($arg1, (const struct sock *)$arg2)")
   public static int __xfrm_sk_clone_policy(Ptr<sock> sk, Ptr<sock> osk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1180,7 +1181,7 @@ public final class XfrmDefinitions {
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+          + "} *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int __xfrm_spi_hash(Ptr<xfrm_address_t> daddr,
       @Unsigned @OriginalName("__be32") int spi, char proto, @Unsigned short family,
       @Unsigned int hmask) {
@@ -1192,11 +1193,11 @@ public final class XfrmDefinitions {
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg1, (const union {\n"
+          + "} *)$arg1, (const union {\n"
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg2, $arg3, $arg4)")
+          + "} *)$arg2, $arg3, $arg4)")
   public static @Unsigned int __xfrm_src_hash(Ptr<xfrm_address_t> daddr, Ptr<xfrm_address_t> saddr,
       @Unsigned short family, @Unsigned int hmask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1324,7 +1325,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_bundle_create($arg1, $arg2, $arg3, $arg4, (const struct flowi*)$arg5, $arg6)")
+  @BuiltinBPFFunction("xfrm_bundle_create($arg1, $arg2, $arg3, $arg4, (const struct flowi *)$arg5, $arg6)")
   public static Ptr<dst_entry> xfrm_bundle_create(Ptr<xfrm_policy> policy,
       Ptr<Ptr<xfrm_state>> xfrm, Ptr<Ptr<xfrm_dst>> bundle, int nx, Ptr<flowi> fl,
       Ptr<dst_entry> dst) {
@@ -1338,13 +1339,13 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_confirm_neigh((const struct dst_entry*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("xfrm_confirm_neigh((const struct dst_entry *)$arg1, (const void *)$arg2)")
   public static void xfrm_confirm_neigh(Ptr<dst_entry> dst, Ptr<?> daddr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_default_advmss((const struct dst_entry*)$arg1)")
+  @BuiltinBPFFunction("xfrm_default_advmss((const struct dst_entry *)$arg1)")
   public static @Unsigned int xfrm_default_advmss(Ptr<dst_entry> dst) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1445,15 +1446,15 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_find_acq($arg1, (const struct xfrm_mark*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const union {\n"
+  @BuiltinBPFFunction("xfrm_find_acq($arg1, (const struct xfrm_mark *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const union {\n"
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg8, (const union {\n"
+          + "} *)$arg8, (const union {\n"
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg9, $arg10, $arg11)")
+          + "} *)$arg9, $arg10, $arg11)")
   public static Ptr<xfrm_state> xfrm_find_acq(Ptr<net> net, Ptr<xfrm_mark> mark, char mode,
       @Unsigned int reqid, @Unsigned int if_id, @Unsigned int pcpu_num, char proto,
       Ptr<xfrm_address_t> daddr, Ptr<xfrm_address_t> saddr, int create, @Unsigned short family) {
@@ -1468,7 +1469,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_flowi_addr_get((const struct flowi*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("xfrm_flowi_addr_get((const struct flowi *)$arg1, $arg2, $arg3, $arg4)")
   public static void xfrm_flowi_addr_get(Ptr<flowi> fl, Ptr<xfrm_address_t> saddr,
       Ptr<xfrm_address_t> daddr, @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
@@ -1523,14 +1524,14 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_icmp_flow_decode($arg1, $arg2, (const struct flowi*)$arg3, $arg4)")
+  @BuiltinBPFFunction("xfrm_icmp_flow_decode($arg1, $arg2, (const struct flowi *)$arg3, $arg4)")
   public static boolean xfrm_icmp_flow_decode(Ptr<sk_buff> skb, @Unsigned short family,
       Ptr<flowi> fl, Ptr<flowi> fl1) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_if_register_cb((const struct xfrm_if_cb*)$arg1)")
+  @BuiltinBPFFunction("xfrm_if_register_cb((const struct xfrm_if_cb *)$arg1)")
   public static void xfrm_if_register_cb(Ptr<xfrm_if_cb> ifcb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1542,7 +1543,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_in_fwd_icmp($arg1, (const struct flowi*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("xfrm_in_fwd_icmp($arg1, (const struct flowi *)$arg2, $arg3, $arg4)")
   public static Ptr<xfrm_policy> xfrm_in_fwd_icmp(Ptr<sk_buff> skb, Ptr<flowi> fl,
       @Unsigned short family, @Unsigned int if_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1567,15 +1568,15 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_init_tempstate($arg1, (const struct flowi*)$arg2, (const struct xfrm_tmpl*)$arg3, (const union {\n"
+  @BuiltinBPFFunction("xfrm_init_tempstate($arg1, (const struct flowi *)$arg2, (const struct xfrm_tmpl *)$arg3, (const union {\n"
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg4, (const union {\n"
+          + "} *)$arg4, (const union {\n"
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg5, $arg6)")
+          + "} *)$arg5, $arg6)")
   public static void xfrm_init_tempstate(Ptr<xfrm_state> x, Ptr<flowi> fl, Ptr<xfrm_tmpl> tmpl,
       Ptr<xfrm_address_t> daddr, Ptr<xfrm_address_t> saddr, @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
@@ -1607,7 +1608,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_input_register_afinfo((const struct xfrm_input_afinfo*)$arg1)")
+  @BuiltinBPFFunction("xfrm_input_register_afinfo((const struct xfrm_input_afinfo *)$arg1)")
   public static int xfrm_input_register_afinfo(Ptr<xfrm_input_afinfo> afinfo) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1623,7 +1624,7 @@ public final class XfrmDefinitions {
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg3, $arg4, $arg5, $arg6)")
+          + "} *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<xfrm_state> xfrm_input_state_lookup(Ptr<net> net, @Unsigned int mark,
       Ptr<xfrm_address_t> daddr, @Unsigned @OriginalName("__be32") int spi, char proto,
       @Unsigned short family) {
@@ -1631,7 +1632,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_input_unregister_afinfo((const struct xfrm_input_afinfo*)$arg1)")
+  @BuiltinBPFFunction("xfrm_input_unregister_afinfo((const struct xfrm_input_afinfo *)$arg1)")
   public static int xfrm_input_unregister_afinfo(Ptr<xfrm_input_afinfo> afinfo) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1649,28 +1650,28 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_lookup($arg1, $arg2, (const struct flowi*)$arg3, (const struct sock*)$arg4, $arg5)")
+  @BuiltinBPFFunction("xfrm_lookup($arg1, $arg2, (const struct flowi *)$arg3, (const struct sock *)$arg4, $arg5)")
   public static Ptr<dst_entry> xfrm_lookup(Ptr<net> net, Ptr<dst_entry> dst_orig, Ptr<flowi> fl,
       Ptr<sock> sk, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_lookup_route($arg1, $arg2, (const struct flowi*)$arg3, (const struct sock*)$arg4, $arg5)")
+  @BuiltinBPFFunction("xfrm_lookup_route($arg1, $arg2, (const struct flowi *)$arg3, (const struct sock *)$arg4, $arg5)")
   public static Ptr<dst_entry> xfrm_lookup_route(Ptr<net> net, Ptr<dst_entry> dst_orig,
       Ptr<flowi> fl, Ptr<sock> sk, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_lookup_with_ifid($arg1, $arg2, (const struct flowi*)$arg3, (const struct sock*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("xfrm_lookup_with_ifid($arg1, $arg2, (const struct flowi *)$arg3, (const struct sock *)$arg4, $arg5, $arg6)")
   public static Ptr<dst_entry> xfrm_lookup_with_ifid(Ptr<net> net, Ptr<dst_entry> dst_orig,
       Ptr<flowi> fl, Ptr<sock> sk, int flags, @Unsigned int if_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_mtu((const struct dst_entry*)$arg1)")
+  @BuiltinBPFFunction("xfrm_mtu((const struct dst_entry *)$arg1)")
   public static @Unsigned int xfrm_mtu(Ptr<dst_entry> dst) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1712,7 +1713,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_neigh_lookup((const struct dst_entry*)$arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("xfrm_neigh_lookup((const struct dst_entry *)$arg1, $arg2, (const void *)$arg3)")
   public static Ptr<neighbour> xfrm_neigh_lookup(Ptr<dst_entry> dst, Ptr<sk_buff> skb,
       Ptr<?> daddr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1782,19 +1783,19 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_pol_bin_cmp($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("xfrm_pol_bin_cmp($arg1, (const void *)$arg2)")
   public static int xfrm_pol_bin_cmp(Ptr<rhashtable_compare_arg> arg, Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_pol_bin_key((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("xfrm_pol_bin_key((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned int xfrm_pol_bin_key(Ptr<?> data, @Unsigned int len, @Unsigned int seed) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_pol_bin_obj((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("xfrm_pol_bin_obj((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned int xfrm_pol_bin_obj(Ptr<?> data, @Unsigned int len, @Unsigned int seed) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1804,7 +1805,7 @@ public final class XfrmDefinitions {
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg1, $arg2, $arg3)")
+          + "} *)$arg1, $arg2, $arg3)")
   public static boolean xfrm_pol_inexact_addr_use_any_list(Ptr<xfrm_address_t> addr, int family,
       char prefixlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1815,11 +1816,11 @@ public final class XfrmDefinitions {
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg1, (const union {\n"
+          + "} *)$arg1, (const union {\n"
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg2, $arg3, $arg4)")
+          + "} *)$arg2, $arg3, $arg4)")
   public static int xfrm_policy_addr_delta(Ptr<xfrm_address_t> a, Ptr<xfrm_address_t> b,
       char prefixlen, @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
@@ -1833,7 +1834,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_policy_byid($arg1, (const struct xfrm_mark*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("xfrm_policy_byid($arg1, (const struct xfrm_mark *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static Ptr<xfrm_policy> xfrm_policy_byid(Ptr<net> net, Ptr<xfrm_mark> mark,
       @Unsigned int if_id, char type, int dir, @Unsigned int id, int delete,
       Ptr<java.lang.Integer> err) {
@@ -1841,7 +1842,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_policy_bysel_ctx($arg1, (const struct xfrm_mark*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("xfrm_policy_bysel_ctx($arg1, (const struct xfrm_mark *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static Ptr<xfrm_policy> xfrm_policy_bysel_ctx(Ptr<net> net, Ptr<xfrm_mark> mark,
       @Unsigned int if_id, char type, int dir, Ptr<xfrm_selector> sel, Ptr<xfrm_sec_ctx> ctx,
       int delete, Ptr<java.lang.Integer> err) {
@@ -1871,11 +1872,11 @@ public final class XfrmDefinitions {
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg3, (const union {\n"
+          + "} *)$arg3, (const union {\n"
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg4)")
+          + "} *)$arg4)")
   public static boolean xfrm_policy_find_inexact_candidates(Ptr<xfrm_pol_inexact_candidates> cand,
       Ptr<xfrm_pol_inexact_bin> b, Ptr<xfrm_address_t> saddr, Ptr<xfrm_address_t> daddr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1900,7 +1901,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_policy_inexact_alloc_bin((const struct xfrm_policy*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xfrm_policy_inexact_alloc_bin((const struct xfrm_policy *)$arg1, $arg2)")
   public static Ptr<xfrm_pol_inexact_bin> xfrm_policy_inexact_alloc_bin(Ptr<xfrm_policy> pol,
       char dir) {
     throw new MethodIsBPFRelatedFunction();
@@ -1968,11 +1969,11 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_policy_lookup_inexact_addr((const struct rb_root*)$arg1, $arg2, (const union {\n"
+  @BuiltinBPFFunction("xfrm_policy_lookup_inexact_addr((const struct rb_root *)$arg1, $arg2, (const union {\n"
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg3, $arg4)")
+          + "} *)$arg3, $arg4)")
   public static Ptr<xfrm_pol_inexact_node> xfrm_policy_lookup_inexact_addr(Ptr<rb_root> r,
       Ptr<@OriginalName("seqcount_spinlock_t") seqcount_spinlock> count, Ptr<xfrm_address_t> addr,
       @Unsigned short family) {
@@ -1980,7 +1981,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_policy_ok((const struct xfrm_tmpl*)$arg1, (const struct sec_path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("xfrm_policy_ok((const struct xfrm_tmpl *)$arg1, (const struct sec_path *)$arg2, $arg3, $arg4, $arg5)")
   public static int xfrm_policy_ok(Ptr<xfrm_tmpl> tmpl, Ptr<sec_path> sp, int start,
       @Unsigned short family, @Unsigned int if_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1993,7 +1994,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_policy_register_afinfo((const struct xfrm_policy_afinfo*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xfrm_policy_register_afinfo((const struct xfrm_policy_afinfo *)$arg1, $arg2)")
   public static int xfrm_policy_register_afinfo(Ptr<xfrm_policy_afinfo> afinfo, int family) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2011,7 +2012,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_policy_unregister_afinfo((const struct xfrm_policy_afinfo*)$arg1)")
+  @BuiltinBPFFunction("xfrm_policy_unregister_afinfo((const struct xfrm_policy_afinfo *)$arg1)")
   public static void xfrm_policy_unregister_afinfo(Ptr<xfrm_policy_afinfo> afinfo) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2065,7 +2066,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_register_mode_cbs($arg1, (const struct xfrm_mode_cbs*)$arg2)")
+  @BuiltinBPFFunction("xfrm_register_mode_cbs($arg1, (const struct xfrm_mode_cbs *)$arg2)")
   public static int xfrm_register_mode_cbs(char mode, Ptr<xfrm_mode_cbs> mode_cbs) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2077,13 +2078,13 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_register_type((const struct xfrm_type*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xfrm_register_type((const struct xfrm_type *)$arg1, $arg2)")
   public static int xfrm_register_type(Ptr<xfrm_type> type, @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_register_type_offload((const struct xfrm_type_offload*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xfrm_register_type_offload((const struct xfrm_type_offload *)$arg1, $arg2)")
   public static int xfrm_register_type_offload(Ptr<xfrm_type_offload> type,
       @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
@@ -2182,7 +2183,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_resolve_and_create_bundle($arg1, $arg2, (const struct flowi*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("xfrm_resolve_and_create_bundle($arg1, $arg2, (const struct flowi *)$arg3, $arg4, $arg5)")
   public static Ptr<xfrm_dst> xfrm_resolve_and_create_bundle(Ptr<Ptr<xfrm_policy>> pols,
       int num_pols, Ptr<flowi> fl, @Unsigned short family, Ptr<dst_entry> dst_orig) {
     throw new MethodIsBPFRelatedFunction();
@@ -2195,14 +2196,14 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_selector_inner_icmp_match($arg1, $arg2, (const struct xfrm_selector*)$arg3, (const struct flowi*)$arg4)")
+  @BuiltinBPFFunction("xfrm_selector_inner_icmp_match($arg1, $arg2, (const struct xfrm_selector *)$arg3, (const struct flowi *)$arg4)")
   public static boolean xfrm_selector_inner_icmp_match(Ptr<sk_buff> skb, @Unsigned short family,
       Ptr<xfrm_selector> sel, Ptr<flowi> fl) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_selector_match((const struct xfrm_selector*)$arg1, (const struct flowi*)$arg2, $arg3)")
+  @BuiltinBPFFunction("xfrm_selector_match((const struct xfrm_selector *)$arg1, (const struct flowi *)$arg2, $arg3)")
   public static boolean xfrm_selector_match(Ptr<xfrm_selector> sel, Ptr<flowi> fl,
       @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
@@ -2221,7 +2222,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_sk_policy_lookup((const struct sock*)$arg1, $arg2, (const struct flowi*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("xfrm_sk_policy_lookup((const struct sock *)$arg1, $arg2, (const struct flowi *)$arg3, $arg4, $arg5)")
   public static Ptr<xfrm_policy> xfrm_sk_policy_lookup(Ptr<sock> sk, int dir, Ptr<flowi> fl,
       @Unsigned short family, @Unsigned int if_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -2268,11 +2269,11 @@ public final class XfrmDefinitions {
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg1, (const union {\n"
+          + "} *)$arg1, (const union {\n"
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg2, (const struct flowi*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+          + "} *)$arg2, (const struct flowi *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static Ptr<xfrm_state> xfrm_state_find(Ptr<xfrm_address_t> daddr,
       Ptr<xfrm_address_t> saddr, Ptr<flowi> fl, Ptr<xfrm_tmpl> tmpl, Ptr<xfrm_policy> pol,
       Ptr<java.lang.Integer> err, @Unsigned short family, @Unsigned int if_id) {
@@ -2322,7 +2323,7 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_state_look_at($arg1, $arg2, (const struct flowi*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("xfrm_state_look_at($arg1, $arg2, (const struct flowi *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void xfrm_state_look_at(Ptr<xfrm_policy> pol, Ptr<xfrm_state> x, Ptr<flowi> fl,
       @Unsigned short family, Ptr<Ptr<xfrm_state>> best, Ptr<java.lang.Integer> acq_in_progress,
       Ptr<java.lang.Integer> error, @Unsigned int pcpu_id) {
@@ -2334,7 +2335,7 @@ public final class XfrmDefinitions {
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg3, $arg4, $arg5, $arg6)")
+          + "} *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<xfrm_state> xfrm_state_lookup(Ptr<net> net, @Unsigned int mark,
       Ptr<xfrm_address_t> daddr, @Unsigned @OriginalName("__be32") int spi, char proto,
       @Unsigned short family) {
@@ -2346,11 +2347,11 @@ public final class XfrmDefinitions {
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg3, (const union {\n"
+          + "} *)$arg3, (const union {\n"
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg4, $arg5, $arg6)")
+          + "} *)$arg4, $arg5, $arg6)")
   public static Ptr<xfrm_state> xfrm_state_lookup_byaddr(Ptr<net> net, @Unsigned int mark,
       Ptr<xfrm_address_t> daddr, Ptr<xfrm_address_t> saddr, char proto, @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
@@ -2439,14 +2440,14 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_tmpl_resolve($arg1, $arg2, (const struct flowi*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("xfrm_tmpl_resolve($arg1, $arg2, (const struct flowi *)$arg3, $arg4, $arg5)")
   public static int xfrm_tmpl_resolve(Ptr<Ptr<xfrm_policy>> pols, int npols, Ptr<flowi> fl,
       Ptr<Ptr<xfrm_state>> xfrm, @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_tmpl_resolve_one($arg1, (const struct flowi*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("xfrm_tmpl_resolve_one($arg1, (const struct flowi *)$arg2, $arg3, $arg4)")
   public static int xfrm_tmpl_resolve_one(Ptr<xfrm_policy> policy, Ptr<flowi> fl,
       Ptr<Ptr<xfrm_state>> xfrm, @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
@@ -2489,13 +2490,13 @@ public final class XfrmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_unregister_type((const struct xfrm_type*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xfrm_unregister_type((const struct xfrm_type *)$arg1, $arg2)")
   public static void xfrm_unregister_type(Ptr<xfrm_type> type, @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm_unregister_type_offload((const struct xfrm_type_offload*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xfrm_unregister_type_offload((const struct xfrm_type_offload *)$arg1, $arg2)")
   public static void xfrm_unregister_type_offload(Ptr<xfrm_type_offload> type,
       @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();

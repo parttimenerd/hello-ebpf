@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -6376,25 +6377,6 @@ public final class BpfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("")
-  @me.bechberger.ebpf.annotations.bpf.KFunc(
-      signature = ""
-  )
-  public static Ptr<?> bpf_arena_alloc_pages(Ptr<?> p__map, Ptr<?> addr__ign,
-      @Unsigned int page_cnt, int node_id, @Unsigned long flags) {
-    throw new MethodIsBPFRelatedFunction();
-  }
-
-  @NotUsableInJava
-  @BuiltinBPFFunction("")
-  @me.bechberger.ebpf.annotations.bpf.KFunc(
-      signature = ""
-  )
-  public static void bpf_arena_free_pages(Ptr<?> p__map, Ptr<?> ptr__ign, @Unsigned int page_cnt) {
-    throw new MethodIsBPFRelatedFunction();
-  }
-
-  @NotUsableInJava
   @BuiltinBPFFunction
   public static @Unsigned long bpf_arena_get_kern_vm_start(Ptr<bpf_arena> arena) {
     throw new MethodIsBPFRelatedFunction();
@@ -6403,16 +6385,6 @@ public final class BpfDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction
   public static @Unsigned long bpf_arena_get_user_vm_start(Ptr<bpf_arena> arena) {
-    throw new MethodIsBPFRelatedFunction();
-  }
-
-  @NotUsableInJava
-  @BuiltinBPFFunction("")
-  @me.bechberger.ebpf.annotations.bpf.KFunc(
-      signature = ""
-  )
-  public static int bpf_arena_reserve_pages(Ptr<?> p__map, Ptr<?> ptr__ign,
-      @Unsigned int page_cnt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -6971,8 +6943,8 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "_Bool bpf_cpumask_and(struct bpf_cpumask *dst, const struct cpumask *src1, const struct cpumask *src2)"
   )
-  public static boolean bpf_cpumask_and(Ptr<bpf_cpumask> dst, Ptr<cpumask> src1,
-      Ptr<cpumask> src2) {
+  public static boolean bpf_cpumask_and(Ptr<bpf_cpumask> dst, @TrustedPtr Ptr<cpumask> src1,
+      @TrustedPtr Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -6981,7 +6953,8 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "unsigned int bpf_cpumask_any_and_distribute(const struct cpumask *src1, const struct cpumask *src2)"
   )
-  public static @Unsigned int bpf_cpumask_any_and_distribute(Ptr<cpumask> src1, Ptr<cpumask> src2) {
+  public static @Unsigned int bpf_cpumask_any_and_distribute(@TrustedPtr Ptr<cpumask> src1,
+      @TrustedPtr Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -6990,7 +6963,7 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "unsigned int bpf_cpumask_any_distribute(const struct cpumask *cpumask)"
   )
-  public static @Unsigned int bpf_cpumask_any_distribute(Ptr<cpumask> cpumask) {
+  public static @Unsigned int bpf_cpumask_any_distribute(@TrustedPtr Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -7032,7 +7005,7 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "_Bool bpf_cpumask_empty(const struct cpumask *cpumask)"
   )
-  public static boolean bpf_cpumask_empty(Ptr<cpumask> cpumask) {
+  public static boolean bpf_cpumask_empty(@TrustedPtr Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -7041,7 +7014,8 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "_Bool bpf_cpumask_equal(const struct cpumask *src1, const struct cpumask *src2)"
   )
-  public static boolean bpf_cpumask_equal(Ptr<cpumask> src1, Ptr<cpumask> src2) {
+  public static boolean bpf_cpumask_equal(@TrustedPtr Ptr<cpumask> src1,
+      @TrustedPtr Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -7050,7 +7024,7 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "unsigned int bpf_cpumask_first(const struct cpumask *cpumask)"
   )
-  public static @Unsigned int bpf_cpumask_first(Ptr<cpumask> cpumask) {
+  public static @Unsigned int bpf_cpumask_first(@TrustedPtr Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -7059,7 +7033,8 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "unsigned int bpf_cpumask_first_and(const struct cpumask *src1, const struct cpumask *src2)"
   )
-  public static @Unsigned int bpf_cpumask_first_and(Ptr<cpumask> src1, Ptr<cpumask> src2) {
+  public static @Unsigned int bpf_cpumask_first_and(@TrustedPtr Ptr<cpumask> src1,
+      @TrustedPtr Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -7068,7 +7043,7 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "unsigned int bpf_cpumask_first_zero(const struct cpumask *cpumask)"
   )
-  public static @Unsigned int bpf_cpumask_first_zero(Ptr<cpumask> cpumask) {
+  public static @Unsigned int bpf_cpumask_first_zero(@TrustedPtr Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -7077,7 +7052,7 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "_Bool bpf_cpumask_full(const struct cpumask *cpumask)"
   )
-  public static boolean bpf_cpumask_full(Ptr<cpumask> cpumask) {
+  public static boolean bpf_cpumask_full(@TrustedPtr Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -7086,7 +7061,8 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "_Bool bpf_cpumask_intersects(const struct cpumask *src1, const struct cpumask *src2)"
   )
-  public static boolean bpf_cpumask_intersects(Ptr<cpumask> src1, Ptr<cpumask> src2) {
+  public static boolean bpf_cpumask_intersects(@TrustedPtr Ptr<cpumask> src1,
+      @TrustedPtr Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -7095,7 +7071,8 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "void bpf_cpumask_or(struct bpf_cpumask *dst, const struct cpumask *src1, const struct cpumask *src2)"
   )
-  public static void bpf_cpumask_or(Ptr<bpf_cpumask> dst, Ptr<cpumask> src1, Ptr<cpumask> src2) {
+  public static void bpf_cpumask_or(Ptr<bpf_cpumask> dst, @TrustedPtr Ptr<cpumask> src1,
+      @TrustedPtr Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -7104,7 +7081,8 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "int bpf_cpumask_populate(struct cpumask *cpumask, void *src, long unsigned int src__sz)"
   )
-  public static int bpf_cpumask_populate(Ptr<cpumask> cpumask, Ptr<?> src, @Unsigned long src__sz) {
+  public static int bpf_cpumask_populate(@TrustedPtr Ptr<cpumask> cpumask, Ptr<?> src,
+      @Unsigned long src__sz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -7146,7 +7124,8 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "_Bool bpf_cpumask_subset(const struct cpumask *src1, const struct cpumask *src2)"
   )
-  public static boolean bpf_cpumask_subset(Ptr<cpumask> src1, Ptr<cpumask> src2) {
+  public static boolean bpf_cpumask_subset(@TrustedPtr Ptr<cpumask> src1,
+      @TrustedPtr Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -7174,7 +7153,7 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "_Bool bpf_cpumask_test_cpu(unsigned int cpu, const struct cpumask *cpumask)"
   )
-  public static boolean bpf_cpumask_test_cpu(@Unsigned int cpu, Ptr<cpumask> cpumask) {
+  public static boolean bpf_cpumask_test_cpu(@Unsigned int cpu, @TrustedPtr Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -7183,7 +7162,7 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "unsigned int bpf_cpumask_weight(const struct cpumask *cpumask)"
   )
-  public static @Unsigned int bpf_cpumask_weight(Ptr<cpumask> cpumask) {
+  public static @Unsigned int bpf_cpumask_weight(@TrustedPtr Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -7192,7 +7171,8 @@ public final class BpfDefinitions {
   @me.bechberger.ebpf.annotations.bpf.KFunc(
       signature = "void bpf_cpumask_xor(struct bpf_cpumask *dst, const struct cpumask *src1, const struct cpumask *src2)"
   )
-  public static void bpf_cpumask_xor(Ptr<bpf_cpumask> dst, Ptr<cpumask> src1, Ptr<cpumask> src2) {
+  public static void bpf_cpumask_xor(Ptr<bpf_cpumask> dst, @TrustedPtr Ptr<cpumask> src1,
+      @TrustedPtr Ptr<cpumask> src2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
@@ -27718,7 +27698,7 @@ public final class BpfDefinitions {
 
     public @Unsigned short cnt;
 
-    public AnonymousType394349340C54 @Size(0) [] cands;
+    public AnonymousType2028510206C54 @Size(0) [] cands;
   }
 
   @Type(
@@ -29429,7 +29409,7 @@ public final class BpfDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType394349340C54 extends Struct {
+  public static class AnonymousType2028510206C54 extends Struct {
     public Ptr<btf> btf;
 
     public @Unsigned int id;

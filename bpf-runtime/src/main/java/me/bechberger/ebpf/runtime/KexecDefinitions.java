@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1134,7 +1135,7 @@ public final class KexecDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kexec_crash_size_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("kexec_crash_size_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long kexec_crash_size_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1154,13 +1155,13 @@ public final class KexecDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kexec_kernel_verify_pe_sig((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kexec_kernel_verify_pe_sig((const u8 *)$arg1, $arg2)")
   public static int kexec_kernel_verify_pe_sig(String kernel, @Unsigned long kernel_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kexec_limit_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("kexec_limit_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int kexec_limit_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1204,14 +1205,14 @@ public final class KexecDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kexec_purgatory_get_set_symbol($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("kexec_purgatory_get_set_symbol($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int kexec_purgatory_get_set_symbol(Ptr<kimage> image, String name, Ptr<?> buf,
       @Unsigned int size, boolean get_value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kexec_purgatory_get_symbol_addr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("kexec_purgatory_get_symbol_addr($arg1, (const u8 *)$arg2)")
   public static Ptr<?> kexec_purgatory_get_symbol_addr(Ptr<kimage> image, String name) {
     throw new MethodIsBPFRelatedFunction();
   }

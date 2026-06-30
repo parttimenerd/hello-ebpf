@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1134,7 +1135,7 @@ public final class LinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("link_path_walk((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("link_path_walk((const u8 *)$arg1, $arg2)")
   public static int link_path_walk(String name, Ptr<nameidata> nd) {
     throw new MethodIsBPFRelatedFunction();
   }

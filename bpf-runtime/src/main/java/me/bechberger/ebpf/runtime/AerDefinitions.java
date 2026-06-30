@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1362,7 +1363,7 @@ public final class AerDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { union { struct __kfifo kfifo; struct aer_err_source *type; const struct aer_err_source*; u8 (*rectype)[0]; struct aer_err_source *ptr; const struct aer_err_source*; }; struct aer_err_source buf[128]; }"
+      cType = "struct { union { struct __kfifo kfifo; struct aer_err_source *type; const struct aer_err_source *const_type; u8 (*rectype)[0]; struct aer_err_source *ptr; const struct aer_err_source *ptr_const; }; struct aer_err_source buf[128]; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

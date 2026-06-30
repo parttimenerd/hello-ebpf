@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1106,7 +1107,7 @@ public final class Xfrm6Definitions {
           + "  unsigned int a4;\n"
           + "  unsigned int a6[4];\n"
           + "  struct in6_addr in6;\n"
-          + "}*)$arg1, $arg2)")
+          + "} *)$arg1, $arg2)")
   public static @Unsigned int __xfrm6_pref_hash(Ptr<xfrm_address_t> addr, char prefixlen) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1149,7 +1150,7 @@ public final class Xfrm6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm6_dst_lookup((const struct xfrm_dst_lookup_params*)$arg1)")
+  @BuiltinBPFFunction("xfrm6_dst_lookup((const struct xfrm_dst_lookup_params *)$arg1)")
   public static Ptr<dst_entry> xfrm6_dst_lookup(Ptr<xfrm_dst_lookup_params> params) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1174,7 +1175,7 @@ public final class Xfrm6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm6_fill_dst($arg1, $arg2, (const struct flowi*)$arg3)")
+  @BuiltinBPFFunction("xfrm6_fill_dst($arg1, $arg2, (const struct flowi *)$arg3)")
   public static int xfrm6_fill_dst(Ptr<xfrm_dst> xdst, Ptr<net_device> dev, Ptr<flowi> fl) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1186,7 +1187,7 @@ public final class Xfrm6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xfrm6_get_saddr($arg1, (const struct xfrm_dst_lookup_params*)$arg2)")
+  @BuiltinBPFFunction("xfrm6_get_saddr($arg1, (const struct xfrm_dst_lookup_params *)$arg2)")
   public static int xfrm6_get_saddr(Ptr<xfrm_address_t> saddr, Ptr<xfrm_dst_lookup_params> params) {
     throw new MethodIsBPFRelatedFunction();
   }

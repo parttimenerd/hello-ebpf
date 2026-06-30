@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1210,7 +1211,7 @@ public final class ReserveDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("reserve_mem_find_by_name((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("reserve_mem_find_by_name((const u8 *)$arg1, $arg2, $arg3)")
   public static int reserve_mem_find_by_name(String name,
       Ptr<java.lang. @Unsigned @OriginalName("phys_addr_t") Long> start,
       Ptr<java.lang. @Unsigned @OriginalName("phys_addr_t") Long> size) {
@@ -1231,7 +1232,7 @@ public final class ReserveDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("reserve_mem_kho_revive((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("reserve_mem_kho_revive((const u8 *)$arg1, $arg2, $arg3)")
   public static boolean reserve_mem_kho_revive(String name,
       @Unsigned @OriginalName("phys_addr_t") long size,
       @Unsigned @OriginalName("phys_addr_t") long align) {
@@ -1246,7 +1247,7 @@ public final class ReserveDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("reserve_mem_release_by_name((const u8*)$arg1)")
+  @BuiltinBPFFunction("reserve_mem_release_by_name((const u8 *)$arg1)")
   public static int reserve_mem_release_by_name(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1283,7 +1284,7 @@ public final class ReserveDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("reserve_region_with_split($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("reserve_region_with_split($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static void reserve_region_with_split(Ptr<resource> root,
       @Unsigned @OriginalName("resource_size_t") long start,
       @Unsigned @OriginalName("resource_size_t") long end, String name) {

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,181 +1097,181 @@ public final class StoreDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_bind($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_bind($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_bind(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_bl_curve($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_bl_curve($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_bl_curve(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_blank($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_blank($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_blank(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_boost($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_boost($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_boost(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_bpp($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_bpp($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_bpp(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_cache_disable($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("store_cache_disable($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_cache_disable(Ptr<cacheinfo> ci, String buf,
       @Unsigned long count, @Unsigned int slot) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_console($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_console($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_console(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_constraint_power_limit_uw($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_constraint_power_limit_uw($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_constraint_power_limit_uw(Ptr<device> dev,
       Ptr<device_attribute> dev_attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_constraint_time_window_us($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_constraint_time_window_us($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_constraint_time_window_us(Ptr<device> dev,
       Ptr<device_attribute> dev_attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_cpb($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("store_cpb($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long store_cpb(Ptr<cpufreq_policy> policy, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_cpumask($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_cpumask($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_cpumask(Ptr<padata_instance> pinst,
       Ptr<attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_current_governor($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_current_governor($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_current_governor(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_cursor($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_cursor($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_cursor(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_energy_efficiency($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_energy_efficiency($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_energy_efficiency(Ptr<kobject> a,
       Ptr<kobj_attribute> b, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_energy_performance_preference($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("store_energy_performance_preference($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long store_energy_performance_preference(
       Ptr<cpufreq_policy> policy, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_fbstate($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_fbstate($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_fbstate(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_host_reset($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_host_reset($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_host_reset(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_hwp_dynamic_boost($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_hwp_dynamic_boost($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_hwp_dynamic_boost(Ptr<kobject> a,
       Ptr<kobj_attribute> b, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_int_with_restart($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_int_with_restart($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_int_with_restart(Ptr<device> s,
       Ptr<device_attribute> attr, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_interrupt_enable($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("store_interrupt_enable($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long store_interrupt_enable(Ptr<threshold_block> b,
       String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_link_ksettings_for_user($arg1, (const struct ethtool_link_ksettings*)$arg2)")
+  @BuiltinBPFFunction("store_link_ksettings_for_user($arg1, (const struct ethtool_link_ksettings *)$arg2)")
   public static int store_link_ksettings_for_user(Ptr<?> to, Ptr<ethtool_link_ksettings> from) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_local_boost($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("store_local_boost($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long store_local_boost(Ptr<cpufreq_policy> policy,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_max_perf_pct($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_max_perf_pct($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_max_perf_pct(Ptr<kobject> a,
       Ptr<kobj_attribute> b, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_min_perf_pct($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_min_perf_pct($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_min_perf_pct(Ptr<kobject> a,
       Ptr<kobj_attribute> b, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_mode($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_mode($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_mode(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_modes($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_modes($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_modes(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1283,133 +1284,133 @@ public final class StoreDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_no_turbo($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_no_turbo($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_no_turbo(Ptr<kobject> a, Ptr<kobj_attribute> b,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_pan($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_pan($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_pan(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_queue_type_field($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_queue_type_field($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_queue_type_field(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_rescan_field($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_rescan_field($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_rescan_field(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_reset($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("store_reset($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long store_reset(Ptr<cpufreq_policy> policy, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_rotate($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_rotate($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_rotate(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_rps_dev_flow_table_cnt($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("store_rps_dev_flow_table_cnt($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long store_rps_dev_flow_table_cnt(
       Ptr<netdev_rx_queue> queue, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_rps_map($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("store_rps_map($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long store_rps_map(Ptr<netdev_rx_queue> queue, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_rxbuf($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_rxbuf($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_rxbuf(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_scaling_governor($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("store_scaling_governor($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long store_scaling_governor(Ptr<cpufreq_policy> policy,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_scaling_max_freq($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("store_scaling_max_freq($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long store_scaling_max_freq(Ptr<cpufreq_policy> policy,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_scaling_min_freq($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("store_scaling_min_freq($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long store_scaling_min_freq(Ptr<cpufreq_policy> policy,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_scaling_setspeed($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("store_scaling_setspeed($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long store_scaling_setspeed(Ptr<cpufreq_policy> policy,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_scan($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_scan($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_scan(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_shost_eh_deadline($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_shost_eh_deadline($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_shost_eh_deadline(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_shost_state($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_shost_state($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_shost_state(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_state_disable($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_state_disable($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_state_disable(Ptr<cpuidle_state> state,
       Ptr<cpuidle_state_usage> state_usage, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_state_field($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_state_field($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_state_field(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_threshold_limit($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("store_threshold_limit($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long store_threshold_limit(Ptr<threshold_block> b,
       String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1422,7 +1423,7 @@ public final class StoreDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_uevent((const struct module_attribute*)$arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_uevent((const struct module_attribute *)$arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_uevent(Ptr<module_attribute> mattr,
       Ptr<module_kobject> mk, String buffer, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1442,7 +1443,7 @@ public final class StoreDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("store_virtual($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("store_virtual($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long store_virtual(Ptr<device> device,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

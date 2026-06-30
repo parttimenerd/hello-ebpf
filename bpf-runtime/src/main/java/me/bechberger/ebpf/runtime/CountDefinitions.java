@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1110,7 +1111,7 @@ public final class CountDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("count_mem_devices((const struct dmi_header*)$arg1, $arg2)")
+  @BuiltinBPFFunction("count_mem_devices((const struct dmi_header *)$arg1, $arg2)")
   public static void count_mem_devices(Ptr<dmi_header> dm, Ptr<?> v) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1129,7 +1130,7 @@ public final class CountDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("count_mod_symbols($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("count_mod_symbols($arg1, (const u8 *)$arg2, $arg3)")
   public static int count_mod_symbols(Ptr<?> data, String name, @Unsigned long unused) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1167,13 +1168,13 @@ public final class CountDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("count_strings((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("count_strings((const u8 *)$arg1, $arg2)")
   public static @Unsigned int count_strings(String strings, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("count_strings_kernel((const u8**)$arg1)")
+  @BuiltinBPFFunction("count_strings_kernel((const const u8 **)$arg1)")
   public static int count_strings_kernel(Ptr<String> argv) {
     throw new MethodIsBPFRelatedFunction();
   }

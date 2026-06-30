@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1122,7 +1123,7 @@ public final class RangeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("range_string($arg1, $arg2, (const struct range*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("range_string($arg1, $arg2, (const struct range *)$arg3, $arg4, (const u8 *)$arg5)")
   public static String range_string(String buf, String end, Ptr<range> range, printf_spec spec,
       String fmt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1179,7 +1180,7 @@ public final class RangeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("range_within((const struct bpf_reg_state*)$arg1, (const struct bpf_reg_state*)$arg2)")
+  @BuiltinBPFFunction("range_within((const struct bpf_reg_state *)$arg1, (const struct bpf_reg_state *)$arg2)")
   public static boolean range_within(Ptr<bpf_reg_state> old, Ptr<bpf_reg_state> cur) {
     throw new MethodIsBPFRelatedFunction();
   }

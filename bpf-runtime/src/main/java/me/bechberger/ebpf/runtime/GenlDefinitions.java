@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,14 +1109,14 @@ public final class GenlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genl_cmd_full_to_split($arg1, (const struct genl_family*)$arg2, (const struct genl_ops*)$arg3, $arg4)")
+  @BuiltinBPFFunction("genl_cmd_full_to_split($arg1, (const struct genl_family *)$arg2, (const struct genl_ops *)$arg3, $arg4)")
   public static int genl_cmd_full_to_split(Ptr<genl_split_ops> op, Ptr<genl_family> family,
       Ptr<genl_ops> full, char flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genl_ctrl_event($arg1, (const struct genl_family*)$arg2, (const struct genl_multicast_group*)$arg3, $arg4)")
+  @BuiltinBPFFunction("genl_ctrl_event($arg1, (const struct genl_family *)$arg2, (const struct genl_multicast_group *)$arg3, $arg4)")
   public static int genl_ctrl_event(int event, Ptr<genl_family> family,
       Ptr<genl_multicast_group> grp, int grp_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1134,14 +1135,14 @@ public final class GenlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genl_family_rcv_msg((const struct genl_family*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("genl_family_rcv_msg((const struct genl_family *)$arg1, $arg2, $arg3, $arg4)")
   public static int genl_family_rcv_msg(Ptr<genl_family> family, Ptr<sk_buff> skb,
       Ptr<nlmsghdr> nlh, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genl_family_rcv_msg_doit((const struct genl_family*)$arg1, $arg2, $arg3, $arg4, (const struct genl_split_ops*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("genl_family_rcv_msg_doit((const struct genl_family *)$arg1, $arg2, $arg3, $arg4, (const struct genl_split_ops *)$arg5, $arg6, $arg7)")
   public static int genl_family_rcv_msg_doit(Ptr<genl_family> family, Ptr<sk_buff> skb,
       Ptr<nlmsghdr> nlh, Ptr<netlink_ext_ack> extack, Ptr<genl_split_ops> ops, int hdrlen,
       Ptr<net> net) {
@@ -1149,7 +1150,7 @@ public final class GenlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genl_family_rcv_msg_dumpit((const struct genl_family*)$arg1, $arg2, $arg3, $arg4, (const struct genl_split_ops*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("genl_family_rcv_msg_dumpit((const struct genl_family *)$arg1, $arg2, $arg3, $arg4, (const struct genl_split_ops *)$arg5, $arg6, $arg7)")
   public static int genl_family_rcv_msg_dumpit(Ptr<genl_family> family, Ptr<sk_buff> skb,
       Ptr<nlmsghdr> nlh, Ptr<netlink_ext_ack> extack, Ptr<genl_split_ops> ops, int hdrlen,
       Ptr<net> net) {
@@ -1157,7 +1158,7 @@ public final class GenlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genl_get_cmd($arg1, $arg2, (const struct genl_family*)$arg3, $arg4)")
+  @BuiltinBPFFunction("genl_get_cmd($arg1, $arg2, (const struct genl_family *)$arg3, $arg4)")
   public static int genl_get_cmd(@Unsigned int cmd, char flags, Ptr<genl_family> family,
       Ptr<genl_split_ops> op) {
     throw new MethodIsBPFRelatedFunction();
@@ -1176,20 +1177,20 @@ public final class GenlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genl_notify((const struct genl_family*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("genl_notify((const struct genl_family *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static void genl_notify(Ptr<genl_family> family, Ptr<sk_buff> skb, Ptr<genl_info> info,
       @Unsigned int group, @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genl_op_from_full((const struct genl_family*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("genl_op_from_full((const struct genl_family *)$arg1, $arg2, $arg3)")
   public static void genl_op_from_full(Ptr<genl_family> family, @Unsigned int i, Ptr<genl_ops> op) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genl_op_from_small((const struct genl_family*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("genl_op_from_small((const struct genl_family *)$arg1, $arg2, $arg3)")
   public static void genl_op_from_small(Ptr<genl_family> family, @Unsigned int i,
       Ptr<genl_ops> op) {
     throw new MethodIsBPFRelatedFunction();
@@ -1250,7 +1251,7 @@ public final class GenlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genl_sk_privs_free((const struct genl_family*)$arg1)")
+  @BuiltinBPFFunction("genl_sk_privs_free((const struct genl_family *)$arg1)")
   public static void genl_sk_privs_free(Ptr<genl_family> family) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1274,7 +1275,7 @@ public final class GenlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genl_unregister_family((const struct genl_family*)$arg1)")
+  @BuiltinBPFFunction("genl_unregister_family((const struct genl_family *)$arg1)")
   public static int genl_unregister_family(Ptr<genl_family> family) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1286,7 +1287,7 @@ public final class GenlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genl_validate_ops((const struct genl_family*)$arg1)")
+  @BuiltinBPFFunction("genl_validate_ops((const struct genl_family *)$arg1)")
   public static int genl_validate_ops(Ptr<genl_family> family) {
     throw new MethodIsBPFRelatedFunction();
   }

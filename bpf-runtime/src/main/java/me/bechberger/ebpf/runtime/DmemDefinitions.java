@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1147,7 +1148,7 @@ public final class DmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dmem_cgroup_register_region($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("dmem_cgroup_register_region($arg1, (const u8 *)$arg2, $arg3_)")
   public static Ptr<dmem_cgroup_region> dmem_cgroup_register_region(@Unsigned long size, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();

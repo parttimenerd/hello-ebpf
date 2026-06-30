@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1170,7 +1171,7 @@ public final class MiscDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("misc_devnode((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("misc_devnode((const struct device *)$arg1, $arg2)")
   public static String misc_devnode(Ptr<device> dev,
       Ptr<java.lang. @Unsigned @OriginalName("umode_t") Short> mode) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1141,7 +1142,7 @@ public final class PnpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pnp_add_id($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("pnp_add_id($arg1, (const u8 *)$arg2)")
   public static Ptr<pnp_id> pnp_add_id(Ptr<pnp_dev> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1181,7 +1182,7 @@ public final class PnpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pnp_alloc_dev($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("pnp_alloc_dev($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<pnp_dev> pnp_alloc_dev(Ptr<pnp_protocol> protocol, int id, String pnpid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1218,7 +1219,7 @@ public final class PnpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pnp_bus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("pnp_bus_match($arg1, (const struct device_driver *)$arg2)")
   public static int pnp_bus_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1468,7 +1469,7 @@ public final class PnpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pnp_request_card_device($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pnp_request_card_device($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<pnp_dev> pnp_request_card_device(Ptr<pnp_card_link> clink, String id,
       Ptr<pnp_dev> from) {
     throw new MethodIsBPFRelatedFunction();
@@ -1569,7 +1570,7 @@ public final class PnpDefinitions {
 
     public @Unsigned @OriginalName("kernel_ulong_t") long driver_data;
 
-    public AnonymousType841483227C22 @Size(8) [] devs;
+    public AnonymousType2110785285C22 @Size(8) [] devs;
   }
 
   @Type(
@@ -1906,7 +1907,7 @@ public final class PnpDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType841483227C22 extends Struct {
+  public static class AnonymousType2110785285C22 extends Struct {
     public char @Size(8) [] id;
   }
 }

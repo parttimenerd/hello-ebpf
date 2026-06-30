@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1112,19 +1113,19 @@ public final class VlanDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vlan_dev_real_dev((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("vlan_dev_real_dev((const struct net_device *)$arg1)")
   public static Ptr<net_device> vlan_dev_real_dev(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vlan_dev_vlan_id((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("vlan_dev_vlan_id((const struct net_device *)$arg1)")
   public static @Unsigned short vlan_dev_vlan_id(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vlan_dev_vlan_proto((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("vlan_dev_vlan_proto((const struct net_device *)$arg1)")
   public static @Unsigned @OriginalName("__be16") short vlan_dev_vlan_proto(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1156,19 +1157,19 @@ public final class VlanDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vlan_get_protocol((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("vlan_get_protocol((const struct sk_buff *)$arg1)")
   public static @Unsigned @OriginalName("__be16") short vlan_get_protocol(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vlan_get_protocol_dgram((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("vlan_get_protocol_dgram((const struct sk_buff *)$arg1)")
   public static @Unsigned @OriginalName("__be16") short vlan_get_protocol_dgram(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vlan_get_tci((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vlan_get_tci((const struct sk_buff *)$arg1, $arg2)")
   public static @Unsigned short vlan_get_tci(Ptr<sk_buff> skb, Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1217,7 +1218,7 @@ public final class VlanDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vlan_uses_dev((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("vlan_uses_dev((const struct net_device *)$arg1)")
   public static boolean vlan_uses_dev(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1237,13 +1238,13 @@ public final class VlanDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vlan_vids_add_by_dev($arg1, (const struct net_device*)$arg2)")
+  @BuiltinBPFFunction("vlan_vids_add_by_dev($arg1, (const struct net_device *)$arg2)")
   public static int vlan_vids_add_by_dev(Ptr<net_device> dev, Ptr<net_device> by_dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vlan_vids_del_by_dev($arg1, (const struct net_device*)$arg2)")
+  @BuiltinBPFFunction("vlan_vids_del_by_dev($arg1, (const struct net_device *)$arg2)")
   public static void vlan_vids_del_by_dev(Ptr<net_device> dev, Ptr<net_device> by_dev) {
     throw new MethodIsBPFRelatedFunction();
   }

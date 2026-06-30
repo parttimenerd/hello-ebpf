@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1114,7 +1115,7 @@ public final class SccnxpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sccnxp_console_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sccnxp_console_write($arg1, (const u8 *)$arg2, $arg3)")
   public static void sccnxp_console_write(Ptr<console> co, String c, @Unsigned int n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1204,7 +1205,7 @@ public final class SccnxpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sccnxp_set_termios($arg1, $arg2, (const struct ktermios*)$arg3)")
+  @BuiltinBPFFunction("sccnxp_set_termios($arg1, $arg2, (const struct ktermios *)$arg3)")
   public static void sccnxp_set_termios(Ptr<uart_port> port, Ptr<ktermios> termios,
       Ptr<ktermios> old) {
     throw new MethodIsBPFRelatedFunction();

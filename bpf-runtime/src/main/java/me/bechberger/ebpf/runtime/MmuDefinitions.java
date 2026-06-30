@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class MmuDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__mmu_interval_notifier_insert($arg1, $arg2, $arg3, $arg4, $arg5, (const struct mmu_interval_notifier_ops*)$arg6)")
+  @BuiltinBPFFunction("__mmu_interval_notifier_insert($arg1, $arg2, $arg3, $arg4, $arg5, (const struct mmu_interval_notifier_ops *)$arg6)")
   public static int __mmu_interval_notifier_insert(Ptr<mmu_interval_notifier> interval_sub,
       Ptr<mm_struct> mm, Ptr<mmu_notifier_subscriptions> subscriptions, @Unsigned long start,
       @Unsigned long length, Ptr<mmu_interval_notifier_ops> ops) {
@@ -1155,7 +1156,7 @@ public final class MmuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mmu_interval_notifier_insert($arg1, $arg2, $arg3, $arg4, (const struct mmu_interval_notifier_ops*)$arg5)")
+  @BuiltinBPFFunction("mmu_interval_notifier_insert($arg1, $arg2, $arg3, $arg4, (const struct mmu_interval_notifier_ops *)$arg5)")
   public static int mmu_interval_notifier_insert(Ptr<mmu_interval_notifier> interval_sub,
       Ptr<mm_struct> mm, @Unsigned long start, @Unsigned long length,
       Ptr<mmu_interval_notifier_ops> ops) {
@@ -1163,7 +1164,7 @@ public final class MmuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mmu_interval_notifier_insert_locked($arg1, $arg2, $arg3, $arg4, (const struct mmu_interval_notifier_ops*)$arg5)")
+  @BuiltinBPFFunction("mmu_interval_notifier_insert_locked($arg1, $arg2, $arg3, $arg4, (const struct mmu_interval_notifier_ops *)$arg5)")
   public static int mmu_interval_notifier_insert_locked(Ptr<mmu_interval_notifier> interval_sub,
       Ptr<mm_struct> mm, @Unsigned long start, @Unsigned long length,
       Ptr<mmu_interval_notifier_ops> ops) {
@@ -1189,7 +1190,7 @@ public final class MmuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mmu_notifier_get_locked((const struct mmu_notifier_ops*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mmu_notifier_get_locked((const struct mmu_notifier_ops *)$arg1, $arg2)")
   public static Ptr<mmu_notifier> mmu_notifier_get_locked(Ptr<mmu_notifier_ops> ops,
       Ptr<mm_struct> mm) {
     throw new MethodIsBPFRelatedFunction();

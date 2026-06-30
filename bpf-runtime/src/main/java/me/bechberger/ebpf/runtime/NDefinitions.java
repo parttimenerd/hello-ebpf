@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1123,7 +1124,7 @@ public final class NDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("n_null_write($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("n_null_write($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long n_null_write(Ptr<tty_struct> tty, Ptr<file> file,
       Ptr<java.lang.Character> buf, @Unsigned long nr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1186,13 +1187,13 @@ public final class NDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("n_tty_kick_worker((const struct tty_struct*)$arg1)")
+  @BuiltinBPFFunction("n_tty_kick_worker((const struct tty_struct *)$arg1)")
   public static void n_tty_kick_worker(Ptr<tty_struct> tty) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("n_tty_lookahead_flow_ctrl($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("n_tty_lookahead_flow_ctrl($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void n_tty_lookahead_flow_ctrl(Ptr<tty_struct> tty, Ptr<java.lang.Character> cp,
       Ptr<java.lang.Character> fp, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1232,28 +1233,28 @@ public final class NDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("n_tty_receive_buf($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("n_tty_receive_buf($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void n_tty_receive_buf(Ptr<tty_struct> tty, Ptr<java.lang.Character> cp,
       Ptr<java.lang.Character> fp, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("n_tty_receive_buf2($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("n_tty_receive_buf2($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static @Unsigned long n_tty_receive_buf2(Ptr<tty_struct> tty, Ptr<java.lang.Character> cp,
       Ptr<java.lang.Character> fp, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("n_tty_receive_buf_closing($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("n_tty_receive_buf_closing($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void n_tty_receive_buf_closing(Ptr<tty_struct> tty, Ptr<java.lang.Character> cp,
       Ptr<java.lang.Character> fp, @Unsigned long count, boolean lookahead_done) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("n_tty_receive_buf_common($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("n_tty_receive_buf_common($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static @Unsigned long n_tty_receive_buf_common(Ptr<tty_struct> tty,
       Ptr<java.lang.Character> cp, Ptr<java.lang.Character> fp, @Unsigned long count,
       boolean flow) {
@@ -1261,7 +1262,7 @@ public final class NDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("n_tty_receive_buf_standard($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("n_tty_receive_buf_standard($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void n_tty_receive_buf_standard(Ptr<tty_struct> tty, Ptr<java.lang.Character> cp,
       Ptr<java.lang.Character> fp, @Unsigned long count, boolean lookahead_done) {
     throw new MethodIsBPFRelatedFunction();
@@ -1305,7 +1306,7 @@ public final class NDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("n_tty_set_termios($arg1, (const struct ktermios*)$arg2)")
+  @BuiltinBPFFunction("n_tty_set_termios($arg1, (const struct ktermios *)$arg2)")
   public static void n_tty_set_termios(Ptr<tty_struct> tty, Ptr<ktermios> old) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1318,7 +1319,7 @@ public final class NDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("n_tty_write($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("n_tty_write($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long n_tty_write(Ptr<tty_struct> tty, Ptr<file> file,
       Ptr<java.lang.Character> buf, @Unsigned long nr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1338,7 +1339,7 @@ public final class NDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("n_vclocks_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("n_vclocks_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long n_vclocks_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

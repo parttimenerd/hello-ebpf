@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1121,7 +1122,7 @@ public final class IpeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipe_bdev_setintegrity($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ipe_bdev_setintegrity($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int ipe_bdev_setintegrity(Ptr<block_device> bdev, lsm_integrity_type type,
       Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1134,7 +1135,7 @@ public final class IpeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipe_build_eval_ctx($arg1, (const struct file*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ipe_build_eval_ctx($arg1, (const struct file *)$arg2, $arg3, $arg4)")
   public static void ipe_build_eval_ctx(Ptr<ipe_eval_ctx> ctx, Ptr<file> file, ipe_op_type op,
       ipe_hook_type hook) {
     throw new MethodIsBPFRelatedFunction();
@@ -1147,13 +1148,13 @@ public final class IpeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipe_digest_audit($arg1, (const struct digest_info*)$arg2)")
+  @BuiltinBPFFunction("ipe_digest_audit($arg1, (const struct digest_info *)$arg2)")
   public static void ipe_digest_audit(Ptr<audit_buffer> ab, Ptr<digest_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipe_digest_eval((const struct digest_info*)$arg1, (const struct digest_info*)$arg2)")
+  @BuiltinBPFFunction("ipe_digest_eval((const struct digest_info *)$arg1, (const struct digest_info *)$arg2)")
   public static boolean ipe_digest_eval(Ptr<digest_info> expected, Ptr<digest_info> digest) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1165,7 +1166,7 @@ public final class IpeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipe_digest_parse((const u8*)$arg1)")
+  @BuiltinBPFFunction("ipe_digest_parse((const u8 *)$arg1)")
   public static Ptr<digest_info> ipe_digest_parse(String valstr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1208,7 +1209,7 @@ public final class IpeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipe_inode_setintegrity((const struct inode*)$arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ipe_inode_setintegrity((const struct inode *)$arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int ipe_inode_setintegrity(Ptr<inode> inode, lsm_integrity_type type, Ptr<?> value,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1234,7 +1235,7 @@ public final class IpeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipe_new_policy((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ipe_new_policy((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<ipe_policy> ipe_new_policy(String text, @Unsigned long textlen, String pkcs7,
       @Unsigned long pkcs7len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1253,13 +1254,13 @@ public final class IpeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipe_sb((const struct super_block*)$arg1)")
+  @BuiltinBPFFunction("ipe_sb((const struct super_block *)$arg1)")
   public static Ptr<ipe_superblock> ipe_sb(Ptr<super_block> sb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipe_set_active_pol((const struct ipe_policy*)$arg1)")
+  @BuiltinBPFFunction("ipe_set_active_pol((const struct ipe_policy *)$arg1)")
   public static int ipe_set_active_pol(Ptr<ipe_policy> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1271,7 +1272,7 @@ public final class IpeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipe_update_policy($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ipe_update_policy($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int ipe_update_policy(Ptr<inode> root, String text, @Unsigned long textlen,
       String pkcs7, @Unsigned long pkcs7len) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1127,14 +1128,14 @@ public final class PickDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pick_idle_cpu_from_online_nodes((const struct cpumask*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("pick_idle_cpu_from_online_nodes((const struct cpumask *)$arg1, $arg2, $arg3)")
   public static int pick_idle_cpu_from_online_nodes(Ptr<cpumask> cpus_allowed, int node,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pick_idle_cpu_in_node((const struct cpumask*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("pick_idle_cpu_in_node((const struct cpumask *)$arg1, $arg2, $arg3)")
   public static int pick_idle_cpu_in_node(Ptr<cpumask> cpus_allowed, int node,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();

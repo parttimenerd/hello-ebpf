@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class PlatformDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__platform_create_bundle($arg1, (int (*)(struct platform_device*))$arg2, $arg3, $arg4, (const void*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__platform_create_bundle($arg1, (int (*)(struct platform_device*))$arg2, $arg3, $arg4, (const void *)$arg5, $arg6, $arg7)")
   public static Ptr<platform_device> __platform_create_bundle(Ptr<platform_driver> driver,
       Ptr<?> probe, Ptr<resource> res, @Unsigned int n_res, Ptr<?> data, @Unsigned long size,
       Ptr<module> module) {
@@ -1111,13 +1112,13 @@ public final class PlatformDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__platform_get_irq_byname($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__platform_get_irq_byname($arg1, (const u8 *)$arg2)")
   public static int __platform_get_irq_byname(Ptr<platform_device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__platform_match($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("__platform_match($arg1, (const void *)$arg2)")
   public static int __platform_match(Ptr<device> dev, Ptr<?> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1155,21 +1156,21 @@ public final class PlatformDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("platform_device_add_data($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("platform_device_add_data($arg1, (const void *)$arg2, $arg3)")
   public static int platform_device_add_data(Ptr<platform_device> pdev, Ptr<?> data,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("platform_device_add_resources($arg1, (const struct resource*)$arg2, $arg3)")
+  @BuiltinBPFFunction("platform_device_add_resources($arg1, (const struct resource *)$arg2, $arg3)")
   public static int platform_device_add_resources(Ptr<platform_device> pdev, Ptr<resource> res,
       @Unsigned int num) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("platform_device_alloc((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("platform_device_alloc((const u8 *)$arg1, $arg2)")
   public static Ptr<platform_device> platform_device_alloc(String name, int id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1206,7 +1207,7 @@ public final class PlatformDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("platform_device_register_full((const struct platform_device_info*)$arg1)")
+  @BuiltinBPFFunction("platform_device_register_full((const struct platform_device_info *)$arg1)")
   public static Ptr<platform_device> platform_device_register_full(
       Ptr<platform_device_info> pdevinfo) {
     throw new MethodIsBPFRelatedFunction();
@@ -1249,7 +1250,7 @@ public final class PlatformDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("platform_find_device_by_driver($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("platform_find_device_by_driver($arg1, (const struct device_driver *)$arg2)")
   public static Ptr<device> platform_find_device_by_driver(Ptr<device> start,
       Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
@@ -1268,13 +1269,13 @@ public final class PlatformDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("platform_get_irq_byname($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("platform_get_irq_byname($arg1, (const u8 *)$arg2)")
   public static int platform_get_irq_byname(Ptr<platform_device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("platform_get_irq_byname_optional($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("platform_get_irq_byname_optional($arg1, (const u8 *)$arg2)")
   public static int platform_get_irq_byname_optional(Ptr<platform_device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1299,7 +1300,7 @@ public final class PlatformDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("platform_get_resource_byname($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("platform_get_resource_byname($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<resource> platform_get_resource_byname(Ptr<platform_device> dev,
       @Unsigned int type, String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1318,7 +1319,7 @@ public final class PlatformDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("platform_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("platform_match($arg1, (const struct device_driver *)$arg2)")
   public static int platform_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1337,7 +1338,7 @@ public final class PlatformDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("platform_pci_probe($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("platform_pci_probe($arg1, (const struct pci_device_id *)$arg2)")
   public static int platform_pci_probe(Ptr<pci_dev> pdev, Ptr<pci_device_id> ent) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1415,7 +1416,7 @@ public final class PlatformDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("platform_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("platform_uevent((const struct device *)$arg1, $arg2)")
   public static int platform_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class BlkgDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__blkg_prfill_rwstat($arg1, $arg2, (const struct blkg_rwstat_sample*)$arg3)")
+  @BuiltinBPFFunction("__blkg_prfill_rwstat($arg1, $arg2, (const struct blkg_rwstat_sample *)$arg3)")
   public static @Unsigned long __blkg_prfill_rwstat(Ptr<seq_file> sf, Ptr<blkg_policy_data> pd,
       Ptr<blkg_rwstat_sample> rwstat) {
     throw new MethodIsBPFRelatedFunction();
@@ -1153,7 +1154,7 @@ public final class BlkgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blkg_conf_prep($arg1, (const struct blkcg_policy*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blkg_conf_prep($arg1, (const struct blkcg_policy *)$arg2, $arg3)")
   public static int blkg_conf_prep(Ptr<blkcg> blkcg, Ptr<blkcg_policy> pol,
       Ptr<blkg_conf_ctx> ctx) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1121,13 +1122,13 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)__clk_get_name((const struct clk*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)__clk_get_name((const struct clk *)$arg1))")
   public static String __clk_get_name(Ptr<clk> clk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__clk_hw_register_composite($arg1, (const u8*)$arg2, (const u8**)$arg3, (const struct clk_parent_data*)$arg4, $arg5, $arg6, (const struct clk_ops*)$arg7, $arg8, (const struct clk_ops*)$arg9, $arg10, (const struct clk_ops*)$arg11, $arg12)")
+  @BuiltinBPFFunction("__clk_hw_register_composite($arg1, (const u8 *)$arg2, (const const u8 **)$arg3, (const struct clk_parent_data *)$arg4, $arg5, $arg6, (const struct clk_ops *)$arg7, $arg8, (const struct clk_ops *)$arg9, $arg10, (const struct clk_ops *)$arg11, $arg12)")
   public static Ptr<clk_hw> __clk_hw_register_composite(Ptr<device> dev, String name,
       Ptr<String> parent_names, Ptr<clk_parent_data> pdata, int num_parents, Ptr<clk_hw> mux_hw,
       Ptr<clk_ops> mux_ops, Ptr<clk_hw> rate_hw, Ptr<clk_ops> rate_ops, Ptr<clk_hw> gate_hw,
@@ -1136,7 +1137,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__clk_hw_register_divider($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, (const struct clk_hw*)$arg5, (const struct clk_parent_data*)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11, (const struct clk_div_table*)$arg12, $arg13)")
+  @BuiltinBPFFunction("__clk_hw_register_divider($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const struct clk_hw *)$arg5, (const struct clk_parent_data *)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11, (const struct clk_div_table *)$arg12, $arg13)")
   public static Ptr<clk_hw> __clk_hw_register_divider(Ptr<device> dev, Ptr<device_node> np,
       String name, String parent_name, Ptr<clk_hw> parent_hw, Ptr<clk_parent_data> parent_data,
       @Unsigned long flags, Ptr<?> reg, char shift, char width, @Unsigned long clk_divider_flags,
@@ -1145,7 +1146,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__clk_hw_register_fixed_factor($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, (const struct clk_hw*)$arg5, (const struct clk_parent_data*)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11, $arg12)")
+  @BuiltinBPFFunction("__clk_hw_register_fixed_factor($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const struct clk_hw *)$arg5, (const struct clk_parent_data *)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11, $arg12)")
   public static Ptr<clk_hw> __clk_hw_register_fixed_factor(Ptr<device> dev, Ptr<device_node> np,
       String name, String parent_name, Ptr<clk_hw> parent_hw, Ptr<clk_parent_data> pdata,
       @Unsigned long flags, @Unsigned int mult, @Unsigned int div, @Unsigned long acc,
@@ -1154,7 +1155,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__clk_hw_register_fixed_rate($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, (const struct clk_hw*)$arg5, (const struct clk_parent_data*)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("__clk_hw_register_fixed_rate($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const struct clk_hw *)$arg5, (const struct clk_parent_data *)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
   public static Ptr<clk_hw> __clk_hw_register_fixed_rate(Ptr<device> dev, Ptr<device_node> np,
       String name, String parent_name, Ptr<clk_hw> parent_hw, Ptr<clk_parent_data> parent_data,
       @Unsigned long flags, @Unsigned long fixed_rate, @Unsigned long fixed_accuracy,
@@ -1163,7 +1164,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__clk_hw_register_gate($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, (const struct clk_hw*)$arg5, (const struct clk_parent_data*)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("__clk_hw_register_gate($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const struct clk_hw *)$arg5, (const struct clk_parent_data *)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
   public static Ptr<clk_hw> __clk_hw_register_gate(Ptr<device> dev, Ptr<device_node> np,
       String name, String parent_name, Ptr<clk_hw> parent_hw, Ptr<clk_parent_data> parent_data,
       @Unsigned long flags, Ptr<?> reg, char bit_idx, char clk_gate_flags,
@@ -1172,7 +1173,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__clk_hw_register_mux($arg1, $arg2, (const u8*)$arg3, $arg4, (const u8**)$arg5, (const struct clk_hw**)$arg6, (const struct clk_parent_data*)$arg7, $arg8, $arg9, $arg10, $arg11, $arg12, (const unsigned int*)$arg13, $arg14)")
+  @BuiltinBPFFunction("__clk_hw_register_mux($arg1, $arg2, (const u8 *)$arg3, $arg4, (const const u8 **)$arg5, (const struct clk_hw**)$arg6, (const struct clk_parent_data *)$arg7, $arg8, $arg9, $arg10, $arg11, $arg12, (const unsigned int *)$arg13, $arg14)")
   public static Ptr<clk_hw> __clk_hw_register_mux(Ptr<device> dev, Ptr<device_node> np, String name,
       char num_parents, Ptr<String> parent_names, Ptr<Ptr<clk_hw>> parent_hws,
       Ptr<clk_parent_data> parent_data, @Unsigned long flags, Ptr<?> reg, char shift,
@@ -1188,13 +1189,13 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__clk_lookup((const u8*)$arg1)")
+  @BuiltinBPFFunction("__clk_lookup((const u8 *)$arg1)")
   public static Ptr<clk> __clk_lookup(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__clk_lookup_subtree((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__clk_lookup_subtree((const u8 *)$arg1, $arg2)")
   public static Ptr<clk_core> __clk_lookup_subtree(String name, Ptr<clk_core> core) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1244,7 +1245,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__clk_register_clkdev($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("__clk_register_clkdev($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4_)")
   public static Ptr<clk_lookup> __clk_register_clkdev(Ptr<clk_hw> hw, String con_id, String dev_id,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1282,20 +1283,20 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_add_alias((const u8*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("clk_add_alias((const u8 *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static int clk_add_alias(String alias, String alias_dev_name, String con_id,
       Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_bulk_disable($arg1, (const struct clk_bulk_data*)$arg2)")
+  @BuiltinBPFFunction("clk_bulk_disable($arg1, (const struct clk_bulk_data *)$arg2)")
   public static void clk_bulk_disable(int num_clks, Ptr<clk_bulk_data> clks) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_bulk_enable($arg1, (const struct clk_bulk_data*)$arg2)")
+  @BuiltinBPFFunction("clk_bulk_enable($arg1, (const struct clk_bulk_data *)$arg2)")
   public static int clk_bulk_enable(int num_clks, Ptr<clk_bulk_data> clks) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1319,7 +1320,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_bulk_prepare($arg1, (const struct clk_bulk_data*)$arg2)")
+  @BuiltinBPFFunction("clk_bulk_prepare($arg1, (const struct clk_bulk_data *)$arg2)")
   public static int clk_bulk_prepare(int num_clks, Ptr<clk_bulk_data> clks) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1337,7 +1338,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_bulk_unprepare($arg1, (const struct clk_bulk_data*)$arg2)")
+  @BuiltinBPFFunction("clk_bulk_unprepare($arg1, (const struct clk_bulk_data *)$arg2)")
   public static void clk_bulk_unprepare(int num_clks, Ptr<clk_bulk_data> clks) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1368,7 +1369,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_composite_determine_rate_for_parent($arg1, $arg2, $arg3, (const struct clk_ops*)$arg4)")
+  @BuiltinBPFFunction("clk_composite_determine_rate_for_parent($arg1, $arg2, $arg3, (const struct clk_ops *)$arg4)")
   public static int clk_composite_determine_rate_for_parent(Ptr<clk_hw> rate_hw,
       Ptr<clk_rate_request> req, Ptr<clk_hw> parent_hw, Ptr<clk_ops> rate_ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1457,13 +1458,13 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_core_evict_parent_cache_subtree($arg1, (const struct clk_core*)$arg2)")
+  @BuiltinBPFFunction("clk_core_evict_parent_cache_subtree($arg1, (const struct clk_core *)$arg2)")
   public static void clk_core_evict_parent_cache_subtree(Ptr<clk_core> root, Ptr<clk_core> target) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_core_forward_rate_req($arg1, (const struct clk_rate_request*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("clk_core_forward_rate_req($arg1, (const struct clk_rate_request *)$arg2, $arg3, $arg4, $arg5)")
   public static void clk_core_forward_rate_req(Ptr<clk_core> core, Ptr<clk_rate_request> old_req,
       Ptr<clk_core> parent, Ptr<clk_rate_request> req, @Unsigned long parent_rate) {
     throw new MethodIsBPFRelatedFunction();
@@ -1496,13 +1497,13 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_core_lookup((const u8*)$arg1)")
+  @BuiltinBPFFunction("clk_core_lookup((const u8 *)$arg1)")
   public static Ptr<clk_core> clk_core_lookup(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_core_populate_parent_map($arg1, (const struct clk_init_data*)$arg2)")
+  @BuiltinBPFFunction("clk_core_populate_parent_map($arg1, (const struct clk_init_data *)$arg2)")
   public static int clk_core_populate_parent_map(Ptr<clk_core> core, Ptr<clk_init_data> init) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1646,7 +1647,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_divider_bestdiv($arg1, $arg2, $arg3, $arg4, (const struct clk_div_table*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("clk_divider_bestdiv($arg1, $arg2, $arg3, $arg4, (const struct clk_div_table *)$arg5, $arg6, $arg7)")
   public static int clk_divider_bestdiv(Ptr<clk_hw> hw, Ptr<clk_hw> parent, @Unsigned long rate,
       Ptr<java.lang. @Unsigned Long> best_parent_rate, Ptr<clk_div_table> table, char width,
       @Unsigned long flags) {
@@ -1817,7 +1818,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_find_hw((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("clk_find_hw((const u8 *)$arg1, (const u8 *)$arg2)")
   public static Ptr<clk_hw> clk_find_hw(String dev_id, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1918,7 +1919,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("clk_get($arg1, (const u8 *)$arg2)")
   public static Ptr<clk> clk_get(Ptr<device> dev, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1954,7 +1955,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_get_sys((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("clk_get_sys((const u8 *)$arg1, (const u8 *)$arg2)")
   public static Ptr<clk> clk_get_sys(String dev_id, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1978,13 +1979,13 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_has_parent((const struct clk*)$arg1, (const struct clk*)$arg2)")
+  @BuiltinBPFFunction("clk_has_parent((const struct clk *)$arg1, (const struct clk *)$arg2)")
   public static boolean clk_has_parent(Ptr<clk> clk, Ptr<clk> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_create_clk($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("clk_hw_create_clk($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static Ptr<clk> clk_hw_create_clk(Ptr<device> dev, Ptr<clk_hw> hw, String dev_id,
       String con_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1997,56 +1998,56 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_forward_rate_request((const struct clk_hw*)$arg1, (const struct clk_rate_request*)$arg2, (const struct clk_hw*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("clk_hw_forward_rate_request((const struct clk_hw *)$arg1, (const struct clk_rate_request *)$arg2, (const struct clk_hw *)$arg3, $arg4, $arg5)")
   public static void clk_hw_forward_rate_request(Ptr<clk_hw> hw, Ptr<clk_rate_request> old_req,
       Ptr<clk_hw> parent, Ptr<clk_rate_request> req, @Unsigned long parent_rate) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_get_clk($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("clk_hw_get_clk($arg1, (const u8 *)$arg2)")
   public static Ptr<clk> clk_hw_get_clk(Ptr<clk_hw> hw, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_get_dev((const struct clk_hw*)$arg1)")
+  @BuiltinBPFFunction("clk_hw_get_dev((const struct clk_hw *)$arg1)")
   public static Ptr<device> clk_hw_get_dev(Ptr<clk_hw> hw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_get_flags((const struct clk_hw*)$arg1)")
+  @BuiltinBPFFunction("clk_hw_get_flags((const struct clk_hw *)$arg1)")
   public static @Unsigned long clk_hw_get_flags(Ptr<clk_hw> hw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)clk_hw_get_name((const struct clk_hw*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)clk_hw_get_name((const struct clk_hw *)$arg1))")
   public static String clk_hw_get_name(Ptr<clk_hw> hw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_get_num_parents((const struct clk_hw*)$arg1)")
+  @BuiltinBPFFunction("clk_hw_get_num_parents((const struct clk_hw *)$arg1)")
   public static @Unsigned int clk_hw_get_num_parents(Ptr<clk_hw> hw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_get_of_node((const struct clk_hw*)$arg1)")
+  @BuiltinBPFFunction("clk_hw_get_of_node((const struct clk_hw *)$arg1)")
   public static Ptr<device_node> clk_hw_get_of_node(Ptr<clk_hw> hw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_get_parent((const struct clk_hw*)$arg1)")
+  @BuiltinBPFFunction("clk_hw_get_parent((const struct clk_hw *)$arg1)")
   public static Ptr<clk_hw> clk_hw_get_parent(Ptr<clk_hw> hw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_get_parent_by_index((const struct clk_hw*)$arg1, $arg2)")
+  @BuiltinBPFFunction("clk_hw_get_parent_by_index((const struct clk_hw *)$arg1, $arg2)")
   public static Ptr<clk_hw> clk_hw_get_parent_by_index(Ptr<clk_hw> hw, @Unsigned int index) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2058,7 +2059,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_get_rate((const struct clk_hw*)$arg1)")
+  @BuiltinBPFFunction("clk_hw_get_rate((const struct clk_hw *)$arg1)")
   public static @Unsigned long clk_hw_get_rate(Ptr<clk_hw> hw) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2071,20 +2072,20 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_init_rate_request((const struct clk_hw*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("clk_hw_init_rate_request((const struct clk_hw *)$arg1, $arg2, $arg3)")
   public static void clk_hw_init_rate_request(Ptr<clk_hw> hw, Ptr<clk_rate_request> req,
       @Unsigned long rate) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_is_enabled((const struct clk_hw*)$arg1)")
+  @BuiltinBPFFunction("clk_hw_is_enabled((const struct clk_hw *)$arg1)")
   public static boolean clk_hw_is_enabled(Ptr<clk_hw> hw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_is_prepared((const struct clk_hw*)$arg1)")
+  @BuiltinBPFFunction("clk_hw_is_prepared((const struct clk_hw *)$arg1)")
   public static boolean clk_hw_is_prepared(Ptr<clk_hw> hw) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2096,13 +2097,13 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_register_clkdev($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("clk_hw_register_clkdev($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int clk_hw_register_clkdev(Ptr<clk_hw> hw, String con_id, String dev_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_register_composite($arg1, (const u8*)$arg2, (const u8**)$arg3, $arg4, $arg5, (const struct clk_ops*)$arg6, $arg7, (const struct clk_ops*)$arg8, $arg9, (const struct clk_ops*)$arg10, $arg11)")
+  @BuiltinBPFFunction("clk_hw_register_composite($arg1, (const u8 *)$arg2, (const const u8 **)$arg3, $arg4, $arg5, (const struct clk_ops *)$arg6, $arg7, (const struct clk_ops *)$arg8, $arg9, (const struct clk_ops *)$arg10, $arg11)")
   public static Ptr<clk_hw> clk_hw_register_composite(Ptr<device> dev, String name,
       Ptr<String> parent_names, int num_parents, Ptr<clk_hw> mux_hw, Ptr<clk_ops> mux_ops,
       Ptr<clk_hw> rate_hw, Ptr<clk_ops> rate_ops, Ptr<clk_hw> gate_hw, Ptr<clk_ops> gate_ops,
@@ -2111,7 +2112,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_register_composite_pdata($arg1, (const u8*)$arg2, (const struct clk_parent_data*)$arg3, $arg4, $arg5, (const struct clk_ops*)$arg6, $arg7, (const struct clk_ops*)$arg8, $arg9, (const struct clk_ops*)$arg10, $arg11)")
+  @BuiltinBPFFunction("clk_hw_register_composite_pdata($arg1, (const u8 *)$arg2, (const struct clk_parent_data *)$arg3, $arg4, $arg5, (const struct clk_ops *)$arg6, $arg7, (const struct clk_ops *)$arg8, $arg9, (const struct clk_ops *)$arg10, $arg11)")
   public static Ptr<clk_hw> clk_hw_register_composite_pdata(Ptr<device> dev, String name,
       Ptr<clk_parent_data> parent_data, int num_parents, Ptr<clk_hw> mux_hw, Ptr<clk_ops> mux_ops,
       Ptr<clk_hw> rate_hw, Ptr<clk_ops> rate_ops, Ptr<clk_hw> gate_hw, Ptr<clk_ops> gate_ops,
@@ -2120,14 +2121,14 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_register_fixed_factor($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("clk_hw_register_fixed_factor($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<clk_hw> clk_hw_register_fixed_factor(Ptr<device> dev, String name,
       String parent_name, @Unsigned long flags, @Unsigned int mult, @Unsigned int div) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_register_fixed_factor_fwname($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("clk_hw_register_fixed_factor_fwname($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5, $arg6, $arg7)")
   public static Ptr<clk_hw> clk_hw_register_fixed_factor_fwname(Ptr<device> dev,
       Ptr<device_node> np, String name, String fw_name, @Unsigned long flags, @Unsigned int mult,
       @Unsigned int div) {
@@ -2135,21 +2136,21 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_register_fixed_factor_index($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("clk_hw_register_fixed_factor_index($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<clk_hw> clk_hw_register_fixed_factor_index(Ptr<device> dev, String name,
       @Unsigned int index, @Unsigned long flags, @Unsigned int mult, @Unsigned int div) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_register_fixed_factor_parent_hw($arg1, (const u8*)$arg2, (const struct clk_hw*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("clk_hw_register_fixed_factor_parent_hw($arg1, (const u8 *)$arg2, (const struct clk_hw *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<clk_hw> clk_hw_register_fixed_factor_parent_hw(Ptr<device> dev, String name,
       Ptr<clk_hw> parent_hw, @Unsigned long flags, @Unsigned int mult, @Unsigned int div) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_register_fixed_factor_with_accuracy_fwname($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("clk_hw_register_fixed_factor_with_accuracy_fwname($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static Ptr<clk_hw> clk_hw_register_fixed_factor_with_accuracy_fwname(Ptr<device> dev,
       Ptr<device_node> np, String name, String fw_name, @Unsigned long flags, @Unsigned int mult,
       @Unsigned int div, @Unsigned long acc) {
@@ -2157,7 +2158,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_hw_register_fractional_divider($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("clk_hw_register_fractional_divider($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
   public static Ptr<clk_hw> clk_hw_register_fractional_divider(Ptr<device> dev, String name,
       String parent_name, @Unsigned long flags, Ptr<?> reg, char mshift, char mwidth, char nshift,
       char nwidth, char clk_divider_flags, Ptr<@OriginalName("spinlock_t") spinlock> lock) {
@@ -2250,7 +2251,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_is_match((const struct clk*)$arg1, (const struct clk*)$arg2)")
+  @BuiltinBPFFunction("clk_is_match((const struct clk *)$arg1, (const struct clk *)$arg2)")
   public static boolean clk_is_match(Ptr<clk> p, Ptr<clk> q) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2320,7 +2321,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_mux_index_to_val((const unsigned int*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("clk_mux_index_to_val((const unsigned int *)$arg1, $arg2, $arg3)")
   public static @Unsigned int clk_mux_index_to_val(Ptr<java.lang. @Unsigned Integer> table,
       @Unsigned int flags, char index) {
     throw new MethodIsBPFRelatedFunction();
@@ -2333,7 +2334,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_mux_val_to_index($arg1, (const unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("clk_mux_val_to_index($arg1, (const unsigned int *)$arg2, $arg3, $arg4)")
   public static int clk_mux_val_to_index(Ptr<clk_hw> hw, Ptr<java.lang. @Unsigned Integer> table,
       @Unsigned int flags, @Unsigned int val) {
     throw new MethodIsBPFRelatedFunction();
@@ -2491,13 +2492,13 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_register_clkdev($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("clk_register_clkdev($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int clk_register_clkdev(Ptr<clk> clk, String con_id, String dev_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_register_composite($arg1, (const u8*)$arg2, (const u8**)$arg3, $arg4, $arg5, (const struct clk_ops*)$arg6, $arg7, (const struct clk_ops*)$arg8, $arg9, (const struct clk_ops*)$arg10, $arg11)")
+  @BuiltinBPFFunction("clk_register_composite($arg1, (const u8 *)$arg2, (const const u8 **)$arg3, $arg4, $arg5, (const struct clk_ops *)$arg6, $arg7, (const struct clk_ops *)$arg8, $arg9, (const struct clk_ops *)$arg10, $arg11)")
   public static Ptr<clk> clk_register_composite(Ptr<device> dev, String name,
       Ptr<String> parent_names, int num_parents, Ptr<clk_hw> mux_hw, Ptr<clk_ops> mux_ops,
       Ptr<clk_hw> rate_hw, Ptr<clk_ops> rate_ops, Ptr<clk_hw> gate_hw, Ptr<clk_ops> gate_ops,
@@ -2506,7 +2507,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_register_composite_pdata($arg1, (const u8*)$arg2, (const struct clk_parent_data*)$arg3, $arg4, $arg5, (const struct clk_ops*)$arg6, $arg7, (const struct clk_ops*)$arg8, $arg9, (const struct clk_ops*)$arg10, $arg11)")
+  @BuiltinBPFFunction("clk_register_composite_pdata($arg1, (const u8 *)$arg2, (const struct clk_parent_data *)$arg3, $arg4, $arg5, (const struct clk_ops *)$arg6, $arg7, (const struct clk_ops *)$arg8, $arg9, (const struct clk_ops *)$arg10, $arg11)")
   public static Ptr<clk> clk_register_composite_pdata(Ptr<device> dev, String name,
       Ptr<clk_parent_data> parent_data, int num_parents, Ptr<clk_hw> mux_hw, Ptr<clk_ops> mux_ops,
       Ptr<clk_hw> rate_hw, Ptr<clk_ops> rate_ops, Ptr<clk_hw> gate_hw, Ptr<clk_ops> gate_ops,
@@ -2515,7 +2516,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_register_divider_table($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, (const struct clk_div_table*)$arg9, $arg10)")
+  @BuiltinBPFFunction("clk_register_divider_table($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, (const struct clk_div_table *)$arg9, $arg10)")
   public static Ptr<clk> clk_register_divider_table(Ptr<device> dev, String name,
       String parent_name, @Unsigned long flags, Ptr<?> reg, char shift, char width,
       @Unsigned long clk_divider_flags, Ptr<clk_div_table> table,
@@ -2524,21 +2525,21 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_register_fixed_factor($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("clk_register_fixed_factor($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<clk> clk_register_fixed_factor(Ptr<device> dev, String name, String parent_name,
       @Unsigned long flags, @Unsigned int mult, @Unsigned int div) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_register_fixed_rate($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("clk_register_fixed_rate($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static Ptr<clk> clk_register_fixed_rate(Ptr<device> dev, String name, String parent_name,
       @Unsigned long flags, @Unsigned long fixed_rate) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_register_fractional_divider($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("clk_register_fractional_divider($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
   public static Ptr<clk> clk_register_fractional_divider(Ptr<device> dev, String name,
       String parent_name, @Unsigned long flags, Ptr<?> reg, char mshift, char mwidth, char nshift,
       char nwidth, char clk_divider_flags, Ptr<@OriginalName("spinlock_t") spinlock> lock) {
@@ -2546,7 +2547,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_register_gate($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("clk_register_gate($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static Ptr<clk> clk_register_gate(Ptr<device> dev, String name, String parent_name,
       @Unsigned long flags, Ptr<?> reg, char bit_idx, char clk_gate_flags,
       Ptr<@OriginalName("spinlock_t") spinlock> lock) {
@@ -2554,7 +2555,7 @@ public final class ClkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clk_register_mux_table($arg1, (const u8*)$arg2, (const u8**)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, (const unsigned int*)$arg10, $arg11)")
+  @BuiltinBPFFunction("clk_register_mux_table($arg1, (const u8 *)$arg2, (const const u8 **)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, (const unsigned int *)$arg10, $arg11)")
   public static Ptr<clk> clk_register_mux_table(Ptr<device> dev, String name,
       Ptr<String> parent_names, char num_parents, @Unsigned long flags, Ptr<?> reg, char shift,
       @Unsigned int mask, char clk_mux_flags, Ptr<java.lang. @Unsigned Integer> table,

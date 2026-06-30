@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1104,7 +1105,7 @@ public final class FanotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fanotify_alloc_event($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, (const struct qstr*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("fanotify_alloc_event($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, (const struct qstr *)$arg6, $arg7, $arg8)")
   public static Ptr<fanotify_event> fanotify_alloc_event(Ptr<fsnotify_group> group,
       @Unsigned int mask, Ptr<?> data, int data_type, Ptr<inode> dir, Ptr<qstr> file_name,
       Ptr<__kernel_fsid_t> fsid, @Unsigned int match_mask) {
@@ -1112,7 +1113,7 @@ public final class FanotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fanotify_alloc_name_event($arg1, $arg2, (const struct qstr*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("fanotify_alloc_name_event($arg1, $arg2, (const struct qstr *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static Ptr<fanotify_event> fanotify_alloc_name_event(Ptr<inode> dir,
       Ptr<__kernel_fsid_t> fsid, Ptr<qstr> name, Ptr<inode> child, Ptr<dentry> moved,
       Ptr<java.lang. @Unsigned Integer> hash, @Unsigned @OriginalName("gfp_t") int gfp) {
@@ -1146,7 +1147,7 @@ public final class FanotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fanotify_find_path($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fanotify_find_path($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int fanotify_find_path(int dfd, String filename, Ptr<path> path,
       @Unsigned int flags, @Unsigned long mask, @Unsigned int obj_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1184,7 +1185,7 @@ public final class FanotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fanotify_group_event_mask($arg1, $arg2, $arg3, $arg4, (const void*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("fanotify_group_event_mask($arg1, $arg2, $arg3, $arg4, (const void *)$arg5, $arg6, $arg7)")
   public static @Unsigned int fanotify_group_event_mask(Ptr<fsnotify_group> group,
       Ptr<fsnotify_iter_info> iter_info, Ptr<java.lang. @Unsigned Integer> match_mask,
       @Unsigned int event_mask, Ptr<?> data, int data_type, Ptr<inode> dir) {
@@ -1192,7 +1193,7 @@ public final class FanotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fanotify_handle_event($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, (const struct qstr*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("fanotify_handle_event($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, (const struct qstr *)$arg6, $arg7, $arg8)")
   public static int fanotify_handle_event(Ptr<fsnotify_group> group, @Unsigned int mask,
       Ptr<?> data, int data_type, Ptr<inode> dir, Ptr<qstr> file_name, @Unsigned int cookie,
       Ptr<fsnotify_iter_info> iter_info) {
@@ -1200,7 +1201,7 @@ public final class FanotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fanotify_info_copy_name($arg1, (const struct qstr*)$arg2)")
+  @BuiltinBPFFunction("fanotify_info_copy_name($arg1, (const struct qstr *)$arg2)")
   public static void fanotify_info_copy_name(Ptr<fanotify_info> info, Ptr<qstr> name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1276,7 +1277,7 @@ public final class FanotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fanotify_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fanotify_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long fanotify_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
     throw new MethodIsBPFRelatedFunction();

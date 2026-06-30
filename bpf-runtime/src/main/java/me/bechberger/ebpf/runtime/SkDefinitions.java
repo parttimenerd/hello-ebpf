@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1202,7 +1203,7 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_capable((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("sk_capable((const struct sock *)$arg1, $arg2)")
   public static boolean sk_capable(Ptr<sock> sk, int cap) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1214,7 +1215,7 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_clone_lock((const struct sock*)$arg1, (const unsigned int)$arg2)")
+  @BuiltinBPFFunction("sk_clone_lock((const struct sock *)$arg1, (const unsigned int)$arg2)")
   public static Ptr<sock> sk_clone_lock(Ptr<sock> sk,
       @Unsigned @OriginalName("gfp_t") int priority) {
     throw new MethodIsBPFRelatedFunction();
@@ -1257,13 +1258,13 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)sk_filter_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)sk_filter_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> sk_filter_func_proto(bpf_func_id func_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_filter_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("sk_filter_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean sk_filter_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1301,7 +1302,7 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_fullsock((const struct sock*)$arg1)")
+  @BuiltinBPFFunction("sk_fullsock((const struct sock *)$arg1)")
   public static boolean sk_fullsock(Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1313,7 +1314,7 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_get_meminfo((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("sk_get_meminfo((const struct sock *)$arg1, $arg2)")
   public static void sk_get_meminfo(Ptr<sock> sk, Ptr<java.lang. @Unsigned Integer> mem) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1332,7 +1333,7 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_is_tcp((const struct sock*)$arg1)")
+  @BuiltinBPFFunction("sk_is_tcp((const struct sock *)$arg1)")
   public static boolean sk_is_tcp(Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1351,27 +1352,27 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_lookup_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sk_lookup_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int sk_lookup_convert_ctx_access(bpf_access_type type, Ptr<bpf_insn> si,
       Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog, Ptr<java.lang. @Unsigned Integer> target_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)sk_lookup_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)sk_lookup_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> sk_lookup_func_proto(bpf_func_id func_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_lookup_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("sk_lookup_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean sk_lookup_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_mc_loop((const struct sock*)$arg1)")
+  @BuiltinBPFFunction("sk_mc_loop((const struct sock *)$arg1)")
   public static boolean sk_mc_loop(Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1390,7 +1391,7 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_msg_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sk_msg_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int sk_msg_convert_ctx_access(bpf_access_type type, Ptr<bpf_insn> si,
       Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog, Ptr<java.lang. @Unsigned Integer> target_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1429,7 +1430,7 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)sk_msg_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)sk_msg_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> sk_msg_func_proto(bpf_func_id func_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1441,7 +1442,7 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_msg_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("sk_msg_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean sk_msg_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1487,7 +1488,7 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_net_capable((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("sk_net_capable((const struct sock *)$arg1, $arg2)")
   public static boolean sk_net_capable(Ptr<sock> sk, int cap) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1499,7 +1500,7 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_ns_capable((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("sk_ns_capable((const struct sock *)$arg1, $arg2, $arg3)")
   public static boolean sk_ns_capable(Ptr<sock> sk, Ptr<user_namespace> user_ns, int cap) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1682,7 +1683,7 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_reuseport_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sk_reuseport_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int sk_reuseport_convert_ctx_access(bpf_access_type type,
       Ptr<bpf_insn> si, Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog,
       Ptr<java.lang. @Unsigned Integer> target_size) {
@@ -1690,14 +1691,14 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)sk_reuseport_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)sk_reuseport_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> sk_reuseport_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_reuseport_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("sk_reuseport_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean sk_reuseport_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1783,27 +1784,27 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_skb_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sk_skb_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int sk_skb_convert_ctx_access(bpf_access_type type, Ptr<bpf_insn> si,
       Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog, Ptr<java.lang. @Unsigned Integer> target_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)sk_skb_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)sk_skb_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> sk_skb_func_proto(bpf_func_id func_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_skb_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("sk_skb_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean sk_skb_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_skb_prologue($arg1, $arg2, (const struct bpf_prog*)$arg3)")
+  @BuiltinBPFFunction("sk_skb_prologue($arg1, $arg2, (const struct bpf_prog *)$arg3)")
   public static int sk_skb_prologue(Ptr<bpf_insn> insn_buf, boolean direct_write,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -1878,7 +1879,7 @@ public final class SkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sk_wait_data($arg1, $arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("sk_wait_data($arg1, $arg2, (const struct sk_buff *)$arg3)")
   public static int sk_wait_data(Ptr<sock> sk, Ptr<java.lang.Long> timeo, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }

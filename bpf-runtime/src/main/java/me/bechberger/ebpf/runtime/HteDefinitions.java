@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1127,20 +1128,20 @@ public final class HteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hte_get_clk_src_info((const struct hte_ts_desc*)$arg1, $arg2)")
+  @BuiltinBPFFunction("hte_get_clk_src_info((const struct hte_ts_desc *)$arg1, $arg2)")
   public static int hte_get_clk_src_info(Ptr<hte_ts_desc> desc, Ptr<hte_clk_info> ci) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hte_init_line_attr($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("hte_init_line_attr($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int hte_init_line_attr(Ptr<hte_ts_desc> desc, @Unsigned int line_id,
       @Unsigned long edge_flags, String name, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hte_push_ts_ns((const struct hte_chip*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("hte_push_ts_ns((const struct hte_chip *)$arg1, $arg2, $arg3)")
   public static int hte_push_ts_ns(Ptr<hte_chip> chip, @Unsigned int xlated_id,
       Ptr<hte_ts_data> data) {
     throw new MethodIsBPFRelatedFunction();

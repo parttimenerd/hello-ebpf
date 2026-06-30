@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class SaveDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("save_args((const struct btf_func_model*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("save_args((const struct btf_func_model *)$arg1, $arg2, $arg3, $arg4)")
   public static void save_args(Ptr<btf_func_model> m, Ptr<Ptr<java.lang.Character>> prog,
       int stack_size, boolean for_call_origin) {
     throw new MethodIsBPFRelatedFunction();
@@ -1179,7 +1180,7 @@ public final class SaveDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("save_mem_devices((const struct dmi_header*)$arg1, $arg2)")
+  @BuiltinBPFFunction("save_mem_devices((const struct dmi_header *)$arg1, $arg2)")
   public static void save_mem_devices(Ptr<dmi_header> dm, Ptr<?> v) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1197,7 +1198,7 @@ public final class SaveDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("save_named_trigger((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("save_named_trigger((const u8 *)$arg1, $arg2)")
   public static int save_named_trigger(String name, Ptr<event_trigger_data> data) {
     throw new MethodIsBPFRelatedFunction();
   }

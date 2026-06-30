@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class SwitchdevDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__switchdev_handle_fdb_event_to_device($arg1, $arg2, $arg3, (const struct switchdev_notifier_fdb_info*)$arg4, (_Bool (*)(const struct net_device*))$arg5, (_Bool (*)(const struct net_device*, const struct net_device*))$arg6, (int (*)(struct net_device*, struct net_device*, long unsigned int, const void*, const struct switchdev_notifier_fdb_info*))$arg7)")
+  @BuiltinBPFFunction("__switchdev_handle_fdb_event_to_device($arg1, $arg2, $arg3, (const struct switchdev_notifier_fdb_info *)$arg4, (_Bool (*)(const struct net_device*))$arg5, (_Bool (*)(const struct net_device*, const struct net_device*))$arg6, (int (*)(struct net_device*, struct net_device*, long unsigned int, const void*, const struct switchdev_notifier_fdb_info*))$arg7)")
   public static int __switchdev_handle_fdb_event_to_device(Ptr<net_device> dev,
       Ptr<net_device> orig_dev, @Unsigned long event, Ptr<switchdev_notifier_fdb_info> fdb_info,
       Ptr<?> check_cb, Ptr<?> foreign_dev_check_cb, Ptr<?> mod_cb) {
@@ -1121,7 +1122,7 @@ public final class SwitchdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("switchdev_bridge_port_offload($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("switchdev_bridge_port_offload($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int switchdev_bridge_port_offload(Ptr<net_device> brport_dev, Ptr<net_device> dev,
       Ptr<?> ctx, Ptr<notifier_block> atomic_nb, Ptr<notifier_block> blocking_nb,
       boolean tx_fwd_offload, Ptr<netlink_ext_ack> extack) {
@@ -1129,7 +1130,7 @@ public final class SwitchdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("switchdev_bridge_port_replay($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("switchdev_bridge_port_replay($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6)")
   public static int switchdev_bridge_port_replay(Ptr<net_device> brport_dev, Ptr<net_device> dev,
       Ptr<?> ctx, Ptr<notifier_block> atomic_nb, Ptr<notifier_block> blocking_nb,
       Ptr<netlink_ext_ack> extack) {
@@ -1137,14 +1138,14 @@ public final class SwitchdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("switchdev_bridge_port_unoffload($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("switchdev_bridge_port_unoffload($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static void switchdev_bridge_port_unoffload(Ptr<net_device> brport_dev, Ptr<?> ctx,
       Ptr<notifier_block> atomic_nb, Ptr<notifier_block> blocking_nb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("switchdev_deferred_enqueue($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("switchdev_deferred_enqueue($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static int switchdev_deferred_enqueue(Ptr<net_device> dev, Ptr<?> data,
       @Unsigned long data_len, Ptr<?> func) {
     throw new MethodIsBPFRelatedFunction();
@@ -1163,7 +1164,7 @@ public final class SwitchdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("switchdev_handle_fdb_event_to_device($arg1, $arg2, (const struct switchdev_notifier_fdb_info*)$arg3, (_Bool (*)(const struct net_device*))$arg4, (_Bool (*)(const struct net_device*, const struct net_device*))$arg5, (int (*)(struct net_device*, struct net_device*, long unsigned int, const void*, const struct switchdev_notifier_fdb_info*))$arg6)")
+  @BuiltinBPFFunction("switchdev_handle_fdb_event_to_device($arg1, $arg2, (const struct switchdev_notifier_fdb_info *)$arg3, (_Bool (*)(const struct net_device*))$arg4, (_Bool (*)(const struct net_device*, const struct net_device*))$arg5, (int (*)(struct net_device*, struct net_device*, long unsigned int, const void*, const struct switchdev_notifier_fdb_info*))$arg6)")
   public static int switchdev_handle_fdb_event_to_device(Ptr<net_device> dev, @Unsigned long event,
       Ptr<switchdev_notifier_fdb_info> fdb_info, Ptr<?> check_cb, Ptr<?> foreign_dev_check_cb,
       Ptr<?> mod_cb) {
@@ -1222,52 +1223,52 @@ public final class SwitchdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("switchdev_port_attr_set($arg1, (const struct switchdev_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("switchdev_port_attr_set($arg1, (const struct switchdev_attr *)$arg2, $arg3)")
   public static int switchdev_port_attr_set(Ptr<net_device> dev, Ptr<switchdev_attr> attr,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("switchdev_port_attr_set_deferred($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("switchdev_port_attr_set_deferred($arg1, (const void *)$arg2)")
   public static void switchdev_port_attr_set_deferred(Ptr<net_device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("switchdev_port_obj_act_is_deferred($arg1, $arg2, (const struct switchdev_obj*)$arg3)")
+  @BuiltinBPFFunction("switchdev_port_obj_act_is_deferred($arg1, $arg2, (const struct switchdev_obj *)$arg3)")
   public static boolean switchdev_port_obj_act_is_deferred(Ptr<net_device> dev,
       switchdev_notifier_type nt, Ptr<switchdev_obj> obj) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("switchdev_port_obj_add($arg1, (const struct switchdev_obj*)$arg2, $arg3)")
+  @BuiltinBPFFunction("switchdev_port_obj_add($arg1, (const struct switchdev_obj *)$arg2, $arg3)")
   public static int switchdev_port_obj_add(Ptr<net_device> dev, Ptr<switchdev_obj> obj,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("switchdev_port_obj_add_deferred($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("switchdev_port_obj_add_deferred($arg1, (const void *)$arg2)")
   public static void switchdev_port_obj_add_deferred(Ptr<net_device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("switchdev_port_obj_del($arg1, (const struct switchdev_obj*)$arg2)")
+  @BuiltinBPFFunction("switchdev_port_obj_del($arg1, (const struct switchdev_obj *)$arg2)")
   public static int switchdev_port_obj_del(Ptr<net_device> dev, Ptr<switchdev_obj> obj) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("switchdev_port_obj_del_deferred($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("switchdev_port_obj_del_deferred($arg1, (const void *)$arg2)")
   public static void switchdev_port_obj_del_deferred(Ptr<net_device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("switchdev_port_obj_notify($arg1, $arg2, (const struct switchdev_obj*)$arg3, $arg4)")
+  @BuiltinBPFFunction("switchdev_port_obj_notify($arg1, $arg2, (const struct switchdev_obj *)$arg3, $arg4)")
   public static int switchdev_port_obj_notify(switchdev_notifier_type nt, Ptr<net_device> dev,
       Ptr<switchdev_obj> obj, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();

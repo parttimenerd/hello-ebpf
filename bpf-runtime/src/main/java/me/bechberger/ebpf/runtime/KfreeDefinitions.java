@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class KfreeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kfree_const((const void*)$arg1)")
+  @BuiltinBPFFunction("kfree_const((const void *)$arg1)")
   public static void kfree_const(Ptr<?> x) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1139,7 +1140,7 @@ public final class KfreeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kfree_sensitive((const void*)$arg1)")
+  @BuiltinBPFFunction("kfree_sensitive((const void *)$arg1)")
   public static void kfree_sensitive(Ptr<?> p) {
     throw new MethodIsBPFRelatedFunction();
   }

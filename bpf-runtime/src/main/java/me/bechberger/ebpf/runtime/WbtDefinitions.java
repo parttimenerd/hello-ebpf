@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1120,7 +1121,7 @@ public final class WbtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wbt_data_dir((const struct request*)$arg1)")
+  @BuiltinBPFFunction("wbt_data_dir((const struct request *)$arg1)")
   public static int wbt_data_dir(Ptr<request> rq) {
     throw new MethodIsBPFRelatedFunction();
   }

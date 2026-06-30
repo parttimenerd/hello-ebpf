@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,14 +1098,14 @@ public final class HrtimerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__hrtimer_get_remaining((const struct hrtimer*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__hrtimer_get_remaining((const struct hrtimer *)$arg1, $arg2)")
   public static @OriginalName("ktime_t") long __hrtimer_get_remaining(Ptr<hrtimer> timer,
       boolean adjust) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__hrtimer_next_event_base($arg1, (const struct hrtimer*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__hrtimer_next_event_base($arg1, (const struct hrtimer *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ktime_t") long __hrtimer_next_event_base(
       Ptr<hrtimer_cpu_base> cpu_base, Ptr<hrtimer> exclude, @Unsigned int active,
       @OriginalName("ktime_t") long expires_next) {
@@ -1126,7 +1127,7 @@ public final class HrtimerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hrtimer_active((const struct hrtimer*)$arg1)")
+  @BuiltinBPFFunction("hrtimer_active((const struct hrtimer *)$arg1)")
   public static boolean hrtimer_active(Ptr<hrtimer> timer) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1176,7 +1177,7 @@ public final class HrtimerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hrtimer_next_event_without((const struct hrtimer*)$arg1)")
+  @BuiltinBPFFunction("hrtimer_next_event_without((const struct hrtimer *)$arg1)")
   public static @Unsigned long hrtimer_next_event_without(Ptr<hrtimer> exclude) {
     throw new MethodIsBPFRelatedFunction();
   }

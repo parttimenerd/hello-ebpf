@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class NhDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__nh_notifier_single_info_init($arg1, (const struct nh_info*)$arg2)")
+  @BuiltinBPFFunction("__nh_notifier_single_info_init($arg1, (const struct nh_info *)$arg2)")
   public static void __nh_notifier_single_info_init(Ptr<nh_notifier_single_info> nh_info,
       Ptr<nh_info> nhi) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__nh_valid_dump_req((const struct nlmsghdr*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__nh_valid_dump_req((const struct nlmsghdr *)$arg1, $arg2, $arg3, $arg4)")
   public static int __nh_valid_dump_req(Ptr<nlmsghdr> nlh, Ptr<Ptr<nlattr>> tb,
       Ptr<nh_dump_filter> filter, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1170,13 +1171,13 @@ public final class NhDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nh_notifier_info_fini($arg1, (const struct nexthop*)$arg2)")
+  @BuiltinBPFFunction("nh_notifier_info_fini($arg1, (const struct nexthop *)$arg2)")
   public static void nh_notifier_info_fini(Ptr<nh_notifier_info> info, Ptr<nexthop> nh) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nh_notifier_info_init($arg1, (const struct nexthop*)$arg2)")
+  @BuiltinBPFFunction("nh_notifier_info_init($arg1, (const struct nexthop *)$arg2)")
   public static int nh_notifier_info_init(Ptr<nh_notifier_info> info, Ptr<nexthop> nh) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1214,28 +1215,28 @@ public final class NhDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nh_valid_dump_bucket_req((const struct nlmsghdr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("nh_valid_dump_bucket_req((const struct nlmsghdr *)$arg1, $arg2, $arg3)")
   public static int nh_valid_dump_bucket_req(Ptr<nlmsghdr> nlh, Ptr<nh_dump_filter> filter,
       Ptr<netlink_callback> cb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nh_valid_dump_req((const struct nlmsghdr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("nh_valid_dump_req((const struct nlmsghdr *)$arg1, $arg2, $arg3)")
   public static int nh_valid_dump_req(Ptr<nlmsghdr> nlh, Ptr<nh_dump_filter> filter,
       Ptr<netlink_callback> cb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nh_valid_get_bucket_req((const struct nlmsghdr*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("nh_valid_get_bucket_req((const struct nlmsghdr *)$arg1, $arg2, $arg3, $arg4)")
   public static int nh_valid_get_bucket_req(Ptr<nlmsghdr> nlh, Ptr<java.lang. @Unsigned Integer> id,
       Ptr<java.lang. @Unsigned Short> bucket_index, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nh_valid_get_del_req((const struct nlmsghdr*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("nh_valid_get_del_req((const struct nlmsghdr *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int nh_valid_get_del_req(Ptr<nlmsghdr> nlh, Ptr<Ptr<nlattr>> tb,
       Ptr<java.lang. @Unsigned Integer> id, Ptr<java.lang. @Unsigned Integer> op_flags,
       Ptr<netlink_ext_ack> extack) {

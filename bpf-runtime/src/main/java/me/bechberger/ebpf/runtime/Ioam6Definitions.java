@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class Ioam6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ioam6_build_state($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ioam6_build_state($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int ioam6_build_state(Ptr<net> net, Ptr<nlattr> nla, @Unsigned int family,
       Ptr<?> cfg, Ptr<Ptr<lwtunnel_state>> ts, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1270,7 +1271,7 @@ public final class Ioam6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ioam6_ns_cmpfn($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ioam6_ns_cmpfn($arg1, (const void *)$arg2)")
   public static int ioam6_ns_cmpfn(Ptr<rhashtable_compare_arg> arg, Ptr<?> obj) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1282,7 +1283,7 @@ public final class Ioam6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ioam6_sc_cmpfn($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ioam6_sc_cmpfn($arg1, (const void *)$arg2)")
   public static int ioam6_sc_cmpfn(Ptr<rhashtable_compare_arg> arg, Ptr<?> obj) {
     throw new MethodIsBPFRelatedFunction();
   }

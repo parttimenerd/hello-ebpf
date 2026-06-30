@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,14 +1097,14 @@ public final class DpllDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__dpll_pin_register($arg1, $arg2, (const struct dpll_pin_ops*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__dpll_pin_register($arg1, $arg2, (const struct dpll_pin_ops *)$arg3, $arg4, $arg5)")
   public static int __dpll_pin_register(Ptr<dpll_device> dpll, Ptr<dpll_pin> pin,
       Ptr<dpll_pin_ops> ops, Ptr<?> priv, Ptr<?> cookie) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__dpll_pin_unregister($arg1, $arg2, (const struct dpll_pin_ops*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__dpll_pin_unregister($arg1, $arg2, (const struct dpll_pin_ops *)$arg3, $arg4, $arg5)")
   public static void __dpll_pin_unregister(Ptr<dpll_device> dpll, Ptr<dpll_pin> pin,
       Ptr<dpll_pin_ops> ops, Ptr<?> priv, Ptr<?> cookie) {
     throw new MethodIsBPFRelatedFunction();
@@ -1173,14 +1174,14 @@ public final class DpllDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_device_register($arg1, $arg2, (const struct dpll_device_ops*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dpll_device_register($arg1, $arg2, (const struct dpll_device_ops *)$arg3, $arg4)")
   public static int dpll_device_register(Ptr<dpll_device> dpll, dpll_type type,
       Ptr<dpll_device_ops> ops, Ptr<?> priv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_device_unregister($arg1, (const struct dpll_device_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dpll_device_unregister($arg1, (const struct dpll_device_ops *)$arg2, $arg3)")
   public static void dpll_device_unregister(Ptr<dpll_device> dpll, Ptr<dpll_device_ops> ops,
       Ptr<?> priv) {
     throw new MethodIsBPFRelatedFunction();
@@ -1199,7 +1200,7 @@ public final class DpllDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_lock_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("dpll_lock_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static int dpll_lock_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb, Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1240,7 +1241,7 @@ public final class DpllDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_netdev_add_pin_handle($arg1, (const struct net_device*)$arg2)")
+  @BuiltinBPFFunction("dpll_netdev_add_pin_handle($arg1, (const struct net_device *)$arg2)")
   public static int dpll_netdev_add_pin_handle(Ptr<sk_buff> msg, Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1252,7 +1253,7 @@ public final class DpllDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_netdev_pin_handle_size((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("dpll_netdev_pin_handle_size((const struct net_device *)$arg1)")
   public static @Unsigned long dpll_netdev_pin_handle_size(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1370,7 +1371,7 @@ public final class DpllDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_pin_get($arg1, $arg2, $arg3, (const struct dpll_pin_properties*)$arg4)")
+  @BuiltinBPFFunction("dpll_pin_get($arg1, $arg2, $arg3, (const struct dpll_pin_properties *)$arg4)")
   public static Ptr<dpll_pin> dpll_pin_get(@Unsigned long clock_id, @Unsigned int pin_idx,
       Ptr<module> module, Ptr<dpll_pin_properties> prop) {
     throw new MethodIsBPFRelatedFunction();
@@ -1389,14 +1390,14 @@ public final class DpllDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_pin_on_pin_register($arg1, $arg2, (const struct dpll_pin_ops*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dpll_pin_on_pin_register($arg1, $arg2, (const struct dpll_pin_ops *)$arg3, $arg4)")
   public static int dpll_pin_on_pin_register(Ptr<dpll_pin> parent, Ptr<dpll_pin> pin,
       Ptr<dpll_pin_ops> ops, Ptr<?> priv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_pin_on_pin_unregister($arg1, $arg2, (const struct dpll_pin_ops*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dpll_pin_on_pin_unregister($arg1, $arg2, (const struct dpll_pin_ops *)$arg3, $arg4)")
   public static void dpll_pin_on_pin_unregister(Ptr<dpll_pin> parent, Ptr<dpll_pin> pin,
       Ptr<dpll_pin_ops> ops, Ptr<?> priv) {
     throw new MethodIsBPFRelatedFunction();
@@ -1424,21 +1425,21 @@ public final class DpllDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_pin_post_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("dpll_pin_post_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static void dpll_pin_post_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_pin_pre_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("dpll_pin_pre_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static int dpll_pin_pre_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_pin_prop_dup((const struct dpll_pin_properties*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dpll_pin_prop_dup((const struct dpll_pin_properties *)$arg1, $arg2)")
   public static int dpll_pin_prop_dup(Ptr<dpll_pin_properties> src, Ptr<dpll_pin_properties> dst) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1470,7 +1471,7 @@ public final class DpllDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_pin_register($arg1, $arg2, (const struct dpll_pin_ops*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dpll_pin_register($arg1, $arg2, (const struct dpll_pin_ops *)$arg3, $arg4)")
   public static int dpll_pin_register(Ptr<dpll_device> dpll, Ptr<dpll_pin> pin,
       Ptr<dpll_pin_ops> ops, Ptr<?> priv) {
     throw new MethodIsBPFRelatedFunction();
@@ -1483,21 +1484,21 @@ public final class DpllDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_pin_unregister($arg1, $arg2, (const struct dpll_pin_ops*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dpll_pin_unregister($arg1, $arg2, (const struct dpll_pin_ops *)$arg3, $arg4)")
   public static void dpll_pin_unregister(Ptr<dpll_device> dpll, Ptr<dpll_pin> pin,
       Ptr<dpll_pin_ops> ops, Ptr<?> priv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_post_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("dpll_post_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static void dpll_post_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_pre_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("dpll_pre_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static int dpll_pre_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb, Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1509,14 +1510,14 @@ public final class DpllDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_unlock_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("dpll_unlock_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static void dpll_unlock_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_xa_ref_dpll_add($arg1, $arg2, (const struct dpll_pin_ops*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("dpll_xa_ref_dpll_add($arg1, $arg2, (const struct dpll_pin_ops *)$arg3, $arg4, $arg5)")
   public static int dpll_xa_ref_dpll_add(Ptr<xarray> xa_dplls, Ptr<dpll_device> dpll,
       Ptr<dpll_pin_ops> ops, Ptr<?> priv, Ptr<?> cookie) {
     throw new MethodIsBPFRelatedFunction();
@@ -1529,14 +1530,14 @@ public final class DpllDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_xa_ref_pin_add($arg1, $arg2, (const struct dpll_pin_ops*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("dpll_xa_ref_pin_add($arg1, $arg2, (const struct dpll_pin_ops *)$arg3, $arg4, $arg5)")
   public static int dpll_xa_ref_pin_add(Ptr<xarray> xa_pins, Ptr<dpll_pin> pin,
       Ptr<dpll_pin_ops> ops, Ptr<?> priv, Ptr<?> cookie) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dpll_xa_ref_pin_del($arg1, $arg2, (const struct dpll_pin_ops*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("dpll_xa_ref_pin_del($arg1, $arg2, (const struct dpll_pin_ops *)$arg3, $arg4, $arg5)")
   public static int dpll_xa_ref_pin_del(Ptr<xarray> xa_pins, Ptr<dpll_pin> pin,
       Ptr<dpll_pin_ops> ops, Ptr<?> priv, Ptr<?> cookie) {
     throw new MethodIsBPFRelatedFunction();

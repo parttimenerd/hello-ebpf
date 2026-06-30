@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1172,7 +1173,7 @@ public final class EfiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efi_call_virt_check_flags($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("efi_call_virt_check_flags($arg1, (const void *)$arg2)")
   public static void efi_call_virt_check_flags(@Unsigned long flags, Ptr<?> caller) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1210,7 +1211,7 @@ public final class EfiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efi_check_md_for_embedded_firmware($arg1, (const struct efi_embedded_fw_desc*)$arg2)")
+  @BuiltinBPFFunction("efi_check_md_for_embedded_firmware($arg1, (const struct efi_embedded_fw_desc *)$arg2)")
   public static int efi_check_md_for_embedded_firmware(Ptr<efi_memory_desc_t> md,
       Ptr<efi_embedded_fw_desc> desc) {
     throw new MethodIsBPFRelatedFunction();
@@ -1236,13 +1237,13 @@ public final class EfiDefinitions {
           + "    } guid;\n"
           + "    unsigned int table;\n"
           + "  } mixed_mode;\n"
-          + "}*)$arg1, $arg2, (const struct {\n"
+          + "} *)$arg1, $arg2, (const struct {\n"
           + "  struct {\n"
           + "    u8 b[16];\n"
           + "  } guid;\n"
           + "  long unsigned int *ptr;\n"
           + "  const const u8[16] name;\n"
-          + "}*)$arg3)")
+          + "} *)$arg3)")
   public static int efi_config_parse_tables(Ptr<efi_config_table_t> config_tables, int count,
       Ptr<efi_config_table_type_t> arch_tables) {
     throw new MethodIsBPFRelatedFunction();
@@ -1291,7 +1292,7 @@ public final class EfiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efi_earlycon_setup($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("efi_earlycon_setup($arg1, (const u8 *)$arg2)")
   public static int efi_earlycon_setup(Ptr<earlycon_device> device, String opt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1309,7 +1310,7 @@ public final class EfiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efi_earlycon_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("efi_earlycon_write($arg1, (const u8 *)$arg2, $arg3)")
   public static void efi_earlycon_write(Ptr<console> con, String str, @Unsigned int num) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1346,7 +1347,7 @@ public final class EfiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efi_get_embedded_fw((const u8*)$arg1, (const u8**)$arg2, $arg3)")
+  @BuiltinBPFFunction("efi_get_embedded_fw((const u8 *)$arg1, (const u8**)$arg2, $arg3)")
   public static int efi_get_embedded_fw(String name, Ptr<Ptr<java.lang.Character>> data,
       Ptr<java.lang. @Unsigned Long> size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1403,7 +1404,7 @@ public final class EfiDefinitions {
           + "  long long unsigned int virt_addr;\n"
           + "  long long unsigned int num_pages;\n"
           + "  long long unsigned int attribute;\n"
-          + "}*)$arg3)")
+          + "} *)$arg3)")
   public static String efi_md_typeattr_format(String buf, @Unsigned long size,
       Ptr<efi_memory_desc_t> md) {
     throw new MethodIsBPFRelatedFunction();
@@ -1487,7 +1488,7 @@ public final class EfiDefinitions {
           + "  long long unsigned int virt_addr;\n"
           + "  long long unsigned int num_pages;\n"
           + "  long long unsigned int attribute;\n"
-          + "}*)$arg1, $arg2)")
+          + "} *)$arg1, $arg2)")
   public static boolean efi_memmap_entry_valid(Ptr<efi_memory_desc_t> md, int i) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1543,7 +1544,7 @@ public final class EfiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efi_mokvar_entry_find((const u8*)$arg1)")
+  @BuiltinBPFFunction("efi_mokvar_entry_find((const u8 *)$arg1)")
   public static Ptr<efi_mokvar_table_entry> efi_mokvar_entry_find(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1562,7 +1563,7 @@ public final class EfiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efi_mokvar_sysfs_read($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("efi_mokvar_sysfs_read($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long efi_mokvar_sysfs_read(Ptr<file> file,
       Ptr<kobject> kobj, Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -1619,7 +1620,7 @@ public final class EfiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efi_reboot($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("efi_reboot($arg1, (const u8 *)$arg2)")
   public static void efi_reboot(reboot_mode reboot_mode, String __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1694,7 +1695,7 @@ public final class EfiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efi_status_cmp_bsearch((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("efi_status_cmp_bsearch((const void *)$arg1, (const void *)$arg2)")
   public static int efi_status_cmp_bsearch(Ptr<?> key, Ptr<?> item) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1724,7 +1725,7 @@ public final class EfiDefinitions {
           + "  unsigned int headersize;\n"
           + "  unsigned int crc32;\n"
           + "  unsigned int reserved;\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static int efi_systab_check_header(Ptr<efi_table_hdr_t> systab_hdr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1742,7 +1743,7 @@ public final class EfiDefinitions {
           + "  unsigned int headersize;\n"
           + "  unsigned int crc32;\n"
           + "  unsigned int reserved;\n"
-          + "}*)$arg1, $arg2)")
+          + "} *)$arg1, $arg2)")
   public static void efi_systab_report_header(Ptr<efi_table_hdr_t> systab_hdr,
       @Unsigned long fw_vendor) {
     throw new MethodIsBPFRelatedFunction();
@@ -2827,18 +2828,48 @@ public final class EfiDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { unsigned int attr; long long unsigned int *storage_space; long long unsigned int *remaining_space; long long unsigned int *max_variable_size; }"
+      cType = "struct { short unsigned int *name; struct { u8 b[16]; } *vendor; unsigned int *attr; long unsigned int *data_size; void *data; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class QUERY_VARIABLE_INFO_of_efi_rts_args extends Struct {
-    public @Unsigned int attr;
+  public static class GET_VARIABLE_of_efi_rts_args extends Struct {
+    public Ptr<java.lang. @Unsigned @OriginalName("efi_char16_t") Short> name;
 
-    public Ptr<java.lang. @Unsigned Long> storage_space;
+    public Ptr<@OriginalName("efi_guid_t") uuid_t> vendor;
 
-    public Ptr<java.lang. @Unsigned Long> remaining_space;
+    public Ptr<java.lang. @Unsigned Integer> attr;
 
-    public Ptr<java.lang. @Unsigned Long> max_variable_size;
+    public Ptr<java.lang. @Unsigned Long> data_size;
+
+    public Ptr<?> data;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct { long unsigned int *name_size; short unsigned int *name; struct { u8 b[16]; } *vendor; }"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class GET_NEXT_VARIABLE_of_efi_rts_args extends Struct {
+    public Ptr<java.lang. @Unsigned Long> name_size;
+
+    public Ptr<java.lang. @Unsigned @OriginalName("efi_char16_t") Short> name;
+
+    public Ptr<@OriginalName("efi_guid_t") uuid_t> vendor;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct { long unsigned int (*acpi_prm_handler)(long long unsigned int, void*); long long unsigned int param_buffer_addr; void *context; }"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class ACPI_PRM_HANDLER_of_efi_rts_args extends Struct {
+    public Ptr<?> acpi_prm_handler;
+
+    public @Unsigned long param_buffer_addr;
+
+    public Ptr<?> context;
   }
 
   @Type(
@@ -2855,18 +2886,16 @@ public final class EfiDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { struct { struct { u8 b[16]; } guid; unsigned int headersize; unsigned int flags; unsigned int imagesize; } **capsules; long unsigned int count; long long unsigned int *max_size; int *reset_type; }"
+      cType = "struct { u8 *enabled; u8 *pending; struct { short unsigned int year; u8 month; u8 day; u8 hour; u8 minute; u8 second; u8 pad1; unsigned int nanosecond; short int timezone; u8 daylight; u8 pad2; } *time; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class QUERY_CAPSULE_CAPS_of_efi_rts_args extends Struct {
-    public Ptr<Ptr<efi_capsule_header_t>> capsules;
+  public static class GET_WAKEUP_TIME_of_efi_rts_args extends Struct {
+    public Ptr<java.lang. @OriginalName("efi_bool_t") Character> enabled;
 
-    public @Unsigned long count;
+    public Ptr<java.lang. @OriginalName("efi_bool_t") Character> pending;
 
-    public Ptr<java.lang. @Unsigned Long> max_size;
-
-    public Ptr<java.lang.Integer> reset_type;
+    public Ptr<efi_time_t> time;
   }
 
   @Type(
@@ -2877,6 +2906,42 @@ public final class EfiDefinitions {
   @NotUsableInJava
   public static class SET_TIME_of_efi_rts_args extends Struct {
     public Ptr<efi_time_t> time;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct { struct { struct { u8 b[16]; } guid; unsigned int headersize; unsigned int flags; unsigned int imagesize; } **capsules; long unsigned int count; long unsigned int sg_list; }"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class UPDATE_CAPSULE_of_efi_rts_args extends Struct {
+    public Ptr<Ptr<efi_capsule_header_t>> capsules;
+
+    public @Unsigned long count;
+
+    public @Unsigned long sg_list;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct { struct { short unsigned int year; u8 month; u8 day; u8 hour; u8 minute; u8 second; u8 pad1; unsigned int nanosecond; short int timezone; u8 daylight; u8 pad2; } *time; struct { unsigned int resolution; unsigned int accuracy; u8 sets_to_zero; } *capabilities; }"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class GET_TIME_of_efi_rts_args extends Struct {
+    public Ptr<efi_time_t> time;
+
+    public Ptr<efi_time_cap_t> capabilities;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
+      cType = "struct { unsigned int *high_count; }"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class GET_NEXT_HIGH_MONO_COUNT_of_efi_rts_args extends Struct {
+    public Ptr<java.lang. @Unsigned Integer> high_count;
   }
 
   @Type(
@@ -2899,97 +2964,33 @@ public final class EfiDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { long unsigned int *name_size; short unsigned int *name; struct { u8 b[16]; } *vendor; }"
+      cType = "struct { struct { struct { u8 b[16]; } guid; unsigned int headersize; unsigned int flags; unsigned int imagesize; } **capsules; long unsigned int count; long long unsigned int *max_size; int *reset_type; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class GET_NEXT_VARIABLE_of_efi_rts_args extends Struct {
-    public Ptr<java.lang. @Unsigned Long> name_size;
-
-    public Ptr<java.lang. @Unsigned @OriginalName("efi_char16_t") Short> name;
-
-    public Ptr<@OriginalName("efi_guid_t") uuid_t> vendor;
-  }
-
-  @Type(
-      noCCodeGeneration = true,
-      cType = "struct { struct { short unsigned int year; u8 month; u8 day; u8 hour; u8 minute; u8 second; u8 pad1; unsigned int nanosecond; short int timezone; u8 daylight; u8 pad2; } *time; struct { unsigned int resolution; unsigned int accuracy; u8 sets_to_zero; } *capabilities; }"
-  )
-  @me.bechberger.ebpf.annotations.KernelBTF
-  @NotUsableInJava
-  public static class GET_TIME_of_efi_rts_args extends Struct {
-    public Ptr<efi_time_t> time;
-
-    public Ptr<efi_time_cap_t> capabilities;
-  }
-
-  @Type(
-      noCCodeGeneration = true,
-      cType = "struct { struct { struct { u8 b[16]; } guid; unsigned int headersize; unsigned int flags; unsigned int imagesize; } **capsules; long unsigned int count; long unsigned int sg_list; }"
-  )
-  @me.bechberger.ebpf.annotations.KernelBTF
-  @NotUsableInJava
-  public static class UPDATE_CAPSULE_of_efi_rts_args extends Struct {
+  public static class QUERY_CAPSULE_CAPS_of_efi_rts_args extends Struct {
     public Ptr<Ptr<efi_capsule_header_t>> capsules;
 
     public @Unsigned long count;
 
-    public @Unsigned long sg_list;
+    public Ptr<java.lang. @Unsigned Long> max_size;
+
+    public Ptr<java.lang.Integer> reset_type;
   }
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { unsigned int *high_count; }"
+      cType = "struct { unsigned int attr; long long unsigned int *storage_space; long long unsigned int *remaining_space; long long unsigned int *max_variable_size; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class GET_NEXT_HIGH_MONO_COUNT_of_efi_rts_args extends Struct {
-    public Ptr<java.lang. @Unsigned Integer> high_count;
-  }
+  public static class QUERY_VARIABLE_INFO_of_efi_rts_args extends Struct {
+    public @Unsigned int attr;
 
-  @Type(
-      noCCodeGeneration = true,
-      cType = "struct { short unsigned int *name; struct { u8 b[16]; } *vendor; unsigned int *attr; long unsigned int *data_size; void *data; }"
-  )
-  @me.bechberger.ebpf.annotations.KernelBTF
-  @NotUsableInJava
-  public static class GET_VARIABLE_of_efi_rts_args extends Struct {
-    public Ptr<java.lang. @Unsigned @OriginalName("efi_char16_t") Short> name;
+    public Ptr<java.lang. @Unsigned Long> storage_space;
 
-    public Ptr<@OriginalName("efi_guid_t") uuid_t> vendor;
+    public Ptr<java.lang. @Unsigned Long> remaining_space;
 
-    public Ptr<java.lang. @Unsigned Integer> attr;
-
-    public Ptr<java.lang. @Unsigned Long> data_size;
-
-    public Ptr<?> data;
-  }
-
-  @Type(
-      noCCodeGeneration = true,
-      cType = "struct { u8 *enabled; u8 *pending; struct { short unsigned int year; u8 month; u8 day; u8 hour; u8 minute; u8 second; u8 pad1; unsigned int nanosecond; short int timezone; u8 daylight; u8 pad2; } *time; }"
-  )
-  @me.bechberger.ebpf.annotations.KernelBTF
-  @NotUsableInJava
-  public static class GET_WAKEUP_TIME_of_efi_rts_args extends Struct {
-    public Ptr<java.lang. @OriginalName("efi_bool_t") Character> enabled;
-
-    public Ptr<java.lang. @OriginalName("efi_bool_t") Character> pending;
-
-    public Ptr<efi_time_t> time;
-  }
-
-  @Type(
-      noCCodeGeneration = true,
-      cType = "struct { long unsigned int (*acpi_prm_handler)(long long unsigned int, void*); long long unsigned int param_buffer_addr; void *context; }"
-  )
-  @me.bechberger.ebpf.annotations.KernelBTF
-  @NotUsableInJava
-  public static class ACPI_PRM_HANDLER_of_efi_rts_args extends Struct {
-    public Ptr<?> acpi_prm_handler;
-
-    public @Unsigned long param_buffer_addr;
-
-    public Ptr<?> context;
+    public Ptr<java.lang. @Unsigned Long> max_variable_size;
   }
 }

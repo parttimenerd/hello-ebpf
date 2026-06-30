@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1151,56 +1152,56 @@ public final class RsaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsa_get_d($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("rsa_get_d($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int rsa_get_d(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsa_get_dp($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("rsa_get_dp($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int rsa_get_dp(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsa_get_dq($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("rsa_get_dq($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int rsa_get_dq(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsa_get_e($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("rsa_get_e($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int rsa_get_e(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsa_get_n($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("rsa_get_n($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int rsa_get_n(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsa_get_p($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("rsa_get_p($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int rsa_get_p(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsa_get_q($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("rsa_get_q($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int rsa_get_q(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsa_get_qinv($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("rsa_get_qinv($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int rsa_get_qinv(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1219,13 +1220,13 @@ public final class RsaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsa_parse_priv_key($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rsa_parse_priv_key($arg1, (const void *)$arg2, $arg3)")
   public static int rsa_parse_priv_key(Ptr<rsa_key> rsa_key, Ptr<?> key, @Unsigned int key_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsa_parse_pub_key($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rsa_parse_pub_key($arg1, (const void *)$arg2, $arg3)")
   public static int rsa_parse_pub_key(Ptr<rsa_key> rsa_key, Ptr<?> key, @Unsigned int key_len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1237,13 +1238,13 @@ public final class RsaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsa_set_priv_key($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rsa_set_priv_key($arg1, (const void *)$arg2, $arg3)")
   public static int rsa_set_priv_key(Ptr<crypto_akcipher> tfm, Ptr<?> key, @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsa_set_pub_key($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rsa_set_pub_key($arg1, (const void *)$arg2, $arg3)")
   public static int rsa_set_pub_key(Ptr<crypto_akcipher> tfm, Ptr<?> key, @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }

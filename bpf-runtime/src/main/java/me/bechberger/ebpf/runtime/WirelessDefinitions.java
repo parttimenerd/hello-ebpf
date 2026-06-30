@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1134,7 +1135,7 @@ public final class WirelessDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wireless_send_event($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("wireless_send_event($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static void wireless_send_event(Ptr<net_device> dev, @Unsigned int cmd,
       Ptr<iwreq_data> wrqu, String extra) {
     throw new MethodIsBPFRelatedFunction();
@@ -1228,7 +1229,7 @@ public final class WirelessDefinitions {
 
     public u_of_wireless_dev u;
 
-    public AnonymousType1931008760C292 @Size(15) [] links;
+    public AnonymousType1004862656C292 @Size(15) [] links;
 
     public @Unsigned short valid_links;
 
@@ -1241,14 +1242,14 @@ public final class WirelessDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1931008760C292 extends Struct {
+  public static class AnonymousType1004862656C292 extends Struct {
     public char @Size(6) [] addr;
 
     @InlineUnion(64422)
-    public AnonymousType596905862C78 ap;
+    public AnonymousType1931008760C78 ap;
 
     @InlineUnion(64422)
-    public AnonymousType1712666248C48 client;
+    public AnonymousType1894978338C48 client;
 
     public boolean cac_started;
 
@@ -1259,11 +1260,21 @@ public final class WirelessDefinitions {
 
   @Type(
       noCCodeGeneration = true,
+      cType = "struct { cfg80211_internal_bss *current_bss; }"
+  )
+  @me.bechberger.ebpf.annotations.KernelBTF
+  @NotUsableInJava
+  public static class AnonymousType1894978338C48 extends Struct {
+    public @OriginalName("cfg80211_internal_bss") Ptr<?> current_bss;
+  }
+
+  @Type(
+      noCCodeGeneration = true,
       cType = "struct { unsigned int beacon_interval; struct cfg80211_chan_def chandef; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType596905862C78 extends Struct {
+  public static class AnonymousType1931008760C78 extends Struct {
     public @Unsigned int beacon_interval;
 
     public cfg80211_chan_def chandef;
@@ -1275,19 +1286,9 @@ public final class WirelessDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1163404461C163 extends Union {
-    public AnonymousType596905862C78 ap;
+  public static class AnonymousType1058921154C163 extends Union {
+    public AnonymousType1931008760C78 ap;
 
-    public AnonymousType1712666248C48 client;
-  }
-
-  @Type(
-      noCCodeGeneration = true,
-      cType = "struct { cfg80211_internal_bss *current_bss; }"
-  )
-  @me.bechberger.ebpf.annotations.KernelBTF
-  @NotUsableInJava
-  public static class AnonymousType1712666248C48 extends Struct {
-    public @OriginalName("cfg80211_internal_bss") Ptr<?> current_bss;
+    public AnonymousType1894978338C48 client;
   }
 }

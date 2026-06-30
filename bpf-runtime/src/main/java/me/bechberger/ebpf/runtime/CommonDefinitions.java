@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1114,7 +1115,7 @@ public final class CommonDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("common_file_perm((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("common_file_perm((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int common_file_perm(String op, Ptr<file> file, @Unsigned int mask,
       boolean in_atomic) {
     throw new MethodIsBPFRelatedFunction();
@@ -1172,35 +1173,35 @@ public final class CommonDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("common_mqueue_perm((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("common_mqueue_perm((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int common_mqueue_perm(String op, @Unsigned int request, Ptr<inode> dir,
       Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("common_nsleep((const int)$arg1, $arg2, (const struct timespec64*)$arg3)")
+  @BuiltinBPFFunction("common_nsleep((const int)$arg1, $arg2, (const struct timespec64 *)$arg3)")
   public static int common_nsleep(@OriginalName("clockid_t") int which_clock, int flags,
       Ptr<timespec64> rqtp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("common_nsleep_timens((const int)$arg1, $arg2, (const struct timespec64*)$arg3)")
+  @BuiltinBPFFunction("common_nsleep_timens((const int)$arg1, $arg2, (const struct timespec64 *)$arg3)")
   public static int common_nsleep_timens(@OriginalName("clockid_t") int which_clock, int flags,
       Ptr<timespec64> rqtp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("common_perm((const u8*)$arg1, (const struct path*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("common_perm((const u8 *)$arg1, (const struct path *)$arg2, $arg3, $arg4)")
   public static int common_perm(String op, Ptr<path> path, @Unsigned int mask,
       Ptr<path_cond> cond) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("common_perm_cond((const u8*)$arg1, (const struct path*)$arg2, $arg3)")
+  @BuiltinBPFFunction("common_perm_cond((const u8 *)$arg1, (const struct path *)$arg2, $arg3)")
   public static int common_perm_cond(String op, Ptr<path> path, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1243,7 +1244,7 @@ public final class CommonDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("common_tracking_show_fdinfo($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("common_tracking_show_fdinfo($arg1, $arg2, (const u8 *)$arg3)")
   public static void common_tracking_show_fdinfo(Ptr<io_ring_ctx> ctx, Ptr<seq_file> m,
       String tracking_strategy) {
     throw new MethodIsBPFRelatedFunction();

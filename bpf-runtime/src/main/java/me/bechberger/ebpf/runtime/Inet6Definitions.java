@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1105,7 +1106,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__inet6_lookup_established((const struct net*)$arg1, $arg2, (const struct in6_addr*)$arg3, (const short unsigned int)$arg4, (const struct in6_addr*)$arg5, (const short unsigned int)$arg6, (const int)$arg7, (const int)$arg8)")
+  @BuiltinBPFFunction("__inet6_lookup_established((const struct net *)$arg1, $arg2, (const struct in6_addr *)$arg3, (const short unsigned int)$arg4, (const struct in6_addr *)$arg5, (const short unsigned int)$arg6, (const int)$arg7, (const int)$arg8)")
   public static Ptr<sock> __inet6_lookup_established(Ptr<net> net, Ptr<inet_hashinfo> hashinfo,
       Ptr<in6_addr> saddr, @Unsigned @OriginalName("__be16") short sport, Ptr<in6_addr> daddr,
       @Unsigned short hnum, int dif, int sdif) {
@@ -1122,13 +1123,13 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_add_offload((const struct net_offload*)$arg1, $arg2)")
+  @BuiltinBPFFunction("inet6_add_offload((const struct net_offload *)$arg1, $arg2)")
   public static int inet6_add_offload(Ptr<net_offload> prot, char protocol) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_add_protocol((const struct inet6_protocol*)$arg1, $arg2)")
+  @BuiltinBPFFunction("inet6_add_protocol((const struct inet6_protocol *)$arg1, $arg2)")
   public static int inet6_add_protocol(Ptr<inet6_protocol> prot, char protocol) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1178,7 +1179,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_csk_route_req((const struct sock*)$arg1, $arg2, (const struct request_sock*)$arg3, $arg4)")
+  @BuiltinBPFFunction("inet6_csk_route_req((const struct sock *)$arg1, $arg2, (const struct request_sock *)$arg3, $arg4)")
   public static Ptr<dst_entry> inet6_csk_route_req(Ptr<sock> sk, Ptr<flowi6> fl6,
       Ptr<request_sock> req, char proto) {
     throw new MethodIsBPFRelatedFunction();
@@ -1203,13 +1204,13 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_del_offload((const struct net_offload*)$arg1, $arg2)")
+  @BuiltinBPFFunction("inet6_del_offload((const struct net_offload *)$arg1, $arg2)")
   public static int inet6_del_offload(Ptr<net_offload> prot, char protocol) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_del_protocol((const struct inet6_protocol*)$arg1, $arg2)")
+  @BuiltinBPFFunction("inet6_del_protocol((const struct inet6_protocol *)$arg1, $arg2)")
   public static int inet6_del_protocol(Ptr<inet6_protocol> prot, char protocol) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1251,21 +1252,21 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_ehashfn((const struct net*)$arg1, (const struct in6_addr*)$arg2, (const short unsigned int)$arg3, (const struct in6_addr*)$arg4, (const short unsigned int)$arg5)")
+  @BuiltinBPFFunction("inet6_ehashfn((const struct net *)$arg1, (const struct in6_addr *)$arg2, (const short unsigned int)$arg3, (const struct in6_addr *)$arg4, (const short unsigned int)$arg5)")
   public static @Unsigned int inet6_ehashfn(Ptr<net> net, Ptr<in6_addr> laddr,
       @Unsigned short lport, Ptr<in6_addr> faddr, @Unsigned @OriginalName("__be16") short fport) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_fill_ifacaddr($arg1, (const struct ifacaddr6*)$arg2, $arg3)")
+  @BuiltinBPFFunction("inet6_fill_ifacaddr($arg1, (const struct ifacaddr6 *)$arg2, $arg3)")
   public static int inet6_fill_ifacaddr(Ptr<sk_buff> skb, Ptr<ifacaddr6> ifaca,
       Ptr<inet6_fill_args> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_fill_ifaddr($arg1, (const struct inet6_ifaddr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("inet6_fill_ifaddr($arg1, (const struct inet6_ifaddr *)$arg2, $arg3)")
   public static int inet6_fill_ifaddr(Ptr<sk_buff> skb, Ptr<inet6_ifaddr> ifa,
       Ptr<inet6_fill_args> args) {
     throw new MethodIsBPFRelatedFunction();
@@ -1286,21 +1287,21 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_fill_ifmcaddr($arg1, (const struct ifmcaddr6*)$arg2, $arg3)")
+  @BuiltinBPFFunction("inet6_fill_ifmcaddr($arg1, (const struct ifmcaddr6 *)$arg2, $arg3)")
   public static int inet6_fill_ifmcaddr(Ptr<sk_buff> skb, Ptr<ifmcaddr6> ifmca,
       Ptr<inet6_fill_args> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_fill_link_af($arg1, (const struct net_device*)$arg2, $arg3)")
+  @BuiltinBPFFunction("inet6_fill_link_af($arg1, (const struct net_device *)$arg2, $arg3)")
   public static int inet6_fill_link_af(Ptr<sk_buff> skb, Ptr<net_device> dev,
       @Unsigned int ext_filter_mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_get_link_af_size((const struct net_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("inet6_get_link_af_size((const struct net_device *)$arg1, $arg2)")
   public static @Unsigned long inet6_get_link_af_size(Ptr<net_device> dev,
       @Unsigned int ext_filter_mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1331,7 +1332,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_ifacaddr_notify($arg1, (const struct ifacaddr6*)$arg2, $arg3)")
+  @BuiltinBPFFunction("inet6_ifacaddr_notify($arg1, (const struct ifacaddr6 *)$arg2, $arg3)")
   public static void inet6_ifacaddr_notify(Ptr<net_device> dev, Ptr<ifacaddr6> ifaca, int event) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1343,7 +1344,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_ifmcaddr_notify($arg1, (const struct ifmcaddr6*)$arg2, $arg3)")
+  @BuiltinBPFFunction("inet6_ifmcaddr_notify($arg1, (const struct ifmcaddr6 *)$arg2, $arg3)")
   public static void inet6_ifmcaddr_notify(Ptr<net_device> dev, Ptr<ifmcaddr6> ifmca, int event) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1361,7 +1362,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_lhash2_lookup((const struct net*)$arg1, $arg2, $arg3, $arg4, (const struct in6_addr*)$arg5, (const short unsigned int)$arg6, (const struct in6_addr*)$arg7, (const short unsigned int)$arg8, (const int)$arg9, (const int)$arg10)")
+  @BuiltinBPFFunction("inet6_lhash2_lookup((const struct net *)$arg1, $arg2, $arg3, $arg4, (const struct in6_addr *)$arg5, (const short unsigned int)$arg6, (const struct in6_addr *)$arg7, (const short unsigned int)$arg8, (const int)$arg9, (const int)$arg10)")
   public static Ptr<sock> inet6_lhash2_lookup(Ptr<net> net, Ptr<inet_listen_hashbucket> ilb2,
       Ptr<sk_buff> skb, int doff, Ptr<in6_addr> saddr,
       @Unsigned @OriginalName("__be16") short sport, Ptr<in6_addr> daddr, @Unsigned short hnum,
@@ -1370,7 +1371,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_lookup((const struct net*)$arg1, $arg2, $arg3, $arg4, (const struct in6_addr*)$arg5, (const short unsigned int)$arg6, (const struct in6_addr*)$arg7, (const short unsigned int)$arg8, (const int)$arg9)")
+  @BuiltinBPFFunction("inet6_lookup((const struct net *)$arg1, $arg2, $arg3, $arg4, (const struct in6_addr *)$arg5, (const short unsigned int)$arg6, (const struct in6_addr *)$arg7, (const short unsigned int)$arg8, (const int)$arg9)")
   public static Ptr<sock> inet6_lookup(Ptr<net> net, Ptr<inet_hashinfo> hashinfo, Ptr<sk_buff> skb,
       int doff, Ptr<in6_addr> saddr, @Unsigned @OriginalName("__be16") short sport,
       Ptr<in6_addr> daddr, @Unsigned @OriginalName("__be16") short dport, int dif) {
@@ -1378,7 +1379,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_lookup_listener((const struct net*)$arg1, $arg2, $arg3, $arg4, (const struct in6_addr*)$arg5, (const short unsigned int)$arg6, (const struct in6_addr*)$arg7, (const short unsigned int)$arg8, (const int)$arg9, (const int)$arg10)")
+  @BuiltinBPFFunction("inet6_lookup_listener((const struct net *)$arg1, $arg2, $arg3, $arg4, (const struct in6_addr *)$arg5, (const short unsigned int)$arg6, (const struct in6_addr *)$arg7, (const short unsigned int)$arg8, (const int)$arg9, (const int)$arg10)")
   public static Ptr<sock> inet6_lookup_listener(Ptr<net> net, Ptr<inet_hashinfo> hashinfo,
       Ptr<sk_buff> skb, int doff, Ptr<in6_addr> saddr,
       @Unsigned @OriginalName("__be16") short sport, Ptr<in6_addr> daddr, @Unsigned short hnum,
@@ -1387,7 +1388,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_lookup_reuseport((const struct net*)$arg1, $arg2, $arg3, $arg4, (const struct in6_addr*)$arg5, $arg6, (const struct in6_addr*)$arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("inet6_lookup_reuseport((const struct net *)$arg1, $arg2, $arg3, $arg4, (const struct in6_addr *)$arg5, $arg6, (const struct in6_addr *)$arg7, $arg8, $arg9)")
   public static Ptr<sock> inet6_lookup_reuseport(Ptr<net> net, Ptr<sock> sk, Ptr<sk_buff> skb,
       int doff, Ptr<in6_addr> saddr, @Unsigned @OriginalName("__be16") short sport,
       Ptr<in6_addr> daddr, @Unsigned short hnum, Ptr<?> ehashfn) {
@@ -1395,7 +1396,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_lookup_run_sk_lookup((const struct net*)$arg1, $arg2, $arg3, $arg4, (const struct in6_addr*)$arg5, (const short unsigned int)$arg6, (const struct in6_addr*)$arg7, (const short unsigned int)$arg8, (const int)$arg9, $arg10)")
+  @BuiltinBPFFunction("inet6_lookup_run_sk_lookup((const struct net *)$arg1, $arg2, $arg3, $arg4, (const struct in6_addr *)$arg5, (const short unsigned int)$arg6, (const struct in6_addr *)$arg7, (const short unsigned int)$arg8, (const int)$arg9, $arg10)")
   public static Ptr<sock> inet6_lookup_run_sk_lookup(Ptr<net> net, int protocol, Ptr<sk_buff> skb,
       int doff, Ptr<in6_addr> saddr, @Unsigned @OriginalName("__be16") short sport,
       Ptr<in6_addr> daddr, @Unsigned short hnum, int dif, Ptr<?> ehashfn) {
@@ -1403,7 +1404,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_mc_check((const struct sock*)$arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3)")
+  @BuiltinBPFFunction("inet6_mc_check((const struct sock *)$arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3)")
   public static boolean inet6_mc_check(Ptr<sock> sk, Ptr<in6_addr> mc_addr,
       Ptr<in6_addr> src_addr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1450,7 +1451,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_pton($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("inet6_pton($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int inet6_pton(Ptr<net> net, String src, @Unsigned short port_num,
       Ptr<__kernel_sockaddr_storage> addr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1525,7 +1526,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_rtm_valid_getroute_req($arg1, (const struct nlmsghdr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("inet6_rtm_valid_getroute_req($arg1, (const struct nlmsghdr *)$arg2, $arg3, $arg4)")
   public static int inet6_rtm_valid_getroute_req(Ptr<sk_buff> skb, Ptr<nlmsghdr> nlh,
       Ptr<Ptr<nlattr>> tb, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1545,7 +1546,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_set_link_af($arg1, (const struct nlattr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("inet6_set_link_af($arg1, (const struct nlattr *)$arg2, $arg3)")
   public static int inet6_set_link_af(Ptr<net_device> dev, Ptr<nlattr> nla,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1558,7 +1559,7 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_sk_rx_dst_set($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("inet6_sk_rx_dst_set($arg1, (const struct sk_buff *)$arg2)")
   public static void inet6_sk_rx_dst_set(Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1576,14 +1577,14 @@ public final class Inet6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_valid_dump_ifaddr_req((const struct nlmsghdr*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("inet6_valid_dump_ifaddr_req((const struct nlmsghdr *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int inet6_valid_dump_ifaddr_req(Ptr<nlmsghdr> nlh, Ptr<inet6_fill_args> fillargs,
       Ptr<Ptr<net>> tgt_net, Ptr<sock> sk, Ptr<netlink_callback> cb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inet6_validate_link_af((const struct net_device*)$arg1, (const struct nlattr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("inet6_validate_link_af((const struct net_device *)$arg1, (const struct nlattr *)$arg2, $arg3)")
   public static int inet6_validate_link_af(Ptr<net_device> dev, Ptr<nlattr> nla,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1160,7 +1161,7 @@ public final class FreqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("freq_step_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("freq_step_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long freq_step_store(Ptr<gov_attr_set> attr_set,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

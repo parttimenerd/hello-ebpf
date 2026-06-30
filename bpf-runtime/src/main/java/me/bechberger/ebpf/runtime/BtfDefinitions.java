@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,27 +1091,27 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class BtfDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__btf_array_show((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__btf_array_show((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void __btf_array_show(Ptr<btf> btf, Ptr<btf_type> t, @Unsigned int type_id,
       Ptr<?> data, char bits_offset, Ptr<btf_show> show) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__btf_kfunc_id_set_contains((const struct btf*)$arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4)")
+  @BuiltinBPFFunction("__btf_kfunc_id_set_contains((const struct btf *)$arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4)")
   public static Ptr<java.lang. @Unsigned Integer> __btf_kfunc_id_set_contains(Ptr<btf> btf,
       btf_kfunc_hook hook, @Unsigned int kfunc_btf_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)__btf_name_by_offset((const struct btf*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const u8*)__btf_name_by_offset((const struct btf *)$arg1, $arg2))")
   public static String __btf_name_by_offset(Ptr<btf> btf, @Unsigned int offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct btf_type*)__btf_resolve_size((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, (const struct btf_type**)$arg4, $arg5, $arg6, $arg7))")
+  @BuiltinBPFFunction("((const struct btf_type*)__btf_resolve_size((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, (const struct btf_type**)$arg4, $arg5, $arg6, $arg7))")
   public static Ptr<btf_type> __btf_resolve_size(Ptr<btf> btf, Ptr<btf_type> type,
       Ptr<java.lang. @Unsigned Integer> type_size, Ptr<Ptr<btf_type>> elem_type,
       Ptr<java.lang. @Unsigned Integer> elem_id, Ptr<java.lang. @Unsigned Integer> total_nelems,
@@ -1119,21 +1120,21 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__btf_type_is_scalar_struct($arg1, (const struct btf*)$arg2, (const struct btf_type*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__btf_type_is_scalar_struct($arg1, (const struct btf *)$arg2, (const struct btf_type *)$arg3, $arg4)")
   public static boolean __btf_type_is_scalar_struct(Ptr<bpf_verifier_env> env, Ptr<btf> btf,
       Ptr<btf_type> t, int rec) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__btf_verifier_log($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("__btf_verifier_log($arg1, (const u8 *)$arg2, $arg3_)")
   public static void __btf_verifier_log(Ptr<bpf_verifier_log> log, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__btf_verifier_log_type($arg1, (const struct btf_type*)$arg2, $arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("__btf_verifier_log_type($arg1, (const struct btf_type *)$arg2, $arg3, (const u8 *)$arg4, $arg5_)")
   public static void __btf_verifier_log_type(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       boolean log_details, String fmt, java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
@@ -1152,40 +1153,40 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_array_check_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_array_check_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_array_check_member(Ptr<btf_verifier_env> env, Ptr<btf_type> struct_type,
       Ptr<btf_member> member, Ptr<btf_type> member_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_array_check_meta($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_array_check_meta($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_array_check_meta(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int meta_left) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_array_log($arg1, (const struct btf_type*)$arg2)")
+  @BuiltinBPFFunction("btf_array_log($arg1, (const struct btf_type *)$arg2)")
   public static void btf_array_log(Ptr<btf_verifier_env> env, Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_array_resolve($arg1, (const struct resolve_vertex*)$arg2)")
+  @BuiltinBPFFunction("btf_array_resolve($arg1, (const struct resolve_vertex *)$arg2)")
   public static int btf_array_resolve(Ptr<btf_verifier_env> env, Ptr<resolve_vertex> v) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_array_show((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_array_show((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void btf_array_show(Ptr<btf> btf, Ptr<btf_type> t, @Unsigned int type_id,
       Ptr<?> data, char bits_offset, Ptr<btf_show> show) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_base_btf((const struct btf*)$arg1)")
+  @BuiltinBPFFunction("btf_base_btf((const struct btf *)$arg1)")
   public static Ptr<btf> btf_base_btf(Ptr<btf> btf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1210,26 +1211,26 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_check_and_fixup_fields((const struct btf*)$arg1, $arg2)")
+  @BuiltinBPFFunction("btf_check_and_fixup_fields((const struct btf *)$arg1, $arg2)")
   public static int btf_check_and_fixup_fields(Ptr<btf> btf, Ptr<btf_record> rec) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_check_func_type_match($arg1, $arg2, (const struct btf_type*)$arg3, $arg4, (const struct btf_type*)$arg5)")
+  @BuiltinBPFFunction("btf_check_func_type_match($arg1, $arg2, (const struct btf_type *)$arg3, $arg4, (const struct btf_type *)$arg5)")
   public static int btf_check_func_type_match(Ptr<bpf_verifier_log> log, Ptr<btf> btf1,
       Ptr<btf_type> t1, Ptr<btf> btf2, Ptr<btf_type> t2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_check_iter_arg($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_check_iter_arg($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_check_iter_arg(Ptr<btf> btf, Ptr<btf_type> func, int arg_idx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_check_iter_kfuncs($arg1, (const u8*)$arg2, (const struct btf_type*)$arg3, $arg4)")
+  @BuiltinBPFFunction("btf_check_iter_kfuncs($arg1, (const u8 *)$arg2, (const struct btf_type *)$arg3, $arg4)")
   public static int btf_check_iter_kfuncs(Ptr<btf> btf, String func_name, Ptr<btf_type> func,
       @Unsigned int func_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1243,7 +1244,7 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_check_type_match($arg1, (const struct bpf_prog*)$arg2, $arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_check_type_match($arg1, (const struct bpf_prog *)$arg2, $arg3, (const struct btf_type *)$arg4)")
   public static int btf_check_type_match(Ptr<bpf_verifier_log> log, Ptr<bpf_prog> prog,
       Ptr<btf> btf2, Ptr<btf_type> t2) {
     throw new MethodIsBPFRelatedFunction();
@@ -1256,147 +1257,147 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_ctx_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("btf_ctx_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean btf_ctx_access(int off, int size, bpf_access_type type, Ptr<bpf_prog> prog,
       Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_ctx_arg_idx($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_ctx_arg_idx($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static @Unsigned int btf_ctx_arg_idx(Ptr<btf> btf, Ptr<btf_type> func_proto, int off) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_ctx_arg_offset((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_ctx_arg_offset((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_ctx_arg_offset(Ptr<btf> btf, Ptr<btf_type> func_proto,
       @Unsigned int arg_no) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_datasec_check_meta($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_datasec_check_meta($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_datasec_check_meta(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int meta_left) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_datasec_log($arg1, (const struct btf_type*)$arg2)")
+  @BuiltinBPFFunction("btf_datasec_log($arg1, (const struct btf_type *)$arg2)")
   public static void btf_datasec_log(Ptr<btf_verifier_env> env, Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_datasec_resolve($arg1, (const struct resolve_vertex*)$arg2)")
+  @BuiltinBPFFunction("btf_datasec_resolve($arg1, (const struct resolve_vertex *)$arg2)")
   public static int btf_datasec_resolve(Ptr<btf_verifier_env> env, Ptr<resolve_vertex> v) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_datasec_show((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_datasec_show((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void btf_datasec_show(Ptr<btf> btf, Ptr<btf_type> t, @Unsigned int type_id,
       Ptr<?> data, char bits_offset, Ptr<btf_show> show) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_decl_tag_check_meta($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_decl_tag_check_meta($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_decl_tag_check_meta(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int meta_left) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_decl_tag_log($arg1, (const struct btf_type*)$arg2)")
+  @BuiltinBPFFunction("btf_decl_tag_log($arg1, (const struct btf_type *)$arg2)")
   public static void btf_decl_tag_log(Ptr<btf_verifier_env> env, Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_decl_tag_resolve($arg1, (const struct resolve_vertex*)$arg2)")
+  @BuiltinBPFFunction("btf_decl_tag_resolve($arg1, (const struct resolve_vertex *)$arg2)")
   public static int btf_decl_tag_resolve(Ptr<btf_verifier_env> env, Ptr<resolve_vertex> v) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_df_check_kflag_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_df_check_kflag_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_df_check_kflag_member(Ptr<btf_verifier_env> env, Ptr<btf_type> struct_type,
       Ptr<btf_member> member, Ptr<btf_type> member_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_df_check_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_df_check_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_df_check_member(Ptr<btf_verifier_env> env, Ptr<btf_type> struct_type,
       Ptr<btf_member> member, Ptr<btf_type> member_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_df_resolve($arg1, (const struct resolve_vertex*)$arg2)")
+  @BuiltinBPFFunction("btf_df_resolve($arg1, (const struct resolve_vertex *)$arg2)")
   public static int btf_df_resolve(Ptr<btf_verifier_env> env, Ptr<resolve_vertex> v) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_df_show((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_df_show((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void btf_df_show(Ptr<btf> btf, Ptr<btf_type> t, @Unsigned int type_id, Ptr<?> data,
       char bits_offsets, Ptr<btf_show> show) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_distill_func_proto($arg1, $arg2, (const struct btf_type*)$arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("btf_distill_func_proto($arg1, $arg2, (const struct btf_type *)$arg3, (const u8 *)$arg4, $arg5)")
   public static int btf_distill_func_proto(Ptr<bpf_verifier_log> log, Ptr<btf> btf,
       Ptr<btf_type> func, String tname, Ptr<btf_func_model> m) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_enum64_check_meta($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_enum64_check_meta($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_enum64_check_meta(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int meta_left) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_enum64_show((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_enum64_show((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void btf_enum64_show(Ptr<btf> btf, Ptr<btf_type> t, @Unsigned int type_id,
       Ptr<?> data, char bits_offset, Ptr<btf_show> show) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_enum_check_kflag_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_enum_check_kflag_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_enum_check_kflag_member(Ptr<btf_verifier_env> env,
       Ptr<btf_type> struct_type, Ptr<btf_member> member, Ptr<btf_type> member_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_enum_check_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_enum_check_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_enum_check_member(Ptr<btf_verifier_env> env, Ptr<btf_type> struct_type,
       Ptr<btf_member> member, Ptr<btf_type> member_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_enum_check_meta($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_enum_check_meta($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_enum_check_meta(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int meta_left) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_enum_log($arg1, (const struct btf_type*)$arg2)")
+  @BuiltinBPFFunction("btf_enum_log($arg1, (const struct btf_type *)$arg2)")
   public static void btf_enum_log(Ptr<btf_verifier_env> env, Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_enum_show((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_enum_show((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void btf_enum_show(Ptr<btf> btf, Ptr<btf_type> t, @Unsigned int type_id,
       Ptr<?> data, char bits_offset, Ptr<btf_show> show) {
     throw new MethodIsBPFRelatedFunction();
@@ -1416,13 +1417,13 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_find_by_name_kind((const struct btf*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_find_by_name_kind((const struct btf *)$arg1, (const u8 *)$arg2, $arg3)")
   public static int btf_find_by_name_kind(Ptr<btf> btf, String name, char kind) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)btf_find_decl_tag_value((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, (const u8*)$arg4))")
+  @BuiltinBPFFunction("((const u8*)btf_find_decl_tag_value((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, (const u8 *)$arg4))")
   public static String btf_find_decl_tag_value(Ptr<btf> btf, Ptr<btf_type> pt, int comp_idx,
       String tag_key) {
     throw new MethodIsBPFRelatedFunction();
@@ -1435,7 +1436,7 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_find_field_one((const struct btf*)$arg1, (const struct btf_type*)$arg2, (const struct btf_type*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("btf_find_field_one((const struct btf *)$arg1, (const struct btf_type *)$arg2, (const struct btf_type *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
   public static int btf_find_field_one(Ptr<btf> btf, Ptr<btf_type> var, Ptr<btf_type> var_type,
       int var_idx, @Unsigned int off, @Unsigned int expected_size, @Unsigned int field_mask,
       Ptr<java.lang. @Unsigned Integer> seen_mask, Ptr<btf_field_info> info, int info_cnt,
@@ -1444,54 +1445,54 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct btf_type*)btf_find_func_proto((const u8*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct btf_type*)btf_find_func_proto((const u8 *)$arg1, $arg2))")
   public static Ptr<btf_type> btf_find_func_proto(String func_name, Ptr<Ptr<btf>> btf_p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_find_next_decl_tag((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("btf_find_next_decl_tag((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int btf_find_next_decl_tag(Ptr<btf> btf, Ptr<btf_type> pt, int comp_idx,
       String tag_key, int last_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_find_struct_field((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_find_struct_field((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int btf_find_struct_field(Ptr<btf> btf, Ptr<btf_type> t, @Unsigned int field_mask,
       Ptr<btf_field_info> info, int info_cnt, @Unsigned int level) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct btf_member*)btf_find_struct_member($arg1, (const struct btf_type*)$arg2, (const u8*)$arg3, $arg4))")
+  @BuiltinBPFFunction("((const struct btf_member*)btf_find_struct_member($arg1, (const struct btf_type *)$arg2, (const u8 *)$arg3, $arg4))")
   public static Ptr<btf_member> btf_find_struct_member(Ptr<btf> btf, Ptr<btf_type> type,
       String member_name, Ptr<java.lang. @Unsigned Integer> anon_offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_find_struct_meta((const struct btf*)$arg1, $arg2)")
+  @BuiltinBPFFunction("btf_find_struct_meta((const struct btf *)$arg1, $arg2)")
   public static Ptr<btf_struct_meta> btf_find_struct_meta(Ptr<btf> btf, @Unsigned int btf_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_float_check_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_float_check_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_float_check_member(Ptr<btf_verifier_env> env, Ptr<btf_type> struct_type,
       Ptr<btf_member> member, Ptr<btf_type> member_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_float_check_meta($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_float_check_meta($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_float_check_meta(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int meta_left) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_float_log($arg1, (const struct btf_type*)$arg2)")
+  @BuiltinBPFFunction("btf_float_log($arg1, (const struct btf_type *)$arg2)")
   public static void btf_float_log(Ptr<btf_verifier_env> env, Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1509,52 +1510,52 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_func_check_meta($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_func_check_meta($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_func_check_meta(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int meta_left) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_func_proto_check($arg1, (const struct btf_type*)$arg2)")
+  @BuiltinBPFFunction("btf_func_proto_check($arg1, (const struct btf_type *)$arg2)")
   public static int btf_func_proto_check(Ptr<btf_verifier_env> env, Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_func_proto_check_meta($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_func_proto_check_meta($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_func_proto_check_meta(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int meta_left) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_func_proto_log($arg1, (const struct btf_type*)$arg2)")
+  @BuiltinBPFFunction("btf_func_proto_log($arg1, (const struct btf_type *)$arg2)")
   public static void btf_func_proto_log(Ptr<btf_verifier_env> env, Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_func_resolve($arg1, (const struct resolve_vertex*)$arg2)")
+  @BuiltinBPFFunction("btf_func_resolve($arg1, (const struct resolve_vertex *)$arg2)")
   public static int btf_func_resolve(Ptr<btf_verifier_env> env, Ptr<resolve_vertex> v) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_fwd_check_meta($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_fwd_check_meta($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_fwd_check_meta(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int meta_left) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_fwd_type_log($arg1, (const struct btf_type*)$arg2)")
+  @BuiltinBPFFunction("btf_fwd_type_log($arg1, (const struct btf_type *)$arg2)")
   public static void btf_fwd_type_log(Ptr<btf_verifier_env> env, Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_generic_check_kflag_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_generic_check_kflag_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_generic_check_kflag_member(Ptr<btf_verifier_env> env,
       Ptr<btf_type> struct_type, Ptr<btf_member> member, Ptr<btf_type> member_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1579,7 +1580,7 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_get_field_type((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_get_field_type((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int btf_get_field_type(Ptr<btf> btf, Ptr<btf_type> var_type,
       @Unsigned int field_mask, Ptr<java.lang. @Unsigned Integer> seen_mask,
       Ptr<java.lang.Integer> align, Ptr<java.lang.Integer> sz) {
@@ -1587,39 +1588,39 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct btf_param*)btf_get_func_param((const struct btf_type*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct btf_param*)btf_get_func_param((const struct btf_type *)$arg1, $arg2))")
   public static Ptr<btf_param> btf_get_func_param(Ptr<btf_type> func_proto,
       Ptr<java.lang.Integer> nr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_get_info_by_fd((const struct btf*)$arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_get_info_by_fd((const struct btf *)$arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int btf_get_info_by_fd(Ptr<btf> btf, Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_get_module_btf((const struct module*)$arg1)")
+  @BuiltinBPFFunction("btf_get_module_btf((const struct module *)$arg1)")
   public static Ptr<btf> btf_get_module_btf(Ptr<module> module) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)btf_get_name((const struct btf*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)btf_get_name((const struct btf *)$arg1))")
   public static String btf_get_name(Ptr<btf> btf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_get_ptr_to_btf_id($arg1, $arg2, (const struct btf*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_get_ptr_to_btf_id($arg1, $arg2, (const struct btf *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_get_ptr_to_btf_id(Ptr<bpf_verifier_log> log, int arg_idx, Ptr<btf> btf,
       Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_id_cmp_func((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("btf_id_cmp_func((const void *)$arg1, (const void *)$arg2)")
   public static int btf_id_cmp_func(Ptr<?> a, Ptr<?> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1631,113 +1632,113 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_int_check_kflag_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_int_check_kflag_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_int_check_kflag_member(Ptr<btf_verifier_env> env, Ptr<btf_type> struct_type,
       Ptr<btf_member> member, Ptr<btf_type> member_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_int_check_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_int_check_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_int_check_member(Ptr<btf_verifier_env> env, Ptr<btf_type> struct_type,
       Ptr<btf_member> member, Ptr<btf_type> member_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_int_check_meta($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_int_check_meta($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_int_check_meta(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int meta_left) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_int_log($arg1, (const struct btf_type*)$arg2)")
+  @BuiltinBPFFunction("btf_int_log($arg1, (const struct btf_type *)$arg2)")
   public static void btf_int_log(Ptr<btf_verifier_env> env, Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_int_show((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_int_show((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void btf_int_show(Ptr<btf> btf, Ptr<btf_type> t, @Unsigned int type_id, Ptr<?> data,
       char bits_offset, Ptr<btf_show> show) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_is_kernel((const struct btf*)$arg1)")
+  @BuiltinBPFFunction("btf_is_kernel((const struct btf *)$arg1)")
   public static boolean btf_is_kernel(Ptr<btf> btf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_is_module((const struct btf*)$arg1)")
+  @BuiltinBPFFunction("btf_is_module((const struct btf *)$arg1)")
   public static boolean btf_is_module(Ptr<btf> btf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_is_prog_ctx_type($arg1, (const struct btf*)$arg2, (const struct btf_type*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("btf_is_prog_ctx_type($arg1, (const struct btf *)$arg2, (const struct btf_type *)$arg3, $arg4, $arg5)")
   public static boolean btf_is_prog_ctx_type(Ptr<bpf_verifier_log> log, Ptr<btf> btf,
       Ptr<btf_type> t, bpf_prog_type prog_type, int arg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_is_projection_of((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("btf_is_projection_of((const u8 *)$arg1, (const u8 *)$arg2)")
   public static boolean btf_is_projection_of(String pname, String tname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_is_vmlinux((const struct btf*)$arg1)")
+  @BuiltinBPFFunction("btf_is_vmlinux((const struct btf *)$arg1)")
   public static boolean btf_is_vmlinux(Ptr<btf> btf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_kfunc_id_set_contains((const struct btf*)$arg1, $arg2, (const struct bpf_prog*)$arg3)")
+  @BuiltinBPFFunction("btf_kfunc_id_set_contains((const struct btf *)$arg1, $arg2, (const struct bpf_prog *)$arg3)")
   public static Ptr<java.lang. @Unsigned Integer> btf_kfunc_id_set_contains(Ptr<btf> btf,
       @Unsigned int kfunc_btf_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_kfunc_is_modify_return((const struct btf*)$arg1, $arg2, (const struct bpf_prog*)$arg3)")
+  @BuiltinBPFFunction("btf_kfunc_is_modify_return((const struct btf *)$arg1, $arg2, (const struct bpf_prog *)$arg3)")
   public static Ptr<java.lang. @Unsigned Integer> btf_kfunc_is_modify_return(Ptr<btf> btf,
       @Unsigned int kfunc_btf_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_member_is_reg_int((const struct btf*)$arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("btf_member_is_reg_int((const struct btf *)$arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, $arg4, $arg5)")
   public static boolean btf_member_is_reg_int(Ptr<btf> btf, Ptr<btf_type> s, Ptr<btf_member> m,
       @Unsigned int expected_offset, @Unsigned int expected_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_modifier_check_kflag_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_modifier_check_kflag_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_modifier_check_kflag_member(Ptr<btf_verifier_env> env,
       Ptr<btf_type> struct_type, Ptr<btf_member> member, Ptr<btf_type> member_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_modifier_check_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_modifier_check_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_modifier_check_member(Ptr<btf_verifier_env> env, Ptr<btf_type> struct_type,
       Ptr<btf_member> member, Ptr<btf_type> member_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_modifier_resolve($arg1, (const struct resolve_vertex*)$arg2)")
+  @BuiltinBPFFunction("btf_modifier_resolve($arg1, (const struct resolve_vertex *)$arg2)")
   public static int btf_modifier_resolve(Ptr<btf_verifier_env> env, Ptr<resolve_vertex> v) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_modifier_show((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_modifier_show((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void btf_modifier_show(Ptr<btf> btf, Ptr<btf_type> t, @Unsigned int type_id,
       Ptr<?> data, char bits_offset, Ptr<btf_show> show) {
     throw new MethodIsBPFRelatedFunction();
@@ -1756,72 +1757,72 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)btf_name_by_offset((const struct btf*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const u8*)btf_name_by_offset((const struct btf *)$arg1, $arg2))")
   public static String btf_name_by_offset(Ptr<btf> btf, @Unsigned int offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_name_valid_identifier((const struct btf*)$arg1, $arg2)")
+  @BuiltinBPFFunction("btf_name_valid_identifier((const struct btf *)$arg1, $arg2)")
   public static boolean btf_name_valid_identifier(Ptr<btf> btf, @Unsigned int offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_nested_type_is_trusted($arg1, (const struct bpf_reg_state*)$arg2, (const u8*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("btf_nested_type_is_trusted($arg1, (const struct bpf_reg_state *)$arg2, (const u8 *)$arg3, $arg4, (const u8 *)$arg5)")
   public static boolean btf_nested_type_is_trusted(Ptr<bpf_verifier_log> log,
       Ptr<bpf_reg_state> reg, String field_name, @Unsigned int btf_id, String suffix) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_new_fd((const union bpf_attr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("btf_new_fd((const union bpf_attr *)$arg1, $arg2, $arg3)")
   public static int btf_new_fd(Ptr<bpf_attr> attr, @OriginalName("bpfptr_t") sockptr_t uattr,
       @Unsigned int uattr_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_nr_types((const struct btf*)$arg1)")
+  @BuiltinBPFFunction("btf_nr_types((const struct btf *)$arg1)")
   public static @Unsigned int btf_nr_types(Ptr<btf> btf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_obj_id((const struct btf*)$arg1)")
+  @BuiltinBPFFunction("btf_obj_id((const struct btf *)$arg1)")
   public static @Unsigned int btf_obj_id(Ptr<btf> btf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_param_match_suffix((const struct btf*)$arg1, (const struct btf_param*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("btf_param_match_suffix((const struct btf *)$arg1, (const struct btf_param *)$arg2, (const u8 *)$arg3)")
   public static boolean btf_param_match_suffix(Ptr<btf> btf, Ptr<btf_param> arg, String suffix) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_parse((const union bpf_attr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("btf_parse((const union bpf_attr *)$arg1, $arg2, $arg3)")
   public static Ptr<btf> btf_parse(Ptr<bpf_attr> attr, @OriginalName("bpfptr_t") sockptr_t uattr,
       @Unsigned int uattr_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_parse_base($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("btf_parse_base($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<btf> btf_parse_base(Ptr<btf_verifier_env> env, String name, Ptr<?> data,
       @Unsigned int data_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_parse_fields((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("btf_parse_fields((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4)")
   public static Ptr<btf_record> btf_parse_fields(Ptr<btf> btf, Ptr<btf_type> t,
       @Unsigned int field_mask, @Unsigned int value_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_parse_graph_root((const struct btf*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("btf_parse_graph_root((const struct btf *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int btf_parse_graph_root(Ptr<btf> btf, Ptr<btf_field> field,
       Ptr<btf_field_info> info, String node_type_name, @Unsigned long node_type_align) {
     throw new MethodIsBPFRelatedFunction();
@@ -1834,13 +1835,13 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_parse_kptr((const struct btf*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("btf_parse_kptr((const struct btf *)$arg1, $arg2, $arg3)")
   public static int btf_parse_kptr(Ptr<btf> btf, Ptr<btf_field> field, Ptr<btf_field_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_parse_module((const u8*)$arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("btf_parse_module((const u8 *)$arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static Ptr<btf> btf_parse_module(String module_name, Ptr<?> data, @Unsigned int data_size,
       Ptr<?> base_data, @Unsigned int base_data_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1859,7 +1860,7 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_populate_kfunc_set($arg1, $arg2, (const struct btf_kfunc_id_set*)$arg3)")
+  @BuiltinBPFFunction("btf_populate_kfunc_set($arg1, $arg2, (const struct btf_kfunc_id_set *)$arg3)")
   public static int btf_populate_kfunc_set(Ptr<btf> btf, btf_kfunc_hook hook,
       Ptr<btf_kfunc_id_set> kset) {
     throw new MethodIsBPFRelatedFunction();
@@ -1872,20 +1873,20 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_ptr_check_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_ptr_check_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_ptr_check_member(Ptr<btf_verifier_env> env, Ptr<btf_type> struct_type,
       Ptr<btf_member> member, Ptr<btf_type> member_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_ptr_resolve($arg1, (const struct resolve_vertex*)$arg2)")
+  @BuiltinBPFFunction("btf_ptr_resolve($arg1, (const struct resolve_vertex *)$arg2)")
   public static int btf_ptr_resolve(Ptr<btf_verifier_env> env, Ptr<resolve_vertex> v) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_ptr_show((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_ptr_show((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void btf_ptr_show(Ptr<btf> btf, Ptr<btf_type> t, @Unsigned int type_id, Ptr<?> data,
       char bits_offset, Ptr<btf_show> show) {
     throw new MethodIsBPFRelatedFunction();
@@ -1898,19 +1899,19 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_record_dup((const struct btf_record*)$arg1)")
+  @BuiltinBPFFunction("btf_record_dup((const struct btf_record *)$arg1)")
   public static Ptr<btf_record> btf_record_dup(Ptr<btf_record> rec) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_record_equal((const struct btf_record*)$arg1, (const struct btf_record*)$arg2)")
+  @BuiltinBPFFunction("btf_record_equal((const struct btf_record *)$arg1, (const struct btf_record *)$arg2)")
   public static boolean btf_record_equal(Ptr<btf_record> rec_a, Ptr<btf_record> rec_b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_record_find((const struct btf_record*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("btf_record_find((const struct btf_record *)$arg1, $arg2, $arg3)")
   public static Ptr<btf_field> btf_record_find(Ptr<btf_record> rec, @Unsigned int offset,
       @Unsigned int field_mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1923,14 +1924,14 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_ref_type_check_meta($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_ref_type_check_meta($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_ref_type_check_meta(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int meta_left) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_ref_type_log($arg1, (const struct btf_type*)$arg2)")
+  @BuiltinBPFFunction("btf_ref_type_log($arg1, (const struct btf_type *)$arg2)")
   public static void btf_ref_type_log(Ptr<btf_verifier_env> env, Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1967,45 +1968,45 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_resolve($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_resolve($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_resolve(Ptr<btf_verifier_env> env, Ptr<btf_type> t, @Unsigned int type_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct btf_type*)btf_resolve_size((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3))")
+  @BuiltinBPFFunction("((const struct btf_type*)btf_resolve_size((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3))")
   public static Ptr<btf_type> btf_resolve_size(Ptr<btf> btf, Ptr<btf_type> type,
       Ptr<java.lang. @Unsigned Integer> type_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_resolve_valid($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_resolve_valid($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static boolean btf_resolve_valid(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int type_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_sec_info_cmp((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("btf_sec_info_cmp((const void *)$arg1, (const void *)$arg2)")
   public static int btf_sec_info_cmp(Ptr<?> a, Ptr<?> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_seq_show($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_seq_show($arg1, (const u8 *)$arg2, $arg3)")
   public static void btf_seq_show(Ptr<btf_show> show, String fmt, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_set_base_btf($arg1, (const struct btf*)$arg2)")
+  @BuiltinBPFFunction("btf_set_base_btf($arg1, (const struct btf *)$arg2)")
   public static void btf_set_base_btf(Ptr<btf> btf, Ptr<btf> base_btf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_show_end_aggr_type($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("btf_show_end_aggr_type($arg1, (const u8 *)$arg2)")
   public static void btf_show_end_aggr_type(Ptr<btf_show> show, String suffix) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2017,32 +2018,32 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_show_obj_safe($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_show_obj_safe($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static Ptr<?> btf_show_obj_safe(Ptr<btf_show> show, Ptr<btf_type> t, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_show_start_aggr_type($arg1, (const struct btf_type*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("btf_show_start_aggr_type($arg1, (const struct btf_type *)$arg2, $arg3, $arg4)")
   public static Ptr<?> btf_show_start_aggr_type(Ptr<btf_show> show, Ptr<btf_type> t,
       @Unsigned int type_id, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_snprintf_show($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_snprintf_show($arg1, (const u8 *)$arg2, $arg3)")
   public static void btf_snprintf_show(Ptr<btf_show> show, String fmt, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)btf_str_by_offset((const struct btf*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const u8*)btf_str_by_offset((const struct btf *)$arg1, $arg2))")
   public static String btf_str_by_offset(Ptr<btf> btf, @Unsigned int offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_struct_access($arg1, (const struct bpf_reg_state*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const u8**)$arg8)")
+  @BuiltinBPFFunction("btf_struct_access($arg1, (const struct bpf_reg_state *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const u8**)$arg8)")
   public static int btf_struct_access(Ptr<bpf_verifier_log> log, Ptr<bpf_reg_state> reg, int off,
       int size, bpf_access_type atype, Ptr<java.lang. @Unsigned Integer> next_btf_id,
       Ptr<bpf_type_flag> flag, Ptr<String> field_name) {
@@ -2050,47 +2051,47 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_struct_check_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("btf_struct_check_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const struct btf_type *)$arg4)")
   public static int btf_struct_check_member(Ptr<btf_verifier_env> env, Ptr<btf_type> struct_type,
       Ptr<btf_member> member, Ptr<btf_type> member_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_struct_check_meta($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_struct_check_meta($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_struct_check_meta(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int meta_left) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_struct_ids_match($arg1, (const struct btf*)$arg2, $arg3, $arg4, (const struct btf*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("btf_struct_ids_match($arg1, (const struct btf *)$arg2, $arg3, $arg4, (const struct btf *)$arg5, $arg6, $arg7)")
   public static boolean btf_struct_ids_match(Ptr<bpf_verifier_log> log, Ptr<btf> btf,
       @Unsigned int id, int off, Ptr<btf> need_btf, @Unsigned int need_type_id, boolean strict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_struct_log($arg1, (const struct btf_type*)$arg2)")
+  @BuiltinBPFFunction("btf_struct_log($arg1, (const struct btf_type *)$arg2)")
   public static void btf_struct_log(Ptr<btf_verifier_env> env, Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_struct_resolve($arg1, (const struct resolve_vertex*)$arg2)")
+  @BuiltinBPFFunction("btf_struct_resolve($arg1, (const struct resolve_vertex *)$arg2)")
   public static int btf_struct_resolve(Ptr<btf_verifier_env> env, Ptr<resolve_vertex> v) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_struct_show((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_struct_show((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void btf_struct_show(Ptr<btf> btf, Ptr<btf_type> t, @Unsigned int type_id,
       Ptr<?> data, char bits_offset, Ptr<btf_show> show) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_struct_walk($arg1, (const struct btf*)$arg2, (const struct btf_type*)$arg3, $arg4, $arg5, $arg6, $arg7, (const u8**)$arg8)")
+  @BuiltinBPFFunction("btf_struct_walk($arg1, (const struct btf *)$arg2, (const struct btf_type *)$arg3, $arg4, $arg5, $arg6, $arg7, (const u8**)$arg8)")
   public static int btf_struct_walk(Ptr<bpf_verifier_log> log, Ptr<btf> btf, Ptr<btf_type> t,
       int off, int size, Ptr<java.lang. @Unsigned Integer> next_btf_id, Ptr<bpf_type_flag> flag,
       Ptr<String> field_name) {
@@ -2098,192 +2099,192 @@ public final class BtfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_sysfs_vmlinux_mmap($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4)")
+  @BuiltinBPFFunction("btf_sysfs_vmlinux_mmap($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4)")
   public static int btf_sysfs_vmlinux_mmap(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> attr, Ptr<vm_area_struct> vma) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_try_get_module((const struct btf*)$arg1)")
+  @BuiltinBPFFunction("btf_try_get_module((const struct btf *)$arg1)")
   public static Ptr<module> btf_try_get_module(Ptr<btf> btf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct btf_type*)btf_type_by_id((const struct btf*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct btf_type*)btf_type_by_id((const struct btf *)$arg1, $arg2))")
   public static Ptr<btf_type> btf_type_by_id(Ptr<btf> btf, @Unsigned int type_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct btf_type*)btf_type_id_resolve((const struct btf*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct btf_type*)btf_type_id_resolve((const struct btf *)$arg1, $arg2))")
   public static Ptr<btf_type> btf_type_id_resolve(Ptr<btf> btf,
       Ptr<java.lang. @Unsigned Integer> type_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct btf_type*)btf_type_id_size((const struct btf*)$arg1, $arg2, $arg3))")
+  @BuiltinBPFFunction("((const struct btf_type*)btf_type_id_size((const struct btf *)$arg1, $arg2, $arg3))")
   public static Ptr<btf_type> btf_type_id_size(Ptr<btf> btf,
       Ptr<java.lang. @Unsigned Integer> type_id, Ptr<java.lang. @Unsigned Integer> ret_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_type_ids_nocast_alias($arg1, (const struct btf*)$arg2, $arg3, (const struct btf*)$arg4, $arg5)")
+  @BuiltinBPFFunction("btf_type_ids_nocast_alias($arg1, (const struct btf *)$arg2, $arg3, (const struct btf *)$arg4, $arg5)")
   public static boolean btf_type_ids_nocast_alias(Ptr<bpf_verifier_log> log, Ptr<btf> reg_btf,
       @Unsigned int reg_id, Ptr<btf> arg_btf, @Unsigned int arg_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_type_is_i32((const struct btf_type*)$arg1)")
+  @BuiltinBPFFunction("btf_type_is_i32((const struct btf_type *)$arg1)")
   public static boolean btf_type_is_i32(Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_type_is_i64((const struct btf_type*)$arg1)")
+  @BuiltinBPFFunction("btf_type_is_i64((const struct btf_type *)$arg1)")
   public static boolean btf_type_is_i64(Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_type_is_primitive((const struct btf_type*)$arg1)")
+  @BuiltinBPFFunction("btf_type_is_primitive((const struct btf_type *)$arg1)")
   public static boolean btf_type_is_primitive(Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_type_is_void((const struct btf_type*)$arg1)")
+  @BuiltinBPFFunction("btf_type_is_void((const struct btf_type *)$arg1)")
   public static boolean btf_type_is_void(Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)btf_type_name((const struct btf*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const u8*)btf_type_name((const struct btf *)$arg1, $arg2))")
   public static String btf_type_name(Ptr<btf> btf, @Unsigned int id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_type_needs_resolve((const struct btf_type*)$arg1)")
+  @BuiltinBPFFunction("btf_type_needs_resolve((const struct btf_type *)$arg1)")
   public static boolean btf_type_needs_resolve(Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct btf_type*)btf_type_resolve_func_ptr((const struct btf*)$arg1, $arg2, $arg3))")
+  @BuiltinBPFFunction("((const struct btf_type*)btf_type_resolve_func_ptr((const struct btf *)$arg1, $arg2, $arg3))")
   public static Ptr<btf_type> btf_type_resolve_func_ptr(Ptr<btf> btf, @Unsigned int id,
       Ptr<java.lang. @Unsigned Integer> res_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct btf_type*)btf_type_resolve_ptr((const struct btf*)$arg1, $arg2, $arg3))")
+  @BuiltinBPFFunction("((const struct btf_type*)btf_type_resolve_ptr((const struct btf *)$arg1, $arg2, $arg3))")
   public static Ptr<btf_type> btf_type_resolve_ptr(Ptr<btf> btf, @Unsigned int id,
       Ptr<java.lang. @Unsigned Integer> res_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_type_seq_show((const struct btf*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("btf_type_seq_show((const struct btf *)$arg1, $arg2, $arg3, $arg4)")
   public static void btf_type_seq_show(Ptr<btf> btf, @Unsigned int type_id, Ptr<?> obj,
       Ptr<seq_file> m) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_type_seq_show_flags((const struct btf*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("btf_type_seq_show_flags((const struct btf *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int btf_type_seq_show_flags(Ptr<btf> btf, @Unsigned int type_id, Ptr<?> obj,
       Ptr<seq_file> m, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_type_show((const struct btf*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("btf_type_show((const struct btf *)$arg1, $arg2, $arg3, $arg4)")
   public static void btf_type_show(Ptr<btf> btf, @Unsigned int type_id, Ptr<?> obj,
       Ptr<btf_show> show) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct btf_type*)btf_type_skip_modifiers((const struct btf*)$arg1, $arg2, $arg3))")
+  @BuiltinBPFFunction("((const struct btf_type*)btf_type_skip_modifiers((const struct btf *)$arg1, $arg2, $arg3))")
   public static Ptr<btf_type> btf_type_skip_modifiers(Ptr<btf> btf, @Unsigned int id,
       Ptr<java.lang. @Unsigned Integer> res_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_type_snprintf_show((const struct btf*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_type_snprintf_show((const struct btf *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int btf_type_snprintf_show(Ptr<btf> btf, @Unsigned int type_id, Ptr<?> obj,
       String buf, int len, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)btf_type_str((const struct btf_type*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)btf_type_str((const struct btf_type *)$arg1))")
   public static String btf_type_str(Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_types_are_same((const struct btf*)$arg1, $arg2, (const struct btf*)$arg3, $arg4)")
+  @BuiltinBPFFunction("btf_types_are_same((const struct btf *)$arg1, $arg2, (const struct btf *)$arg3, $arg4)")
   public static boolean btf_types_are_same(Ptr<btf> btf1, @Unsigned int id1, Ptr<btf> btf2,
       @Unsigned int id2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_validate_prog_ctx_type($arg1, (const struct btf*)$arg2, (const struct btf_type*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_validate_prog_ctx_type($arg1, (const struct btf *)$arg2, (const struct btf_type *)$arg3, $arg4, $arg5, $arg6)")
   public static int btf_validate_prog_ctx_type(Ptr<bpf_verifier_log> log, Ptr<btf> btf,
       Ptr<btf_type> t, int arg, bpf_prog_type prog_type, bpf_attach_type attach_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_var_check_meta($arg1, (const struct btf_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("btf_var_check_meta($arg1, (const struct btf_type *)$arg2, $arg3)")
   public static int btf_var_check_meta(Ptr<btf_verifier_env> env, Ptr<btf_type> t,
       @Unsigned int meta_left) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_var_log($arg1, (const struct btf_type*)$arg2)")
+  @BuiltinBPFFunction("btf_var_log($arg1, (const struct btf_type *)$arg2)")
   public static void btf_var_log(Ptr<btf_verifier_env> env, Ptr<btf_type> t) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_var_resolve($arg1, (const struct resolve_vertex*)$arg2)")
+  @BuiltinBPFFunction("btf_var_resolve($arg1, (const struct resolve_vertex *)$arg2)")
   public static int btf_var_resolve(Ptr<btf_verifier_env> env, Ptr<resolve_vertex> v) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_var_show((const struct btf*)$arg1, (const struct btf_type*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("btf_var_show((const struct btf *)$arg1, (const struct btf_type *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void btf_var_show(Ptr<btf> btf, Ptr<btf_type> t, @Unsigned int type_id, Ptr<?> data,
       char bits_offset, Ptr<btf_show> show) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_verifier_log($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("btf_verifier_log($arg1, (const u8 *)$arg2, $arg3_)")
   public static void btf_verifier_log(Ptr<btf_verifier_env> env, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_verifier_log_member($arg1, (const struct btf_type*)$arg2, (const struct btf_member*)$arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("btf_verifier_log_member($arg1, (const struct btf_type *)$arg2, (const struct btf_member *)$arg3, (const u8 *)$arg4, $arg5_)")
   public static void btf_verifier_log_member(Ptr<btf_verifier_env> env, Ptr<btf_type> struct_type,
       Ptr<btf_member> member, String fmt, java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("btf_verifier_log_vsi($arg1, (const struct btf_type*)$arg2, (const struct btf_var_secinfo*)$arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("btf_verifier_log_vsi($arg1, (const struct btf_type *)$arg2, (const struct btf_var_secinfo *)$arg3, (const u8 *)$arg4, $arg5_)")
   public static void btf_verifier_log_vsi(Ptr<btf_verifier_env> env, Ptr<btf_type> datasec_type,
       Ptr<btf_var_secinfo> vsi, String fmt, java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
@@ -2594,7 +2595,7 @@ public final class BtfDefinitions {
 
     public @Unsigned int flags;
 
-    public AnonymousType1247127272C51 @Size(0) [] pairs;
+    public AnonymousType1747702724C51 @Size(0) [] pairs;
   }
 
   @Type(
@@ -3331,7 +3332,7 @@ public final class BtfDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1247127272C51 extends Struct {
+  public static class AnonymousType1747702724C51 extends Struct {
     public @Unsigned int id;
 
     public @Unsigned int flags;

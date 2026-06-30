@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1123,7 +1124,7 @@ public final class KernelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__kernel_write($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__kernel_write($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long __kernel_write(Ptr<file> file, Ptr<?> buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1191,7 +1192,7 @@ public final class KernelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernel_execve((const u8*)$arg1, (const u8**)$arg2, (const u8**)$arg3)")
+  @BuiltinBPFFunction("kernel_execve((const u8 *)$arg1, (const const u8 **)$arg2, (const const u8 **)$arg3)")
   public static int kernel_execve(String kernel_filename, Ptr<String> argv, Ptr<String> envp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1209,7 +1210,7 @@ public final class KernelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernel_file_open((const struct path*)$arg1, $arg2, (const struct cred*)$arg3)")
+  @BuiltinBPFFunction("kernel_file_open((const struct path *)$arg1, $arg2, (const struct cred *)$arg3)")
   public static Ptr<file> kernel_file_open(Ptr<path> path, int flags, Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1309,21 +1310,21 @@ public final class KernelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernel_mbind($arg1, $arg2, $arg3, (const long unsigned int*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("kernel_mbind($arg1, $arg2, $arg3, (const long unsigned int *)$arg4, $arg5, $arg6)")
   public static long kernel_mbind(@Unsigned long start, @Unsigned long len, @Unsigned long mode,
       Ptr<java.lang. @Unsigned Long> nmask, @Unsigned long maxnode, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernel_migrate_pages($arg1, $arg2, (const long unsigned int*)$arg3, (const long unsigned int*)$arg4)")
+  @BuiltinBPFFunction("kernel_migrate_pages($arg1, $arg2, (const long unsigned int *)$arg3, (const long unsigned int *)$arg4)")
   public static int kernel_migrate_pages(@OriginalName("pid_t") int pid, @Unsigned long maxnode,
       Ptr<java.lang. @Unsigned Long> old_nodes, Ptr<java.lang. @Unsigned Long> new_nodes) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernel_move_pages($arg1, $arg2, (const void**)$arg3, (const int*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("kernel_move_pages($arg1, $arg2, (const void**)$arg3, (const int *)$arg4, $arg5, $arg6)")
   public static int kernel_move_pages(@OriginalName("pid_t") int pid, @Unsigned long nr_pages,
       Ptr<Ptr<?>> pages, Ptr<java.lang.Integer> nodes, Ptr<java.lang.Integer> status, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1416,7 +1417,7 @@ public final class KernelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernel_read_file_from_path((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("kernel_read_file_from_path((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long kernel_read_file_from_path(String path,
       @OriginalName("loff_t") long offset, Ptr<Ptr<?>> buf, @Unsigned long buf_size,
       Ptr<java.lang. @Unsigned Long> file_size, kernel_read_file_id id) {
@@ -1424,7 +1425,7 @@ public final class KernelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernel_read_file_from_path_initns((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("kernel_read_file_from_path_initns((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long kernel_read_file_from_path_initns(String path,
       @OriginalName("loff_t") long offset, Ptr<Ptr<?>> buf, @Unsigned long buf_size,
       Ptr<java.lang. @Unsigned Long> file_size, kernel_read_file_id id) {
@@ -1458,7 +1459,7 @@ public final class KernelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernel_set_mempolicy($arg1, (const long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("kernel_set_mempolicy($arg1, (const long unsigned int *)$arg2, $arg3)")
   public static long kernel_set_mempolicy(int mode, Ptr<java.lang. @Unsigned Long> nmask,
       @Unsigned long maxnode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1520,7 +1521,7 @@ public final class KernelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernel_thread((int (*)(void*))$arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("kernel_thread((int (*)(void*))$arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("pid_t") int kernel_thread(Ptr<?> fn, Ptr<?> arg, String name,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1533,7 +1534,7 @@ public final class KernelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernel_tmpfile_open($arg1, (const struct path*)$arg2, $arg3, $arg4, (const struct cred*)$arg5)")
+  @BuiltinBPFFunction("kernel_tmpfile_open($arg1, (const struct path *)$arg2, $arg3, $arg4, (const struct cred *)$arg5)")
   public static Ptr<file> kernel_tmpfile_open(Ptr<mnt_idmap> idmap, Ptr<path> parentpath,
       @Unsigned @OriginalName("umode_t") short mode, int open_flag, Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
@@ -1580,7 +1581,7 @@ public final class KernelDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernel_write($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("kernel_write($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long kernel_write(Ptr<file> file, Ptr<?> buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1193,7 +1194,7 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_attach($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("phy_attach($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<phy_device> phy_attach(Ptr<net_device> dev, String bus_id,
       @OriginalName("phy_interface_t") interface_of_phy_device_and_interface_of_phylink_link_state _interface) {
     throw new MethodIsBPFRelatedFunction();
@@ -1220,14 +1221,14 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_attached_print($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("phy_attached_print($arg1, (const u8 *)$arg2, $arg3_)")
   public static void phy_attached_print(Ptr<phy_device> phydev, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_bus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("phy_bus_match($arg1, (const struct device_driver *)$arg2)")
   public static int phy_bus_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1272,21 +1273,21 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct link_capabilities*)phy_caps_lookup($arg1, $arg2, (const long unsigned int*)$arg3, $arg4))")
+  @BuiltinBPFFunction("((const struct link_capabilities*)phy_caps_lookup($arg1, $arg2, (const long unsigned int *)$arg3, $arg4))")
   public static Ptr<link_capabilities> phy_caps_lookup(int speed, @Unsigned int duplex,
       Ptr<java.lang. @Unsigned Long> supported, boolean exact) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct link_capabilities*)phy_caps_lookup_by_linkmode((const long unsigned int*)$arg1))")
+  @BuiltinBPFFunction("((const struct link_capabilities*)phy_caps_lookup_by_linkmode((const long unsigned int *)$arg1))")
   public static Ptr<link_capabilities> phy_caps_lookup_by_linkmode(
       Ptr<java.lang. @Unsigned Long> linkmodes) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct link_capabilities*)phy_caps_lookup_by_linkmode_rev((const long unsigned int*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct link_capabilities*)phy_caps_lookup_by_linkmode_rev((const long unsigned int *)$arg1, $arg2))")
   public static Ptr<link_capabilities> phy_caps_lookup_by_linkmode_rev(
       Ptr<java.lang. @Unsigned Long> linkmodes, boolean fdx_only) {
     throw new MethodIsBPFRelatedFunction();
@@ -1300,7 +1301,7 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_caps_valid($arg1, $arg2, (const long unsigned int*)$arg3)")
+  @BuiltinBPFFunction("phy_caps_valid($arg1, $arg2, (const long unsigned int *)$arg3)")
   public static boolean phy_caps_valid(int speed, int duplex,
       Ptr<java.lang. @Unsigned Long> linkmodes) {
     throw new MethodIsBPFRelatedFunction();
@@ -1350,7 +1351,7 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_connect($arg1, (const u8*)$arg2, (void (*)(struct net_device*))$arg3, $arg4)")
+  @BuiltinBPFFunction("phy_connect($arg1, (const u8 *)$arg2, (void (*)(struct net_device*))$arg3, $arg4)")
   public static Ptr<phy_device> phy_connect(Ptr<net_device> dev, String bus_id, Ptr<?> handler,
       @OriginalName("phy_interface_t") interface_of_phy_device_and_interface_of_phylink_link_state _interface) {
     throw new MethodIsBPFRelatedFunction();
@@ -1383,13 +1384,13 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_create($arg1, $arg2, (const struct phy_ops*)$arg3)")
+  @BuiltinBPFFunction("phy_create($arg1, $arg2, (const struct phy_ops *)$arg3)")
   public static Ptr<phy> phy_create(Ptr<device> dev, Ptr<device_node> node, Ptr<phy_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_create_lookup($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("phy_create_lookup($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int phy_create_lookup(Ptr<phy> phy, String con_id, String dev_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1581,7 +1582,7 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_ethtool_ksettings_set($arg1, (const struct ethtool_link_ksettings*)$arg2)")
+  @BuiltinBPFFunction("phy_ethtool_ksettings_set($arg1, (const struct ethtool_link_ksettings *)$arg2)")
   public static int phy_ethtool_ksettings_set(Ptr<phy_device> phydev,
       Ptr<ethtool_link_ksettings> cmd) {
     throw new MethodIsBPFRelatedFunction();
@@ -1600,14 +1601,14 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_ethtool_set_link_ksettings($arg1, (const struct ethtool_link_ksettings*)$arg2)")
+  @BuiltinBPFFunction("phy_ethtool_set_link_ksettings($arg1, (const struct ethtool_link_ksettings *)$arg2)")
   public static int phy_ethtool_set_link_ksettings(Ptr<net_device> ndev,
       Ptr<ethtool_link_ksettings> cmd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_ethtool_set_plca_cfg($arg1, (const struct phy_plca_cfg*)$arg2, $arg3)")
+  @BuiltinBPFFunction("phy_ethtool_set_plca_cfg($arg1, (const struct phy_plca_cfg *)$arg2, $arg3)")
   public static int phy_ethtool_set_plca_cfg(Ptr<phy_device> phydev, Ptr<phy_plca_cfg> plca_cfg,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1620,7 +1621,7 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_fill_reply($arg1, (const struct ethnl_req_info*)$arg2, (const struct ethnl_reply_data*)$arg3)")
+  @BuiltinBPFFunction("phy_fill_reply($arg1, (const struct ethnl_req_info *)$arg2, (const struct ethnl_reply_data *)$arg3)")
   public static int phy_fill_reply(Ptr<sk_buff> skb, Ptr<ethnl_req_info> req_info,
       Ptr<ethnl_reply_data> reply_data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1647,7 +1648,7 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("phy_get($arg1, (const u8 *)$arg2)")
   public static Ptr<phy> phy_get(Ptr<device> dev, String string) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1665,7 +1666,7 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_get_internal_delay($arg1, (const int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("phy_get_internal_delay($arg1, (const int *)$arg2, $arg3, $arg4)")
   public static int phy_get_internal_delay(Ptr<phy_device> phydev,
       Ptr<java.lang.Integer> delay_values, int size, boolean is_rx) {
     throw new MethodIsBPFRelatedFunction();
@@ -1956,7 +1957,7 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_prepare_data((const struct ethnl_req_info*)$arg1, $arg2, (const struct genl_info*)$arg3)")
+  @BuiltinBPFFunction("phy_prepare_data((const struct ethnl_req_info *)$arg1, $arg2, (const struct genl_info *)$arg3)")
   public static int phy_prepare_data(Ptr<ethnl_req_info> req_info, Ptr<ethnl_reply_data> reply_data,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -2005,14 +2006,14 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_register_fixup((const u8*)$arg1, $arg2, $arg3, (int (*)(struct phy_device*))$arg4)")
+  @BuiltinBPFFunction("phy_register_fixup((const u8 *)$arg1, $arg2, $arg3, (int (*)(struct phy_device*))$arg4)")
   public static int phy_register_fixup(String bus_id, @Unsigned int phy_uid,
       @Unsigned int phy_uid_mask, Ptr<?> run) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_register_fixup_for_id((const u8*)$arg1, (int (*)(struct phy_device*))$arg2)")
+  @BuiltinBPFFunction("phy_register_fixup_for_id((const u8 *)$arg1, (int (*)(struct phy_device*))$arg2)")
   public static int phy_register_fixup_for_id(String bus_id, Ptr<?> run) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2043,13 +2044,13 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_remove_lookup($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("phy_remove_lookup($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static void phy_remove_lookup(Ptr<phy> phy, String con_id, String dev_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_reply_size((const struct ethnl_req_info*)$arg1, (const struct ethnl_reply_data*)$arg2)")
+  @BuiltinBPFFunction("phy_reply_size((const struct ethnl_req_info *)$arg1, (const struct ethnl_reply_data *)$arg2)")
   public static int phy_reply_size(Ptr<ethnl_req_info> req_info, Ptr<ethnl_reply_data> reply_data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2188,7 +2189,7 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_sfp_probe($arg1, (const struct sfp_upstream_ops*)$arg2)")
+  @BuiltinBPFFunction("phy_sfp_probe($arg1, (const struct sfp_upstream_ops *)$arg2)")
   public static int phy_sfp_probe(Ptr<phy_device> phydev, Ptr<sfp_upstream_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2243,7 +2244,7 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_start_cable_test_tdr($arg1, $arg2, (const struct phy_tdr_config*)$arg3)")
+  @BuiltinBPFFunction("phy_start_cable_test_tdr($arg1, $arg2, (const struct phy_tdr_config *)$arg3)")
   public static int phy_start_cable_test_tdr(Ptr<phy_device> phydev, Ptr<netlink_ext_ack> extack,
       Ptr<phy_tdr_config> config) {
     throw new MethodIsBPFRelatedFunction();
@@ -2311,14 +2312,14 @@ public final class PhyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_unregister_fixup((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("phy_unregister_fixup((const u8 *)$arg1, $arg2, $arg3)")
   public static int phy_unregister_fixup(String bus_id, @Unsigned int phy_uid,
       @Unsigned int phy_uid_mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("phy_unregister_fixup_for_id((const u8*)$arg1)")
+  @BuiltinBPFFunction("phy_unregister_fixup_for_id((const u8 *)$arg1)")
   public static int phy_unregister_fixup_for_id(String bus_id) {
     throw new MethodIsBPFRelatedFunction();
   }

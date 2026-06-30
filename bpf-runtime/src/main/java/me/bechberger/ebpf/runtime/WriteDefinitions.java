@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class WriteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_actions_logged((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("write_actions_logged((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int write_actions_logged(Ptr<ctl_table> ro_table, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos,
       Ptr<java.lang. @Unsigned Integer> actions_logged) {
@@ -1172,7 +1173,7 @@ public final class WriteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_enabled_file_bool($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("write_enabled_file_bool($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long write_enabled_file_bool(Ptr<file> file,
       String user_buf, @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1186,7 +1187,7 @@ public final class WriteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_file_blob($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("write_file_blob($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long write_file_blob(Ptr<file> file, String user_buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1199,7 +1200,7 @@ public final class WriteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_full($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("write_full($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long write_full(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1213,7 +1214,7 @@ public final class WriteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_generate_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("write_generate_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long write_generate_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1257,14 +1258,14 @@ public final class WriteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_marker_to_buffer($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("write_marker_to_buffer($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long write_marker_to_buffer(Ptr<trace_array> tr,
       String buf, @Unsigned long cnt, @Unsigned long ip) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_mem($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("write_mem($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long write_mem(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1277,7 +1278,7 @@ public final class WriteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_merkle_tree_block($arg1, (const u8*)$arg2, $arg3, (const struct merkle_tree_params*)$arg4)")
+  @BuiltinBPFFunction("write_merkle_tree_block($arg1, (const u8 *)$arg2, $arg3, (const struct merkle_tree_params *)$arg4)")
   public static int write_merkle_tree_block(Ptr<inode> inode, Ptr<java.lang.Character> buf,
       @Unsigned long index, Ptr<merkle_tree_params> params) {
     throw new MethodIsBPFRelatedFunction();
@@ -1314,7 +1315,7 @@ public final class WriteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_null($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("write_null($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long write_null(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1348,7 +1349,7 @@ public final class WriteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_per_ring_nodes($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("write_per_ring_nodes($arg1, $arg2, (const u8 *)$arg3)")
   public static int write_per_ring_nodes(xenbus_transaction xbt, Ptr<blkfront_ring_info> rinfo,
       String dir) {
     throw new MethodIsBPFRelatedFunction();
@@ -1368,7 +1369,7 @@ public final class WriteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_port($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("write_port($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long write_port(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1382,7 +1383,7 @@ public final class WriteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_profile($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("write_profile($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long write_profile(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1416,7 +1417,7 @@ public final class WriteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_sysrq_trigger($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("write_sysrq_trigger($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long write_sysrq_trigger(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1460,7 +1461,7 @@ public final class WriteDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("write_update_fw($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("write_update_fw($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long write_update_fw(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

@@ -7,6 +7,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1281,7 +1282,7 @@ public final class BPFHelpers {
    * @return 0 on success, or a negative error in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_copy_from_user($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("bpf_copy_from_user($arg1, $arg2, (const void *)$arg3)")
   public static long bpf_copy_from_user(Ptr<?> dst, @Unsigned int size, Ptr<?> user_ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1295,7 +1296,7 @@ public final class BPFHelpers {
    * <em>dst</em> buffer is zeroed out.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_copy_from_user_task($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_copy_from_user_task($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static long bpf_copy_from_user_task(Ptr<?> dst, @Unsigned int size, Ptr<?> user_ptr,
       Ptr<task_struct> tsk, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1429,7 +1430,7 @@ public final class BPFHelpers {
    * is out of bounds.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dynptr_data((const struct bpf_dynptr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_dynptr_data((const struct bpf_dynptr *)$arg1, $arg2, $arg3)")
   public static Ptr<?> bpf_dynptr_data(Ptr<bpf_dynptr> ptr, @Unsigned int offset,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1459,7 +1460,7 @@ public final class BPFHelpers {
    * <em>flags</em> is not 0.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dynptr_read($arg1, $arg2, (const struct bpf_dynptr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_dynptr_read($arg1, $arg2, (const struct bpf_dynptr *)$arg3, $arg4, $arg5)")
   public static long bpf_dynptr_read(Ptr<?> dst, @Unsigned int len, Ptr<bpf_dynptr> src,
       @Unsigned int offset, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1483,7 +1484,7 @@ public final class BPFHelpers {
    * other errors correspond to errors returned by <strong>bpf_skb_store_bytes</strong>\ ().
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_dynptr_write((const struct bpf_dynptr*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_dynptr_write((const struct bpf_dynptr *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static long bpf_dynptr_write(Ptr<bpf_dynptr> dst, @Unsigned int offset, Ptr<?> src,
       @Unsigned int len, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2552,7 +2553,7 @@ public final class BPFHelpers {
    * @return 0 on success, or a negative error in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_lwt_seg6_store_bytes($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_lwt_seg6_store_bytes($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static long bpf_lwt_seg6_store_bytes(Ptr<__sk_buff> skb, @Unsigned int offset, Ptr<?> from,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -2563,7 +2564,7 @@ public final class BPFHelpers {
    * @return 0 on success, or a negative error in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_delete_elem($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("bpf_map_delete_elem($arg1, (const void *)$arg2)")
   public static long bpf_map_delete_elem(Ptr<?> map, Ptr<?> key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2574,7 +2575,7 @@ public final class BPFHelpers {
    * found.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_lookup_elem($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("bpf_map_lookup_elem($arg1, (const void *)$arg2)")
   public static Ptr<?> bpf_map_lookup_elem(Ptr<?> map, Ptr<?> key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2586,7 +2587,7 @@ public final class BPFHelpers {
    * was found or <em>cpu</em> is invalid.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_lookup_percpu_elem($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_map_lookup_percpu_elem($arg1, (const void *)$arg2, $arg3)")
   public static Ptr<?> bpf_map_lookup_percpu_elem(Ptr<?> map, Ptr<?> key, @Unsigned int cpu) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2619,7 +2620,7 @@ public final class BPFHelpers {
    * @return 0 on success, or a negative error in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_push_elem($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_map_push_elem($arg1, (const void *)$arg2, $arg3)")
   public static long bpf_map_push_elem(Ptr<?> map, Ptr<?> value, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2639,7 +2640,7 @@ public final class BPFHelpers {
    * @return 0 on success, or a negative error in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_map_update_elem($arg1, (const void*)$arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_map_update_elem($arg1, (const void *)$arg2, (const void *)$arg3, $arg4)")
   public static long bpf_map_update_elem(Ptr<?> map, Ptr<?> key, Ptr<?> value,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2850,7 +2851,7 @@ public final class BPFHelpers {
    * NULL, if <em>cpu</em> is invalid.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_per_cpu_ptr((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bpf_per_cpu_ptr((const void *)$arg1, $arg2)")
   public static Ptr<?> bpf_per_cpu_ptr(Ptr<?> percpu_ptr, @Unsigned int cpu) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3006,7 +3007,7 @@ public final class BPFHelpers {
    * @return 0 on success, or a negative error in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_probe_read($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("bpf_probe_read($arg1, $arg2, (const void *)$arg3)")
   public static long bpf_probe_read(Ptr<?> dst, @Unsigned int size, Ptr<?> unsafe_ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3017,7 +3018,7 @@ public final class BPFHelpers {
    * @return 0 on success, or a negative error in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_probe_read_kernel($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("bpf_probe_read_kernel($arg1, $arg2, (const void *)$arg3)")
   public static long bpf_probe_read_kernel(Ptr<?> dst, @Unsigned int size, Ptr<?> unsafe_ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3029,7 +3030,7 @@ public final class BPFHelpers {
    * the trailing NUL character. On error, a negative value.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_probe_read_kernel_str($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("bpf_probe_read_kernel_str($arg1, $arg2, (const void *)$arg3)")
   public static long bpf_probe_read_kernel_str(Ptr<?> dst, @Unsigned int size, Ptr<?> unsafe_ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3045,7 +3046,7 @@ public final class BPFHelpers {
    * value.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_probe_read_str($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("bpf_probe_read_str($arg1, $arg2, (const void *)$arg3)")
   public static long bpf_probe_read_str(Ptr<?> dst, @Unsigned int size, Ptr<?> unsafe_ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3056,7 +3057,7 @@ public final class BPFHelpers {
    * @return 0 on success, or a negative error in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_probe_read_user($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("bpf_probe_read_user($arg1, $arg2, (const void *)$arg3)")
   public static long bpf_probe_read_user(Ptr<?> dst, @Unsigned int size, Ptr<?> unsafe_ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3100,7 +3101,7 @@ public final class BPFHelpers {
    * value.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_probe_read_user_str($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("bpf_probe_read_user_str($arg1, $arg2, (const void *)$arg3)")
   public static long bpf_probe_read_user_str(Ptr<?> dst, @Unsigned int size, Ptr<?> unsafe_ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3121,7 +3122,7 @@ public final class BPFHelpers {
    * @return 0 on success, or a negative error in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_probe_write_user($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_probe_write_user($arg1, (const void *)$arg2, $arg3)")
   public static long bpf_probe_write_user(Ptr<?> dst, Ptr<?> src, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3531,7 +3532,7 @@ public final class BPFHelpers {
    * <p><strong>-EOVERFLOW</strong> if an overflow happened: The same object will be tried again.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_seq_write($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bpf_seq_write($arg1, (const void *)$arg2, $arg3)")
   public static long bpf_seq_write(Ptr<seq_file> m, Ptr<?> data, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4218,7 +4219,7 @@ public final class BPFHelpers {
    * @return 0 on success, or a negative error in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_skb_load_bytes((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_skb_load_bytes((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static long bpf_skb_load_bytes(Ptr<?> skb, @Unsigned int offset, Ptr<?> to,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -4243,7 +4244,7 @@ public final class BPFHelpers {
    * @return 0 on success, or a negative error in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_skb_load_bytes_relative((const void*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_skb_load_bytes_relative((const void *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static long bpf_skb_load_bytes_relative(Ptr<?> skb, @Unsigned int offset, Ptr<?> to,
       @Unsigned int len, @Unsigned int start_header) {
     throw new MethodIsBPFRelatedFunction();
@@ -4410,7 +4411,7 @@ public final class BPFHelpers {
    * @return 0 on success, or a negative error in case of failure.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_skb_store_bytes($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bpf_skb_store_bytes($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static long bpf_skb_store_bytes(Ptr<__sk_buff> skb, @Unsigned int offset, Ptr<?> from,
       @Unsigned int len, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -4812,7 +4813,7 @@ public final class BPFHelpers {
    * <em>skops</em>\ <strong>-&gt;op</strong>.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_store_hdr_opt($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bpf_store_hdr_opt($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static long bpf_store_hdr_opt(Ptr<bpf_sock_ops> skops, Ptr<?> from, @Unsigned int len,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -5207,7 +5208,7 @@ public final class BPFHelpers {
    * @return A pointer pointing to the kernel percpu variable on this cpu.
    */
   @NotUsableInJava
-  @BuiltinBPFFunction("bpf_this_cpu_ptr((const void*)$arg1)")
+  @BuiltinBPFFunction("bpf_this_cpu_ptr((const void *)$arg1)")
   public static Ptr<?> bpf_this_cpu_ptr(Ptr<?> percpu_ptr) {
     throw new MethodIsBPFRelatedFunction();
   }

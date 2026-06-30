@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CreateDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__create_dir((const u8*)$arg1, $arg2, (const struct inode_operations*)$arg3)")
+  @BuiltinBPFFunction("__create_dir((const u8 *)$arg1, $arg2, (const struct inode_operations *)$arg3)")
   public static Ptr<dentry> __create_dir(String name, Ptr<dentry> parent,
       Ptr<inode_operations> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__create_synth_event((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__create_synth_event((const u8 *)$arg1, (const u8 *)$arg2)")
   public static int __create_synth_event(String name, String raw_fields) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1135,7 +1136,7 @@ public final class CreateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_boot_cache($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("create_boot_cache($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void create_boot_cache(Ptr<kmem_cache> s, String name, @Unsigned int size,
       @Unsigned @OriginalName("slab_flags_t") int flags, @Unsigned int useroffset,
       @Unsigned int usersize) {
@@ -1149,7 +1150,7 @@ public final class CreateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_constraints($arg1, $arg2, (const struct powercap_zone_constraint_ops*)$arg3)")
+  @BuiltinBPFFunction("create_constraints($arg1, $arg2, (const struct powercap_zone_constraint_ops *)$arg3)")
   public static int create_constraints(Ptr<powercap_zone> power_zone, int nr_constraints,
       Ptr<powercap_zone_constraint_ops> const_ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1163,7 +1164,7 @@ public final class CreateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_dyn_event((const u8*)$arg1)")
+  @BuiltinBPFFunction("create_dyn_event((const u8 *)$arg1)")
   public static int create_dyn_event(String raw_command) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1209,7 +1210,7 @@ public final class CreateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_files($arg1, $arg2, $arg3, $arg4, (const struct attribute_group*)$arg5, $arg6)")
+  @BuiltinBPFFunction("create_files($arg1, $arg2, $arg3, $arg4, (const struct attribute_group *)$arg5, $arg6)")
   public static int create_files(Ptr<kernfs_node> parent, Ptr<kobject> kobj, kuid_t uid, kgid_t gid,
       Ptr<attribute_group> grp, int update) {
     throw new MethodIsBPFRelatedFunction();
@@ -1358,25 +1359,25 @@ public final class CreateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_of_modalias((const struct acpi_device*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("create_of_modalias((const struct acpi_device *)$arg1, $arg2, $arg3)")
   public static int create_of_modalias(Ptr<acpi_device> acpi_dev, String modalias, int size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_or_delete_synth_event((const u8*)$arg1)")
+  @BuiltinBPFFunction("create_or_delete_synth_event((const u8 *)$arg1)")
   public static int create_or_delete_synth_event(String raw_command) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_or_delete_trace_kprobe((const u8*)$arg1)")
+  @BuiltinBPFFunction("create_or_delete_trace_kprobe((const u8 *)$arg1)")
   public static int create_or_delete_trace_kprobe(String raw_command) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_or_delete_trace_uprobe((const u8*)$arg1)")
+  @BuiltinBPFFunction("create_or_delete_trace_uprobe((const u8 *)$arg1)")
   public static int create_or_delete_trace_uprobe(String raw_command) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1408,7 +1409,7 @@ public final class CreateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_pnp_modalias((const struct acpi_device*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("create_pnp_modalias((const struct acpi_device *)$arg1, $arg2, $arg3)")
   public static int create_pnp_modalias(Ptr<acpi_device> acpi_dev, String modalias, int size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1420,7 +1421,7 @@ public final class CreateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_regulator($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("create_regulator($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<regulator> create_regulator(Ptr<regulator_dev> rdev, Ptr<device> dev,
       String supply_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1452,20 +1453,20 @@ public final class CreateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_state($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("create_state($arg1, (const u8 *)$arg2)")
   public static Ptr<pinctrl_state> create_state(Ptr<pinctrl> p, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("create_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long create_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_synth_event((const u8*)$arg1)")
+  @BuiltinBPFFunction("create_synth_event((const u8 *)$arg1)")
   public static int create_synth_event(String raw_command) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1503,7 +1504,7 @@ public final class CreateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("create_var($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("create_var($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static Ptr<hist_field> create_var(Ptr<hist_trigger_data> hist_data,
       Ptr<trace_event_file> file, String name, int size, String type) {
     throw new MethodIsBPFRelatedFunction();

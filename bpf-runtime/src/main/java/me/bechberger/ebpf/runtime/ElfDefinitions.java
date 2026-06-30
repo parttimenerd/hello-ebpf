@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,7 +1109,7 @@ public final class ElfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("elf_strtbl_add((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("elf_strtbl_add((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned int elf_strtbl_add(String name, Ptr<?> ehdr, char _class,
       Ptr<java.lang. @Unsigned Long> index) {
     throw new MethodIsBPFRelatedFunction();

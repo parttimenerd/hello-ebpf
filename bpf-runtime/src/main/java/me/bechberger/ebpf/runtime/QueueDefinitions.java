@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1116,7 +1117,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_add_random_store($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("queue_add_random_store($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int queue_add_random_store(Ptr<gendisk> disk, String page, @Unsigned long count,
       Ptr<queue_limits> lim) {
     throw new MethodIsBPFRelatedFunction();
@@ -1158,7 +1159,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("queue_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long queue_attr_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String page, @Unsigned long length) {
     throw new MethodIsBPFRelatedFunction();
@@ -1278,7 +1279,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_io_timeout_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("queue_io_timeout_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long queue_io_timeout_store(Ptr<gendisk> disk, String page,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1292,7 +1293,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_iostats_passthrough_store($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("queue_iostats_passthrough_store($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int queue_iostats_passthrough_store(Ptr<gendisk> disk, String page,
       @Unsigned long count, Ptr<queue_limits> lim) {
     throw new MethodIsBPFRelatedFunction();
@@ -1305,7 +1306,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_iostats_store($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("queue_iostats_store($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int queue_iostats_store(Ptr<gendisk> disk, String page, @Unsigned long count,
       Ptr<queue_limits> lim) {
     throw new MethodIsBPFRelatedFunction();
@@ -1330,7 +1331,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_limits_stack_bdev($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("queue_limits_stack_bdev($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static void queue_limits_stack_bdev(Ptr<queue_limits> t, Ptr<block_device> bdev,
       @Unsigned @OriginalName("sector_t") long offset, String pfx) {
     throw new MethodIsBPFRelatedFunction();
@@ -1376,7 +1377,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_max_discard_sectors_store($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("queue_max_discard_sectors_store($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int queue_max_discard_sectors_store(Ptr<gendisk> disk, String page,
       @Unsigned long count, Ptr<queue_limits> lim) {
     throw new MethodIsBPFRelatedFunction();
@@ -1432,7 +1433,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_max_sectors_store($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("queue_max_sectors_store($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int queue_max_sectors_store(Ptr<gendisk> disk, String page, @Unsigned long count,
       Ptr<queue_limits> lim) {
     throw new MethodIsBPFRelatedFunction();
@@ -1474,7 +1475,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_max_wzeroes_unmap_sectors_store($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("queue_max_wzeroes_unmap_sectors_store($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int queue_max_wzeroes_unmap_sectors_store(Ptr<gendisk> disk, String page,
       @Unsigned long count, Ptr<queue_limits> lim) {
     throw new MethodIsBPFRelatedFunction();
@@ -1494,7 +1495,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_nomerges_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("queue_nomerges_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long queue_nomerges_store(Ptr<gendisk> disk, String page,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1554,7 +1555,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_poll_delay_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("queue_poll_delay_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long queue_poll_delay_store(Ptr<gendisk> disk, String page,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1573,7 +1574,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_poll_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("queue_poll_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long queue_poll_store(Ptr<gendisk> disk, String page,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1592,7 +1593,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_ra_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("queue_ra_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long queue_ra_store(Ptr<gendisk> disk, String page,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1605,7 +1606,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_reply($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("queue_reply($arg1, (const void *)$arg2, $arg3)")
   public static int queue_reply(Ptr<list_head> queue, Ptr<?> data, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1617,7 +1618,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_requests_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("queue_requests_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long queue_requests_store(Ptr<gendisk> disk, String page,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1651,7 +1652,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_rotational_store($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("queue_rotational_store($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int queue_rotational_store(Ptr<gendisk> disk, String page, @Unsigned long count,
       Ptr<queue_limits> lim) {
     throw new MethodIsBPFRelatedFunction();
@@ -1665,7 +1666,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_rq_affinity_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("queue_rq_affinity_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long queue_rq_affinity_store(Ptr<gendisk> disk,
       String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1685,7 +1686,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_stable_writes_store($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("queue_stable_writes_store($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int queue_stable_writes_store(Ptr<gendisk> disk, String page, @Unsigned long count,
       Ptr<queue_limits> lim) {
     throw new MethodIsBPFRelatedFunction();
@@ -1728,7 +1729,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_stack_map_mem_usage((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("queue_stack_map_mem_usage((const struct bpf_map *)$arg1)")
   public static @Unsigned long queue_stack_map_mem_usage(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1754,7 +1755,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_state_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("queue_state_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long queue_state_write(Ptr<?> data, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1787,7 +1788,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_wb_lat_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("queue_wb_lat_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long queue_wb_lat_store(Ptr<gendisk> disk, String page,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1800,7 +1801,7 @@ public final class QueueDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("queue_wc_store($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("queue_wc_store($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int queue_wc_store(Ptr<gendisk> disk, String page, @Unsigned long count,
       Ptr<queue_limits> lim) {
     throw new MethodIsBPFRelatedFunction();

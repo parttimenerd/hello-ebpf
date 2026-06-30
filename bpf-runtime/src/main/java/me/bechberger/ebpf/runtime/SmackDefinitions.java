@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class SmackDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_add_opt($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("smack_add_opt($arg1, (const u8 *)$arg2, $arg3)")
   public static int smack_add_opt(int token, String s, Ptr<Ptr<?>> mnt_opts) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1135,26 +1136,26 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_cred_getlsmprop((const struct cred*)$arg1, $arg2)")
+  @BuiltinBPFFunction("smack_cred_getlsmprop((const struct cred *)$arg1, $arg2)")
   public static void smack_cred_getlsmprop(Ptr<cred> cred, Ptr<lsm_prop> prop) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_cred_getsecid((const struct cred*)$arg1, $arg2)")
+  @BuiltinBPFFunction("smack_cred_getsecid((const struct cred *)$arg1, $arg2)")
   public static void smack_cred_getsecid(Ptr<cred> cred, Ptr<java.lang. @Unsigned Integer> secid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_cred_prepare($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("smack_cred_prepare($arg1, (const struct cred *)$arg2, $arg3)")
   public static int smack_cred_prepare(Ptr<cred> _new, Ptr<cred> old,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_cred_transfer($arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("smack_cred_transfer($arg1, (const struct cred *)$arg2)")
   public static void smack_cred_transfer(Ptr<cred> _new, Ptr<cred> old) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1172,7 +1173,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_dentry_create_files_as($arg1, $arg2, $arg3, (const struct cred*)$arg4, $arg5)")
+  @BuiltinBPFFunction("smack_dentry_create_files_as($arg1, $arg2, $arg3, (const struct cred *)$arg4, $arg5)")
   public static int smack_dentry_create_files_as(Ptr<dentry> dentry, int mode, Ptr<qstr> name,
       Ptr<cred> old, Ptr<cred> _new) {
     throw new MethodIsBPFRelatedFunction();
@@ -1234,7 +1235,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_from_netlbl((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("smack_from_netlbl((const struct sock *)$arg1, $arg2, $arg3)")
   public static Ptr<smack_known> smack_from_netlbl(Ptr<sock> sk, @Unsigned short family,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
@@ -1265,7 +1266,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_getprocattr($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("smack_getprocattr($arg1, (const u8 *)$arg2, $arg3)")
   public static int smack_getprocattr(Ptr<task_struct> p, String name, Ptr<String> value) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1278,13 +1279,13 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inet_conn_request((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("smack_inet_conn_request((const struct sock *)$arg1, $arg2, $arg3)")
   public static int smack_inet_conn_request(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inet_csk_clone($arg1, (const struct request_sock*)$arg2)")
+  @BuiltinBPFFunction("smack_inet_csk_clone($arg1, (const struct request_sock *)$arg2)")
   public static void smack_inet_csk_clone(Ptr<sock> sk, Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1308,19 +1309,19 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inode_copy_up_xattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("smack_inode_copy_up_xattr($arg1, (const u8 *)$arg2)")
   public static int smack_inode_copy_up_xattr(Ptr<dentry> src, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inode_get_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("smack_inode_get_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static int smack_inode_get_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inode_getattr((const struct path*)$arg1)")
+  @BuiltinBPFFunction("smack_inode_getattr((const struct path *)$arg1)")
   public static int smack_inode_getattr(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1338,20 +1339,20 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inode_getsecurity($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("smack_inode_getsecurity($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int smack_inode_getsecurity(Ptr<mnt_idmap> idmap, Ptr<inode> inode, String name,
       Ptr<Ptr<?>> buffer, boolean alloc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inode_getxattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("smack_inode_getxattr($arg1, (const u8 *)$arg2)")
   public static int smack_inode_getxattr(Ptr<dentry> dentry, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inode_init_security($arg1, $arg2, (const struct qstr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("smack_inode_init_security($arg1, $arg2, (const struct qstr *)$arg3, $arg4, $arg5)")
   public static int smack_inode_init_security(Ptr<inode> inode, Ptr<inode> dir, Ptr<qstr> qstr,
       Ptr<xattr> xattrs, Ptr<java.lang.Integer> xattr_count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1384,21 +1385,21 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inode_post_setxattr($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("smack_inode_post_setxattr($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static void smack_inode_post_setxattr(Ptr<dentry> dentry, String name, Ptr<?> value,
       @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inode_remove_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("smack_inode_remove_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static int smack_inode_remove_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inode_removexattr($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("smack_inode_removexattr($arg1, $arg2, (const u8 *)$arg3)")
   public static int smack_inode_removexattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1417,7 +1418,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inode_set_acl($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("smack_inode_set_acl($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int smack_inode_set_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String acl_name,
       Ptr<posix_acl> kacl) {
     throw new MethodIsBPFRelatedFunction();
@@ -1437,14 +1438,14 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inode_setsecurity($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("smack_inode_setsecurity($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static int smack_inode_setsecurity(Ptr<inode> inode, String name, Ptr<?> value,
       @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inode_setxattr($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("smack_inode_setxattr($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int smack_inode_setxattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name,
       Ptr<?> value, @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1457,13 +1458,13 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_inode_xattr_skipcap((const u8*)$arg1)")
+  @BuiltinBPFFunction("smack_inode_xattr_skipcap((const u8 *)$arg1)")
   public static int smack_inode_xattr_skipcap(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_ip_output($arg1, $arg2, (const struct nf_hook_state*)$arg3)")
+  @BuiltinBPFFunction("smack_ip_output($arg1, $arg2, (const struct nf_hook_state *)$arg3)")
   public static @Unsigned int smack_ip_output(Ptr<?> priv, Ptr<sk_buff> skb,
       Ptr<nf_hook_state> state) {
     throw new MethodIsBPFRelatedFunction();
@@ -1494,7 +1495,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_ismaclabel((const u8*)$arg1)")
+  @BuiltinBPFFunction("smack_ismaclabel((const u8 *)$arg1)")
   public static int smack_ismaclabel(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1512,7 +1513,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_key_alloc($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("smack_key_alloc($arg1, (const struct cred *)$arg2, $arg3)")
   public static int smack_key_alloc(Ptr<key> key, Ptr<cred> cred, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1524,7 +1525,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_key_permission($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("smack_key_permission($arg1, (const struct cred *)$arg2, $arg3)")
   public static int smack_key_permission(
       @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> key_ref,
       Ptr<cred> cred, key_need_perm need_perm) {
@@ -1619,7 +1620,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_post_notification((const struct cred*)$arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("smack_post_notification((const struct cred *)$arg1, (const struct cred *)$arg2, $arg3)")
   public static int smack_post_notification(Ptr<cred> w_cred, Ptr<cred> cred,
       Ptr<watch_notification> n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1632,7 +1633,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_privileged_cred($arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("smack_privileged_cred($arg1, (const struct cred *)$arg2)")
   public static boolean smack_privileged_cred(int cap, Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1668,7 +1669,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_secctx_to_secid((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("smack_secctx_to_secid((const u8 *)$arg1, $arg2, $arg3)")
   public static int smack_secctx_to_secid(String secdata, @Unsigned int seclen,
       Ptr<java.lang. @Unsigned Integer> secid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1713,7 +1714,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_setprocattr((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("smack_setprocattr((const u8 *)$arg1, $arg2, $arg3)")
   public static int smack_setprocattr(String name, Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1751,7 +1752,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_sk_clone_security((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("smack_sk_clone_security((const struct sock *)$arg1, $arg2)")
   public static void smack_sk_clone_security(Ptr<sock> sk, Ptr<sock> newsk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1844,7 +1845,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_task_kill($arg1, $arg2, $arg3, (const struct cred*)$arg4)")
+  @BuiltinBPFFunction("smack_task_kill($arg1, $arg2, $arg3, (const struct cred *)$arg4)")
   public static int smack_task_kill(Ptr<task_struct> p, Ptr<kernel_siginfo> info, int sig,
       Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
@@ -1911,7 +1912,7 @@ public final class SmackDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("smack_uring_override_creds((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("smack_uring_override_creds((const struct cred *)$arg1)")
   public static int smack_uring_override_creds(Ptr<cred> _new) {
     throw new MethodIsBPFRelatedFunction();
   }

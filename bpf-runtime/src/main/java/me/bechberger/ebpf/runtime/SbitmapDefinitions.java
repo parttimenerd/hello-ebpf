@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class SbitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__sbitmap_weight((const struct sbitmap*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__sbitmap_weight((const struct sbitmap *)$arg1, $arg2)")
   public static @Unsigned int __sbitmap_weight(Ptr<sbitmap> sb, boolean set) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1116,7 +1117,7 @@ public final class SbitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sbitmap_any_bit_set((const struct sbitmap*)$arg1)")
+  @BuiltinBPFFunction("sbitmap_any_bit_set((const struct sbitmap *)$arg1)")
   public static boolean sbitmap_any_bit_set(Ptr<sbitmap> sb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1246,7 +1247,7 @@ public final class SbitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sbitmap_weight((const struct sbitmap*)$arg1)")
+  @BuiltinBPFFunction("sbitmap_weight((const struct sbitmap *)$arg1)")
   public static @Unsigned int sbitmap_weight(Ptr<sbitmap> sb) {
     throw new MethodIsBPFRelatedFunction();
   }

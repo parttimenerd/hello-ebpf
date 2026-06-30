@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,14 +1109,14 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_connection_find_match((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fwnode_connection_find_match((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<?> fwnode_connection_find_match(Ptr<fwnode_handle> fwnode, String con_id,
       Ptr<?> data, @OriginalName("devcon_match_fn_t") Ptr<?> match) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_connection_find_matches((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fwnode_connection_find_matches((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int fwnode_connection_find_matches(Ptr<fwnode_handle> fwnode, String con_id,
       Ptr<?> data, @OriginalName("devcon_match_fn_t") Ptr<?> match, Ptr<Ptr<?>> matches,
       @Unsigned int matches_len) {
@@ -1123,20 +1124,20 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_count_parents((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("fwnode_count_parents((const struct fwnode_handle *)$arg1)")
   public static @Unsigned int fwnode_count_parents(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_create_software_node((const struct property_entry*)$arg1, (const struct fwnode_handle*)$arg2)")
+  @BuiltinBPFFunction("fwnode_create_software_node((const struct property_entry *)$arg1, (const struct fwnode_handle *)$arg2)")
   public static Ptr<fwnode_handle> fwnode_create_software_node(Ptr<property_entry> properties,
       Ptr<fwnode_handle> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_devcon_matches((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fwnode_devcon_matches((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned int fwnode_devcon_matches(Ptr<fwnode_handle> fwnode, String con_id,
       Ptr<?> data, @OriginalName("devcon_match_fn_t") Ptr<?> match, Ptr<Ptr<?>> matches,
       @Unsigned int matches_len) {
@@ -1144,13 +1145,13 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_device_is_available((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("fwnode_device_is_available((const struct fwnode_handle *)$arg1)")
   public static boolean fwnode_device_is_available(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_find_reference((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("fwnode_find_reference((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<fwnode_handle> fwnode_find_reference(Ptr<fwnode_handle> fwnode, String name,
       @Unsigned int index) {
     throw new MethodIsBPFRelatedFunction();
@@ -1163,7 +1164,7 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_get_child_node_count((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("fwnode_get_child_node_count((const struct fwnode_handle *)$arg1)")
   public static @Unsigned int fwnode_get_child_node_count(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1175,40 +1176,40 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)fwnode_get_name((const struct fwnode_handle*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)fwnode_get_name((const struct fwnode_handle *)$arg1))")
   public static String fwnode_get_name(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)fwnode_get_name_prefix((const struct fwnode_handle*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)fwnode_get_name_prefix((const struct fwnode_handle *)$arg1))")
   public static String fwnode_get_name_prefix(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_get_named_child_node((const struct fwnode_handle*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fwnode_get_named_child_node((const struct fwnode_handle *)$arg1, (const u8 *)$arg2)")
   public static Ptr<fwnode_handle> fwnode_get_named_child_node(Ptr<fwnode_handle> fwnode,
       String childname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_get_named_child_node_count((const struct fwnode_handle*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fwnode_get_named_child_node_count((const struct fwnode_handle *)$arg1, (const u8 *)$arg2)")
   public static @Unsigned int fwnode_get_named_child_node_count(Ptr<fwnode_handle> fwnode,
       String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_get_next_available_child_node((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fwnode_get_next_available_child_node((const struct fwnode_handle *)$arg1, $arg2)")
   public static Ptr<fwnode_handle> fwnode_get_next_available_child_node(Ptr<fwnode_handle> fwnode,
       Ptr<fwnode_handle> child) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_get_next_child_node((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fwnode_get_next_child_node((const struct fwnode_handle *)$arg1, $arg2)")
   public static Ptr<fwnode_handle> fwnode_get_next_child_node(Ptr<fwnode_handle> fwnode,
       Ptr<fwnode_handle> child) {
     throw new MethodIsBPFRelatedFunction();
@@ -1221,7 +1222,7 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_get_next_parent_dev((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("fwnode_get_next_parent_dev((const struct fwnode_handle *)$arg1)")
   public static Ptr<device> fwnode_get_next_parent_dev(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1234,7 +1235,7 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_get_parent((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("fwnode_get_parent((const struct fwnode_handle *)$arg1)")
   public static Ptr<fwnode_handle> fwnode_get_parent(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1247,26 +1248,26 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_get_phy_mode((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("fwnode_get_phy_mode((const struct fwnode_handle *)$arg1)")
   public static int fwnode_get_phy_mode(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_get_phy_node((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("fwnode_get_phy_node((const struct fwnode_handle *)$arg1)")
   public static Ptr<fwnode_handle> fwnode_get_phy_node(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_gpiod_get_index($arg1, (const u8*)$arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("fwnode_gpiod_get_index($arg1, (const u8 *)$arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static Ptr<gpio_desc> fwnode_gpiod_get_index(Ptr<fwnode_handle> fwnode, String con_id,
       int index, gpiod_flags flags, String label) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_graph_devcon_matches((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fwnode_graph_devcon_matches((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned int fwnode_graph_devcon_matches(Ptr<fwnode_handle> fwnode, String con_id,
       Ptr<?> data, @OriginalName("devcon_match_fn_t") Ptr<?> match, Ptr<Ptr<?>> matches,
       @Unsigned int matches_len) {
@@ -1274,52 +1275,52 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_graph_get_endpoint_by_id((const struct fwnode_handle*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fwnode_graph_get_endpoint_by_id((const struct fwnode_handle *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<fwnode_handle> fwnode_graph_get_endpoint_by_id(Ptr<fwnode_handle> fwnode,
       @Unsigned int port, @Unsigned int endpoint, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_graph_get_endpoint_count((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fwnode_graph_get_endpoint_count((const struct fwnode_handle *)$arg1, $arg2)")
   public static @Unsigned int fwnode_graph_get_endpoint_count(Ptr<fwnode_handle> fwnode,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_graph_get_next_endpoint((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fwnode_graph_get_next_endpoint((const struct fwnode_handle *)$arg1, $arg2)")
   public static Ptr<fwnode_handle> fwnode_graph_get_next_endpoint(Ptr<fwnode_handle> fwnode,
       Ptr<fwnode_handle> prev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_graph_get_port_parent((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("fwnode_graph_get_port_parent((const struct fwnode_handle *)$arg1)")
   public static Ptr<fwnode_handle> fwnode_graph_get_port_parent(Ptr<fwnode_handle> endpoint) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_graph_get_remote_endpoint((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("fwnode_graph_get_remote_endpoint((const struct fwnode_handle *)$arg1)")
   public static Ptr<fwnode_handle> fwnode_graph_get_remote_endpoint(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_graph_get_remote_port((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("fwnode_graph_get_remote_port((const struct fwnode_handle *)$arg1)")
   public static Ptr<fwnode_handle> fwnode_graph_get_remote_port(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_graph_get_remote_port_parent((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("fwnode_graph_get_remote_port_parent((const struct fwnode_handle *)$arg1)")
   public static Ptr<fwnode_handle> fwnode_graph_get_remote_port_parent(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_graph_parse_endpoint((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fwnode_graph_parse_endpoint((const struct fwnode_handle *)$arg1, $arg2)")
   public static int fwnode_graph_parse_endpoint(Ptr<fwnode_handle> fwnode,
       Ptr<fwnode_endpoint> endpoint) {
     throw new MethodIsBPFRelatedFunction();
@@ -1344,13 +1345,13 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_irq_get((const struct fwnode_handle*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fwnode_irq_get((const struct fwnode_handle *)$arg1, $arg2)")
   public static int fwnode_irq_get(Ptr<fwnode_handle> fwnode, @Unsigned int index) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_irq_get_byname((const struct fwnode_handle*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fwnode_irq_get_byname((const struct fwnode_handle *)$arg1, (const u8 *)$arg2)")
   public static int fwnode_irq_get_byname(Ptr<fwnode_handle> fwnode, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1388,7 +1389,7 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_name_eq((const struct fwnode_handle*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fwnode_name_eq((const struct fwnode_handle *)$arg1, (const u8 *)$arg2)")
   public static boolean fwnode_name_eq(Ptr<fwnode_handle> fwnode, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1400,7 +1401,7 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_property_get_reference_args((const struct fwnode_handle*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fwnode_property_get_reference_args((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static int fwnode_property_get_reference_args(Ptr<fwnode_handle> fwnode, String prop,
       String nargs_prop, @Unsigned int nargs, @Unsigned int index,
       Ptr<fwnode_reference_args> args) {
@@ -1408,75 +1409,75 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_property_match_property_string((const struct fwnode_handle*)$arg1, (const u8*)$arg2, (const u8**)$arg3, $arg4)")
+  @BuiltinBPFFunction("fwnode_property_match_property_string((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, (const const u8 **)$arg3, $arg4)")
   public static int fwnode_property_match_property_string(Ptr<fwnode_handle> fwnode,
       String propname, Ptr<String> array, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_property_match_string((const struct fwnode_handle*)$arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("fwnode_property_match_string((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int fwnode_property_match_string(Ptr<fwnode_handle> fwnode, String propname,
       String string) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_property_present((const struct fwnode_handle*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fwnode_property_present((const struct fwnode_handle *)$arg1, (const u8 *)$arg2)")
   public static boolean fwnode_property_present(Ptr<fwnode_handle> fwnode, String propname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_property_read_bool((const struct fwnode_handle*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fwnode_property_read_bool((const struct fwnode_handle *)$arg1, (const u8 *)$arg2)")
   public static boolean fwnode_property_read_bool(Ptr<fwnode_handle> fwnode, String propname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_property_read_int_array((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fwnode_property_read_int_array((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int fwnode_property_read_int_array(Ptr<fwnode_handle> fwnode, String propname,
       @Unsigned int elem_size, Ptr<?> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_property_read_string((const struct fwnode_handle*)$arg1, (const u8*)$arg2, (const u8**)$arg3)")
+  @BuiltinBPFFunction("fwnode_property_read_string((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, (const u8**)$arg3)")
   public static int fwnode_property_read_string(Ptr<fwnode_handle> fwnode, String propname,
       Ptr<String> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_property_read_string_array((const struct fwnode_handle*)$arg1, (const u8*)$arg2, (const u8**)$arg3, $arg4)")
+  @BuiltinBPFFunction("fwnode_property_read_string_array((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, (const u8**)$arg3, $arg4)")
   public static int fwnode_property_read_string_array(Ptr<fwnode_handle> fwnode, String propname,
       Ptr<String> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_property_read_u16_array((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fwnode_property_read_u16_array((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int fwnode_property_read_u16_array(Ptr<fwnode_handle> fwnode, String propname,
       Ptr<java.lang. @Unsigned Short> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_property_read_u32_array((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fwnode_property_read_u32_array((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int fwnode_property_read_u32_array(Ptr<fwnode_handle> fwnode, String propname,
       Ptr<java.lang. @Unsigned Integer> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_property_read_u64_array((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fwnode_property_read_u64_array((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int fwnode_property_read_u64_array(Ptr<fwnode_handle> fwnode, String propname,
       Ptr<java.lang. @Unsigned Long> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_property_read_u8_array((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fwnode_property_read_u8_array((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int fwnode_property_read_u8_array(Ptr<fwnode_handle> fwnode, String propname,
       Ptr<java.lang.Character> val, @Unsigned long nval) {
     throw new MethodIsBPFRelatedFunction();
@@ -1489,7 +1490,7 @@ public final class FwnodeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fwnode_string($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("fwnode_string($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static String fwnode_string(String buf, String end, Ptr<fwnode_handle> fwnode,
       printf_spec spec, String fmt) {
     throw new MethodIsBPFRelatedFunction();

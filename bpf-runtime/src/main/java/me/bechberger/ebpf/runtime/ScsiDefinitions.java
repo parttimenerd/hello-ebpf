@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1113,13 +1114,13 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__scsi_dh_lookup((const u8*)$arg1)")
+  @BuiltinBPFFunction("__scsi_dh_lookup((const u8 *)$arg1)")
   public static Ptr<scsi_device_handler> __scsi_dh_lookup(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__scsi_format_command($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__scsi_format_command($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @Unsigned long __scsi_format_command(String logbuf, @Unsigned long logbuf_len,
       String cdb, @Unsigned long cdb_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1132,7 +1133,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__scsi_host_match($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("__scsi_host_match($arg1, (const void *)$arg2)")
   public static int __scsi_host_match(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1145,7 +1146,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__scsi_print_sense((const struct scsi_device*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__scsi_print_sense((const struct scsi_device *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void __scsi_print_sense(Ptr<scsi_device> sdev, String name, String sense_buffer,
       int sense_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1332,7 +1333,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_bus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("scsi_bus_match($arg1, (const struct device_driver *)$arg2)")
   public static int scsi_bus_match(Ptr<device> dev, Ptr<device_driver> gendrv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1374,7 +1375,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_bus_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("scsi_bus_uevent((const struct device *)$arg1, $arg2)")
   public static int scsi_bus_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1435,7 +1436,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_command_normalize_sense((const struct scsi_cmnd*)$arg1, $arg2)")
+  @BuiltinBPFFunction("scsi_command_normalize_sense((const struct scsi_cmnd *)$arg1, $arg2)")
   public static boolean scsi_command_normalize_sense(Ptr<scsi_cmnd> cmd,
       Ptr<scsi_sense_hdr> sshdr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1472,7 +1473,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_dev_info_add_list($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("scsi_dev_info_add_list($arg1, (const u8 *)$arg2)")
   public static int scsi_dev_info_add_list(scsi_devinfo_key key, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1491,7 +1492,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_dev_info_list_find((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("scsi_dev_info_list_find((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<scsi_dev_info_list> scsi_dev_info_list_find(String vendor, String model,
       scsi_devinfo_key key) {
     throw new MethodIsBPFRelatedFunction();
@@ -1610,7 +1611,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_dh_attach($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("scsi_dh_attach($arg1, (const u8 *)$arg2)")
   public static int scsi_dh_attach(Ptr<request_queue> q, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1642,7 +1643,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_dh_set_params($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("scsi_dh_set_params($arg1, (const u8 *)$arg2)")
   public static int scsi_dh_set_params(Ptr<request_queue> q, String params) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1830,7 +1831,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_execute_cmd($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const struct scsi_exec_args*)$arg8)")
+  @BuiltinBPFFunction("scsi_execute_cmd($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const struct scsi_exec_args *)$arg8)")
   public static int scsi_execute_cmd(Ptr<scsi_device> sdev, String cmd,
       @Unsigned @OriginalName("blk_opf_t") int opf, Ptr<?> buffer, @Unsigned int bufflen,
       int timeout, int ml_retries, Ptr<scsi_exec_args> args) {
@@ -1898,7 +1899,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_format_opcode_name($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("scsi_format_opcode_name($arg1, $arg2, (const u8 *)$arg3)")
   public static @Unsigned long scsi_format_opcode_name(String buffer, @Unsigned long buf_len,
       String cdbp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1911,27 +1912,27 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_get_cdrom_generic_arg($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("scsi_get_cdrom_generic_arg($arg1, (const void *)$arg2)")
   public static int scsi_get_cdrom_generic_arg(Ptr<cdrom_generic_command> cgc, Ptr<?> arg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_get_device_flags($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("scsi_get_device_flags($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static @Unsigned @OriginalName("blist_flags_t") long scsi_get_device_flags(
       Ptr<scsi_device> sdev, String vendor, String model) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_get_device_flags_keyed($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("scsi_get_device_flags_keyed($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static @Unsigned @OriginalName("blist_flags_t") long scsi_get_device_flags_keyed(
       Ptr<scsi_device> sdev, String vendor, String model, scsi_devinfo_key key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_get_sense_info_fld((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("scsi_get_sense_info_fld((const u8 *)$arg1, $arg2, $arg3)")
   public static boolean scsi_get_sense_info_fld(Ptr<java.lang.Character> sense_buffer, int sb_len,
       Ptr<java.lang. @Unsigned Long> info_out) {
     throw new MethodIsBPFRelatedFunction();
@@ -1968,7 +1969,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_host_alloc((const struct scsi_host_template*)$arg1, $arg2)")
+  @BuiltinBPFFunction("scsi_host_alloc((const struct scsi_host_template *)$arg1, $arg2)")
   public static Ptr<Scsi_Host> scsi_host_alloc(Ptr<scsi_host_template> sht, int privsize) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2163,19 +2164,19 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_is_host_device((const struct device*)$arg1)")
+  @BuiltinBPFFunction("scsi_is_host_device((const struct device *)$arg1)")
   public static int scsi_is_host_device(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_is_sdev_device((const struct device*)$arg1)")
+  @BuiltinBPFFunction("scsi_is_sdev_device((const struct device *)$arg1)")
   public static int scsi_is_sdev_device(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_is_target_device((const struct device*)$arg1)")
+  @BuiltinBPFFunction("scsi_is_target_device((const struct device *)$arg1)")
   public static int scsi_is_target_device(Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2206,14 +2207,14 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_log_print_sense((const struct scsi_device*)$arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("scsi_log_print_sense((const struct scsi_device *)$arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static void scsi_log_print_sense(Ptr<scsi_device> sdev, String name, int tag,
       String sense_buffer, int sense_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_log_print_sense_hdr((const struct scsi_device*)$arg1, (const u8*)$arg2, $arg3, (const struct scsi_sense_hdr*)$arg4)")
+  @BuiltinBPFFunction("scsi_log_print_sense_hdr((const struct scsi_device *)$arg1, (const u8 *)$arg2, $arg3, (const struct scsi_sense_hdr *)$arg4)")
   public static void scsi_log_print_sense_hdr(Ptr<scsi_device> sdev, String name, int tag,
       Ptr<scsi_sense_hdr> sshdr) {
     throw new MethodIsBPFRelatedFunction();
@@ -2351,7 +2352,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_normalize_sense((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("scsi_normalize_sense((const u8 *)$arg1, $arg2, $arg3)")
   public static boolean scsi_normalize_sense(Ptr<java.lang.Character> sense_buffer, int sb_len,
       Ptr<scsi_sense_hdr> sshdr) {
     throw new MethodIsBPFRelatedFunction();
@@ -2390,19 +2391,19 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_print_result((const struct scsi_cmnd*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("scsi_print_result((const struct scsi_cmnd *)$arg1, (const u8 *)$arg2, $arg3)")
   public static void scsi_print_result(Ptr<scsi_cmnd> cmd, String msg, int disposition) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_print_sense((const struct scsi_cmnd*)$arg1)")
+  @BuiltinBPFFunction("scsi_print_sense((const struct scsi_cmnd *)$arg1)")
   public static void scsi_print_sense(Ptr<scsi_cmnd> cmd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_print_sense_hdr((const struct scsi_device*)$arg1, (const u8*)$arg2, (const struct scsi_sense_hdr*)$arg3)")
+  @BuiltinBPFFunction("scsi_print_sense_hdr((const struct scsi_device *)$arg1, (const u8 *)$arg2, (const struct scsi_sense_hdr *)$arg3)")
   public static void scsi_print_sense_hdr(Ptr<scsi_device> sdev, String name,
       Ptr<scsi_sense_hdr> sshdr) {
     throw new MethodIsBPFRelatedFunction();
@@ -2429,13 +2430,13 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_proc_hostdir_add((const struct scsi_host_template*)$arg1)")
+  @BuiltinBPFFunction("scsi_proc_hostdir_add((const struct scsi_host_template *)$arg1)")
   public static int scsi_proc_hostdir_add(Ptr<scsi_host_template> sht) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_proc_hostdir_rm((const struct scsi_host_template*)$arg1)")
+  @BuiltinBPFFunction("scsi_proc_hostdir_rm((const struct scsi_host_template *)$arg1)")
   public static void scsi_proc_hostdir_rm(Ptr<scsi_host_template> sht) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2447,7 +2448,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_queue_rq($arg1, (const struct blk_mq_queue_data*)$arg2)")
+  @BuiltinBPFFunction("scsi_queue_rq($arg1, (const struct blk_mq_queue_data *)$arg2)")
   public static @OriginalName("blk_status_t") char scsi_queue_rq(Ptr<blk_mq_hw_ctx> hctx,
       Ptr<blk_mq_queue_data> bd) {
     throw new MethodIsBPFRelatedFunction();
@@ -2640,7 +2641,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_sdev_bin_attr_is_visible($arg1, (const struct bin_attribute*)$arg2, $arg3)")
+  @BuiltinBPFFunction("scsi_sdev_bin_attr_is_visible($arg1, (const struct bin_attribute *)$arg2, $arg3)")
   public static @Unsigned @OriginalName("umode_t") short scsi_sdev_bin_attr_is_visible(
       Ptr<kobject> kobj, Ptr<bin_attribute> attr, int i) {
     throw new MethodIsBPFRelatedFunction();
@@ -2654,7 +2655,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)scsi_sense_desc_find((const u8*)$arg1, $arg2, $arg3))")
+  @BuiltinBPFFunction("((const u8*)scsi_sense_desc_find((const u8 *)$arg1, $arg2, $arg3))")
   public static Ptr<java.lang.Character> scsi_sense_desc_find(Ptr<java.lang.Character> sense_buffer,
       int sb_len, int desc_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -2810,7 +2811,7 @@ public final class ScsiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scsi_template_proc_dir((const struct scsi_host_template*)$arg1)")
+  @BuiltinBPFFunction("scsi_template_proc_dir((const struct scsi_host_template *)$arg1)")
   public static Ptr<proc_dir_entry> scsi_template_proc_dir(Ptr<scsi_host_template> sht) {
     throw new MethodIsBPFRelatedFunction();
   }

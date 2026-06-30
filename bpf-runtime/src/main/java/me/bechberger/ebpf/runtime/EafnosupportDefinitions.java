@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1111,7 +1112,7 @@ public final class EafnosupportDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eafnosupport_fib6_select_path((const struct net*)$arg1, $arg2, $arg3, $arg4, $arg5, (const struct sk_buff*)$arg6, $arg7)")
+  @BuiltinBPFFunction("eafnosupport_fib6_select_path((const struct net *)$arg1, $arg2, $arg3, $arg4, $arg5, (const struct sk_buff *)$arg6, $arg7)")
   public static void eafnosupport_fib6_select_path(Ptr<net> net, Ptr<fib6_result> res,
       Ptr<flowi6> fl6, int oif, boolean have_oif_match, Ptr<sk_buff> skb, int strict) {
     throw new MethodIsBPFRelatedFunction();
@@ -1131,21 +1132,21 @@ public final class EafnosupportDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eafnosupport_ip6_mtu_from_fib6((const struct fib6_result*)$arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3)")
+  @BuiltinBPFFunction("eafnosupport_ip6_mtu_from_fib6((const struct fib6_result *)$arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3)")
   public static @Unsigned int eafnosupport_ip6_mtu_from_fib6(Ptr<fib6_result> res,
       Ptr<in6_addr> daddr, Ptr<in6_addr> saddr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eafnosupport_ipv6_dev_find($arg1, (const struct in6_addr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("eafnosupport_ipv6_dev_find($arg1, (const struct in6_addr *)$arg2, $arg3)")
   public static Ptr<net_device> eafnosupport_ipv6_dev_find(Ptr<net> net, Ptr<in6_addr> addr,
       Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("eafnosupport_ipv6_dst_lookup_flow($arg1, (const struct sock*)$arg2, $arg3, (const struct in6_addr*)$arg4)")
+  @BuiltinBPFFunction("eafnosupport_ipv6_dst_lookup_flow($arg1, (const struct sock *)$arg2, $arg3, (const struct in6_addr *)$arg4)")
   public static Ptr<dst_entry> eafnosupport_ipv6_dst_lookup_flow(Ptr<net> net, Ptr<sock> sk,
       Ptr<flowi6> fl6, Ptr<in6_addr> final_dst) {
     throw new MethodIsBPFRelatedFunction();

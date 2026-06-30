@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1213,7 +1214,7 @@ public final class GenphyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genphy_c45_plca_set_cfg($arg1, (const struct phy_plca_cfg*)$arg2)")
+  @BuiltinBPFFunction("genphy_c45_plca_set_cfg($arg1, (const struct phy_plca_cfg *)$arg2)")
   public static int genphy_c45_plca_set_cfg(Ptr<phy_device> phydev, Ptr<phy_plca_cfg> plca_cfg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1329,7 +1330,7 @@ public final class GenphyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genphy_config_advert($arg1, (const long unsigned int*)$arg2)")
+  @BuiltinBPFFunction("genphy_config_advert($arg1, (const long unsigned int *)$arg2)")
   public static int genphy_config_advert(Ptr<phy_device> phydev,
       Ptr<java.lang. @Unsigned Long> advert) {
     throw new MethodIsBPFRelatedFunction();
@@ -1349,7 +1350,7 @@ public final class GenphyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("genphy_match_phy_device($arg1, (const struct phy_driver*)$arg2)")
+  @BuiltinBPFFunction("genphy_match_phy_device($arg1, (const struct phy_driver *)$arg2)")
   public static int genphy_match_phy_device(Ptr<phy_device> phydev, Ptr<phy_driver> phydrv) {
     throw new MethodIsBPFRelatedFunction();
   }

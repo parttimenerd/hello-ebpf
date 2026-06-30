@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class PinconfDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("pinconf_apply_setting((const struct pinctrl_setting*)$arg1)")
+  @BuiltinBPFFunction("pinconf_apply_setting((const struct pinctrl_setting *)$arg1)")
   public static int pinconf_apply_setting(Ptr<pinctrl_setting> setting) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1102,7 +1103,7 @@ public final class PinconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinconf_free_setting((const struct pinctrl_setting*)$arg1)")
+  @BuiltinBPFFunction("pinconf_free_setting((const struct pinctrl_setting *)$arg1)")
   public static void pinconf_free_setting(Ptr<pinctrl_setting> setting) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1115,7 +1116,7 @@ public final class PinconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinconf_generic_dump_one($arg1, $arg2, (const u8*)$arg3, $arg4, (const struct pin_config_item*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("pinconf_generic_dump_one($arg1, $arg2, (const u8 *)$arg3, $arg4, (const struct pin_config_item *)$arg5, $arg6, $arg7)")
   public static void pinconf_generic_dump_one(Ptr<pinctrl_dev> pctldev, Ptr<seq_file> s,
       String gname, @Unsigned int pin, Ptr<pin_config_item> items, int nitems,
       Ptr<java.lang.Integer> print_sep) {
@@ -1123,7 +1124,7 @@ public final class PinconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinconf_generic_dump_pins($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("pinconf_generic_dump_pins($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void pinconf_generic_dump_pins(Ptr<pinctrl_dev> pctldev, Ptr<seq_file> s,
       String gname, @Unsigned int pin) {
     throw new MethodIsBPFRelatedFunction();
@@ -1148,7 +1149,7 @@ public final class PinconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinconf_map_to_setting((const struct pinctrl_map*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pinconf_map_to_setting((const struct pinctrl_map *)$arg1, $arg2)")
   public static int pinconf_map_to_setting(Ptr<pinctrl_map> map, Ptr<pinctrl_setting> setting) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1180,19 +1181,19 @@ public final class PinconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinconf_show_map($arg1, (const struct pinctrl_map*)$arg2)")
+  @BuiltinBPFFunction("pinconf_show_map($arg1, (const struct pinctrl_map *)$arg2)")
   public static void pinconf_show_map(Ptr<seq_file> s, Ptr<pinctrl_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinconf_show_setting($arg1, (const struct pinctrl_setting*)$arg2)")
+  @BuiltinBPFFunction("pinconf_show_setting($arg1, (const struct pinctrl_setting *)$arg2)")
   public static void pinconf_show_setting(Ptr<seq_file> s, Ptr<pinctrl_setting> setting) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pinconf_validate_map((const struct pinctrl_map*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pinconf_validate_map((const struct pinctrl_map *)$arg1, $arg2)")
   public static int pinconf_validate_map(Ptr<pinctrl_map> map, int i) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class ResetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__reset_control_get($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__reset_control_get($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<reset_control> __reset_control_get(Ptr<device> dev, String id, int index,
       reset_control_flags flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1336,7 +1337,7 @@ public final class ResetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("reset_method_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("reset_method_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long reset_method_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1404,7 +1405,7 @@ public final class ResetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("reset_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("reset_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long reset_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1417,7 +1418,7 @@ public final class ResetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("reset_subordinate_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("reset_subordinate_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long reset_subordinate_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

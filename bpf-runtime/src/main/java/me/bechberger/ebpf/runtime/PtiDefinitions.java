@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1144,7 +1145,7 @@ public final class PtiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pti_print_if_insecure((const u8*)$arg1)")
+  @BuiltinBPFFunction("pti_print_if_insecure((const u8 *)$arg1)")
   public static void pti_print_if_insecure(String reason) {
     throw new MethodIsBPFRelatedFunction();
   }

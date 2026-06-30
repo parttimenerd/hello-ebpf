@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1110,7 +1111,7 @@ public final class FillDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fill_analog_mode($arg1, $arg2, (const struct analog_parameters*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("fill_analog_mode($arg1, $arg2, (const struct analog_parameters *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int fill_analog_mode(Ptr<drm_device> dev, Ptr<drm_display_mode> mode,
       Ptr<analog_parameters> params, @Unsigned long pixel_clock_hz, @Unsigned int hactive,
       @Unsigned int vactive, boolean interlace) {
@@ -1148,7 +1149,7 @@ public final class FillDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fill_kobj_path((const struct kobject*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("fill_kobj_path((const struct kobject *)$arg1, $arg2, $arg3)")
   public static int fill_kobj_path(Ptr<kobject> kobj, String path, int length) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1270,7 +1271,7 @@ public final class FillDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fill_rwbs($arg1, (const struct blk_io_trace*)$arg2)")
+  @BuiltinBPFFunction("fill_rwbs($arg1, (const struct blk_io_trace *)$arg2)")
   public static void fill_rwbs(String rwbs, Ptr<blk_io_trace> t) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1295,14 +1296,14 @@ public final class FillDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fill_thread_core_info($arg1, (const struct user_regset_view*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fill_thread_core_info($arg1, (const struct user_regset_view *)$arg2, $arg3, $arg4)")
   public static int fill_thread_core_info(Ptr<elf_thread_core_info> t, Ptr<user_regset_view> view,
       long signr, Ptr<elf_note_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fill_user_desc($arg1, $arg2, (const struct desc_struct*)$arg3)")
+  @BuiltinBPFFunction("fill_user_desc($arg1, $arg2, (const struct desc_struct *)$arg3)")
   public static void fill_user_desc(Ptr<user_desc> info, int idx, Ptr<desc_struct> desc) {
     throw new MethodIsBPFRelatedFunction();
   }

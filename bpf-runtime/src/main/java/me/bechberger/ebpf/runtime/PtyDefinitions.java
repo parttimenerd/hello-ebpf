@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1164,7 +1165,7 @@ public final class PtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pty_set_termios($arg1, (const struct ktermios*)$arg2)")
+  @BuiltinBPFFunction("pty_set_termios($arg1, (const struct ktermios *)$arg2)")
   public static void pty_set_termios(Ptr<tty_struct> tty, Ptr<ktermios> old_termios) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1225,7 +1226,7 @@ public final class PtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pty_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pty_write($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long pty_write(Ptr<tty_struct> tty,
       Ptr<java.lang.Character> buf, @Unsigned long c) {
     throw new MethodIsBPFRelatedFunction();

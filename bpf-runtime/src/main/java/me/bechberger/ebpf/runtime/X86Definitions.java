@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1334,13 +1335,13 @@ public final class X86Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct x86_cpu_id*)x86_match_cpu((const struct x86_cpu_id*)$arg1))")
+  @BuiltinBPFFunction("((const struct x86_cpu_id*)x86_match_cpu((const struct x86_cpu_id *)$arg1))")
   public static Ptr<x86_cpu_id> x86_match_cpu(Ptr<x86_cpu_id> match) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x86_match_min_microcode_rev((const struct x86_cpu_id*)$arg1)")
+  @BuiltinBPFFunction("x86_match_min_microcode_rev((const struct x86_cpu_id *)$arg1)")
   public static boolean x86_match_min_microcode_rev(Ptr<x86_cpu_id> table) {
     throw new MethodIsBPFRelatedFunction();
   }

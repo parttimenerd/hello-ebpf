@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1123,7 +1124,7 @@ public final class NvmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_add_one_cell($arg1, (const struct nvmem_cell_info*)$arg2)")
+  @BuiltinBPFFunction("nvmem_add_one_cell($arg1, (const struct nvmem_cell_info *)$arg2)")
   public static int nvmem_add_one_cell(Ptr<nvmem_device> nvmem, Ptr<nvmem_cell_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1143,21 +1144,21 @@ public final class NvmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_bin_attr_is_visible($arg1, (const struct bin_attribute*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nvmem_bin_attr_is_visible($arg1, (const struct bin_attribute *)$arg2, $arg3)")
   public static @Unsigned @OriginalName("umode_t") short nvmem_bin_attr_is_visible(
       Ptr<kobject> kobj, Ptr<bin_attribute> attr, int i) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_bin_attr_size($arg1, (const struct bin_attribute*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nvmem_bin_attr_size($arg1, (const struct bin_attribute *)$arg2, $arg3)")
   public static @Unsigned long nvmem_bin_attr_size(Ptr<kobject> kobj, Ptr<bin_attribute> attr,
       int i) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_cell_attr_read($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("nvmem_cell_attr_read($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long nvmem_cell_attr_read(Ptr<file> filp,
       Ptr<kobject> kobj, Ptr<bin_attribute> attr, String buf, @OriginalName("loff_t") long pos,
       @Unsigned long count) {
@@ -1165,19 +1166,19 @@ public final class NvmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_cell_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("nvmem_cell_get($arg1, (const u8 *)$arg2)")
   public static Ptr<nvmem_cell> nvmem_cell_get(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_cell_get_from_lookup($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("nvmem_cell_get_from_lookup($arg1, (const u8 *)$arg2)")
   public static Ptr<nvmem_cell> nvmem_cell_get_from_lookup(Ptr<device> dev, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_cell_info_to_nvmem_cell_entry_nodup($arg1, (const struct nvmem_cell_info*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nvmem_cell_info_to_nvmem_cell_entry_nodup($arg1, (const struct nvmem_cell_info *)$arg2, $arg3)")
   public static int nvmem_cell_info_to_nvmem_cell_entry_nodup(Ptr<nvmem_device> nvmem,
       Ptr<nvmem_cell_info> info, Ptr<nvmem_cell_entry> cell) {
     throw new MethodIsBPFRelatedFunction();
@@ -1203,56 +1204,56 @@ public final class NvmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_cell_read_common($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("nvmem_cell_read_common($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int nvmem_cell_read_common(Ptr<device> dev, String cell_id, Ptr<?> val,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_cell_read_u16($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nvmem_cell_read_u16($arg1, (const u8 *)$arg2, $arg3)")
   public static int nvmem_cell_read_u16(Ptr<device> dev, String cell_id,
       Ptr<java.lang. @Unsigned Short> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_cell_read_u32($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nvmem_cell_read_u32($arg1, (const u8 *)$arg2, $arg3)")
   public static int nvmem_cell_read_u32(Ptr<device> dev, String cell_id,
       Ptr<java.lang. @Unsigned Integer> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_cell_read_u64($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nvmem_cell_read_u64($arg1, (const u8 *)$arg2, $arg3)")
   public static int nvmem_cell_read_u64(Ptr<device> dev, String cell_id,
       Ptr<java.lang. @Unsigned Long> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_cell_read_u8($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nvmem_cell_read_u8($arg1, (const u8 *)$arg2, $arg3)")
   public static int nvmem_cell_read_u8(Ptr<device> dev, String cell_id,
       Ptr<java.lang.Character> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)nvmem_cell_read_variable_common($arg1, (const u8*)$arg2, $arg3, $arg4))")
+  @BuiltinBPFFunction("((const void*)nvmem_cell_read_variable_common($arg1, (const u8 *)$arg2, $arg3, $arg4))")
   public static Ptr<?> nvmem_cell_read_variable_common(Ptr<device> dev, String cell_id,
       @Unsigned long max_len, Ptr<java.lang. @Unsigned Long> len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_cell_read_variable_le_u32($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nvmem_cell_read_variable_le_u32($arg1, (const u8 *)$arg2, $arg3)")
   public static int nvmem_cell_read_variable_le_u32(Ptr<device> dev, String cell_id,
       Ptr<java.lang. @Unsigned Integer> val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_cell_read_variable_le_u64($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nvmem_cell_read_variable_le_u64($arg1, (const u8 *)$arg2, $arg3)")
   public static int nvmem_cell_read_variable_le_u64(Ptr<device> dev, String cell_id,
       Ptr<java.lang. @Unsigned Long> val) {
     throw new MethodIsBPFRelatedFunction();
@@ -1265,7 +1266,7 @@ public final class NvmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_create_cell($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nvmem_create_cell($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<nvmem_cell> nvmem_create_cell(Ptr<nvmem_cell_entry> entry, String id,
       int index) {
     throw new MethodIsBPFRelatedFunction();
@@ -1311,7 +1312,7 @@ public final class NvmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_device_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("nvmem_device_get($arg1, (const u8 *)$arg2)")
   public static Ptr<nvmem_device> nvmem_device_get(Ptr<device> dev, String dev_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1330,7 +1331,7 @@ public final class NvmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_device_remove_all_cells((const struct nvmem_device*)$arg1)")
+  @BuiltinBPFFunction("nvmem_device_remove_all_cells((const struct nvmem_device *)$arg1)")
   public static void nvmem_device_remove_all_cells(Ptr<nvmem_device> nvmem) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1386,7 +1387,7 @@ public final class NvmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nvmem_register((const struct nvmem_config*)$arg1)")
+  @BuiltinBPFFunction("nvmem_register((const struct nvmem_config *)$arg1)")
   public static Ptr<nvmem_device> nvmem_register(Ptr<nvmem_config> config) {
     throw new MethodIsBPFRelatedFunction();
   }

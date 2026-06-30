@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,35 +1091,35 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class RegmapDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__regmap_init($arg1, (const struct regmap_bus*)$arg2, $arg3, (const struct regmap_config*)$arg4, $arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("__regmap_init($arg1, (const struct regmap_bus *)$arg2, $arg3, (const struct regmap_config *)$arg4, $arg5, (const u8 *)$arg6)")
   public static Ptr<regmap> __regmap_init(Ptr<device> dev, Ptr<regmap_bus> bus, Ptr<?> bus_context,
       Ptr<regmap_config> config, Ptr<lock_class_key> lock_key, String lock_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__regmap_init_i2c($arg1, (const struct regmap_config*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__regmap_init_i2c($arg1, (const struct regmap_config *)$arg2, $arg3, (const u8 *)$arg4)")
   public static Ptr<regmap> __regmap_init_i2c(Ptr<i2c_client> i2c, Ptr<regmap_config> config,
       Ptr<lock_class_key> lock_key, String lock_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__regmap_init_mmio_clk($arg1, (const u8*)$arg2, $arg3, (const struct regmap_config*)$arg4, $arg5, (const u8*)$arg6)")
+  @BuiltinBPFFunction("__regmap_init_mmio_clk($arg1, (const u8 *)$arg2, $arg3, (const struct regmap_config *)$arg4, $arg5, (const u8 *)$arg6)")
   public static Ptr<regmap> __regmap_init_mmio_clk(Ptr<device> dev, String clk_id, Ptr<?> regs,
       Ptr<regmap_config> config, Ptr<lock_class_key> lock_key, String lock_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__regmap_init_spi($arg1, (const struct regmap_config*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__regmap_init_spi($arg1, (const struct regmap_config *)$arg2, $arg3, (const u8 *)$arg4)")
   public static Ptr<regmap> __regmap_init_spi(Ptr<spi_device> spi, Ptr<regmap_config> config,
       Ptr<lock_class_key> lock_key, String lock_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_regmap_bulk_read($arg1, $arg2, (const unsigned int*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("_regmap_bulk_read($arg1, $arg2, (const unsigned int *)$arg3, $arg4, $arg5)")
   public static int _regmap_bulk_read(Ptr<regmap> map, @Unsigned int reg,
       Ptr<java.lang. @Unsigned Integer> regs, Ptr<?> val, @Unsigned long val_count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1158,7 +1159,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_regmap_multi_reg_write($arg1, (const struct reg_sequence*)$arg2, $arg3)")
+  @BuiltinBPFFunction("_regmap_multi_reg_write($arg1, (const struct reg_sequence *)$arg2, $arg3)")
   public static int _regmap_multi_reg_write(Ptr<regmap> map, Ptr<reg_sequence> regs,
       @Unsigned long num_regs) {
     throw new MethodIsBPFRelatedFunction();
@@ -1172,7 +1173,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_regmap_raw_multi_reg_write($arg1, (const struct reg_sequence*)$arg2, $arg3)")
+  @BuiltinBPFFunction("_regmap_raw_multi_reg_write($arg1, (const struct reg_sequence *)$arg2, $arg3)")
   public static int _regmap_raw_multi_reg_write(Ptr<regmap> map, Ptr<reg_sequence> regs,
       @Unsigned long num_regs) {
     throw new MethodIsBPFRelatedFunction();
@@ -1186,14 +1187,14 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_regmap_raw_write($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("_regmap_raw_write($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static int _regmap_raw_write(Ptr<regmap> map, @Unsigned int reg, Ptr<?> val,
       @Unsigned long val_len, boolean noinc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_regmap_raw_write_impl($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("_regmap_raw_write_impl($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static int _regmap_raw_write_impl(Ptr<regmap> map, @Unsigned int reg, Ptr<?> val,
       @Unsigned long val_len, boolean noinc) {
     throw new MethodIsBPFRelatedFunction();
@@ -1240,14 +1241,14 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_add_irq_chip($arg1, $arg2, $arg3, $arg4, (const struct regmap_irq_chip*)$arg5, $arg6)")
+  @BuiltinBPFFunction("regmap_add_irq_chip($arg1, $arg2, $arg3, $arg4, (const struct regmap_irq_chip *)$arg5, $arg6)")
   public static int regmap_add_irq_chip(Ptr<regmap> map, int irq, int irq_flags, int irq_base,
       Ptr<regmap_irq_chip> chip, Ptr<Ptr<regmap_irq_chip_data>> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_add_irq_chip_fwnode($arg1, $arg2, $arg3, $arg4, $arg5, (const struct regmap_irq_chip*)$arg6, $arg7)")
+  @BuiltinBPFFunction("regmap_add_irq_chip_fwnode($arg1, $arg2, $arg3, $arg4, $arg5, (const struct regmap_irq_chip *)$arg6, $arg7)")
   public static int regmap_add_irq_chip_fwnode(Ptr<fwnode_handle> fwnode, Ptr<regmap> map, int irq,
       int irq_flags, int irq_base, Ptr<regmap_irq_chip> chip, Ptr<Ptr<regmap_irq_chip_data>> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1266,7 +1267,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_attach_dev($arg1, $arg2, (const struct regmap_config*)$arg3)")
+  @BuiltinBPFFunction("regmap_attach_dev($arg1, $arg2, (const struct regmap_config *)$arg3)")
   public static int regmap_attach_dev(Ptr<device> dev, Ptr<regmap> map, Ptr<regmap_config> config) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1279,21 +1280,21 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_bulk_write($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("regmap_bulk_write($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int regmap_bulk_write(Ptr<regmap> map, @Unsigned int reg, Ptr<?> val,
       @Unsigned long val_count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_cache_bypass_write_file($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("regmap_cache_bypass_write_file($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long regmap_cache_bypass_write_file(Ptr<file> file,
       String user_buf, @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_cache_only_write_file($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("regmap_cache_only_write_file($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long regmap_cache_only_write_file(Ptr<file> file,
       String user_buf, @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1312,7 +1313,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_check_range_table($arg1, $arg2, (const struct regmap_access_table*)$arg3)")
+  @BuiltinBPFFunction("regmap_check_range_table($arg1, $arg2, (const struct regmap_access_table *)$arg3)")
   public static boolean regmap_check_range_table(Ptr<regmap> map, @Unsigned int reg,
       Ptr<regmap_access_table> table) {
     throw new MethodIsBPFRelatedFunction();
@@ -1361,7 +1362,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_field_bulk_alloc($arg1, $arg2, (const struct reg_field*)$arg3, $arg4)")
+  @BuiltinBPFFunction("regmap_field_bulk_alloc($arg1, $arg2, (const struct reg_field *)$arg3, $arg4)")
   public static int regmap_field_bulk_alloc(Ptr<regmap> regmap, Ptr<Ptr<regmap_field>> rm_field,
       Ptr<reg_field> reg_field, int num_fields) {
     throw new MethodIsBPFRelatedFunction();
@@ -1512,7 +1513,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct regmap_bus*)regmap_get_i2c_bus($arg1, (const struct regmap_config*)$arg2))")
+  @BuiltinBPFFunction("((const struct regmap_bus*)regmap_get_i2c_bus($arg1, (const struct regmap_config *)$arg2))")
   public static Ptr<regmap_bus> regmap_get_i2c_bus(Ptr<i2c_client> i2c, Ptr<regmap_config> config) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1542,7 +1543,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct regmap_bus*)regmap_get_spi_bus($arg1, (const struct regmap_config*)$arg2))")
+  @BuiltinBPFFunction("((const struct regmap_bus*)regmap_get_spi_bus($arg1, (const struct regmap_config *)$arg2))")
   public static Ptr<regmap_bus> regmap_get_spi_bus(Ptr<spi_device> spi, Ptr<regmap_config> config) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1554,55 +1555,55 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_get_val_endian($arg1, (const struct regmap_bus*)$arg2, (const struct regmap_config*)$arg3)")
+  @BuiltinBPFFunction("regmap_get_val_endian($arg1, (const struct regmap_bus *)$arg2, (const struct regmap_config *)$arg3)")
   public static regmap_endian regmap_get_val_endian(Ptr<device> dev, Ptr<regmap_bus> bus,
       Ptr<regmap_config> config) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_i2c_gather_write($arg1, (const void*)$arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("regmap_i2c_gather_write($arg1, (const void *)$arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int regmap_i2c_gather_write(Ptr<?> context, Ptr<?> reg, @Unsigned long reg_size,
       Ptr<?> val, @Unsigned long val_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_i2c_read($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("regmap_i2c_read($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static int regmap_i2c_read(Ptr<?> context, Ptr<?> reg, @Unsigned long reg_size, Ptr<?> val,
       @Unsigned long val_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_i2c_smbus_i2c_read($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("regmap_i2c_smbus_i2c_read($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static int regmap_i2c_smbus_i2c_read(Ptr<?> context, Ptr<?> reg, @Unsigned long reg_size,
       Ptr<?> val, @Unsigned long val_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_i2c_smbus_i2c_read_reg16($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("regmap_i2c_smbus_i2c_read_reg16($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static int regmap_i2c_smbus_i2c_read_reg16(Ptr<?> context, Ptr<?> reg,
       @Unsigned long reg_size, Ptr<?> val, @Unsigned long val_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_i2c_smbus_i2c_write($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("regmap_i2c_smbus_i2c_write($arg1, (const void *)$arg2, $arg3)")
   public static int regmap_i2c_smbus_i2c_write(Ptr<?> context, Ptr<?> data, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_i2c_smbus_i2c_write_reg16($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("regmap_i2c_smbus_i2c_write_reg16($arg1, (const void *)$arg2, $arg3)")
   public static int regmap_i2c_smbus_i2c_write_reg16(Ptr<?> context, Ptr<?> data,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_i2c_write($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("regmap_i2c_write($arg1, (const void *)$arg2, $arg3)")
   public static int regmap_i2c_write(Ptr<?> context, Ptr<?> data, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1670,7 +1671,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_irq_set_type_config_simple($arg1, $arg2, (const struct regmap_irq*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("regmap_irq_set_type_config_simple($arg1, $arg2, (const struct regmap_irq *)$arg3, $arg4, $arg5)")
   public static int regmap_irq_set_type_config_simple(Ptr<Ptr<java.lang. @Unsigned Integer>> buf,
       @Unsigned int type, Ptr<regmap_irq> irq_data, int idx, Ptr<?> irq_drv_data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1768,7 +1769,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_mmio_gen_context($arg1, (const u8*)$arg2, $arg3, (const struct regmap_config*)$arg4)")
+  @BuiltinBPFFunction("regmap_mmio_gen_context($arg1, (const u8 *)$arg2, $arg3, (const struct regmap_config *)$arg4)")
   public static Ptr<regmap_mmio_context> regmap_mmio_gen_context(Ptr<device> dev, String clk_id,
       Ptr<?> regs, Ptr<regmap_config> config) {
     throw new MethodIsBPFRelatedFunction();
@@ -1851,7 +1852,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_mmio_noinc_write($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("regmap_mmio_noinc_write($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int regmap_mmio_noinc_write(Ptr<?> context, @Unsigned int reg, Ptr<?> val,
       @Unsigned long val_count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1982,20 +1983,20 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_multi_reg_read($arg1, (const unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("regmap_multi_reg_read($arg1, (const unsigned int *)$arg2, $arg3, $arg4)")
   public static int regmap_multi_reg_read(Ptr<regmap> map, Ptr<java.lang. @Unsigned Integer> regs,
       Ptr<?> val, @Unsigned long val_count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_multi_reg_write($arg1, (const struct reg_sequence*)$arg2, $arg3)")
+  @BuiltinBPFFunction("regmap_multi_reg_write($arg1, (const struct reg_sequence *)$arg2, $arg3)")
   public static int regmap_multi_reg_write(Ptr<regmap> map, Ptr<reg_sequence> regs, int num_regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_multi_reg_write_bypassed($arg1, (const struct reg_sequence*)$arg2, $arg3)")
+  @BuiltinBPFFunction("regmap_multi_reg_write_bypassed($arg1, (const struct reg_sequence *)$arg2, $arg3)")
   public static int regmap_multi_reg_write_bypassed(Ptr<regmap> map, Ptr<reg_sequence> regs,
       int num_regs) {
     throw new MethodIsBPFRelatedFunction();
@@ -2023,14 +2024,14 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_noinc_write($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("regmap_noinc_write($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int regmap_noinc_write(Ptr<regmap> map, @Unsigned int reg, Ptr<?> val,
       @Unsigned long val_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_parse_16_be((const void*)$arg1)")
+  @BuiltinBPFFunction("regmap_parse_16_be((const void *)$arg1)")
   public static @Unsigned int regmap_parse_16_be(Ptr<?> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2042,7 +2043,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_parse_16_le((const void*)$arg1)")
+  @BuiltinBPFFunction("regmap_parse_16_le((const void *)$arg1)")
   public static @Unsigned int regmap_parse_16_le(Ptr<?> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2054,19 +2055,19 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_parse_16_native((const void*)$arg1)")
+  @BuiltinBPFFunction("regmap_parse_16_native((const void *)$arg1)")
   public static @Unsigned int regmap_parse_16_native(Ptr<?> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_parse_24_be((const void*)$arg1)")
+  @BuiltinBPFFunction("regmap_parse_24_be((const void *)$arg1)")
   public static @Unsigned int regmap_parse_24_be(Ptr<?> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_parse_32_be((const void*)$arg1)")
+  @BuiltinBPFFunction("regmap_parse_32_be((const void *)$arg1)")
   public static @Unsigned int regmap_parse_32_be(Ptr<?> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2078,7 +2079,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_parse_32_le((const void*)$arg1)")
+  @BuiltinBPFFunction("regmap_parse_32_le((const void *)$arg1)")
   public static @Unsigned int regmap_parse_32_le(Ptr<?> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2090,13 +2091,13 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_parse_32_native((const void*)$arg1)")
+  @BuiltinBPFFunction("regmap_parse_32_native((const void *)$arg1)")
   public static @Unsigned int regmap_parse_32_native(Ptr<?> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_parse_8((const void*)$arg1)")
+  @BuiltinBPFFunction("regmap_parse_8((const void *)$arg1)")
   public static @Unsigned int regmap_parse_8(Ptr<?> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2108,7 +2109,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_parse_val($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("regmap_parse_val($arg1, (const void *)$arg2, $arg3)")
   public static int regmap_parse_val(Ptr<regmap> map, Ptr<?> buf,
       Ptr<java.lang. @Unsigned Integer> val) {
     throw new MethodIsBPFRelatedFunction();
@@ -2135,14 +2136,14 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_raw_write($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("regmap_raw_write($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int regmap_raw_write(Ptr<regmap> map, @Unsigned int reg, Ptr<?> val,
       @Unsigned long val_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_raw_write_async($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("regmap_raw_write_async($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int regmap_raw_write_async(Ptr<regmap> map, @Unsigned int reg, Ptr<?> val,
       @Unsigned long val_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -2183,7 +2184,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_reg_in_ranges($arg1, (const struct regmap_range*)$arg2, $arg3)")
+  @BuiltinBPFFunction("regmap_reg_in_ranges($arg1, (const struct regmap_range *)$arg2, $arg3)")
   public static boolean regmap_reg_in_ranges(@Unsigned int reg, Ptr<regmap_range> ranges,
       @Unsigned int nranges) {
     throw new MethodIsBPFRelatedFunction();
@@ -2197,13 +2198,13 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_register_patch($arg1, (const struct reg_sequence*)$arg2, $arg3)")
+  @BuiltinBPFFunction("regmap_register_patch($arg1, (const struct reg_sequence *)$arg2, $arg3)")
   public static int regmap_register_patch(Ptr<regmap> map, Ptr<reg_sequence> regs, int num_regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_reinit_cache($arg1, (const struct regmap_config*)$arg2)")
+  @BuiltinBPFFunction("regmap_reinit_cache($arg1, (const struct regmap_config *)$arg2)")
   public static int regmap_reinit_cache(Ptr<regmap> map, Ptr<regmap_config> config) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2264,7 +2265,7 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_spi_async_write($arg1, (const void*)$arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("regmap_spi_async_write($arg1, (const void *)$arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int regmap_spi_async_write(Ptr<?> context, Ptr<?> reg, @Unsigned long reg_len,
       Ptr<?> val, @Unsigned long val_len, Ptr<regmap_async> a) {
     throw new MethodIsBPFRelatedFunction();
@@ -2277,21 +2278,21 @@ public final class RegmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_spi_gather_write($arg1, (const void*)$arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("regmap_spi_gather_write($arg1, (const void *)$arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int regmap_spi_gather_write(Ptr<?> context, Ptr<?> reg, @Unsigned long reg_len,
       Ptr<?> val, @Unsigned long val_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_spi_read($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("regmap_spi_read($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static int regmap_spi_read(Ptr<?> context, Ptr<?> reg, @Unsigned long reg_size, Ptr<?> val,
       @Unsigned long val_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regmap_spi_write($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("regmap_spi_write($arg1, (const void *)$arg2, $arg3)")
   public static int regmap_spi_write(Ptr<?> context, Ptr<?> data, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }

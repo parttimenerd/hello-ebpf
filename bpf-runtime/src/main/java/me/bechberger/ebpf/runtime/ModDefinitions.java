@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1134,13 +1135,13 @@ public final class ModDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mod_addr_comp((const void*)$arg1, (const void*)$arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("mod_addr_comp((const void *)$arg1, (const void *)$arg2, (const void *)$arg3)")
   public static int mod_addr_comp(Ptr<?> a, Ptr<?> b, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mod_check_sig((const struct module_signature*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("mod_check_sig((const struct module_signature *)$arg1, $arg2, (const u8 *)$arg3)")
   public static int mod_check_sig(Ptr<module_signature> ms, @Unsigned long file_len, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1177,7 +1178,7 @@ public final class ModDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mod_sysfs_setup($arg1, (const struct load_info*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("mod_sysfs_setup($arg1, (const struct load_info *)$arg2, $arg3, $arg4)")
   public static int mod_sysfs_setup(Ptr<module> mod, Ptr<load_info> info, Ptr<kernel_param> kparam,
       @Unsigned int num_params) {
     throw new MethodIsBPFRelatedFunction();
@@ -1220,7 +1221,7 @@ public final class ModDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mod_verify_sig((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("mod_verify_sig((const void *)$arg1, $arg2)")
   public static int mod_verify_sig(Ptr<?> mod, Ptr<load_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }

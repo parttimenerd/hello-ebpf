@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1204,7 +1205,7 @@ public final class VcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vc_is_sel((const struct vc_data*)$arg1)")
+  @BuiltinBPFFunction("vc_is_sel((const struct vc_data *)$arg1)")
   public static boolean vc_is_sel(Ptr<vc_data> vc) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1281,7 +1282,7 @@ public final class VcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vc_uniscr_copy_line((const struct vc_data*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("vc_uniscr_copy_line((const struct vc_data *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void vc_uniscr_copy_line(Ptr<vc_data> vc, Ptr<?> dest, boolean viewed,
       @Unsigned int row, @Unsigned int col, @Unsigned int nr) {
     throw new MethodIsBPFRelatedFunction();

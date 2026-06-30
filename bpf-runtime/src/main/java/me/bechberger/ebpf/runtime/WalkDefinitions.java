@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1123,7 +1124,7 @@ public final class WalkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("walk_kernel_page_table_range($arg1, $arg2, (const struct mm_walk_ops*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("walk_kernel_page_table_range($arg1, $arg2, (const struct mm_walk_ops *)$arg3, $arg4, $arg5)")
   public static int walk_kernel_page_table_range(@Unsigned long start, @Unsigned long end,
       Ptr<mm_walk_ops> ops, Ptr<pgd_t> pgd, Ptr<?> _private) {
     throw new MethodIsBPFRelatedFunction();
@@ -1151,35 +1152,35 @@ public final class WalkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("walk_page_mapping($arg1, $arg2, $arg3, (const struct mm_walk_ops*)$arg4, $arg5)")
+  @BuiltinBPFFunction("walk_page_mapping($arg1, $arg2, $arg3, (const struct mm_walk_ops *)$arg4, $arg5)")
   public static int walk_page_mapping(Ptr<address_space> mapping, @Unsigned long first_index,
       @Unsigned long nr, Ptr<mm_walk_ops> ops, Ptr<?> _private) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("walk_page_range($arg1, $arg2, $arg3, (const struct mm_walk_ops*)$arg4, $arg5)")
+  @BuiltinBPFFunction("walk_page_range($arg1, $arg2, $arg3, (const struct mm_walk_ops *)$arg4, $arg5)")
   public static int walk_page_range(Ptr<mm_struct> mm, @Unsigned long start, @Unsigned long end,
       Ptr<mm_walk_ops> ops, Ptr<?> _private) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("walk_page_range_debug($arg1, $arg2, $arg3, (const struct mm_walk_ops*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("walk_page_range_debug($arg1, $arg2, $arg3, (const struct mm_walk_ops *)$arg4, $arg5, $arg6)")
   public static int walk_page_range_debug(Ptr<mm_struct> mm, @Unsigned long start,
       @Unsigned long end, Ptr<mm_walk_ops> ops, Ptr<pgd_t> pgd, Ptr<?> _private) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("walk_page_range_mm($arg1, $arg2, $arg3, (const struct mm_walk_ops*)$arg4, $arg5)")
+  @BuiltinBPFFunction("walk_page_range_mm($arg1, $arg2, $arg3, (const struct mm_walk_ops *)$arg4, $arg5)")
   public static int walk_page_range_mm(Ptr<mm_struct> mm, @Unsigned long start, @Unsigned long end,
       Ptr<mm_walk_ops> ops, Ptr<?> _private) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("walk_page_range_vma($arg1, $arg2, $arg3, (const struct mm_walk_ops*)$arg4, $arg5)")
+  @BuiltinBPFFunction("walk_page_range_vma($arg1, $arg2, $arg3, (const struct mm_walk_ops *)$arg4, $arg5)")
   public static int walk_page_range_vma(Ptr<vm_area_struct> vma, @Unsigned long start,
       @Unsigned long end, Ptr<mm_walk_ops> ops, Ptr<?> _private) {
     throw new MethodIsBPFRelatedFunction();
@@ -1192,7 +1193,7 @@ public final class WalkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("walk_page_vma($arg1, (const struct mm_walk_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("walk_page_vma($arg1, (const struct mm_walk_ops *)$arg2, $arg3)")
   public static int walk_page_vma(Ptr<vm_area_struct> vma, Ptr<mm_walk_ops> ops, Ptr<?> _private) {
     throw new MethodIsBPFRelatedFunction();
   }

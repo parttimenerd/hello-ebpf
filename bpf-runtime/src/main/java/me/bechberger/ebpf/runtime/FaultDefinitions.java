@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1121,13 +1122,13 @@ public final class FaultDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fault_in_iov_iter_readable((const struct iov_iter*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fault_in_iov_iter_readable((const struct iov_iter *)$arg1, $arg2)")
   public static @Unsigned long fault_in_iov_iter_readable(Ptr<iov_iter> i, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fault_in_iov_iter_writeable((const struct iov_iter*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fault_in_iov_iter_writeable((const struct iov_iter *)$arg1, $arg2)")
   public static @Unsigned long fault_in_iov_iter_writeable(Ptr<iov_iter> i, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1139,13 +1140,13 @@ public final class FaultDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fault_in_readable((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fault_in_readable((const u8 *)$arg1, $arg2)")
   public static @Unsigned long fault_in_readable(String uaddr, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fault_in_safe_writeable((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fault_in_safe_writeable((const u8 *)$arg1, $arg2)")
   public static @Unsigned long fault_in_safe_writeable(String uaddr, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }

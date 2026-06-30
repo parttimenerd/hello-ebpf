@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1120,7 +1121,7 @@ public final class RunDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("run_init_process((const u8*)$arg1)")
+  @BuiltinBPFFunction("run_init_process((const u8 *)$arg1)")
   public static int run_init_process(String init_filename) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1169,7 +1170,7 @@ public final class RunDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("run_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("run_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long run_store(Ptr<kobject> kobj, Ptr<kobj_attribute> attr,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

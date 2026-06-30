@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DevcdDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("devcd_data_read($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("devcd_data_read($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long devcd_data_read(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buffer, @OriginalName("loff_t") long offset,
       @Unsigned long count) {
@@ -1098,7 +1099,7 @@ public final class DevcdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devcd_data_write($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("devcd_data_write($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long devcd_data_write(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buffer, @OriginalName("loff_t") long offset,
       @Unsigned long count) {
@@ -1136,7 +1137,7 @@ public final class DevcdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devcd_match_failing($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("devcd_match_failing($arg1, (const void *)$arg2)")
   public static int devcd_match_failing(Ptr<device> dev, Ptr<?> failing) {
     throw new MethodIsBPFRelatedFunction();
   }

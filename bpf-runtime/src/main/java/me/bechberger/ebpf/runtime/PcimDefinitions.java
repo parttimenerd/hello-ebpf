@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1145,13 +1146,13 @@ public final class PcimDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcim_iomap_region($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("pcim_iomap_region($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<?> pcim_iomap_region(Ptr<pci_dev> pdev, int bar, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcim_iomap_regions($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("pcim_iomap_regions($arg1, $arg2, (const u8 *)$arg3)")
   public static int pcim_iomap_regions(Ptr<pci_dev> pdev, int mask, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1193,13 +1194,13 @@ public final class PcimDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcim_request_all_regions($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("pcim_request_all_regions($arg1, (const u8 *)$arg2)")
   public static int pcim_request_all_regions(Ptr<pci_dev> pdev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pcim_request_region($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("pcim_request_region($arg1, $arg2, (const u8 *)$arg3)")
   public static int pcim_request_region(Ptr<pci_dev> pdev, int bar, String name) {
     throw new MethodIsBPFRelatedFunction();
   }

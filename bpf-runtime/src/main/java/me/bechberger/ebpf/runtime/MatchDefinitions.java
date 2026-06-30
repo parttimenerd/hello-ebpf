@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1105,26 +1106,26 @@ public final class MatchDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("match_config_table((const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg1, $arg2, (const struct {\n"
+          + "} *)$arg1, $arg2, (const struct {\n"
           + "  struct {\n"
           + "    u8 b[16];\n"
           + "  } guid;\n"
           + "  long unsigned int *ptr;\n"
           + "  const const u8[16] name;\n"
-          + "}*)$arg3)")
+          + "} *)$arg3)")
   public static int match_config_table(Ptr<@OriginalName("efi_guid_t") uuid_t> guid,
       @Unsigned long table, Ptr<efi_config_table_type_t> table_types) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_dev_by_label($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("match_dev_by_label($arg1, (const void *)$arg2)")
   public static int match_dev_by_label(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_dev_by_uuid($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("match_dev_by_uuid($arg1, (const void *)$arg2)")
   public static int match_dev_by_uuid(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1136,14 +1137,14 @@ public final class MatchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_devname_and_update_preferred_console((const u8*)$arg1, (const u8*)$arg2, (const short int)$arg3)")
+  @BuiltinBPFFunction("match_devname_and_update_preferred_console((const u8 *)$arg1, (const u8 *)$arg2, (const short int)$arg3)")
   public static int match_devname_and_update_preferred_console(String devname, String name,
       short idx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_dimm($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("match_dimm($arg1, (const void *)$arg2)")
   public static int match_dimm(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1171,7 +1172,7 @@ public final class MatchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_export($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("match_export($arg1, (const void *)$arg2)")
   public static int match_export(Ptr<device> dev, Ptr<?> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1183,13 +1184,13 @@ public final class MatchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_file((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("match_file((const void *)$arg1, $arg2, $arg3)")
   public static int match_file(Ptr<?> p, Ptr<file> file, @Unsigned int fd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_gdev($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("match_gdev($arg1, (const void *)$arg2)")
   public static int match_gdev(Ptr<device> dev, Ptr<?> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1201,13 +1202,13 @@ public final class MatchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_hid_uid($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("match_hid_uid($arg1, (const void *)$arg2)")
   public static int match_hid_uid(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_identity((const struct detailed_timing*)$arg1, $arg2)")
+  @BuiltinBPFFunction("match_identity((const struct detailed_timing *)$arg1, $arg2)")
   public static void match_identity(Ptr<detailed_timing> timing, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1225,7 +1226,7 @@ public final class MatchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_mnt((const struct cred*)$arg1, $arg2, (const struct path*)$arg3, $arg4, (const struct path*)$arg5, $arg6, (const u8*)$arg7, $arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("match_mnt((const struct cred *)$arg1, $arg2, (const struct path *)$arg3, $arg4, (const struct path *)$arg5, $arg6, (const u8 *)$arg7, $arg8, $arg9, $arg10)")
   public static int match_mnt(Ptr<cred> subj_cred, Ptr<aa_profile> profile, Ptr<path> path,
       String buffer, Ptr<path> devpath, String devbuffer, String type, @Unsigned long flags,
       Ptr<?> data, boolean binary) {
@@ -1233,7 +1234,7 @@ public final class MatchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_mnt_path_str((const struct cred*)$arg1, $arg2, (const struct path*)$arg3, $arg4, (const u8*)$arg5, (const u8*)$arg6, $arg7, $arg8, $arg9, (const u8*)$arg10)")
+  @BuiltinBPFFunction("match_mnt_path_str((const struct cred *)$arg1, $arg2, (const struct path *)$arg3, $arg4, (const u8 *)$arg5, (const u8 *)$arg6, $arg7, $arg8, $arg9, (const u8 *)$arg10)")
   public static int match_mnt_path_str(Ptr<cred> subj_cred, Ptr<aa_profile> profile,
       Ptr<path> mntpath, String buffer, String devname, String type, @Unsigned long flags,
       Ptr<?> data, boolean binary, String devinfo) {
@@ -1253,25 +1254,25 @@ public final class MatchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_one($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("match_one($arg1, (const u8 *)$arg2, $arg3)")
   public static int match_one(String s, String p, Ptr<substring_t> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_option((const u8*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("match_option((const u8 *)$arg1, $arg2, (const u8 *)$arg3)")
   public static boolean match_option(String arg, int arglen, String opt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_pci_dev($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("match_pci_dev($arg1, (const void *)$arg2)")
   public static int match_pci_dev(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_pci_dev_by_id($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("match_pci_dev_by_id($arg1, (const void *)$arg2)")
   public static int match_pci_dev_by_id(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1292,13 +1293,13 @@ public final class MatchDefinitions {
   @BuiltinBPFFunction("match_strdup((const struct {\n"
           + "  u8 *from;\n"
           + "  u8 *to;\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static String match_strdup(Ptr<substring_t> s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_string((const u8**)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("match_string((const const u8 **)$arg1, $arg2, (const u8 *)$arg3)")
   public static int match_string(Ptr<String> array, @Unsigned long n, String string) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1307,7 +1308,7 @@ public final class MatchDefinitions {
   @BuiltinBPFFunction("match_strlcpy($arg1, (const struct {\n"
           + "  u8 *from;\n"
           + "  u8 *to;\n"
-          + "}*)$arg2, $arg3)")
+          + "} *)$arg2, $arg3)")
   public static @Unsigned long match_strlcpy(String dest, Ptr<substring_t> src,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1326,7 +1327,7 @@ public final class MatchDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("match_wildcard((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("match_wildcard((const u8 *)$arg1, (const u8 *)$arg2)")
   public static boolean match_wildcard(String pattern, String str) {
     throw new MethodIsBPFRelatedFunction();
   }

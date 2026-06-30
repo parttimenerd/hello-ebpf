@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class GhesDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ghes_print_estatus((const u8*)$arg1, (const struct acpi_hest_generic*)$arg2, (const struct acpi_hest_generic_status*)$arg3)")
+  @BuiltinBPFFunction("__ghes_print_estatus((const u8 *)$arg1, (const struct acpi_hest_generic *)$arg2, (const struct acpi_hest_generic_status *)$arg3)")
   public static void __ghes_print_estatus(String pfx, Ptr<acpi_hest_generic> generic,
       Ptr<acpi_hest_generic_status> estatus) {
     throw new MethodIsBPFRelatedFunction();
@@ -1142,7 +1143,7 @@ public final class GhesDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ghes_do_proc($arg1, (const struct acpi_hest_generic_status*)$arg2)")
+  @BuiltinBPFFunction("ghes_do_proc($arg1, (const struct acpi_hest_generic_status *)$arg2)")
   public static void ghes_do_proc(Ptr<ghes> ghes, Ptr<acpi_hest_generic_status> estatus) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1114,7 +1115,7 @@ public final class SdioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdio_bus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("sdio_bus_match($arg1, (const struct device_driver *)$arg2)")
   public static int sdio_bus_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1132,7 +1133,7 @@ public final class SdioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdio_bus_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("sdio_bus_uevent((const struct device *)$arg1, $arg2)")
   public static int sdio_bus_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1226,7 +1227,7 @@ public final class SdioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct sdio_device_id*)sdio_match_device($arg1, (const struct sdio_driver*)$arg2))")
+  @BuiltinBPFFunction("((const struct sdio_device_id*)sdio_match_device($arg1, (const struct sdio_driver *)$arg2))")
   public static Ptr<sdio_device_id> sdio_match_device(Ptr<sdio_func> func, Ptr<sdio_driver> sdrv) {
     throw new MethodIsBPFRelatedFunction();
   }

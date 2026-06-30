@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class KernfsDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__kernfs_create_file($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6, (const struct kernfs_ops*)$arg7, $arg8, (const void*)$arg9, $arg10)")
+  @BuiltinBPFFunction("__kernfs_create_file($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6, (const struct kernfs_ops *)$arg7, $arg8, (const void *)$arg9, $arg10)")
   public static Ptr<kernfs_node> __kernfs_create_file(Ptr<kernfs_node> parent, String name,
       @Unsigned @OriginalName("umode_t") short mode, kuid_t uid, kgid_t gid,
       @OriginalName("loff_t") long size, Ptr<kernfs_ops> ops, Ptr<?> priv, Ptr<?> ns,
@@ -1105,7 +1106,7 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__kernfs_new_node($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__kernfs_new_node($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static Ptr<kernfs_node> __kernfs_new_node(Ptr<kernfs_root> root, Ptr<kernfs_node> parent,
       String name, @Unsigned @OriginalName("umode_t") short mode, kuid_t uid, kgid_t gid,
       @Unsigned int flags) {
@@ -1119,7 +1120,7 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__kernfs_setattr($arg1, (const struct iattr*)$arg2)")
+  @BuiltinBPFFunction("__kernfs_setattr($arg1, (const struct iattr *)$arg2)")
   public static int __kernfs_setattr(Ptr<kernfs_node> kn, Ptr<iattr> iattr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1149,7 +1150,7 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_create_dir_ns($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6, (const void*)$arg7)")
+  @BuiltinBPFFunction("kernfs_create_dir_ns($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6, (const void *)$arg7)")
   public static Ptr<kernfs_node> kernfs_create_dir_ns(Ptr<kernfs_node> parent, String name,
       @Unsigned @OriginalName("umode_t") short mode, kuid_t uid, kgid_t gid, Ptr<?> priv,
       Ptr<?> ns) {
@@ -1157,13 +1158,13 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_create_empty_dir($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("kernfs_create_empty_dir($arg1, (const u8 *)$arg2)")
   public static Ptr<kernfs_node> kernfs_create_empty_dir(Ptr<kernfs_node> parent, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_create_link($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("kernfs_create_link($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<kernfs_node> kernfs_create_link(Ptr<kernfs_node> parent, String name,
       Ptr<kernfs_node> target) {
     throw new MethodIsBPFRelatedFunction();
@@ -1189,14 +1190,14 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_dir_pos((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("kernfs_dir_pos((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<kernfs_node> kernfs_dir_pos(Ptr<?> ns, Ptr<kernfs_node> parent,
       @OriginalName("loff_t") long hash, Ptr<kernfs_node> pos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_dop_revalidate($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("kernfs_dop_revalidate($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int kernfs_dop_revalidate(Ptr<inode> dir, Ptr<qstr> name, Ptr<dentry> dentry,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1256,14 +1257,14 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_find_and_get_ns($arg1, (const u8*)$arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("kernfs_find_and_get_ns($arg1, (const u8 *)$arg2, (const void *)$arg3)")
   public static Ptr<kernfs_node> kernfs_find_and_get_ns(Ptr<kernfs_node> parent, String name,
       Ptr<?> ns) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_find_ns($arg1, (const u8*)$arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("kernfs_find_ns($arg1, (const u8 *)$arg2, (const void *)$arg3)")
   public static Ptr<kernfs_node> kernfs_find_ns(Ptr<kernfs_node> parent, String name, Ptr<?> ns) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1396,7 +1397,7 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_iop_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("kernfs_iop_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int kernfs_iop_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1467,13 +1468,13 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_name_hash((const u8*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("kernfs_name_hash((const u8 *)$arg1, (const void *)$arg2)")
   public static @Unsigned int kernfs_name_hash(String name, Ptr<?> ns) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_new_node($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("kernfs_new_node($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<kernfs_node> kernfs_new_node(Ptr<kernfs_node> parent, String name,
       @Unsigned @OriginalName("umode_t") short mode, kuid_t uid, kgid_t gid, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1549,7 +1550,7 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_remove_by_name_ns($arg1, (const u8*)$arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("kernfs_remove_by_name_ns($arg1, (const u8 *)$arg2, (const void *)$arg3)")
   public static int kernfs_remove_by_name_ns(Ptr<kernfs_node> parent, String name, Ptr<?> ns) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1561,7 +1562,7 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_rename_ns($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("kernfs_rename_ns($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4)")
   public static int kernfs_rename_ns(Ptr<kernfs_node> kn, Ptr<kernfs_node> new_parent,
       String new_name, Ptr<?> new_ns) {
     throw new MethodIsBPFRelatedFunction();
@@ -1618,7 +1619,7 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_setattr($arg1, (const struct iattr*)$arg2)")
+  @BuiltinBPFFunction("kernfs_setattr($arg1, (const struct iattr *)$arg2)")
   public static int kernfs_setattr(Ptr<kernfs_node> kn, Ptr<iattr> iattr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1685,7 +1686,7 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_vfs_user_xattr_set((const struct xattr_handler*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("kernfs_vfs_user_xattr_set((const struct xattr_handler *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, (const void *)$arg6, $arg7, $arg8)")
   public static int kernfs_vfs_user_xattr_set(Ptr<xattr_handler> handler, Ptr<mnt_idmap> idmap,
       Ptr<dentry> unused, Ptr<inode> inode, String suffix, Ptr<?> value, @Unsigned long size,
       int flags) {
@@ -1693,14 +1694,14 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_vfs_xattr_get((const struct xattr_handler*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("kernfs_vfs_xattr_get((const struct xattr_handler *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int kernfs_vfs_xattr_get(Ptr<xattr_handler> handler, Ptr<dentry> unused,
       Ptr<inode> inode, String suffix, Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_vfs_xattr_set((const struct xattr_handler*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("kernfs_vfs_xattr_set((const struct xattr_handler *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, (const void *)$arg6, $arg7, $arg8)")
   public static int kernfs_vfs_xattr_set(Ptr<xattr_handler> handler, Ptr<mnt_idmap> idmap,
       Ptr<dentry> unused, Ptr<inode> inode, String suffix, Ptr<?> value, @Unsigned long size,
       int flags) {
@@ -1734,27 +1735,27 @@ public final class KernfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_walk_and_get_ns($arg1, (const u8*)$arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("kernfs_walk_and_get_ns($arg1, (const u8 *)$arg2, (const void *)$arg3)")
   public static Ptr<kernfs_node> kernfs_walk_and_get_ns(Ptr<kernfs_node> parent, String path,
       Ptr<?> ns) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_walk_ns($arg1, (const u8*)$arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("kernfs_walk_ns($arg1, (const u8 *)$arg2, (const void *)$arg3)")
   public static Ptr<kernfs_node> kernfs_walk_ns(Ptr<kernfs_node> parent, String path, Ptr<?> ns) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_xattr_get($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("kernfs_xattr_get($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int kernfs_xattr_get(Ptr<kernfs_node> kn, String name, Ptr<?> value,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kernfs_xattr_set($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("kernfs_xattr_set($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static int kernfs_xattr_set(Ptr<kernfs_node> kn, String name, Ptr<?> value,
       @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();

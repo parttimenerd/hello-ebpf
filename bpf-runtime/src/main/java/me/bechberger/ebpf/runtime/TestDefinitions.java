@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class TestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("test_bit_le($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("test_bit_le($arg1, (const void *)$arg2)")
   public static int test_bit_le(int nr, Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1175,7 +1176,7 @@ public final class TestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("test_write_file($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("test_write_file($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long test_write_file(Ptr<pci_slot> pci_slot, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

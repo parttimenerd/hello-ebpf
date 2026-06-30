@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class SelinuxDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_add_opt($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("selinux_add_opt($arg1, (const u8 *)$arg2, $arg3)")
   public static int selinux_add_opt(int token, String s, Ptr<Ptr<?>> mnt_opts) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1128,25 +1129,25 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_binder_set_context_mgr((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("selinux_binder_set_context_mgr((const struct cred *)$arg1)")
   public static int selinux_binder_set_context_mgr(Ptr<cred> mgr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_binder_transaction((const struct cred*)$arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("selinux_binder_transaction((const struct cred *)$arg1, (const struct cred *)$arg2)")
   public static int selinux_binder_transaction(Ptr<cred> from, Ptr<cred> to) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_binder_transfer_binder((const struct cred*)$arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("selinux_binder_transfer_binder((const struct cred *)$arg1, (const struct cred *)$arg2)")
   public static int selinux_binder_transfer_binder(Ptr<cred> from, Ptr<cred> to) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_binder_transfer_file((const struct cred*)$arg1, (const struct cred*)$arg2, (const struct file*)$arg3)")
+  @BuiltinBPFFunction("selinux_binder_transfer_file((const struct cred *)$arg1, (const struct cred *)$arg2, (const struct file *)$arg3)")
   public static int selinux_binder_transfer_file(Ptr<cred> from, Ptr<cred> to, Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1197,7 +1198,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_bpf_token_create($arg1, $arg2, (const struct path*)$arg3)")
+  @BuiltinBPFFunction("selinux_bpf_token_create($arg1, $arg2, (const struct path *)$arg3)")
   public static int selinux_bpf_token_create(Ptr<bpf_token> token, Ptr<bpf_attr> attr,
       Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
@@ -1210,13 +1211,13 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_bprm_committed_creds((const struct linux_binprm*)$arg1)")
+  @BuiltinBPFFunction("selinux_bprm_committed_creds((const struct linux_binprm *)$arg1)")
   public static void selinux_bprm_committed_creds(Ptr<linux_binprm> bprm) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_bprm_committing_creds((const struct linux_binprm*)$arg1)")
+  @BuiltinBPFFunction("selinux_bprm_committing_creds((const struct linux_binprm *)$arg1)")
   public static void selinux_bprm_committing_creds(Ptr<linux_binprm> bprm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1228,27 +1229,27 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_capable((const struct cred*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("selinux_capable((const struct cred *)$arg1, $arg2, $arg3, $arg4)")
   public static int selinux_capable(Ptr<cred> cred, Ptr<user_namespace> ns, int cap,
       @Unsigned int opts) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_capget((const struct task_struct*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("selinux_capget((const struct task_struct *)$arg1, $arg2, $arg3, $arg4)")
   public static int selinux_capget(Ptr<task_struct> target, Ptr<kernel_cap_t> effective,
       Ptr<kernel_cap_t> inheritable, Ptr<kernel_cap_t> permitted) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_capset($arg1, (const struct cred*)$arg2, (const struct {\n"
+  @BuiltinBPFFunction("selinux_capset($arg1, (const struct cred *)$arg2, (const struct {\n"
           + "  long long unsigned int val;\n"
-          + "}*)$arg3, (const struct {\n"
+          + "} *)$arg3, (const struct {\n"
           + "  long long unsigned int val;\n"
-          + "}*)$arg4, (const struct {\n"
+          + "} *)$arg4, (const struct {\n"
           + "  long long unsigned int val;\n"
-          + "}*)$arg5)")
+          + "} *)$arg5)")
   public static int selinux_capset(Ptr<cred> _new, Ptr<cred> old, Ptr<kernel_cap_t> effective,
       Ptr<kernel_cap_t> inheritable, Ptr<kernel_cap_t> permitted) {
     throw new MethodIsBPFRelatedFunction();
@@ -1261,26 +1262,26 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_cred_getlsmprop((const struct cred*)$arg1, $arg2)")
+  @BuiltinBPFFunction("selinux_cred_getlsmprop((const struct cred *)$arg1, $arg2)")
   public static void selinux_cred_getlsmprop(Ptr<cred> c, Ptr<lsm_prop> prop) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_cred_getsecid((const struct cred*)$arg1, $arg2)")
+  @BuiltinBPFFunction("selinux_cred_getsecid((const struct cred *)$arg1, $arg2)")
   public static void selinux_cred_getsecid(Ptr<cred> c, Ptr<java.lang. @Unsigned Integer> secid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_cred_prepare($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("selinux_cred_prepare($arg1, (const struct cred *)$arg2, $arg3)")
   public static int selinux_cred_prepare(Ptr<cred> _new, Ptr<cred> old,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_cred_transfer($arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("selinux_cred_transfer($arg1, (const struct cred *)$arg2)")
   public static void selinux_cred_transfer(Ptr<cred> _new, Ptr<cred> old) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1298,21 +1299,21 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_dentry_create_files_as($arg1, $arg2, $arg3, (const struct cred*)$arg4, $arg5)")
+  @BuiltinBPFFunction("selinux_dentry_create_files_as($arg1, $arg2, $arg3, (const struct cred *)$arg4, $arg5)")
   public static int selinux_dentry_create_files_as(Ptr<dentry> dentry, int mode, Ptr<qstr> name,
       Ptr<cred> old, Ptr<cred> _new) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_dentry_init_security($arg1, $arg2, (const struct qstr*)$arg3, (const u8**)$arg4, $arg5)")
+  @BuiltinBPFFunction("selinux_dentry_init_security($arg1, $arg2, (const struct qstr *)$arg3, (const u8**)$arg4, $arg5)")
   public static int selinux_dentry_init_security(Ptr<dentry> dentry, int mode, Ptr<qstr> name,
       Ptr<String> xattr_name, Ptr<lsm_context> cp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_determine_inode_label((const struct cred_security_struct*)$arg1, $arg2, (const struct qstr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("selinux_determine_inode_label((const struct cred_security_struct *)$arg1, $arg2, (const struct qstr *)$arg3, $arg4, $arg5)")
   public static int selinux_determine_inode_label(Ptr<cred_security_struct> tsec, Ptr<inode> dir,
       Ptr<qstr> name, @Unsigned short tclass, Ptr<java.lang. @Unsigned Integer> _new_isid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1418,7 +1419,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_getprocattr($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("selinux_getprocattr($arg1, (const u8 *)$arg2, $arg3)")
   public static int selinux_getprocattr(Ptr<task_struct> p, String name, Ptr<String> value) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1437,7 +1438,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_ib_endport_manage_subnet($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("selinux_ib_endport_manage_subnet($arg1, (const u8 *)$arg2, $arg3)")
   public static int selinux_ib_endport_manage_subnet(Ptr<?> ib_sec, String dev_name,
       char port_num) {
     throw new MethodIsBPFRelatedFunction();
@@ -1475,14 +1476,14 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inet_conn_request((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("selinux_inet_conn_request((const struct sock *)$arg1, $arg2, $arg3)")
   public static int selinux_inet_conn_request(Ptr<sock> sk, Ptr<sk_buff> skb,
       Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inet_csk_clone($arg1, (const struct request_sock*)$arg2)")
+  @BuiltinBPFFunction("selinux_inet_csk_clone($arg1, (const struct request_sock *)$arg2)")
   public static void selinux_inet_csk_clone(Ptr<sock> newsk, Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1513,7 +1514,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_copy_up_xattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("selinux_inode_copy_up_xattr($arg1, (const u8 *)$arg2)")
   public static int selinux_inode_copy_up_xattr(Ptr<dentry> dentry, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1550,14 +1551,14 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_get_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("selinux_inode_get_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static int selinux_inode_get_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_getattr((const struct path*)$arg1)")
+  @BuiltinBPFFunction("selinux_inode_getattr((const struct path *)$arg1)")
   public static int selinux_inode_getattr(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1575,27 +1576,27 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_getsecurity($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("selinux_inode_getsecurity($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int selinux_inode_getsecurity(Ptr<mnt_idmap> idmap, Ptr<inode> inode, String name,
       Ptr<Ptr<?>> buffer, boolean alloc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_getxattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("selinux_inode_getxattr($arg1, (const u8 *)$arg2)")
   public static int selinux_inode_getxattr(Ptr<dentry> dentry, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_init_security($arg1, $arg2, (const struct qstr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("selinux_inode_init_security($arg1, $arg2, (const struct qstr *)$arg3, $arg4, $arg5)")
   public static int selinux_inode_init_security(Ptr<inode> inode, Ptr<inode> dir, Ptr<qstr> qstr,
       Ptr<xattr> xattrs, Ptr<java.lang.Integer> xattr_count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_init_security_anon($arg1, (const struct qstr*)$arg2, (const struct inode*)$arg3)")
+  @BuiltinBPFFunction("selinux_inode_init_security_anon($arg1, (const struct qstr *)$arg2, (const struct inode *)$arg3)")
   public static int selinux_inode_init_security_anon(Ptr<inode> inode, Ptr<qstr> name,
       Ptr<inode> context_inode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1654,7 +1655,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_post_setxattr($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("selinux_inode_post_setxattr($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static void selinux_inode_post_setxattr(Ptr<dentry> dentry, String name, Ptr<?> value,
       @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1667,14 +1668,14 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_remove_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("selinux_inode_remove_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static int selinux_inode_remove_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_removexattr($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("selinux_inode_removexattr($arg1, $arg2, (const u8 *)$arg3)")
   public static int selinux_inode_removexattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1694,7 +1695,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_set_acl($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("selinux_inode_set_acl($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int selinux_inode_set_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String acl_name,
       Ptr<posix_acl> kacl) {
     throw new MethodIsBPFRelatedFunction();
@@ -1714,21 +1715,21 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_setsecurity($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("selinux_inode_setsecurity($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static int selinux_inode_setsecurity(Ptr<inode> inode, String name, Ptr<?> value,
       @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_setxattr($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("selinux_inode_setxattr($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int selinux_inode_setxattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name,
       Ptr<?> value, @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_symlink($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("selinux_inode_symlink($arg1, $arg2, (const u8 *)$arg3)")
   public static int selinux_inode_symlink(Ptr<inode> dir, Ptr<dentry> dentry, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1740,34 +1741,34 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_inode_xattr_skipcap((const u8*)$arg1)")
+  @BuiltinBPFFunction("selinux_inode_xattr_skipcap((const u8 *)$arg1)")
   public static int selinux_inode_xattr_skipcap(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_ip_forward($arg1, $arg2, (const struct nf_hook_state*)$arg3)")
+  @BuiltinBPFFunction("selinux_ip_forward($arg1, $arg2, (const struct nf_hook_state *)$arg3)")
   public static @Unsigned int selinux_ip_forward(Ptr<?> priv, Ptr<sk_buff> skb,
       Ptr<nf_hook_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_ip_output($arg1, $arg2, (const struct nf_hook_state*)$arg3)")
+  @BuiltinBPFFunction("selinux_ip_output($arg1, $arg2, (const struct nf_hook_state *)$arg3)")
   public static @Unsigned int selinux_ip_output(Ptr<?> priv, Ptr<sk_buff> skb,
       Ptr<nf_hook_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_ip_postroute($arg1, $arg2, (const struct nf_hook_state*)$arg3)")
+  @BuiltinBPFFunction("selinux_ip_postroute($arg1, $arg2, (const struct nf_hook_state *)$arg3)")
   public static @Unsigned int selinux_ip_postroute(Ptr<?> priv, Ptr<sk_buff> skb,
       Ptr<nf_hook_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_ip_postroute_compat($arg1, (const struct nf_hook_state*)$arg2)")
+  @BuiltinBPFFunction("selinux_ip_postroute_compat($arg1, (const struct nf_hook_state *)$arg2)")
   public static @Unsigned int selinux_ip_postroute_compat(Ptr<sk_buff> skb,
       Ptr<nf_hook_state> state) {
     throw new MethodIsBPFRelatedFunction();
@@ -1786,7 +1787,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_ismaclabel((const u8*)$arg1)")
+  @BuiltinBPFFunction("selinux_ismaclabel((const u8 *)$arg1)")
   public static int selinux_ismaclabel(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1841,7 +1842,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_key_alloc($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("selinux_key_alloc($arg1, (const struct cred *)$arg2, $arg3)")
   public static int selinux_key_alloc(Ptr<key> k, Ptr<cred> cred, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1853,7 +1854,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_key_permission($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("selinux_key_permission($arg1, (const struct cred *)$arg2, $arg3)")
   public static int selinux_key_permission(
       @OriginalName("__key_reference_with_attributes") @OriginalName("__key_reference_with_attributes") @OriginalName("key_ref_t") Ptr<?> key_ref,
       Ptr<cred> cred, key_need_perm need_perm) {
@@ -1898,14 +1899,14 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_mount((const u8*)$arg1, (const struct path*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("selinux_mount((const u8 *)$arg1, (const struct path *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int selinux_mount(String dev_name, Ptr<path> path, String type,
       @Unsigned long flags, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_move_mount((const struct path*)$arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("selinux_move_mount((const struct path *)$arg1, (const struct path *)$arg2)")
   public static int selinux_move_mount(Ptr<path> from_path, Ptr<path> to_path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2120,7 +2121,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_path_notify((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("selinux_path_notify((const struct path *)$arg1, $arg2, $arg3)")
   public static int selinux_path_notify(Ptr<path> path, @Unsigned long mask,
       @Unsigned int obj_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -2163,7 +2164,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_policy_genfs_sid($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("selinux_policy_genfs_sid($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int selinux_policy_genfs_sid(Ptr<selinux_policy> policy, String fstype, String path,
       @Unsigned short orig_sclass, Ptr<java.lang. @Unsigned Integer> sid) {
     throw new MethodIsBPFRelatedFunction();
@@ -2188,7 +2189,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_quotactl($arg1, $arg2, $arg3, (const struct super_block*)$arg4)")
+  @BuiltinBPFFunction("selinux_quotactl($arg1, $arg2, $arg3, (const struct super_block *)$arg4)")
   public static int selinux_quotactl(int cmds, int type, int id, Ptr<super_block> sb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2200,7 +2201,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_req_classify_flow((const struct request_sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("selinux_req_classify_flow((const struct request_sock *)$arg1, $arg2)")
   public static void selinux_req_classify_flow(Ptr<request_sock> req, Ptr<flowi_common> flic) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2212,7 +2213,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_sb_clone_mnt_opts((const struct super_block*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("selinux_sb_clone_mnt_opts((const struct super_block *)$arg1, $arg2, $arg3, $arg4)")
   public static int selinux_sb_clone_mnt_opts(Ptr<super_block> oldsb, Ptr<super_block> newsb,
       @Unsigned long kern_flags, Ptr<java.lang. @Unsigned Long> set_kern_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2225,7 +2226,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_sb_kern_mount((const struct super_block*)$arg1)")
+  @BuiltinBPFFunction("selinux_sb_kern_mount((const struct super_block *)$arg1)")
   public static int selinux_sb_kern_mount(Ptr<super_block> sb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2287,7 +2288,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_secctx_to_secid((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("selinux_secctx_to_secid((const u8 *)$arg1, $arg2, $arg3)")
   public static int selinux_secctx_to_secid(String secdata, @Unsigned int seclen,
       Ptr<java.lang. @Unsigned Integer> secid) {
     throw new MethodIsBPFRelatedFunction();
@@ -2356,7 +2357,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_setprocattr((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("selinux_setprocattr((const u8 *)$arg1, $arg2, $arg3)")
   public static int selinux_setprocattr(String name, Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2400,7 +2401,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_sk_clone_security((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("selinux_sk_clone_security((const struct sock *)$arg1, $arg2)")
   public static void selinux_sk_clone_security(Ptr<sock> sk, Ptr<sock> newsk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2412,7 +2413,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_sk_getsecid((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("selinux_sk_getsecid((const struct sock *)$arg1, $arg2)")
   public static void selinux_sk_getsecid(Ptr<sock> sk, Ptr<java.lang. @Unsigned Integer> secid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2610,7 +2611,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_task_kill($arg1, $arg2, $arg3, (const struct cred*)$arg4)")
+  @BuiltinBPFFunction("selinux_task_kill($arg1, $arg2, $arg3, (const struct cred *)$arg4)")
   public static int selinux_task_kill(Ptr<task_struct> p, Ptr<kernel_siginfo> info, int sig,
       Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
@@ -2623,7 +2624,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_task_prlimit((const struct cred*)$arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("selinux_task_prlimit((const struct cred *)$arg1, (const struct cred *)$arg2, $arg3)")
   public static int selinux_task_prlimit(Ptr<cred> cred, Ptr<cred> tcred, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2666,7 +2667,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_transaction_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("selinux_transaction_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long selinux_transaction_write(Ptr<file> file, String buf,
       @Unsigned long size, Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2721,7 +2722,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_uring_override_creds((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("selinux_uring_override_creds((const struct cred *)$arg1)")
   public static int selinux_uring_override_creds(Ptr<cred> _new) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2733,7 +2734,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_userns_create((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("selinux_userns_create((const struct cred *)$arg1)")
   public static int selinux_userns_create(Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2849,7 +2850,7 @@ public final class SelinuxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("selinux_xfrm_state_pol_flow_match($arg1, $arg2, (const struct flowi_common*)$arg3)")
+  @BuiltinBPFFunction("selinux_xfrm_state_pol_flow_match($arg1, $arg2, (const struct flowi_common *)$arg3)")
   public static int selinux_xfrm_state_pol_flow_match(Ptr<xfrm_state> x, Ptr<xfrm_policy> xp,
       Ptr<flowi_common> flic) {
     throw new MethodIsBPFRelatedFunction();

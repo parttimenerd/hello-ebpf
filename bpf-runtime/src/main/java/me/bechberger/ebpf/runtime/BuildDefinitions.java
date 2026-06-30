@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class BuildDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__build_flow_key((const struct net*)$arg1, $arg2, (const struct sock*)$arg3, (const struct iphdr*)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("__build_flow_key((const struct net *)$arg1, $arg2, (const struct sock *)$arg3, (const struct iphdr *)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static void __build_flow_key(Ptr<net> net, Ptr<flowi4> fl4, Ptr<sock> sk, Ptr<iphdr> iph,
       int oif, char tos, char prot, @Unsigned int mark, int flow_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1141,7 +1142,7 @@ public final class BuildDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("build_change_hat((const struct cred*)$arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("build_change_hat((const struct cred *)$arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<aa_label> build_change_hat(Ptr<cred> subj_cred, Ptr<aa_profile> profile,
       String name, boolean sibling) {
     throw new MethodIsBPFRelatedFunction();
@@ -1169,7 +1170,7 @@ public final class BuildDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("build_id_parse_buf((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("build_id_parse_buf((const void *)$arg1, $arg2, $arg3)")
   public static int build_id_parse_buf(Ptr<?> buf, String build_id, @Unsigned int buf_size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1209,14 +1210,14 @@ public final class BuildDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("build_merkle_tree($arg1, (const struct merkle_tree_params*)$arg2, $arg3)")
+  @BuiltinBPFFunction("build_merkle_tree($arg1, (const struct merkle_tree_params *)$arg2, $arg3)")
   public static int build_merkle_tree(Ptr<file> filp, Ptr<merkle_tree_params> params,
       Ptr<java.lang.Character> root_hash) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("build_open_flags((const struct open_how*)$arg1, $arg2)")
+  @BuiltinBPFFunction("build_open_flags((const struct open_how *)$arg1, $arg2)")
   public static int build_open_flags(Ptr<open_how> how, Ptr<open_flags> op) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1228,27 +1229,27 @@ public final class BuildDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("build_perf_domains((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("build_perf_domains((const struct cpumask *)$arg1)")
   public static boolean build_perf_domains(Ptr<cpumask> cpu_map) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("build_pivotroot((const struct cred*)$arg1, $arg2, (const struct path*)$arg3, $arg4, (const struct path*)$arg5, $arg6)")
+  @BuiltinBPFFunction("build_pivotroot((const struct cred *)$arg1, $arg2, (const struct path *)$arg3, $arg4, (const struct path *)$arg5, $arg6)")
   public static Ptr<aa_label> build_pivotroot(Ptr<cred> subj_cred, Ptr<aa_profile> profile,
       Ptr<path> new_path, String new_buffer, Ptr<path> old_path, String old_buffer) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("build_protos($arg1, $arg2, (const struct proto*)$arg3, (const struct proto_ops*)$arg4)")
+  @BuiltinBPFFunction("build_protos($arg1, $arg2, (const struct proto *)$arg3, (const struct proto_ops *)$arg4)")
   public static void build_protos(Ptr<proto> espintcp_prot, Ptr<proto_ops> espintcp_ops,
       Ptr<proto> orig_prot, Ptr<proto_ops> orig_ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("build_sched_domains((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("build_sched_domains((const struct cpumask *)$arg1, $arg2)")
   public static int build_sched_domains(Ptr<cpumask> cpu_map, Ptr<sched_domain_attr> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1287,7 +1288,7 @@ public final class BuildDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("build_tagset($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const u8*)$arg7, $arg8)")
+  @BuiltinBPFFunction("build_tagset($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const u8 *)$arg7, $arg8)")
   public static long build_tagset(Ptr<?> buf, Ptr<?> hpos, Ptr<?> tpos, @Unsigned short max_size,
       @Unsigned int mask, @Unsigned int count, String tagstr, @Unsigned int tagsize) {
     throw new MethodIsBPFRelatedFunction();

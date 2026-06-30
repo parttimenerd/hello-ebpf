@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1292,7 +1293,7 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_conn_abort_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fuse_conn_abort_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long fuse_conn_abort_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1306,7 +1307,7 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_conn_congestion_threshold_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fuse_conn_congestion_threshold_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long fuse_conn_congestion_threshold_write(Ptr<file> file,
       String buf, @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1325,7 +1326,7 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_conn_init($arg1, $arg2, $arg3, (const struct fuse_iqueue_ops*)$arg4, $arg5)")
+  @BuiltinBPFFunction("fuse_conn_init($arg1, $arg2, $arg3, (const struct fuse_iqueue_ops *)$arg4, $arg5)")
   public static void fuse_conn_init(Ptr<fuse_conn> fc, Ptr<fuse_mount> fm,
       Ptr<user_namespace> user_ns, Ptr<fuse_iqueue_ops> fiq_ops, Ptr<?> fiq_priv) {
     throw new MethodIsBPFRelatedFunction();
@@ -1339,7 +1340,7 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_conn_max_background_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fuse_conn_max_background_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long fuse_conn_max_background_write(Ptr<file> file,
       String buf, @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1441,7 +1442,7 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_ctl_add_dentry($arg1, $arg2, (const u8*)$arg3, $arg4, (const struct inode_operations*)$arg5, (const struct file_operations*)$arg6)")
+  @BuiltinBPFFunction("fuse_ctl_add_dentry($arg1, $arg2, (const u8 *)$arg3, $arg4, (const struct inode_operations *)$arg5, (const struct file_operations *)$arg6)")
   public static Ptr<dentry> fuse_ctl_add_dentry(Ptr<dentry> parent, Ptr<fuse_conn> fc, String name,
       int mode, Ptr<inode_operations> iop, Ptr<file_operations> fop) {
     throw new MethodIsBPFRelatedFunction();
@@ -1609,13 +1610,13 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_dentry_delete((const struct dentry*)$arg1)")
+  @BuiltinBPFFunction("fuse_dentry_delete((const struct dentry *)$arg1)")
   public static int fuse_dentry_delete(Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_dentry_revalidate($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fuse_dentry_revalidate($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int fuse_dentry_revalidate(Ptr<inode> dir, Ptr<qstr> name, Ptr<dentry> entry,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2217,7 +2218,7 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fuse_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int fuse_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2230,7 +2231,7 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_getxattr($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fuse_getxattr($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long fuse_getxattr(Ptr<inode> inode, String name,
       Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -2389,7 +2390,7 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_iomap_read_folio_range((const struct iomap_iter*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fuse_iomap_read_folio_range((const struct iomap_iter *)$arg1, $arg2, $arg3, $arg4)")
   public static int fuse_iomap_read_folio_range(Ptr<iomap_iter> iter, Ptr<folio> folio,
       @OriginalName("loff_t") long pos, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -2466,7 +2467,7 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_lookup_name($arg1, $arg2, (const struct qstr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fuse_lookup_name($arg1, $arg2, (const struct qstr *)$arg3, $arg4, $arg5)")
   public static int fuse_lookup_name(Ptr<super_block> sb, @Unsigned long nodeid, Ptr<qstr> name,
       Ptr<fuse_entry_out> outarg, Ptr<Ptr<inode>> inode) {
     throw new MethodIsBPFRelatedFunction();
@@ -2753,7 +2754,7 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_removexattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fuse_removexattr($arg1, (const u8 *)$arg2)")
   public static int fuse_removexattr(Ptr<inode> inode, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2940,7 +2941,7 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_setxattr($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fuse_setxattr($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5, $arg6)")
   public static int fuse_setxattr(Ptr<inode> inode, String name, Ptr<?> value, @Unsigned long size,
       int flags, @Unsigned int extra_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2982,7 +2983,7 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_symlink($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("fuse_symlink($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int fuse_symlink(Ptr<mnt_idmap> idmap, Ptr<inode> dir, Ptr<dentry> entry,
       String link) {
     throw new MethodIsBPFRelatedFunction();
@@ -3297,14 +3298,14 @@ public final class FuseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_xattr_get((const struct xattr_handler*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fuse_xattr_get((const struct xattr_handler *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int fuse_xattr_get(Ptr<xattr_handler> handler, Ptr<dentry> dentry, Ptr<inode> inode,
       String name, Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fuse_xattr_set((const struct xattr_handler*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("fuse_xattr_set((const struct xattr_handler *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, (const void *)$arg6, $arg7, $arg8)")
   public static int fuse_xattr_set(Ptr<xattr_handler> handler, Ptr<mnt_idmap> idmap,
       Ptr<dentry> dentry, Ptr<inode> inode, String name, Ptr<?> value, @Unsigned long size,
       int flags) {

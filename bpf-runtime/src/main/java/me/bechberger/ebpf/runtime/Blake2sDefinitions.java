@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class Blake2sDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__blake2s_init($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__blake2s_init($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static void __blake2s_init(Ptr<blake2s_state> state, @Unsigned long outlen, Ptr<?> key,
       @Unsigned long keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blake2s_compress($arg1, (const u8*)$arg2, $arg3, (const unsigned int)$arg4)")
+  @BuiltinBPFFunction("blake2s_compress($arg1, (const u8 *)$arg2, $arg3, (const unsigned int)$arg4)")
   public static void blake2s_compress(Ptr<blake2s_state> state, Ptr<java.lang.Character> block,
       @Unsigned long nblocks, @Unsigned int inc) {
     throw new MethodIsBPFRelatedFunction();
@@ -1110,7 +1111,7 @@ public final class Blake2sDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blake2s_compress_generic($arg1, (const u8*)$arg2, $arg3, (const unsigned int)$arg4)")
+  @BuiltinBPFFunction("blake2s_compress_generic($arg1, (const u8 *)$arg2, $arg3, (const unsigned int)$arg4)")
   public static void blake2s_compress_generic(Ptr<blake2s_state> state,
       Ptr<java.lang.Character> block, @Unsigned long nblocks, @Unsigned int inc) {
     throw new MethodIsBPFRelatedFunction();
@@ -1135,7 +1136,7 @@ public final class Blake2sDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blake2s_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("blake2s_update($arg1, (const u8 *)$arg2, $arg3)")
   public static void blake2s_update(Ptr<blake2s_state> state, Ptr<java.lang.Character> in,
       @Unsigned long inlen) {
     throw new MethodIsBPFRelatedFunction();

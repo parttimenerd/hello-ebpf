@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,14 +1097,14 @@ public final class Ip6addrlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6addrlbl_add($arg1, (const struct in6_addr*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ip6addrlbl_add($arg1, (const struct in6_addr *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int ip6addrlbl_add(Ptr<net> net, Ptr<in6_addr> prefix, int prefixlen, int ifindex,
       @Unsigned int label, int replace) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6addrlbl_del($arg1, (const struct in6_addr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ip6addrlbl_del($arg1, (const struct in6_addr *)$arg2, $arg3, $arg4)")
   public static int ip6addrlbl_del(Ptr<net> net, Ptr<in6_addr> prefix, int prefixlen, int ifindex) {
     throw new MethodIsBPFRelatedFunction();
   }

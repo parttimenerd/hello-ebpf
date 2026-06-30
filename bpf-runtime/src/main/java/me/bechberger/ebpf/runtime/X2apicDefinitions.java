@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,7 +1109,7 @@ public final class X2apicDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__x2apic_send_IPI_mask((const struct cpumask*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__x2apic_send_IPI_mask((const struct cpumask *)$arg1, $arg2, $arg3)")
   public static void __x2apic_send_IPI_mask(Ptr<cpumask> mask, int vector, int apic_dest) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1186,13 +1187,13 @@ public final class X2apicDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x2apic_send_IPI_mask((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("x2apic_send_IPI_mask((const struct cpumask *)$arg1, $arg2)")
   public static void x2apic_send_IPI_mask(Ptr<cpumask> mask, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("x2apic_send_IPI_mask_allbutself((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("x2apic_send_IPI_mask_allbutself((const struct cpumask *)$arg1, $arg2)")
   public static void x2apic_send_IPI_mask_allbutself(Ptr<cpumask> mask, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }

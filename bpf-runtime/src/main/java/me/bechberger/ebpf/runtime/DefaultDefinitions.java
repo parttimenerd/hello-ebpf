@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1128,7 +1129,7 @@ public final class DefaultDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("default_affinity_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("default_affinity_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long default_affinity_write(Ptr<file> file, String buffer,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1263,7 +1264,7 @@ public final class DefaultDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("default_pointer($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("default_pointer($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static String default_pointer(String buf, String end, Ptr<?> ptr, printf_spec spec) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1312,13 +1313,13 @@ public final class DefaultDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("default_send_IPI_mask_allbutself_phys((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("default_send_IPI_mask_allbutself_phys((const struct cpumask *)$arg1, $arg2)")
   public static void default_send_IPI_mask_allbutself_phys(Ptr<cpumask> mask, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("default_send_IPI_mask_sequence_phys((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("default_send_IPI_mask_sequence_phys((const struct cpumask *)$arg1, $arg2)")
   public static void default_send_IPI_mask_sequence_phys(Ptr<cpumask> mask, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1392,7 +1393,7 @@ public final class DefaultDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("default_write_file($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("default_write_file($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long default_write_file(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

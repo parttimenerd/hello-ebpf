@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class HufDefinitions {
   public static final @Unsigned int HUF_flags_disableFast = 32;
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_buildCTable_wksp($arg1, (const unsigned int*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("HUF_buildCTable_wksp($arg1, (const unsigned int *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned long HUF_buildCTable_wksp(
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> CTable,
       Ptr<java.lang. @Unsigned Integer> count, @Unsigned int maxSymbolValue,
@@ -1117,7 +1118,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_cardinality((const unsigned int*)$arg1, $arg2)")
+  @BuiltinBPFFunction("HUF_cardinality((const unsigned int *)$arg1, $arg2)")
   public static @Unsigned int HUF_cardinality(Ptr<java.lang. @Unsigned Integer> count,
       @Unsigned int maxSymbolValue) {
     throw new MethodIsBPFRelatedFunction();
@@ -1130,7 +1131,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_compress1X_repeat($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("HUF_compress1X_repeat($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
   public static @Unsigned long HUF_compress1X_repeat(Ptr<?> dst, @Unsigned long dstSize, Ptr<?> src,
       @Unsigned long srcSize, @Unsigned int maxSymbolValue, @Unsigned int huffLog, Ptr<?> workSpace,
       @Unsigned long wkspSize, Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> hufTable,
@@ -1139,7 +1140,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_compress1X_usingCTable($arg1, $arg2, (const void*)$arg3, $arg4, (const long unsigned int*)$arg5, $arg6)")
+  @BuiltinBPFFunction("HUF_compress1X_usingCTable($arg1, $arg2, (const void *)$arg3, $arg4, (const long unsigned int *)$arg5, $arg6)")
   public static @Unsigned long HUF_compress1X_usingCTable(Ptr<?> dst, @Unsigned long dstSize,
       Ptr<?> src, @Unsigned long srcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> CTable, int flags) {
@@ -1147,7 +1148,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_compress1X_usingCTable_internal_bmi2($arg1, $arg2, (const void*)$arg3, $arg4, (const long unsigned int*)$arg5)")
+  @BuiltinBPFFunction("HUF_compress1X_usingCTable_internal_bmi2($arg1, $arg2, (const void *)$arg3, $arg4, (const long unsigned int *)$arg5)")
   public static @Unsigned long HUF_compress1X_usingCTable_internal_bmi2(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> src, @Unsigned long srcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> CTable) {
@@ -1155,7 +1156,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_compress1X_usingCTable_internal_default($arg1, $arg2, (const void*)$arg3, $arg4, (const long unsigned int*)$arg5)")
+  @BuiltinBPFFunction("HUF_compress1X_usingCTable_internal_default($arg1, $arg2, (const void *)$arg3, $arg4, (const long unsigned int *)$arg5)")
   public static @Unsigned long HUF_compress1X_usingCTable_internal_default(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> src, @Unsigned long srcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> CTable) {
@@ -1163,7 +1164,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_compress4X_repeat($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("HUF_compress4X_repeat($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
   public static @Unsigned long HUF_compress4X_repeat(Ptr<?> dst, @Unsigned long dstSize, Ptr<?> src,
       @Unsigned long srcSize, @Unsigned int maxSymbolValue, @Unsigned int huffLog, Ptr<?> workSpace,
       @Unsigned long wkspSize, Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> hufTable,
@@ -1172,7 +1173,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_compress4X_usingCTable($arg1, $arg2, (const void*)$arg3, $arg4, (const long unsigned int*)$arg5, $arg6)")
+  @BuiltinBPFFunction("HUF_compress4X_usingCTable($arg1, $arg2, (const void *)$arg3, $arg4, (const long unsigned int *)$arg5, $arg6)")
   public static @Unsigned long HUF_compress4X_usingCTable(Ptr<?> dst, @Unsigned long dstSize,
       Ptr<?> src, @Unsigned long srcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> CTable, int flags) {
@@ -1180,7 +1181,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_compress4X_usingCTable_internal($arg1, $arg2, (const void*)$arg3, $arg4, (const long unsigned int*)$arg5, $arg6)")
+  @BuiltinBPFFunction("HUF_compress4X_usingCTable_internal($arg1, $arg2, (const void *)$arg3, $arg4, (const long unsigned int *)$arg5, $arg6)")
   public static @Unsigned long HUF_compress4X_usingCTable_internal(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> src, @Unsigned long srcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> CTable, int flags) {
@@ -1194,7 +1195,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_compressCTable_internal((const u8*)$arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6, (const long unsigned int*)$arg7, (const int)$arg8)")
+  @BuiltinBPFFunction("HUF_compressCTable_internal((const u8*)$arg1, $arg2, (const u8*)$arg3, (const void *)$arg4, $arg5, $arg6, (const long unsigned int *)$arg7, (const int)$arg8)")
   public static @Unsigned long HUF_compressCTable_internal(
       Ptr<java.lang. @OriginalName("BYTE") Character> ostart,
       Ptr<java.lang. @OriginalName("BYTE") Character> op,
@@ -1205,7 +1206,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_compress_internal($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11, $arg12)")
+  @BuiltinBPFFunction("HUF_compress_internal($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11, $arg12)")
   public static @Unsigned long HUF_compress_internal(Ptr<?> dst, @Unsigned long dstSize, Ptr<?> src,
       @Unsigned long srcSize, @Unsigned int maxSymbolValue, @Unsigned int huffLog,
       @OriginalName("HUF_nbStreams_e") HUF nbStreams, Ptr<?> workSpace, @Unsigned long wkspSize,
@@ -1215,7 +1216,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress1X1_DCtx_wksp($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("HUF_decompress1X1_DCtx_wksp($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static @Unsigned long HUF_decompress1X1_DCtx_wksp(
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> dctx, Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize, Ptr<?> workSpace,
@@ -1224,7 +1225,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress1X1_usingDTable_internal_bmi2($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5)")
+  @BuiltinBPFFunction("HUF_decompress1X1_usingDTable_internal_bmi2($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5)")
   public static @Unsigned long HUF_decompress1X1_usingDTable_internal_bmi2(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable) {
@@ -1232,7 +1233,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress1X1_usingDTable_internal_default($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5)")
+  @BuiltinBPFFunction("HUF_decompress1X1_usingDTable_internal_default($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5)")
   public static @Unsigned long HUF_decompress1X1_usingDTable_internal_default(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable) {
@@ -1240,7 +1241,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress1X2_DCtx_wksp($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("HUF_decompress1X2_DCtx_wksp($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static @Unsigned long HUF_decompress1X2_DCtx_wksp(
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DCtx, Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize, Ptr<?> workSpace,
@@ -1249,7 +1250,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress1X2_usingDTable_internal_bmi2($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5)")
+  @BuiltinBPFFunction("HUF_decompress1X2_usingDTable_internal_bmi2($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5)")
   public static @Unsigned long HUF_decompress1X2_usingDTable_internal_bmi2(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable) {
@@ -1257,7 +1258,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress1X2_usingDTable_internal_default($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5)")
+  @BuiltinBPFFunction("HUF_decompress1X2_usingDTable_internal_default($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5)")
   public static @Unsigned long HUF_decompress1X2_usingDTable_internal_default(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable) {
@@ -1265,7 +1266,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress1X_DCtx_wksp($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("HUF_decompress1X_DCtx_wksp($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static @Unsigned long HUF_decompress1X_DCtx_wksp(
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> dctx, Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize, Ptr<?> workSpace,
@@ -1274,7 +1275,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress1X_usingDTable($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5, $arg6)")
+  @BuiltinBPFFunction("HUF_decompress1X_usingDTable($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5, $arg6)")
   public static @Unsigned long HUF_decompress1X_usingDTable(Ptr<?> dst, @Unsigned long maxDstSize,
       Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable, int flags) {
@@ -1282,7 +1283,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress4X1_usingDTable_internal($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5, $arg6)")
+  @BuiltinBPFFunction("HUF_decompress4X1_usingDTable_internal($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5, $arg6)")
   public static @Unsigned long HUF_decompress4X1_usingDTable_internal(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable, int flags) {
@@ -1290,7 +1291,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress4X1_usingDTable_internal_bmi2($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5)")
+  @BuiltinBPFFunction("HUF_decompress4X1_usingDTable_internal_bmi2($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5)")
   public static @Unsigned long HUF_decompress4X1_usingDTable_internal_bmi2(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable) {
@@ -1298,7 +1299,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress4X1_usingDTable_internal_default($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5)")
+  @BuiltinBPFFunction("HUF_decompress4X1_usingDTable_internal_default($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5)")
   public static @Unsigned long HUF_decompress4X1_usingDTable_internal_default(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable) {
@@ -1306,7 +1307,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress4X1_usingDTable_internal_fast($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5, $arg6)")
+  @BuiltinBPFFunction("HUF_decompress4X1_usingDTable_internal_fast($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5, $arg6)")
   public static @Unsigned long HUF_decompress4X1_usingDTable_internal_fast(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable,
@@ -1322,7 +1323,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress4X2_usingDTable_internal($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5, $arg6)")
+  @BuiltinBPFFunction("HUF_decompress4X2_usingDTable_internal($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5, $arg6)")
   public static @Unsigned long HUF_decompress4X2_usingDTable_internal(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable, int flags) {
@@ -1330,7 +1331,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress4X2_usingDTable_internal_bmi2($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5)")
+  @BuiltinBPFFunction("HUF_decompress4X2_usingDTable_internal_bmi2($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5)")
   public static @Unsigned long HUF_decompress4X2_usingDTable_internal_bmi2(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable) {
@@ -1338,7 +1339,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress4X2_usingDTable_internal_default($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5)")
+  @BuiltinBPFFunction("HUF_decompress4X2_usingDTable_internal_default($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5)")
   public static @Unsigned long HUF_decompress4X2_usingDTable_internal_default(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable) {
@@ -1346,7 +1347,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress4X2_usingDTable_internal_fast($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5, $arg6)")
+  @BuiltinBPFFunction("HUF_decompress4X2_usingDTable_internal_fast($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5, $arg6)")
   public static @Unsigned long HUF_decompress4X2_usingDTable_internal_fast(Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable,
@@ -1362,7 +1363,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress4X_hufOnly_wksp($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("HUF_decompress4X_hufOnly_wksp($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static @Unsigned long HUF_decompress4X_hufOnly_wksp(
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> dctx, Ptr<?> dst,
       @Unsigned long dstSize, Ptr<?> cSrc, @Unsigned long cSrcSize, Ptr<?> workSpace,
@@ -1371,7 +1372,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_decompress4X_usingDTable($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5, $arg6)")
+  @BuiltinBPFFunction("HUF_decompress4X_usingDTable($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5, $arg6)")
   public static @Unsigned long HUF_decompress4X_usingDTable(Ptr<?> dst, @Unsigned long maxDstSize,
       Ptr<?> cSrc, @Unsigned long cSrcSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable, int flags) {
@@ -1379,7 +1380,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_estimateCompressedSize((const long unsigned int*)$arg1, (const unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("HUF_estimateCompressedSize((const long unsigned int *)$arg1, (const unsigned int *)$arg2, $arg3)")
   public static @Unsigned long HUF_estimateCompressedSize(
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> CTable,
       Ptr<java.lang. @Unsigned Integer> count, @Unsigned int maxSymbolValue) {
@@ -1389,7 +1390,7 @@ public final class HufDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("HUF_fillDTableX2($arg1, (const unsigned int)$arg2, (const struct {\n"
           + "  u8 symbol;\n"
-          + "}*)$arg3, (const unsigned int*)$arg4, $arg5, (const unsigned int)$arg6, (const unsigned int)$arg7)")
+          + "} *)$arg3, (const unsigned int *)$arg4, $arg5, (const unsigned int)$arg6, (const unsigned int)$arg7)")
   public static void HUF_fillDTableX2(Ptr<HUF_DEltX2> DTable, @Unsigned int targetLog,
       Ptr<sortedSymbol_t> sortedList, Ptr<java.lang. @Unsigned Integer> rankStart,
       Ptr<@Unsigned int @Size(13) @OriginalName("rankValCol_t") []> rankValOrigin,
@@ -1400,9 +1401,9 @@ public final class HufDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("HUF_fillDTableX2ForWeight($arg1, (const struct {\n"
           + "  u8 symbol;\n"
-          + "}*)$arg2, (const struct {\n"
+          + "} *)$arg2, (const struct {\n"
           + "  u8 symbol;\n"
-          + "}*)$arg3, $arg4, $arg5, $arg6, (const int)$arg7)")
+          + "} *)$arg3, $arg4, $arg5, $arg6, (const int)$arg7)")
   public static void HUF_fillDTableX2ForWeight(Ptr<HUF_DEltX2> DTableRank,
       Ptr<sortedSymbol_t> begin, Ptr<sortedSymbol_t> end, @Unsigned int nbBits,
       @Unsigned int tableLog, @Unsigned short baseSeq, int level) {
@@ -1416,7 +1417,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_getNbBitsFromCTable((const long unsigned int*)$arg1, $arg2)")
+  @BuiltinBPFFunction("HUF_getNbBitsFromCTable((const long unsigned int *)$arg1, $arg2)")
   public static @Unsigned int HUF_getNbBitsFromCTable(
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> CTable, @Unsigned int symbolValue) {
     throw new MethodIsBPFRelatedFunction();
@@ -1435,7 +1436,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_optimalTableLog($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const unsigned int*)$arg7, $arg8)")
+  @BuiltinBPFFunction("HUF_optimalTableLog($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const unsigned int *)$arg7, $arg8)")
   public static @Unsigned int HUF_optimalTableLog(@Unsigned int maxTableLog, @Unsigned long srcSize,
       @Unsigned int maxSymbolValue, Ptr<?> workSpace, @Unsigned long wkspSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> table,
@@ -1444,7 +1445,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_readCTable($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("HUF_readCTable($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static @Unsigned long HUF_readCTable(
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> CTable,
       Ptr<java.lang. @Unsigned Integer> maxSymbolValuePtr, Ptr<?> src, @Unsigned long srcSize,
@@ -1453,14 +1454,14 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_readCTableHeader((const long unsigned int*)$arg1)")
+  @BuiltinBPFFunction("HUF_readCTableHeader((const long unsigned int *)$arg1)")
   public static HUF_CTableHeader HUF_readCTableHeader(
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> ctable) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_readDTableX1_wksp($arg1, (const void*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("HUF_readDTableX1_wksp($arg1, (const void *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned long HUF_readDTableX1_wksp(
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable, Ptr<?> src,
       @Unsigned long srcSize, Ptr<?> workSpace, @Unsigned long wkspSize, int flags) {
@@ -1468,7 +1469,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_readDTableX2_wksp($arg1, (const void*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("HUF_readDTableX2_wksp($arg1, (const void *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned long HUF_readDTableX2_wksp(
       Ptr<java.lang. @Unsigned @OriginalName("HUF_DTable") Integer> DTable, Ptr<?> src,
       @Unsigned long srcSize, Ptr<?> workSpace, @Unsigned long wkspSize, int flags) {
@@ -1476,7 +1477,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_readStats($arg1, $arg2, $arg3, $arg4, $arg5, (const void*)$arg6, $arg7)")
+  @BuiltinBPFFunction("HUF_readStats($arg1, $arg2, $arg3, $arg4, $arg5, (const void *)$arg6, $arg7)")
   public static @Unsigned long HUF_readStats(
       Ptr<java.lang. @OriginalName("BYTE") Character> huffWeight, @Unsigned long hwSize,
       Ptr<java.lang. @Unsigned Integer> rankStats, Ptr<java.lang. @Unsigned Integer> nbSymbolsPtr,
@@ -1485,7 +1486,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_readStats_body_bmi2($arg1, $arg2, $arg3, $arg4, $arg5, (const void*)$arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("HUF_readStats_body_bmi2($arg1, $arg2, $arg3, $arg4, $arg5, (const void *)$arg6, $arg7, $arg8, $arg9)")
   public static @Unsigned long HUF_readStats_body_bmi2(
       Ptr<java.lang. @OriginalName("BYTE") Character> huffWeight, @Unsigned long hwSize,
       Ptr<java.lang. @Unsigned Integer> rankStats, Ptr<java.lang. @Unsigned Integer> nbSymbolsPtr,
@@ -1495,7 +1496,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_readStats_body_default($arg1, $arg2, $arg3, $arg4, $arg5, (const void*)$arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("HUF_readStats_body_default($arg1, $arg2, $arg3, $arg4, $arg5, (const void *)$arg6, $arg7, $arg8, $arg9)")
   public static @Unsigned long HUF_readStats_body_default(
       Ptr<java.lang. @OriginalName("BYTE") Character> huffWeight, @Unsigned long hwSize,
       Ptr<java.lang. @Unsigned Integer> rankStats, Ptr<java.lang. @Unsigned Integer> nbSymbolsPtr,
@@ -1505,7 +1506,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_readStats_wksp($arg1, $arg2, $arg3, $arg4, $arg5, (const void*)$arg6, $arg7, $arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("HUF_readStats_wksp($arg1, $arg2, $arg3, $arg4, $arg5, (const void *)$arg6, $arg7, $arg8, $arg9, $arg10)")
   public static @Unsigned long HUF_readStats_wksp(
       Ptr<java.lang. @OriginalName("BYTE") Character> huffWeight, @Unsigned long hwSize,
       Ptr<java.lang. @Unsigned Integer> rankStats, Ptr<java.lang. @Unsigned Integer> nbSymbolsPtr,
@@ -1534,7 +1535,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_validateCTable((const long unsigned int*)$arg1, (const unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("HUF_validateCTable((const long unsigned int *)$arg1, (const unsigned int *)$arg2, $arg3)")
   public static int HUF_validateCTable(
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> CTable,
       Ptr<java.lang. @Unsigned Integer> count, @Unsigned int maxSymbolValue) {
@@ -1542,7 +1543,7 @@ public final class HufDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("HUF_writeCTable_wksp($arg1, $arg2, (const long unsigned int*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("HUF_writeCTable_wksp($arg1, $arg2, (const long unsigned int *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static @Unsigned long HUF_writeCTable_wksp(Ptr<?> dst, @Unsigned long maxDstSize,
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> CTable, @Unsigned int maxSymbolValue,
       @Unsigned int huffLog, Ptr<?> workspace, @Unsigned long workspaceSize) {

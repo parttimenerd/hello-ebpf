@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class VdsoDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("vdso_fault((const struct vm_special_mapping*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("vdso_fault((const struct vm_special_mapping *)$arg1, $arg2, $arg3)")
   public static @Unsigned @OriginalName("vm_fault_t") int vdso_fault(Ptr<vm_special_mapping> sm,
       Ptr<vm_area_struct> vma, Ptr<vm_fault> vmf) {
     throw new MethodIsBPFRelatedFunction();
@@ -1110,7 +1111,7 @@ public final class VdsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vdso_mremap((const struct vm_special_mapping*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vdso_mremap((const struct vm_special_mapping *)$arg1, $arg2)")
   public static int vdso_mremap(Ptr<vm_special_mapping> sm, Ptr<vm_area_struct> new_vma) {
     throw new MethodIsBPFRelatedFunction();
   }

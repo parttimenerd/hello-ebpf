@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,48 +1091,48 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class XattrDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__xattr_check_inode($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__xattr_check_inode($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int __xattr_check_inode(Ptr<inode> inode, Ptr<ext4_xattr_ibody_header> header,
       Ptr<?> end, String function, @Unsigned int line) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xattr_dupval($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("xattr_dupval($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5)")
   public static int xattr_dupval(Ptr<xattr> xattrs, Ptr<java.lang.Integer> xattr_count, String name,
       Ptr<?> value, @Unsigned int vallen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xattr_find_entry($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("xattr_find_entry($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int xattr_find_entry(Ptr<inode> inode, Ptr<Ptr<ext4_xattr_entry>> pentry,
       Ptr<?> end, int name_index, String name, int sorted) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)xattr_full_name((const struct xattr_handler*)$arg1, (const u8*)$arg2))")
+  @BuiltinBPFFunction("((const u8*)xattr_full_name((const struct xattr_handler *)$arg1, (const u8 *)$arg2))")
   public static String xattr_full_name(Ptr<xattr_handler> handler, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xattr_getsecurity($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("xattr_getsecurity($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static @OriginalName("ssize_t") long xattr_getsecurity(Ptr<mnt_idmap> idmap,
       Ptr<inode> inode, String name, Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xattr_list_one($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("xattr_list_one($arg1, $arg2, (const u8 *)$arg3)")
   public static int xattr_list_one(Ptr<String> buffer,
       Ptr<java.lang. @OriginalName("ssize_t") Long> remaining_size, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xattr_permission($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("xattr_permission($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int xattr_permission(Ptr<mnt_idmap> idmap, Ptr<inode> inode, String name,
       int mask) {
     throw new MethodIsBPFRelatedFunction();

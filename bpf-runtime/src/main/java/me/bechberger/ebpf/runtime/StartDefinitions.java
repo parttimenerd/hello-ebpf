@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1132,7 +1133,7 @@ public final class StartDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("start_creating((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("start_creating((const u8 *)$arg1, $arg2)")
   public static Ptr<dentry> start_creating(String name, Ptr<dentry> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1156,7 +1157,7 @@ public final class StartDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("start_generic_opal_session($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("start_generic_opal_session($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int start_generic_opal_session(Ptr<opal_dev> dev, opal_uid auth, opal_uid sp_type,
       String key, char key_len) {
     throw new MethodIsBPFRelatedFunction();

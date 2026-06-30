@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1133,7 +1134,7 @@ public final class TimerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("timer_init_key($arg1, (void (*)(struct timer_list*))$arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("timer_init_key($arg1, (void (*)(struct timer_list*))$arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static void timer_init_key(Ptr<timer_list> timer, Ptr<?> func, @Unsigned int flags,
       String name, Ptr<lock_class_key> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -1190,7 +1191,7 @@ public final class TimerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("timer_migration_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("timer_migration_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int timer_migration_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1228,7 +1229,7 @@ public final class TimerDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("timer_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("timer_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long timer_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

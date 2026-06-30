@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1135,14 +1136,14 @@ public final class TraceprobeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("traceprobe_parse_probe_arg($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("traceprobe_parse_probe_arg($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int traceprobe_parse_probe_arg(Ptr<trace_probe> tp, int i, String arg,
       Ptr<traceprobe_parse_context> ctx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("traceprobe_parse_probe_arg_body((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("traceprobe_parse_probe_arg_body((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int traceprobe_parse_probe_arg_body(String argv,
       Ptr<java.lang. @OriginalName("ssize_t") Long> size, Ptr<probe_arg> parg,
       Ptr<traceprobe_parse_context> ctx) {

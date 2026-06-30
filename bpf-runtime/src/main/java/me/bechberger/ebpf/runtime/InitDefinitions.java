@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__init_ldsem($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__init_ldsem($arg1, (const u8 *)$arg2, $arg3)")
   public static void __init_ldsem(Ptr<ld_semaphore> sem, String name, Ptr<lock_class_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1116,7 +1117,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__init_rwsem($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__init_rwsem($arg1, (const u8 *)$arg2, $arg3)")
   public static void __init_rwsem(Ptr<rw_semaphore> sem, String name, Ptr<lock_class_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1129,14 +1130,14 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__init_swait_queue_head($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__init_swait_queue_head($arg1, (const u8 *)$arg2, $arg3)")
   public static void __init_swait_queue_head(Ptr<swait_queue_head> q, String name,
       Ptr<lock_class_key> key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__init_waitqueue_head($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__init_waitqueue_head($arg1, (const u8 *)$arg2, $arg3)")
   public static void __init_waitqueue_head(Ptr<wait_queue_head> wq_head, String name,
       Ptr<lock_class_key> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -1246,7 +1247,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_build_id($arg1, (const struct load_info*)$arg2)")
+  @BuiltinBPFFunction("init_build_id($arg1, (const struct load_info *)$arg2)")
   public static void init_build_id(Ptr<module> mod, Ptr<load_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1290,7 +1291,7 @@ public final class InitDefinitions {
           + "  unsigned int minMatch;\n"
           + "  unsigned int targetLength;\n"
           + "  strategy_of_ZSTD_compressionParameters strategy;\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static void init_cctx_params_from_compress_params(Ptr<ZSTD_CCtx_params_s> cctx_params,
       Ptr<@OriginalName("zstd_compression_parameters") ZSTD_compressionParameters> compress_params) {
     throw new MethodIsBPFRelatedFunction();
@@ -1345,26 +1346,26 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_chdir((const u8*)$arg1)")
+  @BuiltinBPFFunction("init_chdir((const u8 *)$arg1)")
   public static int init_chdir(String filename) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_chmod((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("init_chmod((const u8 *)$arg1, $arg2)")
   public static int init_chmod(String filename, @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_chown((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("init_chown((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int init_chown(String filename, @Unsigned @OriginalName("uid_t") int user,
       @Unsigned @OriginalName("gid_t") int group, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_chroot((const u8*)$arg1)")
+  @BuiltinBPFFunction("init_chroot((const u8 *)$arg1)")
   public static int init_chroot(String filename) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1412,13 +1413,13 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_cpu_possible((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("init_cpu_possible((const struct cpumask *)$arg1)")
   public static void init_cpu_possible(Ptr<cpumask> src) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_cpu_present((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("init_cpu_present((const struct cpumask *)$arg1)")
   public static void init_cpu_present(Ptr<cpumask> src) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1475,7 +1476,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_default_s3((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("init_default_s3((const struct dmi_system_id *)$arg1)")
   public static int init_default_s3(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1559,7 +1560,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_eaccess((const u8*)$arg1)")
+  @BuiltinBPFFunction("init_eaccess((const u8 *)$arg1)")
   public static int init_eaccess(String filename) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1643,7 +1644,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_file($arg1, $arg2, (const struct cred*)$arg3)")
+  @BuiltinBPFFunction("init_file($arg1, $arg2, (const struct cred *)$arg3)")
   public static int init_file(Ptr<file> f, int flags, Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1835,7 +1836,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_ima_appraise_lsm((const struct lsm_id*)$arg1)")
+  @BuiltinBPFFunction("init_ima_appraise_lsm((const struct lsm_id *)$arg1)")
   public static void init_ima_appraise_lsm(Ptr<lsm_id> lsmid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1903,7 +1904,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_irq_alloc_info($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("init_irq_alloc_info($arg1, (const struct cpumask *)$arg2)")
   public static void init_irq_alloc_info(Ptr<irq_alloc_info> info, Ptr<cpumask> mask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1975,7 +1976,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_link((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("init_link((const u8 *)$arg1, (const u8 *)$arg2)")
   public static int init_link(String oldname, String newname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2012,13 +2013,13 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_mkdir((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("init_mkdir((const u8 *)$arg1, $arg2)")
   public static int init_mkdir(String pathname, @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_mknod((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("init_mknod((const u8 *)$arg1, $arg2, $arg3)")
   public static int init_mknod(String filename, @Unsigned @OriginalName("umode_t") short mode,
       @Unsigned int dev) {
     throw new MethodIsBPFRelatedFunction();
@@ -2049,7 +2050,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_module_from_file($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("init_module_from_file($arg1, (const u8 *)$arg2, $arg3)")
   public static int init_module_from_file(Ptr<file> f, String uargs, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2061,7 +2062,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_mount((const u8*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("init_mount((const u8 *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int init_mount(String dev_name, String dir_name, String type_page,
       @Unsigned long flags, Ptr<?> data_page) {
     throw new MethodIsBPFRelatedFunction();
@@ -2130,13 +2131,13 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_nvs_nosave((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("init_nvs_nosave((const struct dmi_system_id *)$arg1)")
   public static int init_nvs_nosave(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_nvs_save_s3((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("init_nvs_save_s3((const struct dmi_system_id *)$arg1)")
   public static int init_nvs_save_s3(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2154,7 +2155,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_old_suspend_ordering((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("init_old_suspend_ordering((const struct dmi_system_id *)$arg1)")
   public static int init_old_suspend_ordering(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2246,7 +2247,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_pkru_write_file($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("init_pkru_write_file($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long init_pkru_write_file(Ptr<file> file, String user_buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2351,7 +2352,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_rmdir((const u8*)$arg1)")
+  @BuiltinBPFFunction("init_rmdir((const u8 *)$arg1)")
   public static int init_rmdir(String pathname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2525,7 +2526,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_skcipher_req((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("init_skcipher_req((const u8 *)$arg1, $arg2)")
   public static Ptr<skcipher_request> init_skcipher_req(Ptr<java.lang.Character> key,
       @Unsigned int key_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -2588,7 +2589,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_stat((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("init_stat((const u8 *)$arg1, $arg2, $arg3)")
   public static int init_stat(String filename, Ptr<kstat> stat, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2606,7 +2607,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_symlink((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("init_symlink((const u8 *)$arg1, (const u8 *)$arg2)")
   public static int init_symlink(String oldname, String newname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2734,7 +2735,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_uevent_argv($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("init_uevent_argv($arg1, (const u8 *)$arg2)")
   public static int init_uevent_argv(Ptr<kobj_uevent_env> env, String subsystem) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2752,7 +2753,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_umount((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("init_umount((const u8 *)$arg1, $arg2)")
   public static int init_umount(String name, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2771,7 +2772,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_unlink((const u8*)$arg1)")
+  @BuiltinBPFFunction("init_unlink((const u8 *)$arg1)")
   public static int init_unlink(String pathname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2808,7 +2809,7 @@ public final class InitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("init_vdso_image((const struct vdso_image*)$arg1)")
+  @BuiltinBPFFunction("init_vdso_image((const struct vdso_image *)$arg1)")
   public static int init_vdso_image(Ptr<vdso_image> image) {
     throw new MethodIsBPFRelatedFunction();
   }

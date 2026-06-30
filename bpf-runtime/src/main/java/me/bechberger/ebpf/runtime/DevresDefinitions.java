@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DevresDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__devres_alloc_node($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("__devres_alloc_node($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static Ptr<?> __devres_alloc_node(@OriginalName("dr_release_t") Ptr<?> release,
       @Unsigned long size, @Unsigned @OriginalName("gfp_t") int gfp, int nid, String name) {
     throw new MethodIsBPFRelatedFunction();

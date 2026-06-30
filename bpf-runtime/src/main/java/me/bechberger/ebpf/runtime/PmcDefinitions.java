@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class PmcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pmc_dev_state_check($arg1, (const struct pmc_bit_map*)$arg2, $arg3, (const struct pmc_bit_map*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pmc_dev_state_check($arg1, (const struct pmc_bit_map *)$arg2, $arg3, (const struct pmc_bit_map *)$arg4, $arg5)")
   public static void pmc_dev_state_check(@Unsigned int sts, Ptr<pmc_bit_map> sts_map,
       @Unsigned int fd, Ptr<pmc_bit_map> fd_map, @Unsigned int sts_possible_false_pos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1115,7 +1116,7 @@ public final class PmcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pmc_dev_state_print($arg1, $arg2, $arg3, (const struct pmc_bit_map*)$arg4, $arg5, (const struct pmc_bit_map*)$arg6)")
+  @BuiltinBPFFunction("pmc_dev_state_print($arg1, $arg2, $arg3, (const struct pmc_bit_map *)$arg4, $arg5, (const struct pmc_bit_map *)$arg6)")
   public static void pmc_dev_state_print(Ptr<seq_file> s, int reg_index, @Unsigned int sts,
       Ptr<pmc_bit_map> sts_map, @Unsigned int fd, Ptr<pmc_bit_map> fd_map) {
     throw new MethodIsBPFRelatedFunction();
@@ -1152,7 +1153,7 @@ public final class PmcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pmc_setup_dev($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("pmc_setup_dev($arg1, (const struct pci_device_id *)$arg2)")
   public static int pmc_setup_dev(Ptr<pci_dev> pdev, Ptr<pci_device_id> ent) {
     throw new MethodIsBPFRelatedFunction();
   }

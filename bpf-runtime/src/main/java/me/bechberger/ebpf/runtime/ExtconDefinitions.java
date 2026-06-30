@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,7 +1109,7 @@ public final class ExtconDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("extcon_dev_allocate((const unsigned int*)$arg1)")
+  @BuiltinBPFFunction("extcon_dev_allocate((const unsigned int *)$arg1)")
   public static Ptr<extcon_dev> extcon_dev_allocate(
       Ptr<java.lang. @Unsigned Integer> supported_cable) {
     throw new MethodIsBPFRelatedFunction();
@@ -1157,7 +1158,7 @@ public final class ExtconDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("extcon_get_extcon_dev((const u8*)$arg1)")
+  @BuiltinBPFFunction("extcon_get_extcon_dev((const u8 *)$arg1)")
   public static Ptr<extcon_dev> extcon_get_extcon_dev(String extcon_name) {
     throw new MethodIsBPFRelatedFunction();
   }

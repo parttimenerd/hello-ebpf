@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class AppendDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("append_bytes($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("append_bytes($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static long append_bytes(Ptr<?> pos, long remaining, String str, @Unsigned int size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1124,20 +1125,20 @@ public final class AppendDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("append_kcore_note($arg1, $arg2, (const u8*)$arg3, $arg4, (const void*)$arg5, $arg6)")
+  @BuiltinBPFFunction("append_kcore_note($arg1, $arg2, (const u8 *)$arg3, $arg4, (const void *)$arg5, $arg6)")
   public static void append_kcore_note(String notes, Ptr<java.lang. @Unsigned Long> i, String name,
       @Unsigned int type, Ptr<?> desc, @Unsigned long descsz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("append_ordered_lsm($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("append_ordered_lsm($arg1, (const u8 *)$arg2)")
   public static void append_ordered_lsm(Ptr<lsm_info> lsm, String from) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("append_printf($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("append_printf($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static int append_printf(Ptr<String> bufp, String end, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();

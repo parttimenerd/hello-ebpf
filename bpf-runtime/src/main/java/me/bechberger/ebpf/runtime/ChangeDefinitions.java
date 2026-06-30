@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1127,7 +1128,7 @@ public final class ChangeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("change_hat((const struct cred*)$arg1, $arg2, (const u8**)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("change_hat((const struct cred *)$arg1, $arg2, (const u8**)$arg3, $arg4, $arg5)")
   public static Ptr<aa_label> change_hat(Ptr<cred> subj_cred, Ptr<aa_label> label, Ptr<String> hats,
       int count, int flags) {
     throw new MethodIsBPFRelatedFunction();

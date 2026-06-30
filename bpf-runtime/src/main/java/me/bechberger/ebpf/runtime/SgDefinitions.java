@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1214,7 +1215,7 @@ public final class SgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sg_copy_from_buffer($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sg_copy_from_buffer($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static @Unsigned long sg_copy_from_buffer(Ptr<scatterlist> sgl, @Unsigned int nents,
       Ptr<?> buf, @Unsigned long buflen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1278,7 +1279,7 @@ public final class SgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sg_init_one($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sg_init_one($arg1, (const void *)$arg2, $arg3)")
   public static void sg_init_one(Ptr<scatterlist> sg, Ptr<?> buf, @Unsigned int buflen) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1385,7 +1386,7 @@ public final class SgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sg_pcopy_from_buffer($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sg_pcopy_from_buffer($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static @Unsigned long sg_pcopy_from_buffer(Ptr<scatterlist> sgl, @Unsigned int nents,
       Ptr<?> buf, @Unsigned long buflen, @OriginalName("off_t") long skip) {
     throw new MethodIsBPFRelatedFunction();
@@ -1480,14 +1481,14 @@ public final class SgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sg_proc_write_adio($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sg_proc_write_adio($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sg_proc_write_adio(Ptr<file> filp, String buffer,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> off) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sg_proc_write_dressz($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sg_proc_write_dressz($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sg_proc_write_dressz(Ptr<file> filp, String buffer,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> off) {
     throw new MethodIsBPFRelatedFunction();
@@ -1578,7 +1579,7 @@ public final class SgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sg_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sg_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long sg_write(Ptr<file> filp, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

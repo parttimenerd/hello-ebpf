@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class BsgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bsg_devnode((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("bsg_devnode((const struct device *)$arg1, $arg2)")
   public static String bsg_devnode(Ptr<device> dev,
       Ptr<java.lang. @Unsigned @OriginalName("umode_t") Short> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1166,14 +1167,14 @@ public final class BsgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bsg_queue_rq($arg1, (const struct blk_mq_queue_data*)$arg2)")
+  @BuiltinBPFFunction("bsg_queue_rq($arg1, (const struct blk_mq_queue_data *)$arg2)")
   public static @OriginalName("blk_status_t") char bsg_queue_rq(Ptr<blk_mq_hw_ctx> hctx,
       Ptr<blk_mq_queue_data> bd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bsg_register_queue($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bsg_register_queue($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<bsg_device> bsg_register_queue(Ptr<request_queue> q, Ptr<device> parent,
       String name, Ptr<?> sg_io_fn) {
     throw new MethodIsBPFRelatedFunction();
@@ -1192,7 +1193,7 @@ public final class BsgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bsg_setup_queue($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("bsg_setup_queue($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<request_queue> bsg_setup_queue(Ptr<device> dev, String name,
       Ptr<queue_limits> lim, Ptr<?> job_fn, Ptr<?> timeout, int dd_job_size) {
     throw new MethodIsBPFRelatedFunction();

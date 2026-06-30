@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1135,7 +1136,7 @@ public final class EarlyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("early_au_setup($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("early_au_setup($arg1, (const u8 *)$arg2)")
   public static int early_au_setup(Ptr<earlycon_device> dev, String opt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1189,7 +1190,7 @@ public final class EarlyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("early_dbgp_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("early_dbgp_write($arg1, (const u8 *)$arg2, $arg3)")
   public static void early_dbgp_write(Ptr<console> con, String str, @Unsigned int n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1372,7 +1373,7 @@ public final class EarlyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("early_lookup_bdev((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("early_lookup_bdev((const u8 *)$arg1, $arg2)")
   public static int early_lookup_bdev(String name,
       Ptr<java.lang. @Unsigned @OriginalName("dev_t") Integer> devt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1516,7 +1517,7 @@ public final class EarlyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("early_printk((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("early_printk((const u8 *)$arg1, $arg2_)")
   public static void early_printk(String fmt, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1570,19 +1571,19 @@ public final class EarlyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("early_serial8250_rs2_setup($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("early_serial8250_rs2_setup($arg1, (const u8 *)$arg2)")
   public static int early_serial8250_rs2_setup(Ptr<earlycon_device> device, String options) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("early_serial8250_setup($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("early_serial8250_setup($arg1, (const u8 *)$arg2)")
   public static int early_serial8250_setup(Ptr<earlycon_device> device, String options) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("early_serial8250_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("early_serial8250_write($arg1, (const u8 *)$arg2, $arg3)")
   public static void early_serial8250_write(Ptr<console> console, String s, @Unsigned int count) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1612,7 +1613,7 @@ public final class EarlyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("early_serial_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("early_serial_write($arg1, (const u8 *)$arg2, $arg3)")
   public static void early_serial_write(Ptr<console> con, String s, @Unsigned int n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1678,7 +1679,7 @@ public final class EarlyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("early_stop_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("early_stop_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long early_stop_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1691,7 +1692,7 @@ public final class EarlyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("early_vga_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("early_vga_write($arg1, (const u8 *)$arg2, $arg3)")
   public static void early_vga_write(Ptr<console> con, String str, @Unsigned int n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1715,7 +1716,7 @@ public final class EarlyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("early_xdbc_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("early_xdbc_write($arg1, (const u8 *)$arg2, $arg3)")
   public static void early_xdbc_write(Ptr<console> con, String str, @Unsigned int n) {
     throw new MethodIsBPFRelatedFunction();
   }

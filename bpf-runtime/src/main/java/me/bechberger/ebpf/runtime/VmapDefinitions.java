@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1159,7 +1160,7 @@ public final class VmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vmap_ram_vread_iter($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vmap_ram_vread_iter($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @Unsigned long vmap_ram_vread_iter(Ptr<iov_iter> iter, String addr,
       @Unsigned long count, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1474,7 +1475,7 @@ public final class HvDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hv_mark_gpa_visibility($arg1, (const long long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hv_mark_gpa_visibility($arg1, (const long long unsigned int *)$arg2, $arg3)")
   public static int hv_mark_gpa_visibility(@Unsigned short count,
       Ptr<java.lang. @Unsigned Long> pfn, hv_mem_host_visibility visibility) {
     throw new MethodIsBPFRelatedFunction();
@@ -1602,13 +1603,13 @@ public final class HvDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hv_send_ipi_mask((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("hv_send_ipi_mask((const struct cpumask *)$arg1, $arg2)")
   public static void hv_send_ipi_mask(Ptr<cpumask> mask, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hv_send_ipi_mask_allbutself((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("hv_send_ipi_mask_allbutself((const struct cpumask *)$arg1, $arg2)")
   public static void hv_send_ipi_mask_allbutself(Ptr<cpumask> mask, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }

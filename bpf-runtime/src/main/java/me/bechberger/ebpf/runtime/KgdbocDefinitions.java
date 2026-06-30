@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1180,7 +1181,7 @@ public final class KgdbocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kgdboc_reset_connect($arg1, $arg2, (const struct input_device_id*)$arg3)")
+  @BuiltinBPFFunction("kgdboc_reset_connect($arg1, $arg2, (const struct input_device_id *)$arg3)")
   public static int kgdboc_reset_connect(Ptr<input_handler> handler, Ptr<input_dev> dev,
       Ptr<input_device_id> id) {
     throw new MethodIsBPFRelatedFunction();

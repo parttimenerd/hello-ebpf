@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class FileDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__file_mqueue_perm((const u8*)$arg1, (const struct cred*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__file_mqueue_perm((const u8 *)$arg1, (const struct cred *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int __file_mqueue_perm(String op, Ptr<cred> subj_cred, Ptr<aa_label> label,
       Ptr<aa_label> flabel, Ptr<file> file, @Unsigned int request, @Unsigned int denied,
       boolean in_atomic) {
@@ -1146,7 +1147,7 @@ public final class FileDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("file_dentry_name($arg1, $arg2, (const struct file*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("file_dentry_name($arg1, $arg2, (const struct file *)$arg3, $arg4, (const u8 *)$arg5)")
   public static String file_dentry_name(String buf, String end, Ptr<file> f, printf_spec spec,
       String fmt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1179,13 +1180,13 @@ public final class FileDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("file_has_perm((const struct cred*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("file_has_perm((const struct cred *)$arg1, $arg2, $arg3)")
   public static int file_has_perm(Ptr<cred> cred, Ptr<file> file, @Unsigned int av) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("file_init_path($arg1, (const struct path*)$arg2, (const struct file_operations*)$arg3)")
+  @BuiltinBPFFunction("file_init_path($arg1, (const struct path *)$arg2, (const struct file_operations *)$arg3)")
   public static void file_init_path(Ptr<file> file, Ptr<path> path, Ptr<file_operations> fop) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1203,7 +1204,7 @@ public final class FileDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("file_ns_capable((const struct file*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("file_ns_capable((const struct file *)$arg1, $arg2, $arg3)")
   public static boolean file_ns_capable(Ptr<file> file, Ptr<user_namespace> ns, int cap) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1216,7 +1217,7 @@ public final class FileDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("file_open_root((const struct path*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("file_open_root((const struct path *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<file> file_open_root(Ptr<path> root, String filename, int flags,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();

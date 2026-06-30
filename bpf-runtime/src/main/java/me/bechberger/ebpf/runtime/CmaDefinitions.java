@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class CmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__cma_declare_contiguous_nid($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const u8*)$arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("__cma_declare_contiguous_nid($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const u8 *)$arg7, $arg8, $arg9)")
   public static int __cma_declare_contiguous_nid(
       Ptr<java.lang. @Unsigned @OriginalName("phys_addr_t") Long> basep,
       @Unsigned @OriginalName("phys_addr_t") long size,
@@ -1147,13 +1148,13 @@ public final class CmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cma_bitmap_pages_to_bits((const struct cma*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cma_bitmap_pages_to_bits((const struct cma *)$arg1, $arg2)")
   public static @Unsigned long cma_bitmap_pages_to_bits(Ptr<cma> cma, @Unsigned long pages) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cma_clear_bitmap($arg1, (const struct cma_memrange*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("cma_clear_bitmap($arg1, (const struct cma_memrange *)$arg2, $arg3, $arg4)")
   public static void cma_clear_bitmap(Ptr<cma> cma, Ptr<cma_memrange> cmr, @Unsigned long pfn,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1190,7 +1191,7 @@ public final class CmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cma_declare_contiguous_multi($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("cma_declare_contiguous_multi($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int cma_declare_contiguous_multi(
       @Unsigned @OriginalName("phys_addr_t") long total_size,
       @Unsigned @OriginalName("phys_addr_t") long align, @Unsigned int order_per_bit, String name,
@@ -1199,7 +1200,7 @@ public final class CmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cma_declare_contiguous_nid($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const u8*)$arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("cma_declare_contiguous_nid($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const u8 *)$arg7, $arg8, $arg9)")
   public static int cma_declare_contiguous_nid(@Unsigned @OriginalName("phys_addr_t") long base,
       @Unsigned @OriginalName("phys_addr_t") long size,
       @Unsigned @OriginalName("phys_addr_t") long limit,
@@ -1221,7 +1222,7 @@ public final class CmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cma_free_folio($arg1, (const struct folio*)$arg2)")
+  @BuiltinBPFFunction("cma_free_folio($arg1, (const struct folio *)$arg2)")
   public static boolean cma_free_folio(Ptr<cma> cma, Ptr<folio> folio) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1239,19 +1240,19 @@ public final class CmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cma_get_base((const struct cma*)$arg1)")
+  @BuiltinBPFFunction("cma_get_base((const struct cma *)$arg1)")
   public static @Unsigned @OriginalName("phys_addr_t") long cma_get_base(Ptr<cma> cma) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)cma_get_name((const struct cma*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)cma_get_name((const struct cma *)$arg1))")
   public static String cma_get_name(Ptr<cma> cma) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cma_get_size((const struct cma*)$arg1)")
+  @BuiltinBPFFunction("cma_get_size((const struct cma *)$arg1)")
   public static @Unsigned long cma_get_size(Ptr<cma> cma) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1340,7 +1341,7 @@ public final class CmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cma_init_reserved_mem($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("cma_init_reserved_mem($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int cma_init_reserved_mem(@Unsigned @OriginalName("phys_addr_t") long base,
       @Unsigned @OriginalName("phys_addr_t") long size, @Unsigned int order_per_bit, String name,
       Ptr<Ptr<cma>> res_cma) {
@@ -1372,14 +1373,14 @@ public final class CmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cma_new_area((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("cma_new_area((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int cma_new_area(String name, @Unsigned @OriginalName("phys_addr_t") long size,
       @Unsigned int order_per_bit, Ptr<Ptr<cma>> res_cma) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cma_pages_valid($arg1, (const struct page*)$arg2, $arg3)")
+  @BuiltinBPFFunction("cma_pages_valid($arg1, (const struct page *)$arg2, $arg3)")
   public static boolean cma_pages_valid(Ptr<cma> cma, Ptr<page> pages, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1392,7 +1393,7 @@ public final class CmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cma_release($arg1, (const struct page*)$arg2, $arg3)")
+  @BuiltinBPFFunction("cma_release($arg1, (const struct page *)$arg2, $arg3)")
   public static boolean cma_release(Ptr<cma> cma, Ptr<page> pages, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }

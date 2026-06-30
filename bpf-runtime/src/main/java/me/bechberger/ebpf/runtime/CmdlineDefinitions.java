@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CmdlineDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("cmdline_find_option((const u8*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("cmdline_find_option((const u8 *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int cmdline_find_option(String cmdline, String option, String buffer, int bufsize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cmdline_find_option_bool((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("cmdline_find_option_bool((const u8 *)$arg1, (const u8 *)$arg2)")
   public static int cmdline_find_option_bool(String cmdline, String option) {
     throw new MethodIsBPFRelatedFunction();
   }

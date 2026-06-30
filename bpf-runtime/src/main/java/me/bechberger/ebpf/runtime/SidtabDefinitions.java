@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1192,7 +1193,7 @@ public final class SidtabDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sidtab_sid2str_put($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sidtab_sid2str_put($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void sidtab_sid2str_put(Ptr<sidtab> s, Ptr<sidtab_entry> entry, String str,
       @Unsigned int str_len) {
     throw new MethodIsBPFRelatedFunction();

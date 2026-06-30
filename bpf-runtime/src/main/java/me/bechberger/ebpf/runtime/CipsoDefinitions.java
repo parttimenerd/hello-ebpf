@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1110,13 +1111,13 @@ public final class CipsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cipso_v4_cache_add((const u8*)$arg1, (const struct netlbl_lsm_secattr*)$arg2)")
+  @BuiltinBPFFunction("cipso_v4_cache_add((const u8 *)$arg1, (const struct netlbl_lsm_secattr *)$arg2)")
   public static int cipso_v4_cache_add(String cipso_ptr, Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cipso_v4_cache_check((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("cipso_v4_cache_check((const u8 *)$arg1, $arg2, $arg3)")
   public static int cipso_v4_cache_check(String key, @Unsigned int key_len,
       Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1190,7 +1191,7 @@ public final class CipsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cipso_v4_getattr((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cipso_v4_getattr((const u8 *)$arg1, $arg2)")
   public static int cipso_v4_getattr(String cipso, Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1202,7 +1203,7 @@ public final class CipsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cipso_v4_optptr((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("cipso_v4_optptr((const struct sk_buff *)$arg1)")
   public static String cipso_v4_optptr(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1214,7 +1215,7 @@ public final class CipsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cipso_v4_req_setattr($arg1, (const struct cipso_v4_doi*)$arg2, (const struct netlbl_lsm_secattr*)$arg3)")
+  @BuiltinBPFFunction("cipso_v4_req_setattr($arg1, (const struct cipso_v4_doi *)$arg2, (const struct netlbl_lsm_secattr *)$arg3)")
   public static int cipso_v4_req_setattr(Ptr<request_sock> req, Ptr<cipso_v4_doi> doi_def,
       Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1227,7 +1228,7 @@ public final class CipsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cipso_v4_skbuff_setattr($arg1, (const struct cipso_v4_doi*)$arg2, (const struct netlbl_lsm_secattr*)$arg3)")
+  @BuiltinBPFFunction("cipso_v4_skbuff_setattr($arg1, (const struct cipso_v4_doi *)$arg2, (const struct netlbl_lsm_secattr *)$arg3)")
   public static int cipso_v4_skbuff_setattr(Ptr<sk_buff> skb, Ptr<cipso_v4_doi> doi_def,
       Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1246,14 +1247,14 @@ public final class CipsoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cipso_v4_sock_setattr($arg1, (const struct cipso_v4_doi*)$arg2, (const struct netlbl_lsm_secattr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("cipso_v4_sock_setattr($arg1, (const struct cipso_v4_doi *)$arg2, (const struct netlbl_lsm_secattr *)$arg3, $arg4)")
   public static int cipso_v4_sock_setattr(Ptr<sock> sk, Ptr<cipso_v4_doi> doi_def,
       Ptr<netlbl_lsm_secattr> secattr, boolean sk_locked) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cipso_v4_validate((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cipso_v4_validate((const struct sk_buff *)$arg1, $arg2)")
   public static int cipso_v4_validate(Ptr<sk_buff> skb, Ptr<String> option) {
     throw new MethodIsBPFRelatedFunction();
   }

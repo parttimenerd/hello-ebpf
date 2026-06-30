@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1125,7 +1126,7 @@ public final class LedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("led_classdev_next_name((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("led_classdev_next_name((const u8 *)$arg1, $arg2, $arg3)")
   public static int led_classdev_next_name(String init_name, String name, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1336,7 +1337,7 @@ public final class LedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("led_trigger_read($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("led_trigger_read($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long led_trigger_read(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> attr, String buf, @OriginalName("loff_t") long pos, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1349,7 +1350,7 @@ public final class LedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("led_trigger_register_simple((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("led_trigger_register_simple((const u8 *)$arg1, $arg2)")
   public static void led_trigger_register_simple(String name, Ptr<Ptr<led_trigger>> tp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1373,7 +1374,7 @@ public final class LedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("led_trigger_snprintf($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("led_trigger_snprintf($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static int led_trigger_snprintf(String buf, @OriginalName("ssize_t") long size, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1392,7 +1393,7 @@ public final class LedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("led_trigger_write($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("led_trigger_write($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long led_trigger_write(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long pos,
       @Unsigned long count) {

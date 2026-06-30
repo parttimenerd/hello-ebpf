@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1143,28 +1144,28 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ip6_route_redirect($arg1, $arg2, $arg3, (const struct sk_buff*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__ip6_route_redirect($arg1, $arg2, $arg3, (const struct sk_buff *)$arg4, $arg5)")
   public static Ptr<rt6_info> __ip6_route_redirect(Ptr<net> net, Ptr<fib6_table> table,
       Ptr<flowi6> fl6, Ptr<sk_buff> skb, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ip6_rt_update_pmtu($arg1, (const struct sock*)$arg2, (const struct ipv6hdr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__ip6_rt_update_pmtu($arg1, (const struct sock *)$arg2, (const struct ipv6hdr *)$arg3, $arg4, $arg5)")
   public static void __ip6_rt_update_pmtu(Ptr<dst_entry> dst, Ptr<sock> sk, Ptr<ipv6hdr> iph,
       @Unsigned int mtu, boolean confirm_neigh) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_addr_string($arg1, $arg2, (const u8*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("ip6_addr_string($arg1, $arg2, (const u8 *)$arg3, $arg4, (const u8 *)$arg5)")
   public static String ip6_addr_string(String buf, String end, Ptr<java.lang.Character> addr,
       printf_spec spec, String fmt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_addr_string_sa($arg1, $arg2, (const struct sockaddr_in6*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("ip6_addr_string_sa($arg1, $arg2, (const struct sockaddr_in6 *)$arg3, $arg4, (const u8 *)$arg5)")
   public static String ip6_addr_string_sa(String buf, String end, Ptr<sockaddr_in6> sa,
       printf_spec spec, String fmt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1179,7 +1180,7 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_autoflowlabel($arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("ip6_autoflowlabel($arg1, (const struct sock *)$arg2)")
   public static boolean ip6_autoflowlabel(Ptr<net> net, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1191,13 +1192,13 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_compressed_string($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("ip6_compressed_string($arg1, (const u8 *)$arg2)")
   public static String ip6_compressed_string(String p, String addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_confirm_neigh((const struct dst_entry*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ip6_confirm_neigh((const struct dst_entry *)$arg1, (const void *)$arg2)")
   public static void ip6_confirm_neigh(Ptr<dst_entry> dst, Ptr<?> daddr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1215,7 +1216,7 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_create_rt_rcu((const struct fib6_result*)$arg1)")
+  @BuiltinBPFFunction("ip6_create_rt_rcu((const struct fib6_result *)$arg1)")
   public static Ptr<rt6_info> ip6_create_rt_rcu(Ptr<fib6_result> res) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1271,7 +1272,7 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_default_advmss((const struct dst_entry*)$arg1)")
+  @BuiltinBPFFunction("ip6_default_advmss((const struct dst_entry *)$arg1)")
   public static @Unsigned int ip6_default_advmss(Ptr<dst_entry> dst) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1332,21 +1333,21 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_dst_lookup_flow($arg1, (const struct sock*)$arg2, $arg3, (const struct in6_addr*)$arg4)")
+  @BuiltinBPFFunction("ip6_dst_lookup_flow($arg1, (const struct sock *)$arg2, $arg3, (const struct in6_addr *)$arg4)")
   public static Ptr<dst_entry> ip6_dst_lookup_flow(Ptr<net> net, Ptr<sock> sk, Ptr<flowi6> fl6,
       Ptr<in6_addr> final_dst) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_dst_lookup_tail($arg1, (const struct sock*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ip6_dst_lookup_tail($arg1, (const struct sock *)$arg2, $arg3, $arg4)")
   public static int ip6_dst_lookup_tail(Ptr<net> net, Ptr<sock> sk, Ptr<Ptr<dst_entry>> dst,
       Ptr<flowi6> fl6) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_dst_neigh_lookup((const struct dst_entry*)$arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("ip6_dst_neigh_lookup((const struct dst_entry *)$arg1, $arg2, (const void *)$arg3)")
   public static Ptr<neighbour> ip6_dst_neigh_lookup(Ptr<dst_entry> dst, Ptr<sk_buff> skb,
       Ptr<?> daddr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1525,33 +1526,33 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_mc_add_src($arg1, (const struct in6_addr*)$arg2, $arg3, $arg4, (const struct in6_addr*)$arg5, $arg6)")
+  @BuiltinBPFFunction("ip6_mc_add_src($arg1, (const struct in6_addr *)$arg2, $arg3, $arg4, (const struct in6_addr *)$arg5, $arg6)")
   public static int ip6_mc_add_src(Ptr<inet6_dev> idev, Ptr<in6_addr> pmca, int sfmode, int sfcount,
       Ptr<in6_addr> psfsrc, int delta) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_mc_del1_src($arg1, $arg2, (const struct in6_addr*)$arg3)")
+  @BuiltinBPFFunction("ip6_mc_del1_src($arg1, $arg2, (const struct in6_addr *)$arg3)")
   public static int ip6_mc_del1_src(Ptr<ifmcaddr6> pmc, int sfmode, Ptr<in6_addr> psfsrc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_mc_del_src($arg1, (const struct in6_addr*)$arg2, $arg3, $arg4, (const struct in6_addr*)$arg5, $arg6)")
+  @BuiltinBPFFunction("ip6_mc_del_src($arg1, (const struct in6_addr *)$arg2, $arg3, $arg4, (const struct in6_addr *)$arg5, $arg6)")
   public static int ip6_mc_del_src(Ptr<inet6_dev> idev, Ptr<in6_addr> pmca, int sfmode, int sfcount,
       Ptr<in6_addr> psfsrc, int delta) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_mc_find_dev($arg1, (const struct in6_addr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ip6_mc_find_dev($arg1, (const struct in6_addr *)$arg2, $arg3)")
   public static Ptr<net_device> ip6_mc_find_dev(Ptr<net> net, Ptr<in6_addr> group, int ifindex) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_mc_hdr((const struct sock*)$arg1, $arg2, $arg3, (const struct in6_addr*)$arg4, (const struct in6_addr*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ip6_mc_hdr((const struct sock *)$arg1, $arg2, $arg3, (const struct in6_addr *)$arg4, (const struct in6_addr *)$arg5, $arg6, $arg7)")
   public static void ip6_mc_hdr(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<net_device> dev,
       Ptr<in6_addr> saddr, Ptr<in6_addr> daddr, int proto, int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1635,20 +1636,20 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_mtu((const struct dst_entry*)$arg1)")
+  @BuiltinBPFFunction("ip6_mtu((const struct dst_entry *)$arg1)")
   public static @Unsigned int ip6_mtu(Ptr<dst_entry> dst) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_mtu_from_fib6((const struct fib6_result*)$arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3)")
+  @BuiltinBPFFunction("ip6_mtu_from_fib6((const struct fib6_result *)$arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3)")
   public static @Unsigned int ip6_mtu_from_fib6(Ptr<fib6_result> res, Ptr<in6_addr> daddr,
       Ptr<in6_addr> saddr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_multipath_l3_keys((const struct sk_buff*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ip6_multipath_l3_keys((const struct sk_buff *)$arg1, $arg2, $arg3)")
   public static void ip6_multipath_l3_keys(Ptr<sk_buff> skb, Ptr<flow_keys> keys,
       Ptr<flow_keys> flkeys) {
     throw new MethodIsBPFRelatedFunction();
@@ -1661,7 +1662,7 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_neigh_lookup((const struct in6_addr*)$arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("ip6_neigh_lookup((const struct in6_addr *)$arg1, $arg2, $arg3, (const void *)$arg4)")
   public static Ptr<neighbour> ip6_neigh_lookup(Ptr<in6_addr> gw, Ptr<net_device> dev,
       Ptr<sk_buff> skb, Ptr<?> daddr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1710,28 +1711,28 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_pol_route($arg1, $arg2, $arg3, $arg4, (const struct sk_buff*)$arg5, $arg6)")
+  @BuiltinBPFFunction("ip6_pol_route($arg1, $arg2, $arg3, $arg4, (const struct sk_buff *)$arg5, $arg6)")
   public static Ptr<rt6_info> ip6_pol_route(Ptr<net> net, Ptr<fib6_table> table, int oif,
       Ptr<flowi6> fl6, Ptr<sk_buff> skb, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_pol_route_input($arg1, $arg2, $arg3, (const struct sk_buff*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ip6_pol_route_input($arg1, $arg2, $arg3, (const struct sk_buff *)$arg4, $arg5)")
   public static Ptr<rt6_info> ip6_pol_route_input(Ptr<net> net, Ptr<fib6_table> table,
       Ptr<flowi6> fl6, Ptr<sk_buff> skb, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_pol_route_lookup($arg1, $arg2, $arg3, (const struct sk_buff*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ip6_pol_route_lookup($arg1, $arg2, $arg3, (const struct sk_buff *)$arg4, $arg5)")
   public static Ptr<rt6_info> ip6_pol_route_lookup(Ptr<net> net, Ptr<fib6_table> table,
       Ptr<flowi6> fl6, Ptr<sk_buff> skb, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_pol_route_output($arg1, $arg2, $arg3, (const struct sk_buff*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ip6_pol_route_output($arg1, $arg2, $arg3, (const struct sk_buff *)$arg4, $arg5)")
   public static Ptr<rt6_info> ip6_pol_route_output(Ptr<net> net, Ptr<fib6_table> table,
       Ptr<flowi6> fl6, Ptr<sk_buff> skb, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1776,7 +1777,7 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_redirect_nh_match((const struct fib6_result*)$arg1, $arg2, (const struct in6_addr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ip6_redirect_nh_match((const struct fib6_result *)$arg1, $arg2, (const struct in6_addr *)$arg3, $arg4)")
   public static boolean ip6_redirect_nh_match(Ptr<fib6_result> res, Ptr<flowi6> fl6,
       Ptr<in6_addr> gw, Ptr<Ptr<rt6_info>> ret) {
     throw new MethodIsBPFRelatedFunction();
@@ -1854,14 +1855,14 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_route_input_lookup($arg1, $arg2, $arg3, (const struct sk_buff*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ip6_route_input_lookup($arg1, $arg2, $arg3, (const struct sk_buff *)$arg4, $arg5)")
   public static Ptr<dst_entry> ip6_route_input_lookup(Ptr<net> net, Ptr<net_device> dev,
       Ptr<flowi6> fl6, Ptr<sk_buff> skb, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_route_lookup($arg1, $arg2, (const struct sk_buff*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ip6_route_lookup($arg1, $arg2, (const struct sk_buff *)$arg3, $arg4)")
   public static Ptr<dst_entry> ip6_route_lookup(Ptr<net> net, Ptr<flowi6> fl6, Ptr<sk_buff> skb,
       int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1917,34 +1918,34 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_route_output_flags($arg1, (const struct sock*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ip6_route_output_flags($arg1, (const struct sock *)$arg2, $arg3, $arg4)")
   public static Ptr<dst_entry> ip6_route_output_flags(Ptr<net> net, Ptr<sock> sk, Ptr<flowi6> fl6,
       int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_route_redirect($arg1, (const struct flowi6*)$arg2, (const struct sk_buff*)$arg3, (const struct in6_addr*)$arg4)")
+  @BuiltinBPFFunction("ip6_route_redirect($arg1, (const struct flowi6 *)$arg2, (const struct sk_buff *)$arg3, (const struct in6_addr *)$arg4)")
   public static Ptr<dst_entry> ip6_route_redirect(Ptr<net> net, Ptr<flowi6> fl6, Ptr<sk_buff> skb,
       Ptr<in6_addr> gateway) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_rt_cache_alloc((const struct fib6_result*)$arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3)")
+  @BuiltinBPFFunction("ip6_rt_cache_alloc((const struct fib6_result *)$arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3)")
   public static Ptr<rt6_info> ip6_rt_cache_alloc(Ptr<fib6_result> res, Ptr<in6_addr> daddr,
       Ptr<in6_addr> saddr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_rt_copy_init($arg1, (const struct fib6_result*)$arg2)")
+  @BuiltinBPFFunction("ip6_rt_copy_init($arg1, (const struct fib6_result *)$arg2)")
   public static void ip6_rt_copy_init(Ptr<rt6_info> rt, Ptr<fib6_result> res) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_rt_get_dev_rcu((const struct fib6_result*)$arg1)")
+  @BuiltinBPFFunction("ip6_rt_get_dev_rcu((const struct fib6_result *)$arg1)")
   public static Ptr<net_device> ip6_rt_get_dev_rcu(Ptr<fib6_result> res) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1970,14 +1971,14 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_sk_dst_lookup_flow($arg1, $arg2, (const struct in6_addr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ip6_sk_dst_lookup_flow($arg1, $arg2, (const struct in6_addr *)$arg3, $arg4)")
   public static Ptr<dst_entry> ip6_sk_dst_lookup_flow(Ptr<sock> sk, Ptr<flowi6> fl6,
       Ptr<in6_addr> final_dst, boolean connected) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_sk_dst_store_flow($arg1, $arg2, (const struct flowi6*)$arg3)")
+  @BuiltinBPFFunction("ip6_sk_dst_store_flow($arg1, $arg2, (const struct flowi6 *)$arg3)")
   public static void ip6_sk_dst_store_flow(Ptr<sock> sk, Ptr<dst_entry> dst, Ptr<flowi6> fl6) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1996,7 +1997,7 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_string($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("ip6_string($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static String ip6_string(String p, String addr, String fmt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2021,7 +2022,7 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_tun_build_state($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ip6_tun_build_state($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int ip6_tun_build_state(Ptr<net> net, Ptr<nlattr> attr, @Unsigned int family,
       Ptr<?> cfg, Ptr<Ptr<lwtunnel_state>> ts, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -2047,7 +2048,7 @@ public final class Ip6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip6_xmit((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ip6_xmit((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int ip6_xmit(Ptr<sock> sk, Ptr<sk_buff> skb, Ptr<flowi6> fl6, @Unsigned int mark,
       Ptr<ipv6_txoptions> opt, int tclass, @Unsigned int priority) {
     throw new MethodIsBPFRelatedFunction();

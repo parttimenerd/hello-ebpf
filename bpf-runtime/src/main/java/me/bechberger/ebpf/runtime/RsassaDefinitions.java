@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1120,28 +1121,28 @@ public final class RsassaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsassa_pkcs1_set_priv_key($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rsassa_pkcs1_set_priv_key($arg1, (const void *)$arg2, $arg3)")
   public static int rsassa_pkcs1_set_priv_key(Ptr<crypto_sig> tfm, Ptr<?> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsassa_pkcs1_set_pub_key($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rsassa_pkcs1_set_pub_key($arg1, (const void *)$arg2, $arg3)")
   public static int rsassa_pkcs1_set_pub_key(Ptr<crypto_sig> tfm, Ptr<?> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsassa_pkcs1_sign($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("rsassa_pkcs1_sign($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static int rsassa_pkcs1_sign(Ptr<crypto_sig> tfm, Ptr<?> src, @Unsigned int slen,
       Ptr<?> dst, @Unsigned int dlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rsassa_pkcs1_verify($arg1, (const void*)$arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("rsassa_pkcs1_verify($arg1, (const void *)$arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int rsassa_pkcs1_verify(Ptr<crypto_sig> tfm, Ptr<?> src, @Unsigned int slen,
       Ptr<?> digest, @Unsigned int dlen) {
     throw new MethodIsBPFRelatedFunction();

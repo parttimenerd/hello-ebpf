@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1114,7 +1115,7 @@ public final class NetlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__netlink_dump_start($arg1, $arg2, (const struct nlmsghdr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__netlink_dump_start($arg1, $arg2, (const struct nlmsghdr *)$arg3, $arg4)")
   public static int __netlink_dump_start(Ptr<sock> ssk, Ptr<sk_buff> skb, Ptr<nlmsghdr> nlh,
       Ptr<netlink_dump_control> control) {
     throw new MethodIsBPFRelatedFunction();
@@ -1135,14 +1136,14 @@ public final class NetlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__netlink_ns_capable((const struct netlink_skb_parms*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__netlink_ns_capable((const struct netlink_skb_parms *)$arg1, $arg2, $arg3)")
   public static boolean __netlink_ns_capable(Ptr<netlink_skb_parms> nsp,
       Ptr<user_namespace> user_ns, int cap) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__netlink_policy_dump_write_attr($arg1, $arg2, (const struct nla_policy*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__netlink_policy_dump_write_attr($arg1, $arg2, (const struct nla_policy *)$arg3, $arg4)")
   public static int __netlink_policy_dump_write_attr(Ptr<netlink_policy_dump_state> state,
       Ptr<sk_buff> skb, Ptr<nla_policy> pt, int nestattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1161,21 +1162,21 @@ public final class NetlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlink_ack($arg1, $arg2, $arg3, (const struct netlink_ext_ack*)$arg4)")
+  @BuiltinBPFFunction("netlink_ack($arg1, $arg2, $arg3, (const struct netlink_ext_ack *)$arg4)")
   public static void netlink_ack(Ptr<sk_buff> in_skb, Ptr<nlmsghdr> nlh, int err,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlink_ack_tlv_fill($arg1, (const struct nlmsghdr*)$arg2, $arg3, (const struct netlink_ext_ack*)$arg4)")
+  @BuiltinBPFFunction("netlink_ack_tlv_fill($arg1, (const struct nlmsghdr *)$arg2, $arg3, (const struct netlink_ext_ack *)$arg4)")
   public static void netlink_ack_tlv_fill(Ptr<sk_buff> skb, Ptr<nlmsghdr> nlh, int err,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlink_ack_tlv_len($arg1, $arg2, (const struct netlink_ext_ack*)$arg3)")
+  @BuiltinBPFFunction("netlink_ack_tlv_len($arg1, $arg2, (const struct netlink_ext_ack *)$arg3)")
   public static @Unsigned long netlink_ack_tlv_len(Ptr<netlink_sock> nlk, int err,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1228,7 +1229,7 @@ public final class NetlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlink_capable((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netlink_capable((const struct sk_buff *)$arg1, $arg2)")
   public static boolean netlink_capable(Ptr<sk_buff> skb, int cap) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1240,7 +1241,7 @@ public final class NetlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlink_compare($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("netlink_compare($arg1, (const void *)$arg2)")
   public static int netlink_compare(Ptr<rhashtable_compare_arg> arg, Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1315,7 +1316,7 @@ public final class NetlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlink_hash((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("netlink_hash((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned int netlink_hash(Ptr<?> data, @Unsigned int len, @Unsigned int seed) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1339,7 +1340,7 @@ public final class NetlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlink_net_capable((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netlink_net_capable((const struct sk_buff *)$arg1, $arg2)")
   public static boolean netlink_net_capable(Ptr<sk_buff> skb, int cap) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1357,20 +1358,20 @@ public final class NetlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlink_ns_capable((const struct sk_buff*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("netlink_ns_capable((const struct sk_buff *)$arg1, $arg2, $arg3)")
   public static boolean netlink_ns_capable(Ptr<sk_buff> skb, Ptr<user_namespace> user_ns, int cap) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlink_policy_dump_add_policy($arg1, (const struct nla_policy*)$arg2, $arg3)")
+  @BuiltinBPFFunction("netlink_policy_dump_add_policy($arg1, (const struct nla_policy *)$arg2, $arg3)")
   public static int netlink_policy_dump_add_policy(Ptr<Ptr<netlink_policy_dump_state>> pstate,
       Ptr<nla_policy> policy, @Unsigned int maxtype) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlink_policy_dump_attr_size_estimate((const struct nla_policy*)$arg1)")
+  @BuiltinBPFFunction("netlink_policy_dump_attr_size_estimate((const struct nla_policy *)$arg1)")
   public static int netlink_policy_dump_attr_size_estimate(Ptr<nla_policy> pt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1382,7 +1383,7 @@ public final class NetlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlink_policy_dump_get_policy_idx($arg1, (const struct nla_policy*)$arg2, $arg3)")
+  @BuiltinBPFFunction("netlink_policy_dump_get_policy_idx($arg1, (const struct nla_policy *)$arg2, $arg3)")
   public static int netlink_policy_dump_get_policy_idx(Ptr<netlink_policy_dump_state> state,
       Ptr<nla_policy> policy, @Unsigned int maxtype) {
     throw new MethodIsBPFRelatedFunction();
@@ -1402,7 +1403,7 @@ public final class NetlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlink_policy_dump_write_attr($arg1, (const struct nla_policy*)$arg2, $arg3)")
+  @BuiltinBPFFunction("netlink_policy_dump_write_attr($arg1, (const struct nla_policy *)$arg2, $arg3)")
   public static int netlink_policy_dump_write_attr(Ptr<sk_buff> skb, Ptr<nla_policy> pt,
       int nestattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1546,7 +1547,7 @@ public final class NetlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlink_to_full_skb((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netlink_to_full_skb((const struct sk_buff *)$arg1, $arg2)")
   public static Ptr<sk_buff> netlink_to_full_skb(Ptr<sk_buff> skb,
       @Unsigned @OriginalName("gfp_t") int gfp_mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -2336,16 +2337,16 @@ public final class NetlinkDefinitions {
 
     public @Unsigned int n_alloc;
 
-    public AnonymousType870019773C60 @Size(0) [] policies;
+    public AnonymousType1813525162C69 @Size(0) [] policies;
   }
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const struct nla_policy*; unsigned int maxtype; }"
+      cType = "struct { const struct nla_policy *policy; unsigned int maxtype; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType870019773C60 extends Struct {
+  public static class AnonymousType1813525162C69 extends Struct {
     public Ptr<nla_policy> policy;
 
     public @Unsigned int maxtype;

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class SimpleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_attr_open($arg1, $arg2, (int (*)(void*, long long unsigned int*))$arg3, (int (*)(void*, long long unsigned int))$arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("simple_attr_open($arg1, $arg2, (int (*)(void*, long long unsigned int*))$arg3, (int (*)(void*, long long unsigned int))$arg4, (const u8 *)$arg5)")
   public static int simple_attr_open(Ptr<inode> inode, Ptr<file> file, Ptr<?> get, Ptr<?> set,
       String fmt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1123,21 +1124,21 @@ public final class SimpleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_attr_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("simple_attr_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long simple_attr_write(Ptr<file> file, String buf,
       @Unsigned long len, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_attr_write_signed($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("simple_attr_write_signed($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long simple_attr_write_signed(Ptr<file> file, String buf,
       @Unsigned long len, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_copy_to_iter((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("simple_copy_to_iter((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned long simple_copy_to_iter(Ptr<?> addr, @Unsigned long bytes, Ptr<?> data,
       Ptr<iov_iter> i) {
     throw new MethodIsBPFRelatedFunction();
@@ -1156,7 +1157,7 @@ public final class SimpleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_fill_super($arg1, $arg2, (const struct tree_descr*)$arg3)")
+  @BuiltinBPFFunction("simple_fill_super($arg1, $arg2, (const struct tree_descr *)$arg3)")
   public static int simple_fill_super(Ptr<super_block> s, @Unsigned long magic,
       Ptr<tree_descr> files) {
     throw new MethodIsBPFRelatedFunction();
@@ -1170,7 +1171,7 @@ public final class SimpleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("simple_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int simple_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1259,7 +1260,7 @@ public final class SimpleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_read_from_buffer($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("simple_read_from_buffer($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @OriginalName("ssize_t") long simple_read_from_buffer(Ptr<?> to,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos, Ptr<?> from,
       @Unsigned long available) {
@@ -1319,7 +1320,7 @@ public final class SimpleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_start_creating($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("simple_start_creating($arg1, (const u8 *)$arg2)")
   public static Ptr<dentry> simple_start_creating(Ptr<dentry> parent, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1331,52 +1332,52 @@ public final class SimpleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_strntoll((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("simple_strntoll((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static long simple_strntoll(String cp, Ptr<String> endp, @Unsigned int base,
       @Unsigned long max_chars) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_strntoul((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("simple_strntoul((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned long simple_strntoul(String cp, Ptr<String> endp, @Unsigned int base,
       @Unsigned long max_chars) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_strntoull((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("simple_strntoull((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned long simple_strntoull(String startp, Ptr<String> endp, @Unsigned int base,
       @Unsigned long max_chars) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_strtol((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("simple_strtol((const u8 *)$arg1, $arg2, $arg3)")
   public static long simple_strtol(String cp, Ptr<String> endp, @Unsigned int base) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_strtoll((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("simple_strtoll((const u8 *)$arg1, $arg2, $arg3)")
   public static long simple_strtoll(String cp, Ptr<String> endp, @Unsigned int base) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_strtoul((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("simple_strtoul((const u8 *)$arg1, $arg2, $arg3)")
   public static @Unsigned long simple_strtoul(String cp, Ptr<String> endp, @Unsigned int base) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_strtoull((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("simple_strtoull((const u8 *)$arg1, $arg2, $arg3)")
   public static @Unsigned long simple_strtoull(String cp, Ptr<String> endp, @Unsigned int base) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_transaction_get($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("simple_transaction_get($arg1, (const u8 *)$arg2, $arg3)")
   public static String simple_transaction_get(Ptr<file> file, String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1407,7 +1408,7 @@ public final class SimpleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_write_begin((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("simple_write_begin((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int simple_write_begin(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, Ptr<Ptr<folio>> foliop,
       Ptr<Ptr<?>> fsdata) {
@@ -1415,7 +1416,7 @@ public final class SimpleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_write_end((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("simple_write_end((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int simple_write_end(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, @Unsigned int copied, Ptr<folio> folio,
       Ptr<?> fsdata) {
@@ -1423,7 +1424,7 @@ public final class SimpleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_write_to_buffer($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("simple_write_to_buffer($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @OriginalName("ssize_t") long simple_write_to_buffer(Ptr<?> to,
       @Unsigned long available, Ptr<java.lang. @OriginalName("loff_t") Long> ppos, Ptr<?> from,
       @Unsigned long count) {
@@ -1437,7 +1438,7 @@ public final class SimpleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_xattr_alloc((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("simple_xattr_alloc((const void *)$arg1, $arg2)")
   public static Ptr<simple_xattr> simple_xattr_alloc(Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1449,7 +1450,7 @@ public final class SimpleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_xattr_get($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("simple_xattr_get($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int simple_xattr_get(Ptr<simple_xattrs> xattrs, String name, Ptr<?> buffer,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1463,14 +1464,14 @@ public final class SimpleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_xattr_set($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("simple_xattr_set($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static Ptr<simple_xattr> simple_xattr_set(Ptr<simple_xattrs> xattrs, String name,
       Ptr<?> value, @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("simple_xattr_space((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("simple_xattr_space((const u8 *)$arg1, $arg2)")
   public static @Unsigned long simple_xattr_space(String name, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }

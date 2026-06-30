@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1306,7 +1307,7 @@ public final class UnixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("unix_fs_perm((const u8*)$arg1, $arg2, (const struct cred*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("unix_fs_perm((const u8 *)$arg1, $arg2, (const struct cred *)$arg3, $arg4, $arg5)")
   public static int unix_fs_perm(String op, @Unsigned int mask, Ptr<cred> subj_cred,
       Ptr<aa_label> label, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
@@ -1356,7 +1357,7 @@ public final class UnixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("unix_maybe_add_creds($arg1, (const struct sock*)$arg2, (const struct sock*)$arg3)")
+  @BuiltinBPFFunction("unix_maybe_add_creds($arg1, (const struct sock *)$arg2, (const struct sock *)$arg3)")
   public static int unix_maybe_add_creds(Ptr<sk_buff> skb, Ptr<sock> sk, Ptr<sock> other) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1398,7 +1399,7 @@ public final class UnixDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("unix_peer_perm((const struct cred*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("unix_peer_perm((const struct cred *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9, $arg10)")
   public static int unix_peer_perm(Ptr<cred> subj_cred, Ptr<aa_label> label, String op,
       @Unsigned int request, Ptr<sock> sk, Ptr<path> path, Ptr<sockaddr_un> peer_addr,
       int peer_addrlen, Ptr<path> peer_path, Ptr<aa_label> peer_label) {
@@ -1702,7 +1703,7 @@ public final class UnixDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const struct tomoyo_path_info*; u8 protocol; u8 operation; }"
+      cType = "struct { const struct tomoyo_path_info *address; u8 protocol; u8 operation; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

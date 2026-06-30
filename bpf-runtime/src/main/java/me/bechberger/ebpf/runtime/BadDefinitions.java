@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1165,7 +1166,7 @@ public final class BadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bad_inode_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bad_inode_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int bad_inode_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1245,7 +1246,7 @@ public final class BadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bad_inode_symlink($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("bad_inode_symlink($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int bad_inode_symlink(Ptr<mnt_idmap> idmap, Ptr<inode> dir, Ptr<dentry> dentry,
       String symname) {
     throw new MethodIsBPFRelatedFunction();
@@ -1271,7 +1272,7 @@ public final class BadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bad_page($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("bad_page($arg1, (const u8 *)$arg2)")
   public static void bad_page(Ptr<page> page, String reason) {
     throw new MethodIsBPFRelatedFunction();
   }

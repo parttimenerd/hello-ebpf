@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class FsDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__fs_parse($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__fs_parse($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int __fs_parse(Ptr<p_log> log, Ptr<fs_parameter_spec> desc, Ptr<fs_parameter> param,
       Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
@@ -1148,7 +1149,7 @@ public final class FsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_dax_get_by_bdev($arg1, $arg2, $arg3, (const struct dax_holder_operations*)$arg4)")
+  @BuiltinBPFFunction("fs_dax_get_by_bdev($arg1, $arg2, $arg3, (const struct dax_holder_operations *)$arg4)")
   public static Ptr<dax_device> fs_dax_get_by_bdev(Ptr<block_device> bdev,
       Ptr<java.lang. @Unsigned Long> start_off, Ptr<?> holder, Ptr<dax_holder_operations> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1161,7 +1162,7 @@ public final class FsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_index((const u8*)$arg1)")
+  @BuiltinBPFFunction("fs_index((const u8 *)$arg1)")
   public static int fs_index(String __name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1200,91 +1201,91 @@ public final class FsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_param_is_blob($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fs_param_is_blob($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int fs_param_is_blob(Ptr<p_log> log, Ptr<fs_parameter_spec> p,
       Ptr<fs_parameter> param, Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_param_is_blockdev($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fs_param_is_blockdev($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int fs_param_is_blockdev(Ptr<p_log> log, Ptr<fs_parameter_spec> p,
       Ptr<fs_parameter> param, Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_param_is_bool($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fs_param_is_bool($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int fs_param_is_bool(Ptr<p_log> log, Ptr<fs_parameter_spec> p,
       Ptr<fs_parameter> param, Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_param_is_enum($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fs_param_is_enum($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int fs_param_is_enum(Ptr<p_log> log, Ptr<fs_parameter_spec> p,
       Ptr<fs_parameter> param, Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_param_is_fd($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fs_param_is_fd($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int fs_param_is_fd(Ptr<p_log> log, Ptr<fs_parameter_spec> p,
       Ptr<fs_parameter> param, Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_param_is_file_or_string($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fs_param_is_file_or_string($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int fs_param_is_file_or_string(Ptr<p_log> log, Ptr<fs_parameter_spec> p,
       Ptr<fs_parameter> param, Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_param_is_gid($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fs_param_is_gid($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int fs_param_is_gid(Ptr<p_log> log, Ptr<fs_parameter_spec> p,
       Ptr<fs_parameter> param, Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_param_is_path($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fs_param_is_path($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int fs_param_is_path(Ptr<p_log> log, Ptr<fs_parameter_spec> p,
       Ptr<fs_parameter> param, Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_param_is_s32($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fs_param_is_s32($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int fs_param_is_s32(Ptr<p_log> log, Ptr<fs_parameter_spec> p,
       Ptr<fs_parameter> param, Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_param_is_string($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fs_param_is_string($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int fs_param_is_string(Ptr<p_log> log, Ptr<fs_parameter_spec> p,
       Ptr<fs_parameter> param, Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_param_is_u32($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fs_param_is_u32($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int fs_param_is_u32(Ptr<p_log> log, Ptr<fs_parameter_spec> p,
       Ptr<fs_parameter> param, Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_param_is_u64($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fs_param_is_u64($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int fs_param_is_u64(Ptr<p_log> log, Ptr<fs_parameter_spec> p,
       Ptr<fs_parameter> param, Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_param_is_uid($arg1, (const struct fs_parameter_spec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fs_param_is_uid($arg1, (const struct fs_parameter_spec *)$arg2, $arg3, $arg4)")
   public static int fs_param_is_uid(Ptr<p_log> log, Ptr<fs_parameter_spec> p,
       Ptr<fs_parameter> param, Ptr<fs_parse_result> result) {
     throw new MethodIsBPFRelatedFunction();
@@ -1309,7 +1310,7 @@ public final class FsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fs_validate_description((const u8*)$arg1, (const struct fs_parameter_spec*)$arg2)")
+  @BuiltinBPFFunction("fs_validate_description((const u8 *)$arg1, (const struct fs_parameter_spec *)$arg2)")
   public static boolean fs_validate_description(String name, Ptr<fs_parameter_spec> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1846,7 +1847,7 @@ public final class FsDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; struct { unsigned int val; } ouid; }"
+      cType = "struct { const u8 *target; struct { unsigned int val; } ouid; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

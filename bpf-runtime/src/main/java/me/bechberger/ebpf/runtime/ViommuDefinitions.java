@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1218,13 +1219,13 @@ public final class ViommuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("viommu_match_node($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("viommu_match_node($arg1, (const void *)$arg2)")
   public static int viommu_match_node(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("viommu_of_xlate($arg1, (const struct of_phandle_args*)$arg2)")
+  @BuiltinBPFFunction("viommu_of_xlate($arg1, (const struct of_phandle_args *)$arg2)")
   public static int viommu_of_xlate(Ptr<device> dev, Ptr<of_phandle_args> args) {
     throw new MethodIsBPFRelatedFunction();
   }

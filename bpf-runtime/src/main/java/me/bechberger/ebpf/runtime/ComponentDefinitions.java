@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class ComponentDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__component_add($arg1, (const struct component_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__component_add($arg1, (const struct component_ops *)$arg2, $arg3)")
   public static int __component_add(Ptr<device> dev, Ptr<component_ops> ops, int subcomponent) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1103,13 +1104,13 @@ public final class ComponentDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("component_add($arg1, (const struct component_ops*)$arg2)")
+  @BuiltinBPFFunction("component_add($arg1, (const struct component_ops *)$arg2)")
   public static int component_add(Ptr<device> dev, Ptr<component_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("component_add_typed($arg1, (const struct component_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("component_add_typed($arg1, (const struct component_ops *)$arg2, $arg3)")
   public static int component_add_typed(Ptr<device> dev, Ptr<component_ops> ops, int subcomponent) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1152,7 +1153,7 @@ public final class ComponentDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("component_del($arg1, (const struct component_ops*)$arg2)")
+  @BuiltinBPFFunction("component_del($arg1, (const struct component_ops *)$arg2)")
   public static void component_del(Ptr<device> dev, Ptr<component_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1170,20 +1171,20 @@ public final class ComponentDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("component_master_add_with_match($arg1, (const struct component_master_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("component_master_add_with_match($arg1, (const struct component_master_ops *)$arg2, $arg3)")
   public static int component_master_add_with_match(Ptr<device> parent,
       Ptr<component_master_ops> ops, Ptr<component_match> match) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("component_master_del($arg1, (const struct component_master_ops*)$arg2)")
+  @BuiltinBPFFunction("component_master_del($arg1, (const struct component_master_ops *)$arg2)")
   public static void component_master_del(Ptr<device> parent, Ptr<component_master_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("component_master_is_bound($arg1, (const struct component_master_ops*)$arg2)")
+  @BuiltinBPFFunction("component_master_is_bound($arg1, (const struct component_master_ops *)$arg2)")
   public static boolean component_master_is_bound(Ptr<device> parent,
       Ptr<component_master_ops> ops) {
     throw new MethodIsBPFRelatedFunction();

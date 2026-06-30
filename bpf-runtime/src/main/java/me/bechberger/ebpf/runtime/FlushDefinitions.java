@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1353,7 +1354,7 @@ public final class FlushDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flush_tlb_multi((const struct cpumask*)$arg1, (const struct flush_tlb_info*)$arg2)")
+  @BuiltinBPFFunction("flush_tlb_multi((const struct cpumask *)$arg1, (const struct flush_tlb_info *)$arg2)")
   public static void flush_tlb_multi(Ptr<cpumask> cpumask, Ptr<flush_tlb_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }

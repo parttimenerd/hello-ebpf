@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1160,7 +1161,7 @@ public final class HasDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("has_uuid_at_pos($arg1, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg2, $arg3, $arg4)")
+          + "} *)$arg2, $arg3, $arg4)")
   public static boolean has_uuid_at_pos(Ptr<nd_region> nd_region, Ptr<uuid_t> uuid,
       @Unsigned long cookie, @Unsigned short pos) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1322,7 +1323,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_btGetAllMatches_dictMatchState_3($arg1, $arg2, $arg3, (const u8*)$arg4, (const const u8*)$arg5, (const unsigned int*)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
+  @BuiltinBPFFunction("ZSTD_btGetAllMatches_dictMatchState_3($arg1, $arg2, $arg3, (const u8 *)$arg4, (const const u8*)$arg5, (const unsigned int *)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
   public static @Unsigned int ZSTD_btGetAllMatches_dictMatchState_3(Ptr<ZSTD_match_t> matches,
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @Unsigned Integer> nextToUpdate3,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
@@ -1332,7 +1333,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_btGetAllMatches_dictMatchState_4($arg1, $arg2, $arg3, (const u8*)$arg4, (const const u8*)$arg5, (const unsigned int*)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
+  @BuiltinBPFFunction("ZSTD_btGetAllMatches_dictMatchState_4($arg1, $arg2, $arg3, (const u8 *)$arg4, (const const u8*)$arg5, (const unsigned int *)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
   public static @Unsigned int ZSTD_btGetAllMatches_dictMatchState_4(Ptr<ZSTD_match_t> matches,
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @Unsigned Integer> nextToUpdate3,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
@@ -1342,7 +1343,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_btGetAllMatches_dictMatchState_5($arg1, $arg2, $arg3, (const u8*)$arg4, (const const u8*)$arg5, (const unsigned int*)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
+  @BuiltinBPFFunction("ZSTD_btGetAllMatches_dictMatchState_5($arg1, $arg2, $arg3, (const u8 *)$arg4, (const const u8*)$arg5, (const unsigned int *)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
   public static @Unsigned int ZSTD_btGetAllMatches_dictMatchState_5(Ptr<ZSTD_match_t> matches,
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @Unsigned Integer> nextToUpdate3,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
@@ -1352,7 +1353,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_btGetAllMatches_dictMatchState_6($arg1, $arg2, $arg3, (const u8*)$arg4, (const const u8*)$arg5, (const unsigned int*)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
+  @BuiltinBPFFunction("ZSTD_btGetAllMatches_dictMatchState_6($arg1, $arg2, $arg3, (const u8 *)$arg4, (const const u8*)$arg5, (const unsigned int *)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
   public static @Unsigned int ZSTD_btGetAllMatches_dictMatchState_6(Ptr<ZSTD_match_t> matches,
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @Unsigned Integer> nextToUpdate3,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
@@ -1362,7 +1363,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_btGetAllMatches_extDict_3($arg1, $arg2, $arg3, (const u8*)$arg4, (const const u8*)$arg5, (const unsigned int*)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
+  @BuiltinBPFFunction("ZSTD_btGetAllMatches_extDict_3($arg1, $arg2, $arg3, (const u8 *)$arg4, (const const u8*)$arg5, (const unsigned int *)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
   public static @Unsigned int ZSTD_btGetAllMatches_extDict_3(Ptr<ZSTD_match_t> matches,
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @Unsigned Integer> nextToUpdate3,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
@@ -1372,7 +1373,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_btGetAllMatches_extDict_4($arg1, $arg2, $arg3, (const u8*)$arg4, (const const u8*)$arg5, (const unsigned int*)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
+  @BuiltinBPFFunction("ZSTD_btGetAllMatches_extDict_4($arg1, $arg2, $arg3, (const u8 *)$arg4, (const const u8*)$arg5, (const unsigned int *)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
   public static @Unsigned int ZSTD_btGetAllMatches_extDict_4(Ptr<ZSTD_match_t> matches,
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @Unsigned Integer> nextToUpdate3,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
@@ -1382,7 +1383,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_btGetAllMatches_extDict_5($arg1, $arg2, $arg3, (const u8*)$arg4, (const const u8*)$arg5, (const unsigned int*)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
+  @BuiltinBPFFunction("ZSTD_btGetAllMatches_extDict_5($arg1, $arg2, $arg3, (const u8 *)$arg4, (const const u8*)$arg5, (const unsigned int *)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
   public static @Unsigned int ZSTD_btGetAllMatches_extDict_5(Ptr<ZSTD_match_t> matches,
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @Unsigned Integer> nextToUpdate3,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
@@ -1392,7 +1393,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_btGetAllMatches_extDict_6($arg1, $arg2, $arg3, (const u8*)$arg4, (const const u8*)$arg5, (const unsigned int*)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
+  @BuiltinBPFFunction("ZSTD_btGetAllMatches_extDict_6($arg1, $arg2, $arg3, (const u8 *)$arg4, (const const u8*)$arg5, (const unsigned int *)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
   public static @Unsigned int ZSTD_btGetAllMatches_extDict_6(Ptr<ZSTD_match_t> matches,
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @Unsigned Integer> nextToUpdate3,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
@@ -1402,7 +1403,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_btGetAllMatches_noDict_3($arg1, $arg2, $arg3, (const u8*)$arg4, (const const u8*)$arg5, (const unsigned int*)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
+  @BuiltinBPFFunction("ZSTD_btGetAllMatches_noDict_3($arg1, $arg2, $arg3, (const u8 *)$arg4, (const const u8*)$arg5, (const unsigned int *)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
   public static @Unsigned int ZSTD_btGetAllMatches_noDict_3(Ptr<ZSTD_match_t> matches,
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @Unsigned Integer> nextToUpdate3,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
@@ -1412,7 +1413,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_btGetAllMatches_noDict_4($arg1, $arg2, $arg3, (const u8*)$arg4, (const const u8*)$arg5, (const unsigned int*)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
+  @BuiltinBPFFunction("ZSTD_btGetAllMatches_noDict_4($arg1, $arg2, $arg3, (const u8 *)$arg4, (const const u8*)$arg5, (const unsigned int *)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
   public static @Unsigned int ZSTD_btGetAllMatches_noDict_4(Ptr<ZSTD_match_t> matches,
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @Unsigned Integer> nextToUpdate3,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
@@ -1422,7 +1423,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_btGetAllMatches_noDict_5($arg1, $arg2, $arg3, (const u8*)$arg4, (const const u8*)$arg5, (const unsigned int*)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
+  @BuiltinBPFFunction("ZSTD_btGetAllMatches_noDict_5($arg1, $arg2, $arg3, (const u8 *)$arg4, (const const u8*)$arg5, (const unsigned int *)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
   public static @Unsigned int ZSTD_btGetAllMatches_noDict_5(Ptr<ZSTD_match_t> matches,
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @Unsigned Integer> nextToUpdate3,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
@@ -1432,7 +1433,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_btGetAllMatches_noDict_6($arg1, $arg2, $arg3, (const u8*)$arg4, (const const u8*)$arg5, (const unsigned int*)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
+  @BuiltinBPFFunction("ZSTD_btGetAllMatches_noDict_6($arg1, $arg2, $arg3, (const u8 *)$arg4, (const const u8*)$arg5, (const unsigned int *)$arg6, (const unsigned int)$arg7, (const unsigned int)$arg8)")
   public static @Unsigned int ZSTD_btGetAllMatches_noDict_6(Ptr<ZSTD_match_t> matches,
       Ptr<ZSTD_MatchState_t> ms, Ptr<java.lang. @Unsigned Integer> nextToUpdate3,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
@@ -1454,7 +1455,7 @@ public final class ZstdDefinitions {
           + "  long unsigned int maxNbLit;\n"
           + "  longLengthType_of_SeqStore_t longLengthType;\n"
           + "  unsigned int longLengthPos;\n"
-          + "}*)$arg1, (const struct {\n"
+          + "} *)$arg1, (const struct {\n"
           + "  struct {\n"
           + "    long unsigned int CTable[257];\n"
           + "    repeatMode_of_ZSTD_hufCTables_t repeatMode;\n"
@@ -1467,7 +1468,7 @@ public final class ZstdDefinitions {
           + "    litlength_repeatMode_of_ZSTD_fseCTables_t_and_matchlength_repeatMode_of_ZSTD_fseCTables_t_and_offcode_repeatMode_of_ZSTD_fseCTables_t matchlength_repeatMode;\n"
           + "    litlength_repeatMode_of_ZSTD_fseCTables_t_and_matchlength_repeatMode_of_ZSTD_fseCTables_t_and_offcode_repeatMode_of_ZSTD_fseCTables_t litlength_repeatMode;\n"
           + "  } fse;\n"
-          + "}*)$arg2, $arg3, (const ZSTD_CCtx_params_s*)$arg4, $arg5, $arg6, $arg7)")
+          + "} *)$arg2, $arg3, (const ZSTD_CCtx_params_s *)$arg4, $arg5, $arg6, $arg7)")
   public static @Unsigned long ZSTD_buildBlockEntropyStats(Ptr<SeqStore_t> seqStorePtr,
       Ptr<ZSTD_entropyCTables_t> prevEntropy, Ptr<ZSTD_entropyCTables_t> nextEntropy,
       Ptr<ZSTD_CCtx_params_s> cctxParams, Ptr<ZSTD_entropyCTablesMetadata_t> entropyMetadata,
@@ -1479,7 +1480,7 @@ public final class ZstdDefinitions {
   @BuiltinBPFFunction("ZSTD_buildBlockEntropyStats_literals((const void*)$arg1, $arg2, (const struct {\n"
           + "  long unsigned int CTable[257];\n"
           + "  repeatMode_of_ZSTD_hufCTables_t repeatMode;\n"
-          + "}*)$arg3, $arg4, $arg5, (const int)$arg6, $arg7, $arg8, $arg9)")
+          + "} *)$arg3, $arg4, $arg5, (const int)$arg6, $arg7, $arg8, $arg9)")
   public static @Unsigned long ZSTD_buildBlockEntropyStats_literals(Ptr<?> src,
       @Unsigned long srcSize, Ptr<ZSTD_hufCTables_t> prevHuf, Ptr<ZSTD_hufCTables_t> nextHuf,
       Ptr<ZSTD_hufCTablesMetadata_t> hufMetadata, int literalsCompressionIsDisabled,
@@ -1488,7 +1489,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_buildCTable($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const u8*)$arg8, $arg9, (const short int*)$arg10, $arg11, $arg12, (const unsigned int*)$arg13, $arg14, $arg15, $arg16)")
+  @BuiltinBPFFunction("ZSTD_buildCTable($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (const u8 *)$arg8, $arg9, (const short int *)$arg10, $arg11, $arg12, (const unsigned int *)$arg13, $arg14, $arg15, $arg16)")
   public static @Unsigned long ZSTD_buildCTable(Ptr<?> dst, @Unsigned long dstCapacity,
       Ptr<java.lang. @Unsigned @OriginalName("FSE_CTable") Integer> nextCTable,
       @Unsigned int FSELog,
@@ -1509,7 +1510,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_buildFSETable($arg1, (const short int*)$arg2, $arg3, (const unsigned int*)$arg4, (const u8*)$arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("ZSTD_buildFSETable($arg1, (const short int *)$arg2, $arg3, (const unsigned int *)$arg4, (const u8 *)$arg5, $arg6, $arg7, $arg8, $arg9)")
   public static void ZSTD_buildFSETable(Ptr<ZSTD_seqSymbol> dt,
       Ptr<java.lang.Short> normalizedCounter, @Unsigned int maxSymbolValue,
       Ptr<java.lang. @Unsigned Integer> baseValue, Ptr<java.lang.Character> nbAdditionalBits,
@@ -1518,7 +1519,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_buildFSETable_body_bmi2($arg1, (const short int*)$arg2, $arg3, (const unsigned int*)$arg4, (const u8*)$arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("ZSTD_buildFSETable_body_bmi2($arg1, (const short int *)$arg2, $arg3, (const unsigned int *)$arg4, (const u8 *)$arg5, $arg6, $arg7, $arg8)")
   public static void ZSTD_buildFSETable_body_bmi2(Ptr<ZSTD_seqSymbol> dt,
       Ptr<java.lang.Short> normalizedCounter, @Unsigned int maxSymbolValue,
       Ptr<java.lang. @Unsigned Integer> baseValue, Ptr<java.lang.Character> nbAdditionalBits,
@@ -1527,7 +1528,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_buildFSETable_body_default($arg1, (const short int*)$arg2, $arg3, (const unsigned int*)$arg4, (const u8*)$arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("ZSTD_buildFSETable_body_default($arg1, (const short int *)$arg2, $arg3, (const unsigned int *)$arg4, (const u8 *)$arg5, $arg6, $arg7, $arg8)")
   public static void ZSTD_buildFSETable_body_default(Ptr<ZSTD_seqSymbol> dt,
       Ptr<java.lang.Short> normalizedCounter, @Unsigned int maxSymbolValue,
       Ptr<java.lang. @Unsigned Integer> baseValue, Ptr<java.lang.Character> nbAdditionalBits,
@@ -1536,7 +1537,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_buildSeqStore($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_buildSeqStore($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long ZSTD_buildSeqStore(Ptr<ZSTD_CCtx_s> zc, Ptr<?> src,
       @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -1555,7 +1556,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_checkContinuity($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_checkContinuity($arg1, (const void *)$arg2, $arg3)")
   public static void ZSTD_checkContinuity(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dst,
       @Unsigned long dstSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -1568,14 +1569,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compress($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compress($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_compress(Ptr<?> dst, @Unsigned long dstCapacity, Ptr<?> src,
       @Unsigned long srcSize, int compressionLevel) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compress2($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compress2($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compress2(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -1588,14 +1589,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBegin_advanced($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBegin_advanced($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBegin_advanced(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dict,
       @Unsigned long dictSize, ZSTD_parameters params, @Unsigned long pledgedSrcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBegin_advanced_internal($arg1, (const void*)$arg2, $arg3, $arg4, $arg5, (const ZSTD_CDict_s*)$arg6, (const ZSTD_CCtx_params_s*)$arg7, $arg8)")
+  @BuiltinBPFFunction("ZSTD_compressBegin_advanced_internal($arg1, (const void *)$arg2, $arg3, $arg4, $arg5, (const ZSTD_CDict_s *)$arg6, (const ZSTD_CCtx_params_s *)$arg7, $arg8)")
   public static @Unsigned long ZSTD_compressBegin_advanced_internal(Ptr<ZSTD_CCtx_s> cctx,
       Ptr<?> dict, @Unsigned long dictSize,
       @OriginalName("ZSTD_dictContentType_e") dictContentType_of_ZSTD_CDict_and_dictContentType_of_ZSTD_CDict_s_and_dictContentType_of_ZSTD_localDict dictContentType,
@@ -1605,7 +1606,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBegin_internal($arg1, (const void*)$arg2, $arg3, $arg4, $arg5, (const ZSTD_CDict_s*)$arg6, (const ZSTD_CCtx_params_s*)$arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("ZSTD_compressBegin_internal($arg1, (const void *)$arg2, $arg3, $arg4, $arg5, (const ZSTD_CDict_s *)$arg6, (const ZSTD_CCtx_params_s *)$arg7, $arg8, $arg9)")
   public static @Unsigned long ZSTD_compressBegin_internal(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dict,
       @Unsigned long dictSize,
       @OriginalName("ZSTD_dictContentType_e") dictContentType_of_ZSTD_CDict_and_dictContentType_of_ZSTD_CDict_s_and_dictContentType_of_ZSTD_localDict dictContentType,
@@ -1616,7 +1617,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBegin_usingCDict($arg1, (const ZSTD_CDict_s*)$arg2)")
+  @BuiltinBPFFunction("ZSTD_compressBegin_usingCDict($arg1, (const ZSTD_CDict_s *)$arg2)")
   public static @Unsigned long ZSTD_compressBegin_usingCDict(Ptr<ZSTD_CCtx_s> cctx,
       Ptr<ZSTD_CDict_s> cdict) {
     throw new MethodIsBPFRelatedFunction();
@@ -1634,7 +1635,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBegin_usingCDict_deprecated($arg1, (const ZSTD_CDict_s*)$arg2)")
+  @BuiltinBPFFunction("ZSTD_compressBegin_usingCDict_deprecated($arg1, (const ZSTD_CDict_s *)$arg2)")
   public static @Unsigned long ZSTD_compressBegin_usingCDict_deprecated(Ptr<ZSTD_CCtx_s> cctx,
       Ptr<ZSTD_CDict_s> cdict) {
     throw new MethodIsBPFRelatedFunction();
@@ -1652,28 +1653,28 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBegin_usingDict($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_compressBegin_usingDict($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static @Unsigned long ZSTD_compressBegin_usingDict(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dict,
       @Unsigned long dictSize, int compressionLevel) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBegin_usingDict_deprecated($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_compressBegin_usingDict_deprecated($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static @Unsigned long ZSTD_compressBegin_usingDict_deprecated(Ptr<ZSTD_CCtx_s> cctx,
       Ptr<?> dict, @Unsigned long dictSize, int compressionLevel) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_btlazy2($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_btlazy2($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_btlazy2(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1681,7 +1682,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_btlazy2_dictMatchState($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_btlazy2_dictMatchState($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_btlazy2_dictMatchState(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1689,7 +1690,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_btlazy2_extDict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_btlazy2_extDict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_btlazy2_extDict(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1697,7 +1698,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_btopt($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_btopt($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_btopt(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1705,7 +1706,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_btopt_dictMatchState($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_btopt_dictMatchState($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_btopt_dictMatchState(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1713,7 +1714,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_btopt_extDict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_btopt_extDict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_btopt_extDict(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1721,7 +1722,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_btultra($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_btultra($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_btultra(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1729,7 +1730,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_btultra2($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_btultra2($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_btultra2(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1737,7 +1738,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_btultra_dictMatchState($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_btultra_dictMatchState($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_btultra_dictMatchState(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1745,7 +1746,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_btultra_extDict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_btultra_extDict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_btultra_extDict(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1753,14 +1754,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_deprecated($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_deprecated($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_deprecated(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_doubleFast(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1768,7 +1769,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_dictMatchState($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_dictMatchState($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_doubleFast_dictMatchState(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize) {
@@ -1776,7 +1777,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_dictMatchState_4($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_dictMatchState_4($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_doubleFast_dictMatchState_4(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize) {
@@ -1784,7 +1785,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_dictMatchState_5($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_dictMatchState_5($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_doubleFast_dictMatchState_5(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize) {
@@ -1792,7 +1793,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_dictMatchState_6($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_dictMatchState_6($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_doubleFast_dictMatchState_6(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize) {
@@ -1800,7 +1801,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_dictMatchState_7($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_dictMatchState_7($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_doubleFast_dictMatchState_7(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize) {
@@ -1808,7 +1809,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_extDict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_extDict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_doubleFast_extDict(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1816,7 +1817,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_extDict_generic($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const unsigned int)$arg6)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_extDict_generic($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const unsigned int)$arg6)")
   public static @Unsigned long ZSTD_compressBlock_doubleFast_extDict_generic(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize, @Unsigned int mls) {
@@ -1824,7 +1825,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_noDict_4($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_noDict_4($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_doubleFast_noDict_4(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1832,7 +1833,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_noDict_5($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_noDict_5($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_doubleFast_noDict_5(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1840,7 +1841,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_noDict_6($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_noDict_6($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_doubleFast_noDict_6(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1848,7 +1849,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_noDict_7($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_doubleFast_noDict_7($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_doubleFast_noDict_7(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1856,7 +1857,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1864,7 +1865,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_dictMatchState($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_dictMatchState($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_dictMatchState(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1872,7 +1873,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_dictMatchState_4_0($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_dictMatchState_4_0($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_dictMatchState_4_0(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1880,7 +1881,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_dictMatchState_5_0($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_dictMatchState_5_0($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_dictMatchState_5_0(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1888,7 +1889,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_dictMatchState_6_0($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_dictMatchState_6_0($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_dictMatchState_6_0(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1896,7 +1897,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_dictMatchState_7_0($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_dictMatchState_7_0($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_dictMatchState_7_0(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1904,7 +1905,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_extDict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_extDict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_extDict(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1912,7 +1913,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_extDict_generic($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const unsigned int)$arg6, (const unsigned int)$arg7)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_extDict_generic($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const unsigned int)$arg6, (const unsigned int)$arg7)")
   public static @Unsigned long ZSTD_compressBlock_fast_extDict_generic(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize, @Unsigned int mls, @Unsigned int hasStep) {
@@ -1920,7 +1921,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_4_0($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_4_0($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_noDict_4_0(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1928,7 +1929,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_4_1($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_4_1($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_noDict_4_1(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1936,7 +1937,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_5_0($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_5_0($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_noDict_5_0(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1944,7 +1945,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_5_1($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_5_1($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_noDict_5_1(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1952,7 +1953,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_6_0($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_6_0($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_noDict_6_0(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1960,7 +1961,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_6_1($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_6_1($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_noDict_6_1(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1968,7 +1969,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_7_0($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_7_0($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_noDict_7_0(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1976,7 +1977,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_7_1($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_fast_noDict_7_1($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_fast_noDict_7_1(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1984,7 +1985,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_greedy($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_greedy($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_greedy(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -1992,7 +1993,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_dedicatedDictSearch($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_dedicatedDictSearch($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_greedy_dedicatedDictSearch(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize) {
@@ -2000,7 +2001,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_dedicatedDictSearch_row($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_dedicatedDictSearch_row($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_greedy_dedicatedDictSearch_row(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize) {
@@ -2008,7 +2009,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_dictMatchState($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_dictMatchState($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_greedy_dictMatchState(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2016,7 +2017,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_dictMatchState_row($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_dictMatchState_row($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_greedy_dictMatchState_row(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize) {
@@ -2024,7 +2025,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_extDict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_extDict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_greedy_extDict(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2032,7 +2033,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_extDict_row($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_extDict_row($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_greedy_extDict_row(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2040,7 +2041,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_row($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_greedy_row($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_greedy_row(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2048,14 +2049,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_internal($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_internal($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static @Unsigned long ZSTD_compressBlock_internal(Ptr<ZSTD_CCtx_s> zc, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize, @Unsigned int frame) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2063,7 +2064,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy2(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2071,7 +2072,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_dedicatedDictSearch($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_dedicatedDictSearch($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy2_dedicatedDictSearch(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize) {
@@ -2079,7 +2080,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_dedicatedDictSearch_row($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_dedicatedDictSearch_row($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy2_dedicatedDictSearch_row(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize) {
@@ -2087,7 +2088,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_dictMatchState($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_dictMatchState($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy2_dictMatchState(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2095,7 +2096,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_dictMatchState_row($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_dictMatchState_row($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy2_dictMatchState_row(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize) {
@@ -2103,7 +2104,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_extDict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_extDict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy2_extDict(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2111,7 +2112,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_extDict_row($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_extDict_row($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy2_extDict_row(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2119,7 +2120,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_row($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy2_row($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy2_row(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2127,7 +2128,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_dedicatedDictSearch($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_dedicatedDictSearch($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy_dedicatedDictSearch(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize) {
@@ -2135,7 +2136,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_dedicatedDictSearch_row($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_dedicatedDictSearch_row($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy_dedicatedDictSearch_row(
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       Ptr<?> src, @Unsigned long srcSize) {
@@ -2143,7 +2144,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_dictMatchState($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_dictMatchState($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy_dictMatchState(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2151,7 +2152,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_dictMatchState_row($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_dictMatchState_row($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy_dictMatchState_row(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2159,7 +2160,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_extDict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_extDict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy_extDict(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2167,7 +2168,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_extDict_row($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_extDict_row($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy_extDict_row(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2175,7 +2176,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_row($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_lazy_row($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressBlock_lazy_row(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2183,7 +2184,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_opt0($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const ZSTD)$arg6)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_opt0($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const ZSTD)$arg6)")
   public static @Unsigned long ZSTD_compressBlock_opt0(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize, @OriginalName("ZSTD_dictMode_e") ZSTD dictMode) {
@@ -2191,7 +2192,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_opt2($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const ZSTD)$arg6)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_opt2($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const ZSTD)$arg6)")
   public static @Unsigned long ZSTD_compressBlock_opt2(Ptr<ZSTD_MatchState_t> ms,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep, Ptr<?> src,
       @Unsigned long srcSize, @OriginalName("ZSTD_dictMode_e") ZSTD dictMode) {
@@ -2199,7 +2200,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressBlock_splitBlock_internal($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ZSTD_compressBlock_splitBlock_internal($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, $arg7)")
   public static @Unsigned long ZSTD_compressBlock_splitBlock_internal(Ptr<ZSTD_CCtx_s> zc,
       Ptr<?> dst, @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long blockSize,
       @Unsigned int lastBlock, @Unsigned int nbSeq) {
@@ -2213,21 +2214,21 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressCCtx($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ZSTD_compressCCtx($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static @Unsigned long ZSTD_compressCCtx(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize, int compressionLevel) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressContinue($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressContinue($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressContinue(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressContinue_internal($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ZSTD_compressContinue_internal($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, $arg7)")
   public static @Unsigned long ZSTD_compressContinue_internal(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize, @Unsigned int frame,
       @Unsigned int lastFrameChunk) {
@@ -2235,31 +2236,31 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressContinue_public($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressContinue_public($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressContinue_public(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressEnd($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressEnd($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressEnd(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressEnd_public($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_compressEnd_public($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_compressEnd_public(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressLiterals($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6, (const struct {\n"
+  @BuiltinBPFFunction("ZSTD_compressLiterals($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6, (const struct {\n"
           + "  long unsigned int CTable[257];\n"
           + "  repeatMode_of_ZSTD_hufCTables_t repeatMode;\n"
-          + "}*)$arg7, $arg8, $arg9, $arg10, $arg11, $arg12)")
+          + "} *)$arg7, $arg8, $arg9, $arg10, $arg11, $arg12)")
   public static @Unsigned long ZSTD_compressLiterals(Ptr<?> dst, @Unsigned long dstCapacity,
       Ptr<?> src, @Unsigned long srcSize, Ptr<?> entropyWorkspace,
       @Unsigned long entropyWorkspaceSize, Ptr<ZSTD_hufCTables_t> prevHuf,
@@ -2270,7 +2271,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressRleLiteralsBlock($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_compressRleLiteralsBlock($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static @Unsigned long ZSTD_compressRleLiteralsBlock(Ptr<?> dst, @Unsigned long dstCapacity,
       Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -2289,7 +2290,7 @@ public final class ZstdDefinitions {
           + "  long unsigned int maxNbLit;\n"
           + "  longLengthType_of_SeqStore_t longLengthType;\n"
           + "  unsigned int longLengthPos;\n"
-          + "}*)$arg2, (const repcodes_s*)$arg3, (const repcodes_s*)$arg4, $arg5, $arg6, (const void*)$arg7, $arg8, $arg9, $arg10)")
+          + "}*)$arg2, (const repcodes_s*)$arg3, (const repcodes_s*)$arg4, $arg5, $arg6, (const void *)$arg7, $arg8, $arg9, $arg10)")
   public static @Unsigned long ZSTD_compressSeqStore_singleBlock(Ptr<ZSTD_CCtx_s> zc,
       Ptr<SeqStore_t> seqStore, Ptr<@OriginalName("Repcodes_t") repcodes_s> dRep,
       Ptr<@OriginalName("Repcodes_t") repcodes_s> cRep, Ptr<?> dst, @Unsigned long dstCapacity,
@@ -2303,7 +2304,7 @@ public final class ZstdDefinitions {
           + "  unsigned int litLength;\n"
           + "  unsigned int matchLength;\n"
           + "  unsigned int rep;\n"
-          + "}*)$arg4, $arg5, (const void*)$arg6, $arg7)")
+          + "} *)$arg4, $arg5, (const void *)$arg6, $arg7)")
   public static @Unsigned long ZSTD_compressSequences(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<ZSTD_Sequence> inSeqs, @Unsigned long inSeqsSize, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2316,7 +2317,7 @@ public final class ZstdDefinitions {
           + "  unsigned int litLength;\n"
           + "  unsigned int matchLength;\n"
           + "  unsigned int rep;\n"
-          + "}*)$arg4, $arg5, (const void*)$arg6, $arg7, $arg8, $arg9)")
+          + "} *)$arg4, $arg5, (const void *)$arg6, $arg7, $arg8, $arg9)")
   public static @Unsigned long ZSTD_compressSequencesAndLiterals(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<ZSTD_Sequence> inSeqs, @Unsigned long inSeqsSize,
       Ptr<?> literals, @Unsigned long litSize, @Unsigned long litCapacity,
@@ -2330,7 +2331,7 @@ public final class ZstdDefinitions {
           + "  unsigned int litLength;\n"
           + "  unsigned int matchLength;\n"
           + "  unsigned int rep;\n"
-          + "}*)$arg4, $arg5, (const void*)$arg6, $arg7, $arg8)")
+          + "} *)$arg4, $arg5, (const void *)$arg6, $arg7, $arg8)")
   public static @Unsigned long ZSTD_compressSequencesAndLiterals_internal(Ptr<ZSTD_CCtx_s> cctx,
       Ptr<?> dst, @Unsigned long dstCapacity, Ptr<ZSTD_Sequence> inSeqs, @Unsigned long nbSequences,
       Ptr<?> literals, @Unsigned long litSize, @Unsigned long srcSize) {
@@ -2343,7 +2344,7 @@ public final class ZstdDefinitions {
           + "  unsigned int litLength;\n"
           + "  unsigned int matchLength;\n"
           + "  unsigned int rep;\n"
-          + "}*)$arg4, $arg5, (const void*)$arg6, $arg7)")
+          + "} *)$arg4, $arg5, (const void *)$arg6, $arg7)")
   public static @Unsigned long ZSTD_compressSequences_internal(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<ZSTD_Sequence> inSeqs, @Unsigned long inSeqsSize, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2367,7 +2368,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressStream2_simpleArgs($arg1, $arg2, $arg3, $arg4, (const void*)$arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("ZSTD_compressStream2_simpleArgs($arg1, $arg2, $arg3, $arg4, (const void *)$arg5, $arg6, $arg7, $arg8)")
   public static @Unsigned long ZSTD_compressStream2_simpleArgs(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<java.lang. @Unsigned Long> dstPos, Ptr<?> src,
       @Unsigned long srcSize, Ptr<java.lang. @Unsigned Long> srcPos,
@@ -2397,7 +2398,7 @@ public final class ZstdDefinitions {
           + "    litlength_repeatMode_of_ZSTD_fseCTables_t_and_matchlength_repeatMode_of_ZSTD_fseCTables_t_and_offcode_repeatMode_of_ZSTD_fseCTables_t matchlength_repeatMode;\n"
           + "    litlength_repeatMode_of_ZSTD_fseCTables_t_and_matchlength_repeatMode_of_ZSTD_fseCTables_t_and_offcode_repeatMode_of_ZSTD_fseCTables_t litlength_repeatMode;\n"
           + "  } fse;\n"
-          + "}*)$arg1, (const struct {\n"
+          + "} *)$arg1, (const struct {\n"
           + "  struct {\n"
           + "    hType_of_ZSTD_hufCTablesMetadata_t_and_llType_of_ZSTD_fseCTablesMetadata_t_and_mlType_of_ZSTD_fseCTablesMetadata_t hType;\n"
           + "    u8 hufDesBuffer[128];\n"
@@ -2411,7 +2412,7 @@ public final class ZstdDefinitions {
           + "    long unsigned int fseTablesSize;\n"
           + "    long unsigned int lastCountSize;\n"
           + "  } fseMetadata;\n"
-          + "}*)$arg2, (const SeqDef_s*)$arg3, $arg4, (const u8*)$arg5, $arg6, (const u8*)$arg7, (const u8*)$arg8, (const u8*)$arg9, (const ZSTD_CCtx_params_s*)$arg10, $arg11, $arg12, (const int)$arg13, $arg14, $arg15, $arg16, $arg17, $arg18)")
+          + "} *)$arg2, (const SeqDef_s *)$arg3, $arg4, (const u8 *)$arg5, $arg6, (const u8 *)$arg7, (const u8 *)$arg8, (const u8 *)$arg9, (const ZSTD_CCtx_params_s *)$arg10, $arg11, $arg12, (const int)$arg13, $arg14, $arg15, $arg16, $arg17, $arg18)")
   public static @Unsigned long ZSTD_compressSubBlock(Ptr<ZSTD_entropyCTables_t> entropy,
       Ptr<ZSTD_entropyCTablesMetadata_t> entropyMetadata, Ptr<SeqDef_s> sequences,
       @Unsigned long nbSeq, Ptr<java.lang. @OriginalName("BYTE") Character> literals,
@@ -2425,11 +2426,11 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressSubBlock_literal((const long unsigned int*)$arg1, (const struct {\n"
+  @BuiltinBPFFunction("ZSTD_compressSubBlock_literal((const long unsigned int *)$arg1, (const struct {\n"
           + "  hType_of_ZSTD_hufCTablesMetadata_t_and_llType_of_ZSTD_fseCTablesMetadata_t_and_mlType_of_ZSTD_fseCTablesMetadata_t hType;\n"
           + "  u8 hufDesBuffer[128];\n"
           + "  long unsigned int hufDesSize;\n"
-          + "}*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, (const int)$arg7, $arg8, $arg9)")
+          + "} *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, (const int)$arg7, $arg8, $arg9)")
   public static @Unsigned long ZSTD_compressSubBlock_literal(
       Ptr<java.lang. @Unsigned @OriginalName("HUF_CElt") Long> hufTable,
       Ptr<ZSTD_hufCTablesMetadata_t> hufMetadata,
@@ -2451,7 +2452,7 @@ public final class ZstdDefinitions {
           + "  long unsigned int maxNbLit;\n"
           + "  longLengthType_of_SeqStore_t longLengthType;\n"
           + "  unsigned int longLengthPos;\n"
-          + "}*)$arg1, (const struct {\n"
+          + "} *)$arg1, (const struct {\n"
           + "  struct {\n"
           + "    struct {\n"
           + "      long unsigned int CTable[257];\n"
@@ -2467,7 +2468,7 @@ public final class ZstdDefinitions {
           + "    } fse;\n"
           + "  } entropy;\n"
           + "  unsigned int rep[3];\n"
-          + "}*)$arg2, $arg3, (const struct {\n"
+          + "} *)$arg2, $arg3, (const struct {\n"
           + "  struct {\n"
           + "    hType_of_ZSTD_hufCTablesMetadata_t_and_llType_of_ZSTD_fseCTablesMetadata_t_and_mlType_of_ZSTD_fseCTablesMetadata_t hType;\n"
           + "    u8 hufDesBuffer[128];\n"
@@ -2481,7 +2482,7 @@ public final class ZstdDefinitions {
           + "    long unsigned int fseTablesSize;\n"
           + "    long unsigned int lastCountSize;\n"
           + "  } fseMetadata;\n"
-          + "}*)$arg4, (const ZSTD_CCtx_params_s*)$arg5, $arg6, $arg7, (const void*)$arg8, $arg9, (const int)$arg10, $arg11, $arg12, $arg13)")
+          + "} *)$arg4, (const ZSTD_CCtx_params_s *)$arg5, $arg6, $arg7, (const void *)$arg8, $arg9, (const int)$arg10, $arg11, $arg12, $arg13)")
   public static @Unsigned long ZSTD_compressSubBlock_multi(Ptr<SeqStore_t> seqStorePtr,
       Ptr<ZSTD_compressedBlockState_t> prevCBlock, Ptr<ZSTD_compressedBlockState_t> nextCBlock,
       Ptr<ZSTD_entropyCTablesMetadata_t> entropyMetadata, Ptr<ZSTD_CCtx_params_s> cctxParams,
@@ -2491,14 +2492,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compressSuperBlock($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ZSTD_compressSuperBlock($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static @Unsigned long ZSTD_compressSuperBlock(Ptr<ZSTD_CCtx_s> zc, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize, @Unsigned int lastBlock) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compress_advanced($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("ZSTD_compress_advanced($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const void *)$arg6, $arg7, $arg8)")
   public static @Unsigned long ZSTD_compress_advanced(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize, Ptr<?> dict,
       @Unsigned long dictSize, ZSTD_parameters params) {
@@ -2506,7 +2507,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compress_advanced_internal($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const void*)$arg6, $arg7, (const ZSTD_CCtx_params_s*)$arg8)")
+  @BuiltinBPFFunction("ZSTD_compress_advanced_internal($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const void *)$arg6, $arg7, (const ZSTD_CCtx_params_s *)$arg8)")
   public static @Unsigned long ZSTD_compress_advanced_internal(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize, Ptr<?> dict,
       @Unsigned long dictSize, Ptr<ZSTD_CCtx_params_s> params) {
@@ -2514,7 +2515,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compress_frameChunk($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ZSTD_compress_frameChunk($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static @Unsigned long ZSTD_compress_frameChunk(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize,
       @Unsigned int lastFrameChunk) {
@@ -2522,7 +2523,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compress_insertDictionary($arg1, $arg2, $arg3, $arg4, (const ZSTD_CCtx_params_s*)$arg5, (const void*)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("ZSTD_compress_insertDictionary($arg1, $arg2, $arg3, $arg4, (const ZSTD_CCtx_params_s *)$arg5, (const void *)$arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
   public static @Unsigned long ZSTD_compress_insertDictionary(Ptr<ZSTD_compressedBlockState_t> bs,
       Ptr<ZSTD_MatchState_t> ms, Ptr<ldmState_t> ls, Ptr<ZSTD_cwksp> ws,
       Ptr<ZSTD_CCtx_params_s> params, Ptr<?> dict, @Unsigned long dictSize,
@@ -2533,14 +2534,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compress_usingCDict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const ZSTD_CDict_s*)$arg6)")
+  @BuiltinBPFFunction("ZSTD_compress_usingCDict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const ZSTD_CDict_s *)$arg6)")
   public static @Unsigned long ZSTD_compress_usingCDict(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize, Ptr<ZSTD_CDict_s> cdict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compress_usingCDict_advanced($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const ZSTD_CDict_s*)$arg6, $arg7)")
+  @BuiltinBPFFunction("ZSTD_compress_usingCDict_advanced($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const ZSTD_CDict_s *)$arg6, $arg7)")
   public static @Unsigned long ZSTD_compress_usingCDict_advanced(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize, Ptr<ZSTD_CDict_s> cdict,
       ZSTD_frameParameters fParams) {
@@ -2548,7 +2549,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_compress_usingDict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("ZSTD_compress_usingDict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const void *)$arg6, $arg7, $arg8)")
   public static @Unsigned long ZSTD_compress_usingDict(Ptr<ZSTD_CCtx_s> cctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize, Ptr<?> dict,
       @Unsigned long dictSize, int compressionLevel) {
@@ -2580,21 +2581,21 @@ public final class ZstdDefinitions {
           + "  long unsigned int maxNbLit;\n"
           + "  longLengthType_of_SeqStore_t longLengthType;\n"
           + "  unsigned int longLengthPos;\n"
-          + "}*)$arg2, (const unsigned int*)$arg3)")
+          + "} *)$arg2, (const unsigned int *)$arg3)")
   public static @Unsigned long ZSTD_copyBlockSequences(Ptr<SeqCollector> seqCollector,
       Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> prevRepcodes) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_copyCCtx($arg1, (const ZSTD_CCtx_s*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_copyCCtx($arg1, (const ZSTD_CCtx_s *)$arg2, $arg3)")
   public static @Unsigned long ZSTD_copyCCtx(Ptr<ZSTD_CCtx_s> dstCCtx, Ptr<ZSTD_CCtx_s> srcCCtx,
       @Unsigned long pledgedSrcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_copyCCtx_internal($arg1, (const ZSTD_CCtx_s*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_copyCCtx_internal($arg1, (const ZSTD_CCtx_s *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_copyCCtx_internal(Ptr<ZSTD_CCtx_s> dstCCtx,
       Ptr<ZSTD_CCtx_s> srcCCtx, ZSTD_frameParameters fParams, @Unsigned long pledgedSrcSize,
       @OriginalName("ZSTD_buffered_policy_e") bufferedPolicy_of_ZSTD_CCtx_and_bufferedPolicy_of_ZSTD_CCtx_s zbuff) {
@@ -2602,19 +2603,19 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_copyDCtx($arg1, (const ZSTD_DCtx_s*)$arg2)")
+  @BuiltinBPFFunction("ZSTD_copyDCtx($arg1, (const ZSTD_DCtx_s *)$arg2)")
   public static void ZSTD_copyDCtx(Ptr<ZSTD_DCtx_s> dstDCtx, Ptr<ZSTD_DCtx_s> srcDCtx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_copyDDictParameters($arg1, (const ZSTD_DDict_s*)$arg2)")
+  @BuiltinBPFFunction("ZSTD_copyDDictParameters($arg1, (const ZSTD_DDict_s *)$arg2)")
   public static void ZSTD_copyDDictParameters(Ptr<ZSTD_DCtx_s> dctx, Ptr<ZSTD_DDict_s> ddict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_count((const u8*)$arg1, (const u8*)$arg2, (const const u8*)$arg3)")
+  @BuiltinBPFFunction("ZSTD_count((const u8 *)$arg1, (const u8 *)$arg2, (const const u8*)$arg3)")
   public static @Unsigned long ZSTD_count(Ptr<java.lang. @OriginalName("BYTE") Character> pIn,
       Ptr<java.lang. @OriginalName("BYTE") Character> pMatch,
       Ptr<java.lang. @OriginalName("BYTE") Character> pInLimit) {
@@ -2622,7 +2623,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_count_2segments((const u8*)$arg1, (const u8*)$arg2, (const u8*)$arg3, (const u8*)$arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("ZSTD_count_2segments((const u8 *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const u8 *)$arg5)")
   public static @Unsigned long ZSTD_count_2segments(
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> match,
@@ -2651,14 +2652,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_createCDict((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_createCDict((const void *)$arg1, $arg2, $arg3)")
   public static Ptr<ZSTD_CDict_s> ZSTD_createCDict(Ptr<?> dict, @Unsigned long dictSize,
       int compressionLevel) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_createCDict_advanced((const void*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ZSTD_createCDict_advanced((const void *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<ZSTD_CDict_s> ZSTD_createCDict_advanced(Ptr<?> dictBuffer,
       @Unsigned long dictSize, @OriginalName("ZSTD_dictLoadMethod_e") ZSTD_dlm_by dictLoadMethod,
       @OriginalName("ZSTD_dictContentType_e") dictContentType_of_ZSTD_CDict_and_dictContentType_of_ZSTD_CDict_s_and_dictContentType_of_ZSTD_localDict dictContentType,
@@ -2667,7 +2668,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_createCDict_advanced2((const void*)$arg1, $arg2, $arg3, $arg4, (const ZSTD_CCtx_params_s*)$arg5, $arg6)")
+  @BuiltinBPFFunction("ZSTD_createCDict_advanced2((const void *)$arg1, $arg2, $arg3, $arg4, (const ZSTD_CCtx_params_s *)$arg5, $arg6)")
   public static Ptr<ZSTD_CDict_s> ZSTD_createCDict_advanced2(Ptr<?> dict, @Unsigned long dictSize,
       @OriginalName("ZSTD_dictLoadMethod_e") ZSTD_dlm_by dictLoadMethod,
       @OriginalName("ZSTD_dictContentType_e") dictContentType_of_ZSTD_CDict_and_dictContentType_of_ZSTD_CDict_s_and_dictContentType_of_ZSTD_localDict dictContentType,
@@ -2676,7 +2677,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_createCDict_byReference((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_createCDict_byReference((const void *)$arg1, $arg2, $arg3)")
   public static Ptr<ZSTD_CDict_s> ZSTD_createCDict_byReference(Ptr<?> dict, @Unsigned long dictSize,
       int compressionLevel) {
     throw new MethodIsBPFRelatedFunction();
@@ -2708,13 +2709,13 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_createDDict((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_createDDict((const void *)$arg1, $arg2)")
   public static Ptr<ZSTD_DDict_s> ZSTD_createDDict(Ptr<?> dict, @Unsigned long dictSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_createDDict_advanced((const void*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_createDDict_advanced((const void *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static Ptr<ZSTD_DDict_s> ZSTD_createDDict_advanced(Ptr<?> dict, @Unsigned long dictSize,
       @OriginalName("ZSTD_dictLoadMethod_e") ZSTD_dlm_by dictLoadMethod,
       @OriginalName("ZSTD_dictContentType_e") dictContentType_of_ZSTD_CDict_and_dictContentType_of_ZSTD_CDict_s_and_dictContentType_of_ZSTD_localDict dictContentType,
@@ -2723,7 +2724,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_createDDict_byReference((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_createDDict_byReference((const void *)$arg1, $arg2)")
   public static Ptr<ZSTD_DDict_s> ZSTD_createDDict_byReference(Ptr<?> dictBuffer,
       @Unsigned long dictSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -2743,7 +2744,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_crossEntropyCost((const short int*)$arg1, $arg2, (const unsigned int*)$arg3, (const unsigned int)$arg4)")
+  @BuiltinBPFFunction("ZSTD_crossEntropyCost((const short int *)$arg1, $arg2, (const unsigned int *)$arg3, (const unsigned int)$arg4)")
   public static @Unsigned long ZSTD_crossEntropyCost(Ptr<java.lang.Short> norm,
       @Unsigned int accuracyLog, Ptr<java.lang. @Unsigned Integer> count, @Unsigned int max) {
     throw new MethodIsBPFRelatedFunction();
@@ -2763,14 +2764,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decodeFrameHeader($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_decodeFrameHeader($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long ZSTD_decodeFrameHeader(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> src,
       @Unsigned long headerSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decodeLiteralsBlock($arg1, (const void*)$arg2, $arg3, $arg4, $arg5, (const streaming_operation)$arg6)")
+  @BuiltinBPFFunction("ZSTD_decodeLiteralsBlock($arg1, (const void *)$arg2, $arg3, $arg4, $arg5, (const streaming_operation)$arg6)")
   public static @Unsigned long ZSTD_decodeLiteralsBlock(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> src,
       @Unsigned long srcSize, Ptr<?> dst, @Unsigned long dstCapacity,
       streaming_operation streaming) {
@@ -2778,14 +2779,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decodeLiteralsBlock_wrapper($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_decodeLiteralsBlock_wrapper($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_decodeLiteralsBlock_wrapper(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> src,
       @Unsigned long srcSize, Ptr<?> dst, @Unsigned long dstCapacity) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decodeSeqHeaders($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_decodeSeqHeaders($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static @Unsigned long ZSTD_decodeSeqHeaders(Ptr<ZSTD_DCtx_s> dctx,
       Ptr<java.lang.Integer> nbSeqPtr, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -2799,7 +2800,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompress($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_decompress($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static @Unsigned long ZSTD_decompress(Ptr<?> dst, @Unsigned long dstCapacity, Ptr<?> src,
       @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -2812,35 +2813,35 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressBegin_usingDDict($arg1, (const ZSTD_DDict_s*)$arg2)")
+  @BuiltinBPFFunction("ZSTD_decompressBegin_usingDDict($arg1, (const ZSTD_DDict_s *)$arg2)")
   public static @Unsigned long ZSTD_decompressBegin_usingDDict(Ptr<ZSTD_DCtx_s> dctx,
       Ptr<ZSTD_DDict_s> ddict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressBegin_usingDict($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_decompressBegin_usingDict($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long ZSTD_decompressBegin_usingDict(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dict,
       @Unsigned long dictSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressBlock($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_decompressBlock($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_decompressBlock(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressBlock_deprecated($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_decompressBlock_deprecated($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_decompressBlock_deprecated(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressBlock_internal($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const streaming_operation)$arg6)")
+  @BuiltinBPFFunction("ZSTD_decompressBlock_internal($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const streaming_operation)$arg6)")
   public static @Unsigned long ZSTD_decompressBlock_internal(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize,
       streaming_operation streaming) {
@@ -2848,20 +2849,20 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressBound((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_decompressBound((const void *)$arg1, $arg2)")
   public static @Unsigned long ZSTD_decompressBound(Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressContinue($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_decompressContinue($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_decompressContinue(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressContinueStream($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_decompressContinueStream($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_decompressContinueStream(
       Ptr<@OriginalName("ZSTD_DStream") ZSTD_DCtx_s> zds, Ptr<String> op, String oend, Ptr<?> src,
       @Unsigned long srcSize) {
@@ -2869,7 +2870,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressDCtx($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_decompressDCtx($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_decompressDCtx(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -2883,7 +2884,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressMultiFrame($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const void*)$arg6, $arg7, (const ZSTD_DDict_s*)$arg8)")
+  @BuiltinBPFFunction("ZSTD_decompressMultiFrame($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const void *)$arg6, $arg7, (const ZSTD_DDict_s *)$arg8)")
   public static @Unsigned long ZSTD_decompressMultiFrame(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize, Ptr<?> dict,
       @Unsigned long dictSize, Ptr<ZSTD_DDict_s> ddict) {
@@ -2891,7 +2892,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressSequencesLong_bmi2($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, (const ZSTD_lo_is)$arg7)")
+  @BuiltinBPFFunction("ZSTD_decompressSequencesLong_bmi2($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, (const ZSTD_lo_is)$arg7)")
   public static @Unsigned long ZSTD_decompressSequencesLong_bmi2(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dst,
       @Unsigned long maxDstSize, Ptr<?> seqStart, @Unsigned long seqSize, int nbSeq,
       @OriginalName("ZSTD_longOffset_e") ZSTD_lo_is isLongOffset) {
@@ -2899,7 +2900,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressSequencesLong_default($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, (const ZSTD_lo_is)$arg7)")
+  @BuiltinBPFFunction("ZSTD_decompressSequencesLong_default($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, (const ZSTD_lo_is)$arg7)")
   public static @Unsigned long ZSTD_decompressSequencesLong_default(Ptr<ZSTD_DCtx_s> dctx,
       Ptr<?> dst, @Unsigned long maxDstSize, Ptr<?> seqStart, @Unsigned long seqSize, int nbSeq,
       @OriginalName("ZSTD_longOffset_e") ZSTD_lo_is isLongOffset) {
@@ -2907,7 +2908,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressSequencesSplitLitBuffer_bmi2($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, (const ZSTD_lo_is)$arg7)")
+  @BuiltinBPFFunction("ZSTD_decompressSequencesSplitLitBuffer_bmi2($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, (const ZSTD_lo_is)$arg7)")
   public static @Unsigned long ZSTD_decompressSequencesSplitLitBuffer_bmi2(Ptr<ZSTD_DCtx_s> dctx,
       Ptr<?> dst, @Unsigned long maxDstSize, Ptr<?> seqStart, @Unsigned long seqSize, int nbSeq,
       @OriginalName("ZSTD_longOffset_e") ZSTD_lo_is isLongOffset) {
@@ -2915,7 +2916,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressSequencesSplitLitBuffer_default($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, (const ZSTD_lo_is)$arg7)")
+  @BuiltinBPFFunction("ZSTD_decompressSequencesSplitLitBuffer_default($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, (const ZSTD_lo_is)$arg7)")
   public static @Unsigned long ZSTD_decompressSequencesSplitLitBuffer_default(Ptr<ZSTD_DCtx_s> dctx,
       Ptr<?> dst, @Unsigned long maxDstSize, Ptr<?> seqStart, @Unsigned long seqSize, int nbSeq,
       @OriginalName("ZSTD_longOffset_e") ZSTD_lo_is isLongOffset) {
@@ -2923,7 +2924,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressSequences_bmi2($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, (const ZSTD_lo_is)$arg7)")
+  @BuiltinBPFFunction("ZSTD_decompressSequences_bmi2($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, (const ZSTD_lo_is)$arg7)")
   public static @Unsigned long ZSTD_decompressSequences_bmi2(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dst,
       @Unsigned long maxDstSize, Ptr<?> seqStart, @Unsigned long seqSize, int nbSeq,
       @OriginalName("ZSTD_longOffset_e") ZSTD_lo_is isLongOffset) {
@@ -2931,7 +2932,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressSequences_default($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6, (const ZSTD_lo_is)$arg7)")
+  @BuiltinBPFFunction("ZSTD_decompressSequences_default($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6, (const ZSTD_lo_is)$arg7)")
   public static @Unsigned long ZSTD_decompressSequences_default(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dst,
       @Unsigned long maxDstSize, Ptr<?> seqStart, @Unsigned long seqSize, int nbSeq,
       @OriginalName("ZSTD_longOffset_e") ZSTD_lo_is isLongOffset) {
@@ -2947,7 +2948,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressStream_simpleArgs($arg1, $arg2, $arg3, $arg4, (const void*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("ZSTD_decompressStream_simpleArgs($arg1, $arg2, $arg3, $arg4, (const void *)$arg5, $arg6, $arg7)")
   public static @Unsigned long ZSTD_decompressStream_simpleArgs(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<java.lang. @Unsigned Long> dstPos, Ptr<?> src,
       @Unsigned long srcSize, Ptr<java.lang. @Unsigned Long> srcPos) {
@@ -2955,14 +2956,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompress_usingDDict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const ZSTD_DDict_s*)$arg6)")
+  @BuiltinBPFFunction("ZSTD_decompress_usingDDict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const ZSTD_DDict_s *)$arg6)")
   public static @Unsigned long ZSTD_decompress_usingDDict(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize, Ptr<ZSTD_DDict_s> ddict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompress_usingDict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const void*)$arg6, $arg7)")
+  @BuiltinBPFFunction("ZSTD_decompress_usingDict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const void *)$arg6, $arg7)")
   public static @Unsigned long ZSTD_decompress_usingDict(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> src, @Unsigned long srcSize, Ptr<?> dict,
       @Unsigned long dictSize) {
@@ -2970,7 +2971,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_decompressionMargin((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_decompressionMargin((const void *)$arg1, $arg2)")
   public static @Unsigned long ZSTD_decompressionMargin(Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3001,7 +3002,7 @@ public final class ZstdDefinitions {
           + "  long unsigned int maxNbLit;\n"
           + "  longLengthType_of_SeqStore_t longLengthType;\n"
           + "  unsigned int longLengthPos;\n"
-          + "}*)$arg5)")
+          + "} *)$arg5)")
   public static void ZSTD_deriveBlockSplitsHelper(Ptr<seqStoreSplits> splits,
       @Unsigned long startIdx, @Unsigned long endIdx, Ptr<ZSTD_CCtx_s> zc,
       Ptr<SeqStore_t> origSeqStore) {
@@ -3021,14 +3022,14 @@ public final class ZstdDefinitions {
           + "  long unsigned int maxNbLit;\n"
           + "  longLengthType_of_SeqStore_t longLengthType;\n"
           + "  unsigned int longLengthPos;\n"
-          + "}*)$arg2, $arg3, $arg4)")
+          + "} *)$arg2, $arg3, $arg4)")
   public static void ZSTD_deriveSeqStoreChunk(Ptr<SeqStore_t> resultSeqStore,
       Ptr<SeqStore_t> originalSeqStore, @Unsigned long startIdx, @Unsigned long endIdx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_encodeSequences($arg1, $arg2, (const unsigned int*)$arg3, (const u8*)$arg4, (const unsigned int*)$arg5, (const u8*)$arg6, (const unsigned int*)$arg7, (const u8*)$arg8, (const SeqDef_s*)$arg9, $arg10, $arg11, $arg12)")
+  @BuiltinBPFFunction("ZSTD_encodeSequences($arg1, $arg2, (const unsigned int *)$arg3, (const u8 *)$arg4, (const unsigned int *)$arg5, (const u8 *)$arg6, (const unsigned int *)$arg7, (const u8 *)$arg8, (const SeqDef_s *)$arg9, $arg10, $arg11, $arg12)")
   public static @Unsigned long ZSTD_encodeSequences(Ptr<?> dst, @Unsigned long dstCapacity,
       Ptr<java.lang. @Unsigned @OriginalName("FSE_CTable") Integer> CTable_MatchLength,
       Ptr<java.lang. @OriginalName("BYTE") Character> mlCodeTable,
@@ -3041,7 +3042,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_encodeSequences_bmi2($arg1, $arg2, (const unsigned int*)$arg3, (const u8*)$arg4, (const unsigned int*)$arg5, (const u8*)$arg6, (const unsigned int*)$arg7, (const u8*)$arg8, (const SeqDef_s*)$arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("ZSTD_encodeSequences_bmi2($arg1, $arg2, (const unsigned int *)$arg3, (const u8 *)$arg4, (const unsigned int *)$arg5, (const u8 *)$arg6, (const unsigned int *)$arg7, (const u8 *)$arg8, (const SeqDef_s *)$arg9, $arg10, $arg11)")
   public static @Unsigned long ZSTD_encodeSequences_bmi2(Ptr<?> dst, @Unsigned long dstCapacity,
       Ptr<java.lang. @Unsigned @OriginalName("FSE_CTable") Integer> CTable_MatchLength,
       Ptr<java.lang. @OriginalName("BYTE") Character> mlCodeTable,
@@ -3054,7 +3055,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_encodeSequences_default($arg1, $arg2, (const unsigned int*)$arg3, (const u8*)$arg4, (const unsigned int*)$arg5, (const u8*)$arg6, (const unsigned int*)$arg7, (const u8*)$arg8, (const SeqDef_s*)$arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("ZSTD_encodeSequences_default($arg1, $arg2, (const unsigned int *)$arg3, (const u8 *)$arg4, (const unsigned int *)$arg5, (const u8 *)$arg6, (const unsigned int *)$arg7, (const u8 *)$arg8, (const SeqDef_s *)$arg9, $arg10, $arg11)")
   public static @Unsigned long ZSTD_encodeSequences_default(Ptr<?> dst, @Unsigned long dstCapacity,
       Ptr<java.lang. @Unsigned @OriginalName("FSE_CTable") Integer> CTable_MatchLength,
       Ptr<java.lang. @OriginalName("BYTE") Character> mlCodeTable,
@@ -3074,7 +3075,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_entropyCompressSeqStore_internal($arg1, $arg2, (const void*)$arg3, $arg4, (const struct {\n"
+  @BuiltinBPFFunction("ZSTD_entropyCompressSeqStore_internal($arg1, $arg2, (const void *)$arg3, $arg4, (const struct {\n"
           + "  SeqDef_s *sequencesStart;\n"
           + "  SeqDef_s *sequences;\n"
           + "  u8 *litStart;\n"
@@ -3086,7 +3087,7 @@ public final class ZstdDefinitions {
           + "  long unsigned int maxNbLit;\n"
           + "  longLengthType_of_SeqStore_t longLengthType;\n"
           + "  unsigned int longLengthPos;\n"
-          + "}*)$arg5, (const struct {\n"
+          + "} *)$arg5, (const struct {\n"
           + "  struct {\n"
           + "    long unsigned int CTable[257];\n"
           + "    repeatMode_of_ZSTD_hufCTables_t repeatMode;\n"
@@ -3099,7 +3100,7 @@ public final class ZstdDefinitions {
           + "    litlength_repeatMode_of_ZSTD_fseCTables_t_and_matchlength_repeatMode_of_ZSTD_fseCTables_t_and_offcode_repeatMode_of_ZSTD_fseCTables_t matchlength_repeatMode;\n"
           + "    litlength_repeatMode_of_ZSTD_fseCTables_t_and_matchlength_repeatMode_of_ZSTD_fseCTables_t_and_offcode_repeatMode_of_ZSTD_fseCTables_t litlength_repeatMode;\n"
           + "  } fse;\n"
-          + "}*)$arg6, $arg7, (const ZSTD_CCtx_params_s*)$arg8, $arg9, $arg10, (const int)$arg11)")
+          + "} *)$arg6, $arg7, (const ZSTD_CCtx_params_s *)$arg8, $arg9, $arg10, (const int)$arg11)")
   public static @Unsigned long ZSTD_entropyCompressSeqStore_internal(Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> literals, @Unsigned long litSize,
       Ptr<SeqStore_t> seqStorePtr, Ptr<ZSTD_entropyCTables_t> prevEntropy,
@@ -3109,7 +3110,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_entropyCompressSeqStore_wExtLitBuffer($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, (const struct {\n"
+  @BuiltinBPFFunction("ZSTD_entropyCompressSeqStore_wExtLitBuffer($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, (const struct {\n"
           + "  SeqDef_s *sequencesStart;\n"
           + "  SeqDef_s *sequences;\n"
           + "  u8 *litStart;\n"
@@ -3121,7 +3122,7 @@ public final class ZstdDefinitions {
           + "  long unsigned int maxNbLit;\n"
           + "  longLengthType_of_SeqStore_t longLengthType;\n"
           + "  unsigned int longLengthPos;\n"
-          + "}*)$arg6, (const struct {\n"
+          + "} *)$arg6, (const struct {\n"
           + "  struct {\n"
           + "    long unsigned int CTable[257];\n"
           + "    repeatMode_of_ZSTD_hufCTables_t repeatMode;\n"
@@ -3134,7 +3135,7 @@ public final class ZstdDefinitions {
           + "    litlength_repeatMode_of_ZSTD_fseCTables_t_and_matchlength_repeatMode_of_ZSTD_fseCTables_t_and_offcode_repeatMode_of_ZSTD_fseCTables_t matchlength_repeatMode;\n"
           + "    litlength_repeatMode_of_ZSTD_fseCTables_t_and_matchlength_repeatMode_of_ZSTD_fseCTables_t_and_offcode_repeatMode_of_ZSTD_fseCTables_t litlength_repeatMode;\n"
           + "  } fse;\n"
-          + "}*)$arg7, $arg8, (const ZSTD_CCtx_params_s*)$arg9, $arg10, $arg11, $arg12)")
+          + "} *)$arg7, $arg8, (const ZSTD_CCtx_params_s *)$arg9, $arg10, $arg11, $arg12)")
   public static @Unsigned long ZSTD_entropyCompressSeqStore_wExtLitBuffer(Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> literals, @Unsigned long litSize, @Unsigned long blockSize,
       Ptr<SeqStore_t> seqStorePtr, Ptr<ZSTD_entropyCTables_t> prevEntropy,
@@ -3150,7 +3151,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_estimateCCtxSize_usingCCtxParams((const ZSTD_CCtx_params_s*)$arg1)")
+  @BuiltinBPFFunction("ZSTD_estimateCCtxSize_usingCCtxParams((const ZSTD_CCtx_params_s *)$arg1)")
   public static @Unsigned long ZSTD_estimateCCtxSize_usingCCtxParams(
       Ptr<ZSTD_CCtx_params_s> params) {
     throw new MethodIsBPFRelatedFunction();
@@ -3165,14 +3166,14 @@ public final class ZstdDefinitions {
           + "  unsigned int minMatch;\n"
           + "  unsigned int targetLength;\n"
           + "  strategy_of_ZSTD_compressionParameters strategy;\n"
-          + "}*)$arg1, (const struct {\n"
+          + "} *)$arg1, (const struct {\n"
           + "  enableLdm_of_ldmParams_t_and_literalCompressionMode_of_ZSTD_CCtx_params_and_literalCompressionMode_of_ZSTD_CCtx_params_s enableLdm;\n"
           + "  unsigned int hashLog;\n"
           + "  unsigned int bucketSizeLog;\n"
           + "  unsigned int minMatchLength;\n"
           + "  unsigned int hashRateLog;\n"
           + "  unsigned int windowLog;\n"
-          + "}*)$arg2, (const int)$arg3, (const enableLdm_of_ldmParams_t_and_literalCompressionMode_of_ZSTD_CCtx_params_and_literalCompressionMode_of_ZSTD_CCtx_params_s)$arg4, (const long unsigned int)$arg5, (const long unsigned int)$arg6, (const long long unsigned int)$arg7, $arg8, $arg9)")
+          + "} *)$arg2, (const int)$arg3, (const enableLdm_of_ldmParams_t_and_literalCompressionMode_of_ZSTD_CCtx_params_and_literalCompressionMode_of_ZSTD_CCtx_params_s)$arg4, (const long unsigned int)$arg5, (const long unsigned int)$arg6, (const long long unsigned int)$arg7, $arg8, $arg9)")
   public static @Unsigned long ZSTD_estimateCCtxSize_usingCCtxParams_internal(
       Ptr<ZSTD_compressionParameters> cParams, Ptr<ldmParams_t> ldmParams, int isStatic,
       @OriginalName("ZSTD_ParamSwitch_e") enableLdm_of_ldmParams_t_and_literalCompressionMode_of_ZSTD_CCtx_params_and_literalCompressionMode_of_ZSTD_CCtx_params_s useRowMatchFinder,
@@ -3210,7 +3211,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_estimateCStreamSize_usingCCtxParams((const ZSTD_CCtx_params_s*)$arg1)")
+  @BuiltinBPFFunction("ZSTD_estimateCStreamSize_usingCCtxParams((const ZSTD_CCtx_params_s *)$arg1)")
   public static @Unsigned long ZSTD_estimateCStreamSize_usingCCtxParams(
       Ptr<ZSTD_CCtx_params_s> params) {
     throw new MethodIsBPFRelatedFunction();
@@ -3243,14 +3244,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_estimateDStreamSize_fromFrame((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_estimateDStreamSize_fromFrame((const void *)$arg1, $arg2)")
   public static @Unsigned long ZSTD_estimateDStreamSize_fromFrame(Ptr<?> src,
       @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_estimateSubBlockSize_symbolType($arg1, (const u8*)$arg2, $arg3, $arg4, (const unsigned int*)$arg5, (const u8*)$arg6, (const short int*)$arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("ZSTD_estimateSubBlockSize_symbolType($arg1, (const u8 *)$arg2, $arg3, $arg4, (const unsigned int *)$arg5, (const u8 *)$arg6, (const short int *)$arg7, $arg8, $arg9, $arg10, $arg11)")
   public static @Unsigned long ZSTD_estimateSubBlockSize_symbolType(
       @OriginalName("SymbolEncodingType_e") hType_of_ZSTD_hufCTablesMetadata_t_and_llType_of_ZSTD_fseCTablesMetadata_t_and_mlType_of_ZSTD_fseCTablesMetadata_t type,
       Ptr<java.lang. @OriginalName("BYTE") Character> codeTable, @Unsigned int maxCode,
@@ -3297,14 +3298,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_fillDoubleHashTableForCCtx($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_fillDoubleHashTableForCCtx($arg1, (const void *)$arg2, $arg3)")
   public static void ZSTD_fillDoubleHashTableForCCtx(Ptr<ZSTD_MatchState_t> ms, Ptr<?> end,
       @OriginalName("ZSTD_dictTableLoadMethod_e") ZSTD_dtlm_f dtlm) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_fillDoubleHashTableForCDict($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_fillDoubleHashTableForCDict($arg1, (const void *)$arg2, $arg3)")
   public static void ZSTD_fillDoubleHashTableForCDict(Ptr<ZSTD_MatchState_t> ms, Ptr<?> end,
       @OriginalName("ZSTD_dictTableLoadMethod_e") ZSTD_dtlm_f dtlm) {
     throw new MethodIsBPFRelatedFunction();
@@ -3333,13 +3334,13 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_findDecompressedSize((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_findDecompressedSize((const void *)$arg1, $arg2)")
   public static @Unsigned long ZSTD_findDecompressedSize(Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_findFrameCompressedSize((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_findFrameCompressedSize((const void *)$arg1, $arg2)")
   public static @Unsigned long ZSTD_findFrameCompressedSize(Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3352,13 +3353,13 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_frameHeaderSize((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_frameHeaderSize((const void *)$arg1, $arg2)")
   public static @Unsigned long ZSTD_frameHeaderSize(Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_frameHeaderSize_internal((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_frameHeaderSize_internal((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned long ZSTD_frameHeaderSize_internal(Ptr<?> src, @Unsigned long srcSize,
       @OriginalName("ZSTD_format_e") format_of_ZSTD_CCtx_params_and_format_of_ZSTD_CCtx_params_s_and_format_of_ZSTD_DCtx format) {
     throw new MethodIsBPFRelatedFunction();
@@ -3409,7 +3410,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_fseBitCost((const unsigned int*)$arg1, (const unsigned int*)$arg2, (const unsigned int)$arg3)")
+  @BuiltinBPFFunction("ZSTD_fseBitCost((const unsigned int *)$arg1, (const unsigned int *)$arg2, (const unsigned int)$arg3)")
   public static @Unsigned long ZSTD_fseBitCost(
       Ptr<java.lang. @Unsigned @OriginalName("FSE_CTable") Integer> ctable,
       Ptr<java.lang. @Unsigned Integer> count, @Unsigned int max) {
@@ -3417,44 +3418,44 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_generateSequences($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_generateSequences($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_generateSequences(Ptr<ZSTD_CCtx_s> zc,
       Ptr<ZSTD_Sequence> outSeqs, @Unsigned long outSeqsSize, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_getBlockSize((const ZSTD_CCtx_s*)$arg1)")
+  @BuiltinBPFFunction("ZSTD_getBlockSize((const ZSTD_CCtx_s *)$arg1)")
   public static @Unsigned long ZSTD_getBlockSize(Ptr<ZSTD_CCtx_s> cctx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_getDecompressedSize((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_getDecompressedSize((const void *)$arg1, $arg2)")
   public static @Unsigned long ZSTD_getDecompressedSize(Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_getDictID_fromCDict((const ZSTD_CDict_s*)$arg1)")
+  @BuiltinBPFFunction("ZSTD_getDictID_fromCDict((const ZSTD_CDict_s *)$arg1)")
   public static @Unsigned int ZSTD_getDictID_fromCDict(Ptr<ZSTD_CDict_s> cdict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_getDictID_fromDDict((const ZSTD_DDict_s*)$arg1)")
+  @BuiltinBPFFunction("ZSTD_getDictID_fromDDict((const ZSTD_DDict_s *)$arg1)")
   public static @Unsigned int ZSTD_getDictID_fromDDict(Ptr<ZSTD_DDict_s> ddict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_getDictID_fromDict((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_getDictID_fromDict((const void *)$arg1, $arg2)")
   public static @Unsigned int ZSTD_getDictID_fromDict(Ptr<?> dict, @Unsigned long dictSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_getDictID_fromFrame((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_getDictID_fromFrame((const void *)$arg1, $arg2)")
   public static @Unsigned int ZSTD_getDictID_fromFrame(Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3478,20 +3479,20 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_getFrameContentSize((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_getFrameContentSize((const void *)$arg1, $arg2)")
   public static @Unsigned long ZSTD_getFrameContentSize(Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_getFrameHeader($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_getFrameHeader($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long ZSTD_getFrameHeader(Ptr<ZSTD_FrameHeader> zfhPtr, Ptr<?> src,
       @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_getFrameHeader_advanced($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_getFrameHeader_advanced($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static @Unsigned long ZSTD_getFrameHeader_advanced(Ptr<ZSTD_FrameHeader> zfhPtr,
       Ptr<?> src, @Unsigned long srcSize,
       @OriginalName("ZSTD_format_e") format_of_ZSTD_CCtx_params_and_format_of_ZSTD_CCtx_params_s_and_format_of_ZSTD_DCtx format) {
@@ -3511,20 +3512,20 @@ public final class ZstdDefinitions {
           + "  long unsigned int maxNbLit;\n"
           + "  longLengthType_of_SeqStore_t longLengthType;\n"
           + "  unsigned int longLengthPos;\n"
-          + "}*)ZSTD_getSeqStore((const ZSTD_CCtx_s*)$arg1))")
+          + "}*)ZSTD_getSeqStore((const ZSTD_CCtx_s *)$arg1))")
   public static Ptr<SeqStore_t> ZSTD_getSeqStore(Ptr<ZSTD_CCtx_s> ctx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_getcBlockSize((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_getcBlockSize((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned long ZSTD_getcBlockSize(Ptr<?> src, @Unsigned long srcSize,
       Ptr<blockProperties_t> bpPtr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_initCDict_internal($arg1, (const void*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ZSTD_initCDict_internal($arg1, (const void *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned long ZSTD_initCDict_internal(Ptr<ZSTD_CDict_s> cdict, Ptr<?> dictBuffer,
       @Unsigned long dictSize, @OriginalName("ZSTD_dictLoadMethod_e") ZSTD_dlm_by dictLoadMethod,
       @OriginalName("ZSTD_dictContentType_e") dictContentType_of_ZSTD_CDict_and_dictContentType_of_ZSTD_CDict_s_and_dictContentType_of_ZSTD_localDict dictContentType,
@@ -3540,7 +3541,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_initCStream_advanced($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_initCStream_advanced($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_initCStream_advanced(
       Ptr<@OriginalName("ZSTD_CStream") ZSTD_CCtx_s> zcs, Ptr<?> dict, @Unsigned long dictSize,
       ZSTD_parameters params, @Unsigned long pss) {
@@ -3548,7 +3549,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_initCStream_internal($arg1, (const void*)$arg2, $arg3, (const ZSTD_CDict_s*)$arg4, (const ZSTD_CCtx_params_s*)$arg5, $arg6)")
+  @BuiltinBPFFunction("ZSTD_initCStream_internal($arg1, (const void *)$arg2, $arg3, (const ZSTD_CDict_s *)$arg4, (const ZSTD_CCtx_params_s *)$arg5, $arg6)")
   public static @Unsigned long ZSTD_initCStream_internal(
       Ptr<@OriginalName("ZSTD_CStream") ZSTD_CCtx_s> zcs, Ptr<?> dict, @Unsigned long dictSize,
       Ptr<ZSTD_CDict_s> cdict, Ptr<ZSTD_CCtx_params_s> params, @Unsigned long pledgedSrcSize) {
@@ -3564,14 +3565,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_initCStream_usingCDict($arg1, (const ZSTD_CDict_s*)$arg2)")
+  @BuiltinBPFFunction("ZSTD_initCStream_usingCDict($arg1, (const ZSTD_CDict_s *)$arg2)")
   public static @Unsigned long ZSTD_initCStream_usingCDict(
       Ptr<@OriginalName("ZSTD_CStream") ZSTD_CCtx_s> zcs, Ptr<ZSTD_CDict_s> cdict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_initCStream_usingCDict_advanced($arg1, (const ZSTD_CDict_s*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_initCStream_usingCDict_advanced($arg1, (const ZSTD_CDict_s *)$arg2, $arg3, $arg4)")
   public static @Unsigned long ZSTD_initCStream_usingCDict_advanced(
       Ptr<@OriginalName("ZSTD_CStream") ZSTD_CCtx_s> zcs, Ptr<ZSTD_CDict_s> cdict,
       ZSTD_frameParameters fParams, @Unsigned long pledgedSrcSize) {
@@ -3579,7 +3580,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_initCStream_usingDict($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_initCStream_usingDict($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static @Unsigned long ZSTD_initCStream_usingDict(
       Ptr<@OriginalName("ZSTD_CStream") ZSTD_CCtx_s> zcs, Ptr<?> dict, @Unsigned long dictSize,
       int compressionLevel) {
@@ -3593,7 +3594,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_initDDict_internal($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_initDDict_internal($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_initDDict_internal(Ptr<ZSTD_DDict_s> ddict, Ptr<?> dict,
       @Unsigned long dictSize, @OriginalName("ZSTD_dictLoadMethod_e") ZSTD_dlm_by dictLoadMethod,
       @OriginalName("ZSTD_dictContentType_e") dictContentType_of_ZSTD_CDict_and_dictContentType_of_ZSTD_CDict_s_and_dictContentType_of_ZSTD_localDict dictContentType) {
@@ -3608,14 +3609,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_initDStream_usingDDict($arg1, (const ZSTD_DDict_s*)$arg2)")
+  @BuiltinBPFFunction("ZSTD_initDStream_usingDDict($arg1, (const ZSTD_DDict_s *)$arg2)")
   public static @Unsigned long ZSTD_initDStream_usingDDict(
       Ptr<@OriginalName("ZSTD_DStream") ZSTD_DCtx_s> dctx, Ptr<ZSTD_DDict_s> ddict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_initDStream_usingDict($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_initDStream_usingDict($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long ZSTD_initDStream_usingDict(
       Ptr<@OriginalName("ZSTD_DStream") ZSTD_DCtx_s> zds, Ptr<?> dict, @Unsigned long dictSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -3627,7 +3628,7 @@ public final class ZstdDefinitions {
           + "  u8 nbAdditionalBits;\n"
           + "  u8 nbBits;\n"
           + "  unsigned int baseValue;\n"
-          + "}*)$arg3)")
+          + "} *)$arg3)")
   public static void ZSTD_initFseState(Ptr<ZSTD_fseState> DStatePtr, Ptr<BIT_DStream_t> bitD,
       Ptr<ZSTD_seqSymbol> dt) {
     throw new MethodIsBPFRelatedFunction();
@@ -3641,7 +3642,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const ZSTD_CDict_s*)ZSTD_initStaticCDict($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6, $arg7))")
+  @BuiltinBPFFunction("((const ZSTD_CDict_s*)ZSTD_initStaticCDict($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6, $arg7))")
   public static Ptr<ZSTD_CDict_s> ZSTD_initStaticCDict(Ptr<?> workspace,
       @Unsigned long workspaceSize, Ptr<?> dict, @Unsigned long dictSize,
       @OriginalName("ZSTD_dictLoadMethod_e") ZSTD_dlm_by dictLoadMethod,
@@ -3665,7 +3666,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const ZSTD_DDict_s*)ZSTD_initStaticDDict($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6))")
+  @BuiltinBPFFunction("((const ZSTD_DDict_s*)ZSTD_initStaticDDict($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6))")
   public static Ptr<ZSTD_DDict_s> ZSTD_initStaticDDict(Ptr<?> sBuffer, @Unsigned long sBufferSize,
       Ptr<?> dict, @Unsigned long dictSize,
       @OriginalName("ZSTD_dictLoadMethod_e") ZSTD_dlm_by dictLoadMethod,
@@ -3681,14 +3682,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_insertAndFindFirstIndex($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("ZSTD_insertAndFindFirstIndex($arg1, (const u8 *)$arg2)")
   public static @Unsigned int ZSTD_insertAndFindFirstIndex(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_insertAndFindFirstIndexHash3((const ZSTD_MatchState_t*)$arg1, $arg2, (const const u8*)$arg3)")
+  @BuiltinBPFFunction("ZSTD_insertAndFindFirstIndexHash3((const ZSTD_MatchState_t *)$arg1, $arg2, (const const u8*)$arg3)")
   public static @Unsigned int ZSTD_insertAndFindFirstIndexHash3(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @Unsigned Integer> nextToUpdate3,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip) {
@@ -3696,14 +3697,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_insertBlock($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_insertBlock($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long ZSTD_insertBlock(Ptr<ZSTD_DCtx_s> dctx, Ptr<?> blockStart,
       @Unsigned long blockSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_insertBt1((const ZSTD_MatchState_t*)$arg1, (const const u8*)$arg2, (const const u8*)$arg3, (const unsigned int)$arg4, (const unsigned int)$arg5, (const int)$arg6)")
+  @BuiltinBPFFunction("ZSTD_insertBt1((const ZSTD_MatchState_t *)$arg1, (const const u8*)$arg2, (const const u8*)$arg3, (const unsigned int)$arg4, (const unsigned int)$arg5, (const int)$arg6)")
   public static @Unsigned int ZSTD_insertBt1(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iend, @Unsigned int target, @Unsigned int mls,
@@ -3712,7 +3713,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_insertDUBT1((const ZSTD_MatchState_t*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, (const ZSTD)$arg6)")
+  @BuiltinBPFFunction("ZSTD_insertDUBT1((const ZSTD_MatchState_t *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, (const ZSTD)$arg6)")
   public static void ZSTD_insertDUBT1(Ptr<ZSTD_MatchState_t> ms, @Unsigned int curr,
       Ptr<java.lang. @OriginalName("BYTE") Character> inputEnd, @Unsigned int nbCompares,
       @Unsigned int btLow, @OriginalName("ZSTD_dictMode_e") ZSTD dictMode) {
@@ -3732,20 +3733,20 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_isFrame((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_isFrame((const void *)$arg1, $arg2)")
   public static @Unsigned int ZSTD_isFrame(Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_isRLE((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_isRLE((const u8 *)$arg1, $arg2)")
   public static int ZSTD_isRLE(Ptr<java.lang. @OriginalName("BYTE") Character> src,
       @Unsigned long length) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_isSkippableFrame((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ZSTD_isSkippableFrame((const void *)$arg1, $arg2)")
   public static @Unsigned int ZSTD_isSkippableFrame(Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3759,14 +3760,14 @@ public final class ZstdDefinitions {
           + "  unsigned int minMatch;\n"
           + "  unsigned int targetLength;\n"
           + "  strategy_of_ZSTD_compressionParameters strategy;\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static void ZSTD_ldm_adjustParameters(Ptr<ldmParams_t> params,
       Ptr<ZSTD_compressionParameters> cParams) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_ldm_blockCompress($arg1, $arg2, $arg3, $arg4, $arg5, (const void*)$arg6, $arg7)")
+  @BuiltinBPFFunction("ZSTD_ldm_blockCompress($arg1, $arg2, $arg3, $arg4, $arg5, (const void *)$arg6, $arg7)")
   public static @Unsigned long ZSTD_ldm_blockCompress(Ptr<RawSeqStore_t> rawSeqStore,
       Ptr<ZSTD_MatchState_t> ms, Ptr<SeqStore_t> seqStore, Ptr<java.lang. @Unsigned Integer> rep,
       @OriginalName("ZSTD_ParamSwitch_e") enableLdm_of_ldmParams_t_and_literalCompressionMode_of_ZSTD_CCtx_params_and_literalCompressionMode_of_ZSTD_CCtx_params_s useRowMatchFinder,
@@ -3775,14 +3776,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_ldm_fillHashTable($arg1, (const u8*)$arg2, (const u8*)$arg3, (const struct {\n"
+  @BuiltinBPFFunction("ZSTD_ldm_fillHashTable($arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const struct {\n"
           + "  enableLdm_of_ldmParams_t_and_literalCompressionMode_of_ZSTD_CCtx_params_and_literalCompressionMode_of_ZSTD_CCtx_params_s enableLdm;\n"
           + "  unsigned int hashLog;\n"
           + "  unsigned int bucketSizeLog;\n"
           + "  unsigned int minMatchLength;\n"
           + "  unsigned int hashRateLog;\n"
           + "  unsigned int windowLog;\n"
-          + "}*)$arg4)")
+          + "} *)$arg4)")
   public static void ZSTD_ldm_fillHashTable(Ptr<ldmState_t> ldmState,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iend, Ptr<ldmParams_t> params) {
@@ -3790,7 +3791,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_ldm_gear_feed($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_ldm_gear_feed($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_ldm_gear_feed(Ptr<ldmRollingHashState_t> state,
       Ptr<java.lang. @OriginalName("BYTE") Character> data, @Unsigned long size,
       Ptr<java.lang. @Unsigned Long> splits, Ptr<java.lang. @Unsigned Integer> numSplits) {
@@ -3805,7 +3806,7 @@ public final class ZstdDefinitions {
           + "  unsigned int minMatchLength;\n"
           + "  unsigned int hashRateLog;\n"
           + "  unsigned int windowLog;\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static void ZSTD_ldm_gear_init(Ptr<ldmRollingHashState_t> state, Ptr<ldmParams_t> params) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3818,7 +3819,7 @@ public final class ZstdDefinitions {
           + "  unsigned int minMatchLength;\n"
           + "  unsigned int hashRateLog;\n"
           + "  unsigned int windowLog;\n"
-          + "}*)$arg3, (const void*)$arg4, $arg5)")
+          + "} *)$arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_ldm_generateSequences(Ptr<ldmState_t> ldmState,
       Ptr<RawSeqStore_t> sequences, Ptr<ldmParams_t> params, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -3832,7 +3833,7 @@ public final class ZstdDefinitions {
           + "  unsigned int minMatchLength;\n"
           + "  unsigned int hashRateLog;\n"
           + "  unsigned int windowLog;\n"
-          + "}*)$arg3, (const void*)$arg4, $arg5)")
+          + "} *)$arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_ldm_generateSequences_internal(Ptr<ldmState_t> ldmState,
       Ptr<RawSeqStore_t> rawSeqStore, Ptr<ldmParams_t> params, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -3890,7 +3891,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_loadDictionaryContent($arg1, $arg2, $arg3, (const ZSTD_CCtx_params_s*)$arg4, (const void*)$arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("ZSTD_loadDictionaryContent($arg1, $arg2, $arg3, (const ZSTD_CCtx_params_s *)$arg4, (const void *)$arg5, $arg6, $arg7, $arg8)")
   public static @Unsigned long ZSTD_loadDictionaryContent(Ptr<ZSTD_MatchState_t> ms,
       Ptr<ldmState_t> ls, Ptr<ZSTD_cwksp> ws, Ptr<ZSTD_CCtx_params_s> params, Ptr<?> src,
       @Unsigned long srcSize, @OriginalName("ZSTD_dictTableLoadMethod_e") ZSTD_dtlm_f dtlm,
@@ -3938,7 +3939,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_noCompressLiterals($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("ZSTD_noCompressLiterals($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static @Unsigned long ZSTD_noCompressLiterals(Ptr<?> dst, @Unsigned long dstCapacity,
       Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -3960,7 +3961,7 @@ public final class ZstdDefinitions {
           + "  unsigned int startPosInBlock;\n"
           + "  unsigned int endPosInBlock;\n"
           + "  unsigned int offset;\n"
-          + "}*)$arg3, $arg4, $arg5)")
+          + "} *)$arg3, $arg4, $arg5)")
   public static void ZSTD_optLdm_maybeAddMatch(Ptr<ZSTD_match_t> matches,
       Ptr<java.lang. @Unsigned Integer> nbMatches, Ptr<ZSTD_optLdm_t> optLdm,
       @Unsigned int currPosInBlock, @Unsigned int minMatch) {
@@ -3990,42 +3991,42 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_overflowCorrectIfNeeded($arg1, $arg2, (const ZSTD_CCtx_params_s*)$arg3, (const void*)$arg4, (const void*)$arg5)")
+  @BuiltinBPFFunction("ZSTD_overflowCorrectIfNeeded($arg1, $arg2, (const ZSTD_CCtx_params_s *)$arg3, (const void *)$arg4, (const void *)$arg5)")
   public static void ZSTD_overflowCorrectIfNeeded(Ptr<ZSTD_MatchState_t> ms, Ptr<ZSTD_cwksp> ws,
       Ptr<ZSTD_CCtx_params_s> params, Ptr<?> ip, Ptr<?> iend) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_readSkippableFrame($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_readSkippableFrame($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long ZSTD_readSkippableFrame(Ptr<?> dst, @Unsigned long dstCapacity,
       Ptr<java.lang. @Unsigned Integer> magicVariant, Ptr<?> src, @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_recordFingerprint_1($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_recordFingerprint_1($arg1, (const void *)$arg2, $arg3)")
   public static void ZSTD_recordFingerprint_1(Ptr<Fingerprint> fp, Ptr<?> src,
       @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_recordFingerprint_11($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_recordFingerprint_11($arg1, (const void *)$arg2, $arg3)")
   public static void ZSTD_recordFingerprint_11(Ptr<Fingerprint> fp, Ptr<?> src,
       @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_recordFingerprint_43($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_recordFingerprint_43($arg1, (const void *)$arg2, $arg3)")
   public static void ZSTD_recordFingerprint_43(Ptr<Fingerprint> fp, Ptr<?> src,
       @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_recordFingerprint_5($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_recordFingerprint_5($arg1, (const void *)$arg2, $arg3)")
   public static void ZSTD_recordFingerprint_5(Ptr<Fingerprint> fp, Ptr<?> src,
       @Unsigned long srcSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -4071,7 +4072,7 @@ public final class ZstdDefinitions {
           + "  unsigned int matchLengthSumBasePrice;\n"
           + "  unsigned int offCodeSumBasePrice;\n"
           + "  priceType_of_optState_t priceType;\n"
-          + "const struct {\n"
+          + "  const struct {\n"
           + "  struct {\n"
           + "    long unsigned int CTable[257];\n"
           + "    repeatMode_of_ZSTD_hufCTables_t repeatMode;\n"
@@ -4084,7 +4085,7 @@ public final class ZstdDefinitions {
           + "    litlength_repeatMode_of_ZSTD_fseCTables_t_and_matchlength_repeatMode_of_ZSTD_fseCTables_t_and_offcode_repeatMode_of_ZSTD_fseCTables_t matchlength_repeatMode;\n"
           + "    litlength_repeatMode_of_ZSTD_fseCTables_t_and_matchlength_repeatMode_of_ZSTD_fseCTables_t_and_offcode_repeatMode_of_ZSTD_fseCTables_t litlength_repeatMode;\n"
           + "  } fse;\n"
-          + "}*;\n"
+          + "} *symbolCosts;\n"
           + "  enableLdm_of_ldmParams_t_and_literalCompressionMode_of_ZSTD_CCtx_params_and_literalCompressionMode_of_ZSTD_CCtx_params_s literalCompressionMode;\n"
           + "}*)$arg1, (const const u8*)$arg2, (const long unsigned int)$arg3, (const int)$arg4)")
   public static void ZSTD_rescaleFreqs(Ptr<optState_t> optPtr,
@@ -4093,7 +4094,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_resetCCtx_byCopyingCDict($arg1, (const ZSTD_CDict_s*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_resetCCtx_byCopyingCDict($arg1, (const ZSTD_CDict_s *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_resetCCtx_byCopyingCDict(Ptr<ZSTD_CCtx_s> cctx,
       Ptr<ZSTD_CDict_s> cdict, ZSTD_CCtx_params_s params, @Unsigned long pledgedSrcSize,
       @OriginalName("ZSTD_buffered_policy_e") bufferedPolicy_of_ZSTD_CCtx_and_bufferedPolicy_of_ZSTD_CCtx_s zbuff) {
@@ -4101,7 +4102,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_resetCCtx_internal($arg1, (const ZSTD_CCtx_params_s*)$arg2, (const long long unsigned int)$arg3, (const long unsigned int)$arg4, (const ZSTDcrp)$arg5, (const bufferedPolicy_of_ZSTD_CCtx_and_bufferedPolicy_of_ZSTD_CCtx_s)$arg6)")
+  @BuiltinBPFFunction("ZSTD_resetCCtx_internal($arg1, (const ZSTD_CCtx_params_s *)$arg2, (const long long unsigned int)$arg3, (const long unsigned int)$arg4, (const ZSTDcrp)$arg5, (const bufferedPolicy_of_ZSTD_CCtx_and_bufferedPolicy_of_ZSTD_CCtx_s)$arg6)")
   public static @Unsigned long ZSTD_resetCCtx_internal(Ptr<ZSTD_CCtx_s> zc,
       Ptr<ZSTD_CCtx_params_s> params, @Unsigned long pledgedSrcSize, @Unsigned long loadedDictSize,
       @OriginalName("ZSTD_compResetPolicy_e") ZSTDcrp crp,
@@ -4110,7 +4111,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_resetCCtx_usingCDict($arg1, (const ZSTD_CDict_s*)$arg2, (const ZSTD_CCtx_params_s*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_resetCCtx_usingCDict($arg1, (const ZSTD_CDict_s *)$arg2, (const ZSTD_CCtx_params_s *)$arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_resetCCtx_usingCDict(Ptr<ZSTD_CCtx_s> cctx,
       Ptr<ZSTD_CDict_s> cdict, Ptr<ZSTD_CCtx_params_s> params, @Unsigned long pledgedSrcSize,
       @OriginalName("ZSTD_buffered_policy_e") bufferedPolicy_of_ZSTD_CCtx_and_bufferedPolicy_of_ZSTD_CCtx_s zbuff) {
@@ -4152,7 +4153,7 @@ public final class ZstdDefinitions {
           + "  unsigned int minMatch;\n"
           + "  unsigned int targetLength;\n"
           + "  strategy_of_ZSTD_compressionParameters strategy;\n"
-          + "}*)$arg3, (const enableLdm_of_ldmParams_t_and_literalCompressionMode_of_ZSTD_CCtx_params_and_literalCompressionMode_of_ZSTD_CCtx_params_s)$arg4, (const ZSTDcrp)$arg5, (const ZSTDirp)$arg6, (const ZSTD_resetTarget_C)$arg7)")
+          + "} *)$arg3, (const enableLdm_of_ldmParams_t_and_literalCompressionMode_of_ZSTD_CCtx_params_and_literalCompressionMode_of_ZSTD_CCtx_params_s)$arg4, (const ZSTDcrp)$arg5, (const ZSTDirp)$arg6, (const ZSTD_resetTarget_C)$arg7)")
   public static @Unsigned long ZSTD_reset_matchState(Ptr<ZSTD_MatchState_t> ms, Ptr<ZSTD_cwksp> ws,
       Ptr<ZSTD_compressionParameters> cParams,
       @OriginalName("ZSTD_ParamSwitch_e") enableLdm_of_ldmParams_t_and_literalCompressionMode_of_ZSTD_CCtx_params_and_literalCompressionMode_of_ZSTD_CCtx_params_s useRowMatchFinder,
@@ -4163,14 +4164,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_row_update((const ZSTD_MatchState_t*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("ZSTD_row_update((const ZSTD_MatchState_t*)$arg1, (const u8 *)$arg2)")
   public static void ZSTD_row_update(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_safecopy($arg1, (const const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_safecopy($arg1, (const const u8*)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void ZSTD_safecopy(Ptr<java.lang. @OriginalName("BYTE") Character> op,
       Ptr<java.lang. @OriginalName("BYTE") Character> oend_w,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip, @OriginalName("ptrdiff_t") long length,
@@ -4179,14 +4180,14 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_safecopyDstBeforeSrc($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ZSTD_safecopyDstBeforeSrc($arg1, (const u8 *)$arg2, $arg3)")
   public static void ZSTD_safecopyDstBeforeSrc(Ptr<java.lang. @OriginalName("BYTE") Character> op,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip, @OriginalName("ptrdiff_t") long length) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_safecopyLiterals($arg1, (const u8*)$arg2, (const const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("ZSTD_safecopyLiterals($arg1, (const u8 *)$arg2, (const const u8*)$arg3, (const u8 *)$arg4)")
   public static void ZSTD_safecopyLiterals(Ptr<java.lang. @OriginalName("BYTE") Character> op,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iend,
@@ -4204,7 +4205,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_selectEncodingType($arg1, (const unsigned int*)$arg2, (const unsigned int)$arg3, (const long unsigned int)$arg4, $arg5, (const unsigned int)$arg6, (const unsigned int*)$arg7, (const short int*)$arg8, $arg9, (const ZSTD_default)$arg10, (const strategy_of_ZSTD_compressionParameters)$arg11)")
+  @BuiltinBPFFunction("ZSTD_selectEncodingType($arg1, (const unsigned int *)$arg2, (const unsigned int)$arg3, (const long unsigned int)$arg4, $arg5, (const unsigned int)$arg6, (const unsigned int *)$arg7, (const short int *)$arg8, $arg9, (const ZSTD_default)$arg10, (const strategy_of_ZSTD_compressionParameters)$arg11)")
   public static @OriginalName("SymbolEncodingType_e") hType_of_ZSTD_hufCTablesMetadata_t_and_llType_of_ZSTD_fseCTablesMetadata_t_and_mlType_of_ZSTD_fseCTablesMetadata_t ZSTD_selectEncodingType(
       Ptr<@OriginalName("FSE_repeat") litlength_repeatMode_of_ZSTD_fseCTables_t_and_matchlength_repeatMode_of_ZSTD_fseCTables_t_and_offcode_repeatMode_of_ZSTD_fseCTables_t> repeatMode,
       Ptr<java.lang. @Unsigned Integer> count, @Unsigned int max, @Unsigned long mostFrequent,
@@ -4250,7 +4251,7 @@ public final class ZstdDefinitions {
           + "  long unsigned int maxNbLit;\n"
           + "  longLengthType_of_SeqStore_t longLengthType;\n"
           + "  unsigned int longLengthPos;\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static int ZSTD_seqToCodes(Ptr<SeqStore_t> seqStorePtr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4268,38 +4269,38 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_sizeof_CCtx((const ZSTD_CCtx_s*)$arg1)")
+  @BuiltinBPFFunction("ZSTD_sizeof_CCtx((const ZSTD_CCtx_s *)$arg1)")
   public static @Unsigned long ZSTD_sizeof_CCtx(Ptr<ZSTD_CCtx_s> cctx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_sizeof_CDict((const ZSTD_CDict_s*)$arg1)")
+  @BuiltinBPFFunction("ZSTD_sizeof_CDict((const ZSTD_CDict_s *)$arg1)")
   public static @Unsigned long ZSTD_sizeof_CDict(Ptr<ZSTD_CDict_s> cdict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_sizeof_CStream((const ZSTD_CCtx_s*)$arg1)")
+  @BuiltinBPFFunction("ZSTD_sizeof_CStream((const ZSTD_CCtx_s *)$arg1)")
   public static @Unsigned long ZSTD_sizeof_CStream(
       Ptr<@OriginalName("ZSTD_CStream") ZSTD_CCtx_s> zcs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_sizeof_DCtx((const ZSTD_DCtx_s*)$arg1)")
+  @BuiltinBPFFunction("ZSTD_sizeof_DCtx((const ZSTD_DCtx_s *)$arg1)")
   public static @Unsigned long ZSTD_sizeof_DCtx(Ptr<ZSTD_DCtx_s> dctx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_sizeof_DDict((const ZSTD_DDict_s*)$arg1)")
+  @BuiltinBPFFunction("ZSTD_sizeof_DDict((const ZSTD_DDict_s *)$arg1)")
   public static @Unsigned long ZSTD_sizeof_DDict(Ptr<ZSTD_DDict_s> ddict) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_sizeof_DStream((const ZSTD_DCtx_s*)$arg1)")
+  @BuiltinBPFFunction("ZSTD_sizeof_DStream((const ZSTD_DCtx_s *)$arg1)")
   public static @Unsigned long ZSTD_sizeof_DStream(
       Ptr<@OriginalName("ZSTD_DStream") ZSTD_DCtx_s> dctx) {
     throw new MethodIsBPFRelatedFunction();
@@ -4322,7 +4323,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_splitBlock((const void*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_splitBlock((const void *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_splitBlock(Ptr<?> blockStart, @Unsigned long blockSize,
       int level, Ptr<?> workspace, @Unsigned long wkspSize) {
     throw new MethodIsBPFRelatedFunction();
@@ -4340,7 +4341,7 @@ public final class ZstdDefinitions {
           + "  unsigned int litLength;\n"
           + "  unsigned int matchLength;\n"
           + "  unsigned int rep;\n"
-          + "}*)$arg3, $arg4, (const void*)$arg5, $arg6, $arg7)")
+          + "}*)$arg3, $arg4, (const void *)$arg5, $arg6, $arg7)")
   public static @Unsigned long ZSTD_transferSequences_noDelim(Ptr<ZSTD_CCtx_s> cctx,
       Ptr<ZSTD_SequencePosition> seqPos, Ptr<ZSTD_Sequence> inSeqs, @Unsigned long inSeqsSize,
       Ptr<?> src, @Unsigned long blockSize,
@@ -4354,7 +4355,7 @@ public final class ZstdDefinitions {
           + "  unsigned int litLength;\n"
           + "  unsigned int matchLength;\n"
           + "  unsigned int rep;\n"
-          + "}*)$arg3, $arg4, (const void*)$arg5, $arg6, $arg7)")
+          + "}*)$arg3, $arg4, (const void *)$arg5, $arg6, $arg7)")
   public static @Unsigned long ZSTD_transferSequences_wBlockDelim(Ptr<ZSTD_CCtx_s> cctx,
       Ptr<ZSTD_SequencePosition> seqPos, Ptr<ZSTD_Sequence> inSeqs, @Unsigned long inSeqsSize,
       Ptr<?> src, @Unsigned long blockSize,
@@ -4388,7 +4389,7 @@ public final class ZstdDefinitions {
           + "  unsigned int matchLengthSumBasePrice;\n"
           + "  unsigned int offCodeSumBasePrice;\n"
           + "  priceType_of_optState_t priceType;\n"
-          + "const struct {\n"
+          + "  const struct {\n"
           + "  struct {\n"
           + "    long unsigned int CTable[257];\n"
           + "    repeatMode_of_ZSTD_hufCTables_t repeatMode;\n"
@@ -4401,9 +4402,9 @@ public final class ZstdDefinitions {
           + "    litlength_repeatMode_of_ZSTD_fseCTables_t_and_matchlength_repeatMode_of_ZSTD_fseCTables_t_and_offcode_repeatMode_of_ZSTD_fseCTables_t matchlength_repeatMode;\n"
           + "    litlength_repeatMode_of_ZSTD_fseCTables_t_and_matchlength_repeatMode_of_ZSTD_fseCTables_t_and_offcode_repeatMode_of_ZSTD_fseCTables_t litlength_repeatMode;\n"
           + "  } fse;\n"
-          + "}*;\n"
+          + "} *symbolCosts;\n"
           + "  enableLdm_of_ldmParams_t_and_literalCompressionMode_of_ZSTD_CCtx_params_and_literalCompressionMode_of_ZSTD_CCtx_params_s literalCompressionMode;\n"
-          + "}*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+          + "}*)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void ZSTD_updateStats(Ptr<optState_t> optPtr, @Unsigned int litLength,
       Ptr<java.lang. @OriginalName("BYTE") Character> literals, @Unsigned int offBase,
       @Unsigned int matchLength) {
@@ -4411,7 +4412,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_updateTree($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("ZSTD_updateTree($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static void ZSTD_updateTree(Ptr<ZSTD_MatchState_t> ms,
       Ptr<java.lang. @OriginalName("BYTE") Character> ip,
       Ptr<java.lang. @OriginalName("BYTE") Character> iend) {
@@ -4431,7 +4432,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_writeFrameHeader($arg1, $arg2, (const ZSTD_CCtx_params_s*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_writeFrameHeader($arg1, $arg2, (const ZSTD_CCtx_params_s *)$arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_writeFrameHeader(Ptr<?> dst, @Unsigned long dstCapacity,
       Ptr<ZSTD_CCtx_params_s> params, @Unsigned long pledgedSrcSize, @Unsigned int dictID) {
     throw new MethodIsBPFRelatedFunction();
@@ -4444,7 +4445,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ZSTD_writeSkippableFrame($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ZSTD_writeSkippableFrame($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static @Unsigned long ZSTD_writeSkippableFrame(Ptr<?> dst, @Unsigned long dstCapacity,
       Ptr<?> src, @Unsigned long srcSize, @Unsigned int magicVariant) {
     throw new MethodIsBPFRelatedFunction();
@@ -4466,7 +4467,7 @@ public final class ZstdDefinitions {
           + "    int checksumFlag;\n"
           + "    int noDictIDFlag;\n"
           + "  } fParams;\n"
-          + "}*)$arg2, $arg3)")
+          + "} *)$arg2, $arg3)")
   public static @Unsigned long zstd_cctx_init(Ptr<@OriginalName("zstd_cctx") ZSTD_CCtx_s> cctx,
       Ptr<@OriginalName("zstd_parameters") ZSTD_parameters> parameters,
       @Unsigned long pledged_src_size) {
@@ -4489,7 +4490,7 @@ public final class ZstdDefinitions {
           + "  unsigned int minMatch;\n"
           + "  unsigned int targetLength;\n"
           + "  strategy_of_ZSTD_compressionParameters strategy;\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static @Unsigned long zstd_cctx_workspace_bound(
       Ptr<@OriginalName("zstd_compression_parameters") ZSTD_compressionParameters> cparams) {
     throw new MethodIsBPFRelatedFunction();
@@ -4504,7 +4505,7 @@ public final class ZstdDefinitions {
           + "  unsigned int minMatch;\n"
           + "  unsigned int targetLength;\n"
           + "  strategy_of_ZSTD_compressionParameters strategy;\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static @Unsigned long zstd_cctx_workspace_bound_with_ext_seq_prod(
       Ptr<@OriginalName("zstd_compression_parameters") ZSTD_compressionParameters> compress_params) {
     throw new MethodIsBPFRelatedFunction();
@@ -4517,7 +4518,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zstd_compress_cctx($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const struct {\n"
+  @BuiltinBPFFunction("zstd_compress_cctx($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const struct {\n"
           + "  struct {\n"
           + "    unsigned int windowLog;\n"
           + "    unsigned int chainLog;\n"
@@ -4532,7 +4533,7 @@ public final class ZstdDefinitions {
           + "    int checksumFlag;\n"
           + "    int noDictIDFlag;\n"
           + "  } fParams;\n"
-          + "}*)$arg6)")
+          + "} *)$arg6)")
   public static @Unsigned long zstd_compress_cctx(Ptr<@OriginalName("zstd_cctx") ZSTD_CCtx_s> cctx,
       Ptr<?> dst, @Unsigned long dst_capacity, Ptr<?> src, @Unsigned long src_size,
       Ptr<@OriginalName("zstd_parameters") ZSTD_parameters> parameters) {
@@ -4545,7 +4546,7 @@ public final class ZstdDefinitions {
           + "  unsigned int litLength;\n"
           + "  unsigned int matchLength;\n"
           + "  unsigned int rep;\n"
-          + "}*)$arg4, $arg5, (const void*)$arg6, $arg7, $arg8, $arg9)")
+          + "} *)$arg4, $arg5, (const void *)$arg6, $arg7, $arg8, $arg9)")
   public static @Unsigned long zstd_compress_sequences_and_literals(
       Ptr<@OriginalName("zstd_cctx") ZSTD_CCtx_s> cctx, Ptr<?> dst, @Unsigned long dst_capacity,
       Ptr<@OriginalName("zstd_sequence") ZSTD_Sequence> in_seqs, @Unsigned long in_seqs_size,
@@ -4564,7 +4565,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zstd_compress_using_cdict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const ZSTD_CDict_s*)$arg6)")
+  @BuiltinBPFFunction("zstd_compress_using_cdict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const ZSTD_CDict_s *)$arg6)")
   public static @Unsigned long zstd_compress_using_cdict(
       Ptr<@OriginalName("zstd_cctx") ZSTD_CCtx_s> cctx, Ptr<?> dst, @Unsigned long dst_capacity,
       Ptr<?> src, @Unsigned long src_size, Ptr<ZSTD_CDict_s> cdict) {
@@ -4579,7 +4580,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zstd_create_cdict_byreference((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("zstd_create_cdict_byreference((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<@OriginalName("zstd_cdict") ZSTD_CDict_s> zstd_create_cdict_byreference(
       Ptr<?> dict, @Unsigned long dict_size,
       @OriginalName("zstd_compression_parameters") ZSTD_compressionParameters cparams,
@@ -4595,7 +4596,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zstd_create_ddict_byreference((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("zstd_create_ddict_byreference((const void *)$arg1, $arg2, $arg3)")
   public static Ptr<@OriginalName("zstd_ddict") ZSTD_DDict_s> zstd_create_ddict_byreference(
       Ptr<?> dict, @Unsigned long dict_size,
       @OriginalName("zstd_custom_mem") ZSTD_customMem custom_mem) {
@@ -4611,7 +4612,7 @@ public final class ZstdDefinitions {
           + "  unsigned int minMatch;\n"
           + "  unsigned int targetLength;\n"
           + "  strategy_of_ZSTD_compressionParameters strategy;\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static @Unsigned long zstd_cstream_workspace_bound(
       Ptr<@OriginalName("zstd_compression_parameters") ZSTD_compressionParameters> cparams) {
     throw new MethodIsBPFRelatedFunction();
@@ -4626,7 +4627,7 @@ public final class ZstdDefinitions {
           + "  unsigned int minMatch;\n"
           + "  unsigned int targetLength;\n"
           + "  strategy_of_ZSTD_compressionParameters strategy;\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static @Unsigned long zstd_cstream_workspace_bound_with_ext_seq_prod(
       Ptr<@OriginalName("zstd_compression_parameters") ZSTD_compressionParameters> compress_params) {
     throw new MethodIsBPFRelatedFunction();
@@ -4639,7 +4640,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zstd_decompress_dctx($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("zstd_decompress_dctx($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long zstd_decompress_dctx(
       Ptr<@OriginalName("zstd_dctx") ZSTD_DCtx_s> dctx, Ptr<?> dst, @Unsigned long dst_capacity,
       Ptr<?> src, @Unsigned long src_size) {
@@ -4656,7 +4657,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zstd_decompress_using_ddict($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, (const ZSTD_DDict_s*)$arg6)")
+  @BuiltinBPFFunction("zstd_decompress_using_ddict($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, (const ZSTD_DDict_s *)$arg6)")
   public static @Unsigned long zstd_decompress_using_ddict(
       Ptr<@OriginalName("zstd_dctx") ZSTD_DCtx_s> dctx, Ptr<?> dst, @Unsigned long dst_capacity,
       Ptr<?> src, @Unsigned long src_size, Ptr<@OriginalName("zstd_ddict") ZSTD_DDict_s> ddict) {
@@ -4684,7 +4685,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zstd_find_frame_compressed_size((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("zstd_find_frame_compressed_size((const void *)$arg1, $arg2)")
   public static @Unsigned long zstd_find_frame_compressed_size(Ptr<?> src,
       @Unsigned long src_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -4744,7 +4745,7 @@ public final class ZstdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("zstd_get_frame_header($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("zstd_get_frame_header($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long zstd_get_frame_header(
       Ptr<@OriginalName("zstd_frame_header") ZSTD_FrameHeader> header, Ptr<?> src,
       @Unsigned long src_size) {
@@ -4780,7 +4781,7 @@ public final class ZstdDefinitions {
           + "    int checksumFlag;\n"
           + "    int noDictIDFlag;\n"
           + "  } fParams;\n"
-          + "}*)$arg1, $arg2, $arg3, $arg4)")
+          + "} *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<@OriginalName("zstd_cstream") ZSTD_CCtx_s> zstd_init_cstream(
       Ptr<@OriginalName("zstd_parameters") ZSTD_parameters> parameters,
       @Unsigned long pledged_src_size, Ptr<?> workspace, @Unsigned long workspace_size) {
@@ -5728,7 +5729,7 @@ public final class ZstdDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { void *dictBuffer; const void*; long unsigned int dictSize; dictContentType_of_ZSTD_CDict_and_dictContentType_of_ZSTD_CDict_s_and_dictContentType_of_ZSTD_localDict dictContentType; ZSTD_CDict_s *cdict; }"
+      cType = "struct { void *dictBuffer; const void *dict; long unsigned int dictSize; dictContentType_of_ZSTD_CDict_and_dictContentType_of_ZSTD_CDict_s_and_dictContentType_of_ZSTD_localDict dictContentType; ZSTD_CDict_s *cdict; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -5878,7 +5879,7 @@ public final class ZstdDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; const u8*; const u8*; unsigned int dictLimit; unsigned int lowLimit; unsigned int nbOverflowCorrections; }"
+      cType = "struct { const u8 *nextSrc; const u8 *base; const u8 *dictBase; unsigned int dictLimit; unsigned int lowLimit; unsigned int nbOverflowCorrections; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
@@ -6322,7 +6323,7 @@ public final class ZstdDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { long unsigned int state; const struct { short unsigned int nextState; u8 nbAdditionalBits; u8 nbBits; unsigned int baseValue; }*; }"
+      cType = "struct { long unsigned int state; const struct { short unsigned int nextState; u8 nbAdditionalBits; u8 nbBits; unsigned int baseValue; } *table; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

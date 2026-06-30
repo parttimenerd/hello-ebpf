@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class EvmDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_calc_hash($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("evm_calc_hash($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int evm_calc_hash(Ptr<dentry> dentry, String req_xattr_name, String req_xattr_value,
       @Unsigned long req_xattr_value_len, char type, Ptr<evm_digest> data,
       Ptr<evm_iint_cache> iint) {
@@ -1098,14 +1099,14 @@ public final class EvmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_calc_hmac($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("evm_calc_hmac($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static int evm_calc_hmac(Ptr<dentry> dentry, String req_xattr_name, String req_xattr_value,
       @Unsigned long req_xattr_value_len, Ptr<evm_digest> data, Ptr<evm_iint_cache> iint) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_calc_hmac_or_hash($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("evm_calc_hmac_or_hash($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int evm_calc_hmac_or_hash(Ptr<dentry> dentry, String req_xattr_name,
       String req_xattr_value, @Unsigned long req_xattr_value_len,
       @OriginalName("uint8_t") char type, Ptr<evm_digest> data, Ptr<evm_iint_cache> iint) {
@@ -1119,7 +1120,7 @@ public final class EvmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_init_hmac($arg1, (const struct xattr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("evm_init_hmac($arg1, (const struct xattr *)$arg2, $arg3)")
   public static int evm_init_hmac(Ptr<inode> inode, Ptr<xattr> xattrs, String hmac_val) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1143,33 +1144,33 @@ public final class EvmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_inode_copy_up_xattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("evm_inode_copy_up_xattr($arg1, (const u8 *)$arg2)")
   public static int evm_inode_copy_up_xattr(Ptr<dentry> src, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_inode_init_security($arg1, $arg2, (const struct qstr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("evm_inode_init_security($arg1, $arg2, (const struct qstr *)$arg3, $arg4, $arg5)")
   public static int evm_inode_init_security(Ptr<inode> inode, Ptr<inode> dir, Ptr<qstr> qstr,
       Ptr<xattr> xattrs, Ptr<java.lang.Integer> xattr_count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_inode_post_remove_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("evm_inode_post_remove_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static void evm_inode_post_remove_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_inode_post_removexattr($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("evm_inode_post_removexattr($arg1, (const u8 *)$arg2)")
   public static void evm_inode_post_removexattr(Ptr<dentry> dentry, String xattr_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_inode_post_set_acl($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("evm_inode_post_set_acl($arg1, (const u8 *)$arg2, $arg3)")
   public static void evm_inode_post_set_acl(Ptr<dentry> dentry, String acl_name,
       Ptr<posix_acl> kacl) {
     throw new MethodIsBPFRelatedFunction();
@@ -1183,28 +1184,28 @@ public final class EvmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_inode_post_setxattr($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("evm_inode_post_setxattr($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static void evm_inode_post_setxattr(Ptr<dentry> dentry, String xattr_name,
       Ptr<?> xattr_value, @Unsigned long xattr_value_len, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_inode_remove_acl($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("evm_inode_remove_acl($arg1, $arg2, (const u8 *)$arg3)")
   public static int evm_inode_remove_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_inode_removexattr($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("evm_inode_removexattr($arg1, $arg2, (const u8 *)$arg3)")
   public static int evm_inode_removexattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String xattr_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_inode_set_acl($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("evm_inode_set_acl($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int evm_inode_set_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String acl_name,
       Ptr<posix_acl> kacl) {
     throw new MethodIsBPFRelatedFunction();
@@ -1217,7 +1218,7 @@ public final class EvmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_inode_setxattr($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("evm_inode_setxattr($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int evm_inode_setxattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String xattr_name,
       Ptr<?> xattr_value, @Unsigned long xattr_value_len, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1236,19 +1237,19 @@ public final class EvmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_protected_xattr((const u8*)$arg1)")
+  @BuiltinBPFFunction("evm_protected_xattr((const u8 *)$arg1)")
   public static int evm_protected_xattr(String req_xattr_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_protected_xattr_common((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("evm_protected_xattr_common((const u8 *)$arg1, $arg2)")
   public static int evm_protected_xattr_common(String req_xattr_name, boolean all_xattrs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_protected_xattr_if_enabled((const u8*)$arg1)")
+  @BuiltinBPFFunction("evm_protected_xattr_if_enabled((const u8 *)$arg1)")
   public static int evm_protected_xattr_if_enabled(String req_xattr_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1268,7 +1269,7 @@ public final class EvmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_revalidate_status((const u8*)$arg1)")
+  @BuiltinBPFFunction("evm_revalidate_status((const u8 *)$arg1)")
   public static boolean evm_revalidate_status(String xattr_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1286,7 +1287,7 @@ public final class EvmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_update_evmxattr($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("evm_update_evmxattr($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static int evm_update_evmxattr(Ptr<dentry> dentry, String xattr_name, String xattr_value,
       @Unsigned long xattr_value_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1299,28 +1300,28 @@ public final class EvmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_verify_hmac($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("evm_verify_hmac($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static integrity_status evm_verify_hmac(Ptr<dentry> dentry, String xattr_name,
       String xattr_value, @Unsigned long xattr_value_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_verifyxattr($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("evm_verifyxattr($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static integrity_status evm_verifyxattr(Ptr<dentry> dentry, String xattr_name,
       Ptr<?> xattr_value, @Unsigned long xattr_value_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_write_key($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("evm_write_key($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long evm_write_key(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("evm_write_xattrs($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("evm_write_xattrs($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long evm_write_xattrs(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

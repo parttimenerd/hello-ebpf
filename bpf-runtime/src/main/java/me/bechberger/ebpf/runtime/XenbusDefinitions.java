@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1101,14 +1102,14 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__xenbus_register_backend($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__xenbus_register_backend($arg1, $arg2, (const u8 *)$arg3)")
   public static int __xenbus_register_backend(Ptr<xenbus_driver> drv, Ptr<module> owner,
       String mod_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__xenbus_register_frontend($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__xenbus_register_frontend($arg1, $arg2, (const u8 *)$arg3)")
   public static int __xenbus_register_frontend(Ptr<xenbus_driver> drv, Ptr<module> owner,
       String mod_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1158,7 +1159,7 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_command_reply($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("xenbus_command_reply($arg1, $arg2, (const u8 *)$arg3)")
   public static int xenbus_command_reply(Ptr<xenbus_file_priv> u, @Unsigned int msg_type,
       String reply) {
     throw new MethodIsBPFRelatedFunction();
@@ -1171,20 +1172,20 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_dev_changed((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xenbus_dev_changed((const u8 *)$arg1, $arg2)")
   public static void xenbus_dev_changed(String node, Ptr<xen_bus_type> bus) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_dev_error($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("xenbus_dev_error($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void xenbus_dev_error(Ptr<xenbus_device> dev, int err, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_dev_fatal($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("xenbus_dev_fatal($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static void xenbus_dev_fatal(Ptr<xenbus_device> dev, int err, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1239,14 +1240,14 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_directory($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("xenbus_directory($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<String> xenbus_directory(xenbus_transaction t, String dir, String node,
       Ptr<java.lang. @Unsigned Integer> num) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_exists($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("xenbus_exists($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int xenbus_exists(xenbus_transaction t, String dir, String node) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1278,7 +1279,7 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_file_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("xenbus_file_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long xenbus_file_write(Ptr<file> filp, String ubuf,
       @Unsigned long len, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1322,7 +1323,7 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_gather($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("xenbus_gather($arg1, (const u8 *)$arg2, $arg3_)")
   public static int xenbus_gather(xenbus_transaction t, String dir, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1371,20 +1372,20 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("xenbus_match($arg1, (const struct device_driver *)$arg2)")
   public static int xenbus_match(Ptr<device> _dev, Ptr<device_driver> _drv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_otherend_changed($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("xenbus_otherend_changed($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void xenbus_otherend_changed(Ptr<xenbus_watch> watch, String path, String token,
       int ignore_on_shutdown) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_printf($arg1, (const u8*)$arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("xenbus_printf($arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5_)")
   public static int xenbus_printf(xenbus_transaction t, String dir, String node, String fmt,
       java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
@@ -1397,7 +1398,7 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_probe_backend($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("xenbus_probe_backend($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int xenbus_probe_backend(Ptr<xen_bus_type> bus, String type, String domid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1415,7 +1416,7 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_probe_frontend($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("xenbus_probe_frontend($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int xenbus_probe_frontend(Ptr<xen_bus_type> bus, String type, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1433,7 +1434,7 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_probe_node($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("xenbus_probe_node($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int xenbus_probe_node(Ptr<xen_bus_type> bus, String type, String nodename) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1445,14 +1446,14 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_read($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("xenbus_read($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<?> xenbus_read(xenbus_transaction t, String dir, String node,
       Ptr<java.lang. @Unsigned Integer> len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_read_driver_state((const u8*)$arg1)")
+  @BuiltinBPFFunction("xenbus_read_driver_state((const u8 *)$arg1)")
   public static xenbus_state xenbus_read_driver_state(String path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1465,21 +1466,21 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_read_unsigned((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("xenbus_read_unsigned((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static @Unsigned int xenbus_read_unsigned(String dir, String node,
       @Unsigned int default_val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_register_driver_common($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("xenbus_register_driver_common($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int xenbus_register_driver_common(Ptr<xenbus_driver> drv, Ptr<xen_bus_type> bus,
       Ptr<module> owner, String mod_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_reset_backend_state_changed($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("xenbus_reset_backend_state_changed($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static void xenbus_reset_backend_state_changed(Ptr<xenbus_watch> w, String path,
       String token) {
     throw new MethodIsBPFRelatedFunction();
@@ -1510,13 +1511,13 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_rm($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("xenbus_rm($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int xenbus_rm(xenbus_transaction t, String dir, String node) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_scanf($arg1, (const u8*)$arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("xenbus_scanf($arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5_)")
   public static int xenbus_scanf(xenbus_transaction t, String dir, String node, String fmt,
       java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
@@ -1537,7 +1538,7 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_switch_fatal($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("xenbus_switch_fatal($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5_)")
   public static void xenbus_switch_fatal(Ptr<xenbus_device> dev, int depth, int err, String fmt,
       java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
@@ -1575,13 +1576,13 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_uevent_backend((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xenbus_uevent_backend((const struct device *)$arg1, $arg2)")
   public static int xenbus_uevent_backend(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_uevent_frontend((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xenbus_uevent_frontend((const struct device *)$arg1, $arg2)")
   public static int xenbus_uevent_frontend(Ptr<device> _dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1626,21 +1627,21 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_va_dev_error($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("xenbus_va_dev_error($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void xenbus_va_dev_error(Ptr<xenbus_device> dev, int err, String fmt,
       Ptr<__va_list_tag> ap) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_watch_path($arg1, (const u8*)$arg2, $arg3, (_Bool (*)(struct xenbus_watch*, const u8*, const u8*))$arg4, (void (*)(struct xenbus_watch*, const u8*, const u8*))$arg5)")
+  @BuiltinBPFFunction("xenbus_watch_path($arg1, (const u8 *)$arg2, $arg3, (_Bool (*)(struct xenbus_watch*, const u8*, const u8*))$arg4, (void (*)(struct xenbus_watch*, const u8*, const u8*))$arg5)")
   public static int xenbus_watch_path(Ptr<xenbus_device> dev, String path, Ptr<xenbus_watch> watch,
       Ptr<?> will_handle, Ptr<?> callback) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_watch_pathfmt($arg1, $arg2, (_Bool (*)(struct xenbus_watch*, const u8*, const u8*))$arg3, (void (*)(struct xenbus_watch*, const u8*, const u8*))$arg4, (const u8*)$arg5, $arg6_)")
+  @BuiltinBPFFunction("xenbus_watch_pathfmt($arg1, $arg2, (_Bool (*)(struct xenbus_watch*, const u8*, const u8*))$arg3, (void (*)(struct xenbus_watch*, const u8*, const u8*))$arg4, (const u8 *)$arg5, $arg6_)")
   public static int xenbus_watch_pathfmt(Ptr<xenbus_device> dev, Ptr<xenbus_watch> watch,
       Ptr<?> will_handle, Ptr<?> callback, String pathfmt, java.lang.Object... param5) {
     throw new MethodIsBPFRelatedFunction();
@@ -1653,7 +1654,7 @@ public final class XenbusDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xenbus_write($arg1, (const u8*)$arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("xenbus_write($arg1, (const u8 *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static int xenbus_write(xenbus_transaction t, String dir, String node, String string) {
     throw new MethodIsBPFRelatedFunction();
   }

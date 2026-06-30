@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class RfkillDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rfkill_alloc((const u8*)$arg1, $arg2, (const enum rfkill_type)$arg3, (const struct rfkill_ops*)$arg4, $arg5)")
+  @BuiltinBPFFunction("rfkill_alloc((const u8 *)$arg1, $arg2, (const enum rfkill_type)$arg3, (const struct rfkill_ops *)$arg4, $arg5)")
   public static Ptr<rfkill> rfkill_alloc(String name, Ptr<device> parent, rfkill_type type,
       Ptr<rfkill_ops> ops, Ptr<?> ops_data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1109,7 +1110,7 @@ public final class RfkillDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rfkill_connect($arg1, $arg2, (const struct input_device_id*)$arg3)")
+  @BuiltinBPFFunction("rfkill_connect($arg1, $arg2, (const struct input_device_id *)$arg3)")
   public static int rfkill_connect(Ptr<input_handler> handler, Ptr<input_dev> dev,
       Ptr<input_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1122,7 +1123,7 @@ public final class RfkillDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rfkill_dev_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("rfkill_dev_uevent((const struct device *)$arg1, $arg2)")
   public static int rfkill_dev_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1146,7 +1147,7 @@ public final class RfkillDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rfkill_find_type((const u8*)$arg1)")
+  @BuiltinBPFFunction("rfkill_find_type((const u8 *)$arg1)")
   public static rfkill_type rfkill_find_type(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1184,7 +1185,7 @@ public final class RfkillDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rfkill_fop_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("rfkill_fop_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long rfkill_fop_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1348,7 +1349,7 @@ public final class RfkillDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rfkill_set_led_trigger_name($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("rfkill_set_led_trigger_name($arg1, (const u8 *)$arg2)")
   public static void rfkill_set_led_trigger_name(Ptr<rfkill> rfkill, String name) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1134,21 +1135,21 @@ public final class RegulatorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_regulator_get($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("_regulator_get($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<regulator> _regulator_get(Ptr<device> dev, String id,
       regulator_get_type get_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_regulator_get_common($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("_regulator_get_common($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<regulator> _regulator_get_common(Ptr<regulator_dev> rdev, Ptr<device> dev,
       String id, regulator_get_type get_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_regulator_get_common_check($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("_regulator_get_common_check($arg1, (const u8 *)$arg2, $arg3)")
   public static int _regulator_get_common_check(Ptr<device> dev, String id,
       regulator_get_type get_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1240,21 +1241,21 @@ public final class RegulatorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_bulk_register_supply_alias($arg1, (const u8**)$arg2, $arg3, (const u8**)$arg4, $arg5)")
+  @BuiltinBPFFunction("regulator_bulk_register_supply_alias($arg1, (const const u8 **)$arg2, $arg3, (const const u8 **)$arg4, $arg5)")
   public static int regulator_bulk_register_supply_alias(Ptr<device> dev, Ptr<String> id,
       Ptr<device> alias_dev, Ptr<String> alias_id, int num_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_bulk_set_supply_names($arg1, (const u8**)$arg2, $arg3)")
+  @BuiltinBPFFunction("regulator_bulk_set_supply_names($arg1, (const const u8 **)$arg2, $arg3)")
   public static void regulator_bulk_set_supply_names(Ptr<regulator_bulk_data> consumers,
       Ptr<String> supply_names, @Unsigned int num_supplies) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_bulk_unregister_supply_alias($arg1, (const u8**)$arg2, $arg3)")
+  @BuiltinBPFFunction("regulator_bulk_unregister_supply_alias($arg1, (const const u8 **)$arg2, $arg3)")
   public static void regulator_bulk_unregister_supply_alias(Ptr<device> dev, Ptr<String> id,
       int num_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1288,21 +1289,21 @@ public final class RegulatorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_desc_list_voltage_linear((const struct regulator_desc*)$arg1, $arg2)")
+  @BuiltinBPFFunction("regulator_desc_list_voltage_linear((const struct regulator_desc *)$arg1, $arg2)")
   public static int regulator_desc_list_voltage_linear(Ptr<regulator_desc> desc,
       @Unsigned int selector) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_desc_list_voltage_linear_range((const struct regulator_desc*)$arg1, $arg2)")
+  @BuiltinBPFFunction("regulator_desc_list_voltage_linear_range((const struct regulator_desc *)$arg1, $arg2)")
   public static int regulator_desc_list_voltage_linear_range(Ptr<regulator_desc> desc,
       @Unsigned int selector) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_dev_lookup($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("regulator_dev_lookup($arg1, (const u8 *)$arg2)")
   public static Ptr<regulator_dev> regulator_dev_lookup(Ptr<device> dev, String supply) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1369,7 +1370,7 @@ public final class RegulatorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_find_closest_bigger($arg1, (const unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("regulator_find_closest_bigger($arg1, (const unsigned int *)$arg2, $arg3, $arg4)")
   public static int regulator_find_closest_bigger(@Unsigned int target,
       Ptr<java.lang. @Unsigned Integer> table, @Unsigned int num_sel,
       Ptr<java.lang. @Unsigned Integer> sel) {
@@ -1395,7 +1396,7 @@ public final class RegulatorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("regulator_get($arg1, (const u8 *)$arg2)")
   public static Ptr<regulator> regulator_get(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1433,7 +1434,7 @@ public final class RegulatorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_get_exclusive($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("regulator_get_exclusive($arg1, (const u8 *)$arg2)")
   public static Ptr<regulator> regulator_get_exclusive(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1472,7 +1473,7 @@ public final class RegulatorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_get_optional($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("regulator_get_optional($arg1, (const u8 *)$arg2)")
   public static Ptr<regulator> regulator_get_optional(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1557,7 +1558,7 @@ public final class RegulatorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_irq_helper($arg1, (const struct regulator_irq_desc*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("regulator_irq_helper($arg1, (const struct regulator_irq_desc *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static Ptr<?> regulator_irq_helper(Ptr<device> dev, Ptr<regulator_irq_desc> d, int irq,
       int irq_flags, int common_errs, Ptr<java.lang.Integer> per_rdev_errs,
       Ptr<Ptr<regulator_dev>> rdev, int rdev_amount) {
@@ -1705,7 +1706,7 @@ public final class RegulatorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_match($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("regulator_match($arg1, (const void *)$arg2)")
   public static int regulator_match(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1750,14 +1751,14 @@ public final class RegulatorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_register($arg1, (const struct regulator_desc*)$arg2, (const struct regulator_config*)$arg3)")
+  @BuiltinBPFFunction("regulator_register($arg1, (const struct regulator_desc *)$arg2, (const struct regulator_config *)$arg3)")
   public static Ptr<regulator_dev> regulator_register(Ptr<device> dev,
       Ptr<regulator_desc> regulator_desc, Ptr<regulator_config> cfg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_register_always_on($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("regulator_register_always_on($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static Ptr<platform_device> regulator_register_always_on(int id, String name,
       Ptr<regulator_consumer_supply> supplies, int num_supplies, int uv) {
     throw new MethodIsBPFRelatedFunction();
@@ -1776,7 +1777,7 @@ public final class RegulatorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_register_supply_alias($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("regulator_register_supply_alias($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4)")
   public static int regulator_register_supply_alias(Ptr<device> dev, String id,
       Ptr<device> alias_dev, String alias_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -2015,7 +2016,7 @@ public final class RegulatorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regulator_unregister_supply_alias($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("regulator_unregister_supply_alias($arg1, (const u8 *)$arg2)")
   public static void regulator_unregister_supply_alias(Ptr<device> dev, String id) {
     throw new MethodIsBPFRelatedFunction();
   }

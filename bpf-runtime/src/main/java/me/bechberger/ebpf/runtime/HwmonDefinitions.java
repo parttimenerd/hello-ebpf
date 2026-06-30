@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class HwmonDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__hwmon_device_register($arg1, (const u8*)$arg2, $arg3, (const struct hwmon_chip_info*)$arg4, (const struct attribute_group**)$arg5)")
+  @BuiltinBPFFunction("__hwmon_device_register($arg1, (const u8 *)$arg2, $arg3, (const struct hwmon_chip_info *)$arg4, (const struct attribute_group**)$arg5)")
   public static Ptr<device> __hwmon_device_register(Ptr<device> dev, String name, Ptr<?> drvdata,
       Ptr<hwmon_chip_info> chip, Ptr<Ptr<attribute_group>> groups) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__hwmon_sanitize_name($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__hwmon_sanitize_name($arg1, (const u8 *)$arg2)")
   public static String __hwmon_sanitize_name(Ptr<device> dev, String old_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1117,7 +1118,7 @@ public final class HwmonDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hwmon_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("hwmon_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long hwmon_attr_store(Ptr<device> dev,
       Ptr<device_attribute> devattr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1143,21 +1144,21 @@ public final class HwmonDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hwmon_device_register_for_thermal($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hwmon_device_register_for_thermal($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<device> hwmon_device_register_for_thermal(Ptr<device> dev, String name,
       Ptr<?> drvdata) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hwmon_device_register_with_groups($arg1, (const u8*)$arg2, $arg3, (const struct attribute_group**)$arg4)")
+  @BuiltinBPFFunction("hwmon_device_register_with_groups($arg1, (const u8 *)$arg2, $arg3, (const struct attribute_group**)$arg4)")
   public static Ptr<device> hwmon_device_register_with_groups(Ptr<device> dev, String name,
       Ptr<?> drvdata, Ptr<Ptr<attribute_group>> groups) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hwmon_device_register_with_info($arg1, (const u8*)$arg2, $arg3, (const struct hwmon_chip_info*)$arg4, (const struct attribute_group**)$arg5)")
+  @BuiltinBPFFunction("hwmon_device_register_with_info($arg1, (const u8 *)$arg2, $arg3, (const struct hwmon_chip_info *)$arg4, (const struct attribute_group**)$arg5)")
   public static Ptr<device> hwmon_device_register_with_info(Ptr<device> dev, String name,
       Ptr<?> drvdata, Ptr<hwmon_chip_info> chip, Ptr<Ptr<attribute_group>> extra_groups) {
     throw new MethodIsBPFRelatedFunction();
@@ -1176,7 +1177,7 @@ public final class HwmonDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hwmon_genattrs((const void*)$arg1, $arg2, (const struct hwmon_ops*)$arg3, (const struct hwmon_channel_info*)$arg4)")
+  @BuiltinBPFFunction("hwmon_genattrs((const void *)$arg1, $arg2, (const struct hwmon_ops *)$arg3, (const struct hwmon_channel_info *)$arg4)")
   public static int hwmon_genattrs(Ptr<?> drvdata, Ptr<Ptr<attribute>> attrs, Ptr<hwmon_ops> ops,
       Ptr<hwmon_channel_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1189,7 +1190,7 @@ public final class HwmonDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hwmon_match_device($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("hwmon_match_device($arg1, (const void *)$arg2)")
   public static int hwmon_match_device(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1202,7 +1203,7 @@ public final class HwmonDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hwmon_num_channel_attrs((const struct hwmon_channel_info*)$arg1)")
+  @BuiltinBPFFunction("hwmon_num_channel_attrs((const struct hwmon_channel_info *)$arg1)")
   public static int hwmon_num_channel_attrs(Ptr<hwmon_channel_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1214,7 +1215,7 @@ public final class HwmonDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hwmon_sanitize_name((const u8*)$arg1)")
+  @BuiltinBPFFunction("hwmon_sanitize_name((const u8 *)$arg1)")
   public static String hwmon_sanitize_name(String name) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class LsmDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("lsm_append((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("lsm_append((const u8 *)$arg1, $arg2)")
   public static int lsm_append(String _new, Ptr<String> result) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1110,7 +1111,7 @@ public final class LsmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lsm_name_to_attr((const u8*)$arg1)")
+  @BuiltinBPFFunction("lsm_name_to_attr((const u8 *)$arg1)")
   public static @Unsigned long lsm_name_to_attr(String name) {
     throw new MethodIsBPFRelatedFunction();
   }

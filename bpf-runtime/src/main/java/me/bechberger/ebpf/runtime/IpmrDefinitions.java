@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class IpmrDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipmr_cache_report((const struct mr_table*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ipmr_cache_report((const struct mr_table *)$arg1, $arg2, $arg3, $arg4)")
   public static int ipmr_cache_report(Ptr<mr_table> mrt, Ptr<sk_buff> pkt,
       @Unsigned @OriginalName("vifi_t") short vifi, int _assert) {
     throw new MethodIsBPFRelatedFunction();
@@ -1205,13 +1206,13 @@ public final class IpmrDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipmr_hash_cmp($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("ipmr_hash_cmp($arg1, (const void *)$arg2)")
   public static int ipmr_hash_cmp(Ptr<rhashtable_compare_arg> arg, Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipmr_init_vif_indev((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("ipmr_init_vif_indev((const struct net_device *)$arg1)")
   public static boolean ipmr_init_vif_indev(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1336,7 +1337,7 @@ public final class IpmrDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipmr_rtm_valid_getroute_req($arg1, (const struct nlmsghdr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ipmr_rtm_valid_getroute_req($arg1, (const struct nlmsghdr *)$arg2, $arg3, $arg4)")
   public static int ipmr_rtm_valid_getroute_req(Ptr<sk_buff> skb, Ptr<nlmsghdr> nlh,
       Ptr<Ptr<nlattr>> tb, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1364,7 +1365,7 @@ public final class IpmrDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipmr_rule_default((const struct fib_rule*)$arg1)")
+  @BuiltinBPFFunction("ipmr_rule_default((const struct fib_rule *)$arg1)")
   public static boolean ipmr_rule_default(Ptr<fib_rule> rule) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1395,7 +1396,7 @@ public final class IpmrDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ipmr_seq_read((const struct net*)$arg1)")
+  @BuiltinBPFFunction("ipmr_seq_read((const struct net *)$arg1)")
   public static @Unsigned int ipmr_seq_read(Ptr<net> net) {
     throw new MethodIsBPFRelatedFunction();
   }

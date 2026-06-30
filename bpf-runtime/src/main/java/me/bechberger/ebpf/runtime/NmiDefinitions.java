@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class NmiDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("nmi_backtrace_stall_check((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("nmi_backtrace_stall_check((const struct cpumask *)$arg1)")
   public static void nmi_backtrace_stall_check(Ptr<cpumask> btp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nmi_backtrace_stall_snap((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("nmi_backtrace_stall_snap((const struct cpumask *)$arg1)")
   public static void nmi_backtrace_stall_snap(Ptr<cpumask> btp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1120,7 +1121,7 @@ public final class NmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nmi_panic($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("nmi_panic($arg1, (const u8 *)$arg2)")
   public static void nmi_panic(Ptr<pt_regs> regs, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1144,7 +1145,7 @@ public final class NmiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nmi_trigger_cpumask_backtrace((const cpumask*)$arg1, $arg2, (void (*)(cpumask*))$arg3)")
+  @BuiltinBPFFunction("nmi_trigger_cpumask_backtrace((const cpumask *)$arg1, $arg2, (void (*)(cpumask*))$arg3)")
   public static void nmi_trigger_cpumask_backtrace(Ptr<@OriginalName("cpumask_t") cpumask> mask,
       int exclude_cpu, Ptr<?> raise) {
     throw new MethodIsBPFRelatedFunction();

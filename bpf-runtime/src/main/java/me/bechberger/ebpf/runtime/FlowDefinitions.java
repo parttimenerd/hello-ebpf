@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1092,7 +1093,7 @@ public final class FlowDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("__flow_hash_from_keys($arg1, (const struct {\n"
           + "  long long unsigned int key[2];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static @Unsigned int __flow_hash_from_keys(Ptr<flow_keys> keys,
       Ptr<siphash_key_t> keyval) {
     throw new MethodIsBPFRelatedFunction();
@@ -1171,7 +1172,7 @@ public final class FlowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_dissector_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("flow_dissector_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int flow_dissector_convert_ctx_access(bpf_access_type type,
       Ptr<bpf_insn> si, Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog,
       Ptr<java.lang. @Unsigned Integer> target_size) {
@@ -1179,27 +1180,27 @@ public final class FlowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)flow_dissector_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)flow_dissector_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> flow_dissector_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_dissector_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("flow_dissector_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean flow_dissector_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_get_u32_dst((const struct flow_keys*)$arg1)")
+  @BuiltinBPFFunction("flow_get_u32_dst((const struct flow_keys *)$arg1)")
   public static @Unsigned @OriginalName("__be32") int flow_get_u32_dst(Ptr<flow_keys> flow) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_get_u32_src((const struct flow_keys*)$arg1)")
+  @BuiltinBPFFunction("flow_get_u32_src((const struct flow_keys *)$arg1)")
   public static @Unsigned @OriginalName("__be32") int flow_get_u32_src(Ptr<flow_keys> flow) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1213,7 +1214,7 @@ public final class FlowDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("flow_hash_from_keys_seed($arg1, (const struct {\n"
           + "  long long unsigned int key[2];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static @Unsigned int flow_hash_from_keys_seed(Ptr<flow_keys> keys,
       Ptr<siphash_key_t> keyval) {
     throw new MethodIsBPFRelatedFunction();
@@ -1253,14 +1254,14 @@ public final class FlowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_limit_cpu_sysctl((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("flow_limit_cpu_sysctl((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int flow_limit_cpu_sysctl(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_limit_table_len_sysctl((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("flow_limit_table_len_sysctl((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int flow_limit_table_len_sysctl(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1273,162 +1274,162 @@ public final class FlowDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_arp((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_arp((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_arp(Ptr<flow_rule> rule, Ptr<flow_match_arp> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_basic((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_basic((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_basic(Ptr<flow_rule> rule, Ptr<flow_match_basic> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_control((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_control((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_control(Ptr<flow_rule> rule, Ptr<flow_match_control> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_ct((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_ct((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_ct(Ptr<flow_rule> rule, Ptr<flow_match_ct> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_cvlan((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_cvlan((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_cvlan(Ptr<flow_rule> rule, Ptr<flow_match_vlan> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_enc_control((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_enc_control((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_enc_control(Ptr<flow_rule> rule, Ptr<flow_match_control> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_enc_ip((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_enc_ip((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_enc_ip(Ptr<flow_rule> rule, Ptr<flow_match_ip> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_enc_ipv4_addrs((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_enc_ipv4_addrs((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_enc_ipv4_addrs(Ptr<flow_rule> rule,
       Ptr<flow_match_ipv4_addrs> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_enc_ipv6_addrs((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_enc_ipv6_addrs((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_enc_ipv6_addrs(Ptr<flow_rule> rule,
       Ptr<flow_match_ipv6_addrs> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_enc_keyid((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_enc_keyid((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_enc_keyid(Ptr<flow_rule> rule, Ptr<flow_match_enc_keyid> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_enc_opts((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_enc_opts((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_enc_opts(Ptr<flow_rule> rule, Ptr<flow_match_enc_opts> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_enc_ports((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_enc_ports((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_enc_ports(Ptr<flow_rule> rule, Ptr<flow_match_ports> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_eth_addrs((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_eth_addrs((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_eth_addrs(Ptr<flow_rule> rule, Ptr<flow_match_eth_addrs> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_icmp((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_icmp((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_icmp(Ptr<flow_rule> rule, Ptr<flow_match_icmp> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_ip((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_ip((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_ip(Ptr<flow_rule> rule, Ptr<flow_match_ip> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_ipsec((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_ipsec((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_ipsec(Ptr<flow_rule> rule, Ptr<flow_match_ipsec> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_ipv4_addrs((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_ipv4_addrs((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_ipv4_addrs(Ptr<flow_rule> rule,
       Ptr<flow_match_ipv4_addrs> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_ipv6_addrs((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_ipv6_addrs((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_ipv6_addrs(Ptr<flow_rule> rule,
       Ptr<flow_match_ipv6_addrs> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_l2tpv3((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_l2tpv3((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_l2tpv3(Ptr<flow_rule> rule, Ptr<flow_match_l2tpv3> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_meta((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_meta((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_meta(Ptr<flow_rule> rule, Ptr<flow_match_meta> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_mpls((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_mpls((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_mpls(Ptr<flow_rule> rule, Ptr<flow_match_mpls> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_ports((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_ports((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_ports(Ptr<flow_rule> rule, Ptr<flow_match_ports> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_ports_range((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_ports_range((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_ports_range(Ptr<flow_rule> rule,
       Ptr<flow_match_ports_range> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_pppoe((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_pppoe((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_pppoe(Ptr<flow_rule> rule, Ptr<flow_match_pppoe> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_tcp((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_tcp((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_tcp(Ptr<flow_rule> rule, Ptr<flow_match_tcp> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("flow_rule_match_vlan((const struct flow_rule*)$arg1, $arg2)")
+  @BuiltinBPFFunction("flow_rule_match_vlan((const struct flow_rule *)$arg1, $arg2)")
   public static void flow_rule_match_vlan(Ptr<flow_rule> rule, Ptr<flow_match_vlan> out) {
     throw new MethodIsBPFRelatedFunction();
   }

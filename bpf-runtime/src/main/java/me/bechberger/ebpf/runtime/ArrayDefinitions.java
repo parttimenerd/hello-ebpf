@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class ArrayDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("array_map_check_btf((const struct bpf_map*)$arg1, (const struct btf*)$arg2, (const struct btf_type*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("array_map_check_btf((const struct bpf_map *)$arg1, (const struct btf *)$arg2, (const struct btf_type *)$arg3, (const struct btf_type *)$arg4)")
   public static int array_map_check_btf(Ptr<bpf_map> map, Ptr<btf> btf, Ptr<btf_type> key_type,
       Ptr<btf_type> value_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1115,14 +1116,14 @@ public final class ArrayDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("array_map_direct_value_addr((const struct bpf_map*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("array_map_direct_value_addr((const struct bpf_map *)$arg1, $arg2, $arg3)")
   public static int array_map_direct_value_addr(Ptr<bpf_map> map,
       Ptr<java.lang. @Unsigned Long> imm, @Unsigned int off) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("array_map_direct_value_meta((const struct bpf_map*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("array_map_direct_value_meta((const struct bpf_map *)$arg1, $arg2, $arg3)")
   public static int array_map_direct_value_meta(Ptr<bpf_map> map, @Unsigned long imm,
       Ptr<java.lang. @Unsigned Integer> off) {
     throw new MethodIsBPFRelatedFunction();
@@ -1159,13 +1160,13 @@ public final class ArrayDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("array_map_mem_usage((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("array_map_mem_usage((const struct bpf_map *)$arg1)")
   public static @Unsigned long array_map_mem_usage(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("array_map_meta_equal((const struct bpf_map*)$arg1, (const struct bpf_map*)$arg2)")
+  @BuiltinBPFFunction("array_map_meta_equal((const struct bpf_map *)$arg1, (const struct bpf_map *)$arg2)")
   public static boolean array_map_meta_equal(Ptr<bpf_map> meta0, Ptr<bpf_map> meta1) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1220,7 +1221,7 @@ public final class ArrayDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("array_size_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("array_size_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long array_size_store(Ptr<mddev> mddev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1233,7 +1234,7 @@ public final class ArrayDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("array_state_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("array_state_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long array_state_store(Ptr<mddev> mddev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class BacklightDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("backlight_device_get_by_name((const u8*)$arg1)")
+  @BuiltinBPFFunction("backlight_device_get_by_name((const u8 *)$arg1)")
   public static Ptr<backlight_device> backlight_device_get_by_name(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1114,7 +1115,7 @@ public final class BacklightDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("backlight_device_register((const u8*)$arg1, $arg2, $arg3, (const struct backlight_ops*)$arg4, (const struct backlight_properties*)$arg5)")
+  @BuiltinBPFFunction("backlight_device_register((const u8 *)$arg1, $arg2, $arg3, (const struct backlight_ops *)$arg4, (const struct backlight_properties *)$arg5)")
   public static Ptr<backlight_device> backlight_device_register(String name, Ptr<device> parent,
       Ptr<?> devdata, Ptr<backlight_ops> ops, Ptr<backlight_properties> props) {
     throw new MethodIsBPFRelatedFunction();

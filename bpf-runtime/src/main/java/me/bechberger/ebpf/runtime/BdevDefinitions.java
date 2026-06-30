@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1178,14 +1179,14 @@ public final class BdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bdev_file_open_by_dev($arg1, $arg2, $arg3, (const struct blk_holder_ops*)$arg4)")
+  @BuiltinBPFFunction("bdev_file_open_by_dev($arg1, $arg2, $arg3, (const struct blk_holder_ops *)$arg4)")
   public static Ptr<file> bdev_file_open_by_dev(@Unsigned @OriginalName("dev_t") int dev,
       @Unsigned @OriginalName("blk_mode_t") int mode, Ptr<?> holder, Ptr<blk_holder_ops> hops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bdev_file_open_by_path((const u8*)$arg1, $arg2, $arg3, (const struct blk_holder_ops*)$arg4)")
+  @BuiltinBPFFunction("bdev_file_open_by_path((const u8 *)$arg1, $arg2, $arg3, (const struct blk_holder_ops *)$arg4)")
   public static Ptr<file> bdev_file_open_by_path(String path,
       @Unsigned @OriginalName("blk_mode_t") int mode, Ptr<?> holder, Ptr<blk_holder_ops> hops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1224,14 +1225,14 @@ public final class BdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bdev_name($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("bdev_name($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static String bdev_name(String buf, String end, Ptr<block_device> bdev, printf_spec spec,
       String fmt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bdev_open($arg1, $arg2, $arg3, (const struct blk_holder_ops*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bdev_open($arg1, $arg2, $arg3, (const struct blk_holder_ops *)$arg4, $arg5)")
   public static int bdev_open(Ptr<block_device> bdev,
       @Unsigned @OriginalName("blk_mode_t") int mode, Ptr<?> holder, Ptr<blk_holder_ops> hops,
       Ptr<file> bdev_file) {
@@ -1287,7 +1288,7 @@ public final class BdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bdev_statx((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bdev_statx((const struct path *)$arg1, $arg2, $arg3)")
   public static void bdev_statx(Ptr<path> path, Ptr<kstat> stat, @Unsigned int request_mask) {
     throw new MethodIsBPFRelatedFunction();
   }

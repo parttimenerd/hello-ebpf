@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1206,7 +1207,7 @@ public final class NativeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("native_flush_tlb_multi((const struct cpumask*)$arg1, (const struct flush_tlb_info*)$arg2)")
+  @BuiltinBPFFunction("native_flush_tlb_multi((const struct cpumask *)$arg1, (const struct flush_tlb_info *)$arg2)")
   public static void native_flush_tlb_multi(Ptr<cpumask> cpumask, Ptr<flush_tlb_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1254,7 +1255,7 @@ public final class NativeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("native_load_gdt((const struct desc_ptr*)$arg1)")
+  @BuiltinBPFFunction("native_load_gdt((const struct desc_ptr *)$arg1)")
   public static void native_load_gdt(Ptr<desc_ptr> dtr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1266,7 +1267,7 @@ public final class NativeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("native_load_idt((const struct desc_ptr*)$arg1)")
+  @BuiltinBPFFunction("native_load_idt((const struct desc_ptr *)$arg1)")
   public static void native_load_idt(Ptr<desc_ptr> dtr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1386,7 +1387,7 @@ public final class NativeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("native_send_call_func_ipi((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("native_send_call_func_ipi((const struct cpumask *)$arg1)")
   public static void native_send_call_func_ipi(Ptr<cpumask> mask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1405,7 +1406,7 @@ public final class NativeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("native_set_ldt((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("native_set_ldt((const void *)$arg1, $arg2)")
   public static void native_set_ldt(Ptr<?> addr, @Unsigned int entries) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1507,21 +1508,21 @@ public final class NativeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("native_write_gdt_entry($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("native_write_gdt_entry($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static void native_write_gdt_entry(Ptr<desc_struct> gdt, int entry, Ptr<?> desc,
       int type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("native_write_idt_entry($arg1, $arg2, (const gate_struct*)$arg3)")
+  @BuiltinBPFFunction("native_write_idt_entry($arg1, $arg2, (const gate_struct *)$arg3)")
   public static void native_write_idt_entry(Ptr<@OriginalName("gate_desc") gate_struct> idt,
       int entry, Ptr<@OriginalName("gate_desc") gate_struct> gate) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("native_write_ldt_entry($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("native_write_ldt_entry($arg1, $arg2, (const void *)$arg3)")
   public static void native_write_ldt_entry(Ptr<desc_struct> ldt, int entry, Ptr<?> desc) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1121,7 +1122,7 @@ public final class FixedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fixed_phy_add($arg1, (const struct fixed_phy_status*)$arg2)")
+  @BuiltinBPFFunction("fixed_phy_add($arg1, (const struct fixed_phy_status *)$arg2)")
   public static int fixed_phy_add(int phy_addr, Ptr<fixed_phy_status> status) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1139,7 +1140,7 @@ public final class FixedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fixed_phy_register((const struct fixed_phy_status*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fixed_phy_register((const struct fixed_phy_status *)$arg1, $arg2)")
   public static Ptr<phy_device> fixed_phy_register(Ptr<fixed_phy_status> status,
       Ptr<device_node> np) {
     throw new MethodIsBPFRelatedFunction();

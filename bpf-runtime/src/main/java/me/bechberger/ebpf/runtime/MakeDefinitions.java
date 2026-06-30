@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1116,7 +1117,7 @@ public final class MakeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("make_flow_keys_digest($arg1, (const struct flow_keys*)$arg2)")
+  @BuiltinBPFFunction("make_flow_keys_digest($arg1, (const struct flow_keys *)$arg2)")
   public static void make_flow_keys_digest(Ptr<flow_keys_digest> digest, Ptr<flow_keys> flow) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1185,7 +1186,7 @@ public final class MakeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("make_slot_name((const u8*)$arg1)")
+  @BuiltinBPFFunction("make_slot_name((const u8 *)$arg1)")
   public static String make_slot_name(String name) {
     throw new MethodIsBPFRelatedFunction();
   }

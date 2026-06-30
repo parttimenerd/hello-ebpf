@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CperDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("cper_bits_to_str($arg1, $arg2, $arg3, (const u8**)$arg4, $arg5)")
+  @BuiltinBPFFunction("cper_bits_to_str($arg1, $arg2, $arg3, (const const u8 **)$arg4, $arg5)")
   public static int cper_bits_to_str(String buf, int buf_size, @Unsigned long bits,
       Ptr<String> strs, @Unsigned int strs_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1103,25 +1104,25 @@ public final class CperDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cper_estatus_check((const struct acpi_hest_generic_status*)$arg1)")
+  @BuiltinBPFFunction("cper_estatus_check((const struct acpi_hest_generic_status *)$arg1)")
   public static int cper_estatus_check(Ptr<acpi_hest_generic_status> estatus) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cper_estatus_check_header((const struct acpi_hest_generic_status*)$arg1)")
+  @BuiltinBPFFunction("cper_estatus_check_header((const struct acpi_hest_generic_status *)$arg1)")
   public static int cper_estatus_check_header(Ptr<acpi_hest_generic_status> estatus) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cper_estatus_print((const u8*)$arg1, (const struct acpi_hest_generic_status*)$arg2)")
+  @BuiltinBPFFunction("cper_estatus_print((const u8 *)$arg1, (const struct acpi_hest_generic_status *)$arg2)")
   public static void cper_estatus_print(String pfx, Ptr<acpi_hest_generic_status> estatus) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cper_estatus_print_section((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("cper_estatus_print_section((const u8 *)$arg1, $arg2, $arg3)")
   public static void cper_estatus_print_section(String pfx, Ptr<acpi_hest_generic_data> gdata,
       int sec_no) {
     throw new MethodIsBPFRelatedFunction();
@@ -1130,7 +1131,7 @@ public final class CperDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("cper_get_err_type((const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg1)")
+          + "} *)$arg1)")
   public static err_types cper_get_err_type(Ptr<@OriginalName("guid_t") uuid_t> err_type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1142,7 +1143,7 @@ public final class CperDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cper_mem_err_pack((const struct cper_sec_mem_err*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cper_mem_err_pack((const struct cper_sec_mem_err *)$arg1, $arg2)")
   public static void cper_mem_err_pack(Ptr<cper_sec_mem_err> mem, Ptr<cper_mem_err_compact> cmem) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1172,33 +1173,33 @@ public final class CperDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cper_print_bits((const u8*)$arg1, $arg2, (const u8**)$arg3, $arg4)")
+  @BuiltinBPFFunction("cper_print_bits((const u8 *)$arg1, $arg2, (const const u8 **)$arg3, $arg4)")
   public static void cper_print_bits(String pfx, @Unsigned int bits, Ptr<String> strs,
       @Unsigned int strs_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cper_print_mem((const u8*)$arg1, (const struct cper_sec_mem_err*)$arg2, $arg3)")
+  @BuiltinBPFFunction("cper_print_mem((const u8 *)$arg1, (const struct cper_sec_mem_err *)$arg2, $arg3)")
   public static void cper_print_mem(String pfx, Ptr<cper_sec_mem_err> mem, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cper_print_pcie((const u8*)$arg1, (const struct cper_sec_pcie*)$arg2, (const struct acpi_hest_generic_data*)$arg3)")
+  @BuiltinBPFFunction("cper_print_pcie((const u8 *)$arg1, (const struct cper_sec_pcie *)$arg2, (const struct acpi_hest_generic_data *)$arg3)")
   public static void cper_print_pcie(String pfx, Ptr<cper_sec_pcie> pcie,
       Ptr<acpi_hest_generic_data> gdata) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cper_print_proc_generic((const u8*)$arg1, (const struct cper_sec_proc_generic*)$arg2)")
+  @BuiltinBPFFunction("cper_print_proc_generic((const u8 *)$arg1, (const struct cper_sec_proc_generic *)$arg2)")
   public static void cper_print_proc_generic(String pfx, Ptr<cper_sec_proc_generic> proc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cper_print_proc_ia((const u8*)$arg1, (const struct cper_sec_proc_ia*)$arg2)")
+  @BuiltinBPFFunction("cper_print_proc_ia((const u8 *)$arg1, (const struct cper_sec_proc_ia *)$arg2)")
   public static void cper_print_proc_ia(String pfx, Ptr<cper_sec_proc_ia> proc) {
     throw new MethodIsBPFRelatedFunction();
   }

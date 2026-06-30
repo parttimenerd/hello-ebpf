@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1135,7 +1136,7 @@ public final class DiskDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("disk_badblocks_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("disk_badblocks_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long disk_badblocks_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String page, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1201,14 +1202,14 @@ public final class DiskDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("disk_events_poll_msecs_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("disk_events_poll_msecs_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long disk_events_poll_msecs_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("disk_events_set_dfl_poll_msecs((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("disk_events_set_dfl_poll_msecs((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int disk_events_set_dfl_poll_msecs(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1391,7 +1392,7 @@ public final class DiskDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("disk_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("disk_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long disk_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();

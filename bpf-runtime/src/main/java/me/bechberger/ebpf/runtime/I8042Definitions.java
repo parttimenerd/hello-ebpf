@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1290,7 +1291,7 @@ public final class I8042Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i8042_pnp_aux_probe($arg1, (const struct pnp_device_id*)$arg2)")
+  @BuiltinBPFFunction("i8042_pnp_aux_probe($arg1, (const struct pnp_device_id *)$arg2)")
   public static int i8042_pnp_aux_probe(Ptr<pnp_dev> dev, Ptr<pnp_device_id> did) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1314,7 +1315,7 @@ public final class I8042Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i8042_pnp_kbd_probe($arg1, (const struct pnp_device_id*)$arg2)")
+  @BuiltinBPFFunction("i8042_pnp_kbd_probe($arg1, (const struct pnp_device_id *)$arg2)")
   public static int i8042_pnp_kbd_probe(Ptr<pnp_dev> dev, Ptr<pnp_device_id> did) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1350,13 +1351,13 @@ public final class I8042Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i8042_set_noaux((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("i8042_set_noaux((const struct dmi_system_id *)$arg1)")
   public static int i8042_set_noaux(Ptr<dmi_system_id> dmi) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i8042_set_reset((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("i8042_set_reset((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int i8042_set_reset(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }

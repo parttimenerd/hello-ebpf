@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1474,7 +1475,7 @@ public final class RawDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("raw_send_hdrinc($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct sockcm_cookie*)$arg7)")
+  @BuiltinBPFFunction("raw_send_hdrinc($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct sockcm_cookie *)$arg7)")
   public static int raw_send_hdrinc(Ptr<sock> sk, Ptr<flowi4> fl4, Ptr<msghdr> msg,
       @Unsigned long length, Ptr<Ptr<rtable>> rtp, @Unsigned int flags, Ptr<sockcm_cookie> sockc) {
     throw new MethodIsBPFRelatedFunction();
@@ -1556,21 +1557,21 @@ public final class RawDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)raw_tp_prog_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)raw_tp_prog_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> raw_tp_prog_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("raw_tp_prog_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("raw_tp_prog_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean raw_tp_prog_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("raw_tp_writable_prog_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("raw_tp_writable_prog_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean raw_tp_writable_prog_is_valid_access(int off, int size,
       bpf_access_type type, Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1583,13 +1584,13 @@ public final class RawDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("raw_v4_input($arg1, $arg2, (const struct iphdr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("raw_v4_input($arg1, $arg2, (const struct iphdr *)$arg3, $arg4)")
   public static int raw_v4_input(Ptr<net> net, Ptr<sk_buff> skb, Ptr<iphdr> iph, int hash) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("raw_v4_match($arg1, (const struct sock*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("raw_v4_match($arg1, (const struct sock *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static boolean raw_v4_match(Ptr<net> net, Ptr<sock> sk, @Unsigned short num,
       @Unsigned @OriginalName("__be32") int raddr, @Unsigned @OriginalName("__be32") int laddr,
       int dif, int sdif) {
@@ -1597,7 +1598,7 @@ public final class RawDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("raw_v6_match($arg1, (const struct sock*)$arg2, $arg3, (const struct in6_addr*)$arg4, (const struct in6_addr*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("raw_v6_match($arg1, (const struct sock *)$arg2, $arg3, (const struct in6_addr *)$arg4, (const struct in6_addr *)$arg5, $arg6, $arg7)")
   public static boolean raw_v6_match(Ptr<net> net, Ptr<sock> sk, @Unsigned short num,
       Ptr<in6_addr> loc_addr, Ptr<in6_addr> rmt_addr, int dif, int sdif) {
     throw new MethodIsBPFRelatedFunction();

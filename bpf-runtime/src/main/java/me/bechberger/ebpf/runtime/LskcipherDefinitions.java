@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1147,21 +1148,21 @@ public final class LskcipherDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lskcipher_setkey_simple($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("lskcipher_setkey_simple($arg1, (const u8 *)$arg2, $arg3)")
   public static int lskcipher_setkey_simple(Ptr<crypto_lskcipher> tfm, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lskcipher_setkey_simple2($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("lskcipher_setkey_simple2($arg1, (const u8 *)$arg2, $arg3)")
   public static int lskcipher_setkey_simple2(Ptr<crypto_lskcipher> tfm,
       Ptr<java.lang.Character> key, @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("lskcipher_setkey_unaligned($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("lskcipher_setkey_unaligned($arg1, (const u8 *)$arg2, $arg3)")
   public static int lskcipher_setkey_unaligned(Ptr<crypto_lskcipher> tfm,
       Ptr<java.lang.Character> key, @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();

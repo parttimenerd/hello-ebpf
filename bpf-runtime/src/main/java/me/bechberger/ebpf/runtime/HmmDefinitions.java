@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1123,7 +1124,7 @@ public final class HmmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hmm_range_need_fault((const struct hmm_vma_walk*)$arg1, (const long unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("hmm_range_need_fault((const struct hmm_vma_walk *)$arg1, (const long unsigned int *)$arg2, $arg3, $arg4)")
   public static @Unsigned int hmm_range_need_fault(Ptr<hmm_vma_walk> hmm_vma_walk,
       Ptr<java.lang. @Unsigned Long> hmm_pfns, @Unsigned long npages, @Unsigned long cpu_flags) {
     throw new MethodIsBPFRelatedFunction();

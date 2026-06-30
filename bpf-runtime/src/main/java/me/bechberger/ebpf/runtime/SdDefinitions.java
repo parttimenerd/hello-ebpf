@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1214,7 +1215,7 @@ public final class SdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sd_init($arg1, (const struct cpumask*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sd_init($arg1, (const struct cpumask *)$arg2, $arg3, $arg4)")
   public static Ptr<sched_domain> sd_init(Ptr<sched_domain_topology_level> tl, Ptr<cpumask> cpu_map,
       Ptr<sched_domain> child, int cpu) {
     throw new MethodIsBPFRelatedFunction();
@@ -1310,7 +1311,7 @@ public final class SdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sd_print_result((const struct scsi_disk*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sd_print_result((const struct scsi_disk *)$arg1, (const u8 *)$arg2, $arg3)")
   public static void sd_print_result(Ptr<scsi_disk> sdkp, String msg, int result) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1686,7 +1687,7 @@ public final class SdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sd_zbc_parse_report($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sd_zbc_parse_report($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int sd_zbc_parse_report(Ptr<scsi_disk> sdkp, Ptr<java.lang.Character> buf,
       @Unsigned int idx, @OriginalName("report_zones_cb") Ptr<?> cb, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();

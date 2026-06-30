@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1385,7 +1386,7 @@ public final class BlkdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blkdev_write_begin((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("blkdev_write_begin((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int blkdev_write_begin(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, Ptr<Ptr<folio>> foliop,
       Ptr<Ptr<?>> fsdata) {
@@ -1393,7 +1394,7 @@ public final class BlkdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("blkdev_write_end((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("blkdev_write_end((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int blkdev_write_end(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, @Unsigned int copied, Ptr<folio> folio,
       Ptr<?> fsdata) {

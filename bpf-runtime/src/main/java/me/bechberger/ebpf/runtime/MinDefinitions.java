@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class MinDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__min_heap_del($arg1, $arg2, $arg3, (const struct min_heap_callbacks*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__min_heap_del($arg1, $arg2, $arg3, (const struct min_heap_callbacks *)$arg4, $arg5)")
   public static boolean __min_heap_del(Ptr<min_heap_char> heap, @Unsigned long elem_size,
       @Unsigned long idx, Ptr<min_heap_callbacks> func, Ptr<?> args) {
     throw new MethodIsBPFRelatedFunction();
@@ -1115,42 +1116,42 @@ public final class MinDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__min_heap_pop($arg1, $arg2, (const struct min_heap_callbacks*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__min_heap_pop($arg1, $arg2, (const struct min_heap_callbacks *)$arg3, $arg4)")
   public static boolean __min_heap_pop(Ptr<min_heap_char> heap, @Unsigned long elem_size,
       Ptr<min_heap_callbacks> func, Ptr<?> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__min_heap_pop_push($arg1, (const void*)$arg2, $arg3, (const struct min_heap_callbacks*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__min_heap_pop_push($arg1, (const void *)$arg2, $arg3, (const struct min_heap_callbacks *)$arg4, $arg5)")
   public static void __min_heap_pop_push(Ptr<min_heap_char> heap, Ptr<?> element,
       @Unsigned long elem_size, Ptr<min_heap_callbacks> func, Ptr<?> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__min_heap_push($arg1, (const void*)$arg2, $arg3, (const struct min_heap_callbacks*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__min_heap_push($arg1, (const void *)$arg2, $arg3, (const struct min_heap_callbacks *)$arg4, $arg5)")
   public static boolean __min_heap_push(Ptr<min_heap_char> heap, Ptr<?> element,
       @Unsigned long elem_size, Ptr<min_heap_callbacks> func, Ptr<?> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__min_heap_sift_down($arg1, $arg2, $arg3, (const struct min_heap_callbacks*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__min_heap_sift_down($arg1, $arg2, $arg3, (const struct min_heap_callbacks *)$arg4, $arg5)")
   public static void __min_heap_sift_down(Ptr<min_heap_char> heap, @Unsigned long pos,
       @Unsigned long elem_size, Ptr<min_heap_callbacks> func, Ptr<?> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__min_heap_sift_up($arg1, $arg2, $arg3, (const struct min_heap_callbacks*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__min_heap_sift_up($arg1, $arg2, $arg3, (const struct min_heap_callbacks *)$arg4, $arg5)")
   public static void __min_heap_sift_up(Ptr<min_heap_char> heap, @Unsigned long elem_size,
       @Unsigned long idx, Ptr<min_heap_callbacks> func, Ptr<?> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__min_heapify_all($arg1, $arg2, (const struct min_heap_callbacks*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__min_heapify_all($arg1, $arg2, (const struct min_heap_callbacks *)$arg3, $arg4)")
   public static void __min_heapify_all(Ptr<min_heap_char> heap, @Unsigned long elem_size,
       Ptr<min_heap_callbacks> func, Ptr<?> args) {
     throw new MethodIsBPFRelatedFunction();
@@ -1164,7 +1165,7 @@ public final class MinDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("min_bytes_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("min_bytes_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long min_bytes_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1185,7 +1186,7 @@ public final class MinDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("min_free_kbytes_sysctl_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("min_free_kbytes_sysctl_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int min_free_kbytes_sysctl_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> length, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1199,7 +1200,7 @@ public final class MinDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("min_freq_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("min_freq_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long min_freq_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1239,7 +1240,7 @@ public final class MinDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("min_partial_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("min_partial_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long min_partial_store(Ptr<kmem_cache> s, String buf,
       @Unsigned long length) {
     throw new MethodIsBPFRelatedFunction();
@@ -1253,7 +1254,7 @@ public final class MinDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("min_ratio_fine_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("min_ratio_fine_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long min_ratio_fine_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1267,7 +1268,7 @@ public final class MinDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("min_ratio_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("min_ratio_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long min_ratio_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1280,7 +1281,7 @@ public final class MinDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("min_sync_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("min_sync_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long min_sync_store(Ptr<mddev> mddev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1301,7 +1302,7 @@ public final class MinDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("min_ttl_ms_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("min_ttl_ms_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long min_ttl_ms_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();

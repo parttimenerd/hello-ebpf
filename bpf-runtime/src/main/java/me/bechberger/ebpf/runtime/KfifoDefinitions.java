@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1140,27 +1141,27 @@ public final class KfifoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__kfifo_from_user($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__kfifo_from_user($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static int __kfifo_from_user(Ptr<__kfifo> fifo, Ptr<?> from, @Unsigned long len,
       Ptr<java.lang. @Unsigned Integer> copied) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__kfifo_from_user_r($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__kfifo_from_user_r($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static int __kfifo_from_user_r(Ptr<__kfifo> fifo, Ptr<?> from, @Unsigned long len,
       Ptr<java.lang. @Unsigned Integer> copied, @Unsigned long recsize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__kfifo_in($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__kfifo_in($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned int __kfifo_in(Ptr<__kfifo> fifo, Ptr<?> buf, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__kfifo_in_r($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__kfifo_in_r($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static @Unsigned int __kfifo_in_r(Ptr<__kfifo> fifo, Ptr<?> buf, @Unsigned int len,
       @Unsigned long recsize) {
     throw new MethodIsBPFRelatedFunction();
@@ -1246,14 +1247,14 @@ public final class KfifoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kfifo_copy_from_user($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("kfifo_copy_from_user($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned long kfifo_copy_from_user(Ptr<__kfifo> fifo, Ptr<?> from,
       @Unsigned int len, @Unsigned int off, Ptr<java.lang. @Unsigned Integer> copied) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kfifo_copy_in($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("kfifo_copy_in($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static void kfifo_copy_in(Ptr<__kfifo> fifo, Ptr<?> src, @Unsigned int len,
       @Unsigned int off) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1117,7 +1118,7 @@ public final class AlarmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alarm_expires_remaining((const struct alarm*)$arg1)")
+  @BuiltinBPFFunction("alarm_expires_remaining((const struct alarm *)$arg1)")
   public static @OriginalName("ktime_t") long alarm_expires_remaining(Ptr<alarm> alarm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1186,7 +1187,7 @@ public final class AlarmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alarm_timer_nsleep((const int)$arg1, $arg2, (const struct timespec64*)$arg3)")
+  @BuiltinBPFFunction("alarm_timer_nsleep((const int)$arg1, $arg2, (const struct timespec64 *)$arg3)")
   public static int alarm_timer_nsleep(@OriginalName("clockid_t") int which_clock, int flags,
       Ptr<timespec64> tsreq) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1720,7 +1721,7 @@ public final class AmdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("amd_iommu_domain_alloc_paging_flags($arg1, $arg2, (const struct iommu_user_data*)$arg3)")
+  @BuiltinBPFFunction("amd_iommu_domain_alloc_paging_flags($arg1, $arg2, (const struct iommu_user_data *)$arg3)")
   public static Ptr<iommu_domain> amd_iommu_domain_alloc_paging_flags(Ptr<device> dev,
       @Unsigned int flags, Ptr<iommu_user_data> user_data) {
     throw new MethodIsBPFRelatedFunction();
@@ -2057,7 +2058,7 @@ public final class AmdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("amd_iommu_restart_log($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("amd_iommu_restart_log($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void amd_iommu_restart_log(Ptr<amd_iommu> iommu, String evt_type, char cntrl_intr,
       char cntrl_log, @Unsigned int status_run_mask, @Unsigned int status_overflow_mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -2140,7 +2141,7 @@ public final class AmdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("amd_ir_set_affinity($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("amd_ir_set_affinity($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int amd_ir_set_affinity(Ptr<irq_data> data, Ptr<cpumask> mask, boolean force) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2668,7 +2669,7 @@ public final class AmdDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("amd_pstate_update_status((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("amd_pstate_update_status((const u8 *)$arg1, $arg2)")
   public static int amd_pstate_update_status(String buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }

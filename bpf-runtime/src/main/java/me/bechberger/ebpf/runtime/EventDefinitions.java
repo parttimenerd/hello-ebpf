@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1225,7 +1226,7 @@ public final class EventDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("event_enable_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("event_enable_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long event_enable_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1290,7 +1291,7 @@ public final class EventDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("event_filter_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("event_filter_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long event_filter_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1406,14 +1407,14 @@ public final class EventDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("event_inject_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("event_inject_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long event_inject_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("event_release((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("event_release((const u8 *)$arg1, $arg2)")
   public static void event_release(String name, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1444,7 +1445,7 @@ public final class EventDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("event_subsystem_dir($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("event_subsystem_dir($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<eventfs_inode> event_subsystem_dir(Ptr<trace_array> tr, String name,
       Ptr<trace_event_file> file, Ptr<eventfs_inode> parent) {
     throw new MethodIsBPFRelatedFunction();
@@ -1481,13 +1482,13 @@ public final class EventDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("event_trigger_check_remove((const u8*)$arg1)")
+  @BuiltinBPFFunction("event_trigger_check_remove((const u8 *)$arg1)")
   public static boolean event_trigger_check_remove(String glob) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("event_trigger_empty_param((const u8*)$arg1)")
+  @BuiltinBPFFunction("event_trigger_empty_param((const u8 *)$arg1)")
   public static boolean event_trigger_empty_param(String param) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1524,7 +1525,7 @@ public final class EventDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("event_trigger_print((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("event_trigger_print((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int event_trigger_print(String name, Ptr<seq_file> m, Ptr<?> data,
       String filter_str) {
     throw new MethodIsBPFRelatedFunction();
@@ -1572,7 +1573,7 @@ public final class EventDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("event_trigger_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("event_trigger_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long event_trigger_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

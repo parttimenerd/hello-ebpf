@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1150,13 +1151,13 @@ public final class DlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dl_cpuset_cpumask_can_shrink((const struct cpumask*)$arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("dl_cpuset_cpumask_can_shrink((const struct cpumask *)$arg1, (const struct cpumask *)$arg2)")
   public static int dl_cpuset_cpumask_can_shrink(Ptr<cpumask> cur, Ptr<cpumask> trial) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dl_param_changed($arg1, (const struct sched_attr*)$arg2)")
+  @BuiltinBPFFunction("dl_param_changed($arg1, (const struct sched_attr *)$arg2)")
   public static boolean dl_param_changed(Ptr<task_struct> p, Ptr<sched_attr> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1225,7 +1226,7 @@ public final class DlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dl_task_check_affinity($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("dl_task_check_affinity($arg1, (const struct cpumask *)$arg2)")
   public static int dl_task_check_affinity(Ptr<task_struct> p, Ptr<cpumask> mask) {
     throw new MethodIsBPFRelatedFunction();
   }

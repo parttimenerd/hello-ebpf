@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1122,14 +1123,14 @@ public final class MapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("map_check_btf($arg1, $arg2, (const struct btf*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("map_check_btf($arg1, $arg2, (const struct btf *)$arg3, $arg4, $arg5)")
   public static int map_check_btf(Ptr<bpf_map> map, Ptr<bpf_token> token, Ptr<btf> btf,
       @Unsigned int btf_key_id, @Unsigned int btf_value_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("map_check_no_btf((const struct bpf_map*)$arg1, (const struct btf*)$arg2, (const struct btf_type*)$arg3, (const struct btf_type*)$arg4)")
+  @BuiltinBPFFunction("map_check_no_btf((const struct bpf_map *)$arg1, (const struct btf *)$arg2, (const struct btf_type *)$arg3, (const struct btf_type *)$arg4)")
   public static int map_check_no_btf(Ptr<bpf_map> map, Ptr<btf> btf, Ptr<btf_type> key_type,
       Ptr<btf_type> value_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1148,7 +1149,7 @@ public final class MapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("map_files_d_revalidate($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("map_files_d_revalidate($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int map_files_d_revalidate(Ptr<inode> dir, Ptr<qstr> name, Ptr<dentry> dentry,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1161,7 +1162,7 @@ public final class MapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("map_freeze((const union bpf_attr*)$arg1)")
+  @BuiltinBPFFunction("map_freeze((const union bpf_attr *)$arg1)")
   public static int map_freeze(Ptr<bpf_attr> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1372,13 +1373,13 @@ public final class MapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("map_vdso((const struct vdso_image*)$arg1, $arg2)")
+  @BuiltinBPFFunction("map_vdso((const struct vdso_image *)$arg1, $arg2)")
   public static int map_vdso(Ptr<vdso_image> image, @Unsigned long addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("map_vdso_once((const struct vdso_image*)$arg1, $arg2)")
+  @BuiltinBPFFunction("map_vdso_once((const struct vdso_image *)$arg1, $arg2)")
   public static int map_vdso_once(Ptr<vdso_image> image, @Unsigned long addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1390,7 +1391,7 @@ public final class MapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("map_write($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("map_write($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static @OriginalName("ssize_t") long map_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos, int cap_setid,
       Ptr<uid_gid_map> map, Ptr<uid_gid_map> parent_map) {

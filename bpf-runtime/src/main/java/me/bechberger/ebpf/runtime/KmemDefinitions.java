@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class KmemDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__kmem_cache_alias((const u8*)$arg1, $arg2, $arg3, $arg4, (void (*)(void*))$arg5)")
+  @BuiltinBPFFunction("__kmem_cache_alias((const u8 *)$arg1, $arg2, $arg3, $arg4, (void (*)(void*))$arg5)")
   public static Ptr<kmem_cache> __kmem_cache_alias(String name, @Unsigned int size,
       @Unsigned int align, @Unsigned @OriginalName("slab_flags_t") int flags, Ptr<?> ctor) {
     throw new MethodIsBPFRelatedFunction();
@@ -1104,7 +1105,7 @@ public final class KmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__kmem_cache_create_args((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__kmem_cache_create_args((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<kmem_cache> __kmem_cache_create_args(String name, @Unsigned int object_size,
       Ptr<kmem_cache_args> args, @Unsigned @OriginalName("slab_flags_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1147,7 +1148,7 @@ public final class KmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kmem_buckets_create((const u8*)$arg1, $arg2, $arg3, $arg4, (void (*)(void*))$arg5)")
+  @BuiltinBPFFunction("kmem_buckets_create((const u8 *)$arg1, $arg2, $arg3, $arg4, (void (*)(void*))$arg5)")
   public static Ptr<Ptr<kmem_cache> @Size(14) @OriginalName("kmem_buckets") []> kmem_buckets_create(
       String name, @Unsigned @OriginalName("slab_flags_t") int flags, @Unsigned int useroffset,
       @Unsigned int usersize, Ptr<?> ctor) {
@@ -1196,7 +1197,7 @@ public final class KmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kmem_cache_flags($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("kmem_cache_flags($arg1, (const u8 *)$arg2)")
   public static @Unsigned @OriginalName("slab_flags_t") int kmem_cache_flags(
       @Unsigned @OriginalName("slab_flags_t") int flags, String name) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,13 +1097,13 @@ public final class DentryDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__dentry_path((const struct dentry*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__dentry_path((const struct dentry *)$arg1, $arg2)")
   public static String __dentry_path(Ptr<dentry> d, Ptr<prepend_buffer> p) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dentry_create((const struct path*)$arg1, $arg2, $arg3, (const struct cred*)$arg4)")
+  @BuiltinBPFFunction("dentry_create((const struct path *)$arg1, $arg2, $arg3, (const struct cred *)$arg4)")
   public static Ptr<file> dentry_create(Ptr<path> path, int flags,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
@@ -1129,7 +1130,7 @@ public final class DentryDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dentry_name($arg1, $arg2, (const struct dentry*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("dentry_name($arg1, $arg2, (const struct dentry *)$arg3, $arg4, (const u8 *)$arg5)")
   public static String dentry_name(String buf, String end, Ptr<dentry> d, printf_spec spec,
       String fmt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1142,25 +1143,25 @@ public final class DentryDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dentry_open((const struct path*)$arg1, $arg2, (const struct cred*)$arg3)")
+  @BuiltinBPFFunction("dentry_open((const struct path *)$arg1, $arg2, (const struct cred *)$arg3)")
   public static Ptr<file> dentry_open(Ptr<path> path, int flags, Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dentry_open_nonotify((const struct path*)$arg1, $arg2, (const struct cred*)$arg3)")
+  @BuiltinBPFFunction("dentry_open_nonotify((const struct path *)$arg1, $arg2, (const struct cred *)$arg3)")
   public static Ptr<file> dentry_open_nonotify(Ptr<path> path, int flags, Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dentry_path((const struct dentry*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("dentry_path((const struct dentry *)$arg1, $arg2, $arg3)")
   public static String dentry_path(Ptr<dentry> dentry, String buf, int buflen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dentry_path_raw((const struct dentry*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("dentry_path_raw((const struct dentry *)$arg1, $arg2, $arg3)")
   public static String dentry_path_raw(Ptr<dentry> dentry, String buf, int buflen) {
     throw new MethodIsBPFRelatedFunction();
   }

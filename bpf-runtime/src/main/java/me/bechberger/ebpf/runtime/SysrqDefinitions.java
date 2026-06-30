@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class SysrqDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__sysrq_swap_key_ops($arg1, (const struct sysrq_key_op*)$arg2, (const struct sysrq_key_op*)$arg3)")
+  @BuiltinBPFFunction("__sysrq_swap_key_ops($arg1, (const struct sysrq_key_op *)$arg2, (const struct sysrq_key_op *)$arg3)")
   public static int __sysrq_swap_key_ops(char key, Ptr<sysrq_key_op> insert_op_p,
       Ptr<sysrq_key_op> remove_op_p) {
     throw new MethodIsBPFRelatedFunction();
@@ -1103,7 +1104,7 @@ public final class SysrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysrq_connect($arg1, $arg2, (const struct input_device_id*)$arg3)")
+  @BuiltinBPFFunction("sysrq_connect($arg1, $arg2, (const struct input_device_id *)$arg3)")
   public static int sysrq_connect(Ptr<input_handler> handler, Ptr<input_dev> dev,
       Ptr<input_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1274,7 +1275,7 @@ public final class SysrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysrq_handler($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("sysrq_handler($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static void sysrq_handler(Ptr<xenbus_watch> watch, String path, String token) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1310,7 +1311,7 @@ public final class SysrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysrq_reset_seq_param_set((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("sysrq_reset_seq_param_set((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int sysrq_reset_seq_param_set(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1328,7 +1329,7 @@ public final class SysrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sysrq_sysctl_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sysrq_sysctl_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int sysrq_sysctl_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

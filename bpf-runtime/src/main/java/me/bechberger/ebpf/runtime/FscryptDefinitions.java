@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class FscryptDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__fscrypt_encrypt_symlink($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__fscrypt_encrypt_symlink($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int __fscrypt_encrypt_symlink(Ptr<inode> inode, String target, @Unsigned int len,
       Ptr<fscrypt_str> disk_link) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__fscrypt_fname_encrypted_size((const union fscrypt_policy*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__fscrypt_fname_encrypted_size((const union fscrypt_policy *)$arg1, $arg2, $arg3, $arg4)")
   public static boolean __fscrypt_fname_encrypted_size(Ptr<fscrypt_policy> policy,
       @Unsigned int orig_len, @Unsigned int max_len,
       Ptr<java.lang. @Unsigned Integer> encrypted_len_ret) {
@@ -1105,7 +1106,7 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__fscrypt_inode_uses_inline_crypto((const struct inode*)$arg1)")
+  @BuiltinBPFFunction("__fscrypt_inode_uses_inline_crypto((const struct inode *)$arg1)")
   public static boolean __fscrypt_inode_uses_inline_crypto(Ptr<inode> inode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1163,7 +1164,7 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_crypt_data_unit((const struct fscrypt_inode_info*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("fscrypt_crypt_data_unit((const struct fscrypt_inode_info *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int fscrypt_crypt_data_unit(Ptr<fscrypt_inode_info> ci,
       @OriginalName("fscrypt_direction_t") FS rw, @Unsigned long index, Ptr<page> src_page,
       Ptr<page> dest_page, @Unsigned int len, @Unsigned int offs) {
@@ -1171,7 +1172,7 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_d_revalidate($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fscrypt_d_revalidate($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int fscrypt_d_revalidate(Ptr<inode> dir, Ptr<qstr> name, Ptr<dentry> dentry,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1184,7 +1185,7 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_decrypt_block_inplace((const struct inode*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fscrypt_decrypt_block_inplace((const struct inode *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int fscrypt_decrypt_block_inplace(Ptr<inode> inode, Ptr<page> page,
       @Unsigned int len, @Unsigned int offs, @Unsigned long lblk_num) {
     throw new MethodIsBPFRelatedFunction();
@@ -1198,14 +1199,14 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_derive_dirhash_key($arg1, (const struct fscrypt_master_key*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_derive_dirhash_key($arg1, (const struct fscrypt_master_key *)$arg2)")
   public static int fscrypt_derive_dirhash_key(Ptr<fscrypt_inode_info> ci,
       Ptr<fscrypt_master_key> mk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_derive_sw_secret($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fscrypt_derive_sw_secret($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int fscrypt_derive_sw_secret(Ptr<super_block> sb,
       Ptr<java.lang.Character> wrapped_key, @Unsigned long wrapped_key_size,
       Ptr<java.lang.Character> sw_secret) {
@@ -1251,14 +1252,14 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_dummy_policies_equal((const struct fscrypt_dummy_policy*)$arg1, (const struct fscrypt_dummy_policy*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_dummy_policies_equal((const struct fscrypt_dummy_policy *)$arg1, (const struct fscrypt_dummy_policy *)$arg2)")
   public static boolean fscrypt_dummy_policies_equal(Ptr<fscrypt_dummy_policy> p1,
       Ptr<fscrypt_dummy_policy> p2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_encrypt_block_inplace((const struct inode*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fscrypt_encrypt_block_inplace((const struct inode *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int fscrypt_encrypt_block_inplace(Ptr<inode> inode, Ptr<page> page,
       @Unsigned int len, @Unsigned int offs, @Unsigned long lblk_num) {
     throw new MethodIsBPFRelatedFunction();
@@ -1284,7 +1285,7 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_find_master_key($arg1, (const struct fscrypt_key_specifier*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_find_master_key($arg1, (const struct fscrypt_key_specifier *)$arg2)")
   public static Ptr<fscrypt_master_key> fscrypt_find_master_key(Ptr<super_block> sb,
       Ptr<fscrypt_key_specifier> mk_spec) {
     throw new MethodIsBPFRelatedFunction();
@@ -1298,21 +1299,21 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_fname_disk_to_usr((const struct inode*)$arg1, $arg2, $arg3, (const struct fscrypt_str*)$arg4, $arg5)")
+  @BuiltinBPFFunction("fscrypt_fname_disk_to_usr((const struct inode *)$arg1, $arg2, $arg3, (const struct fscrypt_str *)$arg4, $arg5)")
   public static int fscrypt_fname_disk_to_usr(Ptr<inode> inode, @Unsigned int hash,
       @Unsigned int minor_hash, Ptr<fscrypt_str> iname, Ptr<fscrypt_str> oname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_fname_encrypt((const struct inode*)$arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fscrypt_fname_encrypt((const struct inode *)$arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int fscrypt_fname_encrypt(Ptr<inode> inode, Ptr<qstr> iname,
       Ptr<java.lang.Character> out, @Unsigned int olen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_fname_encrypted_size((const struct inode*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fscrypt_fname_encrypted_size((const struct inode *)$arg1, $arg2, $arg3, $arg4)")
   public static boolean fscrypt_fname_encrypted_size(Ptr<inode> inode, @Unsigned int orig_len,
       @Unsigned int max_len, Ptr<java.lang. @Unsigned Integer> encrypted_len_ret) {
     throw new MethodIsBPFRelatedFunction();
@@ -1325,7 +1326,7 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_fname_siphash((const struct inode*)$arg1, (const struct qstr*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_fname_siphash((const struct inode *)$arg1, (const struct qstr *)$arg2)")
   public static @Unsigned long fscrypt_fname_siphash(Ptr<inode> dir, Ptr<qstr> name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1349,14 +1350,14 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_generate_dun((const struct fscrypt_inode_info*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("fscrypt_generate_dun((const struct fscrypt_inode_info *)$arg1, $arg2, $arg3)")
   public static void fscrypt_generate_dun(Ptr<fscrypt_inode_info> ci, @Unsigned long lblk_num,
       Ptr<java.lang. @Unsigned Long> dun) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_generate_iv($arg1, $arg2, (const struct fscrypt_inode_info*)$arg3)")
+  @BuiltinBPFFunction("fscrypt_generate_iv($arg1, $arg2, (const struct fscrypt_inode_info *)$arg3)")
   public static void fscrypt_generate_iv(Ptr<fscrypt_iv> iv, @Unsigned long index,
       Ptr<fscrypt_inode_info> ci) {
     throw new MethodIsBPFRelatedFunction();
@@ -1370,7 +1371,7 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_get_direct_key((const struct fscrypt_inode_info*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_get_direct_key((const struct fscrypt_inode_info *)$arg1, (const u8 *)$arg2)")
   public static Ptr<fscrypt_direct_key> fscrypt_get_direct_key(Ptr<fscrypt_inode_info> ci,
       Ptr<java.lang.Character> raw_key) {
     throw new MethodIsBPFRelatedFunction();
@@ -1383,7 +1384,7 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_get_dun_bytes((const struct fscrypt_inode_info*)$arg1)")
+  @BuiltinBPFFunction("fscrypt_get_dun_bytes((const struct fscrypt_inode_info *)$arg1)")
   public static @Unsigned int fscrypt_get_dun_bytes(Ptr<fscrypt_inode_info> ci) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1401,7 +1402,7 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)fscrypt_get_symlink($arg1, (const void*)$arg2, $arg3, $arg4))")
+  @BuiltinBPFFunction("((const u8*)fscrypt_get_symlink($arg1, (const void *)$arg2, $arg3, $arg4))")
   public static String fscrypt_get_symlink(Ptr<inode> inode, Ptr<?> caddr, @Unsigned int max_size,
       Ptr<delayed_call> done) {
     throw new MethodIsBPFRelatedFunction();
@@ -1426,14 +1427,14 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_hash_inode_number($arg1, (const struct fscrypt_master_key*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_hash_inode_number($arg1, (const struct fscrypt_master_key *)$arg2)")
   public static void fscrypt_hash_inode_number(Ptr<fscrypt_inode_info> ci,
       Ptr<fscrypt_master_key> mk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_hkdf_expand((const struct fscrypt_hkdf*)$arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("fscrypt_hkdf_expand((const struct fscrypt_hkdf *)$arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static int fscrypt_hkdf_expand(Ptr<fscrypt_hkdf> hkdf, char context,
       Ptr<java.lang.Character> info, @Unsigned int infolen, Ptr<java.lang.Character> okm,
       @Unsigned int okmlen) {
@@ -1447,7 +1448,7 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_init_hkdf($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("fscrypt_init_hkdf($arg1, (const u8 *)$arg2, $arg3)")
   public static int fscrypt_init_hkdf(Ptr<fscrypt_hkdf> hkdf, Ptr<java.lang.Character> master_key,
       @Unsigned int master_key_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1508,68 +1509,68 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_ioctl_set_policy($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_ioctl_set_policy($arg1, (const void *)$arg2)")
   public static int fscrypt_ioctl_set_policy(Ptr<file> filp, Ptr<?> arg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_limit_io_blocks((const struct inode*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("fscrypt_limit_io_blocks((const struct inode *)$arg1, $arg2, $arg3)")
   public static @Unsigned long fscrypt_limit_io_blocks(Ptr<inode> inode, @Unsigned long lblk,
       @Unsigned long nr_blocks) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_match_name((const struct fscrypt_name*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("fscrypt_match_name((const struct fscrypt_name *)$arg1, (const u8 *)$arg2, $arg3)")
   public static boolean fscrypt_match_name(Ptr<fscrypt_name> fname,
       Ptr<java.lang.Character> de_name, @Unsigned int de_name_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_mergeable_bio($arg1, (const struct inode*)$arg2, $arg3)")
+  @BuiltinBPFFunction("fscrypt_mergeable_bio($arg1, (const struct inode *)$arg2, $arg3)")
   public static boolean fscrypt_mergeable_bio(Ptr<bio> bio, Ptr<inode> inode,
       @Unsigned long next_lblk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_mergeable_bio_bh($arg1, (const struct buffer_head*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_mergeable_bio_bh($arg1, (const struct buffer_head *)$arg2)")
   public static boolean fscrypt_mergeable_bio_bh(Ptr<bio> bio, Ptr<buffer_head> next_bh) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_msg((const struct inode*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("fscrypt_msg((const struct inode *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4_)")
   public static void fscrypt_msg(Ptr<inode> inode, String level, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_new_context($arg1, (const union fscrypt_policy*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("fscrypt_new_context($arg1, (const union fscrypt_policy *)$arg2, (const u8 *)$arg3)")
   public static int fscrypt_new_context(Ptr<fscrypt_context> ctx_u, Ptr<fscrypt_policy> policy_u,
       Ptr<java.lang.Character> nonce) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_parse_test_dummy_encryption((const struct fs_parameter*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fscrypt_parse_test_dummy_encryption((const struct fs_parameter *)$arg1, $arg2)")
   public static int fscrypt_parse_test_dummy_encryption(Ptr<fs_parameter> param,
       Ptr<fscrypt_dummy_policy> dummy_policy) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_policies_equal((const union fscrypt_policy*)$arg1, (const union fscrypt_policy*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_policies_equal((const union fscrypt_policy *)$arg1, (const union fscrypt_policy *)$arg2)")
   public static boolean fscrypt_policies_equal(Ptr<fscrypt_policy> policy1,
       Ptr<fscrypt_policy> policy2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_policy_from_context($arg1, (const union fscrypt_context*)$arg2, $arg3)")
+  @BuiltinBPFFunction("fscrypt_policy_from_context($arg1, (const union fscrypt_context *)$arg2, $arg3)")
   public static int fscrypt_policy_from_context(Ptr<fscrypt_policy> policy_u,
       Ptr<fscrypt_context> ctx_u, int ctx_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1582,14 +1583,14 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_policy_to_key_spec((const union fscrypt_policy*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fscrypt_policy_to_key_spec((const union fscrypt_policy *)$arg1, $arg2)")
   public static int fscrypt_policy_to_key_spec(Ptr<fscrypt_policy> policy,
       Ptr<fscrypt_key_specifier> key_spec) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_prepare_inline_crypt_key($arg1, (const u8*)$arg2, $arg3, $arg4, (const struct fscrypt_inode_info*)$arg5)")
+  @BuiltinBPFFunction("fscrypt_prepare_inline_crypt_key($arg1, (const u8 *)$arg2, $arg3, $arg4, (const struct fscrypt_inode_info *)$arg5)")
   public static int fscrypt_prepare_inline_crypt_key(Ptr<fscrypt_prepared_key> prep_key,
       Ptr<java.lang.Character> key_bytes, @Unsigned long key_size, boolean is_hw_wrapped,
       Ptr<fscrypt_inode_info> ci) {
@@ -1597,7 +1598,7 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_prepare_key($arg1, (const u8*)$arg2, (const struct fscrypt_inode_info*)$arg3)")
+  @BuiltinBPFFunction("fscrypt_prepare_key($arg1, (const u8 *)$arg2, (const struct fscrypt_inode_info *)$arg3)")
   public static int fscrypt_prepare_key(Ptr<fscrypt_prepared_key> prep_key,
       Ptr<java.lang.Character> raw_key, Ptr<fscrypt_inode_info> ci) {
     throw new MethodIsBPFRelatedFunction();
@@ -1624,14 +1625,14 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_prepare_symlink($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("fscrypt_prepare_symlink($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int fscrypt_prepare_symlink(Ptr<inode> dir, String target, @Unsigned int len,
       @Unsigned int max_len, Ptr<fscrypt_str> disk_link) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_provisioning_key_describe((const struct key*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fscrypt_provisioning_key_describe((const struct key *)$arg1, $arg2)")
   public static void fscrypt_provisioning_key_describe(Ptr<key> key, Ptr<seq_file> m) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1687,14 +1688,14 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_set_bio_crypt_ctx($arg1, (const struct inode*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fscrypt_set_bio_crypt_ctx($arg1, (const struct inode *)$arg2, $arg3, $arg4)")
   public static void fscrypt_set_bio_crypt_ctx(Ptr<bio> bio, Ptr<inode> inode,
       @Unsigned long first_lblk, @Unsigned @OriginalName("gfp_t") int gfp_mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_set_bio_crypt_ctx_bh($arg1, (const struct buffer_head*)$arg2, $arg3)")
+  @BuiltinBPFFunction("fscrypt_set_bio_crypt_ctx_bh($arg1, (const struct buffer_head *)$arg2, $arg3)")
   public static void fscrypt_set_bio_crypt_ctx_bh(Ptr<bio> bio, Ptr<buffer_head> first_bh,
       @Unsigned @OriginalName("gfp_t") int gfp_mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1707,28 +1708,28 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_set_per_file_enc_key($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_set_per_file_enc_key($arg1, (const u8 *)$arg2)")
   public static int fscrypt_set_per_file_enc_key(Ptr<fscrypt_inode_info> ci,
       Ptr<java.lang.Character> raw_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_setup_encryption_info($arg1, (const union fscrypt_policy*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("fscrypt_setup_encryption_info($arg1, (const union fscrypt_policy *)$arg2, (const u8 *)$arg3, $arg4)")
   public static int fscrypt_setup_encryption_info(Ptr<inode> inode, Ptr<fscrypt_policy> policy,
       Ptr<java.lang.Character> nonce, boolean need_dirhash_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_setup_filename($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fscrypt_setup_filename($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int fscrypt_setup_filename(Ptr<inode> dir, Ptr<qstr> iname, int lookup,
       Ptr<fscrypt_name> fname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_setup_v1_file_key($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_setup_v1_file_key($arg1, (const u8 *)$arg2)")
   public static int fscrypt_setup_v1_file_key(Ptr<fscrypt_inode_info> ci,
       Ptr<java.lang.Character> raw_master_key) {
     throw new MethodIsBPFRelatedFunction();
@@ -1755,26 +1756,26 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_supported_policy((const union fscrypt_policy*)$arg1, (const struct inode*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_supported_policy((const union fscrypt_policy *)$arg1, (const struct inode *)$arg2)")
   public static boolean fscrypt_supported_policy(Ptr<fscrypt_policy> policy_u, Ptr<inode> inode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_supported_v2_policy((const struct fscrypt_policy_v2*)$arg1, (const struct inode*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_supported_v2_policy((const struct fscrypt_policy_v2 *)$arg1, (const struct inode *)$arg2)")
   public static boolean fscrypt_supported_v2_policy(Ptr<fscrypt_policy_v2> policy,
       Ptr<inode> inode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_symlink_getattr((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fscrypt_symlink_getattr((const struct path *)$arg1, $arg2)")
   public static int fscrypt_symlink_getattr(Ptr<path> path, Ptr<kstat> stat) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_user_key_describe((const struct key*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fscrypt_user_key_describe((const struct key *)$arg1, $arg2)")
   public static void fscrypt_user_key_describe(Ptr<key> key, Ptr<seq_file> m) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1786,21 +1787,21 @@ public final class FscryptDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_verify_key_added($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("fscrypt_verify_key_added($arg1, (const u8 *)$arg2)")
   public static int fscrypt_verify_key_added(Ptr<super_block> sb,
       Ptr<java.lang.Character> identifier) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_zeroout_range((const struct inode*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fscrypt_zeroout_range((const struct inode *)$arg1, $arg2, $arg3, $arg4)")
   public static int fscrypt_zeroout_range(Ptr<inode> inode, @Unsigned long lblk,
       @Unsigned @OriginalName("sector_t") long pblk, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fscrypt_zeroout_range_inline_crypt((const struct inode*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fscrypt_zeroout_range_inline_crypt((const struct inode *)$arg1, $arg2, $arg3, $arg4)")
   public static int fscrypt_zeroout_range_inline_crypt(Ptr<inode> inode, @Unsigned long lblk,
       @Unsigned @OriginalName("sector_t") long pblk, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();

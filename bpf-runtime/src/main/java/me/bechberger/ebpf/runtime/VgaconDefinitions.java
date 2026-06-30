@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1140,7 +1141,7 @@ public final class VgaconDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vgacon_font_set($arg1, (const struct console_font*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vgacon_font_set($arg1, (const struct console_font *)$arg2, $arg3, $arg4)")
   public static int vgacon_font_set(Ptr<vc_data> c, Ptr<console_font> font, @Unsigned int vpitch,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1160,7 +1161,7 @@ public final class VgaconDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vgacon_putcs($arg1, (const short unsigned int*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("vgacon_putcs($arg1, (const short unsigned int *)$arg2, $arg3, $arg4, $arg5)")
   public static void vgacon_putcs(Ptr<vc_data> vc, Ptr<java.lang. @Unsigned Short> s,
       @Unsigned int count, @Unsigned int ypos, @Unsigned int xpos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1211,7 +1212,7 @@ public final class VgaconDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vgacon_set_palette($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("vgacon_set_palette($arg1, (const u8 *)$arg2)")
   public static void vgacon_set_palette(Ptr<vc_data> vc, String table) {
     throw new MethodIsBPFRelatedFunction();
   }

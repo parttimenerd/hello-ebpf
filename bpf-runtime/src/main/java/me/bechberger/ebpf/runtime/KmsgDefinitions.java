@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class KmsgDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("kmsg_dump_desc($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("kmsg_dump_desc($arg1, (const u8 *)$arg2)")
   public static void kmsg_dump_desc(kmsg_dump_reason reason, String desc) {
     throw new MethodIsBPFRelatedFunction();
   }

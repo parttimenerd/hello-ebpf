@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,7 +1109,7 @@ public final class ShashDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shash_default_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("shash_default_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int shash_default_digest(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -1121,14 +1122,14 @@ public final class ShashDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shash_default_finup($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("shash_default_finup($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int shash_default_finup(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shash_default_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("shash_default_import_core($arg1, (const void *)$arg2)")
   public static int shash_default_import_core(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1146,7 +1147,7 @@ public final class ShashDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shash_no_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("shash_no_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int shash_no_setkey(Ptr<crypto_shash> tfm, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();

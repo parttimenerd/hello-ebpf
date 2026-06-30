@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CalcDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("calc_buffer_shash_tfm((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("calc_buffer_shash_tfm((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static int calc_buffer_shash_tfm(Ptr<?> buf, @OriginalName("loff_t") long size,
       Ptr<ima_digest_data> hash, Ptr<crypto_shash> tfm) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("calc_cache_topo_id($arg1, (const struct _cpuid4_info*)$arg2)")
+  @BuiltinBPFFunction("calc_cache_topo_id($arg1, (const struct _cpuid4_info *)$arg2)")
   public static @Unsigned int calc_cache_topo_id(Ptr<cpuinfo_x86> c, Ptr<_cpuid4_info> id4) {
     throw new MethodIsBPFRelatedFunction();
   }

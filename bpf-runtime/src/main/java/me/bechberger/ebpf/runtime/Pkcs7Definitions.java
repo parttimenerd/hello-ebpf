@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class Pkcs7Definitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_check_content_type($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_check_content_type($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_check_content_type(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1103,7 +1104,7 @@ public final class Pkcs7Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_extract_cert($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_extract_cert($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_extract_cert(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1116,7 +1117,7 @@ public final class Pkcs7Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_get_content_data((const struct pkcs7_message*)$arg1, (const void**)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("pkcs7_get_content_data((const struct pkcs7_message *)$arg1, (const void**)$arg2, $arg3, $arg4)")
   public static int pkcs7_get_content_data(Ptr<pkcs7_message> pkcs7, Ptr<Ptr<?>> _data,
       Ptr<java.lang. @Unsigned Long> _data_len, Ptr<java.lang. @Unsigned Long> _headerlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1130,118 +1131,118 @@ public final class Pkcs7Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_note_OID($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_note_OID($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_note_OID(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_note_certificate_list($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_note_certificate_list($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_note_certificate_list(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_note_content($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_note_content($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_note_content(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_note_data($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_note_data($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_note_data(Ptr<?> context, @Unsigned long hdrlen, char tag, Ptr<?> value,
       @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_note_signed_info($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_note_signed_info($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_note_signed_info(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_note_signeddata_version($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_note_signeddata_version($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_note_signeddata_version(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_note_signerinfo_version($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_note_signerinfo_version($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_note_signerinfo_version(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_parse_message((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pkcs7_parse_message((const void *)$arg1, $arg2)")
   public static Ptr<pkcs7_message> pkcs7_parse_message(Ptr<?> data, @Unsigned long datalen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_sig_note_authenticated_attr($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_sig_note_authenticated_attr($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_sig_note_authenticated_attr(Ptr<?> context, @Unsigned long hdrlen,
       char tag, Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_sig_note_digest_algo($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_sig_note_digest_algo($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_sig_note_digest_algo(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_sig_note_issuer($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_sig_note_issuer($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_sig_note_issuer(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_sig_note_pkey_algo($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_sig_note_pkey_algo($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_sig_note_pkey_algo(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_sig_note_serial($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_sig_note_serial($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_sig_note_serial(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_sig_note_set_of_authattrs($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_sig_note_set_of_authattrs($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_sig_note_set_of_authattrs(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_sig_note_signature($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_sig_note_signature($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_sig_note_signature(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_sig_note_skid($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("pkcs7_sig_note_skid($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int pkcs7_sig_note_skid(Ptr<?> context, @Unsigned long hdrlen, char tag,
       Ptr<?> value, @Unsigned long vlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pkcs7_supply_detached_data($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pkcs7_supply_detached_data($arg1, (const void *)$arg2, $arg3)")
   public static int pkcs7_supply_detached_data(Ptr<pkcs7_message> pkcs7, Ptr<?> data,
       @Unsigned long datalen) {
     throw new MethodIsBPFRelatedFunction();

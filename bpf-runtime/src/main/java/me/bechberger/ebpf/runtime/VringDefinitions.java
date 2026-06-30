@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class VringDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__vring_new_virtqueue_packed($arg1, $arg2, $arg3, $arg4, $arg5, (_Bool (*)(struct virtqueue*))$arg6, (void (*)(struct virtqueue*))$arg7, (const u8*)$arg8, $arg9)")
+  @BuiltinBPFFunction("__vring_new_virtqueue_packed($arg1, $arg2, $arg3, $arg4, $arg5, (_Bool (*)(struct virtqueue*))$arg6, (void (*)(struct virtqueue*))$arg7, (const u8 *)$arg8, $arg9)")
   public static Ptr<virtqueue> __vring_new_virtqueue_packed(@Unsigned int index,
       Ptr<vring_virtqueue_packed> vring_packed, Ptr<virtio_device> vdev, boolean weak_barriers,
       boolean context, Ptr<?> notify, Ptr<?> callback, String name, Ptr<device> dma_dev) {
@@ -1098,7 +1099,7 @@ public final class VringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__vring_new_virtqueue_split($arg1, $arg2, $arg3, $arg4, $arg5, (_Bool (*)(struct virtqueue*))$arg6, (void (*)(struct virtqueue*))$arg7, (const u8*)$arg8, $arg9)")
+  @BuiltinBPFFunction("__vring_new_virtqueue_split($arg1, $arg2, $arg3, $arg4, $arg5, (_Bool (*)(struct virtqueue*))$arg6, (void (*)(struct virtqueue*))$arg7, (const u8 *)$arg8, $arg9)")
   public static Ptr<virtqueue> __vring_new_virtqueue_split(@Unsigned int index,
       Ptr<vring_virtqueue_split> vring_split, Ptr<virtio_device> vdev, boolean weak_barriers,
       boolean context, Ptr<?> notify, Ptr<?> callback, String name, Ptr<device> dma_dev) {
@@ -1147,7 +1148,7 @@ public final class VringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vring_create_virtqueue($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (_Bool (*)(struct virtqueue*))$arg8, (void (*)(struct virtqueue*))$arg9, (const u8*)$arg10)")
+  @BuiltinBPFFunction("vring_create_virtqueue($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (_Bool (*)(struct virtqueue*))$arg8, (void (*)(struct virtqueue*))$arg9, (const u8 *)$arg10)")
   public static Ptr<virtqueue> vring_create_virtqueue(@Unsigned int index, @Unsigned int num,
       @Unsigned int vring_align, Ptr<virtio_device> vdev, boolean weak_barriers,
       boolean may_reduce_num, boolean context, Ptr<?> notify, Ptr<?> callback, String name) {
@@ -1155,7 +1156,7 @@ public final class VringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vring_create_virtqueue_dma($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (_Bool (*)(struct virtqueue*))$arg8, (void (*)(struct virtqueue*))$arg9, (const u8*)$arg10, $arg11)")
+  @BuiltinBPFFunction("vring_create_virtqueue_dma($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (_Bool (*)(struct virtqueue*))$arg8, (void (*)(struct virtqueue*))$arg9, (const u8 *)$arg10, $arg11)")
   public static Ptr<virtqueue> vring_create_virtqueue_dma(@Unsigned int index, @Unsigned int num,
       @Unsigned int vring_align, Ptr<virtio_device> vdev, boolean weak_barriers,
       boolean may_reduce_num, boolean context, Ptr<?> notify, Ptr<?> callback, String name,
@@ -1164,7 +1165,7 @@ public final class VringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vring_create_virtqueue_split($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (_Bool (*)(struct virtqueue*))$arg8, (void (*)(struct virtqueue*))$arg9, (const u8*)$arg10, $arg11)")
+  @BuiltinBPFFunction("vring_create_virtqueue_split($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (_Bool (*)(struct virtqueue*))$arg8, (void (*)(struct virtqueue*))$arg9, (const u8 *)$arg10, $arg11)")
   public static Ptr<virtqueue> vring_create_virtqueue_split(@Unsigned int index, @Unsigned int num,
       @Unsigned int vring_align, Ptr<virtio_device> vdev, boolean weak_barriers,
       boolean may_reduce_num, boolean context, Ptr<?> notify, Ptr<?> callback, String name,
@@ -1205,7 +1206,7 @@ public final class VringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vring_map_one_sg((const struct vring_virtqueue*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("vring_map_one_sg((const struct vring_virtqueue *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int vring_map_one_sg(Ptr<vring_virtqueue> vq, Ptr<scatterlist> sg,
       dma_data_direction direction, Ptr<java.lang. @Unsigned @OriginalName("dma_addr_t") Long> addr,
       Ptr<java.lang. @Unsigned Integer> len, boolean premapped) {
@@ -1213,14 +1214,14 @@ public final class VringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vring_map_single((const struct vring_virtqueue*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vring_map_single((const struct vring_virtqueue *)$arg1, $arg2, $arg3, $arg4)")
   public static @Unsigned @OriginalName("dma_addr_t") long vring_map_single(Ptr<vring_virtqueue> vq,
       Ptr<?> cpu_addr, @Unsigned long size, dma_data_direction direction) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vring_new_virtqueue($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (_Bool (*)(struct virtqueue*))$arg8, (void (*)(struct virtqueue*))$arg9, (const u8*)$arg10)")
+  @BuiltinBPFFunction("vring_new_virtqueue($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, (_Bool (*)(struct virtqueue*))$arg8, (void (*)(struct virtqueue*))$arg9, (const u8 *)$arg10)")
   public static Ptr<virtqueue> vring_new_virtqueue(@Unsigned int index, @Unsigned int num,
       @Unsigned int vring_align, Ptr<virtio_device> vdev, boolean weak_barriers, boolean context,
       Ptr<?> pages, Ptr<?> notify, Ptr<?> callback, String name) {
@@ -1240,14 +1241,14 @@ public final class VringDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vring_unmap_extra_packed((const struct vring_virtqueue*)$arg1, (const struct vring_desc_extra*)$arg2)")
+  @BuiltinBPFFunction("vring_unmap_extra_packed((const struct vring_virtqueue *)$arg1, (const struct vring_desc_extra *)$arg2)")
   public static void vring_unmap_extra_packed(Ptr<vring_virtqueue> vq,
       Ptr<vring_desc_extra> extra) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vring_unmap_one_split((const struct vring_virtqueue*)$arg1, $arg2)")
+  @BuiltinBPFFunction("vring_unmap_one_split((const struct vring_virtqueue *)$arg1, $arg2)")
   public static @Unsigned int vring_unmap_one_split(Ptr<vring_virtqueue> vq,
       Ptr<vring_desc_extra> extra) {
     throw new MethodIsBPFRelatedFunction();

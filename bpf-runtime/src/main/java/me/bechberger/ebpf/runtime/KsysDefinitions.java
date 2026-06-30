@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1169,7 +1170,7 @@ public final class KsysDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ksys_pwrite64($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ksys_pwrite64($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long ksys_pwrite64(@Unsigned int fd, String buf,
       @Unsigned long count, @OriginalName("loff_t") long pos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1202,7 +1203,7 @@ public final class KsysDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ksys_semtimedop($arg1, $arg2, $arg3, (const struct __kernel_timespec*)$arg4)")
+  @BuiltinBPFFunction("ksys_semtimedop($arg1, $arg2, $arg3, (const struct __kernel_timespec *)$arg4)")
   public static long ksys_semtimedop(int semid, Ptr<sembuf> tsops, @Unsigned int nsops,
       Ptr<__kernel_timespec> timeout) {
     throw new MethodIsBPFRelatedFunction();
@@ -1258,7 +1259,7 @@ public final class KsysDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ksys_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ksys_write($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long ksys_write(@Unsigned int fd, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

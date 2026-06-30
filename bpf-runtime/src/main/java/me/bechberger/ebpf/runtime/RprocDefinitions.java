@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1132,7 +1133,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_alloc($arg1, (const u8*)$arg2, (const struct rproc_ops*)$arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("rproc_alloc($arg1, (const u8 *)$arg2, (const struct rproc_ops *)$arg3, (const u8 *)$arg4, $arg5)")
   public static Ptr<rproc> rproc_alloc(Ptr<device> dev, String name, Ptr<rproc_ops> ops,
       String firmware, int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1163,7 +1164,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_auto_boot_callback((const struct firmware*)$arg1, $arg2)")
+  @BuiltinBPFFunction("rproc_auto_boot_callback((const struct firmware *)$arg1, $arg2)")
   public static void rproc_auto_boot_callback(Ptr<firmware> fw, Ptr<?> context) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1193,7 +1194,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_cdev_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("rproc_cdev_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long rproc_cdev_write(Ptr<file> filp, String buf,
       @Unsigned long len, Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1272,7 +1273,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_coredump_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("rproc_coredump_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long rproc_coredump_write(Ptr<file> filp, String user_buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1285,7 +1286,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_crash_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("rproc_crash_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long rproc_crash_write(Ptr<file> filp, String user_buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1298,7 +1299,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_create_trace_file((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("rproc_create_trace_file((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<dentry> rproc_create_trace_file(String name, Ptr<rproc> rproc,
       Ptr<rproc_debug_trace> trace) {
     throw new MethodIsBPFRelatedFunction();
@@ -1342,32 +1343,32 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_elf_find_loaded_rsc_table($arg1, (const struct firmware*)$arg2)")
+  @BuiltinBPFFunction("rproc_elf_find_loaded_rsc_table($arg1, (const struct firmware *)$arg2)")
   public static Ptr<resource_table> rproc_elf_find_loaded_rsc_table(Ptr<rproc> rproc,
       Ptr<firmware> fw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_elf_get_boot_addr($arg1, (const struct firmware*)$arg2)")
+  @BuiltinBPFFunction("rproc_elf_get_boot_addr($arg1, (const struct firmware *)$arg2)")
   public static @Unsigned long rproc_elf_get_boot_addr(Ptr<rproc> rproc, Ptr<firmware> fw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_elf_load_rsc_table($arg1, (const struct firmware*)$arg2)")
+  @BuiltinBPFFunction("rproc_elf_load_rsc_table($arg1, (const struct firmware *)$arg2)")
   public static int rproc_elf_load_rsc_table(Ptr<rproc> rproc, Ptr<firmware> fw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_elf_load_segments($arg1, (const struct firmware*)$arg2)")
+  @BuiltinBPFFunction("rproc_elf_load_segments($arg1, (const struct firmware *)$arg2)")
   public static int rproc_elf_load_segments(Ptr<rproc> rproc, Ptr<firmware> fw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_elf_sanity_check($arg1, (const struct firmware*)$arg2)")
+  @BuiltinBPFFunction("rproc_elf_sanity_check($arg1, (const struct firmware *)$arg2)")
   public static int rproc_elf_sanity_check(Ptr<rproc> rproc, Ptr<firmware> fw) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1397,7 +1398,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_find_carveout_by_name($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("rproc_find_carveout_by_name($arg1, (const u8 *)$arg2, $arg3_)")
   public static Ptr<rproc_mem_entry> rproc_find_carveout_by_name(Ptr<rproc> rproc, String name,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
@@ -1416,7 +1417,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_fw_boot($arg1, (const struct firmware*)$arg2)")
+  @BuiltinBPFFunction("rproc_fw_boot($arg1, (const struct firmware *)$arg2)")
   public static int rproc_fw_boot(Ptr<rproc> rproc, Ptr<firmware> fw) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1497,7 +1498,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_mem_entry_init($arg1, $arg2, $arg3, $arg4, $arg5, (int (*)(struct rproc*, struct rproc_mem_entry*))$arg6, (int (*)(struct rproc*, struct rproc_mem_entry*))$arg7, (const u8*)$arg8, $arg9_)")
+  @BuiltinBPFFunction("rproc_mem_entry_init($arg1, $arg2, $arg3, $arg4, $arg5, (int (*)(struct rproc*, struct rproc_mem_entry*))$arg6, (int (*)(struct rproc*, struct rproc_mem_entry*))$arg7, (const u8 *)$arg8, $arg9_)")
   public static Ptr<rproc_mem_entry> rproc_mem_entry_init(Ptr<device> dev, Ptr<?> va,
       @Unsigned @OriginalName("dma_addr_t") long dma, @Unsigned long len, @Unsigned int da,
       Ptr<?> alloc, Ptr<?> release, String name, java.lang.Object... param8) {
@@ -1518,7 +1519,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_of_resm_mem_entry_init($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6_)")
+  @BuiltinBPFFunction("rproc_of_resm_mem_entry_init($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6_)")
   public static Ptr<rproc_mem_entry> rproc_of_resm_mem_entry_init(Ptr<device> dev,
       @Unsigned int of_resm_idx, @Unsigned long len, @Unsigned int da, String name,
       java.lang.Object... param5) {
@@ -1557,7 +1558,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_recovery_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("rproc_recovery_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long rproc_recovery_write(Ptr<file> filp, String user_buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1624,7 +1625,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_set_firmware($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("rproc_set_firmware($arg1, (const u8 *)$arg2)")
   public static int rproc_set_firmware(Ptr<rproc> rproc, String fw_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1636,7 +1637,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_start($arg1, (const struct firmware*)$arg2)")
+  @BuiltinBPFFunction("rproc_start($arg1, (const struct firmware *)$arg2)")
   public static int rproc_start(Ptr<rproc> rproc, Ptr<firmware> fw) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1783,7 +1784,7 @@ public final class RprocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rproc_virtio_set($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("rproc_virtio_set($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static void rproc_virtio_set(Ptr<virtio_device> vdev, @Unsigned int offset, Ptr<?> buf,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();

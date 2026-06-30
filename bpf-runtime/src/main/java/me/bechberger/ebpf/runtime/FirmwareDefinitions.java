@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class FirmwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_data_read($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("firmware_data_read($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long firmware_data_read(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buffer, @OriginalName("loff_t") long offset,
       @Unsigned long count) {
@@ -1110,7 +1111,7 @@ public final class FirmwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_data_write($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("firmware_data_write($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long firmware_data_write(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buffer, @OriginalName("loff_t") long offset,
       @Unsigned long count) {
@@ -1124,7 +1125,7 @@ public final class FirmwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_fallback_sysfs($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("firmware_fallback_sysfs($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int firmware_fallback_sysfs(Ptr<firmware> fw, String name, Ptr<device> device,
       @Unsigned int opt_flags, int ret) {
     throw new MethodIsBPFRelatedFunction();
@@ -1144,7 +1145,7 @@ public final class FirmwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_is_builtin((const struct firmware*)$arg1)")
+  @BuiltinBPFFunction("firmware_is_builtin((const struct firmware *)$arg1)")
   public static boolean firmware_is_builtin(Ptr<firmware> fw) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1157,34 +1158,34 @@ public final class FirmwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_loading_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("firmware_loading_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long firmware_loading_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_map_add_early($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("firmware_map_add_early($arg1, $arg2, (const u8 *)$arg3)")
   public static int firmware_map_add_early(@Unsigned long start, @Unsigned long end, String type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_map_add_entry($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("firmware_map_add_entry($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int firmware_map_add_entry(@Unsigned long start, @Unsigned long end, String type,
       Ptr<firmware_map_entry> entry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_map_add_hotplug($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("firmware_map_add_hotplug($arg1, $arg2, (const u8 *)$arg3)")
   public static int firmware_map_add_hotplug(@Unsigned long start, @Unsigned long end,
       String type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_map_remove($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("firmware_map_remove($arg1, $arg2, (const u8 *)$arg3)")
   public static int firmware_map_remove(@Unsigned long start, @Unsigned long end, String type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1196,40 +1197,40 @@ public final class FirmwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_request_builtin($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("firmware_request_builtin($arg1, (const u8 *)$arg2)")
   public static boolean firmware_request_builtin(Ptr<firmware> fw, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_request_builtin_buf($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("firmware_request_builtin_buf($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static boolean firmware_request_builtin_buf(Ptr<firmware> fw, String name, Ptr<?> buf,
       @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_request_cache($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("firmware_request_cache($arg1, (const u8 *)$arg2)")
   public static int firmware_request_cache(Ptr<device> device, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_request_nowait_nowarn($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, (void (*)(const struct firmware*, void*))$arg6)")
+  @BuiltinBPFFunction("firmware_request_nowait_nowarn($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, (void (*)(const struct firmware*, void*))$arg6)")
   public static int firmware_request_nowait_nowarn(Ptr<module> module, String name,
       Ptr<device> device, @Unsigned @OriginalName("gfp_t") int gfp, Ptr<?> context, Ptr<?> cont) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_request_nowarn((const struct firmware**)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("firmware_request_nowarn((const struct firmware**)$arg1, (const u8 *)$arg2, $arg3)")
   public static int firmware_request_nowarn(Ptr<Ptr<firmware>> firmware, String name,
       Ptr<device> device) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_request_platform((const struct firmware**)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("firmware_request_platform((const struct firmware**)$arg1, (const u8 *)$arg2, $arg3)")
   public static int firmware_request_platform(Ptr<Ptr<firmware>> firmware, String name,
       Ptr<device> device) {
     throw new MethodIsBPFRelatedFunction();
@@ -1264,20 +1265,20 @@ public final class FirmwareDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("firmware_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long firmware_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("firmware_uevent((const struct device *)$arg1, $arg2)")
   public static int firmware_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("firmware_upload_register($arg1, $arg2, (const u8*)$arg3, (const struct fw_upload_ops*)$arg4, $arg5)")
+  @BuiltinBPFFunction("firmware_upload_register($arg1, $arg2, (const u8 *)$arg3, (const struct fw_upload_ops *)$arg4, $arg5)")
   public static Ptr<fw_upload> firmware_upload_register(Ptr<module> module, Ptr<device> parent,
       String name, Ptr<fw_upload_ops> ops, Ptr<?> dd_handle) {
     throw new MethodIsBPFRelatedFunction();

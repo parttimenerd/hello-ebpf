@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class HvcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hvc_alloc($arg1, $arg2, (const struct hv_ops*)$arg3, $arg4)")
+  @BuiltinBPFFunction("hvc_alloc($arg1, $arg2, (const struct hv_ops *)$arg3, $arg4)")
   public static Ptr<hvc_struct> hvc_alloc(@Unsigned @OriginalName("uint32_t") int vtermno, int data,
       Ptr<hv_ops> ops, int outbuf_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1139,7 +1140,7 @@ public final class HvcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hvc_console_print($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hvc_console_print($arg1, (const u8 *)$arg2, $arg3)")
   public static void hvc_console_print(Ptr<console> co, String b, @Unsigned int count) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1176,7 +1177,7 @@ public final class HvcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hvc_instantiate($arg1, $arg2, (const struct hv_ops*)$arg3)")
+  @BuiltinBPFFunction("hvc_instantiate($arg1, $arg2, (const struct hv_ops *)$arg3)")
   public static int hvc_instantiate(@Unsigned @OriginalName("uint32_t") int vtermno, int index,
       Ptr<hv_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1261,7 +1262,7 @@ public final class HvcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hvc_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hvc_write($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long hvc_write(Ptr<tty_struct> tty,
       Ptr<java.lang.Character> buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

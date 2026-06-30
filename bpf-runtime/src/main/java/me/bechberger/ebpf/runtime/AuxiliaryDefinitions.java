@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class AuxiliaryDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__auxiliary_device_add($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__auxiliary_device_add($arg1, (const u8 *)$arg2)")
   public static int __auxiliary_device_add(Ptr<auxiliary_device> auxdev, String modname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__auxiliary_driver_register($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__auxiliary_driver_register($arg1, $arg2, (const u8 *)$arg3)")
   public static int __auxiliary_driver_register(Ptr<auxiliary_driver> auxdrv, Ptr<module> owner,
       String modname) {
     throw new MethodIsBPFRelatedFunction();
@@ -1127,7 +1128,7 @@ public final class AuxiliaryDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("auxiliary_device_create($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("auxiliary_device_create($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static Ptr<auxiliary_device> auxiliary_device_create(Ptr<device> dev, String modname,
       String devname, Ptr<?> platform_data, int id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1170,20 +1171,20 @@ public final class AuxiliaryDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("auxiliary_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("auxiliary_match($arg1, (const struct device_driver *)$arg2)")
   public static int auxiliary_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct auxiliary_device_id*)auxiliary_match_id((const struct auxiliary_device_id*)$arg1, (const struct auxiliary_device*)$arg2))")
+  @BuiltinBPFFunction("((const struct auxiliary_device_id*)auxiliary_match_id((const struct auxiliary_device_id *)$arg1, (const struct auxiliary_device *)$arg2))")
   public static Ptr<auxiliary_device_id> auxiliary_match_id(Ptr<auxiliary_device_id> id,
       Ptr<auxiliary_device> auxdev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("auxiliary_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("auxiliary_uevent((const struct device *)$arg1, $arg2)")
   public static int auxiliary_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }

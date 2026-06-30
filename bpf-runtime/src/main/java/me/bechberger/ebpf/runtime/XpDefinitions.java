@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1227,7 +1228,7 @@ public final class XpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xp_raw_get_ctx((const struct xsk_buff_pool*)$arg1, $arg2)")
+  @BuiltinBPFFunction("xp_raw_get_ctx((const struct xsk_buff_pool *)$arg1, $arg2)")
   public static xdp_desc_ctx xp_raw_get_ctx(Ptr<xsk_buff_pool> pool, @Unsigned long addr) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class StatsDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("stats_fill_reply($arg1, (const struct ethnl_req_info*)$arg2, (const struct ethnl_reply_data*)$arg3)")
+  @BuiltinBPFFunction("stats_fill_reply($arg1, (const struct ethnl_req_info *)$arg2, (const struct ethnl_reply_data *)$arg3)")
   public static int stats_fill_reply(Ptr<sk_buff> skb, Ptr<ethnl_req_info> req_base,
       Ptr<ethnl_reply_data> reply_base) {
     throw new MethodIsBPFRelatedFunction();
@@ -1110,58 +1111,58 @@ public final class StatsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stats_prepare_data((const struct ethnl_req_info*)$arg1, $arg2, (const struct genl_info*)$arg3)")
+  @BuiltinBPFFunction("stats_prepare_data((const struct ethnl_req_info *)$arg1, $arg2, (const struct genl_info *)$arg3)")
   public static int stats_prepare_data(Ptr<ethnl_req_info> req_base,
       Ptr<ethnl_reply_data> reply_base, Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stats_put_ctrl_stats($arg1, (const struct stats_reply_data*)$arg2)")
+  @BuiltinBPFFunction("stats_put_ctrl_stats($arg1, (const struct stats_reply_data *)$arg2)")
   public static int stats_put_ctrl_stats(Ptr<sk_buff> skb, Ptr<stats_reply_data> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stats_put_mac_stats($arg1, (const struct stats_reply_data*)$arg2)")
+  @BuiltinBPFFunction("stats_put_mac_stats($arg1, (const struct stats_reply_data *)$arg2)")
   public static int stats_put_mac_stats(Ptr<sk_buff> skb, Ptr<stats_reply_data> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stats_put_phy_stats($arg1, (const struct stats_reply_data*)$arg2)")
+  @BuiltinBPFFunction("stats_put_phy_stats($arg1, (const struct stats_reply_data *)$arg2)")
   public static int stats_put_phy_stats(Ptr<sk_buff> skb, Ptr<stats_reply_data> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stats_put_phydev_stats($arg1, (const struct stats_reply_data*)$arg2)")
+  @BuiltinBPFFunction("stats_put_phydev_stats($arg1, (const struct stats_reply_data *)$arg2)")
   public static int stats_put_phydev_stats(Ptr<sk_buff> skb, Ptr<stats_reply_data> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stats_put_rmon_hist($arg1, $arg2, (const long long unsigned int*)$arg3, (const struct ethtool_rmon_hist_range*)$arg4)")
+  @BuiltinBPFFunction("stats_put_rmon_hist($arg1, $arg2, (const long long unsigned int *)$arg3, (const struct ethtool_rmon_hist_range *)$arg4)")
   public static int stats_put_rmon_hist(Ptr<sk_buff> skb, @Unsigned int attr,
       Ptr<java.lang. @Unsigned Long> hist, Ptr<ethtool_rmon_hist_range> ranges) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stats_put_rmon_stats($arg1, (const struct stats_reply_data*)$arg2)")
+  @BuiltinBPFFunction("stats_put_rmon_stats($arg1, (const struct stats_reply_data *)$arg2)")
   public static int stats_put_rmon_stats(Ptr<sk_buff> skb, Ptr<stats_reply_data> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stats_put_stats($arg1, (const struct stats_reply_data*)$arg2, $arg3, $arg4, (int (*)(struct sk_buff*, const struct stats_reply_data*))$arg5)")
+  @BuiltinBPFFunction("stats_put_stats($arg1, (const struct stats_reply_data *)$arg2, $arg3, $arg4, (int (*)(struct sk_buff*, const struct stats_reply_data*))$arg5)")
   public static int stats_put_stats(Ptr<sk_buff> skb, Ptr<stats_reply_data> data, @Unsigned int id,
       @Unsigned int ss_id, Ptr<?> cb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("stats_reply_size((const struct ethnl_req_info*)$arg1, (const struct ethnl_reply_data*)$arg2)")
+  @BuiltinBPFFunction("stats_reply_size((const struct ethnl_req_info *)$arg1, (const struct ethnl_reply_data *)$arg2)")
   public static int stats_reply_size(Ptr<ethnl_req_info> req_base,
       Ptr<ethnl_reply_data> reply_base) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1111,7 +1112,7 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_dev_ctl_info_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("edac_dev_ctl_info_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long edac_dev_ctl_info_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String buffer, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1125,14 +1126,14 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_dev_instance_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("edac_dev_instance_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long edac_dev_instance_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String buffer, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_dev_register($arg1, $arg2, $arg3, $arg4, (const struct edac_dev_feature*)$arg5)")
+  @BuiltinBPFFunction("edac_dev_register($arg1, $arg2, $arg3, $arg4, (const struct edac_dev_feature *)$arg5)")
   public static int edac_dev_register(Ptr<device> parent, String name, Ptr<?> _private,
       int num_features, Ptr<edac_dev_feature> ras_features) {
     throw new MethodIsBPFRelatedFunction();
@@ -1190,7 +1191,7 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_device_ctl_log_ce_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("edac_device_ctl_log_ce_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long edac_device_ctl_log_ce_store(
       Ptr<edac_device_ctl_info> ctl_info, String data, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1204,7 +1205,7 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_device_ctl_log_ue_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("edac_device_ctl_log_ue_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long edac_device_ctl_log_ue_store(
       Ptr<edac_device_ctl_info> ctl_info, String data, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1218,7 +1219,7 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_device_ctl_panic_on_ue_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("edac_device_ctl_panic_on_ue_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long edac_device_ctl_panic_on_ue_store(
       Ptr<edac_device_ctl_info> ctl_info, String data, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1232,7 +1233,7 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_device_ctl_poll_msec_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("edac_device_ctl_poll_msec_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long edac_device_ctl_poll_msec_store(
       Ptr<edac_device_ctl_info> ctl_info, String data, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1269,14 +1270,14 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_device_handle_ce_count($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("edac_device_handle_ce_count($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static void edac_device_handle_ce_count(Ptr<edac_device_ctl_info> edac_dev,
       @Unsigned int count, int inst_nr, int block_nr, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_device_handle_ue_count($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("edac_device_handle_ue_count($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static void edac_device_handle_ue_count(Ptr<edac_device_ctl_info> edac_dev,
       @Unsigned int count, int inst_nr, int block_nr, String msg) {
     throw new MethodIsBPFRelatedFunction();
@@ -1432,7 +1433,7 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_mc_handle_error((const enum hw_event_mc_err_type)$arg1, $arg2, (const short unsigned int)$arg3, (const long unsigned int)$arg4, (const long unsigned int)$arg5, (const long unsigned int)$arg6, (const int)$arg7, (const int)$arg8, (const int)$arg9, (const u8*)$arg10, (const u8*)$arg11)")
+  @BuiltinBPFFunction("edac_mc_handle_error((const enum hw_event_mc_err_type)$arg1, $arg2, (const short unsigned int)$arg3, (const long unsigned int)$arg4, (const long unsigned int)$arg5, (const long unsigned int)$arg6, (const int)$arg7, (const int)$arg8, (const int)$arg9, (const u8 *)$arg10, (const u8 *)$arg11)")
   public static void edac_mc_handle_error(hw_event_mc_err_type type, Ptr<mem_ctl_info> mci,
       @Unsigned short error_count, @Unsigned long page_frame_number, @Unsigned long offset_in_page,
       @Unsigned long syndrome, int top_layer, int mid_layer, int low_layer, String msg,
@@ -1497,7 +1498,7 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_pci_alloc_ctl_info($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("edac_pci_alloc_ctl_info($arg1, (const u8 *)$arg2)")
   public static Ptr<edac_pci_ctl_info> edac_pci_alloc_ctl_info(@Unsigned int sz_pvt,
       String edac_pci_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1516,7 +1517,7 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_pci_create_generic_ctl($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("edac_pci_create_generic_ctl($arg1, (const u8 *)$arg2)")
   public static Ptr<edac_pci_ctl_info> edac_pci_create_generic_ctl(Ptr<device> dev,
       String mod_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1548,7 +1549,7 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_pci_dev_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("edac_pci_dev_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long edac_pci_dev_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String buffer, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1585,13 +1586,13 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_pci_handle_npe($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("edac_pci_handle_npe($arg1, (const u8 *)$arg2)")
   public static void edac_pci_handle_npe(Ptr<edac_pci_ctl_info> pci, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_pci_handle_pe($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("edac_pci_handle_pe($arg1, (const u8 *)$arg2)")
   public static void edac_pci_handle_pe(Ptr<edac_pci_ctl_info> pci, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1610,7 +1611,7 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_pci_instance_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("edac_pci_instance_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long edac_pci_instance_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String buffer, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1623,7 +1624,7 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_pci_int_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("edac_pci_int_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long edac_pci_int_store(Ptr<?> ptr, String buffer,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1679,7 +1680,7 @@ public final class EdacDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edac_set_poll_msec((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("edac_set_poll_msec((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int edac_set_poll_msec(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }

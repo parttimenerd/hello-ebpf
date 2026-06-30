@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1155,7 +1156,7 @@ public final class CollectDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("collect_paths((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("collect_paths((const struct path *)$arg1, $arg2, $arg3)")
   public static Ptr<path> collect_paths(Ptr<path> path, Ptr<path> prealloc, @Unsigned int count) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1175,14 +1176,14 @@ public final class CollectDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("collect_procs((const struct folio*)$arg1, (const struct page*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("collect_procs((const struct folio *)$arg1, (const struct page *)$arg2, $arg3, $arg4)")
   public static void collect_procs(Ptr<folio> folio, Ptr<page> page, Ptr<list_head> tokill,
       int force_early) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("collect_procs_ksm((const struct folio*)$arg1, (const struct page*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("collect_procs_ksm((const struct folio *)$arg1, (const struct page *)$arg2, $arg3, $arg4)")
   public static void collect_procs_ksm(Ptr<folio> folio, Ptr<page> page, Ptr<list_head> to_kill,
       int force_early) {
     throw new MethodIsBPFRelatedFunction();

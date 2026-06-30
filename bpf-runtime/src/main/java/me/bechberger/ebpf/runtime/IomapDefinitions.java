@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class IomapDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__iomap_dio_rw($arg1, $arg2, (const struct iomap_ops*)$arg3, (const struct iomap_dio_ops*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__iomap_dio_rw($arg1, $arg2, (const struct iomap_ops *)$arg3, (const struct iomap_dio_ops *)$arg4, $arg5, $arg6, $arg7)")
   public static Ptr<iomap_dio> __iomap_dio_rw(Ptr<kiocb> iocb, Ptr<iov_iter> iter,
       Ptr<iomap_ops> ops, Ptr<iomap_dio_ops> dops, @Unsigned int dio_flags, Ptr<?> _private,
       @Unsigned long done_before) {
@@ -1098,7 +1099,7 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__iomap_write_begin((const struct iomap_iter*)$arg1, (const struct iomap_write_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__iomap_write_begin((const struct iomap_iter *)$arg1, (const struct iomap_write_ops *)$arg2, $arg3, $arg4)")
   public static int __iomap_write_begin(Ptr<iomap_iter> iter, Ptr<iomap_write_ops> write_ops,
       @Unsigned long len, Ptr<folio> folio) {
     throw new MethodIsBPFRelatedFunction();
@@ -1121,7 +1122,7 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_bmap($arg1, $arg2, (const struct iomap_ops*)$arg3)")
+  @BuiltinBPFFunction("iomap_bmap($arg1, $arg2, (const struct iomap_ops *)$arg3)")
   public static @Unsigned @OriginalName("sector_t") long iomap_bmap(Ptr<address_space> mapping,
       @Unsigned @OriginalName("sector_t") long bno, Ptr<iomap_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1189,7 +1190,7 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_dio_rw($arg1, $arg2, (const struct iomap_ops*)$arg3, (const struct iomap_dio_ops*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("iomap_dio_rw($arg1, $arg2, (const struct iomap_ops *)$arg3, (const struct iomap_dio_ops *)$arg4, $arg5, $arg6, $arg7)")
   public static @OriginalName("ssize_t") long iomap_dio_rw(Ptr<kiocb> iocb, Ptr<iov_iter> iter,
       Ptr<iomap_ops> ops, Ptr<iomap_dio_ops> dops, @Unsigned int dio_flags, Ptr<?> _private,
       @Unsigned long done_before) {
@@ -1197,14 +1198,14 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_dio_submit_bio((const struct iomap_iter*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("iomap_dio_submit_bio((const struct iomap_iter *)$arg1, $arg2, $arg3, $arg4)")
   public static void iomap_dio_submit_bio(Ptr<iomap_iter> iter, Ptr<iomap_dio> dio, Ptr<bio> bio,
       @OriginalName("loff_t") long pos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_dio_zero((const struct iomap_iter*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("iomap_dio_zero((const struct iomap_iter *)$arg1, $arg2, $arg3, $arg4)")
   public static int iomap_dio_zero(Ptr<iomap_iter> iter, Ptr<iomap_dio> dio,
       @OriginalName("loff_t") long pos, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1217,21 +1218,21 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_fiemap($arg1, $arg2, $arg3, $arg4, (const struct iomap_ops*)$arg5)")
+  @BuiltinBPFFunction("iomap_fiemap($arg1, $arg2, $arg3, $arg4, (const struct iomap_ops *)$arg5)")
   public static int iomap_fiemap(Ptr<inode> inode, Ptr<fiemap_extent_info> fi, @Unsigned long start,
       @Unsigned long len, Ptr<iomap_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_file_buffered_write($arg1, $arg2, (const struct iomap_ops*)$arg3, (const struct iomap_write_ops*)$arg4, $arg5)")
+  @BuiltinBPFFunction("iomap_file_buffered_write($arg1, $arg2, (const struct iomap_ops *)$arg3, (const struct iomap_write_ops *)$arg4, $arg5)")
   public static @OriginalName("ssize_t") long iomap_file_buffered_write(Ptr<kiocb> iocb,
       Ptr<iov_iter> i, Ptr<iomap_ops> ops, Ptr<iomap_write_ops> write_ops, Ptr<?> _private) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_file_unshare($arg1, $arg2, $arg3, (const struct iomap_ops*)$arg4, (const struct iomap_write_ops*)$arg5)")
+  @BuiltinBPFFunction("iomap_file_unshare($arg1, $arg2, $arg3, (const struct iomap_ops *)$arg4, (const struct iomap_write_ops *)$arg5)")
   public static int iomap_file_unshare(Ptr<inode> inode, @OriginalName("loff_t") long pos,
       @OriginalName("loff_t") long len, Ptr<iomap_ops> ops, Ptr<iomap_write_ops> write_ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1290,7 +1291,7 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_ioend_compare($arg1, (const struct list_head*)$arg2, (const struct list_head*)$arg3)")
+  @BuiltinBPFFunction("iomap_ioend_compare($arg1, (const struct list_head *)$arg2, (const struct list_head *)$arg3)")
   public static int iomap_ioend_compare(Ptr<?> priv, Ptr<list_head> a, Ptr<list_head> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1333,7 +1334,7 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_page_mkwrite($arg1, (const struct iomap_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("iomap_page_mkwrite($arg1, (const struct iomap_ops *)$arg2, $arg3)")
   public static @Unsigned @OriginalName("vm_fault_t") int iomap_page_mkwrite(Ptr<vm_fault> vmf,
       Ptr<iomap_ops> ops, Ptr<?> _private) {
     throw new MethodIsBPFRelatedFunction();
@@ -1346,26 +1347,26 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_read_folio($arg1, (const struct iomap_ops*)$arg2)")
+  @BuiltinBPFFunction("iomap_read_folio($arg1, (const struct iomap_ops *)$arg2)")
   public static int iomap_read_folio(Ptr<folio> folio, Ptr<iomap_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_read_folio_range((const struct iomap_iter*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("iomap_read_folio_range((const struct iomap_iter *)$arg1, $arg2, $arg3, $arg4)")
   public static int iomap_read_folio_range(Ptr<iomap_iter> iter, Ptr<folio> folio,
       @OriginalName("loff_t") long pos, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_read_inline_data((const struct iomap_iter*)$arg1, $arg2)")
+  @BuiltinBPFFunction("iomap_read_inline_data((const struct iomap_iter *)$arg1, $arg2)")
   public static int iomap_read_inline_data(Ptr<iomap_iter> iter, Ptr<folio> folio) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_readahead($arg1, (const struct iomap_ops*)$arg2)")
+  @BuiltinBPFFunction("iomap_readahead($arg1, (const struct iomap_ops *)$arg2)")
   public static void iomap_readahead(Ptr<readahead_control> rac, Ptr<iomap_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1384,14 +1385,14 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_seek_data($arg1, $arg2, (const struct iomap_ops*)$arg3)")
+  @BuiltinBPFFunction("iomap_seek_data($arg1, $arg2, (const struct iomap_ops *)$arg3)")
   public static @OriginalName("loff_t") long iomap_seek_data(Ptr<inode> inode,
       @OriginalName("loff_t") long pos, Ptr<iomap_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_seek_hole($arg1, $arg2, (const struct iomap_ops*)$arg3)")
+  @BuiltinBPFFunction("iomap_seek_hole($arg1, $arg2, (const struct iomap_ops *)$arg3)")
   public static @OriginalName("loff_t") long iomap_seek_hole(Ptr<inode> inode,
       @OriginalName("loff_t") long pos, Ptr<iomap_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1425,7 +1426,7 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_swapfile_activate($arg1, $arg2, $arg3, (const struct iomap_ops*)$arg4)")
+  @BuiltinBPFFunction("iomap_swapfile_activate($arg1, $arg2, $arg3, (const struct iomap_ops *)$arg4)")
   public static int iomap_swapfile_activate(Ptr<swap_info_struct> sis, Ptr<file> swap_file,
       Ptr<java.lang. @Unsigned @OriginalName("sector_t") Long> pagespan, Ptr<iomap_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1438,7 +1439,7 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_swapfile_fail($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("iomap_swapfile_fail($arg1, (const u8 *)$arg2)")
   public static int iomap_swapfile_fail(Ptr<iomap_swapfile_info> isi, String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1451,21 +1452,21 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_to_bh($arg1, $arg2, $arg3, (const struct iomap*)$arg4)")
+  @BuiltinBPFFunction("iomap_to_bh($arg1, $arg2, $arg3, (const struct iomap *)$arg4)")
   public static int iomap_to_bh(Ptr<inode> inode, @Unsigned @OriginalName("sector_t") long block,
       Ptr<buffer_head> bh, Ptr<iomap> iomap) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_to_fiemap($arg1, (const struct iomap*)$arg2, $arg3)")
+  @BuiltinBPFFunction("iomap_to_fiemap($arg1, (const struct iomap *)$arg2, $arg3)")
   public static int iomap_to_fiemap(Ptr<fiemap_extent_info> fi, Ptr<iomap> iomap,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_truncate_page($arg1, $arg2, $arg3, (const struct iomap_ops*)$arg4, (const struct iomap_write_ops*)$arg5, $arg6)")
+  @BuiltinBPFFunction("iomap_truncate_page($arg1, $arg2, $arg3, (const struct iomap_ops *)$arg4, (const struct iomap_write_ops *)$arg5, $arg6)")
   public static int iomap_truncate_page(Ptr<inode> inode, @OriginalName("loff_t") long pos,
       Ptr<java.lang. @OriginalName("bool") Boolean> did_zero, Ptr<iomap_ops> ops,
       Ptr<iomap_write_ops> write_ops, Ptr<?> _private) {
@@ -1473,7 +1474,7 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_write_begin($arg1, (const struct iomap_write_ops*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("iomap_write_begin($arg1, (const struct iomap_write_ops *)$arg2, $arg3, $arg4, $arg5)")
   public static int iomap_write_begin(Ptr<iomap_iter> iter, Ptr<iomap_write_ops> write_ops,
       Ptr<Ptr<folio>> foliop, Ptr<java.lang. @Unsigned Long> poffset,
       Ptr<java.lang. @Unsigned Long> plen) {
@@ -1505,7 +1506,7 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_write_iter($arg1, $arg2, (const struct iomap_write_ops*)$arg3)")
+  @BuiltinBPFFunction("iomap_write_iter($arg1, $arg2, (const struct iomap_write_ops *)$arg3)")
   public static int iomap_write_iter(Ptr<iomap_iter> iter, Ptr<iov_iter> i,
       Ptr<iomap_write_ops> write_ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1524,14 +1525,14 @@ public final class IomapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_zero_iter($arg1, $arg2, (const struct iomap_write_ops*)$arg3)")
+  @BuiltinBPFFunction("iomap_zero_iter($arg1, $arg2, (const struct iomap_write_ops *)$arg3)")
   public static int iomap_zero_iter(Ptr<iomap_iter> iter,
       Ptr<java.lang. @OriginalName("bool") Boolean> did_zero, Ptr<iomap_write_ops> write_ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iomap_zero_range($arg1, $arg2, $arg3, $arg4, (const struct iomap_ops*)$arg5, (const struct iomap_write_ops*)$arg6, $arg7)")
+  @BuiltinBPFFunction("iomap_zero_range($arg1, $arg2, $arg3, $arg4, (const struct iomap_ops *)$arg5, (const struct iomap_write_ops *)$arg6, $arg7)")
   public static int iomap_zero_range(Ptr<inode> inode, @OriginalName("loff_t") long pos,
       @OriginalName("loff_t") long len, Ptr<java.lang. @OriginalName("bool") Boolean> did_zero,
       Ptr<iomap_ops> ops, Ptr<iomap_write_ops> write_ops, Ptr<?> _private) {

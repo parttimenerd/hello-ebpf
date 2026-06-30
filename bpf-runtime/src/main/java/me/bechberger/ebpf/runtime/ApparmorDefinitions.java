@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class ApparmorDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_bprm_committed_creds((const struct linux_binprm*)$arg1)")
+  @BuiltinBPFFunction("apparmor_bprm_committed_creds((const struct linux_binprm *)$arg1)")
   public static void apparmor_bprm_committed_creds(Ptr<linux_binprm> bprm) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_bprm_committing_creds((const struct linux_binprm*)$arg1)")
+  @BuiltinBPFFunction("apparmor_bprm_committing_creds((const struct linux_binprm *)$arg1)")
   public static void apparmor_bprm_committing_creds(Ptr<linux_binprm> bprm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1108,14 +1109,14 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_capable((const struct cred*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("apparmor_capable((const struct cred *)$arg1, $arg2, $arg3, $arg4)")
   public static int apparmor_capable(Ptr<cred> cred, Ptr<user_namespace> ns, int cap,
       @Unsigned int opts) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_capget((const struct task_struct*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("apparmor_capget((const struct task_struct *)$arg1, $arg2, $arg3, $arg4)")
   public static int apparmor_capget(Ptr<task_struct> target, Ptr<kernel_cap_t> effective,
       Ptr<kernel_cap_t> inheritable, Ptr<kernel_cap_t> permitted) {
     throw new MethodIsBPFRelatedFunction();
@@ -1135,14 +1136,14 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_cred_prepare($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("apparmor_cred_prepare($arg1, (const struct cred *)$arg2, $arg3)")
   public static int apparmor_cred_prepare(Ptr<cred> _new, Ptr<cred> old,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_cred_transfer($arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("apparmor_cred_transfer($arg1, (const struct cred *)$arg2)")
   public static void apparmor_cred_transfer(Ptr<cred> _new, Ptr<cred> old) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1160,7 +1161,7 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_dointvec((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("apparmor_dointvec((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int apparmor_dointvec(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1222,7 +1223,7 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_getprocattr($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("apparmor_getprocattr($arg1, (const u8 *)$arg2, $arg3)")
   public static int apparmor_getprocattr(Ptr<task_struct> task, String name, Ptr<String> value) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1235,7 +1236,7 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_inet_conn_request((const struct sock*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("apparmor_inet_conn_request((const struct sock *)$arg1, $arg2, $arg3)")
   public static int apparmor_inet_conn_request(Ptr<sock> sk, Ptr<sk_buff> skb,
       Ptr<request_sock> req) {
     throw new MethodIsBPFRelatedFunction();
@@ -1267,13 +1268,13 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_inode_getattr((const struct path*)$arg1)")
+  @BuiltinBPFFunction("apparmor_inode_getattr((const struct path *)$arg1)")
   public static int apparmor_inode_getattr(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_inode_init_security($arg1, $arg2, (const struct qstr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("apparmor_inode_init_security($arg1, $arg2, (const struct qstr *)$arg3, $arg4, $arg5)")
   public static int apparmor_inode_init_security(Ptr<inode> inode, Ptr<inode> dir, Ptr<qstr> qstr,
       Ptr<xattr> xattrs, Ptr<java.lang.Integer> xattr_count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1293,7 +1294,7 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_ip_postroute($arg1, $arg2, (const struct nf_hook_state*)$arg3)")
+  @BuiltinBPFFunction("apparmor_ip_postroute($arg1, $arg2, (const struct nf_hook_state *)$arg3)")
   public static @Unsigned int apparmor_ip_postroute(Ptr<?> priv, Ptr<sk_buff> skb,
       Ptr<nf_hook_state> state) {
     throw new MethodIsBPFRelatedFunction();
@@ -1319,7 +1320,7 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_move_mount((const struct path*)$arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("apparmor_move_mount((const struct path *)$arg1, (const struct path *)$arg2)")
   public static int apparmor_move_mount(Ptr<path> from_path, Ptr<path> to_path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1343,66 +1344,66 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_path_chmod((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("apparmor_path_chmod((const struct path *)$arg1, $arg2)")
   public static int apparmor_path_chmod(Ptr<path> path,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_path_chown((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("apparmor_path_chown((const struct path *)$arg1, $arg2, $arg3)")
   public static int apparmor_path_chown(Ptr<path> path, kuid_t uid, kgid_t gid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_path_link($arg1, (const struct path*)$arg2, $arg3)")
+  @BuiltinBPFFunction("apparmor_path_link($arg1, (const struct path *)$arg2, $arg3)")
   public static int apparmor_path_link(Ptr<dentry> old_dentry, Ptr<path> new_dir,
       Ptr<dentry> new_dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_path_mkdir((const struct path*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("apparmor_path_mkdir((const struct path *)$arg1, $arg2, $arg3)")
   public static int apparmor_path_mkdir(Ptr<path> dir, Ptr<dentry> dentry,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_path_mknod((const struct path*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("apparmor_path_mknod((const struct path *)$arg1, $arg2, $arg3, $arg4)")
   public static int apparmor_path_mknod(Ptr<path> dir, Ptr<dentry> dentry,
       @Unsigned @OriginalName("umode_t") short mode, @Unsigned int dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_path_rename((const struct path*)$arg1, $arg2, (const struct path*)$arg3, $arg4, (const unsigned int)$arg5)")
+  @BuiltinBPFFunction("apparmor_path_rename((const struct path *)$arg1, $arg2, (const struct path *)$arg3, $arg4, (const unsigned int)$arg5)")
   public static int apparmor_path_rename(Ptr<path> old_dir, Ptr<dentry> old_dentry,
       Ptr<path> new_dir, Ptr<dentry> new_dentry, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_path_rmdir((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("apparmor_path_rmdir((const struct path *)$arg1, $arg2)")
   public static int apparmor_path_rmdir(Ptr<path> dir, Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_path_symlink((const struct path*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("apparmor_path_symlink((const struct path *)$arg1, $arg2, (const u8 *)$arg3)")
   public static int apparmor_path_symlink(Ptr<path> dir, Ptr<dentry> dentry, String old_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_path_truncate((const struct path*)$arg1)")
+  @BuiltinBPFFunction("apparmor_path_truncate((const struct path *)$arg1)")
   public static int apparmor_path_truncate(Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_path_unlink((const struct path*)$arg1, $arg2)")
+  @BuiltinBPFFunction("apparmor_path_unlink((const struct path *)$arg1, $arg2)")
   public static int apparmor_path_unlink(Ptr<path> dir, Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1426,14 +1427,14 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_sb_mount((const u8*)$arg1, (const struct path*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("apparmor_sb_mount((const u8 *)$arg1, (const struct path *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int apparmor_sb_mount(String dev_name, Ptr<path> path, String type,
       @Unsigned long flags, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_sb_pivotroot((const struct path*)$arg1, (const struct path*)$arg2)")
+  @BuiltinBPFFunction("apparmor_sb_pivotroot((const struct path *)$arg1, (const struct path *)$arg2)")
   public static int apparmor_sb_pivotroot(Ptr<path> old_path, Ptr<path> new_path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1445,7 +1446,7 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_secctx_to_secid((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("apparmor_secctx_to_secid((const u8 *)$arg1, $arg2, $arg3)")
   public static int apparmor_secctx_to_secid(String secdata, @Unsigned int seclen,
       Ptr<java.lang. @Unsigned Integer> secid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1458,14 +1459,14 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_secmark_check($arg1, $arg2, $arg3, $arg4, (const struct sock*)$arg5)")
+  @BuiltinBPFFunction("apparmor_secmark_check($arg1, $arg2, $arg3, $arg4, (const struct sock *)$arg5)")
   public static int apparmor_secmark_check(Ptr<aa_label> label, String op, @Unsigned int request,
       @Unsigned int secid, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_setprocattr((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("apparmor_setprocattr((const u8 *)$arg1, $arg2, $arg3)")
   public static int apparmor_setprocattr(String name, Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1485,7 +1486,7 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_sk_clone_security((const struct sock*)$arg1, $arg2)")
+  @BuiltinBPFFunction("apparmor_sk_clone_security((const struct sock *)$arg1, $arg2)")
   public static void apparmor_sk_clone_security(Ptr<sock> sk, Ptr<sock> newsk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1627,7 +1628,7 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_task_kill($arg1, $arg2, $arg3, (const struct cred*)$arg4)")
+  @BuiltinBPFFunction("apparmor_task_kill($arg1, $arg2, $arg3, (const struct cred *)$arg4)")
   public static int apparmor_task_kill(Ptr<task_struct> target, Ptr<kernel_siginfo> info, int sig,
       Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
@@ -1653,7 +1654,7 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_uring_override_creds((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("apparmor_uring_override_creds((const struct cred *)$arg1)")
   public static int apparmor_uring_override_creds(Ptr<cred> _new) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1665,7 +1666,7 @@ public final class ApparmorDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("apparmor_userns_create((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("apparmor_userns_create((const struct cred *)$arg1)")
   public static int apparmor_userns_create(Ptr<cred> new_cred) {
     throw new MethodIsBPFRelatedFunction();
   }

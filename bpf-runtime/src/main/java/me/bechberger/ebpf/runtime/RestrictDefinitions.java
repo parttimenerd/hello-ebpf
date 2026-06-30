@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,91 +1091,91 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class RestrictDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("restrict_link_by_builtin_and_secondary_trusted($arg1, (const struct key_type*)$arg2, (const union key_payload*)$arg3, $arg4)")
+  @BuiltinBPFFunction("restrict_link_by_builtin_and_secondary_trusted($arg1, (const struct key_type *)$arg2, (const union key_payload *)$arg3, $arg4)")
   public static int restrict_link_by_builtin_and_secondary_trusted(Ptr<key> dest_keyring,
       Ptr<key_type> type, Ptr<key_payload> payload, Ptr<key> restrict_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restrict_link_by_builtin_secondary_and_machine($arg1, (const struct key_type*)$arg2, (const union key_payload*)$arg3, $arg4)")
+  @BuiltinBPFFunction("restrict_link_by_builtin_secondary_and_machine($arg1, (const struct key_type *)$arg2, (const union key_payload *)$arg3, $arg4)")
   public static int restrict_link_by_builtin_secondary_and_machine(Ptr<key> dest_keyring,
       Ptr<key_type> type, Ptr<key_payload> payload, Ptr<key> restrict_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restrict_link_by_builtin_trusted($arg1, (const struct key_type*)$arg2, (const union key_payload*)$arg3, $arg4)")
+  @BuiltinBPFFunction("restrict_link_by_builtin_trusted($arg1, (const struct key_type *)$arg2, (const union key_payload *)$arg3, $arg4)")
   public static int restrict_link_by_builtin_trusted(Ptr<key> dest_keyring, Ptr<key_type> type,
       Ptr<key_payload> payload, Ptr<key> restriction_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restrict_link_by_ca($arg1, (const struct key_type*)$arg2, (const union key_payload*)$arg3, $arg4)")
+  @BuiltinBPFFunction("restrict_link_by_ca($arg1, (const struct key_type *)$arg2, (const union key_payload *)$arg3, $arg4)")
   public static int restrict_link_by_ca(Ptr<key> dest_keyring, Ptr<key_type> type,
       Ptr<key_payload> payload, Ptr<key> trust_keyring) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restrict_link_by_digsig($arg1, (const struct key_type*)$arg2, (const union key_payload*)$arg3, $arg4)")
+  @BuiltinBPFFunction("restrict_link_by_digsig($arg1, (const struct key_type *)$arg2, (const union key_payload *)$arg3, $arg4)")
   public static int restrict_link_by_digsig(Ptr<key> dest_keyring, Ptr<key_type> type,
       Ptr<key_payload> payload, Ptr<key> trust_keyring) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restrict_link_by_digsig_builtin($arg1, (const struct key_type*)$arg2, (const union key_payload*)$arg3, $arg4)")
+  @BuiltinBPFFunction("restrict_link_by_digsig_builtin($arg1, (const struct key_type *)$arg2, (const union key_payload *)$arg3, $arg4)")
   public static int restrict_link_by_digsig_builtin(Ptr<key> dest_keyring, Ptr<key_type> type,
       Ptr<key_payload> payload, Ptr<key> restriction_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restrict_link_by_digsig_builtin_and_secondary($arg1, (const struct key_type*)$arg2, (const union key_payload*)$arg3, $arg4)")
+  @BuiltinBPFFunction("restrict_link_by_digsig_builtin_and_secondary($arg1, (const struct key_type *)$arg2, (const union key_payload *)$arg3, $arg4)")
   public static int restrict_link_by_digsig_builtin_and_secondary(Ptr<key> dest_keyring,
       Ptr<key_type> type, Ptr<key_payload> payload, Ptr<key> restrict_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restrict_link_by_key_or_keyring($arg1, (const struct key_type*)$arg2, (const union key_payload*)$arg3, $arg4)")
+  @BuiltinBPFFunction("restrict_link_by_key_or_keyring($arg1, (const struct key_type *)$arg2, (const union key_payload *)$arg3, $arg4)")
   public static int restrict_link_by_key_or_keyring(Ptr<key> dest_keyring, Ptr<key_type> type,
       Ptr<key_payload> payload, Ptr<key> trusted) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restrict_link_by_key_or_keyring_chain($arg1, (const struct key_type*)$arg2, (const union key_payload*)$arg3, $arg4)")
+  @BuiltinBPFFunction("restrict_link_by_key_or_keyring_chain($arg1, (const struct key_type *)$arg2, (const union key_payload *)$arg3, $arg4)")
   public static int restrict_link_by_key_or_keyring_chain(Ptr<key> dest_keyring, Ptr<key_type> type,
       Ptr<key_payload> payload, Ptr<key> trusted) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restrict_link_by_signature($arg1, (const struct key_type*)$arg2, (const union key_payload*)$arg3, $arg4)")
+  @BuiltinBPFFunction("restrict_link_by_signature($arg1, (const struct key_type *)$arg2, (const union key_payload *)$arg3, $arg4)")
   public static int restrict_link_by_signature(Ptr<key> dest_keyring, Ptr<key_type> type,
       Ptr<key_payload> payload, Ptr<key> trust_keyring) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restrict_link_for_blacklist($arg1, (const struct key_type*)$arg2, (const union key_payload*)$arg3, $arg4)")
+  @BuiltinBPFFunction("restrict_link_for_blacklist($arg1, (const struct key_type *)$arg2, (const union key_payload *)$arg3, $arg4)")
   public static int restrict_link_for_blacklist(Ptr<key> dest_keyring, Ptr<key_type> type,
       Ptr<key_payload> payload, Ptr<key> restrict_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restrict_link_reject($arg1, (const struct key_type*)$arg2, (const union key_payload*)$arg3, $arg4)")
+  @BuiltinBPFFunction("restrict_link_reject($arg1, (const struct key_type *)$arg2, (const union key_payload *)$arg3, $arg4)")
   public static int restrict_link_reject(Ptr<key> keyring, Ptr<key_type> type,
       Ptr<key_payload> payload, Ptr<key> restriction_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restrict_unbound_cpumask((const u8*)$arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("restrict_unbound_cpumask((const u8 *)$arg1, (const struct cpumask *)$arg2)")
   public static void restrict_unbound_cpumask(String name, Ptr<cpumask> mask) {
     throw new MethodIsBPFRelatedFunction();
   }

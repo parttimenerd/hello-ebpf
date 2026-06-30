@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class UnregisterDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__unregister_chrdev($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__unregister_chrdev($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static void __unregister_chrdev(@Unsigned int major, @Unsigned int baseminor,
       @Unsigned int count, String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1188,7 +1189,7 @@ public final class UnregisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("unregister_blkdev($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("unregister_blkdev($arg1, (const u8 *)$arg2)")
   public static void unregister_blkdev(@Unsigned int major, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1491,7 +1492,7 @@ public final class UnregisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("unregister_netdevice_many_notify($arg1, $arg2, (const struct nlmsghdr*)$arg3)")
+  @BuiltinBPFFunction("unregister_netdevice_many_notify($arg1, $arg2, (const struct nlmsghdr *)$arg3)")
   public static void unregister_netdevice_many_notify(Ptr<list_head> head, @Unsigned int portid,
       Ptr<nlmsghdr> nlh) {
     throw new MethodIsBPFRelatedFunction();
@@ -1541,7 +1542,7 @@ public final class UnregisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("unregister_nmi_handler($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("unregister_nmi_handler($arg1, (const u8 *)$arg2)")
   public static void unregister_nmi_handler(@Unsigned int type, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1716,7 +1717,7 @@ public final class UnregisterDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("unregister_sysrq_key($arg1, (const struct sysrq_key_op*)$arg2)")
+  @BuiltinBPFFunction("unregister_sysrq_key($arg1, (const struct sysrq_key_op *)$arg2)")
   public static int unregister_sysrq_key(char key, Ptr<sysrq_key_op> op_p) {
     throw new MethodIsBPFRelatedFunction();
   }

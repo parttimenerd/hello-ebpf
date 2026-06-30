@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1161,7 +1162,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__io_getxattr_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("__io_getxattr_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int __io_getxattr_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1174,7 +1175,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__io_issue_sqe($arg1, $arg2, (const struct io_issue_def*)$arg3)")
+  @BuiltinBPFFunction("__io_issue_sqe($arg1, $arg2, (const struct io_issue_def *)$arg3)")
   public static int __io_issue_sqe(Ptr<io_kiocb> req, @Unsigned int issue_flags,
       Ptr<io_issue_def> def) {
     throw new MethodIsBPFRelatedFunction();
@@ -1206,7 +1207,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__io_openat_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("__io_openat_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int __io_openat_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1218,7 +1219,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__io_prep_rw($arg1, (const struct io_uring_sqe*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__io_prep_rw($arg1, (const struct io_uring_sqe *)$arg2, $arg3)")
   public static int __io_prep_rw(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe, int ddir) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1276,7 +1277,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__io_setxattr_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("__io_setxattr_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int __io_setxattr_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1308,7 +1309,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__io_timeout_prep($arg1, (const struct io_uring_sqe*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__io_timeout_prep($arg1, (const struct io_uring_sqe *)$arg2, $arg3)")
   public static int __io_timeout_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe,
       boolean is_timeout_link) {
     throw new MethodIsBPFRelatedFunction();
@@ -1365,7 +1366,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_accept_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_accept_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_accept_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1529,7 +1530,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_async_cancel_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_async_cancel_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_async_cancel_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1542,7 +1543,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_bind_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_bind_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_bind_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1685,7 +1686,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_close_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_close_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_close_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1697,7 +1698,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_cmd_cache_free((const void*)$arg1)")
+  @BuiltinBPFFunction("io_cmd_cache_free((const void *)$arg1)")
   public static void io_cmd_cache_free(Ptr<?> entry) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1729,7 +1730,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_connect_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_connect_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_connect_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1837,7 +1838,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_eopnotsupp_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_eopnotsupp_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_eopnotsupp_prep(Ptr<io_kiocb> kiocb, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1849,13 +1850,13 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_epoll_ctl_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_epoll_ctl_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_epoll_ctl_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_epoll_wait_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_epoll_wait_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_epoll_wait_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1956,7 +1957,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_fadvise_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_fadvise_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_fadvise_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1974,7 +1975,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_fallocate_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_fallocate_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_fallocate_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1986,7 +1987,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_fgetxattr_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_fgetxattr_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_fgetxattr_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2023,7 +2024,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_files_update_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_files_update_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_files_update_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2115,7 +2116,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_fsetxattr_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_fsetxattr_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_fsetxattr_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2127,7 +2128,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_fsync_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_fsync_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_fsync_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2139,7 +2140,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_ftruncate_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_ftruncate_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_ftruncate_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2171,7 +2172,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_futex_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_futex_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_futex_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2215,7 +2216,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_futexv_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_futexv_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_futexv_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2227,7 +2228,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_get_ext_arg($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("io_get_ext_arg($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int io_get_ext_arg(Ptr<io_ring_ctx> ctx, @Unsigned int flags, Ptr<?> argp,
       Ptr<ext_arg> ext_arg) {
     throw new MethodIsBPFRelatedFunction();
@@ -2240,7 +2241,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_getxattr_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_getxattr_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_getxattr_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2300,7 +2301,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_init_req($arg1, $arg2, (const struct io_uring_sqe*)$arg3)")
+  @BuiltinBPFFunction("io_init_req($arg1, $arg2, (const struct io_uring_sqe *)$arg3)")
   public static int io_init_req(Ptr<io_ring_ctx> ctx, Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2312,7 +2313,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_install_fixed_fd_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_install_fixed_fd_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_install_fixed_fd_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2344,7 +2345,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_is_busy_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("io_is_busy_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long io_is_busy_store(Ptr<gov_attr_set> attr_set,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -2412,7 +2413,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_link_timeout_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_link_timeout_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_link_timeout_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2424,19 +2425,19 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_linkat_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_linkat_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_linkat_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_listen_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_listen_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_listen_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_madvise_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_madvise_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_madvise_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2467,7 +2468,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_mkdirat_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_mkdirat_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_mkdirat_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2510,7 +2511,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_msg_ring_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_msg_ring_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_msg_ring_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2553,7 +2554,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_net_import_vec($arg1, $arg2, (const struct iovec*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("io_net_import_vec($arg1, $arg2, (const struct iovec *)$arg3, $arg4, $arg5)")
   public static int io_net_import_vec(Ptr<io_kiocb> req, Ptr<io_async_msghdr> iomsg,
       Ptr<iovec> uiov, @Unsigned int uvec_seg, int ddir) {
     throw new MethodIsBPFRelatedFunction();
@@ -2566,7 +2567,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_netmsg_cache_free((const void*)$arg1)")
+  @BuiltinBPFFunction("io_netmsg_cache_free((const void *)$arg1)")
   public static void io_netmsg_cache_free(Ptr<?> entry) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2584,7 +2585,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_nop_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_nop_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_nop_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2615,13 +2616,13 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_openat2_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_openat2_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_openat2_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_openat_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_openat_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_openat_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2640,7 +2641,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_pipe_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_pipe_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_pipe_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2658,7 +2659,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_poll_add_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_poll_add_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_poll_add_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2730,7 +2731,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_poll_remove_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_poll_remove_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_poll_remove_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2807,68 +2808,68 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_prep_read($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_prep_read($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_prep_read(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_prep_read_fixed($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_prep_read_fixed($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_prep_read_fixed(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_prep_readv($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_prep_readv($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_prep_readv(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_prep_readv_fixed($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_prep_readv_fixed($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_prep_readv_fixed(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_prep_reg_iovec($arg1, $arg2, (const struct iovec*)$arg3, $arg4)")
+  @BuiltinBPFFunction("io_prep_reg_iovec($arg1, $arg2, (const struct iovec *)$arg3, $arg4)")
   public static int io_prep_reg_iovec(Ptr<io_kiocb> req, Ptr<iou_vec> iv, Ptr<iovec> uvec,
       @Unsigned long uvec_segs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_prep_rw($arg1, (const struct io_uring_sqe*)$arg2, $arg3)")
+  @BuiltinBPFFunction("io_prep_rw($arg1, (const struct io_uring_sqe *)$arg2, $arg3)")
   public static int io_prep_rw(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe, int ddir) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_prep_write($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_prep_write($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_prep_write(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_prep_write_fixed($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_prep_write_fixed($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_prep_write_fixed(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_prep_writev($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_prep_writev($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_prep_writev(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_prep_writev_fixed($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_prep_writev_fixed($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_prep_writev_fixed(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_provide_buffers_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_provide_buffers_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_provide_buffers_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2960,7 +2961,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_read_mshot_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_read_mshot_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_read_mshot_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3006,13 +3007,13 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_recvmsg_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_recvmsg_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_recvmsg_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_recvzc_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_recvzc_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_recvzc_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3119,7 +3120,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_remove_buffers_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_remove_buffers_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_remove_buffers_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3137,7 +3138,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_renameat_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_renameat_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_renameat_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3387,7 +3388,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_rw_cache_free((const void*)$arg1)")
+  @BuiltinBPFFunction("io_rw_cache_free((const void *)$arg1)")
   public static void io_rw_cache_free(Ptr<?> entry) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3448,7 +3449,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_send_setup($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_send_setup($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_send_setup(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3466,7 +3467,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_send_zc_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_send_zc_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_send_zc_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3478,7 +3479,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_sendmsg_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_sendmsg_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_sendmsg_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3490,7 +3491,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_sendmsg_setup($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_sendmsg_setup($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_sendmsg_setup(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3514,13 +3515,13 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_setxattr_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_setxattr_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_setxattr_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_sfr_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_sfr_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_sfr_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3539,7 +3540,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_shutdown_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_shutdown_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_shutdown_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3551,7 +3552,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_socket_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_socket_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_socket_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3569,7 +3570,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_splice_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_splice_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_splice_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3687,13 +3688,13 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_statx_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_statx_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_statx_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_submit_fail_init((const struct io_uring_sqe*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("io_submit_fail_init((const struct io_uring_sqe *)$arg1, $arg2, $arg3)")
   public static int io_submit_fail_init(Ptr<io_uring_sqe> sqe, Ptr<io_kiocb> req, int ret) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3723,7 +3724,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_symlinkat_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_symlinkat_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_symlinkat_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3771,7 +3772,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_tee_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_tee_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_tee_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3802,7 +3803,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_timeout_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_timeout_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_timeout_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3814,7 +3815,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_timeout_remove_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_timeout_remove_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_timeout_remove_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3882,7 +3883,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_unlinkat_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_unlinkat_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_unlinkat_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3963,7 +3964,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_uring_cmd_import_fixed_vec($arg1, (const struct iovec*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("io_uring_cmd_import_fixed_vec($arg1, (const struct iovec *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int io_uring_cmd_import_fixed_vec(Ptr<io_uring_cmd> ioucmd, Ptr<iovec> uvec,
       @Unsigned long uvec_segs, int ddir, Ptr<iov_iter> iter, @Unsigned int issue_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -3990,7 +3991,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_uring_cmd_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_uring_cmd_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_uring_cmd_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4178,7 +4179,7 @@ public final class IoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("io_waitid_prep($arg1, (const struct io_uring_sqe*)$arg2)")
+  @BuiltinBPFFunction("io_waitid_prep($arg1, (const struct io_uring_sqe *)$arg2)")
   public static int io_waitid_prep(Ptr<io_kiocb> req, Ptr<io_uring_sqe> sqe) {
     throw new MethodIsBPFRelatedFunction();
   }

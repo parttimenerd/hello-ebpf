@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class DeadlineDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("deadline_async_depth_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("deadline_async_depth_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long deadline_async_depth_store(Ptr<elevator_queue> e,
       String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1143,7 +1144,7 @@ public final class DeadlineDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("deadline_fifo_batch_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("deadline_fifo_batch_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long deadline_fifo_batch_store(Ptr<elevator_queue> e,
       String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1157,7 +1158,7 @@ public final class DeadlineDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("deadline_front_merges_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("deadline_front_merges_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long deadline_front_merges_store(Ptr<elevator_queue> e,
       String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1177,7 +1178,7 @@ public final class DeadlineDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("deadline_prio_aging_expire_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("deadline_prio_aging_expire_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long deadline_prio_aging_expire_store(
       Ptr<elevator_queue> e, String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1269,7 +1270,7 @@ public final class DeadlineDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("deadline_read_expire_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("deadline_read_expire_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long deadline_read_expire_store(Ptr<elevator_queue> e,
       String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1367,7 +1368,7 @@ public final class DeadlineDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("deadline_write_expire_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("deadline_write_expire_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long deadline_write_expire_store(Ptr<elevator_queue> e,
       String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1381,7 +1382,7 @@ public final class DeadlineDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("deadline_writes_starved_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("deadline_writes_starved_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long deadline_writes_starved_store(Ptr<elevator_queue> e,
       String page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

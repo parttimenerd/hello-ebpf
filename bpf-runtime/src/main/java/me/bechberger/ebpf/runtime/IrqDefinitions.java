@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class IrqDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__irq_alloc_descs($arg1, $arg2, $arg3, $arg4, $arg5, (const struct irq_affinity_desc*)$arg6)")
+  @BuiltinBPFFunction("__irq_alloc_descs($arg1, $arg2, $arg3, $arg4, $arg5, (const struct irq_affinity_desc *)$arg6)")
   public static int __irq_alloc_descs(int irq, @Unsigned int from, @Unsigned int cnt, int node,
       Ptr<module> owner, Ptr<irq_affinity_desc> affinity) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__irq_alloc_domain_generic_chips($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__irq_alloc_domain_generic_chips($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int __irq_alloc_domain_generic_chips(Ptr<irq_domain> d, int irqs_per_chip,
       int num_ct, String name, @OriginalName("irq_flow_handler_t") Ptr<?> handler,
       @Unsigned int clr, @Unsigned int set, irq_gc_flags gcflags) {
@@ -1105,7 +1106,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__irq_apply_affinity_hint($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__irq_apply_affinity_hint($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int __irq_apply_affinity_hint(@Unsigned int irq, Ptr<cpumask> m,
       boolean setaffinity) {
     throw new MethodIsBPFRelatedFunction();
@@ -1118,7 +1119,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__irq_do_set_handler($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__irq_do_set_handler($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static void __irq_do_set_handler(Ptr<irq_desc> desc,
       @OriginalName("irq_flow_handler_t") Ptr<?> handle, int is_chained, String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1131,14 +1132,14 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__irq_domain_alloc_fwnode($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__irq_domain_alloc_fwnode($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<fwnode_handle> __irq_domain_alloc_fwnode(@Unsigned int type, int id,
       String name, Ptr<java.lang. @Unsigned @OriginalName("phys_addr_t") Long> pa) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__irq_domain_alloc_irqs($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct irq_affinity_desc*)$arg7)")
+  @BuiltinBPFFunction("__irq_domain_alloc_irqs($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct irq_affinity_desc *)$arg7)")
   public static int __irq_domain_alloc_irqs(Ptr<irq_domain> domain, int irq_base,
       @Unsigned int nr_irqs, int node, Ptr<?> arg, boolean realloc,
       Ptr<irq_affinity_desc> affinity) {
@@ -1146,7 +1147,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__irq_domain_create((const struct irq_domain_info*)$arg1)")
+  @BuiltinBPFFunction("__irq_domain_create((const struct irq_domain_info *)$arg1)")
   public static Ptr<irq_domain> __irq_domain_create(Ptr<irq_domain_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1158,7 +1159,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__irq_domain_instantiate((const struct irq_domain_info*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__irq_domain_instantiate((const struct irq_domain_info *)$arg1, $arg2, $arg3)")
   public static Ptr<irq_domain> __irq_domain_instantiate(Ptr<irq_domain_info> info,
       boolean cond_alloc_descs, boolean force_associate) {
     throw new MethodIsBPFRelatedFunction();
@@ -1211,13 +1212,13 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__irq_set_affinity($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__irq_set_affinity($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int __irq_set_affinity(@Unsigned int irq, Ptr<cpumask> mask, boolean force) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__irq_set_handler($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__irq_set_handler($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static void __irq_set_handler(@Unsigned int irq,
       @OriginalName("irq_flow_handler_t") Ptr<?> handle, int is_chained, String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1278,7 +1279,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_affinity_list_proc_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("irq_affinity_list_proc_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long irq_affinity_list_proc_write(Ptr<file> file,
       String buffer, @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1303,7 +1304,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_affinity_proc_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("irq_affinity_proc_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long irq_affinity_proc_write(Ptr<file> file, String buffer,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> pos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1316,7 +1317,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_alloc_generic_chip((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("irq_alloc_generic_chip((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static Ptr<irq_chip_generic> irq_alloc_generic_chip(String name, int num_ct,
       @Unsigned int irq_base, Ptr<?> reg_base, @OriginalName("irq_flow_handler_t") Ptr<?> handler) {
     throw new MethodIsBPFRelatedFunction();
@@ -1330,7 +1331,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_calc_affinity_vectors($arg1, $arg2, (const struct irq_affinity*)$arg3)")
+  @BuiltinBPFFunction("irq_calc_affinity_vectors($arg1, $arg2, (const struct irq_affinity *)$arg3)")
   public static @Unsigned int irq_calc_affinity_vectors(@Unsigned int minvec, @Unsigned int maxvec,
       Ptr<irq_affinity> affd) {
     throw new MethodIsBPFRelatedFunction();
@@ -1446,7 +1447,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_chip_set_affinity_parent($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("irq_chip_set_affinity_parent($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int irq_chip_set_affinity_parent(Ptr<irq_data> data, Ptr<cpumask> dest,
       boolean force) {
     throw new MethodIsBPFRelatedFunction();
@@ -1508,7 +1509,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_cpu_rmap_notify($arg1, (const cpumask*)$arg2)")
+  @BuiltinBPFFunction("irq_cpu_rmap_notify($arg1, (const cpumask *)$arg2)")
   public static void irq_cpu_rmap_notify(Ptr<irq_affinity_notify> notify,
       Ptr<@OriginalName("cpumask_t") cpumask> mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1540,14 +1541,14 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_create_mapping_affinity($arg1, $arg2, (const struct irq_affinity_desc*)$arg3)")
+  @BuiltinBPFFunction("irq_create_mapping_affinity($arg1, $arg2, (const struct irq_affinity_desc *)$arg3)")
   public static @Unsigned int irq_create_mapping_affinity(Ptr<irq_domain> domain,
       @Unsigned @OriginalName("irq_hw_number_t") long hwirq, Ptr<irq_affinity_desc> affinity) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_create_mapping_affinity_locked($arg1, $arg2, (const struct irq_affinity_desc*)$arg3)")
+  @BuiltinBPFFunction("irq_create_mapping_affinity_locked($arg1, $arg2, (const struct irq_affinity_desc *)$arg3)")
   public static @Unsigned int irq_create_mapping_affinity_locked(Ptr<irq_domain> domain,
       @Unsigned @OriginalName("irq_hw_number_t") long hwirq, Ptr<irq_affinity_desc> affinity) {
     throw new MethodIsBPFRelatedFunction();
@@ -1585,7 +1586,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_do_set_affinity($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("irq_do_set_affinity($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int irq_do_set_affinity(Ptr<irq_data> data, Ptr<cpumask> mask, boolean force) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1597,7 +1598,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_domain_alloc_generic_chips($arg1, (const struct irq_domain_chip_generic_info*)$arg2)")
+  @BuiltinBPFFunction("irq_domain_alloc_generic_chips($arg1, (const struct irq_domain_chip_generic_info *)$arg2)")
   public static int irq_domain_alloc_generic_chips(Ptr<irq_domain> d,
       Ptr<irq_domain_chip_generic_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1611,7 +1612,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_domain_alloc_irqs_locked($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct irq_affinity_desc*)$arg7)")
+  @BuiltinBPFFunction("irq_domain_alloc_irqs_locked($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct irq_affinity_desc *)$arg7)")
   public static int irq_domain_alloc_irqs_locked(Ptr<irq_domain> domain, int irq_base,
       @Unsigned int nr_irqs, int node, Ptr<?> arg, boolean realloc,
       Ptr<irq_affinity_desc> affinity) {
@@ -1647,7 +1648,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_domain_create_legacy($arg1, $arg2, $arg3, $arg4, (const struct irq_domain_ops*)$arg5, $arg6)")
+  @BuiltinBPFFunction("irq_domain_create_legacy($arg1, $arg2, $arg3, $arg4, (const struct irq_domain_ops *)$arg5, $arg6)")
   public static Ptr<irq_domain> irq_domain_create_legacy(Ptr<fwnode_handle> fwnode,
       @Unsigned int size, @Unsigned int first_irq,
       @Unsigned @OriginalName("irq_hw_number_t") long first_hwirq, Ptr<irq_domain_ops> ops,
@@ -1663,14 +1664,14 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_domain_create_sim_full($arg1, $arg2, (const struct irq_sim_ops*)$arg3, $arg4)")
+  @BuiltinBPFFunction("irq_domain_create_sim_full($arg1, $arg2, (const struct irq_sim_ops *)$arg3, $arg4)")
   public static Ptr<irq_domain> irq_domain_create_sim_full(Ptr<fwnode_handle> fwnode,
       @Unsigned int num_irqs, Ptr<irq_sim_ops> ops, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_domain_create_simple($arg1, $arg2, $arg3, (const struct irq_domain_ops*)$arg4, $arg5)")
+  @BuiltinBPFFunction("irq_domain_create_simple($arg1, $arg2, $arg3, (const struct irq_domain_ops *)$arg4, $arg5)")
   public static Ptr<irq_domain> irq_domain_create_simple(Ptr<fwnode_handle> fwnode,
       @Unsigned int size, @Unsigned int first_irq, Ptr<irq_domain_ops> ops, Ptr<?> host_data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1747,7 +1748,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_domain_instantiate((const struct irq_domain_info*)$arg1)")
+  @BuiltinBPFFunction("irq_domain_instantiate((const struct irq_domain_info *)$arg1)")
   public static Ptr<irq_domain> irq_domain_instantiate(Ptr<irq_domain_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1789,14 +1790,14 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_domain_set_hwirq_and_chip($arg1, $arg2, $arg3, (const struct irq_chip*)$arg4, $arg5)")
+  @BuiltinBPFFunction("irq_domain_set_hwirq_and_chip($arg1, $arg2, $arg3, (const struct irq_chip *)$arg4, $arg5)")
   public static int irq_domain_set_hwirq_and_chip(Ptr<irq_domain> domain, @Unsigned int virq,
       @Unsigned @OriginalName("irq_hw_number_t") long hwirq, Ptr<irq_chip> chip, Ptr<?> chip_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_domain_set_info($arg1, $arg2, $arg3, (const struct irq_chip*)$arg4, $arg5, $arg6, $arg7, (const u8*)$arg8)")
+  @BuiltinBPFFunction("irq_domain_set_info($arg1, $arg2, $arg3, (const struct irq_chip *)$arg4, $arg5, $arg6, $arg7, (const u8 *)$arg8)")
   public static void irq_domain_set_info(Ptr<irq_domain> domain, @Unsigned int virq,
       @Unsigned @OriginalName("irq_hw_number_t") long hwirq, Ptr<irq_chip> chip, Ptr<?> chip_data,
       @OriginalName("irq_flow_handler_t") Ptr<?> handler, Ptr<?> handler_data,
@@ -1805,7 +1806,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_domain_set_name($arg1, (const struct irq_domain_info*)$arg2)")
+  @BuiltinBPFFunction("irq_domain_set_name($arg1, (const struct irq_domain_info *)$arg2)")
   public static int irq_domain_set_name(Ptr<irq_domain> domain, Ptr<irq_domain_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1839,7 +1840,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_domain_xlate_onecell($arg1, $arg2, (const unsigned int*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("irq_domain_xlate_onecell($arg1, $arg2, (const unsigned int *)$arg3, $arg4, $arg5, $arg6)")
   public static int irq_domain_xlate_onecell(Ptr<irq_domain> d, Ptr<device_node> ctrlr,
       Ptr<java.lang. @Unsigned Integer> intspec, @Unsigned int intsize,
       Ptr<java.lang. @Unsigned Long> out_hwirq, Ptr<java.lang. @Unsigned Integer> out_type) {
@@ -1847,7 +1848,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_domain_xlate_onetwocell($arg1, $arg2, (const unsigned int*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("irq_domain_xlate_onetwocell($arg1, $arg2, (const unsigned int *)$arg3, $arg4, $arg5, $arg6)")
   public static int irq_domain_xlate_onetwocell(Ptr<irq_domain> d, Ptr<device_node> ctrlr,
       Ptr<java.lang. @Unsigned Integer> intspec, @Unsigned int intsize,
       Ptr<java.lang. @Unsigned Long> out_hwirq, Ptr<java.lang. @Unsigned Integer> out_type) {
@@ -1855,7 +1856,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_domain_xlate_twocell($arg1, $arg2, (const unsigned int*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("irq_domain_xlate_twocell($arg1, $arg2, (const unsigned int *)$arg3, $arg4, $arg5, $arg6)")
   public static int irq_domain_xlate_twocell(Ptr<irq_domain> d, Ptr<device_node> ctrlr,
       Ptr<java.lang. @Unsigned Integer> intspec, @Unsigned int intsize,
       Ptr<java.lang. @Unsigned @OriginalName("irq_hw_number_t") Long> out_hwirq,
@@ -1864,7 +1865,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_domain_xlate_twothreecell($arg1, $arg2, (const unsigned int*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("irq_domain_xlate_twothreecell($arg1, $arg2, (const unsigned int *)$arg3, $arg4, $arg5, $arg6)")
   public static int irq_domain_xlate_twothreecell(Ptr<irq_domain> d, Ptr<device_node> ctrlr,
       Ptr<java.lang. @Unsigned Integer> intspec, @Unsigned int intsize,
       Ptr<java.lang. @Unsigned @OriginalName("irq_hw_number_t") Long> out_hwirq,
@@ -1941,7 +1942,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_force_affinity($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("irq_force_affinity($arg1, (const struct cpumask *)$arg2)")
   public static int irq_force_affinity(@Unsigned int irq, Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2137,7 +2138,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_init_generic_chip($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("irq_init_generic_chip($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static void irq_init_generic_chip(Ptr<irq_chip_generic> gc, String name, int num_ct,
       @Unsigned int irq_base, Ptr<?> reg_base, @OriginalName("irq_flow_handler_t") Ptr<?> handler) {
     throw new MethodIsBPFRelatedFunction();
@@ -2181,14 +2182,14 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_matrix_alloc($arg1, (const struct cpumask*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("irq_matrix_alloc($arg1, (const struct cpumask *)$arg2, $arg3, $arg4)")
   public static int irq_matrix_alloc(Ptr<irq_matrix> m, Ptr<cpumask> msk, boolean reserved,
       Ptr<java.lang. @Unsigned Integer> mapped_cpu) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_matrix_alloc_managed($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("irq_matrix_alloc_managed($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int irq_matrix_alloc_managed(Ptr<irq_matrix> m, Ptr<cpumask> msk,
       Ptr<java.lang. @Unsigned Integer> mapped_cpu) {
     throw new MethodIsBPFRelatedFunction();
@@ -2239,7 +2240,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_matrix_remove_managed($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("irq_matrix_remove_managed($arg1, (const struct cpumask *)$arg2)")
   public static void irq_matrix_remove_managed(Ptr<irq_matrix> m, Ptr<cpumask> msk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2257,7 +2258,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_matrix_reserve_managed($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("irq_matrix_reserve_managed($arg1, (const struct cpumask *)$arg2)")
   public static int irq_matrix_reserve_managed(Ptr<irq_matrix> m, Ptr<cpumask> msk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2497,26 +2498,26 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_safe_dev_in_sleep_domain($arg1, (const struct generic_pm_domain*)$arg2)")
+  @BuiltinBPFFunction("irq_safe_dev_in_sleep_domain($arg1, (const struct generic_pm_domain *)$arg2)")
   public static boolean irq_safe_dev_in_sleep_domain(Ptr<device> dev,
       Ptr<generic_pm_domain> genpd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_set_affinity($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("irq_set_affinity($arg1, (const struct cpumask *)$arg2)")
   public static int irq_set_affinity(@Unsigned int irq, Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_set_affinity_deactivated($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("irq_set_affinity_deactivated($arg1, (const struct cpumask *)$arg2)")
   public static boolean irq_set_affinity_deactivated(Ptr<irq_data> data, Ptr<cpumask> mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_set_affinity_locked($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("irq_set_affinity_locked($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static int irq_set_affinity_locked(Ptr<irq_data> data, Ptr<cpumask> mask, boolean force) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2535,13 +2536,13 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_set_chip($arg1, (const struct irq_chip*)$arg2)")
+  @BuiltinBPFFunction("irq_set_chip($arg1, (const struct irq_chip *)$arg2)")
   public static int irq_set_chip(@Unsigned int irq, Ptr<irq_chip> chip) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_set_chip_and_handler_name($arg1, (const struct irq_chip*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("irq_set_chip_and_handler_name($arg1, (const struct irq_chip *)$arg2, $arg3, (const u8 *)$arg4)")
   public static void irq_set_chip_and_handler_name(@Unsigned int irq, Ptr<irq_chip> chip,
       @OriginalName("irq_flow_handler_t") Ptr<?> handle, String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -2615,7 +2616,7 @@ public final class IrqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("irq_set_percpu_devid_partition($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("irq_set_percpu_devid_partition($arg1, (const struct cpumask *)$arg2)")
   public static int irq_set_percpu_devid_partition(@Unsigned int irq, Ptr<cpumask> affinity) {
     throw new MethodIsBPFRelatedFunction();
   }

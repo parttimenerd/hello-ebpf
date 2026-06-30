@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class EddDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edd_dev_is_type($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("edd_dev_is_type($arg1, (const u8 *)$arg2)")
   public static int edd_dev_is_type(Ptr<edd_device> edev, String type) {
     throw new MethodIsBPFRelatedFunction();
   }

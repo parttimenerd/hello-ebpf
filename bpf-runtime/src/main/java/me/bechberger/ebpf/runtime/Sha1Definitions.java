@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,35 +1097,35 @@ public final class Sha1Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha1_blocks_avx($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sha1_blocks_avx($arg1, (const u8 *)$arg2, $arg3)")
   public static void sha1_blocks_avx(Ptr<sha1_block_state> state, Ptr<java.lang.Character> data,
       @Unsigned long nblocks) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha1_blocks_avx2($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sha1_blocks_avx2($arg1, (const u8 *)$arg2, $arg3)")
   public static void sha1_blocks_avx2(Ptr<sha1_block_state> state, Ptr<java.lang.Character> data,
       @Unsigned long nblocks) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha1_blocks_generic($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sha1_blocks_generic($arg1, (const u8 *)$arg2, $arg3)")
   public static void sha1_blocks_generic(Ptr<sha1_block_state> state, Ptr<java.lang.Character> data,
       @Unsigned long nblocks) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha1_blocks_ni($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sha1_blocks_ni($arg1, (const u8 *)$arg2, $arg3)")
   public static void sha1_blocks_ni(Ptr<sha1_block_state> state, Ptr<java.lang.Character> data,
       @Unsigned long nblocks) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha1_blocks_ssse3($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sha1_blocks_ssse3($arg1, (const u8 *)$arg2, $arg3)")
   public static void sha1_blocks_ssse3(Ptr<sha1_block_state> state, Ptr<java.lang.Character> data,
       @Unsigned long nblocks) {
     throw new MethodIsBPFRelatedFunction();
@@ -1167,7 +1168,7 @@ public final class Sha1Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha1_transform($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sha1_transform($arg1, (const u8 *)$arg2, $arg3)")
   public static void sha1_transform(Ptr<java.lang. @Unsigned Integer> digest, String data,
       Ptr<java.lang. @Unsigned Integer> array) {
     throw new MethodIsBPFRelatedFunction();
@@ -1192,7 +1193,7 @@ public final class Sha1Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sha1_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("sha1_update($arg1, (const u8 *)$arg2, $arg3)")
   public static void sha1_update(Ptr<sha1_ctx> ctx, Ptr<java.lang.Character> data,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();

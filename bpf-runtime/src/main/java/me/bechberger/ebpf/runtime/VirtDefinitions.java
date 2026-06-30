@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1215,7 +1216,7 @@ public final class VirtDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("virt_to_scatterlist((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("virt_to_scatterlist((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static int virt_to_scatterlist(Ptr<?> addr, int size, Ptr<scatterlist> sg, int sg_size) {
     throw new MethodIsBPFRelatedFunction();
   }

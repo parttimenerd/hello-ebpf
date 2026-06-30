@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class FullDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("full_name_hash((const void*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("full_name_hash((const void *)$arg1, (const u8 *)$arg2, $arg3)")
   public static @Unsigned int full_name_hash(Ptr<?> salt, String name, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1142,7 +1143,7 @@ public final class FullDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("full_proxy_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("full_proxy_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long full_proxy_write(Ptr<file> filp, String buf,
       @Unsigned long size, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

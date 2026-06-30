@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1163,20 +1164,20 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_addr_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sock_addr_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int sock_addr_convert_ctx_access(bpf_access_type type, Ptr<bpf_insn> si,
       Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog, Ptr<java.lang. @Unsigned Integer> target_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)sock_addr_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)sock_addr_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> sock_addr_func_proto(bpf_func_id func_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_addr_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("sock_addr_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean sock_addr_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1189,7 +1190,7 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_alloc_file($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("sock_alloc_file($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<file> sock_alloc_file(Ptr<socket> sock, int flags, String dname) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1259,7 +1260,7 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_copy($arg1, (const struct sock*)$arg2)")
+  @BuiltinBPFFunction("sock_copy($arg1, (const struct sock *)$arg2)")
   public static void sock_copy(Ptr<sock> nsk, Ptr<sock> osk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1351,7 +1352,7 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_diag_check_cookie($arg1, (const unsigned int*)$arg2)")
+  @BuiltinBPFFunction("sock_diag_check_cookie($arg1, (const unsigned int *)$arg2)")
   public static int sock_diag_check_cookie(Ptr<sock> sk, Ptr<java.lang. @Unsigned Integer> cookie) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1395,13 +1396,13 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_diag_register((const struct sock_diag_handler*)$arg1)")
+  @BuiltinBPFFunction("sock_diag_register((const struct sock_diag_handler *)$arg1)")
   public static int sock_diag_register(Ptr<sock_diag_handler> hndl) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_diag_register_inet_compat((const struct sock_diag_inet_compat*)$arg1)")
+  @BuiltinBPFFunction("sock_diag_register_inet_compat((const struct sock_diag_inet_compat *)$arg1)")
   public static void sock_diag_register_inet_compat(Ptr<sock_diag_inet_compat> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1413,13 +1414,13 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_diag_unregister((const struct sock_diag_handler*)$arg1)")
+  @BuiltinBPFFunction("sock_diag_unregister((const struct sock_diag_handler *)$arg1)")
   public static void sock_diag_unregister(Ptr<sock_diag_handler> hndl) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_diag_unregister_inet_compat((const struct sock_diag_inet_compat*)$arg1)")
+  @BuiltinBPFFunction("sock_diag_unregister_inet_compat((const struct sock_diag_inet_compat *)$arg1)")
   public static void sock_diag_unregister_inet_compat(Ptr<sock_diag_inet_compat> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1456,14 +1457,14 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)sock_filter_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)sock_filter_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> sock_filter_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_filter_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("sock_filter_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean sock_filter_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1569,7 +1570,7 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_hash_mem_usage((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("sock_hash_mem_usage((const struct bpf_map *)$arg1)")
   public static @Unsigned long sock_hash_mem_usage(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1689,7 +1690,7 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_kmemdup($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("sock_kmemdup($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static Ptr<?> sock_kmemdup(Ptr<sock> sk, Ptr<?> src, int size,
       @Unsigned @OriginalName("gfp_t") int priority) {
     throw new MethodIsBPFRelatedFunction();
@@ -1714,7 +1715,7 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_map_bpf_prog_query((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("sock_map_bpf_prog_query((const union bpf_attr *)$arg1, $arg2)")
   public static int sock_map_bpf_prog_query(Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1750,7 +1751,7 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_map_get_from_fd((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("sock_map_get_from_fd((const union bpf_attr *)$arg1, $arg2)")
   public static int sock_map_get_from_fd(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1787,7 +1788,7 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_map_link_create((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("sock_map_link_create((const union bpf_attr *)$arg1, $arg2)")
   public static int sock_map_link_create(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1805,7 +1806,7 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_map_link_fill_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("sock_map_link_fill_info((const struct bpf_link *)$arg1, $arg2)")
   public static int sock_map_link_fill_info(Ptr<bpf_link> link, Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1817,7 +1818,7 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_map_link_show_fdinfo((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("sock_map_link_show_fdinfo((const struct bpf_link *)$arg1, $arg2)")
   public static void sock_map_link_show_fdinfo(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1842,13 +1843,13 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_map_mem_usage((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("sock_map_mem_usage((const struct bpf_map *)$arg1)")
   public static @Unsigned long sock_map_mem_usage(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_map_prog_detach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("sock_map_prog_detach((const union bpf_attr *)$arg1, $arg2)")
   public static int sock_map_prog_detach(Ptr<bpf_attr> attr, bpf_prog_type ptype) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1906,7 +1907,7 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_map_sk_state_allowed((const struct sock*)$arg1)")
+  @BuiltinBPFFunction("sock_map_sk_state_allowed((const struct sock *)$arg1)")
   public static boolean sock_map_sk_state_allowed(Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2044,20 +2045,20 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_ops_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("sock_ops_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int sock_ops_convert_ctx_access(bpf_access_type type, Ptr<bpf_insn> si,
       Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog, Ptr<java.lang. @Unsigned Integer> target_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)sock_ops_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)sock_ops_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> sock_ops_func_proto(bpf_func_id func_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_ops_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("sock_ops_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean sock_ops_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -2121,7 +2122,7 @@ public final class SockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sock_register((const struct net_proto_family*)$arg1)")
+  @BuiltinBPFFunction("sock_register((const struct net_proto_family *)$arg1)")
   public static int sock_register(Ptr<net_proto_family> ops) {
     throw new MethodIsBPFRelatedFunction();
   }

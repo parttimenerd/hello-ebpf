@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,14 +1091,14 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class NullDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("null_crypt($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("null_crypt($arg1, $arg2, (const u8 *)$arg3)")
   public static void null_crypt(Ptr<crypto_tfm> tfm, Ptr<java.lang.Character> dst,
       Ptr<java.lang.Character> src) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("null_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("null_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int null_digest(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -1110,7 +1111,7 @@ public final class NullDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("null_hash_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("null_hash_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int null_hash_setkey(Ptr<crypto_shash> tfm, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1130,7 +1131,7 @@ public final class NullDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("null_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("null_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int null_setkey(Ptr<crypto_tfm> tfm, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1149,14 +1150,14 @@ public final class NullDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("null_skcipher_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("null_skcipher_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int null_skcipher_setkey(Ptr<crypto_skcipher> tfm, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("null_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("null_update($arg1, (const u8 *)$arg2, $arg3)")
   public static int null_update(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();

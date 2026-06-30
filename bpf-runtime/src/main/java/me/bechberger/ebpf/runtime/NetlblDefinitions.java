@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1104,7 +1105,7 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_af4list_audit_addr($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("netlbl_af4list_audit_addr($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void netlbl_af4list_audit_addr(Ptr<audit_buffer> audit_buf, int src, String dev,
       @Unsigned @OriginalName("__be32") int addr, @Unsigned @OriginalName("__be32") int mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1146,14 +1147,14 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_af6list_audit_addr($arg1, $arg2, (const u8*)$arg3, (const struct in6_addr*)$arg4, (const struct in6_addr*)$arg5)")
+  @BuiltinBPFFunction("netlbl_af6list_audit_addr($arg1, $arg2, (const u8 *)$arg3, (const struct in6_addr *)$arg4, (const struct in6_addr *)$arg5)")
   public static void netlbl_af6list_audit_addr(Ptr<audit_buffer> audit_buf, int src, String dev,
       Ptr<in6_addr> addr, Ptr<in6_addr> mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_af6list_remove((const struct in6_addr*)$arg1, (const struct in6_addr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("netlbl_af6list_remove((const struct in6_addr *)$arg1, (const struct in6_addr *)$arg2, $arg3)")
   public static Ptr<netlbl_af6list> netlbl_af6list_remove(Ptr<in6_addr> addr, Ptr<in6_addr> mask,
       Ptr<list_head> head) {
     throw new MethodIsBPFRelatedFunction();
@@ -1166,13 +1167,13 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_af6list_search((const struct in6_addr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netlbl_af6list_search((const struct in6_addr *)$arg1, $arg2)")
   public static Ptr<netlbl_af6list> netlbl_af6list_search(Ptr<in6_addr> addr, Ptr<list_head> head) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_af6list_search_exact((const struct in6_addr*)$arg1, (const struct in6_addr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("netlbl_af6list_search_exact((const struct in6_addr *)$arg1, (const struct in6_addr *)$arg2, $arg3)")
   public static Ptr<netlbl_af6list> netlbl_af6list_search_exact(Ptr<in6_addr> addr,
       Ptr<in6_addr> mask, Ptr<list_head> head) {
     throw new MethodIsBPFRelatedFunction();
@@ -1198,14 +1199,14 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_bitmap_walk((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("netlbl_bitmap_walk((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int netlbl_bitmap_walk(String bitmap, @Unsigned int bitmap_len,
       @Unsigned int offset, char state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_cache_add((const struct sk_buff*)$arg1, $arg2, (const struct netlbl_lsm_secattr*)$arg3)")
+  @BuiltinBPFFunction("netlbl_cache_add((const struct sk_buff *)$arg1, $arg2, (const struct netlbl_lsm_secattr *)$arg3)")
   public static int netlbl_cache_add(Ptr<sk_buff> skb, @Unsigned short family,
       Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1248,7 +1249,7 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct netlbl_calipso_ops*)netlbl_calipso_ops_register((const struct netlbl_calipso_ops*)$arg1))")
+  @BuiltinBPFFunction("((const struct netlbl_calipso_ops*)netlbl_calipso_ops_register((const struct netlbl_calipso_ops *)$arg1))")
   public static Ptr<netlbl_calipso_ops> netlbl_calipso_ops_register(Ptr<netlbl_calipso_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1318,7 +1319,7 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_cfg_calipso_map_add($arg1, (const u8*)$arg2, (const struct in6_addr*)$arg3, (const struct in6_addr*)$arg4, $arg5)")
+  @BuiltinBPFFunction("netlbl_cfg_calipso_map_add($arg1, (const u8 *)$arg2, (const struct in6_addr *)$arg3, (const struct in6_addr *)$arg4, $arg5)")
   public static int netlbl_cfg_calipso_map_add(@Unsigned int doi, String domain, Ptr<in6_addr> addr,
       Ptr<in6_addr> mask, Ptr<netlbl_audit> audit_info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1338,35 +1339,35 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_cfg_cipsov4_map_add($arg1, (const u8*)$arg2, (const struct in_addr*)$arg3, (const struct in_addr*)$arg4, $arg5)")
+  @BuiltinBPFFunction("netlbl_cfg_cipsov4_map_add($arg1, (const u8 *)$arg2, (const struct in_addr *)$arg3, (const struct in_addr *)$arg4, $arg5)")
   public static int netlbl_cfg_cipsov4_map_add(@Unsigned int doi, String domain, Ptr<in_addr> addr,
       Ptr<in_addr> mask, Ptr<netlbl_audit> audit_info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_cfg_map_del((const u8*)$arg1, $arg2, (const void*)$arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("netlbl_cfg_map_del((const u8 *)$arg1, $arg2, (const void *)$arg3, (const void *)$arg4, $arg5)")
   public static int netlbl_cfg_map_del(String domain, @Unsigned short family, Ptr<?> addr,
       Ptr<?> mask, Ptr<netlbl_audit> audit_info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_cfg_unlbl_map_add((const u8*)$arg1, $arg2, (const void*)$arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("netlbl_cfg_unlbl_map_add((const u8 *)$arg1, $arg2, (const void *)$arg3, (const void *)$arg4, $arg5)")
   public static int netlbl_cfg_unlbl_map_add(String domain, @Unsigned short family, Ptr<?> addr,
       Ptr<?> mask, Ptr<netlbl_audit> audit_info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_cfg_unlbl_static_add($arg1, (const u8*)$arg2, (const void*)$arg3, (const void*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("netlbl_cfg_unlbl_static_add($arg1, (const u8 *)$arg2, (const void *)$arg3, (const void *)$arg4, $arg5, $arg6, $arg7)")
   public static int netlbl_cfg_unlbl_static_add(Ptr<net> net, String dev_name, Ptr<?> addr,
       Ptr<?> mask, @Unsigned short family, @Unsigned int secid, Ptr<netlbl_audit> audit_info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_cfg_unlbl_static_del($arg1, (const u8*)$arg2, (const void*)$arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("netlbl_cfg_unlbl_static_del($arg1, (const u8 *)$arg2, (const void *)$arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int netlbl_cfg_unlbl_static_del(Ptr<net> net, String dev_name, Ptr<?> addr,
       Ptr<?> mask, @Unsigned short family, Ptr<netlbl_audit> audit_info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1427,7 +1428,7 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_conn_setattr($arg1, $arg2, (const struct netlbl_lsm_secattr*)$arg3)")
+  @BuiltinBPFFunction("netlbl_conn_setattr($arg1, $arg2, (const struct netlbl_lsm_secattr *)$arg3)")
   public static int netlbl_conn_setattr(Ptr<sock> sk, Ptr<sockaddr> addr,
       Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1460,27 +1461,27 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_domhsh_getentry((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netlbl_domhsh_getentry((const u8 *)$arg1, $arg2)")
   public static Ptr<netlbl_dom_map> netlbl_domhsh_getentry(String domain, @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_domhsh_getentry_af4((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netlbl_domhsh_getentry_af4((const u8 *)$arg1, $arg2)")
   public static Ptr<netlbl_dommap_def> netlbl_domhsh_getentry_af4(String domain,
       @Unsigned @OriginalName("__be32") int addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_domhsh_getentry_af6((const u8*)$arg1, (const struct in6_addr*)$arg2)")
+  @BuiltinBPFFunction("netlbl_domhsh_getentry_af6((const u8 *)$arg1, (const struct in6_addr *)$arg2)")
   public static Ptr<netlbl_dommap_def> netlbl_domhsh_getentry_af6(String domain,
       Ptr<in6_addr> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_domhsh_hash((const u8*)$arg1)")
+  @BuiltinBPFFunction("netlbl_domhsh_hash((const u8 *)$arg1)")
   public static @Unsigned int netlbl_domhsh_hash(String key) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1492,21 +1493,21 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_domhsh_remove((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("netlbl_domhsh_remove((const u8 *)$arg1, $arg2, $arg3)")
   public static int netlbl_domhsh_remove(String domain, @Unsigned short family,
       Ptr<netlbl_audit> audit_info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_domhsh_remove_af4((const u8*)$arg1, (const struct in_addr*)$arg2, (const struct in_addr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("netlbl_domhsh_remove_af4((const u8 *)$arg1, (const struct in_addr *)$arg2, (const struct in_addr *)$arg3, $arg4)")
   public static int netlbl_domhsh_remove_af4(String domain, Ptr<in_addr> addr, Ptr<in_addr> mask,
       Ptr<netlbl_audit> audit_info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_domhsh_remove_af6((const u8*)$arg1, (const struct in6_addr*)$arg2, (const struct in6_addr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("netlbl_domhsh_remove_af6((const u8 *)$arg1, (const struct in6_addr *)$arg2, (const struct in6_addr *)$arg3, $arg4)")
   public static int netlbl_domhsh_remove_af6(String domain, Ptr<in6_addr> addr, Ptr<in6_addr> mask,
       Ptr<netlbl_audit> audit_info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1527,20 +1528,20 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_domhsh_search((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netlbl_domhsh_search((const u8 *)$arg1, $arg2)")
   public static Ptr<netlbl_dom_map> netlbl_domhsh_search(String domain, @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_domhsh_search_def((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netlbl_domhsh_search_def((const u8 *)$arg1, $arg2)")
   public static Ptr<netlbl_dom_map> netlbl_domhsh_search_def(String domain,
       @Unsigned short family) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_domhsh_validate((const struct netlbl_dom_map*)$arg1)")
+  @BuiltinBPFFunction("netlbl_domhsh_validate((const struct netlbl_dom_map *)$arg1)")
   public static int netlbl_domhsh_validate(Ptr<netlbl_dom_map> entry) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1649,7 +1650,7 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_req_setattr($arg1, (const struct netlbl_lsm_secattr*)$arg2)")
+  @BuiltinBPFFunction("netlbl_req_setattr($arg1, (const struct netlbl_lsm_secattr *)$arg2)")
   public static int netlbl_req_setattr(Ptr<request_sock> req, Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1668,14 +1669,14 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_skbuff_getattr((const struct sk_buff*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("netlbl_skbuff_getattr((const struct sk_buff *)$arg1, $arg2, $arg3)")
   public static int netlbl_skbuff_getattr(Ptr<sk_buff> skb, @Unsigned short family,
       Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_skbuff_setattr($arg1, $arg2, (const struct netlbl_lsm_secattr*)$arg3)")
+  @BuiltinBPFFunction("netlbl_skbuff_setattr($arg1, $arg2, (const struct netlbl_lsm_secattr *)$arg3)")
   public static int netlbl_skbuff_setattr(Ptr<sk_buff> skb, @Unsigned short family,
       Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1694,7 +1695,7 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_sock_setattr($arg1, $arg2, (const struct netlbl_lsm_secattr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("netlbl_sock_setattr($arg1, $arg2, (const struct netlbl_lsm_secattr *)$arg3, $arg4)")
   public static int netlbl_sock_setattr(Ptr<sock> sk, @Unsigned short family,
       Ptr<netlbl_lsm_secattr> secattr, boolean sk_locked) {
     throw new MethodIsBPFRelatedFunction();
@@ -1732,7 +1733,7 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_unlabel_getattr((const struct sk_buff*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("netlbl_unlabel_getattr((const struct sk_buff *)$arg1, $arg2, $arg3)")
   public static int netlbl_unlabel_getattr(Ptr<sk_buff> skb, @Unsigned short family,
       Ptr<netlbl_lsm_secattr> secattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1769,7 +1770,7 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_unlabel_staticlist_gen($arg1, (const struct netlbl_unlhsh_iface*)$arg2, (const struct netlbl_unlhsh_addr4*)$arg3, (const struct netlbl_unlhsh_addr6*)$arg4, $arg5)")
+  @BuiltinBPFFunction("netlbl_unlabel_staticlist_gen($arg1, (const struct netlbl_unlhsh_iface *)$arg2, (const struct netlbl_unlhsh_addr4 *)$arg3, (const struct netlbl_unlhsh_addr6 *)$arg4, $arg5)")
   public static int netlbl_unlabel_staticlist_gen(@Unsigned int cmd, Ptr<netlbl_unlhsh_iface> iface,
       Ptr<netlbl_unlhsh_addr4> addr4, Ptr<netlbl_unlhsh_addr6> addr6, Ptr<?> arg) {
     throw new MethodIsBPFRelatedFunction();
@@ -1794,7 +1795,7 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_unlhsh_add($arg1, (const u8*)$arg2, (const void*)$arg3, (const void*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("netlbl_unlhsh_add($arg1, (const u8 *)$arg2, (const void *)$arg3, (const void *)$arg4, $arg5, $arg6, $arg7)")
   public static int netlbl_unlhsh_add(Ptr<net> net, String dev_name, Ptr<?> addr, Ptr<?> mask,
       @Unsigned int addr_len, @Unsigned int secid, Ptr<netlbl_audit> audit_info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1814,7 +1815,7 @@ public final class NetlblDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netlbl_unlhsh_remove($arg1, (const u8*)$arg2, (const void*)$arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("netlbl_unlhsh_remove($arg1, (const u8 *)$arg2, (const void *)$arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int netlbl_unlhsh_remove(Ptr<net> net, String dev_name, Ptr<?> addr, Ptr<?> mask,
       @Unsigned int addr_len, Ptr<netlbl_audit> audit_info) {
     throw new MethodIsBPFRelatedFunction();

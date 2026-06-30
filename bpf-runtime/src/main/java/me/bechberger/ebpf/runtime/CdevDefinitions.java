@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1133,7 +1134,7 @@ public final class CdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cdev_init($arg1, (const struct file_operations*)$arg2)")
+  @BuiltinBPFFunction("cdev_init($arg1, (const struct file_operations *)$arg2)")
   public static void cdev_init(Ptr<cdev> cdev, Ptr<file_operations> fops) {
     throw new MethodIsBPFRelatedFunction();
   }

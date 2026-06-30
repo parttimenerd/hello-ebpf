@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class PolicyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("policy_hash_bysel($arg1, (const struct xfrm_selector*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("policy_hash_bysel($arg1, (const struct xfrm_selector *)$arg2, $arg3, $arg4)")
   public static Ptr<hlist_head> policy_hash_bysel(Ptr<net> net, Ptr<xfrm_selector> sel,
       @Unsigned short family, int dir) {
     throw new MethodIsBPFRelatedFunction();
@@ -1148,14 +1149,14 @@ public final class PolicyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("policy_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("policy_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long policy_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("policy_update($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, (const struct cred*)$arg6)")
+  @BuiltinBPFFunction("policy_update($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, (const struct cred *)$arg6)")
   public static @OriginalName("ssize_t") long policy_update(@Unsigned int mask, String buf,
       @Unsigned long size, Ptr<java.lang. @OriginalName("loff_t") Long> pos, Ptr<aa_ns> ns,
       Ptr<cred> ocred) {

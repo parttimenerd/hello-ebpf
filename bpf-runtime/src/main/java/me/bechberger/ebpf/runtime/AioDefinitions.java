@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,7 +1109,7 @@ public final class AioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aio_fsync($arg1, (const struct iocb*)$arg2, $arg3)")
+  @BuiltinBPFFunction("aio_fsync($arg1, (const struct iocb *)$arg2, $arg3)")
   public static int aio_fsync(Ptr<fsync_iocb> req, Ptr<iocb> iocb, boolean datasync) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1133,7 +1134,7 @@ public final class AioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aio_poll($arg1, (const struct iocb*)$arg2)")
+  @BuiltinBPFFunction("aio_poll($arg1, (const struct iocb *)$arg2)")
   public static int aio_poll(Ptr<aio_kiocb> aiocb, Ptr<iocb> iocb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1171,13 +1172,13 @@ public final class AioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aio_prep_rw($arg1, (const struct iocb*)$arg2, $arg3)")
+  @BuiltinBPFFunction("aio_prep_rw($arg1, (const struct iocb *)$arg2, $arg3)")
   public static int aio_prep_rw(Ptr<kiocb> req, Ptr<iocb> iocb, int rw_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aio_read($arg1, (const struct iocb*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("aio_read($arg1, (const struct iocb *)$arg2, $arg3, $arg4)")
   public static int aio_read(Ptr<kiocb> req, Ptr<iocb> iocb, boolean vectored, boolean compat) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1213,7 +1214,7 @@ public final class AioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("aio_write($arg1, (const struct iocb*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("aio_write($arg1, (const struct iocb *)$arg2, $arg3, $arg4)")
   public static int aio_write(Ptr<kiocb> req, Ptr<iocb> iocb, boolean vectored, boolean compat) {
     throw new MethodIsBPFRelatedFunction();
   }

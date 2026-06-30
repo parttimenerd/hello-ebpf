@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DebugfsDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__debugfs_create_file((const u8*)$arg1, $arg2, $arg3, $arg4, (const void*)$arg5, (const struct file_operations*)$arg6, (const void*)$arg7)")
+  @BuiltinBPFFunction("__debugfs_create_file((const u8 *)$arg1, $arg2, $arg3, $arg4, (const void *)$arg5, (const struct file_operations *)$arg6, (const void *)$arg7)")
   public static Ptr<dentry> __debugfs_create_file(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<dentry> parent, Ptr<?> data, Ptr<?> aux,
       Ptr<file_operations> proxy_fops, Ptr<?> real_fops) {
@@ -1129,14 +1130,14 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_attr_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_attr_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long debugfs_attr_write(Ptr<file> file, String buf,
       @Unsigned long len, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_attr_write_signed($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_attr_write_signed($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long debugfs_attr_write_signed(Ptr<file> file, String buf,
       @Unsigned long len, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1149,28 +1150,28 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_change_name($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("debugfs_change_name($arg1, (const u8 *)$arg2, $arg3_)")
   public static int debugfs_change_name(Ptr<dentry> dentry, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_atomic_t((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_atomic_t((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_atomic_t(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<dentry> parent, Ptr<atomic_t> value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_automount((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_automount((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<dentry> debugfs_create_automount(String name, Ptr<dentry> parent,
       @OriginalName("debugfs_automount_t") Ptr<?> f, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_blob((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_blob((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<dentry> debugfs_create_blob(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<dentry> parent,
       Ptr<debugfs_blob_wrapper> blob) {
@@ -1178,27 +1179,27 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_bool((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_bool((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_bool(String name, @Unsigned @OriginalName("umode_t") short mode,
       Ptr<dentry> parent, Ptr<java.lang. @OriginalName("bool") Boolean> value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_devm_seqfile($arg1, (const u8*)$arg2, $arg3, (int (*)(struct seq_file*, void*))$arg4)")
+  @BuiltinBPFFunction("debugfs_create_devm_seqfile($arg1, (const u8 *)$arg2, $arg3, (int (*)(struct seq_file*, void*))$arg4)")
   public static void debugfs_create_devm_seqfile(Ptr<device> dev, String name, Ptr<dentry> parent,
       Ptr<?> read_fn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_dir((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("debugfs_create_dir((const u8 *)$arg1, $arg2)")
   public static Ptr<dentry> debugfs_create_dir(String name, Ptr<dentry> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_file_full((const u8*)$arg1, $arg2, $arg3, $arg4, (const void*)$arg5, (const struct file_operations*)$arg6)")
+  @BuiltinBPFFunction("debugfs_create_file_full((const u8 *)$arg1, $arg2, $arg3, $arg4, (const void *)$arg5, (const struct file_operations *)$arg6)")
   public static Ptr<dentry> debugfs_create_file_full(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<dentry> parent, Ptr<?> data, Ptr<?> aux,
       Ptr<file_operations> fops) {
@@ -1206,7 +1207,7 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_file_short((const u8*)$arg1, $arg2, $arg3, $arg4, (const void*)$arg5, (const struct debugfs_short_fops*)$arg6)")
+  @BuiltinBPFFunction("debugfs_create_file_short((const u8 *)$arg1, $arg2, $arg3, $arg4, (const void *)$arg5, (const struct debugfs_short_fops *)$arg6)")
   public static Ptr<dentry> debugfs_create_file_short(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<dentry> parent, Ptr<?> data, Ptr<?> aux,
       Ptr<debugfs_short_fops> fops) {
@@ -1214,7 +1215,7 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_file_size((const u8*)$arg1, $arg2, $arg3, $arg4, (const struct file_operations*)$arg5, $arg6)")
+  @BuiltinBPFFunction("debugfs_create_file_size((const u8 *)$arg1, $arg2, $arg3, $arg4, (const struct file_operations *)$arg5, $arg6)")
   public static void debugfs_create_file_size(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<dentry> parent, Ptr<?> data,
       Ptr<file_operations> fops, @OriginalName("loff_t") long file_size) {
@@ -1222,7 +1223,7 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_file_unsafe((const u8*)$arg1, $arg2, $arg3, $arg4, (const struct file_operations*)$arg5)")
+  @BuiltinBPFFunction("debugfs_create_file_unsafe((const u8 *)$arg1, $arg2, $arg3, $arg4, (const struct file_operations *)$arg5)")
   public static Ptr<dentry> debugfs_create_file_unsafe(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<dentry> parent, Ptr<?> data,
       Ptr<file_operations> fops) {
@@ -1230,7 +1231,7 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_regset32((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_regset32((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_regset32(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<dentry> parent,
       Ptr<debugfs_regset32> regset) {
@@ -1238,7 +1239,7 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_size_t((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_size_t((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_size_t(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<dentry> parent,
       Ptr<java.lang. @Unsigned Long> value) {
@@ -1246,34 +1247,34 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_str((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_str((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_str(String name, @Unsigned @OriginalName("umode_t") short mode,
       Ptr<dentry> parent, Ptr<String> value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_symlink((const u8*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("debugfs_create_symlink((const u8 *)$arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<dentry> debugfs_create_symlink(String name, Ptr<dentry> parent, String target) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_u16((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_u16((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_u16(String name, @Unsigned @OriginalName("umode_t") short mode,
       Ptr<dentry> parent, Ptr<java.lang. @Unsigned Short> value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_u32((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_u32((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_u32(String name, @Unsigned @OriginalName("umode_t") short mode,
       Ptr<dentry> parent, Ptr<java.lang. @Unsigned Integer> value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_u32_array((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_u32_array((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_u32_array(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<dentry> parent,
       Ptr<debugfs_u32_array> array) {
@@ -1281,21 +1282,21 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_u64((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_u64((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_u64(String name, @Unsigned @OriginalName("umode_t") short mode,
       Ptr<dentry> parent, Ptr<java.lang. @Unsigned Long> value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_u8((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_u8((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_u8(String name, @Unsigned @OriginalName("umode_t") short mode,
       Ptr<dentry> parent, Ptr<java.lang.Character> value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_ulong((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_ulong((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_ulong(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<dentry> parent,
       Ptr<java.lang. @Unsigned Long> value) {
@@ -1303,28 +1304,28 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_x16((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_x16((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_x16(String name, @Unsigned @OriginalName("umode_t") short mode,
       Ptr<dentry> parent, Ptr<java.lang. @Unsigned Short> value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_x32((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_x32((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_x32(String name, @Unsigned @OriginalName("umode_t") short mode,
       Ptr<dentry> parent, Ptr<java.lang. @Unsigned Integer> value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_x64((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_x64((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_x64(String name, @Unsigned @OriginalName("umode_t") short mode,
       Ptr<dentry> parent, Ptr<java.lang. @Unsigned Long> value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_create_x8((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_create_x8((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static void debugfs_create_x8(String name, @Unsigned @OriginalName("umode_t") short mode,
       Ptr<dentry> parent, Ptr<java.lang.Character> value) {
     throw new MethodIsBPFRelatedFunction();
@@ -1374,7 +1375,7 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_get_aux((const struct file*)$arg1)")
+  @BuiltinBPFFunction("debugfs_get_aux((const struct file *)$arg1)")
   public static Ptr<?> debugfs_get_aux(Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1435,13 +1436,13 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_lookup((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("debugfs_lookup((const u8 *)$arg1, $arg2)")
   public static Ptr<dentry> debugfs_lookup(String name, Ptr<dentry> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_lookup_and_remove((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("debugfs_lookup_and_remove((const u8 *)$arg1, $arg2)")
   public static void debugfs_lookup_and_remove(String name, Ptr<dentry> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1453,7 +1454,7 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_print_regs32($arg1, (const struct debugfs_reg32*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("debugfs_print_regs32($arg1, (const struct debugfs_reg32 *)$arg2, $arg3, $arg4, $arg5)")
   public static void debugfs_print_regs32(Ptr<seq_file> s, Ptr<debugfs_reg32> regs, int nregs,
       Ptr<?> base, String prefix) {
     throw new MethodIsBPFRelatedFunction();
@@ -1600,14 +1601,14 @@ public final class DebugfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_write_file_bool($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_write_file_bool($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long debugfs_write_file_bool(Ptr<file> file,
       String user_buf, @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("debugfs_write_file_str($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("debugfs_write_file_str($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long debugfs_write_file_str(Ptr<file> file,
       String user_buf, @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

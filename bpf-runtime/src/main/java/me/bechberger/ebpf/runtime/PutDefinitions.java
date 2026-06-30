@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1234,7 +1235,7 @@ public final class PutDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("put_chars($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("put_chars($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long put_chars(@Unsigned int vtermno,
       Ptr<java.lang.Character> buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1279,7 +1280,7 @@ public final class PutDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("put_compat_rusage((const struct rusage*)$arg1, $arg2)")
+  @BuiltinBPFFunction("put_compat_rusage((const struct rusage *)$arg1, $arg2)")
   public static int put_compat_rusage(Ptr<rusage> r, Ptr<compat_rusage> ru) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1303,7 +1304,7 @@ public final class PutDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("put_cred_many((const struct cred*)$arg1, $arg2)")
+  @BuiltinBPFFunction("put_cred_many((const struct cred *)$arg1, $arg2)")
   public static void put_cred_many(Ptr<cred> _cred, int nr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1369,7 +1370,7 @@ public final class PutDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("put_entry((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("put_entry((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static int put_entry(Ptr<?> buf, @Unsigned long bytes, @Unsigned long num,
       Ptr<policy_file> fp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1436,7 +1437,7 @@ public final class PutDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("put_itimerspec64((const struct itimerspec64*)$arg1, $arg2)")
+  @BuiltinBPFFunction("put_itimerspec64((const struct itimerspec64 *)$arg1, $arg2)")
   public static int put_itimerspec64(Ptr<itimerspec64> it, Ptr<__kernel_itimerspec> uit) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1538,19 +1539,19 @@ public final class PutDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("put_old_itimerspec32((const struct itimerspec64*)$arg1, $arg2)")
+  @BuiltinBPFFunction("put_old_itimerspec32((const struct itimerspec64 *)$arg1, $arg2)")
   public static int put_old_itimerspec32(Ptr<itimerspec64> its, Ptr<old_itimerspec32> uits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("put_old_timespec32((const struct timespec64*)$arg1, $arg2)")
+  @BuiltinBPFFunction("put_old_timespec32((const struct timespec64 *)$arg1, $arg2)")
   public static int put_old_timespec32(Ptr<timespec64> ts, Ptr<?> uts) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("put_old_timex32($arg1, (const struct __kernel_timex*)$arg2)")
+  @BuiltinBPFFunction("put_old_timex32($arg1, (const struct __kernel_timex *)$arg2)")
   public static int put_old_timex32(Ptr<old_timex32> utp, Ptr<__kernel_timex> txc) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1690,7 +1691,7 @@ public final class PutDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("put_sg_io_hdr((const struct sg_io_hdr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("put_sg_io_hdr((const struct sg_io_hdr *)$arg1, $arg2)")
   public static int put_sg_io_hdr(Ptr<sg_io_hdr> hdr, Ptr<?> argp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1726,7 +1727,7 @@ public final class PutDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("put_timespec64((const struct timespec64*)$arg1, $arg2)")
+  @BuiltinBPFFunction("put_timespec64((const struct timespec64 *)$arg1, $arg2)")
   public static int put_timespec64(Ptr<timespec64> ts, Ptr<__kernel_timespec> uts) {
     throw new MethodIsBPFRelatedFunction();
   }

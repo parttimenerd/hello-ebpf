@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class TlsDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("tls_alert_recv((const struct sock*)$arg1, (const struct msghdr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tls_alert_recv((const struct sock *)$arg1, (const struct msghdr *)$arg2, $arg3, $arg4)")
   public static void tls_alert_recv(Ptr<sock> sk, Ptr<msghdr> msg, Ptr<java.lang.Character> level,
       Ptr<java.lang.Character> description) {
     throw new MethodIsBPFRelatedFunction();
@@ -1103,34 +1104,34 @@ public final class TlsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tls_client_hello_anon((const struct tls_handshake_args*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tls_client_hello_anon((const struct tls_handshake_args *)$arg1, $arg2)")
   public static int tls_client_hello_anon(Ptr<tls_handshake_args> args,
       @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tls_client_hello_psk((const struct tls_handshake_args*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tls_client_hello_psk((const struct tls_handshake_args *)$arg1, $arg2)")
   public static int tls_client_hello_psk(Ptr<tls_handshake_args> args,
       @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tls_client_hello_x509((const struct tls_handshake_args*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tls_client_hello_x509((const struct tls_handshake_args *)$arg1, $arg2)")
   public static int tls_client_hello_x509(Ptr<tls_handshake_args> args,
       @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tls_desc_okay((const struct user_desc*)$arg1)")
+  @BuiltinBPFFunction("tls_desc_okay((const struct user_desc *)$arg1)")
   public static boolean tls_desc_okay(Ptr<user_desc> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tls_get_record_type((const struct sock*)$arg1, (const struct cmsghdr*)$arg2)")
+  @BuiltinBPFFunction("tls_get_record_type((const struct sock *)$arg1, (const struct cmsghdr *)$arg2)")
   public static char tls_get_record_type(Ptr<sock> sk, Ptr<cmsghdr> cmsg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1161,14 +1162,14 @@ public final class TlsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tls_server_hello_psk((const struct tls_handshake_args*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tls_server_hello_psk((const struct tls_handshake_args *)$arg1, $arg2)")
   public static int tls_server_hello_psk(Ptr<tls_handshake_args> args,
       @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tls_server_hello_x509((const struct tls_handshake_args*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tls_server_hello_x509((const struct tls_handshake_args *)$arg1, $arg2)")
   public static int tls_server_hello_x509(Ptr<tls_handshake_args> args,
       @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();

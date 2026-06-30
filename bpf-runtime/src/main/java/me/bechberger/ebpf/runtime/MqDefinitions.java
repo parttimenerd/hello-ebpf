@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1177,7 +1178,7 @@ public final class MqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("mq_permissions($arg1, (const struct ctl_table*)$arg2)")
+  @BuiltinBPFFunction("mq_permissions($arg1, (const struct ctl_table *)$arg2)")
   public static int mq_permissions(Ptr<ctl_table_header> head, Ptr<ctl_table> table) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1213,7 +1214,7 @@ public final class ConsoleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("console_prepend_message($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("console_prepend_message($arg1, (const u8 *)$arg2, $arg3_)")
   public static void console_prepend_message(Ptr<printk_message> pmsg, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
@@ -1263,7 +1264,7 @@ public final class ConsoleDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("console_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("console_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long console_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

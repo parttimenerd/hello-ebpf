@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class SisDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sis_init_one($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("sis_init_one($arg1, (const struct pci_device_id *)$arg2)")
   public static int sis_init_one(Ptr<pci_dev> pdev, Ptr<pci_device_id> ent) {
     throw new MethodIsBPFRelatedFunction();
   }

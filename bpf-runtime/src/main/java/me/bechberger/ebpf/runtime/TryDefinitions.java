@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1204,7 +1205,7 @@ public final class TryDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("try_match_pkt_pointers((const struct bpf_insn*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("try_match_pkt_pointers((const struct bpf_insn *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static boolean try_match_pkt_pointers(Ptr<bpf_insn> insn, Ptr<bpf_reg_state> dst_reg,
       Ptr<bpf_reg_state> src_reg, Ptr<bpf_verifier_state> this_branch,
       Ptr<bpf_verifier_state> other_branch) {
@@ -1274,7 +1275,7 @@ public final class TryDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("try_then_request_governor((const u8*)$arg1)")
+  @BuiltinBPFFunction("try_then_request_governor((const u8 *)$arg1)")
   public static Ptr<devfreq_governor> try_then_request_governor(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1307,7 +1308,7 @@ public final class TryDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("try_to_compact_pages($arg1, $arg2, $arg3, (const struct alloc_context*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("try_to_compact_pages($arg1, $arg2, $arg3, (const struct alloc_context *)$arg4, $arg5, $arg6)")
   public static compact_result try_to_compact_pages(@Unsigned @OriginalName("gfp_t") int gfp_mask,
       @Unsigned int order, @Unsigned int alloc_flags, Ptr<alloc_context> ac, compact_priority prio,
       Ptr<Ptr<page>> capture) {
@@ -1315,7 +1316,7 @@ public final class TryDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("try_to_force_load($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("try_to_force_load($arg1, (const u8 *)$arg2)")
   public static int try_to_force_load(Ptr<module> mod, String reason) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1427,7 +1428,7 @@ public final class TryDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("try_to_run_init_process((const u8*)$arg1)")
+  @BuiltinBPFFunction("try_to_run_init_process((const u8 *)$arg1)")
   public static int try_to_run_init_process(String init_filename) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1188,14 +1189,14 @@ public final class VcapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vcap_copy_from_client_actionfield($arg1, $arg2, (const struct vcap_client_actionfield*)$arg3)")
+  @BuiltinBPFFunction("vcap_copy_from_client_actionfield($arg1, $arg2, (const struct vcap_client_actionfield *)$arg3)")
   public static void vcap_copy_from_client_actionfield(Ptr<vcap_rule> rule,
       Ptr<vcap_client_actionfield> dst, Ptr<vcap_client_actionfield> src) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vcap_copy_from_client_keyfield($arg1, $arg2, (const struct vcap_client_keyfield*)$arg3)")
+  @BuiltinBPFFunction("vcap_copy_from_client_keyfield($arg1, $arg2, (const struct vcap_client_keyfield *)$arg3)")
   public static void vcap_copy_from_client_keyfield(Ptr<vcap_rule> rule,
       Ptr<vcap_client_keyfield> dst, Ptr<vcap_client_keyfield> src) {
     throw new MethodIsBPFRelatedFunction();
@@ -1264,7 +1265,7 @@ public final class VcapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vcap_debugfs_show_rule_actionfield($arg1, $arg2, $arg3, (const struct vcap_field*)$arg4, $arg5)")
+  @BuiltinBPFFunction("vcap_debugfs_show_rule_actionfield($arg1, $arg2, $arg3, (const struct vcap_field *)$arg4, $arg5)")
   public static void vcap_debugfs_show_rule_actionfield(Ptr<vcap_control> vctrl,
       Ptr<vcap_output_print> out, vcap_action_field action, Ptr<vcap_field> actionfield,
       Ptr<java.lang.Character> value) {
@@ -1272,7 +1273,7 @@ public final class VcapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vcap_debugfs_show_rule_keyfield($arg1, $arg2, $arg3, (const struct vcap_field*)$arg4, $arg5)")
+  @BuiltinBPFFunction("vcap_debugfs_show_rule_keyfield($arg1, $arg2, $arg3, (const struct vcap_field *)$arg4, $arg5)")
   public static void vcap_debugfs_show_rule_keyfield(Ptr<vcap_control> vctrl,
       Ptr<vcap_output_print> out, vcap_key_field key, Ptr<vcap_field> keyfield,
       Ptr<vcap_client_keyfield_data> data) {
@@ -1351,7 +1352,7 @@ public final class VcapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vcap_encode_field($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("vcap_encode_field($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static void vcap_encode_field(Ptr<java.lang. @Unsigned Integer> stream,
       Ptr<vcap_stream_iter> itr, int width, Ptr<java.lang.Character> value) {
     throw new MethodIsBPFRelatedFunction();
@@ -1370,7 +1371,7 @@ public final class VcapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vcap_encode_typegroups($arg1, $arg2, (const struct vcap_typegroup*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vcap_encode_typegroups($arg1, $arg2, (const struct vcap_typegroup *)$arg3, $arg4)")
   public static void vcap_encode_typegroups(Ptr<java.lang. @Unsigned Integer> stream, int sw_width,
       Ptr<vcap_typegroup> tg, boolean mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1448,7 +1449,7 @@ public final class VcapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vcap_iter_init($arg1, $arg2, (const struct vcap_typegroup*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vcap_iter_init($arg1, $arg2, (const struct vcap_typegroup *)$arg3, $arg4)")
   public static void vcap_iter_init(Ptr<vcap_stream_iter> itr, int sw_width, Ptr<vcap_typegroup> tg,
       @Unsigned int offset) {
     throw new MethodIsBPFRelatedFunction();
@@ -1461,7 +1462,7 @@ public final class VcapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vcap_iter_set($arg1, $arg2, (const struct vcap_typegroup*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vcap_iter_set($arg1, $arg2, (const struct vcap_typegroup *)$arg3, $arg4)")
   public static void vcap_iter_set(Ptr<vcap_stream_iter> itr, int sw_width, Ptr<vcap_typegroup> tg,
       @Unsigned int offset) {
     throw new MethodIsBPFRelatedFunction();
@@ -1824,7 +1825,7 @@ public final class VcapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vcap_verify_typegroups($arg1, $arg2, (const struct vcap_typegroup*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("vcap_verify_typegroups($arg1, $arg2, (const struct vcap_typegroup *)$arg3, $arg4, $arg5)")
   public static int vcap_verify_typegroups(Ptr<java.lang. @Unsigned Integer> stream, int sw_width,
       Ptr<vcap_typegroup> tgt, boolean mask, int sw_max) {
     throw new MethodIsBPFRelatedFunction();

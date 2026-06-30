@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1115,7 +1116,7 @@ public final class CpufreqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpufreq_add_device((const u8*)$arg1)")
+  @BuiltinBPFFunction("cpufreq_add_device((const u8 *)$arg1)")
   public static void cpufreq_add_device(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1502,7 +1503,7 @@ public final class CpufreqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpufreq_ready_for_eas((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("cpufreq_ready_for_eas((const struct cpumask *)$arg1)")
   public static boolean cpufreq_ready_for_eas(Ptr<cpumask> cpu_mask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1569,7 +1570,7 @@ public final class CpufreqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpufreq_show_cpus((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cpufreq_show_cpus((const struct cpumask *)$arg1, $arg2)")
   public static @OriginalName("ssize_t") long cpufreq_show_cpus(Ptr<cpumask> mask, String buf) {
     throw new MethodIsBPFRelatedFunction();
   }

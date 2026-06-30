@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class KallsymsDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("kallsyms_callback($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("kallsyms_callback($arg1, (const u8 *)$arg2, $arg3)")
   public static int kallsyms_callback(Ptr<?> data, String name, @Unsigned long addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1125,13 +1126,13 @@ public final class KallsymsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kallsyms_lookup_name((const u8*)$arg1)")
+  @BuiltinBPFFunction("kallsyms_lookup_name((const u8 *)$arg1)")
   public static @Unsigned long kallsyms_lookup_name(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kallsyms_lookup_names((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("kallsyms_lookup_names((const u8 *)$arg1, $arg2, $arg3)")
   public static int kallsyms_lookup_names(String name, Ptr<java.lang. @Unsigned Integer> start,
       Ptr<java.lang. @Unsigned Integer> end) {
     throw new MethodIsBPFRelatedFunction();
@@ -1145,7 +1146,7 @@ public final class KallsymsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kallsyms_on_each_match_symbol((int (*)(void*, long unsigned int))$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("kallsyms_on_each_match_symbol((int (*)(void*, long unsigned int))$arg1, (const u8 *)$arg2, $arg3)")
   public static int kallsyms_on_each_match_symbol(Ptr<?> fn, String name, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1163,7 +1164,7 @@ public final class KallsymsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kallsyms_show_value((const struct cred*)$arg1)")
+  @BuiltinBPFFunction("kallsyms_show_value((const struct cred *)$arg1)")
   public static boolean kallsyms_show_value(Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }

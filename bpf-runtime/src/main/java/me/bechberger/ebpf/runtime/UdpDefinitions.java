@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1178,7 +1179,7 @@ public final class UdpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("udp_ehashfn((const struct net*)$arg1, (const unsigned int)$arg2, (const short unsigned int)$arg3, (const unsigned int)$arg4, (const short unsigned int)$arg5)")
+  @BuiltinBPFFunction("udp_ehashfn((const struct net *)$arg1, (const unsigned int)$arg2, (const short unsigned int)$arg3, (const unsigned int)$arg4, (const short unsigned int)$arg5)")
   public static @Unsigned int udp_ehashfn(Ptr<net> net, @Unsigned @OriginalName("__be32") int laddr,
       @Unsigned short lport, @Unsigned @OriginalName("__be32") int faddr,
       @Unsigned @OriginalName("__be16") short fport) {
@@ -1479,7 +1480,7 @@ public final class UdpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("udp_table_init($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("udp_table_init($arg1, (const u8 *)$arg2)")
   public static void udp_table_init(Ptr<udp_table> table, String name) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class ArpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("arp_create($arg1, $arg2, $arg3, $arg4, $arg5, (const u8*)$arg6, (const u8*)$arg7, (const u8*)$arg8)")
+  @BuiltinBPFFunction("arp_create($arg1, $arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6, (const u8 *)$arg7, (const u8 *)$arg8)")
   public static Ptr<sk_buff> arp_create(int type, int ptype,
       @Unsigned @OriginalName("__be32") int dest_ip, Ptr<net_device> dev,
       @Unsigned @OriginalName("__be32") int src_ip, String dest_hw, String src_hw,
@@ -1123,7 +1124,7 @@ public final class ArpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("arp_hash((const void*)$arg1, (const struct net_device*)$arg2, $arg3)")
+  @BuiltinBPFFunction("arp_hash((const void *)$arg1, (const struct net_device *)$arg2, $arg3)")
   public static @Unsigned int arp_hash(Ptr<?> pkey, Ptr<net_device> dev,
       Ptr<java.lang. @Unsigned Integer> hash_rnd) {
     throw new MethodIsBPFRelatedFunction();
@@ -1162,13 +1163,13 @@ public final class ArpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("arp_is_multicast((const void*)$arg1)")
+  @BuiltinBPFFunction("arp_is_multicast((const void *)$arg1)")
   public static int arp_is_multicast(Ptr<?> pkey) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("arp_key_eq((const struct neighbour*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("arp_key_eq((const struct neighbour *)$arg1, (const void *)$arg2)")
   public static boolean arp_key_eq(Ptr<neighbour> neigh, Ptr<?> pkey) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1236,7 +1237,7 @@ public final class ArpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("arp_send($arg1, $arg2, $arg3, $arg4, $arg5, (const u8*)$arg6, (const u8*)$arg7, (const u8*)$arg8)")
+  @BuiltinBPFFunction("arp_send($arg1, $arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6, (const u8 *)$arg7, (const u8 *)$arg8)")
   public static void arp_send(int type, int ptype, @Unsigned @OriginalName("__be32") int dest_ip,
       Ptr<net_device> dev, @Unsigned @OriginalName("__be32") int src_ip, String dest_hw,
       String src_hw, String target_hw) {
@@ -1244,7 +1245,7 @@ public final class ArpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("arp_send_dst($arg1, $arg2, $arg3, $arg4, $arg5, (const u8*)$arg6, (const u8*)$arg7, (const u8*)$arg8, $arg9)")
+  @BuiltinBPFFunction("arp_send_dst($arg1, $arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6, (const u8 *)$arg7, (const u8 *)$arg8, $arg9)")
   public static void arp_send_dst(int type, int ptype,
       @Unsigned @OriginalName("__be32") int dest_ip, Ptr<net_device> dev,
       @Unsigned @OriginalName("__be32") int src_ip, String dest_hw, String src_hw, String target_hw,

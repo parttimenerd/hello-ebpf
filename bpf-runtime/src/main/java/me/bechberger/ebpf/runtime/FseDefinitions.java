@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1098,7 +1099,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_buildCTable_wksp($arg1, (const short int*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("FSE_buildCTable_wksp($arg1, (const short int *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned long FSE_buildCTable_wksp(
       Ptr<java.lang. @Unsigned @OriginalName("FSE_CTable") Integer> ct,
       Ptr<java.lang.Short> normalizedCounter, @Unsigned int maxSymbolValue, @Unsigned int tableLog,
@@ -1107,7 +1108,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_buildDTable_internal($arg1, (const short int*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("FSE_buildDTable_internal($arg1, (const short int *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned long FSE_buildDTable_internal(
       Ptr<java.lang. @Unsigned @OriginalName("FSE_DTable") Integer> dt,
       Ptr<java.lang.Short> normalizedCounter, @Unsigned int maxSymbolValue, @Unsigned int tableLog,
@@ -1116,7 +1117,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_buildDTable_wksp($arg1, (const short int*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("FSE_buildDTable_wksp($arg1, (const short int *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned long FSE_buildDTable_wksp(
       Ptr<java.lang. @Unsigned @OriginalName("FSE_DTable") Integer> dt,
       Ptr<java.lang.Short> normalizedCounter, @Unsigned int maxSymbolValue, @Unsigned int tableLog,
@@ -1131,7 +1132,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_compress_usingCTable($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5)")
+  @BuiltinBPFFunction("FSE_compress_usingCTable($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5)")
   public static @Unsigned long FSE_compress_usingCTable(Ptr<?> dst, @Unsigned long dstSize,
       Ptr<?> src, @Unsigned long srcSize,
       Ptr<java.lang. @Unsigned @OriginalName("FSE_CTable") Integer> ct) {
@@ -1139,7 +1140,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_compress_usingCTable_generic($arg1, $arg2, (const void*)$arg3, $arg4, (const unsigned int*)$arg5, (const unsigned int)$arg6)")
+  @BuiltinBPFFunction("FSE_compress_usingCTable_generic($arg1, $arg2, (const void *)$arg3, $arg4, (const unsigned int *)$arg5, (const unsigned int)$arg6)")
   public static @Unsigned long FSE_compress_usingCTable_generic(Ptr<?> dst, @Unsigned long dstSize,
       Ptr<?> src, @Unsigned long srcSize,
       Ptr<java.lang. @Unsigned @OriginalName("FSE_CTable") Integer> ct, @Unsigned int fast) {
@@ -1147,7 +1148,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_decompress_wksp_bmi2($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("FSE_decompress_wksp_bmi2($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static @Unsigned long FSE_decompress_wksp_bmi2(Ptr<?> dst, @Unsigned long dstCapacity,
       Ptr<?> cSrc, @Unsigned long cSrcSize, @Unsigned int maxLog, Ptr<?> workSpace,
       @Unsigned long wkspSize, int bmi2) {
@@ -1155,7 +1156,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_decompress_wksp_body_bmi2($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("FSE_decompress_wksp_body_bmi2($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static @Unsigned long FSE_decompress_wksp_body_bmi2(Ptr<?> dst, @Unsigned long dstCapacity,
       Ptr<?> cSrc, @Unsigned long cSrcSize, @Unsigned int maxLog, Ptr<?> workSpace,
       @Unsigned long wkspSize) {
@@ -1163,7 +1164,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_decompress_wksp_body_default($arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("FSE_decompress_wksp_body_default($arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static @Unsigned long FSE_decompress_wksp_body_default(Ptr<?> dst,
       @Unsigned long dstCapacity, Ptr<?> cSrc, @Unsigned long cSrcSize, @Unsigned int maxLog,
       Ptr<?> workSpace, @Unsigned long wkspSize) {
@@ -1183,7 +1184,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_normalizeCount($arg1, $arg2, (const unsigned int*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("FSE_normalizeCount($arg1, $arg2, (const unsigned int *)$arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned long FSE_normalizeCount(Ptr<java.lang.Short> normalizedCounter,
       @Unsigned int tableLog, Ptr<java.lang. @Unsigned Integer> count, @Unsigned long total,
       @Unsigned int maxSymbolValue, @Unsigned int useLowProbCount) {
@@ -1191,7 +1192,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_normalizeM2($arg1, $arg2, (const unsigned int*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("FSE_normalizeM2($arg1, $arg2, (const unsigned int *)$arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned long FSE_normalizeM2(Ptr<java.lang.Short> norm, @Unsigned int tableLog,
       Ptr<java.lang. @Unsigned Integer> count, @Unsigned long total, @Unsigned int maxSymbolValue,
       short lowProbCount) {
@@ -1213,7 +1214,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_readNCount($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("FSE_readNCount($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long FSE_readNCount(Ptr<java.lang.Short> normalizedCounter,
       Ptr<java.lang. @Unsigned Integer> maxSVPtr, Ptr<java.lang. @Unsigned Integer> tableLogPtr,
       Ptr<?> headerBuffer, @Unsigned long hbSize) {
@@ -1221,7 +1222,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_readNCount_bmi2($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("FSE_readNCount_bmi2($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static @Unsigned long FSE_readNCount_bmi2(Ptr<java.lang.Short> normalizedCounter,
       Ptr<java.lang. @Unsigned Integer> maxSVPtr, Ptr<java.lang. @Unsigned Integer> tableLogPtr,
       Ptr<?> headerBuffer, @Unsigned long hbSize, int bmi2) {
@@ -1229,7 +1230,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_readNCount_body_bmi2($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("FSE_readNCount_body_bmi2($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long FSE_readNCount_body_bmi2(Ptr<java.lang.Short> normalizedCounter,
       Ptr<java.lang. @Unsigned Integer> maxSVPtr, Ptr<java.lang. @Unsigned Integer> tableLogPtr,
       Ptr<?> headerBuffer, @Unsigned long hbSize) {
@@ -1237,7 +1238,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_readNCount_body_default($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("FSE_readNCount_body_default($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static @Unsigned long FSE_readNCount_body_default(Ptr<java.lang.Short> normalizedCounter,
       Ptr<java.lang. @Unsigned Integer> maxSVPtr, Ptr<java.lang. @Unsigned Integer> tableLogPtr,
       Ptr<?> headerBuffer, @Unsigned long hbSize) {
@@ -1251,7 +1252,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_writeNCount($arg1, $arg2, (const short int*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("FSE_writeNCount($arg1, $arg2, (const short int *)$arg3, $arg4, $arg5)")
   public static @Unsigned long FSE_writeNCount(Ptr<?> buffer, @Unsigned long bufferSize,
       Ptr<java.lang.Short> normalizedCounter, @Unsigned int maxSymbolValue,
       @Unsigned int tableLog) {
@@ -1259,7 +1260,7 @@ public final class FseDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("FSE_writeNCount_generic($arg1, $arg2, (const short int*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("FSE_writeNCount_generic($arg1, $arg2, (const short int *)$arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned long FSE_writeNCount_generic(Ptr<?> header,
       @Unsigned long headerBufferSize, Ptr<java.lang.Short> normalizedCounter,
       @Unsigned int maxSymbolValue, @Unsigned int tableLog, @Unsigned int writeIsSafe) {

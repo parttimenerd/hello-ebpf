@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1116,7 +1117,7 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__tty_insert_flip_string_flags($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__tty_insert_flip_string_flags($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static @Unsigned long __tty_insert_flip_string_flags(Ptr<tty_port> port,
       Ptr<java.lang.Character> chars, Ptr<java.lang.Character> flags, boolean mutable_flags,
       @Unsigned long size) {
@@ -1149,7 +1150,7 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_audit_add_data((const struct tty_struct*)$arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tty_audit_add_data((const struct tty_struct *)$arg1, (const void *)$arg2, $arg3)")
   public static void tty_audit_add_data(Ptr<tty_struct> tty, Ptr<?> data, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1167,7 +1168,7 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_audit_log((const u8*)$arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("tty_audit_log((const u8 *)$arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void tty_audit_log(String description, @Unsigned @OriginalName("dev_t") int dev,
       Ptr<java.lang.Character> data, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1180,7 +1181,7 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_audit_tiocsti((const struct tty_struct*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tty_audit_tiocsti((const struct tty_struct *)$arg1, $arg2)")
   public static void tty_audit_tiocsti(Ptr<tty_struct> tty, char ch) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1301,7 +1302,7 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_copy((const struct tty_struct*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tty_copy((const struct tty_struct *)$arg1, $arg2, $arg3, $arg4)")
   public static void tty_copy(Ptr<tty_struct> tty, Ptr<?> to, @Unsigned long tail,
       @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1314,7 +1315,7 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_dev_name_to_number((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tty_dev_name_to_number((const u8 *)$arg1, $arg2)")
   public static int tty_dev_name_to_number(String name,
       Ptr<java.lang. @Unsigned @OriginalName("dev_t") Integer> number) {
     throw new MethodIsBPFRelatedFunction();
@@ -1327,7 +1328,7 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_devnode((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tty_devnode((const struct device *)$arg1, $arg2)")
   public static String tty_devnode(Ptr<device> dev,
       Ptr<java.lang. @Unsigned @OriginalName("umode_t") Short> mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1358,7 +1359,7 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)tty_driver_name((const struct tty_struct*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)tty_driver_name((const struct tty_struct *)$arg1))")
   public static String tty_driver_name(Ptr<tty_struct> tty) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1455,7 +1456,7 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_insert_flip_string_and_push_buffer($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tty_insert_flip_string_and_push_buffer($arg1, (const u8 *)$arg2, $arg3)")
   public static int tty_insert_flip_string_and_push_buffer(Ptr<tty_port> port,
       Ptr<java.lang.Character> chars, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1559,7 +1560,7 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_ldisc_receive_buf($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("tty_ldisc_receive_buf($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static @Unsigned long tty_ldisc_receive_buf(Ptr<tty_ldisc> ld, Ptr<java.lang.Character> p,
       Ptr<java.lang.Character> f, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1659,7 +1660,7 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)tty_name((const struct tty_struct*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)tty_name((const struct tty_struct *)$arg1))")
   public static String tty_name(Ptr<tty_struct> tty) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1727,14 +1728,14 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_port_default_lookahead_buf($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("tty_port_default_lookahead_buf($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void tty_port_default_lookahead_buf(Ptr<tty_port> port, Ptr<java.lang.Character> p,
       Ptr<java.lang.Character> f, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_port_default_receive_buf($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("tty_port_default_receive_buf($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static @Unsigned long tty_port_default_receive_buf(Ptr<tty_port> port,
       Ptr<java.lang.Character> p, Ptr<java.lang.Character> f, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1992,14 +1993,14 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_termios_baud_rate((const struct ktermios*)$arg1)")
+  @BuiltinBPFFunction("tty_termios_baud_rate((const struct ktermios *)$arg1)")
   public static @Unsigned @OriginalName("speed_t") int tty_termios_baud_rate(
       Ptr<ktermios> termios) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_termios_copy_hw($arg1, (const struct ktermios*)$arg2)")
+  @BuiltinBPFFunction("tty_termios_copy_hw($arg1, (const struct ktermios *)$arg2)")
   public static void tty_termios_copy_hw(Ptr<ktermios> _new, Ptr<ktermios> old) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2012,13 +2013,13 @@ public final class TtyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_termios_hw_change((const struct ktermios*)$arg1, (const struct ktermios*)$arg2)")
+  @BuiltinBPFFunction("tty_termios_hw_change((const struct ktermios *)$arg1, (const struct ktermios *)$arg2)")
   public static boolean tty_termios_hw_change(Ptr<ktermios> a, Ptr<ktermios> b) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tty_termios_input_baud_rate((const struct ktermios*)$arg1)")
+  @BuiltinBPFFunction("tty_termios_input_baud_rate((const struct ktermios *)$arg1)")
   public static @Unsigned @OriginalName("speed_t") int tty_termios_input_baud_rate(
       Ptr<ktermios> termios) {
     throw new MethodIsBPFRelatedFunction();

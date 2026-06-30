@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class CtrlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ctrl_build_family_msg((const struct genl_family*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ctrl_build_family_msg((const struct genl_family *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<sk_buff> ctrl_build_family_msg(Ptr<genl_family> family, @Unsigned int portid,
       int seq, char cmd) {
     throw new MethodIsBPFRelatedFunction();
@@ -1140,7 +1141,7 @@ public final class CtrlDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ctrl_fill_info((const struct genl_family*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ctrl_fill_info((const struct genl_family *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int ctrl_fill_info(Ptr<genl_family> family, @Unsigned int portid, @Unsigned int seq,
       @Unsigned int flags, Ptr<sk_buff> skb, char cmd) {
     throw new MethodIsBPFRelatedFunction();

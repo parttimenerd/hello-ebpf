@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,27 +1091,27 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class NlaDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__nla_parse($arg1, $arg2, (const struct nlattr*)$arg3, $arg4, (const struct nla_policy*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("__nla_parse($arg1, $arg2, (const struct nlattr *)$arg3, $arg4, (const struct nla_policy *)$arg5, $arg6, $arg7)")
   public static int __nla_parse(Ptr<Ptr<nlattr>> tb, int maxtype, Ptr<nlattr> head, int len,
       Ptr<nla_policy> policy, @Unsigned int validate, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__nla_put($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("__nla_put($arg1, $arg2, $arg3, (const void *)$arg4)")
   public static void __nla_put(Ptr<sk_buff> skb, int attrtype, int attrlen, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__nla_put_64bit($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__nla_put_64bit($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static void __nla_put_64bit(Ptr<sk_buff> skb, int attrtype, int attrlen, Ptr<?> data,
       int padattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__nla_put_nohdr($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("__nla_put_nohdr($arg1, $arg2, (const void *)$arg3)")
   public static void __nla_put_nohdr(Ptr<sk_buff> skb, int attrlen, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1135,14 +1136,14 @@ public final class NlaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__nla_validate((const struct nlattr*)$arg1, $arg2, $arg3, (const struct nla_policy*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__nla_validate((const struct nlattr *)$arg1, $arg2, $arg3, (const struct nla_policy *)$arg4, $arg5, $arg6)")
   public static int __nla_validate(Ptr<nlattr> head, int len, int maxtype, Ptr<nla_policy> policy,
       @Unsigned int validate, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__nla_validate_parse((const struct nlattr*)$arg1, $arg2, $arg3, (const struct nla_policy*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__nla_validate_parse((const struct nlattr *)$arg1, $arg2, $arg3, (const struct nla_policy *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int __nla_validate_parse(Ptr<nlattr> head, int len, int maxtype,
       Ptr<nla_policy> policy, @Unsigned int validate, Ptr<netlink_ext_ack> extack,
       Ptr<Ptr<nlattr>> tb, @Unsigned int depth) {
@@ -1150,57 +1151,57 @@ public final class NlaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_append($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("nla_append($arg1, $arg2, (const void *)$arg3)")
   public static int nla_append(Ptr<sk_buff> skb, int attrlen, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_find((const struct nlattr*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("nla_find((const struct nlattr *)$arg1, $arg2, $arg3)")
   public static Ptr<nlattr> nla_find(Ptr<nlattr> head, int len, int attrtype) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_get_range_signed((const struct nla_policy*)$arg1, $arg2)")
+  @BuiltinBPFFunction("nla_get_range_signed((const struct nla_policy *)$arg1, $arg2)")
   public static void nla_get_range_signed(Ptr<nla_policy> pt,
       Ptr<netlink_range_validation_signed> range) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_get_range_unsigned((const struct nla_policy*)$arg1, $arg2)")
+  @BuiltinBPFFunction("nla_get_range_unsigned((const struct nla_policy *)$arg1, $arg2)")
   public static void nla_get_range_unsigned(Ptr<nla_policy> pt,
       Ptr<netlink_range_validation> range) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_memcmp((const struct nlattr*)$arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nla_memcmp((const struct nlattr *)$arg1, (const void *)$arg2, $arg3)")
   public static int nla_memcmp(Ptr<nlattr> nla, Ptr<?> data, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_memcpy($arg1, (const struct nlattr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nla_memcpy($arg1, (const struct nlattr *)$arg2, $arg3)")
   public static int nla_memcpy(Ptr<?> dest, Ptr<nlattr> src, int count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_policy_len((const struct nla_policy*)$arg1, $arg2)")
+  @BuiltinBPFFunction("nla_policy_len((const struct nla_policy *)$arg1, $arg2)")
   public static int nla_policy_len(Ptr<nla_policy> p, int n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_put($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("nla_put($arg1, $arg2, $arg3, (const void *)$arg4)")
   public static int nla_put(Ptr<sk_buff> skb, int attrtype, int attrlen, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_put_64bit($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("nla_put_64bit($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int nla_put_64bit(Ptr<sk_buff> skb, int attrtype, int attrlen, Ptr<?> data,
       int padattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1233,7 +1234,7 @@ public final class NlaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_put_nohdr($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("nla_put_nohdr($arg1, $arg2, (const void *)$arg3)")
   public static int nla_put_nohdr(Ptr<sk_buff> skb, int attrlen, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1258,26 +1259,26 @@ public final class NlaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_strcmp((const struct nlattr*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("nla_strcmp((const struct nlattr *)$arg1, (const u8 *)$arg2)")
   public static int nla_strcmp(Ptr<nlattr> nla, String str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_strdup((const struct nlattr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("nla_strdup((const struct nlattr *)$arg1, $arg2)")
   public static String nla_strdup(Ptr<nlattr> nla, @Unsigned @OriginalName("gfp_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_strscpy($arg1, (const struct nlattr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("nla_strscpy($arg1, (const struct nlattr *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long nla_strscpy(String dst, Ptr<nlattr> nla,
       @Unsigned long dstsize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("nla_validate_range_unsigned((const struct nla_policy*)$arg1, (const struct nlattr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("nla_validate_range_unsigned((const struct nla_policy *)$arg1, (const struct nlattr *)$arg2, $arg3, $arg4)")
   public static int nla_validate_range_unsigned(Ptr<nla_policy> pt, Ptr<nlattr> nla,
       Ptr<netlink_ext_ack> extack, @Unsigned int validate) {
     throw new MethodIsBPFRelatedFunction();

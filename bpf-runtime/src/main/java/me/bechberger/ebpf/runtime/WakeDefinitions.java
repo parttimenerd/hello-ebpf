@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1182,7 +1183,7 @@ public final class WakeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wake_all_kswapds($arg1, $arg2, (const struct alloc_context*)$arg3)")
+  @BuiltinBPFFunction("wake_all_kswapds($arg1, $arg2, (const struct alloc_context *)$arg3)")
   public static void wake_all_kswapds(@Unsigned int order,
       @Unsigned @OriginalName("gfp_t") int gfp_mask, Ptr<alloc_context> ac) {
     throw new MethodIsBPFRelatedFunction();
@@ -1217,7 +1218,7 @@ public final class WakeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wake_lock_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("wake_lock_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long wake_lock_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
@@ -1263,7 +1264,7 @@ public final class WakeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wake_unlock_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("wake_unlock_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long wake_unlock_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();

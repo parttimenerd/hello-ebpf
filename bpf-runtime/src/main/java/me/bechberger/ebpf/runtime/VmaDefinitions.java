@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1217,7 +1218,7 @@ public final class VmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vma_is_special_mapping((const struct vm_area_struct*)$arg1, (const struct vm_special_mapping*)$arg2)")
+  @BuiltinBPFFunction("vma_is_special_mapping((const struct vm_area_struct *)$arg1, (const struct vm_special_mapping *)$arg2)")
   public static boolean vma_is_special_mapping(Ptr<vm_area_struct> vma,
       Ptr<vm_special_mapping> sm) {
     throw new MethodIsBPFRelatedFunction();
@@ -1362,7 +1363,7 @@ public final class VmaDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vma_ra_enabled_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("vma_ra_enabled_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long vma_ra_enabled_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

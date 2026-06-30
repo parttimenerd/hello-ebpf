@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1168,7 +1169,7 @@ public final class CpusetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpuset_cpumask_can_shrink((const struct cpumask*)$arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("cpuset_cpumask_can_shrink((const struct cpumask *)$arg1, (const struct cpumask *)$arg2)")
   public static int cpuset_cpumask_can_shrink(Ptr<cpumask> cur, Ptr<cpumask> trial) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1277,7 +1278,7 @@ public final class CpusetDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpuset_mems_allowed_intersects((const struct task_struct*)$arg1, (const struct task_struct*)$arg2)")
+  @BuiltinBPFFunction("cpuset_mems_allowed_intersects((const struct task_struct *)$arg1, (const struct task_struct *)$arg2)")
   public static int cpuset_mems_allowed_intersects(Ptr<task_struct> tsk1, Ptr<task_struct> tsk2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1285,9 +1286,9 @@ public final class CpusetDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("cpuset_migrate_mm($arg1, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg2, (const struct {\n"
+          + "} *)$arg2, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg3)")
+          + "} *)$arg3)")
   public static void cpuset_migrate_mm(Ptr<mm_struct> mm, Ptr<nodemask_t> from,
       Ptr<nodemask_t> to) {
     throw new MethodIsBPFRelatedFunction();

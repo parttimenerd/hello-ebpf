@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,14 +1097,14 @@ public final class KprobeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__kprobe_event_gen_cmd_start($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("__kprobe_event_gen_cmd_start($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5_)")
   public static int __kprobe_event_gen_cmd_start(Ptr<dynevent_cmd> cmd, boolean kretprobe,
       String name, String loc, java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_kprobe_addr($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("_kprobe_addr($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<java.lang. @OriginalName("kprobe_opcode_t") Character> _kprobe_addr(
       Ptr<java.lang. @OriginalName("kprobe_opcode_t") Character> addr, String symbol_name,
       @Unsigned long offset, Ptr<java.lang. @OriginalName("bool") Boolean> on_func_entry) {
@@ -1247,7 +1248,7 @@ public final class KprobeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kprobe_event_delete((const u8*)$arg1)")
+  @BuiltinBPFFunction("kprobe_event_delete((const u8 *)$arg1)")
   public static int kprobe_event_delete(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1298,7 +1299,7 @@ public final class KprobeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kprobe_lookup_name((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kprobe_lookup_name((const u8 *)$arg1, $arg2)")
   public static Ptr<java.lang. @OriginalName("kprobe_opcode_t") Character> kprobe_lookup_name(
       String name, @Unsigned int __unused) {
     throw new MethodIsBPFRelatedFunction();
@@ -1326,7 +1327,7 @@ public final class KprobeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kprobe_on_func_entry($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("kprobe_on_func_entry($arg1, (const u8 *)$arg2, $arg3)")
   public static int kprobe_on_func_entry(
       Ptr<java.lang. @OriginalName("kprobe_opcode_t") Character> addr, String sym,
       @Unsigned long offset) {
@@ -1353,14 +1354,14 @@ public final class KprobeDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)kprobe_prog_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)kprobe_prog_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> kprobe_prog_func_proto(bpf_func_id func_id,
       Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kprobe_prog_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("kprobe_prog_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean kprobe_prog_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();

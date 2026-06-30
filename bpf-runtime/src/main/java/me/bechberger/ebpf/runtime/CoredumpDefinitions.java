@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CoredumpDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("coredump_file($arg1, $arg2, (const struct linux_binfmt*)$arg3)")
+  @BuiltinBPFFunction("coredump_file($arg1, $arg2, (const struct linux_binfmt *)$arg3)")
   public static boolean coredump_file(Ptr<core_name> cn, Ptr<coredump_params> cprm,
       Ptr<linux_binfmt> binfmt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1155,7 +1156,7 @@ public final class CoredumpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("coredump_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("coredump_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long coredump_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

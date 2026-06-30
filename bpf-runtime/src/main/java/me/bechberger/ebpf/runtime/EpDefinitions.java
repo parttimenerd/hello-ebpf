@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1183,14 +1184,14 @@ public final class EpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ep_insert($arg1, (const struct epoll_event*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ep_insert($arg1, (const struct epoll_event *)$arg2, $arg3, $arg4, $arg5)")
   public static int ep_insert(Ptr<eventpoll> ep, Ptr<epoll_event> event, Ptr<file> tfile, int fd,
       int full_check) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ep_item_poll((const struct epitem*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ep_item_poll((const struct epitem *)$arg1, $arg2, $arg3)")
   public static @Unsigned @OriginalName("__poll_t") int ep_item_poll(Ptr<epitem> epi,
       Ptr<poll_table_struct> pt, int depth) {
     throw new MethodIsBPFRelatedFunction();

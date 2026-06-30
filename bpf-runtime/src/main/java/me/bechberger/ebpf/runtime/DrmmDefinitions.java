@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,21 +1091,21 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DrmmDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__drmm_add_action($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__drmm_add_action($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int __drmm_add_action(Ptr<drm_device> dev,
       @OriginalName("drmres_release_t") Ptr<?> action, Ptr<?> data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drmm_add_action_or_reset($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("__drmm_add_action_or_reset($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int __drmm_add_action_or_reset(Ptr<drm_device> dev,
       @OriginalName("drmres_release_t") Ptr<?> action, Ptr<?> data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drmm_crtc_alloc_with_planes($arg1, $arg2, $arg3, $arg4, $arg5, (const struct drm_crtc_funcs*)$arg6, (const u8*)$arg7, $arg8_)")
+  @BuiltinBPFFunction("__drmm_crtc_alloc_with_planes($arg1, $arg2, $arg3, $arg4, $arg5, (const struct drm_crtc_funcs *)$arg6, (const u8 *)$arg7, $arg8_)")
   public static Ptr<?> __drmm_crtc_alloc_with_planes(Ptr<drm_device> dev, @Unsigned long size,
       @Unsigned long offset, Ptr<drm_plane> primary, Ptr<drm_plane> cursor,
       Ptr<drm_crtc_funcs> funcs, String name, java.lang.Object... param7) {
@@ -1112,7 +1113,7 @@ public final class DrmmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drmm_crtc_init_with_planes($arg1, $arg2, $arg3, $arg4, (const struct drm_crtc_funcs*)$arg5, (const u8*)$arg6, $arg7)")
+  @BuiltinBPFFunction("__drmm_crtc_init_with_planes($arg1, $arg2, $arg3, $arg4, (const struct drm_crtc_funcs *)$arg5, (const u8 *)$arg6, $arg7)")
   public static int __drmm_crtc_init_with_planes(Ptr<drm_device> dev, Ptr<drm_crtc> crtc,
       Ptr<drm_plane> primary, Ptr<drm_plane> cursor, Ptr<drm_crtc_funcs> funcs, String name,
       Ptr<__va_list_tag> args) {
@@ -1120,7 +1121,7 @@ public final class DrmmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drmm_encoder_alloc($arg1, $arg2, $arg3, (const struct drm_encoder_funcs*)$arg4, $arg5, (const u8*)$arg6, $arg7_)")
+  @BuiltinBPFFunction("__drmm_encoder_alloc($arg1, $arg2, $arg3, (const struct drm_encoder_funcs *)$arg4, $arg5, (const u8 *)$arg6, $arg7_)")
   public static Ptr<?> __drmm_encoder_alloc(Ptr<drm_device> dev, @Unsigned long size,
       @Unsigned long offset, Ptr<drm_encoder_funcs> funcs, int encoder_type, String name,
       java.lang.Object... param6) {
@@ -1128,7 +1129,7 @@ public final class DrmmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drmm_encoder_init($arg1, $arg2, (const struct drm_encoder_funcs*)$arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("__drmm_encoder_init($arg1, $arg2, (const struct drm_encoder_funcs *)$arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int __drmm_encoder_init(Ptr<drm_device> dev, Ptr<drm_encoder> encoder,
       Ptr<drm_encoder_funcs> funcs, int encoder_type, String name, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
@@ -1148,7 +1149,7 @@ public final class DrmmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__drmm_universal_plane_alloc($arg1, $arg2, $arg3, $arg4, (const struct drm_plane_funcs*)$arg5, (const unsigned int*)$arg6, $arg7, (const long long unsigned int*)$arg8, $arg9, (const u8*)$arg10, $arg11_)")
+  @BuiltinBPFFunction("__drmm_universal_plane_alloc($arg1, $arg2, $arg3, $arg4, (const struct drm_plane_funcs *)$arg5, (const unsigned int *)$arg6, $arg7, (const long long unsigned int *)$arg8, $arg9, (const u8 *)$arg10, $arg11_)")
   public static Ptr<?> __drmm_universal_plane_alloc(Ptr<drm_device> dev, @Unsigned long size,
       @Unsigned long offset, @Unsigned @OriginalName("uint32_t") int possible_crtcs,
       Ptr<drm_plane_funcs> funcs,
@@ -1178,14 +1179,14 @@ public final class DrmmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drmm_cgroup_register_region($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drmm_cgroup_register_region($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<dmem_cgroup_region> drmm_cgroup_register_region(Ptr<drm_device> dev,
       String region_name, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drmm_connector_hdmi_init($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, (const struct drm_connector_funcs*)$arg5, (const struct drm_connector_hdmi_funcs*)$arg6, $arg7, $arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("drmm_connector_hdmi_init($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const struct drm_connector_funcs *)$arg5, (const struct drm_connector_hdmi_funcs *)$arg6, $arg7, $arg8, $arg9, $arg10)")
   public static int drmm_connector_hdmi_init(Ptr<drm_device> dev, Ptr<drm_connector> connector,
       String vendor, String product, Ptr<drm_connector_funcs> funcs,
       Ptr<drm_connector_hdmi_funcs> hdmi_funcs, int connector_type, Ptr<i2c_adapter> ddc,
@@ -1194,14 +1195,14 @@ public final class DrmmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drmm_connector_init($arg1, $arg2, (const struct drm_connector_funcs*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("drmm_connector_init($arg1, $arg2, (const struct drm_connector_funcs *)$arg3, $arg4, $arg5)")
   public static int drmm_connector_init(Ptr<drm_device> dev, Ptr<drm_connector> connector,
       Ptr<drm_connector_funcs> funcs, int connector_type, Ptr<i2c_adapter> ddc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drmm_crtc_init_with_planes($arg1, $arg2, $arg3, $arg4, (const struct drm_crtc_funcs*)$arg5, (const u8*)$arg6, $arg7_)")
+  @BuiltinBPFFunction("drmm_crtc_init_with_planes($arg1, $arg2, $arg3, $arg4, (const struct drm_crtc_funcs *)$arg5, (const u8 *)$arg6, $arg7_)")
   public static int drmm_crtc_init_with_planes(Ptr<drm_device> dev, Ptr<drm_crtc> crtc,
       Ptr<drm_plane> primary, Ptr<drm_plane> cursor, Ptr<drm_crtc_funcs> funcs, String name,
       java.lang.Object... param6) {
@@ -1227,7 +1228,7 @@ public final class DrmmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drmm_encoder_init($arg1, $arg2, (const struct drm_encoder_funcs*)$arg3, $arg4, (const u8*)$arg5, $arg6_)")
+  @BuiltinBPFFunction("drmm_encoder_init($arg1, $arg2, (const struct drm_encoder_funcs *)$arg3, $arg4, (const u8 *)$arg5, $arg6_)")
   public static int drmm_encoder_init(Ptr<drm_device> dev, Ptr<drm_encoder> encoder,
       Ptr<drm_encoder_funcs> funcs, int encoder_type, String name, java.lang.Object... param5) {
     throw new MethodIsBPFRelatedFunction();
@@ -1253,7 +1254,7 @@ public final class DrmmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drmm_kstrdup($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drmm_kstrdup($arg1, (const u8 *)$arg2, $arg3)")
   public static String drmm_kstrdup(Ptr<drm_device> dev, String s,
       @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1285,7 +1286,7 @@ public final class DrmmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drmm_writeback_connector_init($arg1, $arg2, (const struct drm_connector_funcs*)$arg3, $arg4, (const unsigned int*)$arg5, $arg6)")
+  @BuiltinBPFFunction("drmm_writeback_connector_init($arg1, $arg2, (const struct drm_connector_funcs *)$arg3, $arg4, (const unsigned int *)$arg5, $arg6)")
   public static int drmm_writeback_connector_init(Ptr<drm_device> dev,
       Ptr<drm_writeback_connector> wb_connector, Ptr<drm_connector_funcs> con_funcs,
       Ptr<drm_encoder> enc, Ptr<java.lang. @Unsigned Integer> formats, int n_formats) {

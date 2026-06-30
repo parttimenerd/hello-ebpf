@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class ShmemDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__shmem_file_setup($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__shmem_file_setup($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static Ptr<file> __shmem_file_setup(Ptr<vfsmount> mnt, String name,
       @OriginalName("loff_t") long size, @Unsigned long flags, @Unsigned int i_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1205,7 +1206,7 @@ public final class ShmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shmem_enabled_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("shmem_enabled_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long shmem_enabled_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1285,14 +1286,14 @@ public final class ShmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shmem_file_setup((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("shmem_file_setup((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<file> shmem_file_setup(String name, @OriginalName("loff_t") long size,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shmem_file_setup_with_mnt($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("shmem_file_setup_with_mnt($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<file> shmem_file_setup_with_mnt(Ptr<vfsmount> mnt, String name,
       @OriginalName("loff_t") long size, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1453,7 +1454,7 @@ public final class ShmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shmem_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("shmem_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int shmem_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1498,7 +1499,7 @@ public final class ShmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shmem_initxattrs($arg1, (const struct xattr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("shmem_initxattrs($arg1, (const struct xattr *)$arg2, $arg3)")
   public static int shmem_initxattrs(Ptr<inode> inode, Ptr<xattr> xattr_array, Ptr<?> fs_info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1516,7 +1517,7 @@ public final class ShmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shmem_kernel_file_setup((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("shmem_kernel_file_setup((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<file> shmem_kernel_file_setup(String name, @OriginalName("loff_t") long size,
       @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1594,7 +1595,7 @@ public final class ShmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shmem_parse_huge((const u8*)$arg1)")
+  @BuiltinBPFFunction("shmem_parse_huge((const u8 *)$arg1)")
   public static int shmem_parse_huge(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1764,7 +1765,7 @@ public final class ShmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shmem_symlink($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("shmem_symlink($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int shmem_symlink(Ptr<mnt_idmap> idmap, Ptr<inode> dir, Ptr<dentry> dentry,
       String symname) {
     throw new MethodIsBPFRelatedFunction();
@@ -1854,7 +1855,7 @@ public final class ShmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shmem_write_begin((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("shmem_write_begin((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int shmem_write_begin(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, Ptr<Ptr<folio>> foliop,
       Ptr<Ptr<?>> fsdata) {
@@ -1862,7 +1863,7 @@ public final class ShmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shmem_write_end((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("shmem_write_end((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int shmem_write_end(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, @Unsigned int copied, Ptr<folio> folio,
       Ptr<?> fsdata) {
@@ -1883,14 +1884,14 @@ public final class ShmemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shmem_xattr_handler_get((const struct xattr_handler*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("shmem_xattr_handler_get((const struct xattr_handler *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int shmem_xattr_handler_get(Ptr<xattr_handler> handler, Ptr<dentry> unused,
       Ptr<inode> inode, String name, Ptr<?> buffer, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("shmem_xattr_handler_set((const struct xattr_handler*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("shmem_xattr_handler_set((const struct xattr_handler *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, (const void *)$arg6, $arg7, $arg8)")
   public static int shmem_xattr_handler_set(Ptr<xattr_handler> handler, Ptr<mnt_idmap> idmap,
       Ptr<dentry> unused, Ptr<inode> inode, String name, Ptr<?> value, @Unsigned long size,
       int flags) {

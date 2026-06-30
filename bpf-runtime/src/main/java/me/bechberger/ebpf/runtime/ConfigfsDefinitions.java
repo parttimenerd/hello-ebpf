@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1117,7 +1118,7 @@ public final class ConfigfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("configfs_create_bin_file($arg1, (const struct configfs_bin_attribute*)$arg2)")
+  @BuiltinBPFFunction("configfs_create_bin_file($arg1, (const struct configfs_bin_attribute *)$arg2)")
   public static int configfs_create_bin_file(Ptr<config_item> item,
       Ptr<configfs_bin_attribute> bin_attr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1131,7 +1132,7 @@ public final class ConfigfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("configfs_create_file($arg1, (const struct configfs_attribute*)$arg2)")
+  @BuiltinBPFFunction("configfs_create_file($arg1, (const struct configfs_attribute *)$arg2)")
   public static int configfs_create_file(Ptr<config_item> item, Ptr<configfs_attribute> attr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1340,7 +1341,7 @@ public final class ConfigfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("configfs_register_default_group($arg1, (const u8*)$arg2, (const struct config_item_type*)$arg3)")
+  @BuiltinBPFFunction("configfs_register_default_group($arg1, (const u8 *)$arg2, (const struct config_item_type *)$arg3)")
   public static Ptr<config_group> configfs_register_default_group(Ptr<config_group> parent_group,
       String name, Ptr<config_item_type> item_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1408,7 +1409,7 @@ public final class ConfigfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("configfs_symlink($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("configfs_symlink($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int configfs_symlink(Ptr<mnt_idmap> idmap, Ptr<inode> dir, Ptr<dentry> dentry,
       String symname) {
     throw new MethodIsBPFRelatedFunction();

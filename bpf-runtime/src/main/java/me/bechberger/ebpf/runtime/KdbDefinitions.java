@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1120,7 +1121,7 @@ public final class KdbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_bt1($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("kdb_bt1($arg1, (const u8 *)$arg2, $arg3)")
   public static int kdb_bt1(Ptr<task_struct> p, String mask, boolean btaprompt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1162,7 +1163,7 @@ public final class KdbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_defcmd2((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("kdb_defcmd2((const u8 *)$arg1, (const u8 *)$arg2)")
   public static int kdb_defcmd2(String cmdstr, String argv0) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1247,7 +1248,7 @@ public final class KdbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_getstr($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("kdb_getstr($arg1, $arg2, (const u8 *)$arg3)")
   public static String kdb_getstr(String buffer, @Unsigned long bufsize, String prompt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1334,7 +1335,7 @@ public final class KdbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_md_line((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("kdb_md_line((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void kdb_md_line(String fmtstr, @Unsigned long addr, int symbolic, int nosect,
       int bytesperword, int num, int repeat, int phys) {
     throw new MethodIsBPFRelatedFunction();
@@ -1347,13 +1348,13 @@ public final class KdbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_msg_write((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kdb_msg_write((const u8 *)$arg1, $arg2)")
   public static void kdb_msg_write(String msg, int msg_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_parse((const u8*)$arg1)")
+  @BuiltinBPFFunction("kdb_parse((const u8 *)$arg1)")
   public static int kdb_parse(String cmdstr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1371,7 +1372,7 @@ public final class KdbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_print_state((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kdb_print_state((const u8 *)$arg1, $arg2)")
   public static void kdb_print_state(String text, int value) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1383,13 +1384,13 @@ public final class KdbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_printf((const u8*)$arg1, $arg2_)")
+  @BuiltinBPFFunction("kdb_printf((const u8 *)$arg1, $arg2_)")
   public static int kdb_printf(String fmt, java.lang.Object... param1) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_process_cpu((const struct task_struct*)$arg1)")
+  @BuiltinBPFFunction("kdb_process_cpu((const struct task_struct *)$arg1)")
   public static int kdb_process_cpu(Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1401,7 +1402,7 @@ public final class KdbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_ps1((const struct task_struct*)$arg1)")
+  @BuiltinBPFFunction("kdb_ps1((const struct task_struct *)$arg1)")
   public static void kdb_ps1(Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1480,7 +1481,7 @@ public final class KdbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_setenv((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("kdb_setenv((const u8 *)$arg1, (const u8 *)$arg2)")
   public static int kdb_setenv(String var, String val) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1504,7 +1505,7 @@ public final class KdbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_strdup((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kdb_strdup((const u8 *)$arg1, $arg2)")
   public static String kdb_strdup(String str, @Unsigned @OriginalName("gfp_t") int type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1522,20 +1523,20 @@ public final class KdbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_symbol_print($arg1, (const __ksymtab*)$arg2, $arg3)")
+  @BuiltinBPFFunction("kdb_symbol_print($arg1, (const __ksymtab *)$arg2, $arg3)")
   public static void kdb_symbol_print(@Unsigned long addr,
       Ptr<@OriginalName("kdb_symtab_t") __ksymtab> symtab_p, @Unsigned int punc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_task_state((const struct task_struct*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("kdb_task_state((const struct task_struct *)$arg1, (const u8 *)$arg2)")
   public static boolean kdb_task_state(Ptr<task_struct> p, String mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kdb_task_state_char((const struct task_struct*)$arg1)")
+  @BuiltinBPFFunction("kdb_task_state_char((const struct task_struct *)$arg1)")
   public static char kdb_task_state_char(Ptr<task_struct> p) {
     throw new MethodIsBPFRelatedFunction();
   }

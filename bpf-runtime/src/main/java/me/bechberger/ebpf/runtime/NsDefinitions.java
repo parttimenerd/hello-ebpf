@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1114,7 +1115,7 @@ public final class NsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ns_get_name($arg1, $arg2, $arg3, (const struct proc_ns_operations*)$arg4)")
+  @BuiltinBPFFunction("ns_get_name($arg1, $arg2, $arg3, (const struct proc_ns_operations *)$arg4)")
   public static int ns_get_name(String buf, @Unsigned long size, Ptr<task_struct> task,
       Ptr<proc_ns_operations> ns_ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1127,7 +1128,7 @@ public final class NsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ns_get_path($arg1, $arg2, (const struct proc_ns_operations*)$arg3)")
+  @BuiltinBPFFunction("ns_get_path($arg1, $arg2, (const struct proc_ns_operations *)$arg3)")
   public static int ns_get_path(Ptr<path> path, Ptr<task_struct> task,
       Ptr<proc_ns_operations> ns_ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1146,7 +1147,7 @@ public final class NsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ns_match((const struct ns_common*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("ns_match((const struct ns_common *)$arg1, $arg2, $arg3)")
   public static boolean ns_match(Ptr<ns_common> ns, @Unsigned @OriginalName("dev_t") int dev,
       @Unsigned @OriginalName("ino_t") long ino) {
     throw new MethodIsBPFRelatedFunction();
@@ -1257,7 +1258,7 @@ public final class NsDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "struct { const u8*; }"
+      cType = "struct { const u8 *target; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

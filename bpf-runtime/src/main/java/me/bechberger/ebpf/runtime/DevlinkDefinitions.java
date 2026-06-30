@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1104,7 +1105,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__devlink_health_reporter_create($arg1, (const struct devlink_health_reporter_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__devlink_health_reporter_create($arg1, (const struct devlink_health_reporter_ops *)$arg2, $arg3, $arg4)")
   public static Ptr<devlink_health_reporter> __devlink_health_reporter_create(Ptr<devlink> devlink,
       Ptr<devlink_health_reporter_ops> ops, @Unsigned long graceful_period, Ptr<?> priv) {
     throw new MethodIsBPFRelatedFunction();
@@ -1166,14 +1167,14 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_alloc_ns((const struct devlink_ops*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("devlink_alloc_ns((const struct devlink_ops *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<devlink> devlink_alloc_ns(Ptr<devlink_ops> ops, @Unsigned long priv_size,
       Ptr<net> net, Ptr<device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_attr_param_type_validate((const struct nlattr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("devlink_attr_param_type_validate((const struct nlattr *)$arg1, $arg2)")
   public static int devlink_attr_param_type_validate(Ptr<nlattr> attr,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1186,7 +1187,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_compat_flash_update($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devlink_compat_flash_update($arg1, (const u8 *)$arg2)")
   public static int devlink_compat_flash_update(Ptr<devlink> devlink, String file_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1268,7 +1269,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_dpipe_table_counter_enabled($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devlink_dpipe_table_counter_enabled($arg1, (const u8 *)$arg2)")
   public static boolean devlink_dpipe_table_counter_enabled(Ptr<devlink> devlink,
       String table_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1287,21 +1288,21 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_flash_component_lookup_cb((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_flash_component_lookup_cb((const u8 *)$arg1, $arg2, $arg3)")
   public static void devlink_flash_component_lookup_cb(String version_name,
       devlink_info_version_type version_type, Ptr<?> version_cb_priv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_flash_update_status_notify($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("devlink_flash_update_status_notify($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void devlink_flash_update_status_notify(Ptr<devlink> devlink, String status_msg,
       String component, @Unsigned long done, @Unsigned long total) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_flash_update_timeout_notify($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("devlink_flash_update_timeout_notify($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void devlink_flash_update_timeout_notify(Ptr<devlink> devlink, String status_msg,
       String component, @Unsigned long timeout) {
     throw new MethodIsBPFRelatedFunction();
@@ -1314,7 +1315,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_arr_pair_nest_start($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devlink_fmsg_arr_pair_nest_start($arg1, (const u8 *)$arg2)")
   public static void devlink_fmsg_arr_pair_nest_start(Ptr<devlink_fmsg> fmsg, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1326,34 +1327,34 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_binary_pair_nest_start($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devlink_fmsg_binary_pair_nest_start($arg1, (const u8 *)$arg2)")
   public static void devlink_fmsg_binary_pair_nest_start(Ptr<devlink_fmsg> fmsg, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_binary_pair_put($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("devlink_fmsg_binary_pair_put($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4)")
   public static void devlink_fmsg_binary_pair_put(Ptr<devlink_fmsg> fmsg, String name, Ptr<?> value,
       @Unsigned int value_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_binary_put($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_fmsg_binary_put($arg1, (const void *)$arg2, $arg3)")
   public static void devlink_fmsg_binary_put(Ptr<devlink_fmsg> fmsg, Ptr<?> value,
       @Unsigned short value_len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_bool_pair_put($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_fmsg_bool_pair_put($arg1, (const u8 *)$arg2, $arg3)")
   public static void devlink_fmsg_bool_pair_put(Ptr<devlink_fmsg> fmsg, String name,
       boolean value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_dump_skb($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("devlink_fmsg_dump_skb($arg1, (const struct sk_buff *)$arg2)")
   public static void devlink_fmsg_dump_skb(Ptr<devlink_fmsg> fmsg, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1383,7 +1384,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_pair_nest_start($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devlink_fmsg_pair_nest_start($arg1, (const u8 *)$arg2)")
   public static void devlink_fmsg_pair_nest_start(Ptr<devlink_fmsg> fmsg, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1396,33 +1397,33 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_put_name($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devlink_fmsg_put_name($arg1, (const u8 *)$arg2)")
   public static void devlink_fmsg_put_name(Ptr<devlink_fmsg> fmsg, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_put_value($arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("devlink_fmsg_put_value($arg1, (const void *)$arg2, $arg3, $arg4)")
   public static void devlink_fmsg_put_value(Ptr<devlink_fmsg> fmsg, Ptr<?> value,
       @Unsigned short value_len, char value_nla_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_string_pair_put($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("devlink_fmsg_string_pair_put($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static void devlink_fmsg_string_pair_put(Ptr<devlink_fmsg> fmsg, String name,
       String value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_string_put($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devlink_fmsg_string_put($arg1, (const u8 *)$arg2)")
   public static void devlink_fmsg_string_put(Ptr<devlink_fmsg> fmsg, String value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_u32_pair_put($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_fmsg_u32_pair_put($arg1, (const u8 *)$arg2, $arg3)")
   public static void devlink_fmsg_u32_pair_put(Ptr<devlink_fmsg> fmsg, String name,
       @Unsigned int value) {
     throw new MethodIsBPFRelatedFunction();
@@ -1435,14 +1436,14 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_u64_pair_put($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_fmsg_u64_pair_put($arg1, (const u8 *)$arg2, $arg3)")
   public static void devlink_fmsg_u64_pair_put(Ptr<devlink_fmsg> fmsg, String name,
       @Unsigned long value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_fmsg_u8_pair_put($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_fmsg_u8_pair_put($arg1, (const u8 *)$arg2, $arg3)")
   public static void devlink_fmsg_u8_pair_put(Ptr<devlink_fmsg> fmsg, String name, char value) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1468,14 +1469,14 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_health_report($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_health_report($arg1, (const u8 *)$arg2, $arg3)")
   public static int devlink_health_report(Ptr<devlink_health_reporter> reporter, String msg,
       Ptr<?> priv_ctx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_health_reporter_create($arg1, (const struct devlink_health_reporter_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("devlink_health_reporter_create($arg1, (const struct devlink_health_reporter_ops *)$arg2, $arg3, $arg4)")
   public static Ptr<devlink_health_reporter> devlink_health_reporter_create(Ptr<devlink> devlink,
       Ptr<devlink_health_reporter_ops> ops, @Unsigned long graceful_period, Ptr<?> priv) {
     throw new MethodIsBPFRelatedFunction();
@@ -1521,54 +1522,54 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_info_board_serial_number_put($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devlink_info_board_serial_number_put($arg1, (const u8 *)$arg2)")
   public static int devlink_info_board_serial_number_put(Ptr<devlink_info_req> req, String bsn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_info_serial_number_put($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devlink_info_serial_number_put($arg1, (const u8 *)$arg2)")
   public static int devlink_info_serial_number_put(Ptr<devlink_info_req> req, String sn) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_info_version_fixed_put($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("devlink_info_version_fixed_put($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int devlink_info_version_fixed_put(Ptr<devlink_info_req> req, String version_name,
       String version_value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_info_version_put($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("devlink_info_version_put($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5)")
   public static int devlink_info_version_put(Ptr<devlink_info_req> req, int attr,
       String version_name, String version_value, devlink_info_version_type version_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_info_version_running_put($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("devlink_info_version_running_put($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int devlink_info_version_running_put(Ptr<devlink_info_req> req, String version_name,
       String version_value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_info_version_running_put_ext($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("devlink_info_version_running_put_ext($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static int devlink_info_version_running_put_ext(Ptr<devlink_info_req> req,
       String version_name, String version_value, devlink_info_version_type version_type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_info_version_stored_put($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("devlink_info_version_stored_put($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static int devlink_info_version_stored_put(Ptr<devlink_info_req> req, String version_name,
       String version_value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_info_version_stored_put_ext($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("devlink_info_version_stored_put_ext($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static int devlink_info_version_stored_put_ext(Ptr<devlink_info_req> req,
       String version_name, String version_value, devlink_info_version_type version_type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1581,7 +1582,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_is_reload_failed((const struct devlink*)$arg1)")
+  @BuiltinBPFFunction("devlink_is_reload_failed((const struct devlink *)$arg1)")
   public static boolean devlink_is_reload_failed(Ptr<devlink> devlink) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1630,7 +1631,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_linecard_provision_set($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devlink_linecard_provision_set($arg1, (const u8 *)$arg2)")
   public static void devlink_linecard_provision_set(Ptr<devlink_linecard> linecard, String type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1650,7 +1651,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_linecard_type_set($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_linecard_type_set($arg1, (const u8 *)$arg2, $arg3)")
   public static int devlink_linecard_type_set(Ptr<devlink_linecard> linecard, String type,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1675,7 +1676,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_net((const struct devlink*)$arg1)")
+  @BuiltinBPFFunction("devlink_net((const struct devlink *)$arg1)")
   public static Ptr<net> devlink_net(Ptr<devlink> devlink) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2032,42 +2033,42 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_nl_post_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_nl_post_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static void devlink_nl_post_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_nl_post_doit_dev_lock((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_nl_post_doit_dev_lock((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static void devlink_nl_post_doit_dev_lock(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_nl_pre_doit((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_nl_pre_doit((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static int devlink_nl_pre_doit(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_nl_pre_doit_dev_lock((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_nl_pre_doit_dev_lock((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static int devlink_nl_pre_doit_dev_lock(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_nl_pre_doit_port((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_nl_pre_doit_port((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static int devlink_nl_pre_doit_port(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_nl_pre_doit_port_optional((const struct genl_split_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_nl_pre_doit_port_optional((const struct genl_split_ops *)$arg1, $arg2, $arg3)")
   public static int devlink_nl_pre_doit_port_optional(Ptr<genl_split_ops> ops, Ptr<sk_buff> skb,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -2133,7 +2134,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_nl_rate_set($arg1, (const struct devlink_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_nl_rate_set($arg1, (const struct devlink_ops *)$arg2, $arg3)")
   public static int devlink_nl_rate_set(Ptr<devlink_rate> devlink_rate, Ptr<devlink_ops> ops,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -2373,7 +2374,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_nl_trap_fill($arg1, $arg2, (const struct devlink_trap_item*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("devlink_nl_trap_fill($arg1, $arg2, (const struct devlink_trap_item *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int devlink_nl_trap_fill(Ptr<sk_buff> msg, Ptr<devlink> devlink,
       Ptr<devlink_trap_item> trap_item, devlink_command cmd, @Unsigned int portid,
       @Unsigned int seq, int flags) {
@@ -2400,7 +2401,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_nl_trap_group_fill($arg1, $arg2, (const struct devlink_trap_group_item*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("devlink_nl_trap_group_fill($arg1, $arg2, (const struct devlink_trap_group_item *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int devlink_nl_trap_group_fill(Ptr<sk_buff> msg, Ptr<devlink> devlink,
       Ptr<devlink_trap_group_item> group_item, devlink_command cmd, @Unsigned int portid,
       @Unsigned int seq, int flags) {
@@ -2433,7 +2434,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_nl_trap_policer_fill($arg1, $arg2, (const struct devlink_trap_policer_item*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("devlink_nl_trap_policer_fill($arg1, $arg2, (const struct devlink_trap_policer_item *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int devlink_nl_trap_policer_fill(Ptr<sk_buff> msg, Ptr<devlink> devlink,
       Ptr<devlink_trap_policer_item> policer_item, devlink_command cmd, @Unsigned int portid,
       @Unsigned int seq, int flags) {
@@ -2490,27 +2491,27 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_param_cmode_is_supported((const struct devlink_param*)$arg1, $arg2)")
+  @BuiltinBPFFunction("devlink_param_cmode_is_supported((const struct devlink_param *)$arg1, $arg2)")
   public static boolean devlink_param_cmode_is_supported(Ptr<devlink_param> param,
       devlink_param_cmode cmode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_param_find_by_name($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("devlink_param_find_by_name($arg1, (const u8 *)$arg2)")
   public static Ptr<devlink_param_item> devlink_param_find_by_name(Ptr<xarray> params,
       String param_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_param_register($arg1, (const struct devlink_param*)$arg2)")
+  @BuiltinBPFFunction("devlink_param_register($arg1, (const struct devlink_param *)$arg2)")
   public static int devlink_param_register(Ptr<devlink> devlink, Ptr<devlink_param> param) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_param_unregister($arg1, (const struct devlink_param*)$arg2)")
+  @BuiltinBPFFunction("devlink_param_unregister($arg1, (const struct devlink_param *)$arg2)")
   public static void devlink_param_unregister(Ptr<devlink> devlink, Ptr<devlink_param> param) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2540,14 +2541,14 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_params_register($arg1, (const struct devlink_param*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_params_register($arg1, (const struct devlink_param *)$arg2, $arg3)")
   public static int devlink_params_register(Ptr<devlink> devlink, Ptr<devlink_param> params,
       @Unsigned long params_count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_params_unregister($arg1, (const struct devlink_param*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_params_unregister($arg1, (const struct devlink_param *)$arg2, $arg3)")
   public static void devlink_params_unregister(Ptr<devlink> devlink, Ptr<devlink_param> params,
       @Unsigned long params_count) {
     throw new MethodIsBPFRelatedFunction();
@@ -2601,7 +2602,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_port_function_set($arg1, (const struct nlattr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_port_function_set($arg1, (const struct nlattr *)$arg2, $arg3)")
   public static int devlink_port_function_set(Ptr<devlink_port> port, Ptr<nlattr> attr,
       Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -2636,7 +2637,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_port_health_reporter_create($arg1, (const struct devlink_health_reporter_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("devlink_port_health_reporter_create($arg1, (const struct devlink_health_reporter_ops *)$arg2, $arg3, $arg4)")
   public static Ptr<devlink_health_reporter> devlink_port_health_reporter_create(
       Ptr<devlink_port> port, Ptr<devlink_health_reporter_ops> ops, @Unsigned long graceful_period,
       Ptr<?> priv) {
@@ -2670,7 +2671,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_port_region_create($arg1, (const struct devlink_port_region_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("devlink_port_region_create($arg1, (const struct devlink_port_region_ops *)$arg2, $arg3, $arg4)")
   public static Ptr<devlink_region> devlink_port_region_create(Ptr<devlink_port> port,
       Ptr<devlink_port_region_ops> ops, @Unsigned int region_max_snapshots,
       @Unsigned long region_size) {
@@ -2678,7 +2679,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_port_register_with_ops($arg1, $arg2, $arg3, (const struct devlink_port_ops*)$arg4)")
+  @BuiltinBPFFunction("devlink_port_register_with_ops($arg1, $arg2, $arg3, (const struct devlink_port_ops *)$arg4)")
   public static int devlink_port_register_with_ops(Ptr<devlink> devlink,
       Ptr<devlink_port> devlink_port, @Unsigned int port_index, Ptr<devlink_port_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -2786,7 +2787,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_rate_set_ops_supported((const struct devlink_ops*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_rate_set_ops_supported((const struct devlink_ops *)$arg1, $arg2, $arg3)")
   public static boolean devlink_rate_set_ops_supported(Ptr<devlink_ops> ops, Ptr<genl_info> info,
       devlink_rate_type type) {
     throw new MethodIsBPFRelatedFunction();
@@ -2812,7 +2813,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_region_create($arg1, (const struct devlink_region_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("devlink_region_create($arg1, (const struct devlink_region_ops *)$arg2, $arg3, $arg4)")
   public static Ptr<devlink_region> devlink_region_create(Ptr<devlink> devlink,
       Ptr<devlink_region_ops> ops, @Unsigned int region_max_snapshots, @Unsigned long region_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -2965,7 +2966,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_reload_actions_valid((const struct devlink_ops*)$arg1)")
+  @BuiltinBPFFunction("devlink_reload_actions_valid((const struct devlink_ops *)$arg1)")
   public static boolean devlink_reload_actions_valid(Ptr<devlink_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3032,7 +3033,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_to_dev((const struct devlink*)$arg1)")
+  @BuiltinBPFFunction("devlink_to_dev((const struct devlink *)$arg1)")
   public static Ptr<device> devlink_to_dev(Ptr<devlink> devlink) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3044,21 +3045,21 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_trap_group_notify($arg1, (const struct devlink_trap_group_item*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_trap_group_notify($arg1, (const struct devlink_trap_group_item *)$arg2, $arg3)")
   public static void devlink_trap_group_notify(Ptr<devlink> devlink,
       Ptr<devlink_trap_group_item> group_item, devlink_command cmd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_trap_group_register($arg1, (const struct devlink_trap_group*)$arg2)")
+  @BuiltinBPFFunction("devlink_trap_group_register($arg1, (const struct devlink_trap_group *)$arg2)")
   public static int devlink_trap_group_register(Ptr<devlink> devlink,
       Ptr<devlink_trap_group> group) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_trap_group_unregister($arg1, (const struct devlink_trap_group*)$arg2)")
+  @BuiltinBPFFunction("devlink_trap_group_unregister($arg1, (const struct devlink_trap_group *)$arg2)")
   public static void devlink_trap_group_unregister(Ptr<devlink> devlink,
       Ptr<devlink_trap_group> group) {
     throw new MethodIsBPFRelatedFunction();
@@ -3077,35 +3078,35 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_trap_groups_register($arg1, (const struct devlink_trap_group*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_trap_groups_register($arg1, (const struct devlink_trap_group *)$arg2, $arg3)")
   public static int devlink_trap_groups_register(Ptr<devlink> devlink,
       Ptr<devlink_trap_group> groups, @Unsigned long groups_count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_trap_groups_unregister($arg1, (const struct devlink_trap_group*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_trap_groups_unregister($arg1, (const struct devlink_trap_group *)$arg2, $arg3)")
   public static void devlink_trap_groups_unregister(Ptr<devlink> devlink,
       Ptr<devlink_trap_group> groups, @Unsigned long groups_count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_trap_notify($arg1, (const struct devlink_trap_item*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_trap_notify($arg1, (const struct devlink_trap_item *)$arg2, $arg3)")
   public static void devlink_trap_notify(Ptr<devlink> devlink, Ptr<devlink_trap_item> trap_item,
       devlink_command cmd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_trap_policer_notify($arg1, (const struct devlink_trap_policer_item*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_trap_policer_notify($arg1, (const struct devlink_trap_policer_item *)$arg2, $arg3)")
   public static void devlink_trap_policer_notify(Ptr<devlink> devlink,
       Ptr<devlink_trap_policer_item> policer_item, devlink_command cmd) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_trap_policer_unregister($arg1, (const struct devlink_trap_policer*)$arg2)")
+  @BuiltinBPFFunction("devlink_trap_policer_unregister($arg1, (const struct devlink_trap_policer *)$arg2)")
   public static void devlink_trap_policer_unregister(Ptr<devlink> devlink,
       Ptr<devlink_trap_policer> policer) {
     throw new MethodIsBPFRelatedFunction();
@@ -3124,14 +3125,14 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_trap_register($arg1, (const struct devlink_trap*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_trap_register($arg1, (const struct devlink_trap *)$arg2, $arg3)")
   public static int devlink_trap_register(Ptr<devlink> devlink, Ptr<devlink_trap> trap,
       Ptr<?> priv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_trap_report($arg1, $arg2, $arg3, $arg4, (const struct flow_action_cookie*)$arg5)")
+  @BuiltinBPFFunction("devlink_trap_report($arg1, $arg2, $arg3, $arg4, (const struct flow_action_cookie *)$arg5)")
   public static void devlink_trap_report(Ptr<devlink> devlink, Ptr<sk_buff> skb, Ptr<?> trap_ctx,
       Ptr<devlink_port> in_devlink_port, Ptr<flow_action_cookie> fa_cookie) {
     throw new MethodIsBPFRelatedFunction();
@@ -3145,7 +3146,7 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_trap_unregister($arg1, (const struct devlink_trap*)$arg2)")
+  @BuiltinBPFFunction("devlink_trap_unregister($arg1, (const struct devlink_trap *)$arg2)")
   public static void devlink_trap_unregister(Ptr<devlink> devlink, Ptr<devlink_trap> trap) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3163,14 +3164,14 @@ public final class DevlinkDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_traps_register($arg1, (const struct devlink_trap*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("devlink_traps_register($arg1, (const struct devlink_trap *)$arg2, $arg3, $arg4)")
   public static int devlink_traps_register(Ptr<devlink> devlink, Ptr<devlink_trap> traps,
       @Unsigned long traps_count, Ptr<?> priv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("devlink_traps_unregister($arg1, (const struct devlink_trap*)$arg2, $arg3)")
+  @BuiltinBPFFunction("devlink_traps_unregister($arg1, (const struct devlink_trap *)$arg2, $arg3)")
   public static void devlink_traps_unregister(Ptr<devlink> devlink, Ptr<devlink_trap> traps,
       @Unsigned long traps_count) {
     throw new MethodIsBPFRelatedFunction();

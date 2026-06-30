@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1396,7 +1397,7 @@ public final class BioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bio_crypt_dun_is_contiguous((const struct bio_crypt_ctx*)$arg1, $arg2, (const long long unsigned int*)$arg3)")
+  @BuiltinBPFFunction("bio_crypt_dun_is_contiguous((const struct bio_crypt_ctx *)$arg1, $arg2, (const long long unsigned int *)$arg3)")
   public static boolean bio_crypt_dun_is_contiguous(Ptr<bio_crypt_ctx> bc, @Unsigned int bytes,
       Ptr<java.lang. @Unsigned Long> next_dun) {
     throw new MethodIsBPFRelatedFunction();
@@ -1409,7 +1410,7 @@ public final class BioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bio_crypt_set_ctx($arg1, (const struct blk_crypto_key*)$arg2, (const long long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bio_crypt_set_ctx($arg1, (const struct blk_crypto_key *)$arg2, (const long long unsigned int *)$arg3, $arg4)")
   public static void bio_crypt_set_ctx(Ptr<bio> bio, Ptr<blk_crypto_key> key,
       Ptr<java.lang. @Unsigned Long> dun, @Unsigned @OriginalName("gfp_t") int gfp_mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1557,7 +1558,7 @@ public final class BioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bio_iov_bvec_set($arg1, (const struct iov_iter*)$arg2)")
+  @BuiltinBPFFunction("bio_iov_bvec_set($arg1, (const struct iov_iter *)$arg2)")
   public static void bio_iov_bvec_set(Ptr<bio> bio, Ptr<iov_iter> iter) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1626,14 +1627,14 @@ public final class BioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bio_split_discard($arg1, (const struct queue_limits*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bio_split_discard($arg1, (const struct queue_limits *)$arg2, $arg3)")
   public static Ptr<bio> bio_split_discard(Ptr<bio> bio, Ptr<queue_limits> lim,
       Ptr<java.lang. @Unsigned Integer> nsegs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bio_split_io_at($arg1, (const struct queue_limits*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bio_split_io_at($arg1, (const struct queue_limits *)$arg2, $arg3, $arg4, $arg5)")
   public static int bio_split_io_at(Ptr<bio> bio, Ptr<queue_limits> lim,
       Ptr<java.lang. @Unsigned Integer> segs, @Unsigned int max_bytes,
       @Unsigned int len_align_mask) {
@@ -1641,7 +1642,7 @@ public final class BioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bio_split_rw($arg1, (const struct queue_limits*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bio_split_rw($arg1, (const struct queue_limits *)$arg2, $arg3)")
   public static Ptr<bio> bio_split_rw(Ptr<bio> bio, Ptr<queue_limits> lim,
       Ptr<java.lang. @Unsigned Integer> nr_segs) {
     throw new MethodIsBPFRelatedFunction();
@@ -1654,14 +1655,14 @@ public final class BioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bio_split_write_zeroes($arg1, (const struct queue_limits*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bio_split_write_zeroes($arg1, (const struct queue_limits *)$arg2, $arg3)")
   public static Ptr<bio> bio_split_write_zeroes(Ptr<bio> bio, Ptr<queue_limits> lim,
       Ptr<java.lang. @Unsigned Integer> nsegs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bio_split_zone_append($arg1, (const struct queue_limits*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bio_split_zone_append($arg1, (const struct queue_limits *)$arg2, $arg3)")
   public static Ptr<bio> bio_split_zone_append(Ptr<bio> bio, Ptr<queue_limits> lim,
       Ptr<java.lang. @Unsigned Integer> nr_segs) {
     throw new MethodIsBPFRelatedFunction();

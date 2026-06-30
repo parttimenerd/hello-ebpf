@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1144,7 +1145,7 @@ public final class TpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm_buf_append($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tpm_buf_append($arg1, (const u8 *)$arg2, $arg3)")
   public static void tpm_buf_append(Ptr<tpm_buf> buf, Ptr<java.lang.Character> new_data,
       @Unsigned short new_length) {
     throw new MethodIsBPFRelatedFunction();
@@ -1268,7 +1269,7 @@ public final class TpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm_chip_alloc($arg1, (const struct tpm_class_ops*)$arg2)")
+  @BuiltinBPFFunction("tpm_chip_alloc($arg1, (const struct tpm_class_ops *)$arg2)")
   public static Ptr<tpm_chip> tpm_chip_alloc(Ptr<device> pdev, Ptr<tpm_class_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1337,7 +1338,7 @@ public final class TpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm_common_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("tpm_common_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long tpm_common_write(Ptr<file> file, String buf,
       @Unsigned long size, Ptr<java.lang. @OriginalName("loff_t") Long> off) {
     throw new MethodIsBPFRelatedFunction();
@@ -1516,7 +1517,7 @@ public final class TpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm_seal($arg1, $arg2, $arg3, (const u8*)$arg4, (const u8*)$arg5, $arg6, $arg7, $arg8, (const u8*)$arg9, (const u8*)$arg10, $arg11)")
+  @BuiltinBPFFunction("tpm_seal($arg1, $arg2, $arg3, (const u8 *)$arg4, (const u8 *)$arg5, $arg6, $arg7, $arg8, (const u8 *)$arg9, (const u8 *)$arg10, $arg11)")
   public static int tpm_seal(Ptr<tpm_buf> tb, @Unsigned @OriginalName("uint16_t") short keytype,
       @Unsigned @OriginalName("uint32_t") int keyhandle, String keyauth, String data,
       @Unsigned @OriginalName("uint32_t") int datalen, String blob,
@@ -1568,7 +1569,7 @@ public final class TpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm_store_ppi_request($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("tpm_store_ppi_request($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long tpm_store_ppi_request(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1588,7 +1589,7 @@ public final class TpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm_tcg_write_bytes($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("tpm_tcg_write_bytes($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int tpm_tcg_write_bytes(Ptr<tpm_tis_data> data, @Unsigned int addr,
       @Unsigned short len, Ptr<java.lang.Character> value, tpm_tis_io_mode io_mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1607,7 +1608,7 @@ public final class TpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm_tis_core_init($arg1, $arg2, $arg3, (const struct tpm_tis_phy_ops*)$arg4, $arg5)")
+  @BuiltinBPFFunction("tpm_tis_core_init($arg1, $arg2, $arg3, (const struct tpm_tis_phy_ops *)$arg4, $arg5)")
   public static int tpm_tis_core_init(Ptr<device> dev, Ptr<tpm_tis_data> priv, int irq,
       Ptr<tpm_tis_phy_ops> phy_ops, @OriginalName("acpi_handle") Ptr<?> acpi_dev_handle) {
     throw new MethodIsBPFRelatedFunction();
@@ -1644,7 +1645,7 @@ public final class TpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm_tis_pnp_init($arg1, (const struct pnp_device_id*)$arg2)")
+  @BuiltinBPFFunction("tpm_tis_pnp_init($arg1, (const struct pnp_device_id *)$arg2)")
   public static int tpm_tis_pnp_init(Ptr<pnp_dev> pnp_dev, Ptr<pnp_device_id> pnp_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1720,14 +1721,14 @@ public final class TpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm_tis_send_data($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tpm_tis_send_data($arg1, (const u8 *)$arg2, $arg3)")
   public static int tpm_tis_send_data(Ptr<tpm_chip> chip, Ptr<java.lang.Character> buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm_tis_send_main($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("tpm_tis_send_main($arg1, (const u8 *)$arg2, $arg3)")
   public static int tpm_tis_send_main(Ptr<tpm_chip> chip, Ptr<java.lang.Character> buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1774,7 +1775,7 @@ public final class TpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm_transmit_cmd($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("tpm_transmit_cmd($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static @OriginalName("ssize_t") long tpm_transmit_cmd(Ptr<tpm_chip> chip, Ptr<tpm_buf> buf,
       @Unsigned long min_rsp_body_length, String desc) {
     throw new MethodIsBPFRelatedFunction();
@@ -1794,7 +1795,7 @@ public final class TpmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm_unseal($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5, (const u8*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("tpm_unseal($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5, (const u8 *)$arg6, $arg7, $arg8)")
   public static int tpm_unseal(Ptr<tpm_buf> tb, @Unsigned @OriginalName("uint32_t") int keyhandle,
       String keyauth, String blob, int bloblen, String blobauth, String data,
       Ptr<java.lang. @Unsigned Integer> datalen) {

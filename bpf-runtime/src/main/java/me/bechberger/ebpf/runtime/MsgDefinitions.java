@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,14 +1097,14 @@ public final class MsgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("msg_add_dict_text($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("msg_add_dict_text($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static @OriginalName("ssize_t") long msg_add_dict_text(String buf, @Unsigned long size,
       String key, String val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("msg_add_ext_text($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("msg_add_ext_text($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static @OriginalName("ssize_t") long msg_add_ext_text(String buf, @Unsigned long size,
       String text, @Unsigned long text_len, char endc) {
     throw new MethodIsBPFRelatedFunction();

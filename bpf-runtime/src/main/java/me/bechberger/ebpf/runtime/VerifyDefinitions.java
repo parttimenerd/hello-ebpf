@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class VerifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("verify_container((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("verify_container((const u8 *)$arg1, $arg2)")
   public static boolean verify_container(Ptr<java.lang.Character> buf, @Unsigned long buf_size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1114,7 +1115,7 @@ public final class VerifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("verify_data_block($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("verify_data_block($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static boolean verify_data_block(Ptr<inode> inode, Ptr<fsverity_info> vi, Ptr<?> data,
       @Unsigned long data_pos, @Unsigned long max_ra_pages) {
     throw new MethodIsBPFRelatedFunction();
@@ -1134,13 +1135,13 @@ public final class VerifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("verify_dirent_name((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("verify_dirent_name((const u8 *)$arg1, $arg2)")
   public static int verify_dirent_name(String name, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("verify_equivalence_table((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("verify_equivalence_table((const u8 *)$arg1, $arg2)")
   public static boolean verify_equivalence_table(Ptr<java.lang.Character> buf,
       @Unsigned long buf_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1159,20 +1160,20 @@ public final class VerifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("verify_module_namespace((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("verify_module_namespace((const u8 *)$arg1, (const u8 *)$arg2)")
   public static boolean verify_module_namespace(String namespace, String modname) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("verify_patch((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("verify_patch((const u8 *)$arg1, $arg2, $arg3)")
   public static int verify_patch(Ptr<java.lang.Character> buf, @Unsigned long buf_size,
       Ptr<java.lang. @Unsigned Integer> patch_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("verify_pefile_signature((const void*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("verify_pefile_signature((const void *)$arg1, $arg2, $arg3, $arg4)")
   public static int verify_pefile_signature(Ptr<?> pebuf, @Unsigned int pelen,
       Ptr<key> trusted_keys, key_being_used_for usage) {
     throw new MethodIsBPFRelatedFunction();
@@ -1185,7 +1186,7 @@ public final class VerifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("verify_pkcs7_message_sig((const void*)$arg1, $arg2, $arg3, $arg4, $arg5, (int (*)(void*, const void*, long unsigned int, long unsigned int))$arg6, $arg7)")
+  @BuiltinBPFFunction("verify_pkcs7_message_sig((const void *)$arg1, $arg2, $arg3, $arg4, $arg5, (int (*)(void*, const void*, long unsigned int, long unsigned int))$arg6, $arg7)")
   public static int verify_pkcs7_message_sig(Ptr<?> data, @Unsigned long len,
       Ptr<pkcs7_message> pkcs7, Ptr<key> trusted_keys, key_being_used_for usage,
       Ptr<?> view_content, Ptr<?> ctx) {
@@ -1193,7 +1194,7 @@ public final class VerifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("verify_pkcs7_signature((const void*)$arg1, $arg2, (const void*)$arg3, $arg4, $arg5, $arg6, (int (*)(void*, const void*, long unsigned int, long unsigned int))$arg7, $arg8)")
+  @BuiltinBPFFunction("verify_pkcs7_signature((const void *)$arg1, $arg2, (const void *)$arg3, $arg4, $arg5, $arg6, (int (*)(void*, const void*, long unsigned int, long unsigned int))$arg7, $arg8)")
   public static int verify_pkcs7_signature(Ptr<?> data, @Unsigned long len, Ptr<?> raw_pkcs7,
       @Unsigned long pkcs7_len, Ptr<key> trusted_keys, key_being_used_for usage,
       Ptr<?> view_content, Ptr<?> ctx) {
@@ -1214,14 +1215,14 @@ public final class VerifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("verify_sha256_digest($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("verify_sha256_digest($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static boolean verify_sha256_digest(@Unsigned int patch_id, @Unsigned int cur_rev,
       Ptr<java.lang.Character> data, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("verify_signature((const struct key*)$arg1, (const struct public_key_signature*)$arg2)")
+  @BuiltinBPFFunction("verify_signature((const struct key *)$arg1, (const struct public_key_signature *)$arg2)")
   public static int verify_signature(Ptr<key> key, Ptr<public_key_signature> sig) {
     throw new MethodIsBPFRelatedFunction();
   }

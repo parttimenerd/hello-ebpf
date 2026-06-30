@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class PwmDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__pwm_apply($arg1, (const struct pwm_state*)$arg2)")
+  @BuiltinBPFFunction("__pwm_apply($arg1, (const struct pwm_state *)$arg2)")
   public static int __pwm_apply(Ptr<pwm_device> pwm, Ptr<pwm_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1108,21 +1109,21 @@ public final class PwmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__pwm_round_waveform_fromhw($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__pwm_round_waveform_fromhw($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static int __pwm_round_waveform_fromhw(Ptr<pwm_chip> chip, Ptr<pwm_device> pwm,
       Ptr<?> wfhw, Ptr<pwm_waveform> wf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__pwm_round_waveform_tohw($arg1, $arg2, (const struct pwm_waveform*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__pwm_round_waveform_tohw($arg1, $arg2, (const struct pwm_waveform *)$arg3, $arg4)")
   public static int __pwm_round_waveform_tohw(Ptr<pwm_chip> chip, Ptr<pwm_device> pwm,
       Ptr<pwm_waveform> wf, Ptr<?> wfhw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__pwm_write_waveform($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("__pwm_write_waveform($arg1, $arg2, (const void *)$arg3)")
   public static int __pwm_write_waveform(Ptr<pwm_chip> chip, Ptr<pwm_device> pwm, Ptr<?> wfhw) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1140,13 +1141,13 @@ public final class PwmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pwm_apply_atomic($arg1, (const struct pwm_state*)$arg2)")
+  @BuiltinBPFFunction("pwm_apply_atomic($arg1, (const struct pwm_state *)$arg2)")
   public static int pwm_apply_atomic(Ptr<pwm_device> pwm, Ptr<pwm_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pwm_apply_might_sleep($arg1, (const struct pwm_state*)$arg2)")
+  @BuiltinBPFFunction("pwm_apply_might_sleep($arg1, (const struct pwm_state *)$arg2)")
   public static int pwm_apply_might_sleep(Ptr<pwm_device> pwm, Ptr<pwm_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1207,7 +1208,7 @@ public final class PwmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pwm_device_request($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("pwm_device_request($arg1, (const u8 *)$arg2)")
   public static int pwm_device_request(Ptr<pwm_device> pwm, String label) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1219,7 +1220,7 @@ public final class PwmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pwm_get($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("pwm_get($arg1, (const u8 *)$arg2)")
   public static Ptr<pwm_device> pwm_get(Ptr<device> dev, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1243,7 +1244,7 @@ public final class PwmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pwm_lpss_apply($arg1, $arg2, (const struct pwm_state*)$arg3)")
+  @BuiltinBPFFunction("pwm_lpss_apply($arg1, $arg2, (const struct pwm_state *)$arg3)")
   public static int pwm_lpss_apply(Ptr<pwm_chip> chip, Ptr<pwm_device> pwm, Ptr<pwm_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1280,14 +1281,14 @@ public final class PwmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pwm_lpss_prepare_enable($arg1, $arg2, (const struct pwm_state*)$arg3)")
+  @BuiltinBPFFunction("pwm_lpss_prepare_enable($arg1, $arg2, (const struct pwm_state *)$arg3)")
   public static int pwm_lpss_prepare_enable(Ptr<pwm_lpss_chip> lpwm, Ptr<pwm_device> pwm,
       Ptr<pwm_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pwm_lpss_probe_pci($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("pwm_lpss_probe_pci($arg1, (const struct pci_device_id *)$arg2)")
   public static int pwm_lpss_probe_pci(Ptr<pci_dev> pdev, Ptr<pci_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1317,7 +1318,7 @@ public final class PwmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pwm_request_from_chip($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("pwm_request_from_chip($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<pwm_device> pwm_request_from_chip(Ptr<pwm_chip> chip, @Unsigned int index,
       String label) {
     throw new MethodIsBPFRelatedFunction();
@@ -1356,7 +1357,7 @@ public final class PwmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pwm_set_waveform_might_sleep($arg1, (const struct pwm_waveform*)$arg2, $arg3)")
+  @BuiltinBPFFunction("pwm_set_waveform_might_sleep($arg1, (const struct pwm_waveform *)$arg2, $arg3)")
   public static int pwm_set_waveform_might_sleep(Ptr<pwm_device> pwm, Ptr<pwm_waveform> wf,
       boolean exact) {
     throw new MethodIsBPFRelatedFunction();
@@ -1369,13 +1370,13 @@ public final class PwmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pwm_unexport_match($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("pwm_unexport_match($arg1, (const void *)$arg2)")
   public static int pwm_unexport_match(Ptr<device> pwm_dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pwm_wf2state((const struct pwm_waveform*)$arg1, $arg2)")
+  @BuiltinBPFFunction("pwm_wf2state((const struct pwm_waveform *)$arg1, $arg2)")
   public static void pwm_wf2state(Ptr<pwm_waveform> wf, Ptr<pwm_state> state) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__usb_create_hcd((const struct hc_driver*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__usb_create_hcd((const struct hc_driver *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static Ptr<usb_hcd> __usb_create_hcd(Ptr<hc_driver> driver, Ptr<device> sysdev,
       Ptr<device> dev, String bus_name, Ptr<usb_hcd> primary_hcd) {
     throw new MethodIsBPFRelatedFunction();
@@ -1251,7 +1252,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_altnum_to_altsetting((const struct usb_interface*)$arg1, $arg2)")
+  @BuiltinBPFFunction("usb_altnum_to_altsetting((const struct usb_interface *)$arg1, $arg2)")
   public static Ptr<usb_host_interface> usb_altnum_to_altsetting(Ptr<usb_interface> intf,
       @Unsigned int altnum) {
     throw new MethodIsBPFRelatedFunction();
@@ -1445,14 +1446,14 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_check_bulk_endpoints((const struct usb_interface*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("usb_check_bulk_endpoints((const struct usb_interface *)$arg1, (const u8 *)$arg2)")
   public static boolean usb_check_bulk_endpoints(Ptr<usb_interface> intf,
       Ptr<java.lang.Character> ep_addrs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_check_int_endpoints((const struct usb_interface*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("usb_check_int_endpoints((const struct usb_interface *)$arg1, (const u8 *)$arg2)")
   public static boolean usb_check_int_endpoints(Ptr<usb_interface> intf,
       Ptr<java.lang.Character> ep_addrs) {
     throw new MethodIsBPFRelatedFunction();
@@ -1505,7 +1506,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_control_msg_send($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const void*)$arg7, $arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("usb_control_msg_send($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const void *)$arg7, $arg8, $arg9, $arg10)")
   public static int usb_control_msg_send(Ptr<usb_device> dev, char endpoint, char request,
       char requesttype, @Unsigned short value, @Unsigned short index, Ptr<?> driver_data,
       @Unsigned short size, int timeout, @Unsigned @OriginalName("gfp_t") int memflags) {
@@ -1520,14 +1521,14 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_create_hcd((const struct hc_driver*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("usb_create_hcd((const struct hc_driver *)$arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<usb_hcd> usb_create_hcd(Ptr<hc_driver> driver, Ptr<device> dev,
       String bus_name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_create_shared_hcd((const struct hc_driver*)$arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("usb_create_shared_hcd((const struct hc_driver *)$arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static Ptr<usb_hcd> usb_create_shared_hcd(Ptr<hc_driver> driver, Ptr<device> dev,
       String bus_name, Ptr<usb_hcd> primary_hcd) {
     throw new MethodIsBPFRelatedFunction();
@@ -1579,7 +1580,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_decode_interval((const struct usb_endpoint_descriptor*)$arg1, $arg2)")
+  @BuiltinBPFFunction("usb_decode_interval((const struct usb_endpoint_descriptor *)$arg1, $arg2)")
   public static @Unsigned int usb_decode_interval(Ptr<usb_endpoint_descriptor> epd,
       usb_device_speed speed) {
     throw new MethodIsBPFRelatedFunction();
@@ -1629,7 +1630,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_detect_static_quirks($arg1, (const struct usb_device_id*)$arg2)")
+  @BuiltinBPFFunction("usb_detect_static_quirks($arg1, (const struct usb_device_id *)$arg2)")
   public static @Unsigned int usb_detect_static_quirks(Ptr<usb_device> udev,
       Ptr<usb_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1684,7 +1685,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_dev_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("usb_dev_uevent((const struct device *)$arg1, $arg2)")
   public static int usb_dev_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1706,13 +1707,13 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_device_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("usb_device_match($arg1, (const struct device_driver *)$arg2)")
   public static int usb_device_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct usb_device_id*)usb_device_match_id($arg1, (const struct usb_device_id*)$arg2))")
+  @BuiltinBPFFunction("((const struct usb_device_id*)usb_device_match_id($arg1, (const struct usb_device_id *)$arg2))")
   public static Ptr<usb_device_id> usb_device_match_id(Ptr<usb_device> udev,
       Ptr<usb_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1831,7 +1832,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_driver_applicable($arg1, (const struct usb_device_driver*)$arg2)")
+  @BuiltinBPFFunction("usb_driver_applicable($arg1, (const struct usb_device_driver *)$arg2)")
   public static boolean usb_driver_applicable(Ptr<usb_device> udev, Ptr<usb_device_driver> udrv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1857,7 +1858,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_dump_config($arg1, $arg2, $arg3, (const struct usb_host_config*)$arg4, $arg5)")
+  @BuiltinBPFFunction("usb_dump_config($arg1, $arg2, $arg3, (const struct usb_host_config *)$arg4, $arg5)")
   public static String usb_dump_config(int speed, String start, String end,
       Ptr<usb_host_config> config, int active) {
     throw new MethodIsBPFRelatedFunction();
@@ -2250,7 +2251,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_hcd_pci_probe($arg1, (const struct hc_driver*)$arg2)")
+  @BuiltinBPFFunction("usb_hcd_pci_probe($arg1, (const struct hc_driver *)$arg2)")
   public static int usb_hcd_pci_probe(Ptr<pci_dev> dev, Ptr<hc_driver> driver) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2426,13 +2427,13 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_if_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("usb_if_uevent((const struct device *)$arg1, $arg2)")
   public static int usb_if_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_ifnum_to_if((const struct usb_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("usb_ifnum_to_if((const struct usb_device *)$arg1, $arg2)")
   public static Ptr<usb_interface> usb_ifnum_to_if(Ptr<usb_device> dev, @Unsigned int ifnum) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2493,7 +2494,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_lock_device_for_reset($arg1, (const struct usb_interface*)$arg2)")
+  @BuiltinBPFFunction("usb_lock_device_for_reset($arg1, (const struct usb_interface *)$arg2)")
   public static int usb_lock_device_for_reset(Ptr<usb_device> udev, Ptr<usb_interface> iface) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2511,33 +2512,33 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_match_device($arg1, (const struct usb_device_id*)$arg2)")
+  @BuiltinBPFFunction("usb_match_device($arg1, (const struct usb_device_id *)$arg2)")
   public static int usb_match_device(Ptr<usb_device> dev, Ptr<usb_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct usb_device_id*)usb_match_dynamic_id($arg1, (const struct usb_driver*)$arg2))")
+  @BuiltinBPFFunction("((const struct usb_device_id*)usb_match_dynamic_id($arg1, (const struct usb_driver *)$arg2))")
   public static Ptr<usb_device_id> usb_match_dynamic_id(Ptr<usb_interface> intf,
       Ptr<usb_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct usb_device_id*)usb_match_id($arg1, (const struct usb_device_id*)$arg2))")
+  @BuiltinBPFFunction("((const struct usb_device_id*)usb_match_id($arg1, (const struct usb_device_id *)$arg2))")
   public static Ptr<usb_device_id> usb_match_id(Ptr<usb_interface> _interface,
       Ptr<usb_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_match_one_id($arg1, (const struct usb_device_id*)$arg2)")
+  @BuiltinBPFFunction("usb_match_one_id($arg1, (const struct usb_device_id *)$arg2)")
   public static int usb_match_one_id(Ptr<usb_interface> _interface, Ptr<usb_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_match_one_id_intf($arg1, $arg2, (const struct usb_device_id*)$arg3)")
+  @BuiltinBPFFunction("usb_match_one_id_intf($arg1, $arg2, (const struct usb_device_id *)$arg3)")
   public static int usb_match_one_id_intf(Ptr<usb_device> dev, Ptr<usb_host_interface> intf,
       Ptr<usb_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
@@ -2550,7 +2551,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_mon_register((const struct usb_mon_operations*)$arg1)")
+  @BuiltinBPFFunction("usb_mon_register((const struct usb_mon_operations *)$arg1)")
   public static int usb_mon_register(Ptr<usb_mon_operations> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2738,7 +2739,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_phy_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("usb_phy_uevent((const struct device *)$arg1, $arg2)")
   public static int usb_phy_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2873,7 +2874,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_register_driver($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("usb_register_driver($arg1, $arg2, (const u8 *)$arg3)")
   public static int usb_register_driver(Ptr<usb_driver> new_driver, Ptr<module> owner,
       String mod_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -3013,7 +3014,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_role_switch_find_by_fwnode((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("usb_role_switch_find_by_fwnode((const struct fwnode_handle *)$arg1)")
   public static Ptr<usb_role_switch> usb_role_switch_find_by_fwnode(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3050,7 +3051,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_role_switch_match((const struct fwnode_handle*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("usb_role_switch_match((const struct fwnode_handle *)$arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<?> usb_role_switch_match(Ptr<fwnode_handle> fwnode, String id, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3062,7 +3063,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_role_switch_register($arg1, (const struct usb_role_switch_desc*)$arg2)")
+  @BuiltinBPFFunction("usb_role_switch_register($arg1, (const struct usb_role_switch_desc *)$arg2)")
   public static Ptr<usb_role_switch> usb_role_switch_register(Ptr<device> parent,
       Ptr<usb_role_switch_desc> desc) {
     throw new MethodIsBPFRelatedFunction();
@@ -3087,7 +3088,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_role_switch_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("usb_role_switch_uevent((const struct device *)$arg1, $arg2)")
   public static int usb_role_switch_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3247,7 +3248,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_store_new_id($arg1, (const struct usb_device_id*)$arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("usb_store_new_id($arg1, (const struct usb_device_id *)$arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static @OriginalName("ssize_t") long usb_store_new_id(Ptr<usb_dynids> dynids,
       Ptr<usb_device_id> id_table, Ptr<device_driver> driver, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -3286,7 +3287,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("usb_uevent((const struct device *)$arg1, $arg2)")
   public static int usb_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3358,7 +3359,7 @@ public final class UsbDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("usb_urb_ep_type_check((const struct urb*)$arg1)")
+  @BuiltinBPFFunction("usb_urb_ep_type_check((const struct urb *)$arg1)")
   public static int usb_urb_ep_type_check(Ptr<urb> urb) {
     throw new MethodIsBPFRelatedFunction();
   }

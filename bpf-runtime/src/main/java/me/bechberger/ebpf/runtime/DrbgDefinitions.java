@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class DrbgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drbg_convert_tfm_core((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("drbg_convert_tfm_core((const u8 *)$arg1, $arg2, $arg3)")
   public static void drbg_convert_tfm_core(String cra_driver_name, Ptr<java.lang.Integer> coreref,
       Ptr<java.lang. @OriginalName("bool") Boolean> pr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1129,7 +1130,7 @@ public final class DrbgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drbg_fill_array($arg1, (const struct drbg_core*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drbg_fill_array($arg1, (const struct drbg_core *)$arg2, $arg3)")
   public static void drbg_fill_array(Ptr<rng_alg> alg, Ptr<drbg_core> core, int pr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1229,21 +1230,21 @@ public final class DrbgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drbg_kcapi_random($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("drbg_kcapi_random($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int drbg_kcapi_random(Ptr<crypto_rng> tfm, Ptr<java.lang.Character> src,
       @Unsigned int slen, Ptr<java.lang.Character> dst, @Unsigned int dlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drbg_kcapi_seed($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drbg_kcapi_seed($arg1, (const u8 *)$arg2, $arg3)")
   public static int drbg_kcapi_seed(Ptr<crypto_rng> tfm, Ptr<java.lang.Character> seed,
       @Unsigned int slen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("drbg_kcapi_set_entropy($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("drbg_kcapi_set_entropy($arg1, (const u8 *)$arg2, $arg3)")
   public static void drbg_kcapi_set_entropy(Ptr<crypto_rng> tfm, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();

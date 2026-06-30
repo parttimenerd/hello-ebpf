@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,3379 +1091,3379 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class Ia32Definitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_epoll_pwait((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_epoll_pwait((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_epoll_pwait(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_epoll_pwait2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_epoll_pwait2((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_epoll_pwait2(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_execve((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_execve((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_execve(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_execveat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_execveat((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_execveat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_fadvise64_64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_fadvise64_64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_fadvise64_64(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_fanotify_mark((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_fanotify_mark((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_fanotify_mark(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_fcntl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_fcntl((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_fcntl(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_fcntl64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_fcntl64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_fcntl64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_fstatfs((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_fstatfs((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_fstatfs(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_fstatfs64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_fstatfs64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_fstatfs64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_ftruncate((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_ftruncate((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_ftruncate(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_get_robust_list((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_get_robust_list((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_get_robust_list(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_getdents((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_getdents((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_getdents(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_getitimer((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_getitimer((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_getitimer(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_getrlimit((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_getrlimit((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_getrlimit(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_getrusage((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_getrusage((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_getrusage(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_getsockopt((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_getsockopt((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_getsockopt(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_gettimeofday((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_gettimeofday((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_gettimeofday(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_ia32_clone((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_ia32_clone((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_ia32_clone(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_ia32_fstat64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_ia32_fstat64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_ia32_fstat64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_ia32_fstatat64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_ia32_fstatat64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_ia32_fstatat64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_ia32_lstat64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_ia32_lstat64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_ia32_lstat64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_ia32_mmap((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_ia32_mmap((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_ia32_mmap(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_ia32_stat64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_ia32_stat64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_ia32_stat64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_io_pgetevents((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_io_pgetevents((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_io_pgetevents(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_io_pgetevents_time64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_io_pgetevents_time64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_io_pgetevents_time64(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_io_setup((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_io_setup((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_io_setup(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_io_submit((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_io_submit((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_io_submit(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_ioctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_ioctl((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_ioctl(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_ipc((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_ipc((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_ipc(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_kexec_load((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_kexec_load((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_kexec_load(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_keyctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_keyctl((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_keyctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_lseek((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_lseek((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_lseek(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_mq_getsetattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_mq_getsetattr((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_mq_getsetattr(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_mq_notify((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_mq_notify((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_mq_notify(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_mq_open((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_mq_open((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_mq_open(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_msgctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_msgctl((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_msgctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_msgrcv((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_msgrcv((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_msgrcv(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_msgsnd((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_msgsnd((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_msgsnd(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_newfstat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_newfstat((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_newfstat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_newfstatat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_newfstatat((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_newfstatat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_newlstat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_newlstat((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_newlstat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_newstat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_newstat((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_newstat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_old_getrlimit((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_old_getrlimit((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_old_getrlimit(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_old_msgctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_old_msgctl((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_old_msgctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_old_readdir((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_old_readdir((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_old_readdir(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_old_select((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_old_select((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_old_select(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_old_semctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_old_semctl((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_old_semctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_old_shmctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_old_shmctl((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_old_shmctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_open((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_open((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_open(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_open_by_handle_at((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_open_by_handle_at((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_open_by_handle_at(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_openat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_openat((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_openat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_ppoll_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_ppoll_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_ppoll_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_ppoll_time64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_ppoll_time64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_ppoll_time64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_preadv((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_preadv((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_preadv(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_preadv2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_preadv2((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_preadv2(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_preadv64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_preadv64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_preadv64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_preadv64v2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_preadv64v2((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_preadv64v2(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_process_vm_readv((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_process_vm_readv((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_process_vm_readv(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_process_vm_writev((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_process_vm_writev((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_process_vm_writev(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_pselect6_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_pselect6_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_pselect6_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_pselect6_time64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_pselect6_time64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_pselect6_time64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_ptrace((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_ptrace((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_ptrace(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_pwritev((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_pwritev((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_pwritev(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_pwritev2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_pwritev2((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_pwritev2(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_pwritev64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_pwritev64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_pwritev64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_pwritev64v2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_pwritev64v2((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_pwritev64v2(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_recv((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_recv((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_recv(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_recvfrom((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_recvfrom((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_recvfrom(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_recvmmsg_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_recvmmsg_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_recvmmsg_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_recvmmsg_time64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_recvmmsg_time64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_recvmmsg_time64(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_recvmsg((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_recvmsg((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_recvmsg(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigaction((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigaction((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_rt_sigaction(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigpending((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigpending((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_rt_sigpending(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigprocmask((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigprocmask((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_rt_sigprocmask(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigqueueinfo((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigqueueinfo((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_rt_sigqueueinfo(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigsuspend((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigsuspend((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_rt_sigsuspend(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigtimedwait_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigtimedwait_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_rt_sigtimedwait_time32(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigtimedwait_time64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_rt_sigtimedwait_time64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_rt_sigtimedwait_time64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_rt_tgsigqueueinfo((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_rt_tgsigqueueinfo((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_rt_tgsigqueueinfo(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_s390_ipc((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_s390_ipc((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_s390_ipc(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_sched_getaffinity((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_sched_getaffinity((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_sched_getaffinity(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_sched_setaffinity((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_sched_setaffinity((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_sched_setaffinity(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_select((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_select((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_select(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_semctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_semctl((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_semctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_sendfile((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_sendfile((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_sendfile(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_sendfile64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_sendfile64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_sendfile64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_sendmmsg((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_sendmmsg((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_sendmmsg(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_sendmsg((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_sendmsg((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_sendmsg(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_set_robust_list((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_set_robust_list((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_set_robust_list(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_setitimer((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_setitimer((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_setitimer(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_setrlimit((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_setrlimit((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_setrlimit(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_setsockopt((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_setsockopt((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_setsockopt(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_settimeofday((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_settimeofday((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_settimeofday(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_shmat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_shmat((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_shmat(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_shmctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_shmctl((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_shmctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_sigaction((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_sigaction((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_sigaction(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_sigaltstack((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_sigaltstack((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_sigaltstack(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_signalfd((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_signalfd((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_signalfd(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_signalfd4((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_signalfd4((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_signalfd4(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_sigpending((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_sigpending((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_sigpending(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_sigprocmask((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_sigprocmask((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_sigprocmask(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_socketcall((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_socketcall((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_socketcall(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_statfs((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_statfs((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_statfs(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_statfs64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_statfs64((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_statfs64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_sysinfo((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_sysinfo((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_sysinfo(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_timer_create((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_timer_create((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_timer_create(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_times((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_times((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_times(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_truncate((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_truncate((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_truncate(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_ustat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_ustat((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_ustat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_wait4((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_wait4((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_wait4(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_compat_sys_waitid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_compat_sys_waitid((const struct pt_regs *)$arg1)")
   public static long __ia32_compat_sys_waitid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_accept((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_accept((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_accept(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_accept4((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_accept4((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_accept4(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_access((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_access((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_access(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_acct((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_acct((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_acct(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_add_key((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_add_key((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_add_key(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_adjtimex((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_adjtimex((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_adjtimex(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_adjtimex_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_adjtimex_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_adjtimex_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_alarm((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_alarm((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_alarm(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_arch_prctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_arch_prctl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_arch_prctl(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_bind((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_bind((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_bind(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_bpf((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_bpf((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_bpf(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_brk((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_brk((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_brk(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_cachestat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_cachestat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_cachestat(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_capget((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_capget((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_capget(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_capset((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_capset((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_capset(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_chdir((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_chdir((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_chdir(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_chmod((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_chmod((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_chmod(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_chown((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_chown((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_chown(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_chown16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_chown16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_chown16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_chroot((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_chroot((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_chroot(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_clock_adjtime((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_clock_adjtime((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_clock_adjtime(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_clock_adjtime32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_clock_adjtime32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_clock_adjtime32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_clock_getres((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_clock_getres((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_clock_getres(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_clock_getres_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_clock_getres_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_clock_getres_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_clock_gettime((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_clock_gettime((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_clock_gettime(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_clock_gettime32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_clock_gettime32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_clock_gettime32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_clock_nanosleep((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_clock_nanosleep((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_clock_nanosleep(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_clock_nanosleep_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_clock_nanosleep_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_clock_nanosleep_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_clock_settime((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_clock_settime((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_clock_settime(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_clock_settime32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_clock_settime32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_clock_settime32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_clone((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_clone((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_clone(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_clone3((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_clone3((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_clone3(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_close((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_close((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_close(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_close_range((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_close_range((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_close_range(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_connect((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_connect((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_connect(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_copy_file_range((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_copy_file_range((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_copy_file_range(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_creat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_creat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_creat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_delete_module((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_delete_module((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_delete_module(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_dup((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_dup((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_dup(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_dup2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_dup2((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_dup2(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_dup3((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_dup3((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_dup3(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_epoll_create((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_epoll_create((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_epoll_create(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_epoll_create1((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_epoll_create1((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_epoll_create1(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_epoll_ctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_epoll_ctl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_epoll_ctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_epoll_pwait((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_epoll_pwait((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_epoll_pwait(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_epoll_pwait2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_epoll_pwait2((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_epoll_pwait2(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_epoll_wait((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_epoll_wait((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_epoll_wait(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_eventfd((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_eventfd((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_eventfd(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_eventfd2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_eventfd2((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_eventfd2(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_execve((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_execve((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_execve(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_execveat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_execveat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_execveat(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_exit((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_exit((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_exit(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_exit_group((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_exit_group((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_exit_group(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_faccessat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_faccessat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_faccessat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_faccessat2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_faccessat2((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_faccessat2(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fadvise64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fadvise64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fadvise64(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fadvise64_64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fadvise64_64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fadvise64_64(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fallocate((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fallocate((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fallocate(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fanotify_init((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fanotify_init((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fanotify_init(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fanotify_mark((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fanotify_mark((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fanotify_mark(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fchdir((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fchdir((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fchdir(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fchmod((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fchmod((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fchmod(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fchmodat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fchmodat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fchmodat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fchmodat2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fchmodat2((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fchmodat2(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fchown((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fchown((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fchown(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fchown16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fchown16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fchown16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fchownat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fchownat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fchownat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fcntl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fcntl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fcntl(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fdatasync((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fdatasync((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fdatasync(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fgetxattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fgetxattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fgetxattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_file_getattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_file_getattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_file_getattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_file_setattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_file_setattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_file_setattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_finit_module((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_finit_module((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_finit_module(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_flistxattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_flistxattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_flistxattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_flock((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_flock((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_flock(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fremovexattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fremovexattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fremovexattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fsconfig((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fsconfig((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fsconfig(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fsetxattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fsetxattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fsetxattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fsmount((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fsmount((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fsmount(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fsopen((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fsopen((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fsopen(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fspick((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fspick((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fspick(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fstat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fstat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fstat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fstatfs((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fstatfs((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fstatfs(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fstatfs64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fstatfs64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fstatfs64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_fsync((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_fsync((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_fsync(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ftruncate((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ftruncate((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ftruncate(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_futex((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_futex((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_futex(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_futex_requeue((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_futex_requeue((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_futex_requeue(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_futex_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_futex_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_futex_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_futex_wait((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_futex_wait((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_futex_wait(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_futex_waitv((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_futex_waitv((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_futex_waitv(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_futex_wake((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_futex_wake((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_futex_wake(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_futimesat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_futimesat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_futimesat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_futimesat_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_futimesat_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_futimesat_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_get_mempolicy((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_get_mempolicy((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_get_mempolicy(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_get_robust_list((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_get_robust_list((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_get_robust_list(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_get_thread_area((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_get_thread_area((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_get_thread_area(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getcpu((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getcpu((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getcpu(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getcwd((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getcwd((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getcwd(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getdents((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getdents((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getdents(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getdents64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getdents64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getdents64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getegid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getegid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getegid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_geteuid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_geteuid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_geteuid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getgid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getgid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getgid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getgroups((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getgroups((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getgroups(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getgroups16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getgroups16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getgroups16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_gethostname((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_gethostname((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_gethostname(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getitimer((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getitimer((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getitimer(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getpeername((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getpeername((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getpeername(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getpgid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getpgid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getpgid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getpriority((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getpriority((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getpriority(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getrandom((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getrandom((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getrandom(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getresgid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getresgid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getresgid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getresgid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getresgid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getresgid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getresuid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getresuid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getresuid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getresuid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getresuid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getresuid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getrlimit((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getrlimit((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getrlimit(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getrusage((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getrusage((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getrusage(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getsid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getsid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getsid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getsockname((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getsockname((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getsockname(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getsockopt((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getsockopt((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getsockopt(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_gettimeofday((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_gettimeofday((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_gettimeofday(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getuid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getuid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getuid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getxattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getxattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getxattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_getxattrat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_getxattrat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_getxattrat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ia32_fadvise64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ia32_fadvise64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ia32_fadvise64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ia32_fadvise64_64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ia32_fadvise64_64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ia32_fadvise64_64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ia32_fallocate((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ia32_fallocate((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ia32_fallocate(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ia32_ftruncate64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ia32_ftruncate64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ia32_ftruncate64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ia32_pread64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ia32_pread64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ia32_pread64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ia32_pwrite64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ia32_pwrite64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ia32_pwrite64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ia32_readahead((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ia32_readahead((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ia32_readahead(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ia32_sync_file_range((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ia32_sync_file_range((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ia32_sync_file_range(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ia32_truncate64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ia32_truncate64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ia32_truncate64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_init_module((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_init_module((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_init_module(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_inotify_add_watch((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_inotify_add_watch((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_inotify_add_watch(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_inotify_init((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_inotify_init((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_inotify_init(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_inotify_init1((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_inotify_init1((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_inotify_init1(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_inotify_rm_watch((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_inotify_rm_watch((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_inotify_rm_watch(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_io_cancel((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_io_cancel((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_io_cancel(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_io_destroy((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_io_destroy((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_io_destroy(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_io_getevents((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_io_getevents((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_io_getevents(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_io_getevents_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_io_getevents_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_io_getevents_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_io_pgetevents((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_io_pgetevents((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_io_pgetevents(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_io_pgetevents_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_io_pgetevents_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_io_pgetevents_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_io_setup((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_io_setup((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_io_setup(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_io_submit((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_io_submit((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_io_submit(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_io_uring_enter((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_io_uring_enter((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_io_uring_enter(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_io_uring_register((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_io_uring_register((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_io_uring_register(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_io_uring_setup((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_io_uring_setup((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_io_uring_setup(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ioctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ioctl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ioctl(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ioperm((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ioperm((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ioperm(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_iopl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_iopl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_iopl(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ioprio_get((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ioprio_get((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ioprio_get(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ioprio_set((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ioprio_set((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ioprio_set(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ipc((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ipc((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ipc(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_kcmp((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_kcmp((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_kcmp(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_kexec_file_load((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_kexec_file_load((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_kexec_file_load(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_kexec_load((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_kexec_load((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_kexec_load(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_keyctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_keyctl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_keyctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_kill((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_kill((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_kill(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_landlock_add_rule((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_landlock_add_rule((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_landlock_add_rule(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_landlock_create_ruleset((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_landlock_create_ruleset((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_landlock_create_ruleset(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_landlock_restrict_self((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_landlock_restrict_self((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_landlock_restrict_self(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_lchown((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_lchown((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_lchown(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_lchown16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_lchown16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_lchown16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_lgetxattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_lgetxattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_lgetxattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_link((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_link((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_link(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_linkat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_linkat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_linkat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_listen((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_listen((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_listen(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_listmount((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_listmount((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_listmount(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_listxattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_listxattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_listxattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_listxattrat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_listxattrat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_listxattrat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_llistxattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_llistxattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_llistxattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_llseek((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_llseek((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_llseek(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_lremovexattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_lremovexattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_lremovexattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_lseek((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_lseek((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_lseek(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_lsetxattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_lsetxattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_lsetxattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_lsm_get_self_attr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_lsm_get_self_attr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_lsm_get_self_attr(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_lsm_list_modules((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_lsm_list_modules((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_lsm_list_modules(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_lsm_set_self_attr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_lsm_set_self_attr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_lsm_set_self_attr(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_lstat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_lstat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_lstat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_madvise((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_madvise((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_madvise(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_map_shadow_stack((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_map_shadow_stack((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_map_shadow_stack(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mbind((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mbind((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mbind(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_membarrier((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_membarrier((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_membarrier(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_memfd_create((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_memfd_create((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_memfd_create(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_memfd_secret((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_memfd_secret((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_memfd_secret(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_migrate_pages((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_migrate_pages((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_migrate_pages(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mincore((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mincore((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mincore(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mkdir((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mkdir((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mkdir(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mkdirat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mkdirat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mkdirat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mknod((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mknod((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mknod(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mknodat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mknodat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mknodat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mlock((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mlock((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mlock(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mlock2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mlock2((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mlock2(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mlockall((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mlockall((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mlockall(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mmap((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mmap((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mmap(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mmap_pgoff((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mmap_pgoff((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mmap_pgoff(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_modify_ldt((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_modify_ldt((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_modify_ldt(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mount((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mount((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mount(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mount_setattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mount_setattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mount_setattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_move_mount((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_move_mount((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_move_mount(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_move_pages((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_move_pages((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_move_pages(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mprotect((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mprotect((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mprotect(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mq_getsetattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mq_getsetattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mq_getsetattr(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mq_notify((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mq_notify((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mq_notify(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mq_open((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mq_open((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mq_open(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mq_timedreceive((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mq_timedreceive((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mq_timedreceive(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mq_timedreceive_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mq_timedreceive_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mq_timedreceive_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mq_timedsend((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mq_timedsend((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mq_timedsend(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mq_timedsend_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mq_timedsend_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mq_timedsend_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mq_unlink((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mq_unlink((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mq_unlink(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mremap((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mremap((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mremap(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_mseal((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_mseal((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_mseal(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_msgctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_msgctl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_msgctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_msgget((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_msgget((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_msgget(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_msgrcv((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_msgrcv((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_msgrcv(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_msgsnd((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_msgsnd((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_msgsnd(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_msync((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_msync((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_msync(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_munlock((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_munlock((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_munlock(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_munlockall((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_munlockall((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_munlockall(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_munmap((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_munmap((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_munmap(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_name_to_handle_at((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_name_to_handle_at((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_name_to_handle_at(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_nanosleep((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_nanosleep((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_nanosleep(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_nanosleep_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_nanosleep_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_nanosleep_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_newfstat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_newfstat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_newfstat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_newfstatat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_newfstatat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_newfstatat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_newlstat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_newlstat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_newlstat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_newstat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_newstat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_newstat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_newuname((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_newuname((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_newuname(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_nice((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_nice((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_nice(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_old_getrlimit((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_old_getrlimit((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_old_getrlimit(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_old_msgctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_old_msgctl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_old_msgctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_old_readdir((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_old_readdir((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_old_readdir(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_old_semctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_old_semctl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_old_semctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_old_shmctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_old_shmctl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_old_shmctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_oldumount((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_oldumount((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_oldumount(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_olduname((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_olduname((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_olduname(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_open((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_open((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_open(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_open_by_handle_at((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_open_by_handle_at((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_open_by_handle_at(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_open_tree((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_open_tree((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_open_tree(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_open_tree_attr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_open_tree_attr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_open_tree_attr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_openat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_openat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_openat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_openat2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_openat2((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_openat2(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pciconfig_iobase((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pciconfig_iobase((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pciconfig_iobase(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pciconfig_read((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pciconfig_read((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pciconfig_read(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pciconfig_write((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pciconfig_write((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pciconfig_write(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_perf_event_open((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_perf_event_open((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_perf_event_open(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_personality((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_personality((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_personality(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pidfd_getfd((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pidfd_getfd((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pidfd_getfd(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pidfd_open((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pidfd_open((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pidfd_open(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pidfd_send_signal((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pidfd_send_signal((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pidfd_send_signal(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pipe((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pipe((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pipe(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pipe2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pipe2((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pipe2(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pivot_root((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pivot_root((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pivot_root(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pkey_alloc((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pkey_alloc((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pkey_alloc(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pkey_free((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pkey_free((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pkey_free(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pkey_mprotect((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pkey_mprotect((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pkey_mprotect(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_poll((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_poll((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_poll(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ppoll((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ppoll((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ppoll(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ppoll_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ppoll_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ppoll_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_prctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_prctl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_prctl(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pread64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pread64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pread64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_preadv((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_preadv((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_preadv(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_preadv2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_preadv2((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_preadv2(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_prlimit64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_prlimit64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_prlimit64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_process_madvise((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_process_madvise((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_process_madvise(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_process_mrelease((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_process_mrelease((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_process_mrelease(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_process_vm_readv((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_process_vm_readv((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_process_vm_readv(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_process_vm_writev((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_process_vm_writev((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_process_vm_writev(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pselect6((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pselect6((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pselect6(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pselect6_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pselect6_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pselect6_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ptrace((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ptrace((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ptrace(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pwrite64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pwrite64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pwrite64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pwritev((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pwritev((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pwritev(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_pwritev2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_pwritev2((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_pwritev2(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_quotactl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_quotactl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_quotactl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_quotactl_fd((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_quotactl_fd((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_quotactl_fd(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_read((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_read((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_read(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_readahead((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_readahead((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_readahead(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_readlink((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_readlink((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_readlink(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_readlinkat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_readlinkat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_readlinkat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_readv((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_readv((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_readv(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_reboot((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_reboot((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_reboot(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_recv((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_recv((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_recv(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_recvfrom((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_recvfrom((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_recvfrom(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_recvmmsg((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_recvmmsg((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_recvmmsg(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_recvmmsg_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_recvmmsg_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_recvmmsg_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_recvmsg((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_recvmsg((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_recvmsg(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_remap_file_pages((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_remap_file_pages((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_remap_file_pages(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_removexattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_removexattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_removexattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_removexattrat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_removexattrat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_removexattrat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_rename((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_rename((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_rename(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_renameat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_renameat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_renameat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_renameat2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_renameat2((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_renameat2(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_request_key((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_request_key((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_request_key(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_rmdir((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_rmdir((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_rmdir(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_rseq((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_rseq((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_rseq(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_rt_sigaction((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_rt_sigaction((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_rt_sigaction(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_rt_sigpending((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_rt_sigpending((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_rt_sigpending(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_rt_sigprocmask((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_rt_sigprocmask((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_rt_sigprocmask(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_rt_sigqueueinfo((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_rt_sigqueueinfo((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_rt_sigqueueinfo(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_rt_sigsuspend((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_rt_sigsuspend((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_rt_sigsuspend(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_rt_sigtimedwait((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_rt_sigtimedwait((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_rt_sigtimedwait(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_rt_sigtimedwait_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_rt_sigtimedwait_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_rt_sigtimedwait_time32(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_rt_tgsigqueueinfo((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_rt_tgsigqueueinfo((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_rt_tgsigqueueinfo(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_rtas((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_rtas((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_rtas(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_s390_ipc((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_s390_ipc((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_s390_ipc(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_s390_pci_mmio_read((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_s390_pci_mmio_read((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_s390_pci_mmio_read(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_s390_pci_mmio_write((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_s390_pci_mmio_write((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_s390_pci_mmio_write(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sched_get_priority_max((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sched_get_priority_max((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sched_get_priority_max(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sched_get_priority_min((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sched_get_priority_min((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sched_get_priority_min(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sched_getaffinity((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sched_getaffinity((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sched_getaffinity(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sched_getattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sched_getattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sched_getattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sched_getparam((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sched_getparam((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sched_getparam(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sched_getscheduler((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sched_getscheduler((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sched_getscheduler(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sched_rr_get_interval((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sched_rr_get_interval((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sched_rr_get_interval(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sched_rr_get_interval_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sched_rr_get_interval_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sched_rr_get_interval_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sched_setaffinity((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sched_setaffinity((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sched_setaffinity(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sched_setattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sched_setattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sched_setattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sched_setparam((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sched_setparam((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sched_setparam(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sched_setscheduler((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sched_setscheduler((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sched_setscheduler(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_seccomp((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_seccomp((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_seccomp(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_select((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_select((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_select(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_semctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_semctl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_semctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_semget((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_semget((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_semget(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_semop((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_semop((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_semop(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_semtimedop((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_semtimedop((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_semtimedop(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_semtimedop_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_semtimedop_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_semtimedop_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_send((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_send((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_send(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sendfile((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sendfile((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sendfile(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sendfile64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sendfile64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sendfile64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sendmmsg((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sendmmsg((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sendmmsg(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sendmsg((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sendmsg((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sendmsg(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sendto((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sendto((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sendto(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_set_mempolicy((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_set_mempolicy((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_set_mempolicy(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_set_mempolicy_home_node((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_set_mempolicy_home_node((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_set_mempolicy_home_node(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_set_robust_list((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_set_robust_list((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_set_robust_list(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_set_thread_area((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_set_thread_area((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_set_thread_area(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_set_tid_address((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_set_tid_address((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_set_tid_address(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setdomainname((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setdomainname((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setdomainname(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setfsgid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setfsgid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setfsgid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setfsgid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setfsgid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setfsgid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setfsuid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setfsuid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setfsuid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setfsuid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setfsuid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setfsuid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setgid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setgid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setgid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setgid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setgid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setgid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setgroups((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setgroups((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setgroups(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setgroups16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setgroups16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setgroups16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sethostname((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sethostname((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sethostname(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setitimer((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setitimer((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setitimer(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setns((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setns((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setns(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setpgid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setpgid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setpgid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setpriority((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setpriority((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setpriority(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setregid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setregid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setregid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setregid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setregid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setregid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setresgid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setresgid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setresgid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setresgid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setresgid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setresgid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setresuid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setresuid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setresuid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setresuid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setresuid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setresuid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setreuid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setreuid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setreuid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setreuid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setreuid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setreuid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setrlimit((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setrlimit((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setrlimit(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setsockopt((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setsockopt((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setsockopt(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_settimeofday((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_settimeofday((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_settimeofday(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setuid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setuid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setuid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setuid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setuid16((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setuid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setxattr((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setxattr((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setxattr(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_setxattrat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_setxattrat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_setxattrat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sgetmask((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sgetmask((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sgetmask(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_shmat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_shmat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_shmat(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_shmctl((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_shmctl((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_shmctl(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_shmdt((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_shmdt((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_shmdt(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_shmget((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_shmget((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_shmget(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_shutdown((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_shutdown((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_shutdown(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sigaltstack((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sigaltstack((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sigaltstack(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_signal((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_signal((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_signal(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_signalfd((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_signalfd((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_signalfd(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_signalfd4((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_signalfd4((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_signalfd4(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sigpending((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sigpending((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sigpending(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sigprocmask((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sigprocmask((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sigprocmask(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sigsuspend((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sigsuspend((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sigsuspend(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_socket((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_socket((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_socket(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_socketcall((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_socketcall((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_socketcall(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_socketpair((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_socketpair((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_socketpair(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_splice((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_splice((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_splice(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_spu_create((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_spu_create((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_spu_create(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_spu_run((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_spu_run((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_spu_run(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ssetmask((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ssetmask((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ssetmask(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_stat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_stat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_stat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_statfs((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_statfs((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_statfs(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_statfs64((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_statfs64((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_statfs64(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_statmount((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_statmount((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_statmount(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_statx((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_statx((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_statx(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_stime((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_stime((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_stime(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_stime32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_stime32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_stime32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_subpage_prot((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_subpage_prot((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_subpage_prot(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_swapoff((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_swapoff((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_swapoff(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_swapon((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_swapon((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_swapon(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_symlink((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_symlink((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_symlink(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_symlinkat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_symlinkat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_symlinkat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sync_file_range((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sync_file_range((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sync_file_range(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sync_file_range2((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sync_file_range2((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sync_file_range2(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_syncfs((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_syncfs((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_syncfs(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sysfs((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sysfs((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sysfs(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_sysinfo((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_sysinfo((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_sysinfo(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_syslog((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_syslog((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_syslog(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_tee((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_tee((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_tee(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_tgkill((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_tgkill((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_tgkill(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_time((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_time((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_time(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_timer_create((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_timer_create((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_timer_create(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_timer_delete((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_timer_delete((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_timer_delete(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_timer_getoverrun((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_timer_getoverrun((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_timer_getoverrun(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_timer_gettime((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_timer_gettime((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_timer_gettime(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_timer_gettime32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_timer_gettime32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_timer_gettime32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_timer_settime((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_timer_settime((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_timer_settime(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_timer_settime32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_timer_settime32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_timer_settime32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_timerfd_create((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_timerfd_create((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_timerfd_create(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_timerfd_gettime((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_timerfd_gettime((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_timerfd_gettime(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_timerfd_gettime32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_timerfd_gettime32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_timerfd_gettime32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_timerfd_settime((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_timerfd_settime((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_timerfd_settime(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_timerfd_settime32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_timerfd_settime32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_timerfd_settime32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_times((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_times((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_times(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_tkill((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_tkill((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_tkill(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_truncate((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_truncate((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_truncate(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_umask((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_umask((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_umask(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_umount((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_umount((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_umount(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_uname((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_uname((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_uname(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_unlink((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_unlink((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_unlink(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_unlinkat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_unlinkat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_unlinkat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_unshare((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_unshare((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_unshare(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_uretprobe((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_uretprobe((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_uretprobe(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_uselib((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_uselib((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_uselib(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_userfaultfd((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_userfaultfd((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_userfaultfd(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_ustat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_ustat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_ustat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_utime((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_utime((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_utime(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_utime32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_utime32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_utime32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_utimensat((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_utimensat((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_utimensat(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_utimensat_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_utimensat_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_utimensat_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_utimes((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_utimes((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_utimes(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_utimes_time32((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_utimes_time32((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_utimes_time32(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_vm86((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_vm86((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_vm86(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_vm86old((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_vm86old((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_vm86old(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_vmsplice((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_vmsplice((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_vmsplice(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_wait4((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_wait4((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_wait4(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_waitid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_waitid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_waitid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_waitpid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_waitpid((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_waitpid(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_write((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_write((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_write(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ia32_sys_writev((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__ia32_sys_writev((const struct pt_regs *)$arg1)")
   public static long __ia32_sys_writev(Ptr<pt_regs> regs) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4513,7 +4514,7 @@ public final class Ia32Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ia32_sys_call((const struct pt_regs*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ia32_sys_call((const struct pt_regs *)$arg1, $arg2)")
   public static long ia32_sys_call(Ptr<pt_regs> regs, @Unsigned int nr) {
     throw new MethodIsBPFRelatedFunction();
   }

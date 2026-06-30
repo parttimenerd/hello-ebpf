@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1170,7 +1171,7 @@ public final class Rawv6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rawv6_send_hdrinc($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct sockcm_cookie*)$arg7)")
+  @BuiltinBPFFunction("rawv6_send_hdrinc($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct sockcm_cookie *)$arg7)")
   public static int rawv6_send_hdrinc(Ptr<sock> sk, Ptr<msghdr> msg, int length, Ptr<flowi6> fl6,
       Ptr<Ptr<dst_entry>> dstp, @Unsigned int flags, Ptr<sockcm_cookie> sockc) {
     throw new MethodIsBPFRelatedFunction();

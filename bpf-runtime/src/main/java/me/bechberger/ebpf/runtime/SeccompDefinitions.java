@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class SeccompDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seccomp_actions_logged_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("seccomp_actions_logged_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int seccomp_actions_logged_handler(Ptr<ctl_table> ro_table, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> lenp,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
@@ -1179,7 +1180,7 @@ public final class SeccompDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("seccomp_set_mode_filter($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("seccomp_set_mode_filter($arg1, (const u8 *)$arg2)")
   public static long seccomp_set_mode_filter(@Unsigned int flags, String filter) {
     throw new MethodIsBPFRelatedFunction();
   }

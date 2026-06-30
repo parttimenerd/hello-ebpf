@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class InotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inotify_find_inode((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("inotify_find_inode((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int inotify_find_inode(String dirname, Ptr<path> path, @Unsigned int flags,
       @Unsigned long mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1127,7 +1128,7 @@ public final class InotifyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("inotify_handle_inode_event($arg1, $arg2, $arg3, $arg4, (const struct qstr*)$arg5, $arg6)")
+  @BuiltinBPFFunction("inotify_handle_inode_event($arg1, $arg2, $arg3, $arg4, (const struct qstr *)$arg5, $arg6)")
   public static int inotify_handle_inode_event(Ptr<fsnotify_mark> inode_mark, @Unsigned int mask,
       Ptr<inode> inode, Ptr<inode> dir, Ptr<qstr> name, @Unsigned int cookie) {
     throw new MethodIsBPFRelatedFunction();

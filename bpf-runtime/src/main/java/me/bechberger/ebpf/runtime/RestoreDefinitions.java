@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1109,7 +1110,7 @@ public final class RestoreDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restore_altstack((const sigaltstack*)$arg1)")
+  @BuiltinBPFFunction("restore_altstack((const sigaltstack *)$arg1)")
   public static int restore_altstack(Ptr<@OriginalName("stack_t") sigaltstack> uss) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1121,7 +1122,7 @@ public final class RestoreDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restore_bytes($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("restore_bytes($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static void restore_bytes(Ptr<kmem_cache> s, String message, char data, Ptr<?> from,
       Ptr<?> to) {
     throw new MethodIsBPFRelatedFunction();
@@ -1197,7 +1198,7 @@ public final class RestoreDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("restore_regs((const struct btf_func_model*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("restore_regs((const struct btf_func_model *)$arg1, $arg2, $arg3)")
   public static void restore_regs(Ptr<btf_func_model> m, Ptr<Ptr<java.lang.Character>> prog,
       int stack_size) {
     throw new MethodIsBPFRelatedFunction();

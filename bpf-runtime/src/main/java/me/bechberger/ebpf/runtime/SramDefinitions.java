@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1115,7 +1116,7 @@ public final class SramDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sram_read($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("sram_read($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long sram_read(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> attr, String buf, @OriginalName("loff_t") long pos, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1128,7 +1129,7 @@ public final class SramDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sram_reserve_cmp($arg1, (const struct list_head*)$arg2, (const struct list_head*)$arg3)")
+  @BuiltinBPFFunction("sram_reserve_cmp($arg1, (const struct list_head *)$arg2, (const struct list_head *)$arg3)")
   public static int sram_reserve_cmp(Ptr<?> priv, Ptr<list_head> a, Ptr<list_head> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1140,7 +1141,7 @@ public final class SramDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sram_write($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("sram_write($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long sram_write(Ptr<file> filp, Ptr<kobject> kobj,
       Ptr<bin_attribute> attr, String buf, @OriginalName("loff_t") long pos, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

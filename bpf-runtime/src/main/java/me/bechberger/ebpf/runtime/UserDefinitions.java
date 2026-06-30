@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class UserDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("user_describe((const struct key*)$arg1, $arg2)")
+  @BuiltinBPFFunction("user_describe((const struct key *)$arg1, $arg2)")
   public static void user_describe(Ptr<key> key, Ptr<seq_file> m) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1140,7 +1141,7 @@ public final class UserDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("user_event_create((const u8*)$arg1)")
+  @BuiltinBPFFunction("user_event_create((const u8 *)$arg1)")
   public static int user_event_create(String raw_command) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1203,7 +1204,7 @@ public final class UserDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("user_event_match((const u8*)$arg1, (const u8*)$arg2, $arg3, (const u8**)$arg4, $arg5)")
+  @BuiltinBPFFunction("user_event_match((const u8 *)$arg1, (const u8 *)$arg2, $arg3, (const u8**)$arg4, $arg5)")
   public static boolean user_event_match(String system, String event, int argc, Ptr<String> argv,
       Ptr<dyn_event> ev) {
     throw new MethodIsBPFRelatedFunction();
@@ -1348,7 +1349,7 @@ public final class UserDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("user_events_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("user_events_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long user_events_write(Ptr<file> file, String ubuf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1374,13 +1375,13 @@ public final class UserDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("user_field_array_size((const u8*)$arg1)")
+  @BuiltinBPFFunction("user_field_array_size((const u8 *)$arg1)")
   public static int user_field_array_size(String type) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)user_field_format((const u8*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)user_field_format((const u8 *)$arg1))")
   public static String user_field_format(String type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1400,7 +1401,7 @@ public final class UserDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("user_field_size((const u8*)$arg1)")
+  @BuiltinBPFFunction("user_field_size((const u8 *)$arg1)")
   public static int user_field_size(String type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1457,20 +1458,20 @@ public final class UserDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("user_path_at($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("user_path_at($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int user_path_at(int dfd, String name, @Unsigned int flags, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("user_path_create($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("user_path_create($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<dentry> user_path_create(int dfd, String pathname, Ptr<path> path,
       @Unsigned int lookup_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("user_path_locked_at($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("user_path_locked_at($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<dentry> user_path_locked_at(int dfd, String name, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1571,14 +1572,14 @@ public final class UserDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("user_space_trip_crossed($arg1, (const struct thermal_trip*)$arg2, $arg3)")
+  @BuiltinBPFFunction("user_space_trip_crossed($arg1, (const struct thermal_trip *)$arg2, $arg3)")
   public static void user_space_trip_crossed(Ptr<thermal_zone_device> tz, Ptr<thermal_trip> trip,
       boolean upward) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("user_statfs((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("user_statfs((const u8 *)$arg1, $arg2)")
   public static int user_statfs(String pathname, Ptr<kstatfs> st) {
     throw new MethodIsBPFRelatedFunction();
   }

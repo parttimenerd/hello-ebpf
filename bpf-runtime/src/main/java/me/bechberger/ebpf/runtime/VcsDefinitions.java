@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1159,7 +1160,7 @@ public final class VcsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vcs_scr_readw((const struct vc_data*)$arg1, (const short unsigned int*)$arg2)")
+  @BuiltinBPFFunction("vcs_scr_readw((const struct vc_data *)$arg1, (const short unsigned int *)$arg2)")
   public static @Unsigned short vcs_scr_readw(Ptr<vc_data> vc,
       Ptr<java.lang. @Unsigned Short> org) {
     throw new MethodIsBPFRelatedFunction();
@@ -1179,20 +1180,20 @@ public final class VcsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vcs_size((const struct vc_data*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("vcs_size((const struct vc_data *)$arg1, $arg2, $arg3)")
   public static int vcs_size(Ptr<vc_data> vc, boolean attr, boolean unicode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vcs_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("vcs_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long vcs_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("vcs_write_buf($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("vcs_write_buf($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<java.lang. @Unsigned Short> vcs_write_buf(Ptr<vc_data> vc, String con_buf,
       @Unsigned int pos, @Unsigned int count, boolean viewed,
       Ptr<Ptr<java.lang. @Unsigned Short>> org0) {

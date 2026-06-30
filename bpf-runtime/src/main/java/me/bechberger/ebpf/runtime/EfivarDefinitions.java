@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1136,7 +1137,7 @@ public final class EfivarDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efivar_get_utf8name((const short unsigned int*)$arg1, $arg2)")
+  @BuiltinBPFFunction("efivar_get_utf8name((const short unsigned int *)$arg1, $arg2)")
   public static String efivar_get_utf8name(
       Ptr<java.lang. @Unsigned @OriginalName("efi_char16_t") Short> name16,
       Ptr<@OriginalName("efi_guid_t") uuid_t> vendor) {
@@ -1244,7 +1245,7 @@ public final class EfivarDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("efivar_variable_is_removable($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("efivar_variable_is_removable($arg1, (const u8 *)$arg2, $arg3)")
   public static boolean efivar_variable_is_removable(@OriginalName("efi_guid_t") uuid_t vendor,
       String var_name, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();

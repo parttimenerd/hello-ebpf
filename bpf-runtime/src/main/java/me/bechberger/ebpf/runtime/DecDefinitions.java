@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1175,7 +1176,7 @@ public final class DecDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dec_vli($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("dec_vli($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static xz_ret dec_vli(Ptr<xz_dec> s, Ptr<java.lang. @OriginalName("uint8_t") Character> in,
       Ptr<java.lang. @Unsigned Long> in_pos, @Unsigned long in_size) {
     throw new MethodIsBPFRelatedFunction();

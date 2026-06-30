@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class AafsDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__aafs_ns_mkdir($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__aafs_ns_mkdir($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int __aafs_ns_mkdir(Ptr<aa_ns> ns, Ptr<dentry> parent, String name,
       Ptr<dentry> dent) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class Udpv6Definitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__udpv6_gso_segment_csum($arg1, $arg2, (const struct in6_addr*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__udpv6_gso_segment_csum($arg1, $arg2, (const struct in6_addr *)$arg3, $arg4, $arg5)")
   public static void __udpv6_gso_segment_csum(Ptr<sk_buff> seg, Ptr<in6_addr> oldip,
       Ptr<in6_addr> newip, Ptr<java.lang. @Unsigned @OriginalName("__be16") Short> oldport,
       @Unsigned @OriginalName("__be16") short newport) {

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class PidfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pidfs_coredump((const struct coredump_params*)$arg1)")
+  @BuiltinBPFFunction("pidfs_coredump((const struct coredump_params *)$arg1)")
   public static void pidfs_coredump(Ptr<coredump_params> cprm) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1164,7 +1165,7 @@ public final class PidfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pidfs_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("pidfs_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int pidfs_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1226,14 +1227,14 @@ public final class PidfsDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pidfs_xattr_get((const struct xattr_handler*)$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("pidfs_xattr_get((const struct xattr_handler *)$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static int pidfs_xattr_get(Ptr<xattr_handler> handler, Ptr<dentry> unused,
       Ptr<inode> inode, String suffix, Ptr<?> value, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("pidfs_xattr_set((const struct xattr_handler*)$arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, (const void*)$arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("pidfs_xattr_set((const struct xattr_handler *)$arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, (const void *)$arg6, $arg7, $arg8)")
   public static int pidfs_xattr_set(Ptr<xattr_handler> handler, Ptr<mnt_idmap> idmap,
       Ptr<dentry> unused, Ptr<inode> inode, String suffix, Ptr<?> value, @Unsigned long size,
       int flags) {

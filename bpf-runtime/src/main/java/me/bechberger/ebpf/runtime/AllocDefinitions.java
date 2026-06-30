@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,7 +1104,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__alloc_bucket_spinlocks($arg1, $arg2, $arg3, $arg4, $arg5, (const u8*)$arg6, $arg7)")
+  @BuiltinBPFFunction("__alloc_bucket_spinlocks($arg1, $arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6, $arg7)")
   public static int __alloc_bucket_spinlocks(Ptr<Ptr<@OriginalName("spinlock_t") spinlock>> locks,
       Ptr<java.lang. @Unsigned Integer> locks_mask, @Unsigned long max_size, @Unsigned int cpu_mult,
       @Unsigned @OriginalName("gfp_t") int gfp, String name, Ptr<lock_class_key> key) {
@@ -1132,7 +1133,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__alloc_pages_direct_compact($arg1, $arg2, $arg3, (const struct alloc_context*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__alloc_pages_direct_compact($arg1, $arg2, $arg3, (const struct alloc_context *)$arg4, $arg5, $arg6)")
   public static Ptr<page> __alloc_pages_direct_compact(
       @Unsigned @OriginalName("gfp_t") int gfp_mask, @Unsigned int order, @Unsigned int alloc_flags,
       Ptr<alloc_context> ac, compact_priority prio, Ptr<compact_result> compact_result) {
@@ -1140,7 +1141,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__alloc_pages_may_oom($arg1, $arg2, (const struct alloc_context*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__alloc_pages_may_oom($arg1, $arg2, (const struct alloc_context *)$arg3, $arg4)")
   public static Ptr<page> __alloc_pages_may_oom(@Unsigned @OriginalName("gfp_t") int gfp_mask,
       @Unsigned int order, Ptr<alloc_context> ac,
       Ptr<java.lang. @Unsigned Long> did_some_progress) {
@@ -1169,7 +1170,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__alloc_workqueue((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__alloc_workqueue((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<workqueue_struct> __alloc_workqueue(String fmt, @Unsigned int flags,
       int max_active, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
@@ -1269,7 +1270,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_chrdev_region($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("alloc_chrdev_region($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int alloc_chrdev_region(
       Ptr<java.lang. @Unsigned @OriginalName("dev_t") Integer> dev, @Unsigned int baseminor,
       @Unsigned int count, String name) {
@@ -1283,7 +1284,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_clk($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("alloc_clk($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static Ptr<clk> alloc_clk(Ptr<clk_core> core, String dev_id, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1343,7 +1344,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_dax($arg1, (const struct dax_operations*)$arg2)")
+  @BuiltinBPFFunction("alloc_dax($arg1, (const struct dax_operations *)$arg2)")
   public static Ptr<dax_device> alloc_dax(Ptr<?> _private, Ptr<dax_operations> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1375,14 +1376,14 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_desc($arg1, $arg2, $arg3, (const struct cpumask*)$arg4, $arg5)")
+  @BuiltinBPFFunction("alloc_desc($arg1, $arg2, $arg3, (const struct cpumask *)$arg4, $arg5)")
   public static Ptr<irq_desc> alloc_desc(int irq, int node, @Unsigned int flags,
       Ptr<cpumask> affinity, Ptr<module> owner) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_descs($arg1, $arg2, $arg3, (const struct irq_affinity_desc*)$arg4, $arg5)")
+  @BuiltinBPFFunction("alloc_descs($arg1, $arg2, $arg3, (const struct irq_affinity_desc *)$arg4, $arg5)")
   public static int alloc_descs(@Unsigned int start, @Unsigned int cnt, int node,
       Ptr<irq_affinity_desc> affinity, Ptr<module> owner) {
     throw new MethodIsBPFRelatedFunction();
@@ -1408,19 +1409,19 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_empty_backing_file($arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("alloc_empty_backing_file($arg1, (const struct cred *)$arg2)")
   public static Ptr<file> alloc_empty_backing_file(int flags, Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_empty_file($arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("alloc_empty_file($arg1, (const struct cred *)$arg2)")
   public static Ptr<file> alloc_empty_file(int flags, Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_empty_file_noaccount($arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("alloc_empty_file_noaccount($arg1, (const struct cred *)$arg2)")
   public static Ptr<file> alloc_empty_file_noaccount(int flags, Ptr<cred> cred) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1463,20 +1464,20 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_file_clone($arg1, $arg2, (const struct file_operations*)$arg3)")
+  @BuiltinBPFFunction("alloc_file_clone($arg1, $arg2, (const struct file_operations *)$arg3)")
   public static Ptr<file> alloc_file_clone(Ptr<file> base, int flags, Ptr<file_operations> fops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_file_pseudo($arg1, $arg2, (const u8*)$arg3, $arg4, (const struct file_operations*)$arg5)")
+  @BuiltinBPFFunction("alloc_file_pseudo($arg1, $arg2, (const u8 *)$arg3, $arg4, (const struct file_operations *)$arg5)")
   public static Ptr<file> alloc_file_pseudo(Ptr<inode> inode, Ptr<vfsmount> mnt, String name,
       int flags, Ptr<file_operations> fops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_file_pseudo_noaccount($arg1, $arg2, (const u8*)$arg3, $arg4, (const struct file_operations*)$arg5)")
+  @BuiltinBPFFunction("alloc_file_pseudo_noaccount($arg1, $arg2, (const u8 *)$arg3, $arg4, (const struct file_operations *)$arg5)")
   public static Ptr<file> alloc_file_pseudo_noaccount(Ptr<inode> inode, Ptr<vfsmount> mnt,
       String name, int flags, Ptr<file_operations> fops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1491,7 +1492,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_free_mem_region($arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("alloc_free_mem_region($arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static Ptr<resource> alloc_free_mem_region(Ptr<resource> base, @Unsigned long size,
       @Unsigned long align, String name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1525,7 +1526,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_fw_cache_entry((const u8*)$arg1)")
+  @BuiltinBPFFunction("alloc_fw_cache_entry((const u8 *)$arg1)")
   public static Ptr<fw_cache_entry> alloc_fw_cache_entry(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1666,7 +1667,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_large_system_hash((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("alloc_large_system_hash((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static Ptr<?> alloc_large_system_hash(String tablename, @Unsigned long bucketsize,
       @Unsigned long numentries, int scale, int flags,
       Ptr<java.lang. @Unsigned Integer> _hash_shift, Ptr<java.lang. @Unsigned Integer> _hash_mask,
@@ -1688,7 +1689,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_lookup_fw_priv((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("alloc_lookup_fw_priv((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int alloc_lookup_fw_priv(String fw_name, Ptr<firmware_cache> fwc,
       Ptr<Ptr<fw_priv>> fw_priv, Ptr<?> dbuf, @Unsigned long size, @Unsigned long offset,
       @Unsigned int opt_flags) {
@@ -1751,7 +1752,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_netdev_mqs($arg1, (const u8*)$arg2, $arg3, (void (*)(struct net_device*))$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("alloc_netdev_mqs($arg1, (const u8 *)$arg2, $arg3, (void (*)(struct net_device*))$arg4, $arg5, $arg6)")
   public static Ptr<net_device> alloc_netdev_mqs(int sizeof_priv, String name,
       char name_assign_type, Ptr<?> setup, @Unsigned int txqs, @Unsigned int rxqs) {
     throw new MethodIsBPFRelatedFunction();
@@ -1777,7 +1778,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_nodes_groups($arg1, $arg2, (const struct cpumask*)$arg3, (const struct {\n"
+  @BuiltinBPFFunction("alloc_nodes_groups($arg1, $arg2, (const struct cpumask *)$arg3, (const struct {\n"
           + "  long unsigned int bits[16];\n"
           + "})$arg4, $arg5, $arg6)")
   public static void alloc_nodes_groups(@Unsigned int numgrps,
@@ -1787,7 +1788,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_ns((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("alloc_ns((const u8 *)$arg1, (const u8 *)$arg2)")
   public static Ptr<aa_ns> alloc_ns(String prefix, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2051,7 +2052,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_sleep_millisecs_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("alloc_sleep_millisecs_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long alloc_sleep_millisecs_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -2104,7 +2105,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_synth_event((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("alloc_synth_event((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<synth_event> alloc_synth_event(String name, int n_fields,
       Ptr<Ptr<synth_field>> fields) {
     throw new MethodIsBPFRelatedFunction();
@@ -2131,28 +2132,28 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_trace_fprobe((const u8*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("alloc_trace_fprobe((const u8 *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<trace_fprobe> alloc_trace_fprobe(String group, String event, String symbol,
       int nargs, boolean is_return, boolean is_tracepoint) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_trace_kprobe((const u8*)$arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("alloc_trace_kprobe((const u8 *)$arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static Ptr<trace_kprobe> alloc_trace_kprobe(String group, String event, Ptr<?> addr,
       String symbol, @Unsigned long offs, int maxactive, int nargs, boolean is_return) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_trace_uprobe((const u8*)$arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("alloc_trace_uprobe((const u8 *)$arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<trace_uprobe> alloc_trace_uprobe(String group, String event, int nargs,
       boolean is_ret) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_tree((const u8*)$arg1)")
+  @BuiltinBPFFunction("alloc_tree((const u8 *)$arg1)")
   public static Ptr<audit_tree> alloc_tree(String s) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2176,7 +2177,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_uevent_skb($arg1, (const u8*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("alloc_uevent_skb($arg1, (const u8 *)$arg2, (const u8 *)$arg3)")
   public static Ptr<sk_buff> alloc_uevent_skb(Ptr<kobj_uevent_env> env, String action_string,
       String devpath) {
     throw new MethodIsBPFRelatedFunction();
@@ -2189,14 +2190,14 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_unbound_pwq($arg1, (const struct workqueue_attrs*)$arg2)")
+  @BuiltinBPFFunction("alloc_unbound_pwq($arg1, (const struct workqueue_attrs *)$arg2)")
   public static Ptr<pool_workqueue> alloc_unbound_pwq(Ptr<workqueue_struct> wq,
       Ptr<workqueue_attrs> attrs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_unconfined((const u8*)$arg1)")
+  @BuiltinBPFFunction("alloc_unconfined((const u8 *)$arg1)")
   public static Ptr<aa_profile> alloc_unconfined(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2215,7 +2216,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_vfsmnt((const u8*)$arg1)")
+  @BuiltinBPFFunction("alloc_vfsmnt((const u8 *)$arg1)")
   public static Ptr<mount> alloc_vfsmnt(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2241,7 +2242,7 @@ public final class AllocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("alloc_workqueue_noprof((const u8*)$arg1, $arg2, $arg3, $arg4_)")
+  @BuiltinBPFFunction("alloc_workqueue_noprof((const u8 *)$arg1, $arg2, $arg3, $arg4_)")
   public static Ptr<workqueue_struct> alloc_workqueue_noprof(String fmt, @Unsigned int flags,
       int max_active, java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1292,7 +1293,7 @@ public final class UpdateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("update_classid_sock((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("update_classid_sock((const void *)$arg1, $arg2, $arg3)")
   public static int update_classid_sock(Ptr<?> v, Ptr<file> file, @Unsigned int n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1318,7 +1319,7 @@ public final class UpdateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("update_cpumask($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("update_cpumask($arg1, $arg2, (const u8 *)$arg3)")
   public static int update_cpumask(Ptr<cpuset> cs, Ptr<cpuset> trialcs, String buf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1398,7 +1399,7 @@ public final class UpdateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("update_display_info($arg1, (const struct drm_edid*)$arg2)")
+  @BuiltinBPFFunction("update_display_info($arg1, (const struct drm_edid *)$arg2)")
   public static void update_display_info(Ptr<drm_connector> connector, Ptr<drm_edid> drm_edid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1460,13 +1461,13 @@ public final class UpdateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("update_exclusive_cpumask($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("update_exclusive_cpumask($arg1, $arg2, (const u8 *)$arg3)")
   public static int update_exclusive_cpumask(Ptr<cpuset> cs, Ptr<cpuset> trialcs, String buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("update_fast_timekeeper((const struct tk_read_base*)$arg1, $arg2)")
+  @BuiltinBPFFunction("update_fast_timekeeper((const struct tk_read_base *)$arg1, $arg2)")
   public static void update_fast_timekeeper(Ptr<tk_read_base> tkr, Ptr<tk_fast> tkf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1597,13 +1598,13 @@ public final class UpdateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("update_netprio((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("update_netprio((const void *)$arg1, $arg2, $arg3)")
   public static int update_netprio(Ptr<?> v, Ptr<file> file, @Unsigned int n) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("update_nodemask($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("update_nodemask($arg1, $arg2, (const u8 *)$arg3)")
   public static int update_nodemask(Ptr<cpuset> cs, Ptr<cpuset> trialcs, String buf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1615,14 +1616,14 @@ public final class UpdateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("update_note_header_size_elf32((const elf32_hdr*)$arg1)")
+  @BuiltinBPFFunction("update_note_header_size_elf32((const elf32_hdr *)$arg1)")
   public static int update_note_header_size_elf32(
       Ptr<@OriginalName("Elf32_Ehdr") elf32_hdr> ehdr_ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("update_note_header_size_elf64((const elf64_hdr*)$arg1)")
+  @BuiltinBPFFunction("update_note_header_size_elf64((const elf64_hdr *)$arg1)")
   public static int update_note_header_size_elf64(
       Ptr<@OriginalName("Elf64_Ehdr") elf64_hdr> ehdr_ptr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1712,7 +1713,7 @@ public final class UpdateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("update_policy($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("update_policy($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long update_policy(Ptr<file> f, String data,
       @Unsigned long len, Ptr<java.lang. @OriginalName("loff_t") Long> offset) {
     throw new MethodIsBPFRelatedFunction();
@@ -2009,7 +2010,7 @@ public final class UpdateDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("update_xperms_extended_data($arg1, (const struct extended_perms_data*)$arg2, $arg3)")
+  @BuiltinBPFFunction("update_xperms_extended_data($arg1, (const struct extended_perms_data *)$arg2, $arg3)")
   public static void update_xperms_extended_data(char specified, Ptr<extended_perms_data> from,
       Ptr<extended_perms_data> xp_data) {
     throw new MethodIsBPFRelatedFunction();

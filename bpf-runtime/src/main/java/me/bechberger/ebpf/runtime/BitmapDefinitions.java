@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class BitmapDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_and($arg1, (const long unsigned int*)$arg2, (const long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bitmap_and($arg1, (const long unsigned int *)$arg2, (const long unsigned int *)$arg3, $arg4)")
   public static boolean __bitmap_and(Ptr<java.lang. @Unsigned Long> dst,
       Ptr<java.lang. @Unsigned Long> bitmap1, Ptr<java.lang. @Unsigned Long> bitmap2,
       @Unsigned int bits) {
@@ -1098,7 +1099,7 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_andnot($arg1, (const long unsigned int*)$arg2, (const long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bitmap_andnot($arg1, (const long unsigned int *)$arg2, (const long unsigned int *)$arg3, $arg4)")
   public static boolean __bitmap_andnot(Ptr<java.lang. @Unsigned Long> dst,
       Ptr<java.lang. @Unsigned Long> bitmap1, Ptr<java.lang. @Unsigned Long> bitmap2,
       @Unsigned int bits) {
@@ -1113,7 +1114,7 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_complement($arg1, (const long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bitmap_complement($arg1, (const long unsigned int *)$arg2, $arg3)")
   public static void __bitmap_complement(Ptr<java.lang. @Unsigned Long> dst,
       Ptr<java.lang. @Unsigned Long> src, @Unsigned int bits) {
     throw new MethodIsBPFRelatedFunction();
@@ -1134,21 +1135,21 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_equal((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bitmap_equal((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3)")
   public static boolean __bitmap_equal(Ptr<java.lang. @Unsigned Long> bitmap1,
       Ptr<java.lang. @Unsigned Long> bitmap2, @Unsigned int bits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_intersects((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bitmap_intersects((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3)")
   public static boolean __bitmap_intersects(Ptr<java.lang. @Unsigned Long> bitmap1,
       Ptr<java.lang. @Unsigned Long> bitmap2, @Unsigned int bits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_or($arg1, (const long unsigned int*)$arg2, (const long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bitmap_or($arg1, (const long unsigned int *)$arg2, (const long unsigned int *)$arg3, $arg4)")
   public static void __bitmap_or(Ptr<java.lang. @Unsigned Long> dst,
       Ptr<java.lang. @Unsigned Long> bitmap1, Ptr<java.lang. @Unsigned Long> bitmap2,
       @Unsigned int bits) {
@@ -1156,7 +1157,7 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_or_equal((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, (const long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bitmap_or_equal((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, (const long unsigned int *)$arg3, $arg4)")
   public static boolean __bitmap_or_equal(Ptr<java.lang. @Unsigned Long> bitmap1,
       Ptr<java.lang. @Unsigned Long> bitmap2, Ptr<java.lang. @Unsigned Long> bitmap3,
       @Unsigned int bits) {
@@ -1164,7 +1165,7 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_replace($arg1, (const long unsigned int*)$arg2, (const long unsigned int*)$arg3, (const long unsigned int*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__bitmap_replace($arg1, (const long unsigned int *)$arg2, (const long unsigned int *)$arg3, (const long unsigned int *)$arg4, $arg5)")
   public static void __bitmap_replace(Ptr<java.lang. @Unsigned Long> dst,
       Ptr<java.lang. @Unsigned Long> old, Ptr<java.lang. @Unsigned Long> _new,
       Ptr<java.lang. @Unsigned Long> mask, @Unsigned int nbits) {
@@ -1186,21 +1187,21 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_shift_left($arg1, (const long unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bitmap_shift_left($arg1, (const long unsigned int *)$arg2, $arg3, $arg4)")
   public static void __bitmap_shift_left(Ptr<java.lang. @Unsigned Long> dst,
       Ptr<java.lang. @Unsigned Long> src, @Unsigned int shift, @Unsigned int nbits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_shift_right($arg1, (const long unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__bitmap_shift_right($arg1, (const long unsigned int *)$arg2, $arg3, $arg4)")
   public static void __bitmap_shift_right(Ptr<java.lang. @Unsigned Long> dst,
       Ptr<java.lang. @Unsigned Long> src, @Unsigned int shift, @Unsigned int nbits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_subset((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bitmap_subset((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3)")
   public static boolean __bitmap_subset(Ptr<java.lang. @Unsigned Long> bitmap1,
       Ptr<java.lang. @Unsigned Long> bitmap2, @Unsigned int bits) {
     throw new MethodIsBPFRelatedFunction();
@@ -1213,28 +1214,28 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_weight((const long unsigned int*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__bitmap_weight((const long unsigned int *)$arg1, $arg2)")
   public static @Unsigned int __bitmap_weight(Ptr<java.lang. @Unsigned Long> bitmap,
       @Unsigned int bits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_weight_and((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bitmap_weight_and((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3)")
   public static @Unsigned int __bitmap_weight_and(Ptr<java.lang. @Unsigned Long> bitmap1,
       Ptr<java.lang. @Unsigned Long> bitmap2, @Unsigned int bits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_weight_andnot((const long unsigned int*)$arg1, (const long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__bitmap_weight_andnot((const long unsigned int *)$arg1, (const long unsigned int *)$arg2, $arg3)")
   public static @Unsigned int __bitmap_weight_andnot(Ptr<java.lang. @Unsigned Long> bitmap1,
       Ptr<java.lang. @Unsigned Long> bitmap2, @Unsigned int bits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__bitmap_xor($arg1, (const long unsigned int*)$arg2, (const long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__bitmap_xor($arg1, (const long unsigned int *)$arg2, (const long unsigned int *)$arg3, $arg4)")
   public static void __bitmap_xor(Ptr<java.lang. @Unsigned Long> dst,
       Ptr<java.lang. @Unsigned Long> bitmap1, Ptr<java.lang. @Unsigned Long> bitmap2,
       @Unsigned int bits) {
@@ -1256,7 +1257,7 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_bitremap($arg1, (const long unsigned int*)$arg2, (const long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bitmap_bitremap($arg1, (const long unsigned int *)$arg2, (const long unsigned int *)$arg3, $arg4)")
   public static int bitmap_bitremap(int oldbit, Ptr<java.lang. @Unsigned Long> old,
       Ptr<java.lang. @Unsigned Long> _new, int bits) {
     throw new MethodIsBPFRelatedFunction();
@@ -1297,7 +1298,7 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_cut($arg1, (const long unsigned int*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bitmap_cut($arg1, (const long unsigned int *)$arg2, $arg3, $arg4, $arg5)")
   public static void bitmap_cut(Ptr<java.lang. @Unsigned Long> dst,
       Ptr<java.lang. @Unsigned Long> src, @Unsigned int first, @Unsigned int cut,
       @Unsigned int nbits) {
@@ -1364,20 +1365,20 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_fold($arg1, (const long unsigned int*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bitmap_fold($arg1, (const long unsigned int *)$arg2, $arg3, $arg4)")
   public static void bitmap_fold(Ptr<java.lang. @Unsigned Long> dst,
       Ptr<java.lang. @Unsigned Long> orig, @Unsigned int sz, @Unsigned int nbits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_free((const long unsigned int*)$arg1)")
+  @BuiltinBPFFunction("bitmap_free((const long unsigned int *)$arg1)")
   public static void bitmap_free(Ptr<java.lang. @Unsigned Long> bitmap) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_from_arr32($arg1, (const unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bitmap_from_arr32($arg1, (const unsigned int *)$arg2, $arg3)")
   public static void bitmap_from_arr32(Ptr<java.lang. @Unsigned Long> bitmap,
       Ptr<java.lang. @Unsigned Integer> buf, @Unsigned int nbits) {
     throw new MethodIsBPFRelatedFunction();
@@ -1396,7 +1397,7 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_list_string($arg1, $arg2, (const long unsigned int*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("bitmap_list_string($arg1, $arg2, (const long unsigned int *)$arg3, $arg4, (const u8 *)$arg5)")
   public static String bitmap_list_string(String buf, String end,
       Ptr<java.lang. @Unsigned Long> bitmap, printf_spec spec, String fmt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1409,7 +1410,7 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_onto($arg1, (const long unsigned int*)$arg2, (const long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bitmap_onto($arg1, (const long unsigned int *)$arg2, (const long unsigned int *)$arg3, $arg4)")
   public static void bitmap_onto(Ptr<java.lang. @Unsigned Long> dst,
       Ptr<java.lang. @Unsigned Long> orig, Ptr<java.lang. @Unsigned Long> relmap,
       @Unsigned int bits) {
@@ -1417,49 +1418,49 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_parse((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bitmap_parse((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int bitmap_parse(String start, @Unsigned int buflen,
       Ptr<java.lang. @Unsigned Long> maskp, int nmaskbits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_parse_user((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bitmap_parse_user((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int bitmap_parse_user(String ubuf, @Unsigned int ulen,
       Ptr<java.lang. @Unsigned Long> maskp, int nmaskbits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_parselist((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bitmap_parselist((const u8 *)$arg1, $arg2, $arg3)")
   public static int bitmap_parselist(String buf, Ptr<java.lang. @Unsigned Long> maskp,
       int nmaskbits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_parselist_user((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("bitmap_parselist_user((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int bitmap_parselist_user(String ubuf, @Unsigned int ulen,
       Ptr<java.lang. @Unsigned Long> maskp, int nmaskbits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_pos_to_ord((const long unsigned int*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("bitmap_pos_to_ord((const long unsigned int *)$arg1, $arg2, $arg3)")
   public static int bitmap_pos_to_ord(Ptr<java.lang. @Unsigned Long> buf, @Unsigned int pos,
       @Unsigned int nbits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_print_bitmask_to_buf($arg1, (const long unsigned int*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bitmap_print_bitmask_to_buf($arg1, (const long unsigned int *)$arg2, $arg3, $arg4, $arg5)")
   public static int bitmap_print_bitmask_to_buf(String buf, Ptr<java.lang. @Unsigned Long> maskp,
       int nmaskbits, @OriginalName("loff_t") long off, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_print_list_to_buf($arg1, (const long unsigned int*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("bitmap_print_list_to_buf($arg1, (const long unsigned int *)$arg2, $arg3, $arg4, $arg5)")
   public static int bitmap_print_list_to_buf(String buf, Ptr<java.lang. @Unsigned Long> maskp,
       int nmaskbits, @OriginalName("loff_t") long off, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1472,7 +1473,7 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_print_to_buf($arg1, $arg2, (const long unsigned int*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("bitmap_print_to_buf($arg1, $arg2, (const long unsigned int *)$arg3, $arg4, $arg5, $arg6)")
   public static int bitmap_print_to_buf(boolean list, String buf,
       Ptr<java.lang. @Unsigned Long> maskp, int nmaskbits, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -1480,14 +1481,14 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_print_to_pagebuf($arg1, $arg2, (const long unsigned int*)$arg3, $arg4)")
+  @BuiltinBPFFunction("bitmap_print_to_pagebuf($arg1, $arg2, (const long unsigned int *)$arg3, $arg4)")
   public static int bitmap_print_to_pagebuf(boolean list, String buf,
       Ptr<java.lang. @Unsigned Long> maskp, int nmaskbits) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_remap($arg1, (const long unsigned int*)$arg2, (const long unsigned int*)$arg3, (const long unsigned int*)$arg4, $arg5)")
+  @BuiltinBPFFunction("bitmap_remap($arg1, (const long unsigned int *)$arg2, (const long unsigned int *)$arg3, (const long unsigned int *)$arg4, $arg5)")
   public static void bitmap_remap(Ptr<java.lang. @Unsigned Long> dst,
       Ptr<java.lang. @Unsigned Long> src, Ptr<java.lang. @Unsigned Long> old,
       Ptr<java.lang. @Unsigned Long> _new, @Unsigned int nbits) {
@@ -1529,14 +1530,14 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bitmap_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long bitmap_store(Ptr<mddev> mddev, String buf,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_string($arg1, $arg2, (const long unsigned int*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("bitmap_string($arg1, $arg2, (const long unsigned int *)$arg3, $arg4, (const u8 *)$arg5)")
   public static String bitmap_string(String buf, String end, Ptr<java.lang. @Unsigned Long> bitmap,
       printf_spec spec, String fmt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1553,7 +1554,7 @@ public final class BitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("bitmap_to_arr32($arg1, (const long unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("bitmap_to_arr32($arg1, (const long unsigned int *)$arg2, $arg3)")
   public static void bitmap_to_arr32(Ptr<java.lang. @Unsigned Integer> buf,
       Ptr<java.lang. @Unsigned Long> bitmap, @Unsigned int nbits) {
     throw new MethodIsBPFRelatedFunction();

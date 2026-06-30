@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class RhashtableDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__rhashtable_lookup($arg1, (const void*)$arg2, (const struct rhashtable_params)$arg3)")
+  @BuiltinBPFFunction("__rhashtable_lookup($arg1, (const void *)$arg2, (const struct rhashtable_params)$arg3)")
   public static Ptr<rhash_head> __rhashtable_lookup(Ptr<rhashtable> ht, Ptr<?> key,
       rhashtable_params params) {
     throw new MethodIsBPFRelatedFunction();
@@ -1115,19 +1116,19 @@ public final class RhashtableDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rhashtable_init_noprof($arg1, (const struct rhashtable_params*)$arg2)")
+  @BuiltinBPFFunction("rhashtable_init_noprof($arg1, (const struct rhashtable_params *)$arg2)")
   public static int rhashtable_init_noprof(Ptr<rhashtable> ht, Ptr<rhashtable_params> params) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rhashtable_insert_slow($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rhashtable_insert_slow($arg1, (const void *)$arg2, $arg3)")
   public static Ptr<?> rhashtable_insert_slow(Ptr<rhashtable> ht, Ptr<?> key, Ptr<rhash_head> obj) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rhashtable_jhash2((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("rhashtable_jhash2((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned int rhashtable_jhash2(Ptr<?> key, @Unsigned int length,
       @Unsigned int seed) {
     throw new MethodIsBPFRelatedFunction();
@@ -1147,7 +1148,7 @@ public final class RhashtableDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("rhashtable_try_insert($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("rhashtable_try_insert($arg1, (const void *)$arg2, $arg3)")
   public static Ptr<?> rhashtable_try_insert(Ptr<rhashtable> ht, Ptr<?> key, Ptr<rhash_head> obj) {
     throw new MethodIsBPFRelatedFunction();
   }

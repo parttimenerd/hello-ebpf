@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1109,7 +1110,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__audit_file((const struct file*)$arg1)")
+  @BuiltinBPFFunction("__audit_file((const struct file *)$arg1)")
   public static void __audit_file(Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1134,13 +1135,13 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__audit_inode($arg1, (const struct dentry*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__audit_inode($arg1, (const struct dentry *)$arg2, $arg3)")
   public static void __audit_inode(Ptr<filename> name, Ptr<dentry> dentry, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__audit_inode_child($arg1, (const struct dentry*)$arg2, (const u8)$arg3)")
+  @BuiltinBPFFunction("__audit_inode_child($arg1, (const struct dentry *)$arg2, (const u8)$arg3)")
   public static void __audit_inode_child(Ptr<inode> parent, Ptr<dentry> dentry, char type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1160,25 +1161,25 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__audit_log_bprm_fcaps($arg1, (const struct cred*)$arg2, (const struct cred*)$arg3)")
+  @BuiltinBPFFunction("__audit_log_bprm_fcaps($arg1, (const struct cred *)$arg2, (const struct cred *)$arg3)")
   public static int __audit_log_bprm_fcaps(Ptr<linux_binprm> bprm, Ptr<cred> _new, Ptr<cred> old) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__audit_log_capset((const struct cred*)$arg1, (const struct cred*)$arg2)")
+  @BuiltinBPFFunction("__audit_log_capset((const struct cred *)$arg1, (const struct cred *)$arg2)")
   public static void __audit_log_capset(Ptr<cred> _new, Ptr<cred> old) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__audit_log_kern_module((const u8*)$arg1)")
+  @BuiltinBPFFunction("__audit_log_kern_module((const u8 *)$arg1)")
   public static void __audit_log_kern_module(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__audit_log_nfcfg((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__audit_log_nfcfg((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static void __audit_log_nfcfg(String name, char af, @Unsigned int nentries,
       audit_nfcfgop op, @Unsigned @OriginalName("gfp_t") int gfp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1197,7 +1198,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__audit_mq_notify($arg1, (const struct sigevent*)$arg2)")
+  @BuiltinBPFFunction("__audit_mq_notify($arg1, (const struct sigevent *)$arg2)")
   public static void __audit_mq_notify(@OriginalName("mqd_t") int mqdes,
       Ptr<sigevent> notification) {
     throw new MethodIsBPFRelatedFunction();
@@ -1211,14 +1212,14 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__audit_mq_sendrecv($arg1, $arg2, $arg3, (const struct timespec64*)$arg4)")
+  @BuiltinBPFFunction("__audit_mq_sendrecv($arg1, $arg2, $arg3, (const struct timespec64 *)$arg4)")
   public static void __audit_mq_sendrecv(@OriginalName("mqd_t") int mqdes, @Unsigned long msg_len,
       @Unsigned int msg_prio, Ptr<timespec64> abs_timeout) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__audit_ntp_log((const struct audit_ntp_data*)$arg1)")
+  @BuiltinBPFFunction("__audit_ntp_log((const struct audit_ntp_data *)$arg1)")
   public static void __audit_ntp_log(Ptr<audit_ntp_data> ad) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1236,7 +1237,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__audit_reusename((const u8*)$arg1)")
+  @BuiltinBPFFunction("__audit_reusename((const u8 *)$arg1)")
   public static Ptr<filename> __audit_reusename(String uptr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1378,7 +1379,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_compare_dname_path((const struct qstr*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("audit_compare_dname_path((const struct qstr *)$arg1, (const u8 *)$arg2, $arg3)")
   public static int audit_compare_dname_path(Ptr<qstr> dname, String path, int parentlen) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1404,7 +1405,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_copy_inode($arg1, (const struct dentry*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("audit_copy_inode($arg1, (const struct dentry *)$arg2, $arg3, $arg4)")
   public static void audit_copy_inode(Ptr<audit_names> name, Ptr<dentry> dentry, Ptr<inode> inode,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1466,7 +1467,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_field_compare($arg1, (const struct cred*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("audit_field_compare($arg1, (const struct cred *)$arg2, $arg3, $arg4, $arg5)")
   public static int audit_field_compare(Ptr<task_struct> tsk, Ptr<cred> cred, Ptr<audit_field> f,
       Ptr<audit_context> ctx, Ptr<audit_names> name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1584,7 +1585,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_log($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("audit_log($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5_)")
   public static void audit_log(Ptr<audit_context> ctx,
       @Unsigned @OriginalName("gfp_t") int gfp_mask, int type, String fmt,
       java.lang.Object... param4) {
@@ -1606,7 +1607,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_log_d_path($arg1, (const u8*)$arg2, (const struct path*)$arg3)")
+  @BuiltinBPFFunction("audit_log_d_path($arg1, (const u8 *)$arg2, (const struct path *)$arg3)")
   public static void audit_log_d_path(Ptr<audit_buffer> ab, String prefix, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1643,7 +1644,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_log_format($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("audit_log_format($arg1, (const u8 *)$arg2, $arg3_)")
   public static void audit_log_format(Ptr<audit_buffer> ab, String fmt,
       java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
@@ -1656,37 +1657,37 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_log_lost((const u8*)$arg1)")
+  @BuiltinBPFFunction("audit_log_lost((const u8 *)$arg1)")
   public static void audit_log_lost(String message) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_log_lsm_data($arg1, (const struct common_audit_data*)$arg2)")
+  @BuiltinBPFFunction("audit_log_lsm_data($arg1, (const struct common_audit_data *)$arg2)")
   public static void audit_log_lsm_data(Ptr<audit_buffer> ab, Ptr<common_audit_data> a) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_log_multicast($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("audit_log_multicast($arg1, (const u8 *)$arg2, $arg3)")
   public static void audit_log_multicast(int group, String op, int err) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_log_n_hex($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("audit_log_n_hex($arg1, (const u8 *)$arg2, $arg3)")
   public static void audit_log_n_hex(Ptr<audit_buffer> ab, String buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_log_n_string($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("audit_log_n_string($arg1, (const u8 *)$arg2, $arg3)")
   public static void audit_log_n_string(Ptr<audit_buffer> ab, String string, @Unsigned long slen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_log_n_untrustedstring($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("audit_log_n_untrustedstring($arg1, (const u8 *)$arg2, $arg3)")
   public static void audit_log_n_untrustedstring(Ptr<audit_buffer> ab, String string,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1699,7 +1700,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_log_path_denied($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("audit_log_path_denied($arg1, (const u8 *)$arg2)")
   public static void audit_log_path_denied(int type, String operation) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1762,7 +1763,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_log_untrustedstring($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("audit_log_untrustedstring($arg1, (const u8 *)$arg2)")
   public static void audit_log_untrustedstring(Ptr<audit_buffer> ab, String string) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1774,13 +1775,13 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_log_vformat($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("audit_log_vformat($arg1, (const u8 *)$arg2, $arg3)")
   public static void audit_log_vformat(Ptr<audit_buffer> ab, String fmt, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_make_reply($arg1, $arg2, $arg3, $arg4, (const void*)$arg5, $arg6)")
+  @BuiltinBPFFunction("audit_make_reply($arg1, $arg2, $arg3, $arg4, (const void *)$arg5, $arg6)")
   public static Ptr<sk_buff> audit_make_reply(int seq, int type, int done, int multi,
       Ptr<?> payload, int size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1800,7 +1801,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_mark_handle_event($arg1, $arg2, $arg3, $arg4, (const struct qstr*)$arg5, $arg6)")
+  @BuiltinBPFFunction("audit_mark_handle_event($arg1, $arg2, $arg3, $arg4, (const struct qstr *)$arg5, $arg6)")
   public static int audit_mark_handle_event(Ptr<fsnotify_mark> inode_mark, @Unsigned int mask,
       Ptr<inode> inode, Ptr<inode> dir, Ptr<qstr> dname, @Unsigned int cookie) {
     throw new MethodIsBPFRelatedFunction();
@@ -1885,13 +1886,13 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_pack_string($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("audit_pack_string($arg1, (const u8 *)$arg2)")
   public static @Unsigned long audit_pack_string(Ptr<Ptr<?>> bufp, String str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_panic((const u8*)$arg1)")
+  @BuiltinBPFFunction("audit_panic((const u8 *)$arg1)")
   public static void audit_panic(String message) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1994,7 +1995,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_resource((const struct cred*)$arg1, $arg2, $arg3, $arg4, $arg5, (const u8*)$arg6, $arg7)")
+  @BuiltinBPFFunction("audit_resource((const struct cred *)$arg1, $arg2, $arg3, $arg4, $arg5, (const u8 *)$arg6, $arg7)")
   public static int audit_resource(Ptr<cred> subj_cred, Ptr<aa_profile> profile,
       @Unsigned int resource, @Unsigned long value, Ptr<aa_label> peer, String info, int error) {
     throw new MethodIsBPFRelatedFunction();
@@ -2013,7 +2014,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_seccomp_actions_logged((const u8*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("audit_seccomp_actions_logged((const u8 *)$arg1, (const u8 *)$arg2, $arg3)")
   public static void audit_seccomp_actions_logged(String names, String old_names, int res) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2067,7 +2068,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_string_contains_control((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("audit_string_contains_control((const u8 *)$arg1, $arg2)")
   public static boolean audit_string_contains_control(String string, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2097,7 +2098,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_tree_handle_event($arg1, $arg2, $arg3, $arg4, (const struct qstr*)$arg5, $arg6)")
+  @BuiltinBPFFunction("audit_tree_handle_event($arg1, $arg2, $arg3, $arg4, (const struct qstr *)$arg5, $arg6)")
   public static int audit_tree_handle_event(Ptr<fsnotify_mark> mark, @Unsigned int mask,
       Ptr<inode> inode, Ptr<inode> dir, Ptr<qstr> file_name, @Unsigned int cookie) {
     throw new MethodIsBPFRelatedFunction();
@@ -2110,7 +2111,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_tree_lookup((const struct inode*)$arg1)")
+  @BuiltinBPFFunction("audit_tree_lookup((const struct inode *)$arg1)")
   public static Ptr<audit_chunk> audit_tree_lookup(Ptr<inode> inode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2140,7 +2141,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_unix_addr($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("audit_unix_addr($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void audit_unix_addr(Ptr<audit_buffer> ab, String str, Ptr<sockaddr_un> addr,
       int addrlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -2160,7 +2161,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_update_watch($arg1, (const struct qstr*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("audit_update_watch($arg1, (const struct qstr *)$arg2, $arg3, $arg4, $arg5)")
   public static void audit_update_watch(Ptr<audit_parent> parent, Ptr<qstr> dname,
       @Unsigned @OriginalName("dev_t") int dev, @Unsigned long ino, @Unsigned int invalidating) {
     throw new MethodIsBPFRelatedFunction();
@@ -2186,7 +2187,7 @@ public final class AuditDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("audit_watch_handle_event($arg1, $arg2, $arg3, $arg4, (const struct qstr*)$arg5, $arg6)")
+  @BuiltinBPFFunction("audit_watch_handle_event($arg1, $arg2, $arg3, $arg4, (const struct qstr *)$arg5, $arg6)")
   public static int audit_watch_handle_event(Ptr<fsnotify_mark> inode_mark, @Unsigned int mask,
       Ptr<inode> inode, Ptr<inode> dir, Ptr<qstr> dname, @Unsigned int cookie) {
     throw new MethodIsBPFRelatedFunction();

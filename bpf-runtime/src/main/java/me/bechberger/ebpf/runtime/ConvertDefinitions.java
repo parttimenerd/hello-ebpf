@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1136,7 +1137,7 @@ public final class ConvertDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("convert_legacy_settings_to_link_ksettings($arg1, (const struct ethtool_cmd*)$arg2)")
+  @BuiltinBPFFunction("convert_legacy_settings_to_link_ksettings($arg1, (const struct ethtool_cmd *)$arg2)")
   public static boolean convert_legacy_settings_to_link_ksettings(
       Ptr<ethtool_link_ksettings> link_ksettings, Ptr<ethtool_cmd> legacy_settings) {
     throw new MethodIsBPFRelatedFunction();
@@ -1167,7 +1168,7 @@ public final class ConvertDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("convert_to_fxsr($arg1, (const struct user_i387_ia32_struct*)$arg2)")
+  @BuiltinBPFFunction("convert_to_fxsr($arg1, (const struct user_i387_ia32_struct *)$arg2)")
   public static void convert_to_fxsr(Ptr<fxregs_state> fxsave, Ptr<user_i387_ia32_struct> env) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1120,7 +1121,7 @@ public final class TrustedDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("trusted_read((const struct key*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("trusted_read((const struct key *)$arg1, $arg2, $arg3)")
   public static long trusted_read(Ptr<key> key, String buffer, @Unsigned long buflen) {
     throw new MethodIsBPFRelatedFunction();
   }

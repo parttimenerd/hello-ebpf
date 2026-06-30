@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1103,20 +1104,20 @@ public final class WqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wq_affinity_strict_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("wq_affinity_strict_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long wq_affinity_strict_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wq_affn_dfl_get($arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("wq_affn_dfl_get($arg1, (const struct kernel_param *)$arg2)")
   public static int wq_affn_dfl_get(String buffer, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wq_affn_dfl_set((const u8*)$arg1, (const struct kernel_param*)$arg2)")
+  @BuiltinBPFFunction("wq_affn_dfl_set((const u8 *)$arg1, (const struct kernel_param *)$arg2)")
   public static int wq_affn_dfl_set(String val, Ptr<kernel_param> kp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1129,7 +1130,7 @@ public final class WqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wq_affn_scope_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("wq_affn_scope_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long wq_affn_scope_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1161,7 +1162,7 @@ public final class WqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wq_cpumask_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("wq_cpumask_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long wq_cpumask_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1181,7 +1182,7 @@ public final class WqDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("wq_nice_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("wq_nice_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long wq_nice_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

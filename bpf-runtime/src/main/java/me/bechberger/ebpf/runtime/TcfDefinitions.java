@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1124,7 +1125,7 @@ public final class TcfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__tcf_classify($arg1, (const struct tcf_proto*)$arg2, (const struct tcf_proto*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__tcf_classify($arg1, (const struct tcf_proto *)$arg2, (const struct tcf_proto *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int __tcf_classify(Ptr<sk_buff> skb, Ptr<tcf_proto> tp, Ptr<tcf_proto> orig_tp,
       Ptr<tcf_result> res, boolean compat_mode, Ptr<tcf_exts_miss_cookie_node> n, int act_index,
       Ptr<java.lang. @Unsigned Integer> last_executed_chain) {
@@ -1139,7 +1140,7 @@ public final class TcfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__tcf_generic_walker($arg1, $arg2, $arg3, $arg4, (const struct tc_action_ops*)$arg5, $arg6)")
+  @BuiltinBPFFunction("__tcf_generic_walker($arg1, $arg2, $arg3, $arg4, (const struct tc_action_ops *)$arg5, $arg6)")
   public static int __tcf_generic_walker(Ptr<net> net, Ptr<sk_buff> skb, Ptr<netlink_callback> cb,
       int type, Ptr<tc_action_ops> ops, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1158,7 +1159,7 @@ public final class TcfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct tcf_proto_ops*)__tcf_proto_lookup_ops((const u8*)$arg1))")
+  @BuiltinBPFFunction("((const struct tcf_proto_ops*)__tcf_proto_lookup_ops((const u8 *)$arg1))")
   public static Ptr<tcf_proto_ops> __tcf_proto_lookup_ops(String kind) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1236,7 +1237,7 @@ public final class TcfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcf_action_fill_size((const struct tc_action*)$arg1)")
+  @BuiltinBPFFunction("tcf_action_fill_size((const struct tc_action *)$arg1)")
   public static @Unsigned long tcf_action_fill_size(Ptr<tc_action> act) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1451,7 +1452,7 @@ public final class TcfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcf_classify($arg1, (const struct tcf_block*)$arg2, (const struct tcf_proto*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("tcf_classify($arg1, (const struct tcf_block *)$arg2, (const struct tcf_proto *)$arg3, $arg4, $arg5)")
   public static int tcf_classify(Ptr<sk_buff> skb, Ptr<tcf_block> block, Ptr<tcf_proto> tp,
       Ptr<tcf_result> res, boolean compat_mode) {
     throw new MethodIsBPFRelatedFunction();
@@ -1588,7 +1589,7 @@ public final class TcfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcf_generic_walker($arg1, $arg2, $arg3, $arg4, (const struct tc_action_ops*)$arg5, $arg6)")
+  @BuiltinBPFFunction("tcf_generic_walker($arg1, $arg2, $arg3, $arg4, (const struct tc_action_ops *)$arg5, $arg6)")
   public static int tcf_generic_walker(Ptr<tc_action_net> tn, Ptr<sk_buff> skb,
       Ptr<netlink_callback> cb, int type, Ptr<tc_action_ops> ops, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -1620,7 +1621,7 @@ public final class TcfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcf_idr_create($arg1, $arg2, $arg3, $arg4, (const struct tc_action_ops*)$arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("tcf_idr_create($arg1, $arg2, $arg3, $arg4, (const struct tc_action_ops *)$arg5, $arg6, $arg7, $arg8)")
   public static int tcf_idr_create(Ptr<tc_action_net> tn, @Unsigned int index, Ptr<nlattr> est,
       Ptr<Ptr<tc_action>> a, Ptr<tc_action_ops> ops, int bind, boolean cpustats,
       @Unsigned int flags) {
@@ -1628,7 +1629,7 @@ public final class TcfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcf_idr_create_from_flags($arg1, $arg2, $arg3, $arg4, (const struct tc_action_ops*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("tcf_idr_create_from_flags($arg1, $arg2, $arg3, $arg4, (const struct tc_action_ops *)$arg5, $arg6, $arg7)")
   public static int tcf_idr_create_from_flags(Ptr<tc_action_net> tn, @Unsigned int index,
       Ptr<nlattr> est, Ptr<Ptr<tc_action>> a, Ptr<tc_action_ops> ops, int bind,
       @Unsigned int flags) {
@@ -1662,7 +1663,7 @@ public final class TcfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcf_idrinfo_destroy((const struct tc_action_ops*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcf_idrinfo_destroy((const struct tc_action_ops *)$arg1, $arg2)")
   public static void tcf_idrinfo_destroy(Ptr<tc_action_ops> ops, Ptr<tcf_idrinfo> idrinfo) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1717,7 +1718,7 @@ public final class TcfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcf_proto_is_unlocked((const u8*)$arg1)")
+  @BuiltinBPFFunction("tcf_proto_is_unlocked((const u8 *)$arg1)")
   public static boolean tcf_proto_is_unlocked(String kind) {
     throw new MethodIsBPFRelatedFunction();
   }

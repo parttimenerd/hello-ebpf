@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1349,7 +1350,7 @@ public final class UDefinitions {
 
   @Type(
       noCCodeGeneration = true,
-      cType = "union { struct path path; struct dentry *dentry; struct inode *inode; struct lsm_network_audit *net; int cap; int ipc_id; struct task_struct *tsk; struct { int key; u8 *key_desc; } key_struct; u8 *kmod_name; struct lsm_ioctlop_audit *op; struct file *file; struct lsm_ibpkey_audit *ibpkey; struct lsm_ibendport_audit *ibendport; int reason; const u8*; short unsigned int nlmsg_type; }"
+      cType = "union { struct path path; struct dentry *dentry; struct inode *inode; struct lsm_network_audit *net; int cap; int ipc_id; struct task_struct *tsk; struct { int key; u8 *key_desc; } key_struct; u8 *kmod_name; struct lsm_ioctlop_audit *op; struct file *file; struct lsm_ibpkey_audit *ibpkey; struct lsm_ibendport_audit *ibendport; int reason; const u8 *anonclass; short unsigned int nlmsg_type; }"
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava

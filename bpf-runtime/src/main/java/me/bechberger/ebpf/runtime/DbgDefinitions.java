@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,7 +1097,7 @@ public final class DbgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dbg_cmd($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dbg_cmd($arg1, (const u8 *)$arg2, $arg3)")
   public static void dbg_cmd(Ptr<ehci_hcd> ehci, String label, @Unsigned int command) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1192,7 +1193,7 @@ public final class DbgDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dbg_status($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dbg_status($arg1, (const u8 *)$arg2, $arg3)")
   public static void dbg_status(Ptr<ehci_hcd> ehci, String label, @Unsigned int status) {
     throw new MethodIsBPFRelatedFunction();
   }

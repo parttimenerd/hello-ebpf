@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1402,7 +1403,7 @@ public final class CpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpu_device_create($arg1, $arg2, (const struct attribute_group**)$arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("cpu_device_create($arg1, $arg2, (const struct attribute_group**)$arg3, (const u8 *)$arg4, $arg5_)")
   public static Ptr<device> cpu_device_create(Ptr<device> parent, Ptr<?> drvdata,
       Ptr<Ptr<attribute_group>> groups, String fmt, java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
@@ -1711,7 +1712,7 @@ public final class CpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpu_latency_qos_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("cpu_latency_qos_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long cpu_latency_qos_write(Ptr<file> filp, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> f_pos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1788,7 +1789,7 @@ public final class CpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpu_map_mem_usage((const struct bpf_map*)$arg1)")
+  @BuiltinBPFFunction("cpu_map_mem_usage((const struct bpf_map *)$arg1)")
   public static @Unsigned long cpu_map_mem_usage(Ptr<bpf_map> map) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1833,7 +1834,7 @@ public final class CpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpu_matches((const struct x86_cpu_id*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cpu_matches((const struct x86_cpu_id *)$arg1, $arg2)")
   public static boolean cpu_matches(Ptr<x86_cpu_id> table, @Unsigned long which) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1900,7 +1901,7 @@ public final class CpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpu_partial_store($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("cpu_partial_store($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long cpu_partial_store(Ptr<kmem_cache> s, String buf,
       @Unsigned long length) {
     throw new MethodIsBPFRelatedFunction();
@@ -1945,7 +1946,7 @@ public final class CpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpu_rmap_copy_neigh($arg1, $arg2, (const struct cpumask*)$arg3, $arg4)")
+  @BuiltinBPFFunction("cpu_rmap_copy_neigh($arg1, $arg2, (const struct cpumask *)$arg3, $arg4)")
   public static boolean cpu_rmap_copy_neigh(Ptr<cpu_rmap> rmap, @Unsigned int cpu,
       Ptr<cpumask> mask, @Unsigned short dist) {
     throw new MethodIsBPFRelatedFunction();
@@ -1964,7 +1965,7 @@ public final class CpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpu_rmap_update($arg1, $arg2, (const struct cpumask*)$arg3)")
+  @BuiltinBPFFunction("cpu_rmap_update($arg1, $arg2, (const struct cpumask *)$arg3)")
   public static int cpu_rmap_update(Ptr<cpu_rmap> rmap, @Unsigned short index,
       Ptr<cpumask> affinity) {
     throw new MethodIsBPFRelatedFunction();
@@ -2227,14 +2228,14 @@ public final class CpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpu_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("cpu_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long cpu_store(Ptr<kobject> kobj, Ptr<kobj_attribute> attr,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpu_subsys_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("cpu_subsys_match($arg1, (const struct device_driver *)$arg2)")
   public static int cpu_subsys_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2290,7 +2291,7 @@ public final class CpuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cpu_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cpu_uevent((const struct device *)$arg1, $arg2)")
   public static int cpu_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3152,7 +3153,7 @@ public final class CpuDefinitions {
 
     public Ptr<Ptr<?>> obj;
 
-    public AnonymousType1628305283C65 @Size(0) [] near;
+    public AnonymousType2044150758C65 @Size(0) [] near;
   }
 
   @Type(
@@ -3274,7 +3275,7 @@ public final class CpuDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1628305283C65 extends Struct {
+  public static class AnonymousType2044150758C65 extends Struct {
     public @Unsigned short index;
 
     public @Unsigned short dist;

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1160,14 +1161,14 @@ public final class Tpm1Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm1_getcap($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("tpm1_getcap($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static @OriginalName("ssize_t") long tpm1_getcap(Ptr<tpm_chip> chip,
       @Unsigned int subcap_id, Ptr<cap_t> cap, String desc, @Unsigned long min_cap_length) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tpm1_pcr_extend($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("tpm1_pcr_extend($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static int tpm1_pcr_extend(Ptr<tpm_chip> chip, @Unsigned int pcr_idx,
       Ptr<java.lang.Character> hash, String log_msg) {
     throw new MethodIsBPFRelatedFunction();

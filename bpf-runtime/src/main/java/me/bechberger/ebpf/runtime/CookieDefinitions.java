@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,26 +1091,26 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CookieDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__cookie_v4_check((const struct iphdr*)$arg1, (const struct tcphdr*)$arg2)")
+  @BuiltinBPFFunction("__cookie_v4_check((const struct iphdr *)$arg1, (const struct tcphdr *)$arg2)")
   public static int __cookie_v4_check(Ptr<iphdr> iph, Ptr<tcphdr> th) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__cookie_v4_init_sequence((const struct iphdr*)$arg1, (const struct tcphdr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__cookie_v4_init_sequence((const struct iphdr *)$arg1, (const struct tcphdr *)$arg2, $arg3)")
   public static @Unsigned int __cookie_v4_init_sequence(Ptr<iphdr> iph, Ptr<tcphdr> th,
       Ptr<java.lang. @Unsigned Short> mssp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__cookie_v6_check((const struct ipv6hdr*)$arg1, (const struct tcphdr*)$arg2)")
+  @BuiltinBPFFunction("__cookie_v6_check((const struct ipv6hdr *)$arg1, (const struct tcphdr *)$arg2)")
   public static int __cookie_v6_check(Ptr<ipv6hdr> iph, Ptr<tcphdr> th) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__cookie_v6_init_sequence((const struct ipv6hdr*)$arg1, (const struct tcphdr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__cookie_v6_init_sequence((const struct ipv6hdr *)$arg1, (const struct tcphdr *)$arg2, $arg3)")
   public static @Unsigned int __cookie_v6_init_sequence(Ptr<ipv6hdr> iph, Ptr<tcphdr> th,
       Ptr<java.lang. @Unsigned Short> mssp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1128,7 +1129,7 @@ public final class CookieDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cookie_tcp_reqsk_alloc((const struct request_sock_ops*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("cookie_tcp_reqsk_alloc((const struct request_sock_ops *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6)")
   public static Ptr<request_sock> cookie_tcp_reqsk_alloc(Ptr<request_sock_ops> ops, Ptr<sock> sk,
       Ptr<sk_buff> skb, Ptr<tcp_options_received> tcp_opt, int mss, @Unsigned int tsoff) {
     throw new MethodIsBPFRelatedFunction();
@@ -1141,7 +1142,7 @@ public final class CookieDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cookie_timestamp_decode((const struct net*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cookie_timestamp_decode((const struct net *)$arg1, $arg2)")
   public static boolean cookie_timestamp_decode(Ptr<net> net, Ptr<tcp_options_received> tcp_opt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1153,7 +1154,7 @@ public final class CookieDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cookie_v4_init_sequence((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cookie_v4_init_sequence((const struct sk_buff *)$arg1, $arg2)")
   public static @Unsigned int cookie_v4_init_sequence(Ptr<sk_buff> skb,
       Ptr<java.lang. @Unsigned Short> mssp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1166,7 +1167,7 @@ public final class CookieDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cookie_v6_init_sequence((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("cookie_v6_init_sequence((const struct sk_buff *)$arg1, $arg2)")
   public static @Unsigned int cookie_v6_init_sequence(Ptr<sk_buff> skb,
       Ptr<java.lang. @Unsigned Short> mssp) {
     throw new MethodIsBPFRelatedFunction();

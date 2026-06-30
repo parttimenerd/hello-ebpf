@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1207,13 +1208,13 @@ public final class ConDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("con_is_bound((const struct consw*)$arg1)")
+  @BuiltinBPFFunction("con_is_bound((const struct consw *)$arg1)")
   public static int con_is_bound(Ptr<consw> csw) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("con_is_visible((const struct vc_data*)$arg1)")
+  @BuiltinBPFFunction("con_is_visible((const struct vc_data *)$arg1)")
   public static boolean con_is_visible(Ptr<vc_data> vc) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1317,7 +1318,7 @@ public final class ConDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("con_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("con_write($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long con_write(Ptr<tty_struct> tty,
       Ptr<java.lang.Character> buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

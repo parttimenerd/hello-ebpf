@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1122,14 +1123,14 @@ public final class SdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_format_header($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_format_header($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @Unsigned long sdev_format_header(String logbuf, @Unsigned long logbuf_len,
       String name, int tag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_prefix_printk((const u8*)$arg1, (const struct scsi_device*)$arg2, (const u8*)$arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("sdev_prefix_printk((const u8 *)$arg1, (const struct scsi_device *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4, $arg5_)")
   public static void sdev_prefix_printk(String level, Ptr<scsi_device> sdev, String name,
       String fmt, java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
@@ -1311,91 +1312,91 @@ public final class SdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_store_cdl_enable($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_store_cdl_enable($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sdev_store_cdl_enable(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_store_delete($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_store_delete($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sdev_store_delete(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_store_dh_state($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_store_dh_state($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sdev_store_dh_state(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_store_eh_timeout($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_store_eh_timeout($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sdev_store_eh_timeout(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_store_evt_capacity_change_reported($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_store_evt_capacity_change_reported($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sdev_store_evt_capacity_change_reported(
       Ptr<device> dev, Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_store_evt_inquiry_change_reported($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_store_evt_inquiry_change_reported($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sdev_store_evt_inquiry_change_reported(
       Ptr<device> dev, Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_store_evt_lun_change_reported($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_store_evt_lun_change_reported($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sdev_store_evt_lun_change_reported(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_store_evt_media_change($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_store_evt_media_change($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sdev_store_evt_media_change(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_store_evt_mode_parameter_change_reported($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_store_evt_mode_parameter_change_reported($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sdev_store_evt_mode_parameter_change_reported(
       Ptr<device> dev, Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_store_evt_soft_threshold_reached($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_store_evt_soft_threshold_reached($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sdev_store_evt_soft_threshold_reached(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_store_queue_depth($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_store_queue_depth($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sdev_store_queue_depth(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_store_queue_ramp_up_period($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_store_queue_ramp_up_period($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sdev_store_queue_ramp_up_period(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("sdev_store_timeout($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("sdev_store_timeout($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long sdev_store_timeout(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

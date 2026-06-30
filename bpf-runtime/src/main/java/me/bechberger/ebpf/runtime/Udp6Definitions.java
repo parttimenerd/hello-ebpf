@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class Udp6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__udp6_lib_lookup((const struct net*)$arg1, (const struct in6_addr*)$arg2, $arg3, (const struct in6_addr*)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("__udp6_lib_lookup((const struct net *)$arg1, (const struct in6_addr *)$arg2, $arg3, (const struct in6_addr *)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static Ptr<sock> __udp6_lib_lookup(Ptr<net> net, Ptr<in6_addr> saddr,
       @Unsigned @OriginalName("__be16") short sport, Ptr<in6_addr> daddr,
       @Unsigned @OriginalName("__be16") short dport, int dif, int sdif, Ptr<udp_table> udptable,
@@ -1106,7 +1107,7 @@ public final class Udp6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__udp6_lib_mcast_deliver($arg1, $arg2, (const struct in6_addr*)$arg3, (const struct in6_addr*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("__udp6_lib_mcast_deliver($arg1, $arg2, (const struct in6_addr *)$arg3, (const struct in6_addr *)$arg4, $arg5, $arg6)")
   public static int __udp6_lib_mcast_deliver(Ptr<net> net, Ptr<sk_buff> skb, Ptr<in6_addr> saddr,
       Ptr<in6_addr> daddr, Ptr<udp_table> udptable, int proto) {
     throw new MethodIsBPFRelatedFunction();
@@ -1125,7 +1126,7 @@ public final class Udp6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("udp6_ehashfn((const struct net*)$arg1, (const struct in6_addr*)$arg2, (const short unsigned int)$arg3, (const struct in6_addr*)$arg4, (const short unsigned int)$arg5)")
+  @BuiltinBPFFunction("udp6_ehashfn((const struct net *)$arg1, (const struct in6_addr *)$arg2, (const short unsigned int)$arg3, (const struct in6_addr *)$arg4, (const short unsigned int)$arg5)")
   public static @Unsigned int udp6_ehashfn(Ptr<net> net, Ptr<in6_addr> laddr, @Unsigned short lport,
       Ptr<in6_addr> faddr, @Unsigned @OriginalName("__be16") short fport) {
     throw new MethodIsBPFRelatedFunction();
@@ -1144,7 +1145,7 @@ public final class Udp6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("udp6_lib_lookup((const struct net*)$arg1, (const struct in6_addr*)$arg2, $arg3, (const struct in6_addr*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("udp6_lib_lookup((const struct net *)$arg1, (const struct in6_addr *)$arg2, $arg3, (const struct in6_addr *)$arg4, $arg5, $arg6)")
   public static Ptr<sock> udp6_lib_lookup(Ptr<net> net, Ptr<in6_addr> saddr,
       @Unsigned @OriginalName("__be16") short sport, Ptr<in6_addr> daddr,
       @Unsigned @OriginalName("__be16") short dport, int dif) {
@@ -1152,7 +1153,7 @@ public final class Udp6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("udp6_lib_lookup2((const struct net*)$arg1, (const struct in6_addr*)$arg2, $arg3, (const struct in6_addr*)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("udp6_lib_lookup2((const struct net *)$arg1, (const struct in6_addr *)$arg2, $arg3, (const struct in6_addr *)$arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static Ptr<sock> udp6_lib_lookup2(Ptr<net> net, Ptr<in6_addr> saddr,
       @Unsigned @OriginalName("__be16") short sport, Ptr<in6_addr> daddr, @Unsigned int hnum,
       int dif, int sdif, Ptr<udp_hslot> hslot2, Ptr<sk_buff> skb) {
@@ -1160,7 +1161,7 @@ public final class Udp6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("udp6_lib_lookup_skb((const struct sk_buff*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("udp6_lib_lookup_skb((const struct sk_buff *)$arg1, $arg2, $arg3)")
   public static Ptr<sock> udp6_lib_lookup_skb(Ptr<sk_buff> skb,
       @Unsigned @OriginalName("__be16") short sport,
       @Unsigned @OriginalName("__be16") short dport) {
@@ -1186,7 +1187,7 @@ public final class Udp6Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("udp6_set_csum($arg1, $arg2, (const struct in6_addr*)$arg3, (const struct in6_addr*)$arg4, $arg5)")
+  @BuiltinBPFFunction("udp6_set_csum($arg1, $arg2, (const struct in6_addr *)$arg3, (const struct in6_addr *)$arg4, $arg5)")
   public static void udp6_set_csum(boolean nocheck, Ptr<sk_buff> skb, Ptr<in6_addr> saddr,
       Ptr<in6_addr> daddr, int len) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class EbitmapDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("ebitmap_and($arg1, (const struct ebitmap*)$arg2, (const struct ebitmap*)$arg3)")
+  @BuiltinBPFFunction("ebitmap_and($arg1, (const struct ebitmap *)$arg2, (const struct ebitmap *)$arg3)")
   public static int ebitmap_and(Ptr<ebitmap> dst, Ptr<ebitmap> e1, Ptr<ebitmap> e2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1102,13 +1103,13 @@ public final class EbitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ebitmap_contains((const struct ebitmap*)$arg1, (const struct ebitmap*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ebitmap_contains((const struct ebitmap *)$arg1, (const struct ebitmap *)$arg2, $arg3)")
   public static int ebitmap_contains(Ptr<ebitmap> e1, Ptr<ebitmap> e2, @Unsigned int last_e2bit) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ebitmap_cpy($arg1, (const struct ebitmap*)$arg2)")
+  @BuiltinBPFFunction("ebitmap_cpy($arg1, (const struct ebitmap *)$arg2)")
   public static int ebitmap_cpy(Ptr<ebitmap> dst, Ptr<ebitmap> src) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1120,13 +1121,13 @@ public final class EbitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ebitmap_equal((const struct ebitmap*)$arg1, (const struct ebitmap*)$arg2)")
+  @BuiltinBPFFunction("ebitmap_equal((const struct ebitmap *)$arg1, (const struct ebitmap *)$arg2)")
   public static boolean ebitmap_equal(Ptr<ebitmap> e1, Ptr<ebitmap> e2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ebitmap_hash((const struct ebitmap*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ebitmap_hash((const struct ebitmap *)$arg1, $arg2)")
   public static @Unsigned int ebitmap_hash(Ptr<ebitmap> e, @Unsigned int hash) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1162,7 +1163,7 @@ public final class EbitmapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ebitmap_write((const struct ebitmap*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ebitmap_write((const struct ebitmap *)$arg1, $arg2)")
   public static int ebitmap_write(Ptr<ebitmap> e, Ptr<policy_file> fp) {
     throw new MethodIsBPFRelatedFunction();
   }

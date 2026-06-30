@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1154,7 +1155,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__netdev_printk((const u8*)$arg1, (const struct net_device*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__netdev_printk((const u8 *)$arg1, (const struct net_device *)$arg2, $arg3)")
   public static void __netdev_printk(String level, Ptr<net_device> dev, Ptr<va_format> vaf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1259,7 +1260,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_alert((const struct net_device*)$arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("netdev_alert((const struct net_device *)$arg1, (const u8 *)$arg2, $arg3_)")
   public static void netdev_alert(Ptr<net_device> dev, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1272,7 +1273,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_bits($arg1, $arg2, (const void*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("netdev_bits($arg1, $arg2, (const void *)$arg3, $arg4, (const u8 *)$arg5)")
   public static String netdev_bits(String buf, String end, Ptr<?> addr, printf_spec spec,
       String fmt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1292,7 +1293,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_change_owner($arg1, (const struct net*)$arg2, (const struct net*)$arg3)")
+  @BuiltinBPFFunction("netdev_change_owner($arg1, (const struct net *)$arg2, (const struct net *)$arg3)")
   public static int netdev_change_owner(Ptr<net_device> ndev, Ptr<net> net_old, Ptr<net> net_new) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1305,13 +1306,13 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_class_create_file_ns((const struct class_attribute*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("netdev_class_create_file_ns((const struct class_attribute *)$arg1, (const void *)$arg2)")
   public static int netdev_class_create_file_ns(Ptr<class_attribute> class_attr, Ptr<?> ns) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_class_remove_file_ns((const struct class_attribute*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("netdev_class_remove_file_ns((const struct class_attribute *)$arg1, (const void *)$arg2)")
   public static void netdev_class_remove_file_ns(Ptr<class_attribute> class_attr, Ptr<?> ns) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1348,7 +1349,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_crit((const struct net_device*)$arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("netdev_crit((const struct net_device *)$arg1, (const u8 *)$arg2, $arg3_)")
   public static void netdev_crit(Ptr<net_device> dev, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1366,19 +1367,19 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)netdev_drivername((const struct net_device*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)netdev_drivername((const struct net_device *)$arg1))")
   public static String netdev_drivername(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_emerg((const struct net_device*)$arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("netdev_emerg((const struct net_device *)$arg1, (const u8 *)$arg2, $arg3_)")
   public static void netdev_emerg(Ptr<net_device> dev, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_err((const struct net_device*)$arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("netdev_err((const struct net_device *)$arg1, (const u8 *)$arg2, $arg3_)")
   public static void netdev_err(Ptr<net_device> dev, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1456,7 +1457,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_get_by_name($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("netdev_get_by_name($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<net_device> netdev_get_by_name(Ptr<net> net, String name,
       Ptr<@OriginalName("netdevice_tracker") lockdep_map_p> tracker,
       @Unsigned @OriginalName("gfp_t") int gfp) {
@@ -1496,7 +1497,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_hw_stats64_add($arg1, (const struct rtnl_hw_stats64*)$arg2)")
+  @BuiltinBPFFunction("netdev_hw_stats64_add($arg1, (const struct rtnl_hw_stats64 *)$arg2)")
   public static void netdev_hw_stats64_add(Ptr<rtnl_hw_stats64> dest, Ptr<rtnl_hw_stats64> src) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1511,7 +1512,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_info((const struct net_device*)$arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("netdev_info((const struct net_device *)$arg1, (const u8 *)$arg2, $arg3_)")
   public static void netdev_info(Ptr<net_device> dev, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1594,25 +1595,25 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)netdev_name((const struct net_device*)$arg1))")
+  @BuiltinBPFFunction("((const u8*)netdev_name((const struct net_device *)$arg1))")
   public static String netdev_name(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_name_in_use($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("netdev_name_in_use($arg1, (const u8 *)$arg2)")
   public static boolean netdev_name_in_use(Ptr<net> net, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_name_node_alt_create($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("netdev_name_node_alt_create($arg1, (const u8 *)$arg2)")
   public static int netdev_name_node_alt_create(Ptr<net_device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_name_node_alt_destroy($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("netdev_name_node_alt_destroy($arg1, (const u8 *)$arg2)")
   public static int netdev_name_node_alt_destroy(Ptr<net_device> dev, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1624,7 +1625,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_name_node_lookup($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("netdev_name_node_lookup($arg1, (const u8 *)$arg2)")
   public static Ptr<netdev_name_node> netdev_name_node_lookup(Ptr<net> net, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1655,7 +1656,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_nl_dev_fill($arg1, $arg2, (const struct genl_info*)$arg3)")
+  @BuiltinBPFFunction("netdev_nl_dev_fill($arg1, $arg2, (const struct genl_info *)$arg3)")
   public static int netdev_nl_dev_fill(Ptr<net_device> netdev, Ptr<sk_buff> rsp,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1674,14 +1675,14 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_nl_napi_dump_one($arg1, $arg2, (const struct genl_info*)$arg3, $arg4)")
+  @BuiltinBPFFunction("netdev_nl_napi_dump_one($arg1, $arg2, (const struct genl_info *)$arg3, $arg4)")
   public static int netdev_nl_napi_dump_one(Ptr<net_device> netdev, Ptr<sk_buff> rsp,
       Ptr<genl_info> info, Ptr<netdev_nl_dump_ctx> ctx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_nl_napi_fill_one($arg1, $arg2, (const struct genl_info*)$arg3)")
+  @BuiltinBPFFunction("netdev_nl_napi_fill_one($arg1, $arg2, (const struct genl_info *)$arg3)")
   public static int netdev_nl_napi_fill_one(Ptr<sk_buff> rsp, Ptr<napi_struct> napi,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1706,7 +1707,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_nl_page_pool_event((const struct page_pool*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netdev_nl_page_pool_event((const struct page_pool *)$arg1, $arg2)")
   public static void netdev_nl_page_pool_event(Ptr<page_pool> pool, @Unsigned int cmd) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1751,7 +1752,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_nl_qstats_get_dump_one($arg1, $arg2, $arg3, (const struct genl_info*)$arg4, $arg5)")
+  @BuiltinBPFFunction("netdev_nl_qstats_get_dump_one($arg1, $arg2, $arg3, (const struct genl_info *)$arg4, $arg5)")
   public static int netdev_nl_qstats_get_dump_one(Ptr<net_device> netdev, @Unsigned int scope,
       Ptr<sk_buff> skb, Ptr<genl_info> info, Ptr<netdev_nl_dump_ctx> ctx) {
     throw new MethodIsBPFRelatedFunction();
@@ -1764,14 +1765,14 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_nl_queue_dump_one($arg1, $arg2, (const struct genl_info*)$arg3, $arg4)")
+  @BuiltinBPFFunction("netdev_nl_queue_dump_one($arg1, $arg2, (const struct genl_info *)$arg3, $arg4)")
   public static int netdev_nl_queue_dump_one(Ptr<net_device> netdev, Ptr<sk_buff> rsp,
       Ptr<genl_info> info, Ptr<netdev_nl_dump_ctx> ctx) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_nl_queue_fill_one($arg1, $arg2, $arg3, $arg4, (const struct genl_info*)$arg5)")
+  @BuiltinBPFFunction("netdev_nl_queue_fill_one($arg1, $arg2, $arg3, $arg4, (const struct genl_info *)$arg5)")
   public static int netdev_nl_queue_fill_one(Ptr<sk_buff> rsp, Ptr<net_device> netdev,
       @Unsigned int q_idx, @Unsigned int q_type, Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1802,14 +1803,14 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_nl_stats_by_netdev($arg1, $arg2, (const struct genl_info*)$arg3)")
+  @BuiltinBPFFunction("netdev_nl_stats_by_netdev($arg1, $arg2, (const struct genl_info *)$arg3)")
   public static int netdev_nl_stats_by_netdev(Ptr<net_device> netdev, Ptr<sk_buff> rsp,
       Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_nl_stats_queue($arg1, $arg2, $arg3, $arg4, (const struct genl_info*)$arg5)")
+  @BuiltinBPFFunction("netdev_nl_stats_queue($arg1, $arg2, $arg3, $arg4, (const struct genl_info *)$arg5)")
   public static int netdev_nl_stats_queue(Ptr<net_device> netdev, Ptr<sk_buff> rsp,
       @Unsigned int q_type, int i, Ptr<genl_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1828,7 +1829,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_notice((const struct net_device*)$arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("netdev_notice((const struct net_device *)$arg1, (const u8 *)$arg2, $arg3_)")
   public static void netdev_notice(Ptr<net_device> dev, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1854,7 +1855,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_offload_xstats_enabled((const struct net_device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netdev_offload_xstats_enabled((const struct net_device *)$arg1, $arg2)")
   public static boolean netdev_offload_xstats_enabled(Ptr<net_device> dev,
       netdev_offload_xstats_type type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1877,14 +1878,14 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_offload_xstats_push_delta($arg1, $arg2, (const struct rtnl_hw_stats64*)$arg3)")
+  @BuiltinBPFFunction("netdev_offload_xstats_push_delta($arg1, $arg2, (const struct rtnl_hw_stats64 *)$arg3)")
   public static void netdev_offload_xstats_push_delta(Ptr<net_device> dev,
       netdev_offload_xstats_type type, Ptr<rtnl_hw_stats64> p_stats) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_offload_xstats_report_delta($arg1, (const struct rtnl_hw_stats64*)$arg2)")
+  @BuiltinBPFFunction("netdev_offload_xstats_report_delta($arg1, (const struct rtnl_hw_stats64 *)$arg2)")
   public static void netdev_offload_xstats_report_delta(
       Ptr<netdev_notifier_offload_xstats_rd> report_delta, Ptr<rtnl_hw_stats64> stats) {
     throw new MethodIsBPFRelatedFunction();
@@ -1898,7 +1899,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_ops_assert_locked((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("netdev_ops_assert_locked((const struct net_device *)$arg1)")
   public static void netdev_ops_assert_locked(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1924,7 +1925,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_printk((const u8*)$arg1, (const struct net_device*)$arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("netdev_printk((const u8 *)$arg1, (const struct net_device *)$arg2, (const u8 *)$arg3, $arg4_)")
   public static void netdev_printk(String level, Ptr<net_device> dev, String format,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
@@ -1938,21 +1939,21 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_queue_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("netdev_queue_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long netdev_queue_attr_store(Ptr<kobject> kobj,
       Ptr<attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_queue_get_ownership((const struct kobject*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("netdev_queue_get_ownership((const struct kobject *)$arg1, $arg2, $arg3)")
   public static void netdev_queue_get_ownership(Ptr<kobject> kobj, Ptr<kuid_t> uid,
       Ptr<kgid_t> gid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)netdev_queue_namespace((const struct kobject*)$arg1))")
+  @BuiltinBPFFunction("((const void*)netdev_queue_namespace((const struct kobject *)$arg1))")
   public static Ptr<?> netdev_queue_namespace(Ptr<kobject> kobj) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1970,7 +1971,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_refcnt_read((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("netdev_refcnt_read((const struct net_device *)$arg1)")
   public static int netdev_refcnt_read(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2038,7 +2039,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_set_default_ethtool_ops($arg1, (const struct ethtool_ops*)$arg2)")
+  @BuiltinBPFFunction("netdev_set_default_ethtool_ops($arg1, (const struct ethtool_ops *)$arg2)")
   public static void netdev_set_default_ethtool_ops(Ptr<net_device> dev, Ptr<ethtool_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2083,14 +2084,14 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_stats_to_stats64($arg1, (const struct net_device_stats*)$arg2)")
+  @BuiltinBPFFunction("netdev_stats_to_stats64($arg1, (const struct net_device_stats *)$arg2)")
   public static void netdev_stats_to_stats64(Ptr<rtnl_link_stats64> stats64,
       Ptr<net_device_stats> netdev_stats) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_store($arg1, $arg2, (const u8*)$arg3, $arg4, (int (*)(struct net_device*, long unsigned int))$arg5)")
+  @BuiltinBPFFunction("netdev_store($arg1, $arg2, (const u8 *)$arg3, $arg4, (int (*)(struct net_device*, long unsigned int))$arg5)")
   public static @OriginalName("ssize_t") long netdev_store(Ptr<device> dev,
       Ptr<device_attribute> attr, String buf, @Unsigned long len, Ptr<?> set) {
     throw new MethodIsBPFRelatedFunction();
@@ -2116,7 +2117,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netdev_uevent((const struct device *)$arg1, $arg2)")
   public static int netdev_uevent(Ptr<device> d, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2187,7 +2188,7 @@ public final class NetdevDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netdev_warn((const struct net_device*)$arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("netdev_warn((const struct net_device *)$arg1, (const u8 *)$arg2, $arg3_)")
   public static void netdev_warn(Ptr<net_device> dev, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }

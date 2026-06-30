@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -2030,7 +2031,7 @@ public final class UncoreDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uncore_pci_find_dev_pmu($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("uncore_pci_find_dev_pmu($arg1, (const struct pci_device_id *)$arg2)")
   public static Ptr<intel_uncore_pmu> uncore_pci_find_dev_pmu(Ptr<pci_dev> pdev,
       Ptr<pci_device_id> ids) {
     throw new MethodIsBPFRelatedFunction();
@@ -2062,7 +2063,7 @@ public final class UncoreDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uncore_pci_probe($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("uncore_pci_probe($arg1, (const struct pci_device_id *)$arg2)")
   public static int uncore_pci_probe(Ptr<pci_dev> pdev, Ptr<pci_device_id> id) {
     throw new MethodIsBPFRelatedFunction();
   }

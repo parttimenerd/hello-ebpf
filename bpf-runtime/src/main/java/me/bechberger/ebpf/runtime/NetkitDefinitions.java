@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1135,7 +1136,7 @@ public final class NetkitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netkit_fill_info($arg1, (const struct net_device*)$arg2)")
+  @BuiltinBPFFunction("netkit_fill_info($arg1, (const struct net_device *)$arg2)")
   public static int netkit_fill_info(Ptr<sk_buff> skb, Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1147,19 +1148,19 @@ public final class NetkitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netkit_get_iflink((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("netkit_get_iflink((const struct net_device *)$arg1)")
   public static int netkit_get_iflink(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netkit_get_link_net((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("netkit_get_link_net((const struct net_device *)$arg1)")
   public static Ptr<net> netkit_get_link_net(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netkit_get_size((const struct net_device*)$arg1)")
+  @BuiltinBPFFunction("netkit_get_size((const struct net_device *)$arg1)")
   public static @Unsigned long netkit_get_size(Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1177,7 +1178,7 @@ public final class NetkitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netkit_link_attach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netkit_link_attach((const union bpf_attr *)$arg1, $arg2)")
   public static int netkit_link_attach(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1195,13 +1196,13 @@ public final class NetkitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netkit_link_fdinfo((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netkit_link_fdinfo((const struct bpf_link *)$arg1, $arg2)")
   public static void netkit_link_fdinfo(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netkit_link_fill_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netkit_link_fill_info((const struct bpf_link *)$arg1, $arg2)")
   public static int netkit_link_fill_info(Ptr<bpf_link> link, Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1239,19 +1240,19 @@ public final class NetkitDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netkit_prog_attach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netkit_prog_attach((const union bpf_attr *)$arg1, $arg2)")
   public static int netkit_prog_attach(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netkit_prog_detach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netkit_prog_detach((const union bpf_attr *)$arg1, $arg2)")
   public static int netkit_prog_detach(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("netkit_prog_query((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("netkit_prog_query((const union bpf_attr *)$arg1, $arg2)")
   public static int netkit_prog_query(Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }

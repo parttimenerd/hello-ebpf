@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class InDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("in_aton((const u8*)$arg1)")
+  @BuiltinBPFFunction("in_aton((const u8 *)$arg1)")
   public static @Unsigned @OriginalName("__be32") int in_aton(String str) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1139,7 +1140,7 @@ public final class InDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("in_group_or_capable($arg1, (const struct inode*)$arg2, $arg3)")
+  @BuiltinBPFFunction("in_group_or_capable($arg1, (const struct inode *)$arg2, $arg3)")
   public static boolean in_group_or_capable(Ptr<mnt_idmap> idmap, Ptr<inode> inode,
       @OriginalName("vfsgid_t") kgid_t vfsgid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1210,7 +1211,7 @@ public final class InDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("in_userns((const struct user_namespace*)$arg1, (const struct user_namespace*)$arg2)")
+  @BuiltinBPFFunction("in_userns((const struct user_namespace *)$arg1, (const struct user_namespace *)$arg2)")
   public static boolean in_userns(Ptr<user_namespace> ancestor, Ptr<user_namespace> child) {
     throw new MethodIsBPFRelatedFunction();
   }

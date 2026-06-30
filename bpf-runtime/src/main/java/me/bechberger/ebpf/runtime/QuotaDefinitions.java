@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class QuotaDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__quota_error($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("__quota_error($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4_)")
   public static void __quota_error(Ptr<super_block> sb, String func, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();

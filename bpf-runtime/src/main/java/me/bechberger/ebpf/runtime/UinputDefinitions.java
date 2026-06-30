@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1158,13 +1159,13 @@ public final class UinputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uinput_ff_upload_from_user((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("uinput_ff_upload_from_user((const u8 *)$arg1, $arg2)")
   public static int uinput_ff_upload_from_user(String buffer, Ptr<uinput_ff_upload> ff_up) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uinput_ff_upload_to_user($arg1, (const struct uinput_ff_upload*)$arg2)")
+  @BuiltinBPFFunction("uinput_ff_upload_to_user($arg1, (const struct uinput_ff_upload *)$arg2)")
   public static int uinput_ff_upload_to_user(String buffer, Ptr<uinput_ff_upload> ff_up) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1227,20 +1228,20 @@ public final class UinputDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uinput_setup_device_legacy($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("uinput_setup_device_legacy($arg1, (const u8 *)$arg2, $arg3)")
   public static int uinput_setup_device_legacy(Ptr<uinput_device> udev, String buffer,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uinput_str_to_user($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("uinput_str_to_user($arg1, (const u8 *)$arg2, $arg3)")
   public static int uinput_str_to_user(Ptr<?> dest, String str, @Unsigned int maxlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("uinput_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("uinput_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long uinput_write(Ptr<file> file, String buffer,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

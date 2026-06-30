@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1269,7 +1270,7 @@ public final class SetupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("setup_data_data_read($arg1, $arg2, (const struct bin_attribute*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("setup_data_data_read($arg1, $arg2, (const struct bin_attribute *)$arg3, $arg4, $arg5, $arg6)")
   public static @OriginalName("ssize_t") long setup_data_data_read(Ptr<file> fp, Ptr<kobject> kobj,
       Ptr<bin_attribute> bin_attr, String buf, @OriginalName("loff_t") long off,
       @Unsigned long count) {
@@ -1455,13 +1456,13 @@ public final class SetupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("setup_modinfo_srcversion($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("setup_modinfo_srcversion($arg1, (const u8 *)$arg2)")
   public static void setup_modinfo_srcversion(Ptr<module> mod, String s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("setup_modinfo_version($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("setup_modinfo_version($arg1, (const u8 *)$arg2)")
   public static void setup_modinfo_version(Ptr<module> mod, String s) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1905,7 +1906,7 @@ public final class SetupDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("setup_vq($arg1, $arg2, $arg3, (void (*)(struct virtqueue*))$arg4, (const u8*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("setup_vq($arg1, $arg2, $arg3, (void (*)(struct virtqueue*))$arg4, (const u8 *)$arg5, $arg6, $arg7)")
   public static Ptr<virtqueue> setup_vq(Ptr<virtio_pci_device> vp_dev, Ptr<virtio_pci_vq_info> info,
       @Unsigned int index, Ptr<?> callback, String name, boolean ctx, @Unsigned short msix_vec) {
     throw new MethodIsBPFRelatedFunction();

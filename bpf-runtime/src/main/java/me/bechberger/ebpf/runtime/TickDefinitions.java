@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1675,7 +1676,7 @@ public final class TickDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tick_setup_device($arg1, $arg2, $arg3, (const struct cpumask*)$arg4)")
+  @BuiltinBPFFunction("tick_setup_device($arg1, $arg2, $arg3, (const struct cpumask *)$arg4)")
   public static void tick_setup_device(Ptr<tick_device> td, Ptr<clock_event_device> newdev, int cpu,
       Ptr<cpumask> cpumask) {
     throw new MethodIsBPFRelatedFunction();

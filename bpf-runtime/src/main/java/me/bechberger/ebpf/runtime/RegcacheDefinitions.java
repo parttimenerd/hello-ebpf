@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class RegcacheDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regcache_default_cmp((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("regcache_default_cmp((const void *)$arg1, (const void *)$arg2)")
   public static int regcache_default_cmp(Ptr<?> a, Ptr<?> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1114,7 +1115,7 @@ public final class RegcacheDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regcache_defaults_cmp((const void*)$arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("regcache_defaults_cmp((const void *)$arg1, (const void *)$arg2)")
   public static int regcache_defaults_cmp(Ptr<?> a, Ptr<?> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1157,7 +1158,7 @@ public final class RegcacheDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regcache_get_val($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("regcache_get_val($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned int regcache_get_val(Ptr<regmap> map, Ptr<?> base, @Unsigned int idx) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1169,7 +1170,7 @@ public final class RegcacheDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("regcache_init($arg1, (const struct regmap_config*)$arg2)")
+  @BuiltinBPFFunction("regcache_init($arg1, (const struct regmap_config *)$arg2)")
   public static int regcache_init(Ptr<regmap> map, Ptr<regmap_config> config) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1114,7 +1115,7 @@ public final class FsverityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsverity_create_info((const struct inode*)$arg1, $arg2)")
+  @BuiltinBPFFunction("fsverity_create_info((const struct inode *)$arg1, $arg2)")
   public static Ptr<fsverity_info> fsverity_create_info(Ptr<inode> inode,
       Ptr<fsverity_descriptor> desc) {
     throw new MethodIsBPFRelatedFunction();
@@ -1147,20 +1148,20 @@ public final class FsverityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct fsverity_hash_alg*)fsverity_get_hash_alg((const struct inode*)$arg1, $arg2))")
+  @BuiltinBPFFunction("((const struct fsverity_hash_alg*)fsverity_get_hash_alg((const struct inode *)$arg1, $arg2))")
   public static Ptr<fsverity_hash_alg> fsverity_get_hash_alg(Ptr<inode> inode, @Unsigned int num) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsverity_hash_block((const struct merkle_tree_params*)$arg1, (const struct inode*)$arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("fsverity_hash_block((const struct merkle_tree_params *)$arg1, (const struct inode *)$arg2, (const void *)$arg3, $arg4)")
   public static void fsverity_hash_block(Ptr<merkle_tree_params> params, Ptr<inode> inode,
       Ptr<?> data, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsverity_hash_buffer((const struct fsverity_hash_alg*)$arg1, (const void*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("fsverity_hash_buffer((const struct fsverity_hash_alg *)$arg1, (const void *)$arg2, $arg3, $arg4)")
   public static void fsverity_hash_buffer(Ptr<fsverity_hash_alg> alg, Ptr<?> data,
       @Unsigned long size, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -1185,7 +1186,7 @@ public final class FsverityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsverity_init_merkle_tree_params($arg1, (const struct inode*)$arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("fsverity_init_merkle_tree_params($arg1, (const struct inode *)$arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int fsverity_init_merkle_tree_params(Ptr<merkle_tree_params> params,
       Ptr<inode> inode, @Unsigned int hash_algorithm, @Unsigned int log_blocksize,
       Ptr<java.lang.Character> salt, @Unsigned long salt_size) {
@@ -1205,7 +1206,7 @@ public final class FsverityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsverity_ioctl_enable($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("fsverity_ioctl_enable($arg1, (const void *)$arg2)")
   public static int fsverity_ioctl_enable(Ptr<file> filp, Ptr<?> uarg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1217,27 +1218,27 @@ public final class FsverityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsverity_ioctl_read_metadata($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("fsverity_ioctl_read_metadata($arg1, (const void *)$arg2)")
   public static int fsverity_ioctl_read_metadata(Ptr<file> filp, Ptr<?> uarg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsverity_msg((const struct inode*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("fsverity_msg((const struct inode *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4_)")
   public static void fsverity_msg(Ptr<inode> inode, String level, String fmt,
       java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsverity_prepare_hash_state((const struct fsverity_hash_alg*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("fsverity_prepare_hash_state((const struct fsverity_hash_alg *)$arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<fsverity_hash_ctx> fsverity_prepare_hash_state(Ptr<fsverity_hash_alg> alg,
       Ptr<java.lang.Character> salt, @Unsigned long salt_size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsverity_read_buffer($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("fsverity_read_buffer($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static int fsverity_read_buffer(Ptr<?> dst, @Unsigned long offset, int length, Ptr<?> src,
       @Unsigned long src_length) {
     throw new MethodIsBPFRelatedFunction();
@@ -1263,7 +1264,7 @@ public final class FsverityDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("fsverity_verify_signature((const struct fsverity_info*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("fsverity_verify_signature((const struct fsverity_info *)$arg1, (const u8 *)$arg2, $arg3)")
   public static int fsverity_verify_signature(Ptr<fsverity_info> vi,
       Ptr<java.lang.Character> signature, @Unsigned long sig_size) {
     throw new MethodIsBPFRelatedFunction();

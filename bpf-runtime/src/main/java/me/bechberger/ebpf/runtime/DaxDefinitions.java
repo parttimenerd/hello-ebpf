@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DaxDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__dax_driver_register($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__dax_driver_register($arg1, $arg2, (const u8 *)$arg3)")
   public static int __dax_driver_register(Ptr<dax_device_driver> dax_drv, Ptr<module> module,
       String mod_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -1147,7 +1148,7 @@ public final class DaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_bus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("dax_bus_match($arg1, (const struct device_driver *)$arg2)")
   public static int dax_bus_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1165,7 +1166,7 @@ public final class DaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_bus_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("dax_bus_uevent((const struct device *)$arg1, $arg2)")
   public static int dax_bus_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1197,7 +1198,7 @@ public final class DaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_dedupe_file_range_compare($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct iomap_ops*)$arg7)")
+  @BuiltinBPFFunction("dax_dedupe_file_range_compare($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct iomap_ops *)$arg7)")
   public static int dax_dedupe_file_range_compare(Ptr<inode> src,
       @OriginalName("loff_t") long srcoff, Ptr<inode> dst, @OriginalName("loff_t") long dstoff,
       @OriginalName("loff_t") long len, Ptr<java.lang. @OriginalName("bool") Boolean> same,
@@ -1238,14 +1239,14 @@ public final class DaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_fault_cow_page($arg1, (const struct iomap_iter*)$arg2)")
+  @BuiltinBPFFunction("dax_fault_cow_page($arg1, (const struct iomap_iter *)$arg2)")
   public static @Unsigned @OriginalName("vm_fault_t") int dax_fault_cow_page(Ptr<vm_fault> vmf,
       Ptr<iomap_iter> iter) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_fault_iter($arg1, (const struct iomap_iter*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("dax_fault_iter($arg1, (const struct iomap_iter *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static @Unsigned @OriginalName("vm_fault_t") int dax_fault_iter(Ptr<vm_fault> vmf,
       Ptr<iomap_iter> iter, Ptr<java.lang. @Unsigned Long> pfnp, Ptr<xa_state> xas,
       Ptr<Ptr<?>> entry, boolean pmd) {
@@ -1253,7 +1254,7 @@ public final class DaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_file_unshare($arg1, $arg2, $arg3, (const struct iomap_ops*)$arg4)")
+  @BuiltinBPFFunction("dax_file_unshare($arg1, $arg2, $arg3, (const struct iomap_ops *)$arg4)")
   public static int dax_file_unshare(Ptr<inode> inode, @OriginalName("loff_t") long pos,
       @OriginalName("loff_t") long len, Ptr<iomap_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1322,7 +1323,7 @@ public final class DaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_insert_entry($arg1, $arg2, (const struct iomap_iter*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("dax_insert_entry($arg1, $arg2, (const struct iomap_iter *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<?> dax_insert_entry(Ptr<xa_state> xas, Ptr<vm_fault> vmf, Ptr<iomap_iter> iter,
       Ptr<?> entry, @Unsigned long pfn, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1343,7 +1344,7 @@ public final class DaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_iomap_copy_around($arg1, $arg2, $arg3, (const struct iomap*)$arg4, $arg5)")
+  @BuiltinBPFFunction("dax_iomap_copy_around($arg1, $arg2, $arg3, (const struct iomap *)$arg4, $arg5)")
   public static int dax_iomap_copy_around(@OriginalName("loff_t") long pos,
       @Unsigned @OriginalName("uint64_t") long length, @Unsigned long align_size, Ptr<iomap> srcmap,
       Ptr<?> daddr) {
@@ -1351,14 +1352,14 @@ public final class DaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_iomap_direct_access((const struct iomap*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("dax_iomap_direct_access((const struct iomap *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int dax_iomap_direct_access(Ptr<iomap> iomap, @OriginalName("loff_t") long pos,
       @Unsigned long size, Ptr<Ptr<?>> kaddr, Ptr<java.lang. @Unsigned Long> pfnp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_iomap_fault($arg1, $arg2, $arg3, $arg4, (const struct iomap_ops*)$arg5)")
+  @BuiltinBPFFunction("dax_iomap_fault($arg1, $arg2, $arg3, $arg4, (const struct iomap_ops *)$arg5)")
   public static @Unsigned @OriginalName("vm_fault_t") int dax_iomap_fault(Ptr<vm_fault> vmf,
       @Unsigned int order, Ptr<java.lang. @Unsigned Long> pfnp, Ptr<java.lang.Integer> iomap_errp,
       Ptr<iomap_ops> ops) {
@@ -1372,21 +1373,21 @@ public final class DaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_iomap_pmd_fault($arg1, $arg2, (const struct iomap_ops*)$arg3)")
+  @BuiltinBPFFunction("dax_iomap_pmd_fault($arg1, $arg2, (const struct iomap_ops *)$arg3)")
   public static @Unsigned @OriginalName("vm_fault_t") int dax_iomap_pmd_fault(Ptr<vm_fault> vmf,
       Ptr<java.lang. @Unsigned Long> pfnp, Ptr<iomap_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_iomap_pte_fault($arg1, $arg2, $arg3, (const struct iomap_ops*)$arg4)")
+  @BuiltinBPFFunction("dax_iomap_pte_fault($arg1, $arg2, $arg3, (const struct iomap_ops *)$arg4)")
   public static @Unsigned @OriginalName("vm_fault_t") int dax_iomap_pte_fault(Ptr<vm_fault> vmf,
       Ptr<java.lang. @Unsigned Long> pfnp, Ptr<java.lang.Integer> iomap_errp, Ptr<iomap_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_iomap_rw($arg1, $arg2, (const struct iomap_ops*)$arg3)")
+  @BuiltinBPFFunction("dax_iomap_rw($arg1, $arg2, (const struct iomap_ops *)$arg3)")
   public static @OriginalName("ssize_t") long dax_iomap_rw(Ptr<kiocb> iocb, Ptr<iov_iter> iter,
       Ptr<iomap_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1425,7 +1426,7 @@ public final class DaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_pmd_load_hole($arg1, $arg2, (const struct iomap_iter*)$arg3, $arg4)")
+  @BuiltinBPFFunction("dax_pmd_load_hole($arg1, $arg2, (const struct iomap_iter *)$arg3, $arg4)")
   public static @Unsigned @OriginalName("vm_fault_t") int dax_pmd_load_hole(Ptr<xa_state> xas,
       Ptr<vm_fault> vmf, Ptr<iomap_iter> iter, Ptr<Ptr<?>> entry) {
     throw new MethodIsBPFRelatedFunction();
@@ -1471,7 +1472,7 @@ public final class DaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_remap_file_range_prep($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct iomap_ops*)$arg7)")
+  @BuiltinBPFFunction("dax_remap_file_range_prep($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct iomap_ops *)$arg7)")
   public static int dax_remap_file_range_prep(Ptr<file> file_in,
       @OriginalName("loff_t") long pos_in, Ptr<file> file_out, @OriginalName("loff_t") long pos_out,
       Ptr<java.lang. @OriginalName("loff_t") Long> len, @Unsigned int remap_flags,
@@ -1517,7 +1518,7 @@ public final class DaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_truncate_page($arg1, $arg2, $arg3, (const struct iomap_ops*)$arg4)")
+  @BuiltinBPFFunction("dax_truncate_page($arg1, $arg2, $arg3, (const struct iomap_ops *)$arg4)")
   public static int dax_truncate_page(Ptr<inode> inode, @OriginalName("loff_t") long pos,
       Ptr<java.lang. @OriginalName("bool") Boolean> did_zero, Ptr<iomap_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1589,7 +1590,7 @@ public final class DaxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("dax_zero_range($arg1, $arg2, $arg3, $arg4, (const struct iomap_ops*)$arg5)")
+  @BuiltinBPFFunction("dax_zero_range($arg1, $arg2, $arg3, $arg4, (const struct iomap_ops *)$arg5)")
   public static int dax_zero_range(Ptr<inode> inode, @OriginalName("loff_t") long pos,
       @OriginalName("loff_t") long len, Ptr<java.lang. @OriginalName("bool") Boolean> did_zero,
       Ptr<iomap_ops> ops) {

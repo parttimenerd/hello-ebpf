@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1108,7 +1109,7 @@ public final class IommuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__iommu_copy_struct_from_user($arg1, (const struct iommu_user_data*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__iommu_copy_struct_from_user($arg1, (const struct iommu_user_data *)$arg2, $arg3, $arg4, $arg5)")
   public static int __iommu_copy_struct_from_user(Ptr<?> dst_data, Ptr<iommu_user_data> src_data,
       @Unsigned int data_type, @Unsigned long data_len, @Unsigned long min_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1230,7 +1231,7 @@ public final class IommuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__iommu_setup_intcapxt($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__iommu_setup_intcapxt($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int __iommu_setup_intcapxt(Ptr<amd_iommu> iommu, String devname, int hwirq,
       @OriginalName("irq_handler_t") Ptr<?> thread_fn) {
     throw new MethodIsBPFRelatedFunction();
@@ -1457,7 +1458,7 @@ public final class IommuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iommu_device_register($arg1, (const struct iommu_ops*)$arg2, $arg3)")
+  @BuiltinBPFFunction("iommu_device_register($arg1, (const struct iommu_ops *)$arg2, $arg3)")
   public static int iommu_device_register(Ptr<iommu_device> iommu, Ptr<iommu_ops> ops,
       Ptr<device> hwdev) {
     throw new MethodIsBPFRelatedFunction();
@@ -1470,7 +1471,7 @@ public final class IommuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iommu_device_sysfs_add($arg1, $arg2, (const struct attribute_group**)$arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("iommu_device_sysfs_add($arg1, $arg2, (const struct attribute_group**)$arg3, (const u8 *)$arg4, $arg5_)")
   public static int iommu_device_sysfs_add(Ptr<iommu_device> iommu, Ptr<device> parent,
       Ptr<Ptr<attribute_group>> groups, String fmt, java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
@@ -1700,7 +1701,7 @@ public final class IommuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iommu_dma_ranges_sort($arg1, (const struct list_head*)$arg2, (const struct list_head*)$arg3)")
+  @BuiltinBPFFunction("iommu_dma_ranges_sort($arg1, (const struct list_head *)$arg2, (const struct list_head *)$arg3)")
   public static int iommu_dma_ranges_sort(Ptr<?> priv, Ptr<list_head> a, Ptr<list_head> b) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1871,7 +1872,7 @@ public final class IommuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iommu_fwspec_add_ids($arg1, (const unsigned int*)$arg2, $arg3)")
+  @BuiltinBPFFunction("iommu_fwspec_add_ids($arg1, (const unsigned int *)$arg2, $arg3)")
   public static int iommu_fwspec_add_ids(Ptr<device> dev, Ptr<java.lang. @Unsigned Integer> ids,
       int num_ids) {
     throw new MethodIsBPFRelatedFunction();
@@ -1965,7 +1966,7 @@ public final class IommuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iommu_group_attr_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("iommu_group_attr_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long iommu_group_attr_store(Ptr<kobject> kobj,
       Ptr<attribute> __attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -2057,7 +2058,7 @@ public final class IommuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iommu_group_set_name($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("iommu_group_set_name($arg1, (const u8 *)$arg2)")
   public static int iommu_group_set_name(Ptr<iommu_group> group, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2084,7 +2085,7 @@ public final class IommuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iommu_group_store_type($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("iommu_group_store_type($arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long iommu_group_store_type(Ptr<iommu_group> group,
       String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -2184,7 +2185,7 @@ public final class IommuDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct iommu_ops*)iommu_ops_from_fwnode((const struct fwnode_handle*)$arg1))")
+  @BuiltinBPFFunction("((const struct iommu_ops*)iommu_ops_from_fwnode((const struct fwnode_handle *)$arg1))")
   public static Ptr<iommu_ops> iommu_ops_from_fwnode(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }

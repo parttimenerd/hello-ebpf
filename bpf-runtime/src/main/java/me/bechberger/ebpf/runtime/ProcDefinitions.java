@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class ProcDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__proc_create($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__proc_create($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<proc_dir_entry> __proc_create(Ptr<Ptr<proc_dir_entry>> parent, String name,
       @Unsigned @OriginalName("umode_t") short mode, @Unsigned @OriginalName("nlink_t") int nlink) {
     throw new MethodIsBPFRelatedFunction();
@@ -1110,7 +1111,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_proc_mkdir((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("_proc_mkdir((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static Ptr<proc_dir_entry> _proc_mkdir(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<proc_dir_entry> parent, Ptr<?> data,
       boolean force_lookup) {
@@ -1130,7 +1131,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_allowed_congestion_control((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_allowed_congestion_control((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_allowed_congestion_control(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1169,21 +1170,21 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_available_path_managers((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_available_path_managers((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_available_path_managers(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_available_schedulers((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_available_schedulers((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_available_schedulers(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_blackhole_detect_timeout((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_blackhole_detect_timeout((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_blackhole_detect_timeout(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1234,7 +1235,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_bus_pci_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_bus_pci_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long proc_bus_pci_write(Ptr<file> file, String buf,
       @Unsigned long nbytes, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1247,7 +1248,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_cap_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_cap_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_cap_handler(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1310,7 +1311,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_coredump_filter_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_coredump_filter_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long proc_coredump_filter_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1323,7 +1324,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_create((const u8*)$arg1, $arg2, $arg3, (const struct proc_ops*)$arg4)")
+  @BuiltinBPFFunction("proc_create((const u8 *)$arg1, $arg2, $arg3, (const struct proc_ops *)$arg4)")
   public static Ptr<proc_dir_entry> proc_create(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<proc_dir_entry> parent,
       Ptr<proc_ops> proc_ops) {
@@ -1331,7 +1332,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_create_data((const u8*)$arg1, $arg2, $arg3, (const struct proc_ops*)$arg4, $arg5)")
+  @BuiltinBPFFunction("proc_create_data((const u8 *)$arg1, $arg2, $arg3, (const struct proc_ops *)$arg4, $arg5)")
   public static Ptr<proc_dir_entry> proc_create_data(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<proc_dir_entry> parent,
       Ptr<proc_ops> proc_ops, Ptr<?> data) {
@@ -1339,13 +1340,13 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_create_mount_point((const u8*)$arg1)")
+  @BuiltinBPFFunction("proc_create_mount_point((const u8 *)$arg1)")
   public static Ptr<proc_dir_entry> proc_create_mount_point(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_create_net_data((const u8*)$arg1, $arg2, $arg3, (const struct seq_operations*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("proc_create_net_data((const u8 *)$arg1, $arg2, $arg3, (const struct seq_operations *)$arg4, $arg5, $arg6)")
   public static Ptr<proc_dir_entry> proc_create_net_data(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<proc_dir_entry> parent,
       Ptr<seq_operations> ops, @Unsigned int state_size, Ptr<?> data) {
@@ -1353,7 +1354,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_create_net_data_write((const u8*)$arg1, $arg2, $arg3, (const struct seq_operations*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("proc_create_net_data_write((const u8 *)$arg1, $arg2, $arg3, (const struct seq_operations *)$arg4, $arg5, $arg6, $arg7)")
   public static Ptr<proc_dir_entry> proc_create_net_data_write(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<proc_dir_entry> parent,
       Ptr<seq_operations> ops, @OriginalName("proc_write_t") Ptr<?> write, @Unsigned int state_size,
@@ -1362,7 +1363,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_create_net_single((const u8*)$arg1, $arg2, $arg3, (int (*)(struct seq_file*, void*))$arg4, $arg5)")
+  @BuiltinBPFFunction("proc_create_net_single((const u8 *)$arg1, $arg2, $arg3, (int (*)(struct seq_file*, void*))$arg4, $arg5)")
   public static Ptr<proc_dir_entry> proc_create_net_single(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<proc_dir_entry> parent, Ptr<?> show,
       Ptr<?> data) {
@@ -1370,7 +1371,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_create_net_single_write((const u8*)$arg1, $arg2, $arg3, (int (*)(struct seq_file*, void*))$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("proc_create_net_single_write((const u8 *)$arg1, $arg2, $arg3, (int (*)(struct seq_file*, void*))$arg4, $arg5, $arg6)")
   public static Ptr<proc_dir_entry> proc_create_net_single_write(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<proc_dir_entry> parent, Ptr<?> show,
       @OriginalName("proc_write_t") Ptr<?> write, Ptr<?> data) {
@@ -1378,14 +1379,14 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_create_reg((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_create_reg((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<proc_dir_entry> proc_create_reg(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<Ptr<proc_dir_entry>> parent, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_create_seq_private((const u8*)$arg1, $arg2, $arg3, (const struct seq_operations*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("proc_create_seq_private((const u8 *)$arg1, $arg2, $arg3, (const struct seq_operations *)$arg4, $arg5, $arg6)")
   public static Ptr<proc_dir_entry> proc_create_seq_private(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<proc_dir_entry> parent,
       Ptr<seq_operations> ops, @Unsigned int state_size, Ptr<?> data) {
@@ -1393,7 +1394,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_create_single_data((const u8*)$arg1, $arg2, $arg3, (int (*)(struct seq_file*, void*))$arg4, $arg5)")
+  @BuiltinBPFFunction("proc_create_single_data((const u8 *)$arg1, $arg2, $arg3, (int (*)(struct seq_file*, void*))$arg4, $arg5)")
   public static Ptr<proc_dir_entry> proc_create_single_data(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<proc_dir_entry> parent, Ptr<?> show,
       Ptr<?> data) {
@@ -1438,42 +1439,42 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_do_cad_pid((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_do_cad_pid((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_do_cad_pid(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_do_dev_weight((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_do_dev_weight((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_do_dev_weight(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_do_large_bitmap((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_do_large_bitmap((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_do_large_bitmap(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_do_rointvec((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_do_rointvec((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_do_rointvec(Ptr<ctl_table> table, int write, Ptr<?> buf,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_do_rss_key((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_do_rss_key((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_do_rss_key(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_do_static_key((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_do_static_key((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_do_static_key(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1488,63 +1489,63 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_do_uts_string((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_do_uts_string((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_do_uts_string(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_do_uuid((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_do_uuid((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_do_uuid(Ptr<ctl_table> table, int write, Ptr<?> buf,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dobool((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dobool((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dobool(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dohung_task_timeout_secs((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dohung_task_timeout_secs((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dohung_task_timeout_secs(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dointvec((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dointvec((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dointvec(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dointvec_jiffies((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dointvec_jiffies((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dointvec_jiffies(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dointvec_minmax((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dointvec_minmax((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dointvec_minmax(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dointvec_minmax_bpf_enable((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dointvec_minmax_bpf_enable((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dointvec_minmax_bpf_enable(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dointvec_minmax_bpf_restricted((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dointvec_minmax_bpf_restricted((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dointvec_minmax_bpf_restricted(Ptr<ctl_table> table, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> lenp,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
@@ -1552,21 +1553,21 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dointvec_minmax_coredump((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dointvec_minmax_coredump((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dointvec_minmax_coredump(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dointvec_minmax_sysadmin((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dointvec_minmax_sysadmin((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dointvec_minmax_sysadmin(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dointvec_minmax_warn_RT_change((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dointvec_minmax_warn_RT_change((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dointvec_minmax_warn_RT_change(Ptr<ctl_table> table, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> lenp,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
@@ -1574,28 +1575,28 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dointvec_ms_jiffies((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dointvec_ms_jiffies((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dointvec_ms_jiffies(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dointvec_ms_jiffies_minmax((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dointvec_ms_jiffies_minmax((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dointvec_ms_jiffies_minmax(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dointvec_userhz_jiffies((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dointvec_userhz_jiffies((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dointvec_userhz_jiffies(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dolongvec_minmax_bpf_restricted((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dolongvec_minmax_bpf_restricted((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dolongvec_minmax_bpf_restricted(Ptr<ctl_table> table, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> lenp,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
@@ -1603,56 +1604,56 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dopipe_max_size((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dopipe_max_size((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dopipe_max_size(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dostring((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dostring((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dostring(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dostring_coredump((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dostring_coredump((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dostring_coredump(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_dou8vec_minmax((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_dou8vec_minmax((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_dou8vec_minmax(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_douintvec((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_douintvec((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_douintvec(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_douintvec_minmax((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_douintvec_minmax((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_douintvec_minmax(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_doulongvec_minmax((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_doulongvec_minmax((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_doulongvec_minmax(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_doulongvec_ms_jiffies_minmax((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_doulongvec_ms_jiffies_minmax((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_doulongvec_ms_jiffies_minmax(Ptr<ctl_table> table, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> lenp,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
@@ -1696,14 +1697,14 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_fd_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_fd_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int proc_fd_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_fd_instantiate($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("proc_fd_instantiate($arg1, $arg2, (const void *)$arg3)")
   public static Ptr<dentry> proc_fd_instantiate(Ptr<dentry> dentry, Ptr<task_struct> task,
       Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1728,7 +1729,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_fdinfo_instantiate($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("proc_fdinfo_instantiate($arg1, $arg2, (const void *)$arg3)")
   public static Ptr<dentry> proc_fdinfo_instantiate(Ptr<dentry> dentry, Ptr<task_struct> task,
       Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1747,21 +1748,21 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_fib_multipath_hash_fields((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_fib_multipath_hash_fields((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_fib_multipath_hash_fields(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_fib_multipath_hash_policy((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_fib_multipath_hash_policy((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_fib_multipath_hash_policy(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_fib_multipath_hash_seed((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_fib_multipath_hash_seed((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_fib_multipath_hash_seed(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1774,7 +1775,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_fill_cache($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, (const void*)$arg7)")
+  @BuiltinBPFFunction("proc_fill_cache($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, (const void *)$arg7)")
   public static boolean proc_fill_cache(Ptr<file> file, Ptr<dir_context> ctx, String name,
       @Unsigned int len, Ptr<?> instantiate, Ptr<task_struct> task, Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1835,7 +1836,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_get_parent_data((const struct inode*)$arg1)")
+  @BuiltinBPFFunction("proc_get_parent_data((const struct inode *)$arg1)")
   public static Ptr<?> proc_get_parent_data(Ptr<inode> inode) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1847,7 +1848,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int proc_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1866,7 +1867,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_gid_map_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_gid_map_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long proc_gid_map_write(Ptr<file> file, String buf,
       @Unsigned long size, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1891,7 +1892,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_id_map_open($arg1, $arg2, (const struct seq_operations*)$arg3)")
+  @BuiltinBPFFunction("proc_id_map_open($arg1, $arg2, (const struct seq_operations *)$arg3)")
   public static int proc_id_map_open(Ptr<inode> inode, Ptr<file> file,
       Ptr<seq_operations> seq_ops) {
     throw new MethodIsBPFRelatedFunction();
@@ -1935,21 +1936,21 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_ipc_auto_msgmni((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_ipc_auto_msgmni((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_ipc_auto_msgmni(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_ipc_dointvec_minmax_orphans((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_ipc_dointvec_minmax_orphans((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_ipc_dointvec_minmax_orphans(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_ipc_sem_dointvec((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_ipc_sem_dointvec((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_ipc_sem_dointvec(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2026,7 +2027,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_kprobes_optimization_handler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_kprobes_optimization_handler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_kprobes_optimization_handler(Ptr<ctl_table> table, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> length,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
@@ -2053,7 +2054,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_loginuid_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_loginuid_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long proc_loginuid_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2093,7 +2094,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_map_files_instantiate($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("proc_map_files_instantiate($arg1, $arg2, (const void *)$arg3)")
   public static Ptr<dentry> proc_map_files_instantiate(Ptr<dentry> dentry, Ptr<task_struct> task,
       Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
@@ -2119,7 +2120,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_match((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("proc_match((const u8 *)$arg1, $arg2, $arg3)")
   public static int proc_match(String name, Ptr<proc_dir_entry> de, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2137,33 +2138,33 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_misc_d_delete((const struct dentry*)$arg1)")
+  @BuiltinBPFFunction("proc_misc_d_delete((const struct dentry *)$arg1)")
   public static int proc_misc_d_delete(Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_misc_d_revalidate($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_misc_d_revalidate($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int proc_misc_d_revalidate(Ptr<inode> dir, Ptr<qstr> name, Ptr<dentry> dentry,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_mkdir((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("proc_mkdir((const u8 *)$arg1, $arg2)")
   public static Ptr<proc_dir_entry> proc_mkdir(String name, Ptr<proc_dir_entry> parent) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_mkdir_data((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_mkdir_data((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<proc_dir_entry> proc_mkdir_data(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<proc_dir_entry> parent, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_mkdir_mode((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("proc_mkdir_mode((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<proc_dir_entry> proc_mkdir_mode(String name,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<proc_dir_entry> parent) {
     throw new MethodIsBPFRelatedFunction();
@@ -2176,7 +2177,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_net_d_revalidate($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_net_d_revalidate($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int proc_net_d_revalidate(Ptr<inode> dir, Ptr<qstr> name, Ptr<dentry> dentry,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2201,7 +2202,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_nmi_watchdog((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_nmi_watchdog((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_nmi_watchdog(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2214,21 +2215,21 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_nr_dentry((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_nr_dentry((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_nr_dentry(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_nr_files((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_nr_files((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_nr_files(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_nr_inodes((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_nr_inodes((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_nr_inodes(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2248,7 +2249,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_ns_file((const struct file*)$arg1)")
+  @BuiltinBPFFunction("proc_ns_file((const struct file *)$arg1)")
   public static boolean proc_ns_file(Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2261,7 +2262,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_ns_instantiate($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("proc_ns_instantiate($arg1, $arg2, (const void *)$arg3)")
   public static Ptr<dentry> proc_ns_instantiate(Ptr<dentry> dentry, Ptr<task_struct> task,
       Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
@@ -2293,7 +2294,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_path_manager((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_path_manager((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_path_manager(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2320,7 +2321,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_pid_attr_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_pid_attr_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long proc_pid_attr_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2347,7 +2348,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_pid_instantiate($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("proc_pid_instantiate($arg1, $arg2, (const void *)$arg3)")
   public static Ptr<dentry> proc_pid_instantiate(Ptr<dentry> dentry, Ptr<task_struct> task,
       Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
@@ -2469,28 +2470,28 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_pident_instantiate($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("proc_pident_instantiate($arg1, $arg2, (const void *)$arg3)")
   public static Ptr<dentry> proc_pident_instantiate(Ptr<dentry> dentry, Ptr<task_struct> task,
       Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_pident_lookup($arg1, $arg2, (const struct pid_entry*)$arg3, (const struct pid_entry*)$arg4)")
+  @BuiltinBPFFunction("proc_pident_lookup($arg1, $arg2, (const struct pid_entry *)$arg3, (const struct pid_entry *)$arg4)")
   public static Ptr<dentry> proc_pident_lookup(Ptr<inode> dir, Ptr<dentry> dentry, Ptr<pid_entry> p,
       Ptr<pid_entry> end) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_pident_readdir($arg1, $arg2, (const struct pid_entry*)$arg3, $arg4)")
+  @BuiltinBPFFunction("proc_pident_readdir($arg1, $arg2, (const struct pid_entry *)$arg3, $arg4)")
   public static int proc_pident_readdir(Ptr<file> file, Ptr<dir_context> ctx, Ptr<pid_entry> ents,
       @Unsigned int nents) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_pm_type((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_pm_type((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_pm_type(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2509,7 +2510,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_projid_map_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_projid_map_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long proc_projid_map_write(Ptr<file> file, String buf,
       @Unsigned long size, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2632,7 +2633,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_reg_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_reg_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long proc_reg_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2658,7 +2659,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_root_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_root_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int proc_root_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2690,14 +2691,14 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_rt6_multipath_hash_fields((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_rt6_multipath_hash_fields((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_rt6_multipath_hash_fields(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_rt6_multipath_hash_policy((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_rt6_multipath_hash_policy((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_rt6_multipath_hash_policy(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2735,7 +2736,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_scheduler((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_scheduler((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_scheduler(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2748,7 +2749,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_scsi_devinfo_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_scsi_devinfo_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long proc_scsi_devinfo_write(Ptr<file> file, String buf,
       @Unsigned long length, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2761,7 +2762,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_scsi_host_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_scsi_host_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long proc_scsi_host_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2780,7 +2781,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_scsi_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_scsi_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long proc_scsi_write(Ptr<file> file, String buf,
       @Unsigned long length, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2855,7 +2856,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_setgroups_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_setgroups_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long proc_setgroups_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2886,7 +2887,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_simple_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_simple_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long proc_simple_write(Ptr<file> f, String ubuf,
       @Unsigned long size, Ptr<java.lang. @OriginalName("loff_t") Long> _pos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2918,7 +2919,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_soft_watchdog((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_soft_watchdog((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_soft_watchdog(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -2937,7 +2938,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_symlink((const u8*)$arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("proc_symlink((const u8 *)$arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<proc_dir_entry> proc_symlink(String name, Ptr<proc_dir_entry> parent,
       String dest) {
     throw new MethodIsBPFRelatedFunction();
@@ -2951,14 +2952,14 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_sys_compare((const struct dentry*)$arg1, $arg2, (const u8*)$arg3, (const struct qstr*)$arg4)")
+  @BuiltinBPFFunction("proc_sys_compare((const struct dentry *)$arg1, $arg2, (const u8 *)$arg3, (const struct qstr *)$arg4)")
   public static int proc_sys_compare(Ptr<dentry> dentry, @Unsigned int len, String str,
       Ptr<qstr> name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_sys_delete((const struct dentry*)$arg1)")
+  @BuiltinBPFFunction("proc_sys_delete((const struct dentry *)$arg1)")
   public static int proc_sys_delete(Ptr<dentry> dentry) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2970,7 +2971,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_sys_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_sys_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int proc_sys_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2990,7 +2991,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_sys_make_inode($arg1, $arg2, (const struct ctl_table*)$arg3)")
+  @BuiltinBPFFunction("proc_sys_make_inode($arg1, $arg2, (const struct ctl_table *)$arg3)")
   public static Ptr<inode> proc_sys_make_inode(Ptr<super_block> sb, Ptr<ctl_table_header> head,
       Ptr<ctl_table> table) {
     throw new MethodIsBPFRelatedFunction();
@@ -3034,7 +3035,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_sys_revalidate($arg1, (const struct qstr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_sys_revalidate($arg1, (const struct qstr *)$arg2, $arg3, $arg4)")
   public static int proc_sys_revalidate(Ptr<inode> dir, Ptr<qstr> name, Ptr<dentry> dentry,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -3053,21 +3054,21 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_taint((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_taint((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_taint(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_task_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_task_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int proc_task_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_task_instantiate($arg1, $arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("proc_task_instantiate($arg1, $arg2, (const void *)$arg3)")
   public static Ptr<dentry> proc_task_instantiate(Ptr<dentry> dentry, Ptr<task_struct> task,
       Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
@@ -3093,7 +3094,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_tcp_available_congestion_control((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_tcp_available_congestion_control((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_tcp_available_congestion_control(Ptr<ctl_table> ctl, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> lenp,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
@@ -3101,35 +3102,35 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_tcp_available_ulp((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_tcp_available_ulp((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_tcp_available_ulp(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_tcp_congestion_control((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_tcp_congestion_control((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_tcp_congestion_control(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_tcp_ehash_entries((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_tcp_ehash_entries((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_tcp_ehash_entries(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_tcp_fastopen_key((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_tcp_fastopen_key((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_tcp_fastopen_key(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_tfo_blackhole_detect_timeout((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_tfo_blackhole_detect_timeout((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_tfo_blackhole_detect_timeout(Ptr<ctl_table> table, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> lenp,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
@@ -3157,7 +3158,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_tgid_net_getattr($arg1, (const struct path*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_tgid_net_getattr($arg1, (const struct path *)$arg2, $arg3, $arg4, $arg5)")
   public static int proc_tgid_net_getattr(Ptr<mnt_idmap> idmap, Ptr<path> path, Ptr<kstat> stat,
       @Unsigned int request_mask, @Unsigned int query_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -3267,7 +3268,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_udp_hash_entries((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_udp_hash_entries((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_udp_hash_entries(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -3280,7 +3281,7 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_uid_map_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("proc_uid_map_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long proc_uid_map_write(Ptr<file> file, String buf,
       @Unsigned long size, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -3311,28 +3312,28 @@ public final class ProcDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_watchdog((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_watchdog((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_watchdog(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_watchdog_common($arg1, (const struct ctl_table*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("proc_watchdog_common($arg1, (const struct ctl_table *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int proc_watchdog_common(int which, Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_watchdog_cpumask((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_watchdog_cpumask((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_watchdog_cpumask(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("proc_watchdog_thresh((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("proc_watchdog_thresh((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int proc_watchdog_thresh(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

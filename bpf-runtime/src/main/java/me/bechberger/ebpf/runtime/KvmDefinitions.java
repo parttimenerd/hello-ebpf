@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1198,7 +1199,7 @@ public final class KvmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kvm_flush_tlb_multi((const struct cpumask*)$arg1, (const struct flush_tlb_info*)$arg2)")
+  @BuiltinBPFFunction("kvm_flush_tlb_multi((const struct cpumask *)$arg1, (const struct flush_tlb_info *)$arg2)")
   public static void kvm_flush_tlb_multi(Ptr<cpumask> cpumask, Ptr<flush_tlb_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1319,13 +1320,13 @@ public final class KvmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kvm_send_ipi_mask((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kvm_send_ipi_mask((const struct cpumask *)$arg1, $arg2)")
   public static void kvm_send_ipi_mask(Ptr<cpumask> mask, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kvm_send_ipi_mask_allbutself((const struct cpumask*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kvm_send_ipi_mask_allbutself((const struct cpumask *)$arg1, $arg2)")
   public static void kvm_send_ipi_mask_allbutself(Ptr<cpumask> mask, int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1337,7 +1338,7 @@ public final class KvmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kvm_set_wallclock((const struct timespec64*)$arg1)")
+  @BuiltinBPFFunction("kvm_set_wallclock((const struct timespec64 *)$arg1)")
   public static int kvm_set_wallclock(Ptr<timespec64> now) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1379,7 +1380,7 @@ public final class KvmDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kvm_smp_send_call_func_ipi((const struct cpumask*)$arg1)")
+  @BuiltinBPFFunction("kvm_smp_send_call_func_ipi((const struct cpumask *)$arg1)")
   public static void kvm_smp_send_call_func_ipi(Ptr<cpumask> mask) {
     throw new MethodIsBPFRelatedFunction();
   }

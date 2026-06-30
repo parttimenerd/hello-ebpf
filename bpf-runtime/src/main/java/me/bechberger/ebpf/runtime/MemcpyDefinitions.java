@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class MemcpyDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__memcpy_flushcache($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__memcpy_flushcache($arg1, (const void *)$arg2, $arg3)")
   public static void __memcpy_flushcache(Ptr<?> _dst, Ptr<?> _src, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("memcpy_and_pad($arg1, $arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("memcpy_and_pad($arg1, $arg2, (const void *)$arg3, $arg4, $arg5)")
   public static void memcpy_and_pad(Ptr<?> dest, @Unsigned long dest_len, Ptr<?> src,
       @Unsigned long count, int pad) {
     throw new MethodIsBPFRelatedFunction();
@@ -1110,7 +1111,7 @@ public final class MemcpyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("memcpy_fallback($arg1, (const struct iosys_map*)$arg2, $arg3)")
+  @BuiltinBPFFunction("memcpy_fallback($arg1, (const struct iosys_map *)$arg2, $arg3)")
   public static void memcpy_fallback(Ptr<iosys_map> dst, Ptr<iosys_map> src, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1137,7 +1138,7 @@ public final class MemcpyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("memcpy_fromio($arg1, (const volatile void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("memcpy_fromio($arg1, (const volatile void *)$arg2, $arg3)")
   public static void memcpy_fromio(Ptr<?> to, Ptr<?> from, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1156,21 +1157,21 @@ public final class MemcpyDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("memcpy_to_scatterwalk($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("memcpy_to_scatterwalk($arg1, (const void *)$arg2, $arg3)")
   public static void memcpy_to_scatterwalk(Ptr<scatter_walk> walk, Ptr<?> buf,
       @Unsigned int nbytes) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("memcpy_to_sglist($arg1, $arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("memcpy_to_sglist($arg1, $arg2, (const void *)$arg3, $arg4)")
   public static void memcpy_to_sglist(Ptr<scatterlist> sg, @Unsigned int start, Ptr<?> buf,
       @Unsigned int nbytes) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("memcpy_toio((volatile void*)$arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("memcpy_toio((volatile void *)$arg1, (const void *)$arg2, $arg3)")
   public static void memcpy_toio(Ptr<?> to, Ptr<?> from, @Unsigned long n) {
     throw new MethodIsBPFRelatedFunction();
   }

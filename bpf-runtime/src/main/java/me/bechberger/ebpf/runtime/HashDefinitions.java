@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1114,14 +1115,14 @@ public final class HashDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const u8*)hash_name($arg1, (const u8*)$arg2, $arg3))")
+  @BuiltinBPFFunction("((const u8*)hash_name($arg1, (const u8 *)$arg2, $arg3))")
   public static String hash_name(Ptr<nameidata> nd, String name,
       Ptr<java.lang. @Unsigned Long> lastword) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("hash_one_block($arg1, (const struct merkle_tree_params*)$arg2, $arg3)")
+  @BuiltinBPFFunction("hash_one_block($arg1, (const struct merkle_tree_params *)$arg2, $arg3)")
   public static int hash_one_block(Ptr<inode> inode, Ptr<merkle_tree_params> params,
       Ptr<block_buffer> cur) {
     throw new MethodIsBPFRelatedFunction();

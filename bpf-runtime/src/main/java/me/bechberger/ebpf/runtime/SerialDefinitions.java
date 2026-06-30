@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1127,7 +1128,7 @@ public final class SerialDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("serial_base_device_init($arg1, $arg2, $arg3, (const struct device_type*)$arg4, (void (*)(struct device*))$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("serial_base_device_init($arg1, $arg2, $arg3, (const struct device_type *)$arg4, (void (*)(struct device*))$arg5, $arg6, $arg7)")
   public static int serial_base_device_init(Ptr<uart_port> port, Ptr<device> dev,
       Ptr<device> parent_dev, Ptr<device_type> type, Ptr<?> release, @Unsigned int ctrl_id,
       @Unsigned int port_id) {
@@ -1159,7 +1160,7 @@ public final class SerialDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("serial_base_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("serial_base_match($arg1, (const struct device_driver *)$arg2)")
   public static int serial_base_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1288,7 +1289,7 @@ public final class SerialDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("serial_match_port($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("serial_match_port($arg1, (const void *)$arg2)")
   public static int serial_match_port(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1312,7 +1313,7 @@ public final class SerialDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("serial_pnp_probe($arg1, (const struct pnp_device_id*)$arg2)")
+  @BuiltinBPFFunction("serial_pnp_probe($arg1, (const struct pnp_device_id *)$arg2)")
   public static int serial_pnp_probe(Ptr<pnp_dev> dev, Ptr<pnp_device_id> dev_id) {
     throw new MethodIsBPFRelatedFunction();
   }

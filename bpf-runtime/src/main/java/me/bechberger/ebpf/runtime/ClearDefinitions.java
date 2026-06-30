@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1271,7 +1272,7 @@ public final class ClearDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clear_pfnblock_bit((const struct page*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("clear_pfnblock_bit((const struct page *)$arg1, $arg2, $arg3)")
   public static void clear_pfnblock_bit(Ptr<page> page, @Unsigned long pfn, pageblock_bits pb_bit) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1317,14 +1318,14 @@ public final class ClearDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clear_refs_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("clear_refs_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long clear_refs_write(Ptr<file> file, String buf,
       @Unsigned long count, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("clear_relocate_add($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("clear_relocate_add($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static void clear_relocate_add(Ptr<@OriginalName("Elf64_Shdr") elf64_shdr> sechdrs,
       String strtab, @Unsigned int symindex, @Unsigned int relsec, Ptr<module> me) {
     throw new MethodIsBPFRelatedFunction();

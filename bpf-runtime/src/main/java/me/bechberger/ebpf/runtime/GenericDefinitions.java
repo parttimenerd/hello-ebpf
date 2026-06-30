@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1104,7 +1105,7 @@ public final class GenericDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__generic_remap_file_range_prep($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct iomap_ops*)$arg7)")
+  @BuiltinBPFFunction("__generic_remap_file_range_prep($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, (const struct iomap_ops *)$arg7)")
   public static int __generic_remap_file_range_prep(Ptr<file> file_in,
       @OriginalName("loff_t") long pos_in, Ptr<file> file_out, @OriginalName("loff_t") long pos_out,
       Ptr<java.lang. @OriginalName("loff_t") Long> len, @Unsigned int remap_flags,
@@ -1168,20 +1169,20 @@ public final class GenericDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("generic_ci_d_compare((const struct dentry*)$arg1, $arg2, (const u8*)$arg3, (const struct qstr*)$arg4)")
+  @BuiltinBPFFunction("generic_ci_d_compare((const struct dentry *)$arg1, $arg2, (const u8 *)$arg3, (const struct qstr *)$arg4)")
   public static int generic_ci_d_compare(Ptr<dentry> dentry, @Unsigned int len, String str,
       Ptr<qstr> name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("generic_ci_d_hash((const struct dentry*)$arg1, $arg2)")
+  @BuiltinBPFFunction("generic_ci_d_hash((const struct dentry *)$arg1, $arg2)")
   public static int generic_ci_d_hash(Ptr<dentry> dentry, Ptr<qstr> str) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("generic_ci_match((const struct inode*)$arg1, (const struct qstr*)$arg2, (const struct qstr*)$arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("generic_ci_match((const struct inode *)$arg1, (const struct qstr *)$arg2, (const struct qstr *)$arg3, (const u8 *)$arg4, $arg5)")
   public static int generic_ci_match(Ptr<inode> parent, Ptr<qstr> name, Ptr<qstr> folded_name,
       Ptr<java.lang.Character> de_name, @Unsigned int de_name_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1360,7 +1361,7 @@ public final class GenericDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("generic_get_columns($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("generic_get_columns($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int generic_get_columns(Ptr<opal_dev> dev, Ptr<java.lang.Character> table,
       @Unsigned long start_column, @Unsigned long end_column) {
     throw new MethodIsBPFRelatedFunction();
@@ -1382,7 +1383,7 @@ public final class GenericDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("generic_get_table_info($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("generic_get_table_info($arg1, (const u8 *)$arg2, $arg3)")
   public static int generic_get_table_info(Ptr<opal_dev> dev, Ptr<java.lang.Character> table_uid,
       @Unsigned long column) {
     throw new MethodIsBPFRelatedFunction();
@@ -1489,21 +1490,21 @@ public final class GenericDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("generic_map_delete_batch($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("generic_map_delete_batch($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int generic_map_delete_batch(Ptr<bpf_map> map, Ptr<bpf_attr> attr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("generic_map_lookup_batch($arg1, (const union bpf_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("generic_map_lookup_batch($arg1, (const union bpf_attr *)$arg2, $arg3)")
   public static int generic_map_lookup_batch(Ptr<bpf_map> map, Ptr<bpf_attr> attr,
       Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("generic_map_update_batch($arg1, $arg2, (const union bpf_attr*)$arg3, $arg4)")
+  @BuiltinBPFFunction("generic_map_update_batch($arg1, $arg2, (const union bpf_attr *)$arg3, $arg4)")
   public static int generic_map_update_batch(Ptr<bpf_map> map, Ptr<file> map_file,
       Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
@@ -1672,7 +1673,7 @@ public final class GenericDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("generic_table_write_data($arg1, (const long long unsigned int)$arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("generic_table_write_data($arg1, (const long long unsigned int)$arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static int generic_table_write_data(Ptr<opal_dev> dev, @Unsigned long data,
       @Unsigned long offset, @Unsigned long size, Ptr<java.lang.Character> uid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1713,7 +1714,7 @@ public final class GenericDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("generic_write_end((const struct kiocb*)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("generic_write_end((const struct kiocb *)$arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int generic_write_end(Ptr<kiocb> iocb, Ptr<address_space> mapping,
       @OriginalName("loff_t") long pos, @Unsigned int len, @Unsigned int copied, Ptr<folio> folio,
       Ptr<?> fsdata) {
@@ -1727,7 +1728,7 @@ public final class GenericDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("generic_xdp_tx($arg1, (const struct bpf_prog*)$arg2)")
+  @BuiltinBPFFunction("generic_xdp_tx($arg1, (const struct bpf_prog *)$arg2)")
   public static void generic_xdp_tx(Ptr<sk_buff> skb, Ptr<bpf_prog> xdp_prog) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1123,20 +1124,20 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_compat_sys_ia32_fstatat64($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__do_compat_sys_ia32_fstatat64($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static long __do_compat_sys_ia32_fstatat64(@Unsigned int dfd, String filename,
       Ptr<stat64> statbuf, int flag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_compat_sys_ia32_lstat64((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__do_compat_sys_ia32_lstat64((const u8 *)$arg1, $arg2)")
   public static long __do_compat_sys_ia32_lstat64(String filename, Ptr<stat64> statbuf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_compat_sys_ia32_stat64((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__do_compat_sys_ia32_stat64((const u8 *)$arg1, $arg2)")
   public static long __do_compat_sys_ia32_stat64(String filename, Ptr<stat64> statbuf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1156,7 +1157,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_compat_sys_mq_getsetattr($arg1, (const struct compat_mq_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__do_compat_sys_mq_getsetattr($arg1, (const struct compat_mq_attr *)$arg2, $arg3)")
   public static long __do_compat_sys_mq_getsetattr(@OriginalName("mqd_t") int mqdes,
       Ptr<compat_mq_attr> u_mqstat, Ptr<compat_mq_attr> u_omqstat) {
     throw new MethodIsBPFRelatedFunction();
@@ -1169,32 +1170,32 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_compat_sys_newfstatat($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__do_compat_sys_newfstatat($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static long __do_compat_sys_newfstatat(@Unsigned int dfd, String filename,
       Ptr<compat_stat> statbuf, int flag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_compat_sys_newlstat((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__do_compat_sys_newlstat((const u8 *)$arg1, $arg2)")
   public static long __do_compat_sys_newlstat(String filename, Ptr<compat_stat> statbuf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_compat_sys_newstat((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__do_compat_sys_newstat((const u8 *)$arg1, $arg2)")
   public static long __do_compat_sys_newstat(String filename, Ptr<compat_stat> statbuf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_compat_sys_rt_sigreturn((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_compat_sys_rt_sigreturn((const struct pt_regs *)$arg1)")
   public static long __do_compat_sys_rt_sigreturn(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_compat_sys_sigreturn((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_compat_sys_sigreturn((const struct pt_regs *)$arg1)")
   public static long __do_compat_sys_sigreturn(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1206,7 +1207,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_compat_sys_statfs((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__do_compat_sys_statfs((const u8 *)$arg1, $arg2)")
   public static long __do_compat_sys_statfs(String pathname, Ptr<compat_statfs> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1304,7 +1305,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_proc_dointvec($arg1, (const struct ctl_table*)$arg2, $arg3, $arg4, $arg5, $arg6, (int (*)(_Bool*, long unsigned int*, int*, int, void*))$arg7, $arg8)")
+  @BuiltinBPFFunction("__do_proc_dointvec($arg1, (const struct ctl_table *)$arg2, $arg3, $arg4, $arg5, $arg6, (int (*)(_Bool*, long unsigned int*, int*, int, void*))$arg7, $arg8)")
   public static int __do_proc_dointvec(Ptr<?> tbl_data, Ptr<ctl_table> table, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> lenp,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos, Ptr<?> conv, Ptr<?> data) {
@@ -1312,7 +1313,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_proc_douintvec($arg1, (const struct ctl_table*)$arg2, $arg3, $arg4, $arg5, $arg6, (int (*)(long unsigned int*, unsigned int*, int, void*))$arg7, $arg8)")
+  @BuiltinBPFFunction("__do_proc_douintvec($arg1, (const struct ctl_table *)$arg2, $arg3, $arg4, $arg5, $arg6, (int (*)(long unsigned int*, unsigned int*, int, void*))$arg7, $arg8)")
   public static int __do_proc_douintvec(Ptr<?> tbl_data, Ptr<ctl_table> table, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> lenp,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos, Ptr<?> conv, Ptr<?> data) {
@@ -1320,7 +1321,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_proc_doulongvec_minmax($arg1, (const struct ctl_table*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("__do_proc_doulongvec_minmax($arg1, (const struct ctl_table *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static int __do_proc_doulongvec_minmax(Ptr<?> data, Ptr<ctl_table> table, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> lenp,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos, @Unsigned long convmul,
@@ -1329,7 +1330,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_semtimedop($arg1, $arg2, $arg3, (const struct timespec64*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__do_semtimedop($arg1, $arg2, $arg3, (const struct timespec64 *)$arg4, $arg5)")
   public static long __do_semtimedop(int semid, Ptr<sembuf> sops, @Unsigned int nsops,
       Ptr<timespec64> timeout, Ptr<ipc_namespace> ns) {
     throw new MethodIsBPFRelatedFunction();
@@ -1357,7 +1358,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_add_key((const u8*)$arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__do_sys_add_key((const u8 *)$arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static long __do_sys_add_key(String _type, String _description, Ptr<?> _payload,
       @Unsigned long plen, @OriginalName("key_serial_t") int ringid) {
     throw new MethodIsBPFRelatedFunction();
@@ -1435,7 +1436,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_delete_module((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__do_sys_delete_module((const u8 *)$arg1, $arg2)")
   public static long __do_sys_delete_module(String name_user, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1447,14 +1448,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_file_getattr($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__do_sys_file_getattr($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static long __do_sys_file_getattr(int dfd, String filename, Ptr<file_attr> ufattr,
       @Unsigned long usize, @Unsigned int at_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_file_setattr($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__do_sys_file_setattr($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static long __do_sys_file_setattr(int dfd, String filename, Ptr<file_attr> ufattr,
       @Unsigned long usize, @Unsigned int at_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1467,13 +1468,13 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_fork((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_fork((const struct pt_regs *)$arg1)")
   public static long __do_sys_fork(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_fsconfig($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__do_sys_fsconfig($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5)")
   public static long __do_sys_fsconfig(int fd, @Unsigned int cmd, String _key, Ptr<?> _value,
       int aux) {
     throw new MethodIsBPFRelatedFunction();
@@ -1524,37 +1525,37 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_getegid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_getegid((const struct pt_regs *)$arg1)")
   public static long __do_sys_getegid(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_getegid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_getegid16((const struct pt_regs *)$arg1)")
   public static long __do_sys_getegid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_geteuid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_geteuid((const struct pt_regs *)$arg1)")
   public static long __do_sys_geteuid(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_geteuid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_geteuid16((const struct pt_regs *)$arg1)")
   public static long __do_sys_geteuid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_getgid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_getgid((const struct pt_regs *)$arg1)")
   public static long __do_sys_getgid(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_getgid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_getgid16((const struct pt_regs *)$arg1)")
   public static long __do_sys_getgid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1566,19 +1567,19 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_getpgrp((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_getpgrp((const struct pt_regs *)$arg1)")
   public static long __do_sys_getpgrp(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_getpid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_getpid((const struct pt_regs *)$arg1)")
   public static long __do_sys_getpid(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_getppid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_getppid((const struct pt_regs *)$arg1)")
   public static long __do_sys_getppid(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1596,37 +1597,37 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_gettid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_gettid((const struct pt_regs *)$arg1)")
   public static long __do_sys_gettid(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_getuid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_getuid((const struct pt_regs *)$arg1)")
   public static long __do_sys_getuid(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_getuid16((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_getuid16((const struct pt_regs *)$arg1)")
   public static long __do_sys_getuid16(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_init_module($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("__do_sys_init_module($arg1, $arg2, (const u8 *)$arg3)")
   public static long __do_sys_init_module(Ptr<?> umod, @Unsigned long len, String uargs) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_inotify_init((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_inotify_init((const struct pt_regs *)$arg1)")
   public static long __do_sys_inotify_init(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_io_uring_enter($arg1, $arg2, $arg3, $arg4, (const void*)$arg5, $arg6)")
+  @BuiltinBPFFunction("__do_sys_io_uring_enter($arg1, $arg2, $arg3, $arg4, (const void *)$arg5, $arg6)")
   public static long __do_sys_io_uring_enter(@Unsigned int fd, @Unsigned int to_submit,
       @Unsigned int min_complete, @Unsigned int flags, Ptr<?> argp, @Unsigned long argsz) {
     throw new MethodIsBPFRelatedFunction();
@@ -1659,7 +1660,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_kexec_file_load($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__do_sys_kexec_file_load($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static long __do_sys_kexec_file_load(int kernel_fd, int initrd_fd,
       @Unsigned long cmdline_len, String cmdline_ptr, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1686,14 +1687,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_listmount((const struct mnt_id_req*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__do_sys_listmount((const struct mnt_id_req *)$arg1, $arg2, $arg3, $arg4)")
   public static long __do_sys_listmount(Ptr<mnt_id_req> req, Ptr<java.lang. @Unsigned Long> mnt_ids,
       @Unsigned long nr_mnt_ids, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_lstat((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__do_sys_lstat((const u8 *)$arg1, $arg2)")
   public static long __do_sys_lstat(String filename, Ptr<__old_kernel_stat> statbuf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1705,7 +1706,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_memfd_create((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__do_sys_memfd_create((const u8 *)$arg1, $arg2)")
   public static long __do_sys_memfd_create(String uname, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1717,21 +1718,21 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_move_mount($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__do_sys_move_mount($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static long __do_sys_move_mount(int from_dfd, String from_pathname, int to_dfd,
       String to_pathname, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_mq_getsetattr($arg1, (const struct mq_attr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__do_sys_mq_getsetattr($arg1, (const struct mq_attr *)$arg2, $arg3)")
   public static long __do_sys_mq_getsetattr(@OriginalName("mqd_t") int mqdes, Ptr<mq_attr> u_mqstat,
       Ptr<mq_attr> u_omqstat) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_mq_unlink((const u8*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_mq_unlink((const u8 *)$arg1)")
   public static long __do_sys_mq_unlink(String u_name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1750,7 +1751,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_munlockall((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_munlockall((const struct pt_regs *)$arg1)")
   public static long __do_sys_munlockall(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1762,19 +1763,19 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_newfstatat($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__do_sys_newfstatat($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static long __do_sys_newfstatat(int dfd, String filename, Ptr<stat> statbuf, int flag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_newlstat((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__do_sys_newlstat((const u8 *)$arg1, $arg2)")
   public static long __do_sys_newlstat(String filename, Ptr<stat> statbuf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_newstat((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__do_sys_newstat((const u8 *)$arg1, $arg2)")
   public static long __do_sys_newstat(String filename, Ptr<stat> statbuf) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1786,20 +1787,20 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_ni_syscall((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_ni_syscall((const struct pt_regs *)$arg1)")
   public static long __do_sys_ni_syscall(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_open_tree_attr($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__do_sys_open_tree_attr($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static long __do_sys_open_tree_attr(int dfd, String filename, @Unsigned int flags,
       Ptr<mount_attr> uattr, @Unsigned long usize) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_pause((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_pause((const struct pt_regs *)$arg1)")
   public static long __do_sys_pause(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1812,7 +1813,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_pivot_root((const u8*)$arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("__do_sys_pivot_root((const u8 *)$arg1, (const u8 *)$arg2)")
   public static long __do_sys_pivot_root(String new_root, String put_old) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1831,14 +1832,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_prlimit64($arg1, $arg2, (const struct rlimit64*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__do_sys_prlimit64($arg1, $arg2, (const struct rlimit64 *)$arg3, $arg4)")
   public static long __do_sys_prlimit64(@OriginalName("pid_t") int pid, @Unsigned int resource,
       Ptr<rlimit64> new_rlim, Ptr<rlimit64> old_rlim) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_process_madvise($arg1, (const struct iovec*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("__do_sys_process_madvise($arg1, (const struct iovec *)$arg2, $arg3, $arg4, $arg5)")
   public static long __do_sys_process_madvise(int pidfd, Ptr<iovec> vec, @Unsigned long vlen,
       int behavior, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1864,20 +1865,20 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_request_key((const u8*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__do_sys_request_key((const u8 *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static long __do_sys_request_key(String _type, String _description, String _callout_info,
       @OriginalName("key_serial_t") int destringid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_restart_syscall((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_restart_syscall((const struct pt_regs *)$arg1)")
   public static long __do_sys_restart_syscall(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_rt_sigreturn((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_rt_sigreturn((const struct pt_regs *)$arg1)")
   public static long __do_sys_rt_sigreturn(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1890,7 +1891,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_sched_yield((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_sched_yield((const struct pt_regs *)$arg1)")
   public static long __do_sys_sched_yield(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1936,13 +1937,13 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_setsid((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_setsid((const struct pt_regs *)$arg1)")
   public static long __do_sys_setsid(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_sgetmask((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_sgetmask((const struct pt_regs *)$arg1)")
   public static long __do_sys_sgetmask(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1954,44 +1955,44 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_stat((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__do_sys_stat((const u8 *)$arg1, $arg2)")
   public static long __do_sys_stat(String filename, Ptr<__old_kernel_stat> statbuf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_statfs((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__do_sys_statfs((const u8 *)$arg1, $arg2)")
   public static long __do_sys_statfs(String pathname, Ptr<statfs> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_statfs64((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__do_sys_statfs64((const u8 *)$arg1, $arg2, $arg3)")
   public static long __do_sys_statfs64(String pathname, @Unsigned long sz, Ptr<statfs64> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_statmount((const struct mnt_id_req*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__do_sys_statmount((const struct mnt_id_req *)$arg1, $arg2, $arg3, $arg4)")
   public static long __do_sys_statmount(Ptr<mnt_id_req> req, Ptr<statmount> buf,
       @Unsigned long bufsize, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_swapoff((const u8*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_swapoff((const u8 *)$arg1)")
   public static long __do_sys_swapoff(String specialfile) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_swapon((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__do_sys_swapon((const u8 *)$arg1, $arg2)")
   public static long __do_sys_swapon(String specialfile, int swap_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_sync((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_sync((const struct pt_regs *)$arg1)")
   public static long __do_sys_sync(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2015,7 +2016,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_uretprobe((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_uretprobe((const struct pt_regs *)$arg1)")
   public static long __do_sys_uretprobe(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2027,19 +2028,19 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_vfork((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_vfork((const struct pt_regs *)$arg1)")
   public static long __do_sys_vfork(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_vhangup((const struct pt_regs*)$arg1)")
+  @BuiltinBPFFunction("__do_sys_vhangup((const struct pt_regs *)$arg1)")
   public static long __do_sys_vhangup(Ptr<pt_regs> __unused) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__do_sys_vmsplice($arg1, (const struct iovec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("__do_sys_vmsplice($arg1, (const struct iovec *)$arg2, $arg3, $arg4)")
   public static long __do_sys_vmsplice(int fd, Ptr<iovec> uiov, @Unsigned long nr_segs,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2073,14 +2074,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_add_master_key($arg1, $arg2, (const struct fscrypt_key_specifier*)$arg3)")
+  @BuiltinBPFFunction("do_add_master_key($arg1, $arg2, (const struct fscrypt_key_specifier *)$arg3)")
   public static int do_add_master_key(Ptr<super_block> sb, Ptr<fscrypt_master_key_secret> secret,
       Ptr<fscrypt_key_specifier> mk_spec) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_add_mount($arg1, $arg2, (const struct path*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_add_mount($arg1, $arg2, (const struct path *)$arg3, $arg4)")
   public static int do_add_mount(Ptr<mount> newmnt, Ptr<mountpoint> mp, Ptr<path> path,
       int mnt_flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2118,7 +2119,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_bind_con_driver((const struct consw*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_bind_con_driver((const struct consw *)$arg1, $arg2, $arg3, $arg4)")
   public static int do_bind_con_driver(Ptr<consw> csw, int first, int last, int deflt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2210,7 +2211,7 @@ public final class DoDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("do_compat_epoll_pwait($arg1, $arg2, $arg3, $arg4, (const struct {\n"
           + "  unsigned int sig[2];\n"
-          + "}*)$arg5, $arg6)")
+          + "} *)$arg5, $arg6)")
   public static int do_compat_epoll_pwait(int epfd, Ptr<epoll_event> events, int maxevents,
       Ptr<timespec64> timeout, Ptr<compat_sigset_t> sigmask,
       @Unsigned @OriginalName("compat_size_t") int sigsetsize) {
@@ -2225,7 +2226,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_compat_futimesat($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_compat_futimesat($arg1, (const u8 *)$arg2, $arg3)")
   public static long do_compat_futimesat(@Unsigned int dfd, String filename, Ptr<old_timeval32> t) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2252,7 +2253,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_compat_sigaltstack((const compat_sigaltstack*)$arg1, $arg2)")
+  @BuiltinBPFFunction("do_compat_sigaltstack((const compat_sigaltstack *)$arg1, $arg2)")
   public static int do_compat_sigaltstack(
       Ptr<@OriginalName("compat_stack_t") compat_sigaltstack> uss_ptr,
       Ptr<@OriginalName("compat_stack_t") compat_sigaltstack> uoss_ptr) {
@@ -2272,7 +2273,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_con_write($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_con_write($arg1, (const u8 *)$arg2, $arg3)")
   public static int do_con_write(Ptr<tty_struct> tty, Ptr<java.lang.Character> buf, int count) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2290,14 +2291,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_cpu_nanosleep((const int)$arg1, $arg2, (const struct timespec64*)$arg3)")
+  @BuiltinBPFFunction("do_cpu_nanosleep((const int)$arg1, $arg2, (const struct timespec64 *)$arg3)")
   public static int do_cpu_nanosleep(@OriginalName("clockid_t") int which_clock, int flags,
       Ptr<timespec64> rqtp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_cvt_mode((const struct detailed_timing*)$arg1, $arg2)")
+  @BuiltinBPFFunction("do_cvt_mode((const struct detailed_timing *)$arg1, $arg2)")
   public static void do_cvt_mode(Ptr<detailed_timing> timing, Ptr<?> c) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2315,7 +2316,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_detailed_mode((const struct detailed_timing*)$arg1, $arg2)")
+  @BuiltinBPFFunction("do_detailed_mode((const struct detailed_timing *)$arg1, $arg2)")
   public static void do_detailed_mode(Ptr<detailed_timing> timing, Ptr<?> c) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2352,7 +2353,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_early_param($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_early_param($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int do_early_param(String param, String val, String unused, Ptr<?> arg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2410,7 +2411,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_established_modes((const struct detailed_timing*)$arg1, $arg2)")
+  @BuiltinBPFFunction("do_established_modes((const struct detailed_timing *)$arg1, $arg2)")
   public static void do_established_modes(Ptr<detailed_timing> timing, Ptr<?> c) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2428,13 +2429,13 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_faccessat($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_faccessat($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int do_faccessat(int dfd, String filename, int mode, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_fanotify_mark($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("do_fanotify_mark($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static int do_fanotify_mark(int fanotify_fd, @Unsigned int flags, @Unsigned long mask,
       int dfd, String pathname) {
     throw new MethodIsBPFRelatedFunction();
@@ -2471,14 +2472,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_fchmodat($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_fchmodat($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int do_fchmodat(int dfd, String filename,
       @Unsigned @OriginalName("umode_t") short mode, @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_fchownat($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_fchownat($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int do_fchownat(int dfd, String filename, @Unsigned @OriginalName("uid_t") int user,
       @Unsigned @OriginalName("gid_t") int group, int flag) {
     throw new MethodIsBPFRelatedFunction();
@@ -2491,13 +2492,13 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_file_open_root((const struct path*)$arg1, (const u8*)$arg2, (const struct open_flags*)$arg3)")
+  @BuiltinBPFFunction("do_file_open_root((const struct path *)$arg1, (const u8 *)$arg2, (const struct open_flags *)$arg3)")
   public static Ptr<file> do_file_open_root(Ptr<path> root, String name, Ptr<open_flags> op) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_filp_open($arg1, $arg2, (const struct open_flags*)$arg3)")
+  @BuiltinBPFFunction("do_filp_open($arg1, $arg2, (const struct open_flags *)$arg3)")
   public static Ptr<file> do_filp_open(int dfd, Ptr<filename> pathname, Ptr<open_flags> op) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2541,13 +2542,13 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_futimesat($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_futimesat($arg1, (const u8 *)$arg2, $arg3)")
   public static long do_futimesat(int dfd, String filename, Ptr<__kernel_old_timeval> utimes) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_get_acl($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_get_acl($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static @OriginalName("ssize_t") long do_get_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry,
       String acl_name, Ptr<?> kvalue, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -2617,7 +2618,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_hdmi_vsdb_modes($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_hdmi_vsdb_modes($arg1, (const u8 *)$arg2, $arg3)")
   public static int do_hdmi_vsdb_modes(Ptr<drm_connector> connector, Ptr<java.lang.Character> db,
       char len) {
     throw new MethodIsBPFRelatedFunction();
@@ -2661,7 +2662,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_id_store($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_id_store($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long do_id_store(Ptr<device_driver> drv, String buf,
       @Unsigned long count, id_action action) {
     throw new MethodIsBPFRelatedFunction();
@@ -2674,7 +2675,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_inferred_modes((const struct detailed_timing*)$arg1, $arg2)")
+  @BuiltinBPFFunction("do_inferred_modes((const struct detailed_timing *)$arg1, $arg2)")
   public static void do_inferred_modes(Ptr<detailed_timing> timing, Ptr<?> c) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2833,7 +2834,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_kmem_cache_create($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_kmem_cache_create($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int do_kmem_cache_create(Ptr<kmem_cache> s, String name, @Unsigned int size,
       Ptr<kmem_cache_args> args, @Unsigned @OriginalName("slab_flags_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2872,7 +2873,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_match_mnt($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4, (const u8*)$arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("do_match_mnt($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const u8 *)$arg5, $arg6, $arg7, $arg8, $arg9)")
   public static int do_match_mnt(Ptr<aa_policydb> policy, @Unsigned int start, String mntpnt,
       String devname, String type, @Unsigned long flags, Ptr<?> data, boolean binary,
       Ptr<aa_perms> perms) {
@@ -2907,9 +2908,9 @@ public final class DoDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("do_migrate_pages($arg1, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg2, (const struct {\n"
+          + "} *)$arg2, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg3, $arg4)")
+          + "} *)$arg3, $arg4)")
   public static int do_migrate_pages(Ptr<mm_struct> mm, Ptr<nodemask_t> from, Ptr<nodemask_t> to,
       int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -2970,14 +2971,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_mount((const u8*)$arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_mount((const u8 *)$arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int do_mount(String dev_name, String dir_name, String type_page,
       @Unsigned long flags, Ptr<?> data_page) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_mount_root((const u8*)$arg1, (const u8*)$arg2, (const int)$arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("do_mount_root((const u8 *)$arg1, (const u8 *)$arg2, (const int)$arg3, (const void *)$arg4)")
   public static int do_mount_root(String name, String fs, int flags, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3008,13 +3009,13 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_mq_notify($arg1, (const struct sigevent*)$arg2)")
+  @BuiltinBPFFunction("do_mq_notify($arg1, (const struct sigevent *)$arg2)")
   public static int do_mq_notify(@OriginalName("mqd_t") int mqdes, Ptr<sigevent> notification) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_mq_open((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_mq_open((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static int do_mq_open(String u_name, int oflag,
       @Unsigned @OriginalName("umode_t") short mode, Ptr<mq_attr> attr) {
     throw new MethodIsBPFRelatedFunction();
@@ -3028,7 +3029,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_mq_timedsend($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_mq_timedsend($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int do_mq_timedsend(@OriginalName("mqd_t") int mqdes, String u_msg_ptr,
       @Unsigned long msg_len, @Unsigned int msg_prio, Ptr<timespec64> ts) {
     throw new MethodIsBPFRelatedFunction();
@@ -3092,7 +3093,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_new_mount($arg1, (const u8*)$arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("do_new_mount($arg1, (const u8 *)$arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int do_new_mount(Ptr<path> path, String fstype, int sb_flags, int mnt_flags,
       String name, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -3165,7 +3166,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_open($arg1, $arg2, (const struct open_flags*)$arg3)")
+  @BuiltinBPFFunction("do_open($arg1, $arg2, (const struct open_flags *)$arg3)")
   public static int do_open(Ptr<nameidata> nd, Ptr<file> file, Ptr<open_flags> op) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3202,7 +3203,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_pages_move($arg1, $arg2, $arg3, (const void**)$arg4, (const int*)$arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("do_pages_move($arg1, $arg2, $arg3, (const void**)$arg4, (const int *)$arg5, $arg6, $arg7)")
   public static int do_pages_move(Ptr<mm_struct> mm, nodemask_t task_nodes, @Unsigned long nr_pages,
       Ptr<Ptr<?>> pages, Ptr<java.lang.Integer> nodes, Ptr<java.lang.Integer> status, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -3234,14 +3235,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_aer_event($arg1, (const u8*)$arg2, (const unsigned int)$arg3, (const u8)$arg4, (const u8)$arg5, $arg6)")
+  @BuiltinBPFFunction("do_perf_trace_aer_event($arg1, (const u8 *)$arg2, (const unsigned int)$arg3, (const u8)$arg4, (const u8)$arg5, $arg6)")
   public static void do_perf_trace_aer_event(Ptr<?> __data, String dev_name, @Unsigned int status,
       char severity, char tlp_header_valid, Ptr<pcie_tlp_log> tlp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_arm_event($arg1, (const struct cper_sec_proc_arm*)$arg2, (const u8*)$arg3, (const unsigned int)$arg4, (const u8*)$arg5, (const unsigned int)$arg6, (const u8*)$arg7, (const unsigned int)$arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("do_perf_trace_arm_event($arg1, (const struct cper_sec_proc_arm *)$arg2, (const u8 *)$arg3, (const unsigned int)$arg4, (const u8 *)$arg5, (const unsigned int)$arg6, (const u8 *)$arg7, (const unsigned int)$arg8, $arg9, $arg10)")
   public static void do_perf_trace_arm_event(Ptr<?> __data, Ptr<cper_sec_proc_arm> proc,
       Ptr<java.lang.Character> pei_err, @Unsigned int pei_len, Ptr<java.lang.Character> ctx_err,
       @Unsigned int ctx_len, Ptr<java.lang.Character> oem, @Unsigned int oem_len, char sev,
@@ -3305,40 +3306,40 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_bpf_trace_printk($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("do_perf_trace_bpf_trace_printk($arg1, (const u8 *)$arg2)")
   public static void do_perf_trace_bpf_trace_printk(Ptr<?> __data, String bpf_string) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_bpf_xdp_link_attach_failed($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("do_perf_trace_bpf_xdp_link_attach_failed($arg1, (const u8 *)$arg2)")
   public static void do_perf_trace_bpf_xdp_link_attach_failed(Ptr<?> __data, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_br_fdb_add($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("do_perf_trace_br_fdb_add($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static void do_perf_trace_br_fdb_add(Ptr<?> __data, Ptr<ndmsg> ndm, Ptr<net_device> dev,
       String addr, @Unsigned short vid, @Unsigned short nlh_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_br_fdb_external_learn_add($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("do_perf_trace_br_fdb_external_learn_add($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static void do_perf_trace_br_fdb_external_learn_add(Ptr<?> __data, Ptr<net_bridge> br,
       Ptr<net_bridge_port> p, String addr, @Unsigned short vid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_br_fdb_update($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("do_perf_trace_br_fdb_update($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static void do_perf_trace_br_fdb_update(Ptr<?> __data, Ptr<net_bridge> br,
       Ptr<net_bridge_port> source, String addr, @Unsigned short vid, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_br_mdb_full($arg1, (const struct net_device*)$arg2, (const struct br_ip*)$arg3)")
+  @BuiltinBPFFunction("do_perf_trace_br_mdb_full($arg1, (const struct net_device *)$arg2, (const struct br_ip *)$arg3)")
   public static void do_perf_trace_br_mdb_full(Ptr<?> __data, Ptr<net_device> dev,
       Ptr<br_ip> group) {
     throw new MethodIsBPFRelatedFunction();
@@ -3366,20 +3367,20 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_cgroup($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("do_perf_trace_cgroup($arg1, $arg2, (const u8 *)$arg3)")
   public static void do_perf_trace_cgroup(Ptr<?> __data, Ptr<cgroup> cgrp, String path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_cgroup_event($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_cgroup_event($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void do_perf_trace_cgroup_event(Ptr<?> __data, Ptr<cgroup> cgrp, String path,
       int val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_cgroup_migrate($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_perf_trace_cgroup_migrate($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void do_perf_trace_cgroup_migrate(Ptr<?> __data, Ptr<cgroup> dst_cgrp, String path,
       Ptr<task_struct> task, boolean threadgroup) {
     throw new MethodIsBPFRelatedFunction();
@@ -3438,35 +3439,35 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_cma_alloc_busy_retry($arg1, (const u8*)$arg2, $arg3, (const struct page*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("do_perf_trace_cma_alloc_busy_retry($arg1, (const u8 *)$arg2, $arg3, (const struct page *)$arg4, $arg5, $arg6)")
   public static void do_perf_trace_cma_alloc_busy_retry(Ptr<?> __data, String name,
       @Unsigned long pfn, Ptr<page> page, @Unsigned long count, @Unsigned int align) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_cma_alloc_finish($arg1, (const u8*)$arg2, $arg3, (const struct page*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("do_perf_trace_cma_alloc_finish($arg1, (const u8 *)$arg2, $arg3, (const struct page *)$arg4, $arg5, $arg6, $arg7)")
   public static void do_perf_trace_cma_alloc_finish(Ptr<?> __data, String name, @Unsigned long pfn,
       Ptr<page> page, @Unsigned long count, @Unsigned int align, int errorno) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_cma_alloc_start($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_cma_alloc_start($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void do_perf_trace_cma_alloc_start(Ptr<?> __data, String name, @Unsigned long count,
       @Unsigned int align) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_cma_release($arg1, (const u8*)$arg2, $arg3, (const struct page*)$arg4, $arg5)")
+  @BuiltinBPFFunction("do_perf_trace_cma_release($arg1, (const u8 *)$arg2, $arg3, (const struct page *)$arg4, $arg5)")
   public static void do_perf_trace_cma_release(Ptr<?> __data, String name, @Unsigned long pfn,
       Ptr<page> page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_console($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_perf_trace_console($arg1, (const u8 *)$arg2, $arg3)")
   public static void do_perf_trace_console(Ptr<?> __data, String text, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3479,7 +3480,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_dev_pm_qos_request($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_dev_pm_qos_request($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void do_perf_trace_dev_pm_qos_request(Ptr<?> __data, String name,
       dev_pm_qos_req_type type, int new_value) {
     throw new MethodIsBPFRelatedFunction();
@@ -3506,14 +3507,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_device_pm_callback_start($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_device_pm_callback_start($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void do_perf_trace_device_pm_callback_start(Ptr<?> __data, Ptr<device> dev,
       String pm_ops, int event) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_devlink_health_recover_aborted($arg1, (const struct devlink*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_perf_trace_devlink_health_recover_aborted($arg1, (const struct devlink *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void do_perf_trace_devlink_health_recover_aborted(Ptr<?> __data,
       Ptr<devlink> devlink, String reporter_name, boolean health_state,
       @Unsigned long time_since_last_recover) {
@@ -3521,35 +3522,35 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_devlink_health_report($arg1, (const struct devlink*)$arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("do_perf_trace_devlink_health_report($arg1, (const struct devlink *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static void do_perf_trace_devlink_health_report(Ptr<?> __data, Ptr<devlink> devlink,
       String reporter_name, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_devlink_health_reporter_state_update($arg1, (const struct devlink*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_devlink_health_reporter_state_update($arg1, (const struct devlink *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void do_perf_trace_devlink_health_reporter_state_update(Ptr<?> __data,
       Ptr<devlink> devlink, String reporter_name, boolean new_state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_devlink_hwerr($arg1, (const struct devlink*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("do_perf_trace_devlink_hwerr($arg1, (const struct devlink *)$arg2, $arg3, (const u8 *)$arg4)")
   public static void do_perf_trace_devlink_hwerr(Ptr<?> __data, Ptr<devlink> devlink, int err,
       String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_devlink_hwmsg($arg1, (const struct devlink*)$arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("do_perf_trace_devlink_hwmsg($arg1, (const struct devlink *)$arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static void do_perf_trace_devlink_hwmsg(Ptr<?> __data, Ptr<devlink> devlink,
       boolean incoming, @Unsigned long type, Ptr<java.lang.Character> buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_devres($arg1, $arg2, (const u8*)$arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("do_perf_trace_devres($arg1, $arg2, (const u8 *)$arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static void do_perf_trace_devres(Ptr<?> __data, Ptr<device> dev, String op, Ptr<?> node,
       String name, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -3745,7 +3746,7 @@ public final class DoDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("do_perf_trace_extlog_mem_event($arg1, $arg2, $arg3, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg4, (const u8*)$arg5, $arg6)")
+          + "} *)$arg4, (const u8 *)$arg5, $arg6)")
   public static void do_perf_trace_extlog_mem_event(Ptr<?> __data, Ptr<cper_sec_mem_err> mem,
       @Unsigned int err_seq, Ptr<@OriginalName("guid_t") uuid_t> fru_id, String fru_text,
       char sev) {
@@ -3760,14 +3761,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_fib6_table_lookup($arg1, (const struct net*)$arg2, (const struct fib6_result*)$arg3, $arg4, (const struct flowi6*)$arg5)")
+  @BuiltinBPFFunction("do_perf_trace_fib6_table_lookup($arg1, (const struct net *)$arg2, (const struct fib6_result *)$arg3, $arg4, (const struct flowi6 *)$arg5)")
   public static void do_perf_trace_fib6_table_lookup(Ptr<?> __data, Ptr<net> net,
       Ptr<fib6_result> res, Ptr<fib6_table> table, Ptr<flowi6> flp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_fib_table_lookup($arg1, $arg2, (const struct flowi4*)$arg3, (const struct fib_nh_common*)$arg4, $arg5)")
+  @BuiltinBPFFunction("do_perf_trace_fib_table_lookup($arg1, $arg2, (const struct flowi4 *)$arg3, (const struct fib_nh_common *)$arg4, $arg5)")
   public static void do_perf_trace_fib_table_lookup(Ptr<?> __data, @Unsigned int tb_id,
       Ptr<flowi4> flp, Ptr<fib_nh_common> nhc, int err) {
     throw new MethodIsBPFRelatedFunction();
@@ -3788,14 +3789,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_handshake_alert_class($arg1, (const struct sock*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_handshake_alert_class($arg1, (const struct sock *)$arg2, $arg3, $arg4)")
   public static void do_perf_trace_handshake_alert_class(Ptr<?> __data, Ptr<sock> sk, char level,
       char description) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_handshake_error_class($arg1, (const struct net*)$arg2, (const struct handshake_req*)$arg3, (const struct sock*)$arg4, $arg5)")
+  @BuiltinBPFFunction("do_perf_trace_handshake_error_class($arg1, (const struct net *)$arg2, (const struct handshake_req *)$arg3, (const struct sock *)$arg4, $arg5)")
   public static void do_perf_trace_handshake_error_class(Ptr<?> __data, Ptr<net> net,
       Ptr<handshake_req> req, Ptr<sock> sk, int err) {
     throw new MethodIsBPFRelatedFunction();
@@ -3809,21 +3810,21 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_hwmon_attr_class($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_hwmon_attr_class($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void do_perf_trace_hwmon_attr_class(Ptr<?> __data, int index, String attr_name,
       long val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_hwmon_attr_show_string($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("do_perf_trace_hwmon_attr_show_string($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static void do_perf_trace_hwmon_attr_show_string(Ptr<?> __data, int index,
       String attr_name, String s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_hyperv_mmu_flush_tlb_multi($arg1, (const struct cpumask*)$arg2, (const struct flush_tlb_info*)$arg3)")
+  @BuiltinBPFFunction("do_perf_trace_hyperv_mmu_flush_tlb_multi($arg1, (const struct cpumask *)$arg2, (const struct flush_tlb_info *)$arg3)")
   public static void do_perf_trace_hyperv_mmu_flush_tlb_multi(Ptr<?> __data, Ptr<cpumask> cpus,
       Ptr<flush_tlb_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -3837,28 +3838,28 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_hyperv_send_ipi_mask($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_perf_trace_hyperv_send_ipi_mask($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static void do_perf_trace_hyperv_send_ipi_mask(Ptr<?> __data, Ptr<cpumask> cpus,
       int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_i2c_reply($arg1, (const struct i2c_adapter*)$arg2, (const struct i2c_msg*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_i2c_reply($arg1, (const struct i2c_adapter *)$arg2, (const struct i2c_msg *)$arg3, $arg4)")
   public static void do_perf_trace_i2c_reply(Ptr<?> __data, Ptr<i2c_adapter> adap, Ptr<i2c_msg> msg,
       int num) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_i2c_slave($arg1, (const struct i2c_client*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_perf_trace_i2c_slave($arg1, (const struct i2c_client *)$arg2, $arg3, $arg4, $arg5)")
   public static void do_perf_trace_i2c_slave(Ptr<?> __data, Ptr<i2c_client> client,
       i2c_slave_event event, Ptr<java.lang.Character> val, int cb_ret) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_i2c_write($arg1, (const struct i2c_adapter*)$arg2, (const struct i2c_msg*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_i2c_write($arg1, (const struct i2c_adapter *)$arg2, (const struct i2c_msg *)$arg3, $arg4)")
   public static void do_perf_trace_i2c_write(Ptr<?> __data, Ptr<i2c_adapter> adap, Ptr<i2c_msg> msg,
       int num) {
     throw new MethodIsBPFRelatedFunction();
@@ -3878,7 +3879,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_initcall_level($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("do_perf_trace_initcall_level($arg1, (const u8 *)$arg2)")
   public static void do_perf_trace_initcall_level(Ptr<?> __data, String level) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3925,7 +3926,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_io_uring_req_failed($arg1, (const struct io_uring_sqe*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_io_uring_req_failed($arg1, (const struct io_uring_sqe *)$arg2, $arg3, $arg4)")
   public static void do_perf_trace_io_uring_req_failed(Ptr<?> __data, Ptr<io_uring_sqe> sqe,
       Ptr<io_kiocb> req, int error) {
     throw new MethodIsBPFRelatedFunction();
@@ -3944,7 +3945,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_iocg_inuse_update($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("do_perf_trace_iocg_inuse_update($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void do_perf_trace_iocg_inuse_update(Ptr<?> __data, Ptr<ioc_gq> iocg, String path,
       Ptr<ioc_now> now, @Unsigned int old_inuse, @Unsigned int new_inuse,
       @Unsigned long old_hw_inuse, @Unsigned long new_hw_inuse) {
@@ -3960,7 +3961,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_iocost_iocg_forgive_debt($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("do_perf_trace_iocost_iocg_forgive_debt($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static void do_perf_trace_iocost_iocg_forgive_debt(Ptr<?> __data, Ptr<ioc_gq> iocg,
       String path, Ptr<ioc_now> now, @Unsigned int usage_pct, @Unsigned long old_debt,
       @Unsigned long new_debt, @Unsigned long old_delay, @Unsigned long new_delay) {
@@ -3968,7 +3969,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_iocost_iocg_state($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("do_perf_trace_iocost_iocg_state($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static void do_perf_trace_iocost_iocg_state(Ptr<?> __data, Ptr<ioc_gq> iocg, String path,
       Ptr<ioc_now> now, @Unsigned long last_period, @Unsigned long cur_period,
       @Unsigned long vtime) {
@@ -3995,7 +3996,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_ipi_send_cpumask($arg1, (const struct cpumask*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_ipi_send_cpumask($arg1, (const struct cpumask *)$arg2, $arg3, $arg4)")
   public static void do_perf_trace_ipi_send_cpumask(Ptr<?> __data, Ptr<cpumask> cpumask,
       @Unsigned long callsite, Ptr<?> callback) {
     throw new MethodIsBPFRelatedFunction();
@@ -4009,21 +4010,21 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_irq_noise($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_perf_trace_irq_noise($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void do_perf_trace_irq_noise(Ptr<?> __data, int vector, String desc,
       @Unsigned long start, @Unsigned long duration) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_kmem_cache_free($arg1, $arg2, (const void*)$arg3, (const struct kmem_cache*)$arg4)")
+  @BuiltinBPFFunction("do_perf_trace_kmem_cache_free($arg1, $arg2, (const void *)$arg3, (const struct kmem_cache *)$arg4)")
   public static void do_perf_trace_kmem_cache_free(Ptr<?> __data, @Unsigned long call_site,
       Ptr<?> ptr, Ptr<kmem_cache> s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_ma_op($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_perf_trace_ma_op($arg1, (const u8 *)$arg2, $arg3)")
   public static void do_perf_trace_ma_op(Ptr<?> __data, String fn, Ptr<ma_state> mas) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4036,7 +4037,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_mc_event($arg1, (const unsigned int)$arg2, (const u8*)$arg3, (const u8*)$arg4, (const int)$arg5, (const u8)$arg6, (const s8)$arg7, (const s8)$arg8, (const s8)$arg9, $arg10, (const u8)$arg11, $arg12, (const u8*)$arg13)")
+  @BuiltinBPFFunction("do_perf_trace_mc_event($arg1, (const unsigned int)$arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const int)$arg5, (const u8)$arg6, (const s8)$arg7, (const s8)$arg8, (const s8)$arg9, $arg10, (const u8)$arg11, $arg12, (const u8 *)$arg13)")
   public static void do_perf_trace_mc_event(Ptr<?> __data, @Unsigned int err_type, String error_msg,
       String label, int error_count, char mc_index, @OriginalName("s8") byte top_layer,
       @OriginalName("s8") byte mid_layer, @OriginalName("s8") byte low_layer,
@@ -4152,27 +4153,27 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_neigh_create($arg1, $arg2, $arg3, (const void*)$arg4, (const struct neighbour*)$arg5, $arg6)")
+  @BuiltinBPFFunction("do_perf_trace_neigh_create($arg1, $arg2, $arg3, (const void *)$arg4, (const struct neighbour *)$arg5, $arg6)")
   public static void do_perf_trace_neigh_create(Ptr<?> __data, Ptr<neigh_table> tbl,
       Ptr<net_device> dev, Ptr<?> pkey, Ptr<neighbour> n, boolean exempt_from_gc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_neigh_update($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("do_perf_trace_neigh_update($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static void do_perf_trace_neigh_update(Ptr<?> __data, Ptr<neighbour> n,
       Ptr<java.lang.Character> lladdr, char _new, @Unsigned int flags, @Unsigned int nlmsg_pid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_net_dev_rx_verbose_template($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("do_perf_trace_net_dev_rx_verbose_template($arg1, (const struct sk_buff *)$arg2)")
   public static void do_perf_trace_net_dev_rx_verbose_template(Ptr<?> __data, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_net_dev_start_xmit($arg1, (const struct sk_buff*)$arg2, (const struct net_device*)$arg3)")
+  @BuiltinBPFFunction("do_perf_trace_net_dev_start_xmit($arg1, (const struct sk_buff *)$arg2, (const struct net_device *)$arg3)")
   public static void do_perf_trace_net_dev_start_xmit(Ptr<?> __data, Ptr<sk_buff> skb,
       Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
@@ -4199,7 +4200,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_netlink_extack($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("do_perf_trace_netlink_extack($arg1, (const u8 *)$arg2)")
   public static void do_perf_trace_netlink_extack(Ptr<?> __data, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4207,9 +4208,9 @@ public final class DoDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("do_perf_trace_non_standard_event($arg1, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg2, (const struct {\n"
+          + "} *)$arg2, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg3, (const u8*)$arg4, (const u8)$arg5, (const u8*)$arg6, (const unsigned int)$arg7)")
+          + "} *)$arg3, (const u8 *)$arg4, (const u8)$arg5, (const u8 *)$arg6, (const unsigned int)$arg7)")
   public static void do_perf_trace_non_standard_event(Ptr<?> __data,
       Ptr<@OriginalName("guid_t") uuid_t> sec_type, Ptr<@OriginalName("guid_t") uuid_t> fru_id,
       String fru_text, char sev, Ptr<java.lang.Character> err, @Unsigned int len) {
@@ -4223,7 +4224,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_page_pool_state_release($arg1, (const struct page_pool*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_page_pool_state_release($arg1, (const struct page_pool *)$arg2, $arg3, $arg4)")
   public static void do_perf_trace_page_pool_state_release(Ptr<?> __data, Ptr<page_pool> pool,
       @Unsigned @OriginalName("netmem_ref") long netmem, @Unsigned int release) {
     throw new MethodIsBPFRelatedFunction();
@@ -4258,7 +4259,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_qdisc_create($arg1, (const struct Qdisc_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_qdisc_create($arg1, (const struct Qdisc_ops *)$arg2, $arg3, $arg4)")
   public static void do_perf_trace_qdisc_create(Ptr<?> __data, Ptr<Qdisc_ops> ops,
       Ptr<net_device> dev, @Unsigned int parent) {
     throw new MethodIsBPFRelatedFunction();
@@ -4291,7 +4292,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_regcache_sync($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("do_perf_trace_regcache_sync($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static void do_perf_trace_regcache_sync(Ptr<?> __data, Ptr<regmap> map, String type,
       String status) {
     throw new MethodIsBPFRelatedFunction();
@@ -4317,7 +4318,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_regmap_bulk($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("do_perf_trace_regmap_bulk($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static void do_perf_trace_regmap_bulk(Ptr<?> __data, Ptr<regmap> map, @Unsigned int reg,
       Ptr<?> val, int val_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -4331,19 +4332,19 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_regulator_basic($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("do_perf_trace_regulator_basic($arg1, (const u8 *)$arg2)")
   public static void do_perf_trace_regulator_basic(Ptr<?> __data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_regulator_range($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_perf_trace_regulator_range($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void do_perf_trace_regulator_range(Ptr<?> __data, String name, int min, int max) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_regulator_value($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_perf_trace_regulator_value($arg1, (const u8 *)$arg2, $arg3)")
   public static void do_perf_trace_regulator_value(Ptr<?> __data, String name, @Unsigned int val) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4380,13 +4381,13 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_sched_ext_dump($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("do_perf_trace_sched_ext_dump($arg1, (const u8 *)$arg2)")
   public static void do_perf_trace_sched_ext_dump(Ptr<?> __data, String line) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_sched_ext_event($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_perf_trace_sched_ext_event($arg1, (const u8 *)$arg2, $arg3)")
   public static void do_perf_trace_sched_ext_event(Ptr<?> __data, String name, long delta) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4518,7 +4519,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_selinux_audited($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("do_perf_trace_selinux_audited($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static void do_perf_trace_selinux_audited(Ptr<?> __data, Ptr<selinux_audit_data> sad,
       String scontext, String tcontext, String tclass) {
     throw new MethodIsBPFRelatedFunction();
@@ -4566,46 +4567,46 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_task_rename($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("do_perf_trace_task_rename($arg1, $arg2, (const u8 *)$arg3)")
   public static void do_perf_trace_task_rename(Ptr<?> __data, Ptr<task_struct> task, String comm) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_tcp_ao_event($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
+  @BuiltinBPFFunction("do_perf_trace_tcp_ao_event($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
   public static void do_perf_trace_tcp_ao_event(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb,
       char keyid, char rnext, char maclen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_tcp_ao_event_sk($arg1, (const struct sock*)$arg2, (const u8)$arg3, (const u8)$arg4)")
+  @BuiltinBPFFunction("do_perf_trace_tcp_ao_event_sk($arg1, (const struct sock *)$arg2, (const u8)$arg3, (const u8)$arg4)")
   public static void do_perf_trace_tcp_ao_event_sk(Ptr<?> __data, Ptr<sock> sk, char keyid,
       char rnext) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_tcp_ao_event_sne($arg1, (const struct sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_perf_trace_tcp_ao_event_sne($arg1, (const struct sock *)$arg2, $arg3)")
   public static void do_perf_trace_tcp_ao_event_sne(Ptr<?> __data, Ptr<sock> sk,
       @Unsigned int new_sne) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_tcp_event_skb($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("do_perf_trace_tcp_event_skb($arg1, (const struct sk_buff *)$arg2)")
   public static void do_perf_trace_tcp_event_skb(Ptr<?> __data, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_tcp_hash_event($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("do_perf_trace_tcp_hash_event($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3)")
   public static void do_perf_trace_tcp_hash_event(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_tcp_probe($arg1, $arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("do_perf_trace_tcp_probe($arg1, $arg2, (const struct sk_buff *)$arg3)")
   public static void do_perf_trace_tcp_probe(Ptr<?> __data, Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4617,7 +4618,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_tcp_send_reset($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, (const enum sk_rst_reason)$arg4)")
+  @BuiltinBPFFunction("do_perf_trace_tcp_send_reset($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, (const enum sk_rst_reason)$arg4)")
   public static void do_perf_trace_tcp_send_reset(Ptr<?> __data, Ptr<sock> sk,
       Ptr<sk_buff> skb__nullable, sk_rst_reason reason) {
     throw new MethodIsBPFRelatedFunction();
@@ -4666,7 +4667,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_tls_contenttype($arg1, (const struct sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_perf_trace_tls_contenttype($arg1, (const struct sock *)$arg2, $arg3)")
   public static void do_perf_trace_tls_contenttype(Ptr<?> __data, Ptr<sock> sk, char type) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4679,20 +4680,20 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_tsm_mr_read($arg1, (const struct tsm_measurement_register*)$arg2)")
+  @BuiltinBPFFunction("do_perf_trace_tsm_mr_read($arg1, (const struct tsm_measurement_register *)$arg2)")
   public static void do_perf_trace_tsm_mr_read(Ptr<?> __data, Ptr<tsm_measurement_register> mr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_tsm_mr_refresh($arg1, (const struct tsm_measurement_register*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_perf_trace_tsm_mr_refresh($arg1, (const struct tsm_measurement_register *)$arg2, $arg3)")
   public static void do_perf_trace_tsm_mr_refresh(Ptr<?> __data, Ptr<tsm_measurement_register> mr,
       int rc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_tsm_mr_write($arg1, (const struct tsm_measurement_register*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("do_perf_trace_tsm_mr_write($arg1, (const struct tsm_measurement_register *)$arg2, (const u8 *)$arg3)")
   public static void do_perf_trace_tsm_mr_write(Ptr<?> __data, Ptr<tsm_measurement_register> mr,
       Ptr<java.lang.Character> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -4712,7 +4713,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_wakeup_source($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_perf_trace_wakeup_source($arg1, (const u8 *)$arg2, $arg3)")
   public static void do_perf_trace_wakeup_source(Ptr<?> __data, String name, @Unsigned int state) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -4739,7 +4740,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_wbt_step($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("do_perf_trace_wbt_step($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void do_perf_trace_wbt_step(Ptr<?> __data, Ptr<backing_dev_info> bdi, String msg,
       int step, @Unsigned long window, @Unsigned int bg, @Unsigned int normal, @Unsigned int max) {
     throw new MethodIsBPFRelatedFunction();
@@ -4846,7 +4847,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_perf_trace_xen_mmu_flush_tlb_multi($arg1, (const struct cpumask*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_perf_trace_xen_mmu_flush_tlb_multi($arg1, (const struct cpumask *)$arg2, $arg3, $arg4, $arg5)")
   public static void do_perf_trace_xen_mmu_flush_tlb_multi(Ptr<?> __data, Ptr<cpumask> cpus,
       Ptr<mm_struct> mm, @Unsigned long addr, @Unsigned long end) {
     throw new MethodIsBPFRelatedFunction();
@@ -4917,7 +4918,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_preadv($arg1, (const struct iovec*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_preadv($arg1, (const struct iovec *)$arg2, $arg3, $arg4, $arg5)")
   public static @OriginalName("ssize_t") long do_preadv(@Unsigned long fd, Ptr<iovec> vec,
       @Unsigned long vlen, @OriginalName("loff_t") long pos, @OriginalName("rwf_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -4996,7 +4997,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_proc_douintvec((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5, (int (*)(long unsigned int*, unsigned int*, int, void*))$arg6, $arg7)")
+  @BuiltinBPFFunction("do_proc_douintvec((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5, (int (*)(long unsigned int*, unsigned int*, int, void*))$arg6, $arg7)")
   public static int do_proc_douintvec(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos,
       Ptr<?> conv, Ptr<?> data) {
@@ -5018,7 +5019,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_proc_dqstats((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_proc_dqstats((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int do_proc_dqstats(Ptr<ctl_table> table, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -5039,7 +5040,7 @@ public final class DoDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("do_pselect($arg1, $arg2, $arg3, $arg4, $arg5, (const struct {\n"
           + "  long unsigned int sig[1];\n"
-          + "}*)$arg6, $arg7, $arg8)")
+          + "} *)$arg6, $arg7, $arg8)")
   public static long do_pselect(int n, Ptr<@OriginalName("fd_set") __kernel_fd_set> inp,
       Ptr<@OriginalName("fd_set") __kernel_fd_set> outp,
       Ptr<@OriginalName("fd_set") __kernel_fd_set> exp, Ptr<?> tsp, Ptr<sigset_t> sigmask,
@@ -5048,14 +5049,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_pwritev($arg1, (const struct iovec*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_pwritev($arg1, (const struct iovec *)$arg2, $arg3, $arg4, $arg5)")
   public static @OriginalName("ssize_t") long do_pwritev(@Unsigned long fd, Ptr<iovec> vec,
       @Unsigned long vlen, @OriginalName("loff_t") long pos, @OriginalName("rwf_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_quotactl($arg1, $arg2, $arg3, $arg4, $arg5, (const struct path*)$arg6)")
+  @BuiltinBPFFunction("do_quotactl($arg1, $arg2, $arg3, $arg4, $arg5, (const struct path *)$arg6)")
   public static int do_quotactl(Ptr<super_block> sb, int type, int cmd,
       @Unsigned @OriginalName("qid_t") int id, Ptr<?> addr, Ptr<path> path) {
     throw new MethodIsBPFRelatedFunction();
@@ -5082,13 +5083,13 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_readlinkat($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_readlinkat($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int do_readlinkat(int dfd, String pathname, String buf, int bufsiz) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_readv($arg1, (const struct iovec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_readv($arg1, (const struct iovec *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long do_readv(@Unsigned long fd, Ptr<iovec> vec,
       @Unsigned long vlen, @OriginalName("rwf_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -5115,7 +5116,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_register_con_driver((const struct consw*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("do_register_con_driver((const struct consw *)$arg1, $arg2, $arg3)")
   public static int do_register_con_driver(Ptr<consw> csw, int first, int last) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5217,7 +5218,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_semtimedop($arg1, $arg2, $arg3, (const struct timespec64*)$arg4)")
+  @BuiltinBPFFunction("do_semtimedop($arg1, $arg2, $arg3, (const struct timespec64 *)$arg4)")
   public static long do_semtimedop(int semid, Ptr<sembuf> tsops, @Unsigned int nsops,
       Ptr<timespec64> timeout) {
     throw new MethodIsBPFRelatedFunction();
@@ -5246,14 +5247,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_set_acl($arg1, $arg2, (const u8*)$arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("do_set_acl($arg1, $arg2, (const u8 *)$arg3, (const void *)$arg4, $arg5)")
   public static int do_set_acl(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String acl_name,
       Ptr<?> kvalue, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_set_cpus_allowed($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("do_set_cpus_allowed($arg1, (const struct cpumask *)$arg2)")
   public static void do_set_cpus_allowed(Ptr<task_struct> p, Ptr<cpumask> new_mask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5304,7 +5305,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_settimeofday64((const struct timespec64*)$arg1)")
+  @BuiltinBPFFunction("do_settimeofday64((const struct timespec64 *)$arg1)")
   public static int do_settimeofday64(Ptr<timespec64> ts) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5355,7 +5356,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_sigaltstack((const sigaltstack*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_sigaltstack((const sigaltstack *)$arg1, $arg2, $arg3, $arg4)")
   public static int do_sigaltstack(Ptr<@OriginalName("stack_t") sigaltstack> ss,
       Ptr<@OriginalName("stack_t") sigaltstack> oss, @Unsigned long sp,
       @Unsigned long min_ss_size) {
@@ -5454,13 +5455,13 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_sta_before_sun((const struct dmi_system_id*)$arg1)")
+  @BuiltinBPFFunction("do_sta_before_sun((const struct dmi_system_id *)$arg1)")
   public static int do_sta_before_sun(Ptr<dmi_system_id> d) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_standard_modes((const struct detailed_timing*)$arg1, $arg2)")
+  @BuiltinBPFFunction("do_standard_modes((const struct detailed_timing *)$arg1, $arg2)")
   public static void do_standard_modes(Ptr<detailed_timing> timing, Ptr<?> c) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5554,21 +5555,21 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_sys_name_to_handle((const struct path*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_sys_name_to_handle((const struct path *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static long do_sys_name_to_handle(Ptr<path> path, Ptr<file_handle> ufh, Ptr<?> mnt_id,
       boolean unique_mntid, int fh_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_sys_open($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_sys_open($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int do_sys_open(int dfd, String filename, int flags,
       @Unsigned @OriginalName("umode_t") short mode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_sys_openat2($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_sys_openat2($arg1, (const u8 *)$arg2, $arg3)")
   public static int do_sys_openat2(int dfd, String filename, Ptr<open_how> how) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5580,7 +5581,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_sys_settimeofday64((const struct timespec64*)$arg1, (const struct timezone*)$arg2)")
+  @BuiltinBPFFunction("do_sys_settimeofday64((const struct timespec64 *)$arg1, (const struct timezone *)$arg2)")
   public static int do_sys_settimeofday64(Ptr<timespec64> tv, Ptr<timezone> tz) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5592,7 +5593,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_sys_truncate((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("do_sys_truncate((const u8 *)$arg1, $arg2)")
   public static int do_sys_truncate(String pathname, @OriginalName("loff_t") long length) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5628,7 +5629,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_take_over_console((const struct consw*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_take_over_console((const struct consw *)$arg1, $arg2, $arg3, $arg4)")
   public static int do_take_over_console(Ptr<consw> csw, int first, int last, int deflt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -5721,21 +5722,21 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_timerfd_settime($arg1, $arg2, (const struct itimerspec64*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_timerfd_settime($arg1, $arg2, (const struct itimerspec64 *)$arg3, $arg4)")
   public static int do_timerfd_settime(int ufd, int flags, Ptr<itimerspec64> _new,
       Ptr<itimerspec64> old) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_aer_event($arg1, (const u8*)$arg2, (const unsigned int)$arg3, (const u8)$arg4, (const u8)$arg5, $arg6)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_aer_event($arg1, (const u8 *)$arg2, (const unsigned int)$arg3, (const u8)$arg4, (const u8)$arg5, $arg6)")
   public static void do_trace_event_raw_event_aer_event(Ptr<?> __data, String dev_name,
       @Unsigned int status, char severity, char tlp_header_valid, Ptr<pcie_tlp_log> tlp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_arm_event($arg1, (const struct cper_sec_proc_arm*)$arg2, (const u8*)$arg3, (const unsigned int)$arg4, (const u8*)$arg5, (const unsigned int)$arg6, (const u8*)$arg7, (const unsigned int)$arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_arm_event($arg1, (const struct cper_sec_proc_arm *)$arg2, (const u8 *)$arg3, (const unsigned int)$arg4, (const u8 *)$arg5, (const unsigned int)$arg6, (const u8 *)$arg7, (const unsigned int)$arg8, $arg9, $arg10)")
   public static void do_trace_event_raw_event_arm_event(Ptr<?> __data, Ptr<cper_sec_proc_arm> proc,
       Ptr<java.lang.Character> pei_err, @Unsigned int pei_len, Ptr<java.lang.Character> ctx_err,
       @Unsigned int ctx_len, Ptr<java.lang.Character> oem, @Unsigned int oem_len, char sev,
@@ -5799,41 +5800,41 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_bpf_trace_printk($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_bpf_trace_printk($arg1, (const u8 *)$arg2)")
   public static void do_trace_event_raw_event_bpf_trace_printk(Ptr<?> __data, String bpf_string) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_bpf_xdp_link_attach_failed($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_bpf_xdp_link_attach_failed($arg1, (const u8 *)$arg2)")
   public static void do_trace_event_raw_event_bpf_xdp_link_attach_failed(Ptr<?> __data,
       String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_br_fdb_add($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_br_fdb_add($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static void do_trace_event_raw_event_br_fdb_add(Ptr<?> __data, Ptr<ndmsg> ndm,
       Ptr<net_device> dev, String addr, @Unsigned short vid, @Unsigned short nlh_flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_br_fdb_external_learn_add($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_br_fdb_external_learn_add($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static void do_trace_event_raw_event_br_fdb_external_learn_add(Ptr<?> __data,
       Ptr<net_bridge> br, Ptr<net_bridge_port> p, String addr, @Unsigned short vid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_br_fdb_update($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_br_fdb_update($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5, $arg6)")
   public static void do_trace_event_raw_event_br_fdb_update(Ptr<?> __data, Ptr<net_bridge> br,
       Ptr<net_bridge_port> source, String addr, @Unsigned short vid, @Unsigned long flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_br_mdb_full($arg1, (const struct net_device*)$arg2, (const struct br_ip*)$arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_br_mdb_full($arg1, (const struct net_device *)$arg2, (const struct br_ip *)$arg3)")
   public static void do_trace_event_raw_event_br_mdb_full(Ptr<?> __data, Ptr<net_device> dev,
       Ptr<br_ip> group) {
     throw new MethodIsBPFRelatedFunction();
@@ -5861,20 +5862,20 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_cgroup($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_cgroup($arg1, $arg2, (const u8 *)$arg3)")
   public static void do_trace_event_raw_event_cgroup(Ptr<?> __data, Ptr<cgroup> cgrp, String path) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_cgroup_event($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_cgroup_event($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void do_trace_event_raw_event_cgroup_event(Ptr<?> __data, Ptr<cgroup> cgrp,
       String path, int val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_cgroup_migrate($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_cgroup_migrate($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void do_trace_event_raw_event_cgroup_migrate(Ptr<?> __data, Ptr<cgroup> dst_cgrp,
       String path, Ptr<task_struct> task, boolean threadgroup) {
     throw new MethodIsBPFRelatedFunction();
@@ -5935,42 +5936,42 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_cma_alloc_busy_retry($arg1, (const u8*)$arg2, $arg3, (const struct page*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_cma_alloc_busy_retry($arg1, (const u8 *)$arg2, $arg3, (const struct page *)$arg4, $arg5, $arg6)")
   public static void do_trace_event_raw_event_cma_alloc_busy_retry(Ptr<?> __data, String name,
       @Unsigned long pfn, Ptr<page> page, @Unsigned long count, @Unsigned int align) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_cma_alloc_finish($arg1, (const u8*)$arg2, $arg3, (const struct page*)$arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_cma_alloc_finish($arg1, (const u8 *)$arg2, $arg3, (const struct page *)$arg4, $arg5, $arg6, $arg7)")
   public static void do_trace_event_raw_event_cma_alloc_finish(Ptr<?> __data, String name,
       @Unsigned long pfn, Ptr<page> page, @Unsigned long count, @Unsigned int align, int errorno) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_cma_alloc_start($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_cma_alloc_start($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void do_trace_event_raw_event_cma_alloc_start(Ptr<?> __data, String name,
       @Unsigned long count, @Unsigned int align) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_cma_release($arg1, (const u8*)$arg2, $arg3, (const struct page*)$arg4, $arg5)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_cma_release($arg1, (const u8 *)$arg2, $arg3, (const struct page *)$arg4, $arg5)")
   public static void do_trace_event_raw_event_cma_release(Ptr<?> __data, String name,
       @Unsigned long pfn, Ptr<page> page, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_console($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_console($arg1, (const u8 *)$arg2, $arg3)")
   public static void do_trace_event_raw_event_console(Ptr<?> __data, String text,
       @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_dev_pm_qos_request($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_dev_pm_qos_request($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void do_trace_event_raw_event_dev_pm_qos_request(Ptr<?> __data, String name,
       dev_pm_qos_req_type type, int new_value) {
     throw new MethodIsBPFRelatedFunction();
@@ -5997,14 +5998,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_device_pm_callback_start($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_device_pm_callback_start($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void do_trace_event_raw_event_device_pm_callback_start(Ptr<?> __data,
       Ptr<device> dev, String pm_ops, int event) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_devlink_health_recover_aborted($arg1, (const struct devlink*)$arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_devlink_health_recover_aborted($arg1, (const struct devlink *)$arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void do_trace_event_raw_event_devlink_health_recover_aborted(Ptr<?> __data,
       Ptr<devlink> devlink, String reporter_name, boolean health_state,
       @Unsigned long time_since_last_recover) {
@@ -6012,35 +6013,35 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_devlink_health_report($arg1, (const struct devlink*)$arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_devlink_health_report($arg1, (const struct devlink *)$arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static void do_trace_event_raw_event_devlink_health_report(Ptr<?> __data,
       Ptr<devlink> devlink, String reporter_name, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_devlink_health_reporter_state_update($arg1, (const struct devlink*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_devlink_health_reporter_state_update($arg1, (const struct devlink *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void do_trace_event_raw_event_devlink_health_reporter_state_update(Ptr<?> __data,
       Ptr<devlink> devlink, String reporter_name, boolean new_state) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_devlink_hwerr($arg1, (const struct devlink*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_devlink_hwerr($arg1, (const struct devlink *)$arg2, $arg3, (const u8 *)$arg4)")
   public static void do_trace_event_raw_event_devlink_hwerr(Ptr<?> __data, Ptr<devlink> devlink,
       int err, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_devlink_hwmsg($arg1, (const struct devlink*)$arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_devlink_hwmsg($arg1, (const struct devlink *)$arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static void do_trace_event_raw_event_devlink_hwmsg(Ptr<?> __data, Ptr<devlink> devlink,
       boolean incoming, @Unsigned long type, Ptr<java.lang.Character> buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_devres($arg1, $arg2, (const u8*)$arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_devres($arg1, $arg2, (const u8 *)$arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static void do_trace_event_raw_event_devres(Ptr<?> __data, Ptr<device> dev, String op,
       Ptr<?> node, String name, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
@@ -6175,7 +6176,7 @@ public final class DoDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("do_trace_event_raw_event_extlog_mem_event($arg1, $arg2, $arg3, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg4, (const u8*)$arg5, $arg6)")
+          + "} *)$arg4, (const u8 *)$arg5, $arg6)")
   public static void do_trace_event_raw_event_extlog_mem_event(Ptr<?> __data,
       Ptr<cper_sec_mem_err> mem, @Unsigned int err_seq, Ptr<@OriginalName("guid_t") uuid_t> fru_id,
       String fru_text, char sev) {
@@ -6190,14 +6191,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_fib6_table_lookup($arg1, (const struct net*)$arg2, (const struct fib6_result*)$arg3, $arg4, (const struct flowi6*)$arg5)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_fib6_table_lookup($arg1, (const struct net *)$arg2, (const struct fib6_result *)$arg3, $arg4, (const struct flowi6 *)$arg5)")
   public static void do_trace_event_raw_event_fib6_table_lookup(Ptr<?> __data, Ptr<net> net,
       Ptr<fib6_result> res, Ptr<fib6_table> table, Ptr<flowi6> flp) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_fib_table_lookup($arg1, $arg2, (const struct flowi4*)$arg3, (const struct fib_nh_common*)$arg4, $arg5)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_fib_table_lookup($arg1, $arg2, (const struct flowi4 *)$arg3, (const struct fib_nh_common *)$arg4, $arg5)")
   public static void do_trace_event_raw_event_fib_table_lookup(Ptr<?> __data, @Unsigned int tb_id,
       Ptr<flowi4> flp, Ptr<fib_nh_common> nhc, int err) {
     throw new MethodIsBPFRelatedFunction();
@@ -6211,7 +6212,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_handshake_alert_class($arg1, (const struct sock*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_handshake_alert_class($arg1, (const struct sock *)$arg2, $arg3, $arg4)")
   public static void do_trace_event_raw_event_handshake_alert_class(Ptr<?> __data, Ptr<sock> sk,
       char level, char description) {
     throw new MethodIsBPFRelatedFunction();
@@ -6225,49 +6226,49 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_hwmon_attr_class($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_hwmon_attr_class($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static void do_trace_event_raw_event_hwmon_attr_class(Ptr<?> __data, int index,
       String attr_name, long val) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_hwmon_attr_show_string($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_hwmon_attr_show_string($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static void do_trace_event_raw_event_hwmon_attr_show_string(Ptr<?> __data, int index,
       String attr_name, String s) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_hyperv_mmu_flush_tlb_multi($arg1, (const struct cpumask*)$arg2, (const struct flush_tlb_info*)$arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_hyperv_mmu_flush_tlb_multi($arg1, (const struct cpumask *)$arg2, (const struct flush_tlb_info *)$arg3)")
   public static void do_trace_event_raw_event_hyperv_mmu_flush_tlb_multi(Ptr<?> __data,
       Ptr<cpumask> cpus, Ptr<flush_tlb_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_hyperv_send_ipi_mask($arg1, (const struct cpumask*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_hyperv_send_ipi_mask($arg1, (const struct cpumask *)$arg2, $arg3)")
   public static void do_trace_event_raw_event_hyperv_send_ipi_mask(Ptr<?> __data, Ptr<cpumask> cpus,
       int vector) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_i2c_reply($arg1, (const struct i2c_adapter*)$arg2, (const struct i2c_msg*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_i2c_reply($arg1, (const struct i2c_adapter *)$arg2, (const struct i2c_msg *)$arg3, $arg4)")
   public static void do_trace_event_raw_event_i2c_reply(Ptr<?> __data, Ptr<i2c_adapter> adap,
       Ptr<i2c_msg> msg, int num) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_i2c_slave($arg1, (const struct i2c_client*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_i2c_slave($arg1, (const struct i2c_client *)$arg2, $arg3, $arg4, $arg5)")
   public static void do_trace_event_raw_event_i2c_slave(Ptr<?> __data, Ptr<i2c_client> client,
       i2c_slave_event event, Ptr<java.lang.Character> val, int cb_ret) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_i2c_write($arg1, (const struct i2c_adapter*)$arg2, (const struct i2c_msg*)$arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_i2c_write($arg1, (const struct i2c_adapter *)$arg2, (const struct i2c_msg *)$arg3, $arg4)")
   public static void do_trace_event_raw_event_i2c_write(Ptr<?> __data, Ptr<i2c_adapter> adap,
       Ptr<i2c_msg> msg, int num) {
     throw new MethodIsBPFRelatedFunction();
@@ -6288,7 +6289,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_initcall_level($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_initcall_level($arg1, (const u8 *)$arg2)")
   public static void do_trace_event_raw_event_initcall_level(Ptr<?> __data, String level) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6335,7 +6336,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_io_uring_req_failed($arg1, (const struct io_uring_sqe*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_io_uring_req_failed($arg1, (const struct io_uring_sqe *)$arg2, $arg3, $arg4)")
   public static void do_trace_event_raw_event_io_uring_req_failed(Ptr<?> __data,
       Ptr<io_uring_sqe> sqe, Ptr<io_kiocb> req, int error) {
     throw new MethodIsBPFRelatedFunction();
@@ -6356,7 +6357,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_iocg_inuse_update($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_iocg_inuse_update($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void do_trace_event_raw_event_iocg_inuse_update(Ptr<?> __data, Ptr<ioc_gq> iocg,
       String path, Ptr<ioc_now> now, @Unsigned int old_inuse, @Unsigned int new_inuse,
       @Unsigned long old_hw_inuse, @Unsigned long new_hw_inuse) {
@@ -6372,7 +6373,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_iocost_iocg_forgive_debt($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_iocost_iocg_forgive_debt($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9)")
   public static void do_trace_event_raw_event_iocost_iocg_forgive_debt(Ptr<?> __data,
       Ptr<ioc_gq> iocg, String path, Ptr<ioc_now> now, @Unsigned int usage_pct,
       @Unsigned long old_debt, @Unsigned long new_debt, @Unsigned long old_delay,
@@ -6381,7 +6382,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_iocost_iocg_state($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_iocost_iocg_state($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7)")
   public static void do_trace_event_raw_event_iocost_iocg_state(Ptr<?> __data, Ptr<ioc_gq> iocg,
       String path, Ptr<ioc_now> now, @Unsigned long last_period, @Unsigned long cur_period,
       @Unsigned long vtime) {
@@ -6409,7 +6410,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_ipi_send_cpumask($arg1, (const struct cpumask*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_ipi_send_cpumask($arg1, (const struct cpumask *)$arg2, $arg3, $arg4)")
   public static void do_trace_event_raw_event_ipi_send_cpumask(Ptr<?> __data, Ptr<cpumask> cpumask,
       @Unsigned long callsite, Ptr<?> callback) {
     throw new MethodIsBPFRelatedFunction();
@@ -6423,14 +6424,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_irq_noise($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_irq_noise($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static void do_trace_event_raw_event_irq_noise(Ptr<?> __data, int vector, String desc,
       @Unsigned long start, @Unsigned long duration) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_kmem_cache_free($arg1, $arg2, (const void*)$arg3, (const struct kmem_cache*)$arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_kmem_cache_free($arg1, $arg2, (const void *)$arg3, (const struct kmem_cache *)$arg4)")
   public static void do_trace_event_raw_event_kmem_cache_free(Ptr<?> __data,
       @Unsigned long call_site, Ptr<?> ptr, Ptr<kmem_cache> s) {
     throw new MethodIsBPFRelatedFunction();
@@ -6444,7 +6445,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_mc_event($arg1, (const unsigned int)$arg2, (const u8*)$arg3, (const u8*)$arg4, (const int)$arg5, (const u8)$arg6, (const s8)$arg7, (const s8)$arg8, (const s8)$arg9, $arg10, (const u8)$arg11, $arg12, (const u8*)$arg13)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_mc_event($arg1, (const unsigned int)$arg2, (const u8 *)$arg3, (const u8 *)$arg4, (const int)$arg5, (const u8)$arg6, (const s8)$arg7, (const s8)$arg8, (const s8)$arg9, $arg10, (const u8)$arg11, $arg12, (const u8 *)$arg13)")
   public static void do_trace_event_raw_event_mc_event(Ptr<?> __data, @Unsigned int err_type,
       String error_msg, String label, int error_count, char mc_index,
       @OriginalName("s8") byte top_layer, @OriginalName("s8") byte mid_layer,
@@ -6557,28 +6558,28 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_neigh_create($arg1, $arg2, $arg3, (const void*)$arg4, (const struct neighbour*)$arg5, $arg6)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_neigh_create($arg1, $arg2, $arg3, (const void *)$arg4, (const struct neighbour *)$arg5, $arg6)")
   public static void do_trace_event_raw_event_neigh_create(Ptr<?> __data, Ptr<neigh_table> tbl,
       Ptr<net_device> dev, Ptr<?> pkey, Ptr<neighbour> n, boolean exempt_from_gc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_neigh_update($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_neigh_update($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static void do_trace_event_raw_event_neigh_update(Ptr<?> __data, Ptr<neighbour> n,
       Ptr<java.lang.Character> lladdr, char _new, @Unsigned int flags, @Unsigned int nlmsg_pid) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_net_dev_rx_verbose_template($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_net_dev_rx_verbose_template($arg1, (const struct sk_buff *)$arg2)")
   public static void do_trace_event_raw_event_net_dev_rx_verbose_template(Ptr<?> __data,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_net_dev_start_xmit($arg1, (const struct sk_buff*)$arg2, (const struct net_device*)$arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_net_dev_start_xmit($arg1, (const struct sk_buff *)$arg2, (const struct net_device *)$arg3)")
   public static void do_trace_event_raw_event_net_dev_start_xmit(Ptr<?> __data, Ptr<sk_buff> skb,
       Ptr<net_device> dev) {
     throw new MethodIsBPFRelatedFunction();
@@ -6605,7 +6606,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_netlink_extack($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_netlink_extack($arg1, (const u8 *)$arg2)")
   public static void do_trace_event_raw_event_netlink_extack(Ptr<?> __data, String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -6613,9 +6614,9 @@ public final class DoDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("do_trace_event_raw_event_non_standard_event($arg1, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg2, (const struct {\n"
+          + "} *)$arg2, (const struct {\n"
           + "  u8 b[16];\n"
-          + "}*)$arg3, (const u8*)$arg4, (const u8)$arg5, (const u8*)$arg6, (const unsigned int)$arg7)")
+          + "} *)$arg3, (const u8 *)$arg4, (const u8)$arg5, (const u8 *)$arg6, (const unsigned int)$arg7)")
   public static void do_trace_event_raw_event_non_standard_event(Ptr<?> __data,
       Ptr<@OriginalName("guid_t") uuid_t> sec_type, Ptr<@OriginalName("guid_t") uuid_t> fru_id,
       String fru_text, char sev, Ptr<java.lang.Character> err, @Unsigned int len) {
@@ -6630,7 +6631,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_page_pool_state_release($arg1, (const struct page_pool*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_page_pool_state_release($arg1, (const struct page_pool *)$arg2, $arg3, $arg4)")
   public static void do_trace_event_raw_event_page_pool_state_release(Ptr<?> __data,
       Ptr<page_pool> pool, @Unsigned @OriginalName("netmem_ref") long netmem,
       @Unsigned int release) {
@@ -6646,7 +6647,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_qdisc_create($arg1, (const struct Qdisc_ops*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_qdisc_create($arg1, (const struct Qdisc_ops *)$arg2, $arg3, $arg4)")
   public static void do_trace_event_raw_event_qdisc_create(Ptr<?> __data, Ptr<Qdisc_ops> ops,
       Ptr<net_device> dev, @Unsigned int parent) {
     throw new MethodIsBPFRelatedFunction();
@@ -6679,7 +6680,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_regcache_sync($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_regcache_sync($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static void do_trace_event_raw_event_regcache_sync(Ptr<?> __data, Ptr<regmap> map,
       String type, String status) {
     throw new MethodIsBPFRelatedFunction();
@@ -6706,7 +6707,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_regmap_bulk($arg1, $arg2, $arg3, (const void*)$arg4, $arg5)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_regmap_bulk($arg1, $arg2, $arg3, (const void *)$arg4, $arg5)")
   public static void do_trace_event_raw_event_regmap_bulk(Ptr<?> __data, Ptr<regmap> map,
       @Unsigned int reg, Ptr<?> val, int val_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -6720,20 +6721,20 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_regulator_basic($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_regulator_basic($arg1, (const u8 *)$arg2)")
   public static void do_trace_event_raw_event_regulator_basic(Ptr<?> __data, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_regulator_range($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_regulator_range($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static void do_trace_event_raw_event_regulator_range(Ptr<?> __data, String name, int min,
       int max) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_regulator_value($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_regulator_value($arg1, (const u8 *)$arg2, $arg3)")
   public static void do_trace_event_raw_event_regulator_value(Ptr<?> __data, String name,
       @Unsigned int val) {
     throw new MethodIsBPFRelatedFunction();
@@ -6768,13 +6769,13 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_sched_ext_dump($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_sched_ext_dump($arg1, (const u8 *)$arg2)")
   public static void do_trace_event_raw_event_sched_ext_dump(Ptr<?> __data, String line) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_sched_ext_event($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_sched_ext_event($arg1, (const u8 *)$arg2, $arg3)")
   public static void do_trace_event_raw_event_sched_ext_event(Ptr<?> __data, String name,
       long delta) {
     throw new MethodIsBPFRelatedFunction();
@@ -6906,7 +6907,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_selinux_audited($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_selinux_audited($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5)")
   public static void do_trace_event_raw_event_selinux_audited(Ptr<?> __data,
       Ptr<selinux_audit_data> sad, String scontext, String tcontext, String tclass) {
     throw new MethodIsBPFRelatedFunction();
@@ -6955,48 +6956,48 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_task_rename($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_task_rename($arg1, $arg2, (const u8 *)$arg3)")
   public static void do_trace_event_raw_event_task_rename(Ptr<?> __data, Ptr<task_struct> task,
       String comm) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_ao_event($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_ao_event($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, (const u8)$arg4, (const u8)$arg5, (const u8)$arg6)")
   public static void do_trace_event_raw_event_tcp_ao_event(Ptr<?> __data, Ptr<sock> sk,
       Ptr<sk_buff> skb, char keyid, char rnext, char maclen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_ao_event_sk($arg1, (const struct sock*)$arg2, (const u8)$arg3, (const u8)$arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_ao_event_sk($arg1, (const struct sock *)$arg2, (const u8)$arg3, (const u8)$arg4)")
   public static void do_trace_event_raw_event_tcp_ao_event_sk(Ptr<?> __data, Ptr<sock> sk,
       char keyid, char rnext) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_ao_event_sne($arg1, (const struct sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_ao_event_sne($arg1, (const struct sock *)$arg2, $arg3)")
   public static void do_trace_event_raw_event_tcp_ao_event_sne(Ptr<?> __data, Ptr<sock> sk,
       @Unsigned int new_sne) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_event_skb($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_event_skb($arg1, (const struct sk_buff *)$arg2)")
   public static void do_trace_event_raw_event_tcp_event_skb(Ptr<?> __data, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_hash_event($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_hash_event($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3)")
   public static void do_trace_event_raw_event_tcp_hash_event(Ptr<?> __data, Ptr<sock> sk,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_probe($arg1, $arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_probe($arg1, $arg2, (const struct sk_buff *)$arg3)")
   public static void do_trace_event_raw_event_tcp_probe(Ptr<?> __data, Ptr<sock> sk,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
@@ -7010,7 +7011,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_send_reset($arg1, (const struct sock*)$arg2, (const struct sk_buff*)$arg3, (const enum sk_rst_reason)$arg4)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_tcp_send_reset($arg1, (const struct sock *)$arg2, (const struct sk_buff *)$arg3, (const enum sk_rst_reason)$arg4)")
   public static void do_trace_event_raw_event_tcp_send_reset(Ptr<?> __data, Ptr<sock> sk,
       Ptr<sk_buff> skb__nullable, sk_rst_reason reason) {
     throw new MethodIsBPFRelatedFunction();
@@ -7054,7 +7055,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_tls_contenttype($arg1, (const struct sock*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_tls_contenttype($arg1, (const struct sock *)$arg2, $arg3)")
   public static void do_trace_event_raw_event_tls_contenttype(Ptr<?> __data, Ptr<sock> sk,
       char type) {
     throw new MethodIsBPFRelatedFunction();
@@ -7068,21 +7069,21 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_tsm_mr_read($arg1, (const struct tsm_measurement_register*)$arg2)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_tsm_mr_read($arg1, (const struct tsm_measurement_register *)$arg2)")
   public static void do_trace_event_raw_event_tsm_mr_read(Ptr<?> __data,
       Ptr<tsm_measurement_register> mr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_tsm_mr_refresh($arg1, (const struct tsm_measurement_register*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_tsm_mr_refresh($arg1, (const struct tsm_measurement_register *)$arg2, $arg3)")
   public static void do_trace_event_raw_event_tsm_mr_refresh(Ptr<?> __data,
       Ptr<tsm_measurement_register> mr, int rc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_tsm_mr_write($arg1, (const struct tsm_measurement_register*)$arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_tsm_mr_write($arg1, (const struct tsm_measurement_register *)$arg2, (const u8 *)$arg3)")
   public static void do_trace_event_raw_event_tsm_mr_write(Ptr<?> __data,
       Ptr<tsm_measurement_register> mr, Ptr<java.lang.Character> data) {
     throw new MethodIsBPFRelatedFunction();
@@ -7096,7 +7097,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_wakeup_source($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_wakeup_source($arg1, (const u8 *)$arg2, $arg3)")
   public static void do_trace_event_raw_event_wakeup_source(Ptr<?> __data, String name,
       @Unsigned int state) {
     throw new MethodIsBPFRelatedFunction();
@@ -7124,7 +7125,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_wbt_step($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_wbt_step($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, $arg7, $arg8)")
   public static void do_trace_event_raw_event_wbt_step(Ptr<?> __data, Ptr<backing_dev_info> bdi,
       String msg, int step, @Unsigned long window, @Unsigned int bg, @Unsigned int normal,
       @Unsigned int max) {
@@ -7217,7 +7218,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_event_raw_event_xen_mmu_flush_tlb_multi($arg1, (const struct cpumask*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_trace_event_raw_event_xen_mmu_flush_tlb_multi($arg1, (const struct cpumask *)$arg2, $arg3, $arg4, $arg5)")
   public static void do_trace_event_raw_event_xen_mmu_flush_tlb_multi(Ptr<?> __data,
       Ptr<cpumask> cpus, Ptr<mm_struct> mm, @Unsigned long addr, @Unsigned long end) {
     throw new MethodIsBPFRelatedFunction();
@@ -7243,13 +7244,13 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_netlink_extack((const u8*)$arg1)")
+  @BuiltinBPFFunction("do_trace_netlink_extack((const u8 *)$arg1)")
   public static void do_trace_netlink_extack(String msg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_trace_rcu_torture_read((const u8*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("do_trace_rcu_torture_read((const u8 *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static void do_trace_rcu_torture_read(String rcutorturename, Ptr<callback_head> rhp,
       @Unsigned long secs, @Unsigned long c_old, @Unsigned long c) {
     throw new MethodIsBPFRelatedFunction();
@@ -7306,7 +7307,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_unbind_con_driver((const struct consw*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_unbind_con_driver((const struct consw *)$arg1, $arg2, $arg3, $arg4)")
   public static int do_unbind_con_driver(Ptr<consw> csw, int first, int last, int deflt) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7330,7 +7331,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_unregister_con_driver((const struct consw*)$arg1)")
+  @BuiltinBPFFunction("do_unregister_con_driver((const struct consw *)$arg1)")
   public static int do_unregister_con_driver(Ptr<consw> csw) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7361,7 +7362,7 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_utimes($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_utimes($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static long do_utimes(int dfd, String filename, Ptr<timespec64> times, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -7433,14 +7434,14 @@ public final class DoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_writev($arg1, (const struct iovec*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("do_writev($arg1, (const struct iovec *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long do_writev(@Unsigned long fd, Ptr<iovec> vec,
       @Unsigned long vlen, @OriginalName("rwf_t") int flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("do_xdp_generic((const struct bpf_prog*)$arg1, $arg2)")
+  @BuiltinBPFFunction("do_xdp_generic((const struct bpf_prog *)$arg1, $arg2)")
   public static int do_xdp_generic(Ptr<bpf_prog> xdp_prog, Ptr<Ptr<sk_buff>> pskb) {
     throw new MethodIsBPFRelatedFunction();
   }

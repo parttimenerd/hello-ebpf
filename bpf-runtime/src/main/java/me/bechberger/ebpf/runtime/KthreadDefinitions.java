@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1096,14 +1097,14 @@ public final class KthreadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__kthread_create_on_node((int (*)(void*))$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__kthread_create_on_node((int (*)(void*))$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static Ptr<task_struct> __kthread_create_on_node(Ptr<?> threadfn, Ptr<?> data, int node,
       String namefmt, Ptr<__va_list_tag> args) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__kthread_init_worker($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__kthread_init_worker($arg1, (const u8 *)$arg2, $arg3)")
   public static void __kthread_init_worker(Ptr<kthread_worker> worker, String name,
       Ptr<lock_class_key> key) {
     throw new MethodIsBPFRelatedFunction();
@@ -1123,7 +1124,7 @@ public final class KthreadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kthread_affine_preferred($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("kthread_affine_preferred($arg1, (const struct cpumask *)$arg2)")
   public static int kthread_affine_preferred(Ptr<task_struct> p, Ptr<cpumask> mask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1141,7 +1142,7 @@ public final class KthreadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kthread_bind_mask($arg1, (const struct cpumask*)$arg2)")
+  @BuiltinBPFFunction("kthread_bind_mask($arg1, (const struct cpumask *)$arg2)")
   public static void kthread_bind_mask(Ptr<task_struct> p, Ptr<cpumask> mask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1171,28 +1172,28 @@ public final class KthreadDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kthread_create_on_cpu((int (*)(void*))$arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("kthread_create_on_cpu((int (*)(void*))$arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static Ptr<task_struct> kthread_create_on_cpu(Ptr<?> threadfn, Ptr<?> data,
       @Unsigned int cpu, String namefmt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kthread_create_on_node((int (*)(void*))$arg1, $arg2, $arg3, (const u8*)$arg4, $arg5_)")
+  @BuiltinBPFFunction("kthread_create_on_node((int (*)(void*))$arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5_)")
   public static Ptr<task_struct> kthread_create_on_node(Ptr<?> threadfn, Ptr<?> data, int node,
       String namefmt, java.lang.Object... param4) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kthread_create_worker_on_cpu($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("kthread_create_worker_on_cpu($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<kthread_worker> kthread_create_worker_on_cpu(int cpu, @Unsigned int flags,
       String namefmt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kthread_create_worker_on_node($arg1, $arg2, (const u8*)$arg3, $arg4_)")
+  @BuiltinBPFFunction("kthread_create_worker_on_node($arg1, $arg2, (const u8 *)$arg3, $arg4_)")
   public static Ptr<kthread_worker> kthread_create_worker_on_node(@Unsigned int flags, int node,
       String namefmt, java.lang.Object... param3) {
     throw new MethodIsBPFRelatedFunction();

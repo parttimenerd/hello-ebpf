@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1097,7 +1098,7 @@ public final class BlockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__block_write_begin_int($arg1, $arg2, $arg3, $arg4, (const struct iomap*)$arg5)")
+  @BuiltinBPFFunction("__block_write_begin_int($arg1, $arg2, $arg3, $arg4, (const struct iomap *)$arg5)")
   public static int __block_write_begin_int(Ptr<folio> folio, @OriginalName("loff_t") long pos,
       @Unsigned int len, Ptr<?> get_block, Ptr<iomap> iomap) {
     throw new MethodIsBPFRelatedFunction();
@@ -1124,7 +1125,7 @@ public final class BlockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("block_devnode((const struct device*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("block_devnode((const struct device *)$arg1, $arg2, $arg3, $arg4)")
   public static String block_devnode(Ptr<device> dev,
       Ptr<java.lang. @Unsigned @OriginalName("umode_t") Short> mode, Ptr<kuid_t> uid,
       Ptr<kgid_t> gid) {
@@ -1198,7 +1199,7 @@ public final class BlockDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("block_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("block_uevent((const struct device *)$arg1, $arg2)")
   public static int block_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1129,7 +1130,7 @@ public final class MpolDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("mpol_new_nodemask($arg1, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static int mpol_new_nodemask(Ptr<mempolicy> pol, Ptr<nodemask_t> nodes) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1137,7 +1138,7 @@ public final class MpolDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("mpol_new_preferred($arg1, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static int mpol_new_preferred(Ptr<mempolicy> pol, Ptr<nodemask_t> nodes) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1157,7 +1158,7 @@ public final class MpolDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("mpol_rebind_default($arg1, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static void mpol_rebind_default(Ptr<mempolicy> pol, Ptr<nodemask_t> nodes) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1171,7 +1172,7 @@ public final class MpolDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("mpol_rebind_nodemask($arg1, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static void mpol_rebind_nodemask(Ptr<mempolicy> pol, Ptr<nodemask_t> nodes) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1179,7 +1180,7 @@ public final class MpolDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("mpol_rebind_policy($arg1, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static void mpol_rebind_policy(Ptr<mempolicy> pol, Ptr<nodemask_t> newmask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1187,7 +1188,7 @@ public final class MpolDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("mpol_rebind_preferred($arg1, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static void mpol_rebind_preferred(Ptr<mempolicy> pol, Ptr<nodemask_t> nodes) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1195,7 +1196,7 @@ public final class MpolDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("mpol_rebind_task($arg1, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg2)")
+          + "} *)$arg2)")
   public static void mpol_rebind_task(Ptr<task_struct> tsk, Ptr<nodemask_t> _new) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1203,9 +1204,9 @@ public final class MpolDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("mpol_relative_nodemask($arg1, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg2, (const struct {\n"
+          + "} *)$arg2, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg3)")
+          + "} *)$arg3)")
   public static void mpol_relative_nodemask(Ptr<nodemask_t> ret, Ptr<nodemask_t> orig,
       Ptr<nodemask_t> rel) {
     throw new MethodIsBPFRelatedFunction();
@@ -1214,7 +1215,7 @@ public final class MpolDefinitions {
   @NotUsableInJava
   @BuiltinBPFFunction("mpol_set_nodemask($arg1, (const struct {\n"
           + "  long unsigned int bits[16];\n"
-          + "}*)$arg2, $arg3)")
+          + "} *)$arg2, $arg3)")
   public static int mpol_set_nodemask(Ptr<mempolicy> pol, Ptr<nodemask_t> nodes,
       Ptr<nodemask_scratch> nsc) {
     throw new MethodIsBPFRelatedFunction();

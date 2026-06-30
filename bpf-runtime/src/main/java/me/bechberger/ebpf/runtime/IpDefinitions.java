@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1166,7 +1167,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__ip_options_echo($arg1, $arg2, $arg3, (const struct ip_options*)$arg4)")
+  @BuiltinBPFFunction("__ip_options_echo($arg1, $arg2, $arg3, (const struct ip_options *)$arg4)")
   public static int __ip_options_echo(Ptr<net> net, Ptr<ip_options> dopt, Ptr<sk_buff> skb,
       Ptr<ip_options> sopt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1197,7 +1198,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_addr_string($arg1, $arg2, (const void*)$arg3, $arg4, (const u8*)$arg5)")
+  @BuiltinBPFFunction("ip_addr_string($arg1, $arg2, (const void *)$arg3, $arg4, (const u8 *)$arg5)")
   public static String ip_addr_string(String buf, String end, Ptr<?> ptr, printf_spec spec,
       String fmt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1212,7 +1213,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_build_and_send_pkt($arg1, (const struct sock*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ip_build_and_send_pkt($arg1, (const struct sock *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int ip_build_and_send_pkt(Ptr<sk_buff> skb, Ptr<sock> sk,
       @Unsigned @OriginalName("__be32") int saddr, @Unsigned @OriginalName("__be32") int daddr,
       Ptr<ip_options_rcu> opt, char tos) {
@@ -1254,7 +1255,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_compute_csum((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ip_compute_csum((const void *)$arg1, $arg2)")
   public static @Unsigned @OriginalName("__sum16") short ip_compute_csum(Ptr<?> buff, int len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1448,7 +1449,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_icmp_error_rfc4884((const struct sk_buff*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ip_icmp_error_rfc4884((const struct sk_buff *)$arg1, $arg2, $arg3, $arg4)")
   public static void ip_icmp_error_rfc4884(Ptr<sk_buff> skb, Ptr<sock_ee_data_rfc4884> out,
       int thlen, int off) {
     throw new MethodIsBPFRelatedFunction();
@@ -1461,7 +1462,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_ipgre_mc_map($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("ip_ipgre_mc_map($arg1, (const u8 *)$arg2, $arg3)")
   public static void ip_ipgre_mc_map(@Unsigned @OriginalName("__be32") int naddr, String broadcast,
       String buf) {
     throw new MethodIsBPFRelatedFunction();
@@ -1649,7 +1650,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_mc_sf_allow((const struct sock*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("ip_mc_sf_allow((const struct sock *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int ip_mc_sf_allow(Ptr<sock> sk, @Unsigned @OriginalName("__be32") int loc_addr,
       @Unsigned @OriginalName("__be32") int rmt_addr, int dif, int sdif) {
     throw new MethodIsBPFRelatedFunction();
@@ -1755,7 +1756,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_multipath_l3_keys((const struct sk_buff*)$arg1, $arg2)")
+  @BuiltinBPFFunction("ip_multipath_l3_keys((const struct sk_buff *)$arg1, $arg2)")
   public static void ip_multipath_l3_keys(Ptr<sk_buff> skb, Ptr<flow_keys> hash_keys) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1866,7 +1867,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_rcv_finish_core($arg1, $arg2, $arg3, (const struct sk_buff*)$arg4)")
+  @BuiltinBPFFunction("ip_rcv_finish_core($arg1, $arg2, $arg3, (const struct sk_buff *)$arg4)")
   public static int ip_rcv_finish_core(Ptr<net> net, Ptr<sk_buff> skb, Ptr<net_device> dev,
       Ptr<sk_buff> hint) {
     throw new MethodIsBPFRelatedFunction();
@@ -1924,27 +1925,27 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_route_output_flow($arg1, $arg2, (const struct sock*)$arg3)")
+  @BuiltinBPFFunction("ip_route_output_flow($arg1, $arg2, (const struct sock *)$arg3)")
   public static Ptr<rtable> ip_route_output_flow(Ptr<net> net, Ptr<flowi4> flp4, Ptr<sock> sk) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_route_output_key_hash($arg1, $arg2, (const struct sk_buff*)$arg3)")
+  @BuiltinBPFFunction("ip_route_output_key_hash($arg1, $arg2, (const struct sk_buff *)$arg3)")
   public static Ptr<rtable> ip_route_output_key_hash(Ptr<net> net, Ptr<flowi4> fl4,
       Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_route_output_key_hash_rcu($arg1, $arg2, $arg3, (const struct sk_buff*)$arg4)")
+  @BuiltinBPFFunction("ip_route_output_key_hash_rcu($arg1, $arg2, $arg3, (const struct sk_buff *)$arg4)")
   public static Ptr<rtable> ip_route_output_key_hash_rcu(Ptr<net> net, Ptr<flowi4> fl4,
       Ptr<fib_result> res, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_route_use_hint($arg1, $arg2, $arg3, $arg4, $arg5, (const struct sk_buff*)$arg6)")
+  @BuiltinBPFFunction("ip_route_use_hint($arg1, $arg2, $arg3, $arg4, $arg5, (const struct sk_buff *)$arg6)")
   public static skb_drop_reason ip_route_use_hint(Ptr<sk_buff> skb,
       @Unsigned @OriginalName("__be32") int daddr, @Unsigned @OriginalName("__be32") int saddr,
       @OriginalName("dscp_t") char dscp, Ptr<net_device> dev, Ptr<sk_buff> hint) {
@@ -2020,7 +2021,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_send_unicast_reply($arg1, (const struct sock*)$arg2, $arg3, (const struct ip_options*)$arg4, $arg5, $arg6, (const struct ip_reply_arg*)$arg7, $arg8, $arg9, $arg10)")
+  @BuiltinBPFFunction("ip_send_unicast_reply($arg1, (const struct sock *)$arg2, $arg3, (const struct ip_options *)$arg4, $arg5, $arg6, (const struct ip_reply_arg *)$arg7, $arg8, $arg9, $arg10)")
   public static void ip_send_unicast_reply(Ptr<sock> sk, Ptr<sock> orig_sk, Ptr<sk_buff> skb,
       Ptr<ip_options> sopt, @Unsigned @OriginalName("__be32") int daddr,
       @Unsigned @OriginalName("__be32") int saddr, Ptr<ip_reply_arg> arg, @Unsigned int len,
@@ -2043,7 +2044,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_skb_dst_mtu($arg1, (const struct sk_buff*)$arg2)")
+  @BuiltinBPFFunction("ip_skb_dst_mtu($arg1, (const struct sk_buff *)$arg2)")
   public static @Unsigned int ip_skb_dst_mtu(Ptr<sock> sk, Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2097,7 +2098,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_tun_build_state($arg1, $arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("ip_tun_build_state($arg1, $arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static int ip_tun_build_state(Ptr<net> net, Ptr<nlattr> attr, @Unsigned int family,
       Ptr<?> cfg, Ptr<Ptr<lwtunnel_state>> ts, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
@@ -2154,7 +2155,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_tunnel_info_opts_get($arg1, (const struct ip_tunnel_info*)$arg2)")
+  @BuiltinBPFFunction("ip_tunnel_info_opts_get($arg1, (const struct ip_tunnel_info *)$arg2)")
   public static void ip_tunnel_info_opts_get(Ptr<?> to, Ptr<ip_tunnel_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2180,7 +2181,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_tunnel_parse_protocol((const struct sk_buff*)$arg1)")
+  @BuiltinBPFFunction("ip_tunnel_parse_protocol((const struct sk_buff *)$arg1)")
   public static @Unsigned @OriginalName("__be16") short ip_tunnel_parse_protocol(Ptr<sk_buff> skb) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2192,7 +2193,7 @@ public final class IpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("ip_valid_fib_dump_req($arg1, (const struct nlmsghdr*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("ip_valid_fib_dump_req($arg1, (const struct nlmsghdr *)$arg2, $arg3, $arg4)")
   public static int ip_valid_fib_dump_req(Ptr<net> net, Ptr<nlmsghdr> nlh,
       Ptr<fib_dump_filter> filter, Ptr<netlink_callback> cb) {
     throw new MethodIsBPFRelatedFunction();

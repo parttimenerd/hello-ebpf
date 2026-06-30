@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1130,14 +1131,14 @@ public final class XdpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xdp_btf_struct_access($arg1, (const struct bpf_reg_state*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("xdp_btf_struct_access($arg1, (const struct bpf_reg_state *)$arg2, $arg3, $arg4)")
   public static int xdp_btf_struct_access(Ptr<bpf_verifier_log> log, Ptr<bpf_reg_state> reg,
       int off, int size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xdp_build_skb_from_buff((const struct xdp_buff*)$arg1)")
+  @BuiltinBPFFunction("xdp_build_skb_from_buff((const struct xdp_buff *)$arg1)")
   public static Ptr<sk_buff> xdp_build_skb_from_buff(Ptr<xdp_buff> xdp) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1155,7 +1156,7 @@ public final class XdpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xdp_convert_ctx_access($arg1, (const struct bpf_insn*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("xdp_convert_ctx_access($arg1, (const struct bpf_insn *)$arg2, $arg3, $arg4, $arg5)")
   public static @Unsigned int xdp_convert_ctx_access(bpf_access_type type, Ptr<bpf_insn> si,
       Ptr<bpf_insn> insn_buf, Ptr<bpf_prog> prog, Ptr<java.lang. @Unsigned Integer> target_size) {
     throw new MethodIsBPFRelatedFunction();
@@ -1174,21 +1175,21 @@ public final class XdpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xdp_do_generic_redirect($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4)")
+  @BuiltinBPFFunction("xdp_do_generic_redirect($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4)")
   public static int xdp_do_generic_redirect(Ptr<net_device> dev, Ptr<sk_buff> skb,
       Ptr<xdp_buff> xdp, Ptr<bpf_prog> xdp_prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xdp_do_redirect($arg1, $arg2, (const struct bpf_prog*)$arg3)")
+  @BuiltinBPFFunction("xdp_do_redirect($arg1, $arg2, (const struct bpf_prog *)$arg3)")
   public static int xdp_do_redirect(Ptr<net_device> dev, Ptr<xdp_buff> xdp,
       Ptr<bpf_prog> xdp_prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xdp_do_redirect_frame($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4)")
+  @BuiltinBPFFunction("xdp_do_redirect_frame($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4)")
   public static int xdp_do_redirect_frame(Ptr<net_device> dev, Ptr<xdp_buff> xdp,
       Ptr<xdp_frame> xdpf, Ptr<bpf_prog> xdp_prog) {
     throw new MethodIsBPFRelatedFunction();
@@ -1220,7 +1221,7 @@ public final class XdpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct bpf_func_proto*)xdp_func_proto($arg1, (const struct bpf_prog*)$arg2))")
+  @BuiltinBPFFunction("((const struct bpf_func_proto*)xdp_func_proto($arg1, (const struct bpf_prog *)$arg2))")
   public static Ptr<bpf_func_proto> xdp_func_proto(bpf_func_id func_id, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1232,7 +1233,7 @@ public final class XdpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xdp_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog*)$arg4, $arg5)")
+  @BuiltinBPFFunction("xdp_is_valid_access($arg1, $arg2, $arg3, (const struct bpf_prog *)$arg4, $arg5)")
   public static boolean xdp_is_valid_access(int off, int size, bpf_access_type type,
       Ptr<bpf_prog> prog, Ptr<bpf_insn_access_aux> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1253,13 +1254,13 @@ public final class XdpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xdp_mem_id_cmp($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("xdp_mem_id_cmp($arg1, (const void *)$arg2)")
   public static int xdp_mem_id_cmp(Ptr<rhashtable_compare_arg> arg, Ptr<?> ptr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xdp_mem_id_hashfn((const void*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("xdp_mem_id_hashfn((const void *)$arg1, $arg2, $arg3)")
   public static @Unsigned int xdp_mem_id_hashfn(Ptr<?> data, @Unsigned int len,
       @Unsigned int seed) {
     throw new MethodIsBPFRelatedFunction();
@@ -1296,7 +1297,7 @@ public final class XdpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xdp_return_frag($arg1, (const struct xdp_buff*)$arg2)")
+  @BuiltinBPFFunction("xdp_return_frag($arg1, (const struct xdp_buff *)$arg2)")
   public static void xdp_return_frag(@Unsigned @OriginalName("netmem_ref") long netmem,
       Ptr<xdp_buff> xdp) {
     throw new MethodIsBPFRelatedFunction();
@@ -1321,7 +1322,7 @@ public final class XdpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xdp_rxq_info_attach_page_pool($arg1, (const struct page_pool*)$arg2)")
+  @BuiltinBPFFunction("xdp_rxq_info_attach_page_pool($arg1, (const struct page_pool *)$arg2)")
   public static void xdp_rxq_info_attach_page_pool(Ptr<xdp_rxq_info> xdp_rxq, Ptr<page_pool> pool) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1410,13 +1411,13 @@ public final class XdpDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xdp_unreg_page_pool((const struct page_pool*)$arg1)")
+  @BuiltinBPFFunction("xdp_unreg_page_pool((const struct page_pool *)$arg1)")
   public static void xdp_unreg_page_pool(Ptr<page_pool> pool) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("xdp_warn((const u8*)$arg1, (const u8*)$arg2, (const int)$arg3)")
+  @BuiltinBPFFunction("xdp_warn((const u8 *)$arg1, (const u8 *)$arg2, (const int)$arg3)")
   public static void xdp_warn(String msg, String func, int line) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class DimDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("dim_calc_stats((const struct dim_sample*)$arg1, (const struct dim_sample*)$arg2, $arg3)")
+  @BuiltinBPFFunction("dim_calc_stats((const struct dim_sample *)$arg1, (const struct dim_sample *)$arg2, $arg3)")
   public static boolean dim_calc_stats(Ptr<dim_sample> start, Ptr<dim_sample> end,
       Ptr<dim_stats> curr_stats) {
     throw new MethodIsBPFRelatedFunction();

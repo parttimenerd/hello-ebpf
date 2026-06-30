@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CryptoDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_alg_lookup((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__crypto_alg_lookup((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_alg> __crypto_alg_lookup(String name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1111,26 +1112,26 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_dh_decode_key((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("__crypto_dh_decode_key((const u8 *)$arg1, $arg2, $arg3)")
   public static int __crypto_dh_decode_key(String buf, @Unsigned int len, Ptr<dh> params) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_inst_setname($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__crypto_inst_setname($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static int __crypto_inst_setname(Ptr<crypto_instance> inst, String name, String driver,
       Ptr<crypto_alg> alg) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_lookup_template((const u8*)$arg1)")
+  @BuiltinBPFFunction("__crypto_lookup_template((const u8 *)$arg1)")
   public static Ptr<crypto_template> __crypto_lookup_template(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_memneq((const void*)$arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("__crypto_memneq((const void *)$arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long __crypto_memneq(Ptr<?> a, Ptr<?> b, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1143,73 +1144,73 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_sha1_export((const struct sha1_ctx*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__crypto_sha1_export((const struct sha1_ctx *)$arg1, $arg2)")
   public static int __crypto_sha1_export(Ptr<sha1_ctx> ctx0, Ptr<?> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_sha1_export_core((const struct sha1_ctx*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__crypto_sha1_export_core((const struct sha1_ctx *)$arg1, $arg2)")
   public static int __crypto_sha1_export_core(Ptr<sha1_ctx> ctx, Ptr<?> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_sha1_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("__crypto_sha1_import($arg1, (const void *)$arg2)")
   public static int __crypto_sha1_import(Ptr<sha1_ctx> ctx, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_sha1_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("__crypto_sha1_import_core($arg1, (const void *)$arg2)")
   public static int __crypto_sha1_import_core(Ptr<sha1_ctx> ctx, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_sha256_export((const struct __sha256_ctx*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__crypto_sha256_export((const struct __sha256_ctx *)$arg1, $arg2)")
   public static int __crypto_sha256_export(Ptr<__sha256_ctx> ctx0, Ptr<?> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_sha256_export_core((const struct __sha256_ctx*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__crypto_sha256_export_core((const struct __sha256_ctx *)$arg1, $arg2)")
   public static int __crypto_sha256_export_core(Ptr<__sha256_ctx> ctx, Ptr<?> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_sha256_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("__crypto_sha256_import($arg1, (const void *)$arg2)")
   public static int __crypto_sha256_import(Ptr<__sha256_ctx> ctx, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_sha256_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("__crypto_sha256_import_core($arg1, (const void *)$arg2)")
   public static int __crypto_sha256_import_core(Ptr<__sha256_ctx> ctx, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_sha512_export((const struct __sha512_ctx*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__crypto_sha512_export((const struct __sha512_ctx *)$arg1, $arg2)")
   public static int __crypto_sha512_export(Ptr<__sha512_ctx> ctx0, Ptr<?> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_sha512_export_core((const struct __sha512_ctx*)$arg1, $arg2)")
+  @BuiltinBPFFunction("__crypto_sha512_export_core((const struct __sha512_ctx *)$arg1, $arg2)")
   public static int __crypto_sha512_export_core(Ptr<__sha512_ctx> ctx, Ptr<?> out) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_sha512_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("__crypto_sha512_import($arg1, (const void *)$arg2)")
   public static int __crypto_sha512_import(Ptr<__sha512_ctx> ctx, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_sha512_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("__crypto_sha512_import_core($arg1, (const void *)$arg2)")
   public static int __crypto_sha512_import_core(Ptr<__sha512_ctx> ctx, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1221,13 +1222,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_shash_import($arg1, (const void*)$arg2, (int (*)(struct shash_desc*, const void*))$arg3)")
+  @BuiltinBPFFunction("__crypto_shash_import($arg1, (const void *)$arg2, (int (*)(struct shash_desc*, const void*))$arg3)")
   public static int __crypto_shash_import(Ptr<shash_desc> desc, Ptr<?> in, Ptr<?> _import) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__crypto_xor($arg1, (const u8*)$arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("__crypto_xor($arg1, (const u8 *)$arg2, (const u8 *)$arg3, $arg4)")
   public static void __crypto_xor(Ptr<java.lang.Character> dst, Ptr<java.lang.Character> src1,
       Ptr<java.lang.Character> src2, @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1336,7 +1337,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_aead_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_aead_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_aead_setkey(Ptr<crypto_aead> tfm, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1349,21 +1350,21 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_aes_decrypt($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("crypto_aes_decrypt($arg1, $arg2, (const u8 *)$arg3)")
   public static void crypto_aes_decrypt(Ptr<crypto_tfm> tfm, Ptr<java.lang.Character> out,
       Ptr<java.lang.Character> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_aes_encrypt($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("crypto_aes_encrypt($arg1, $arg2, (const u8 *)$arg3)")
   public static void crypto_aes_encrypt(Ptr<crypto_tfm> tfm, Ptr<java.lang.Character> out,
       Ptr<java.lang.Character> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_aes_set_key($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_aes_set_key($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_aes_set_key(Ptr<crypto_tfm> tfm, Ptr<java.lang.Character> in_key,
       @Unsigned int key_len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1412,13 +1413,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_ahash_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_ahash_import($arg1, (const void *)$arg2)")
   public static int crypto_ahash_import(Ptr<ahash_request> req, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_ahash_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_ahash_import_core($arg1, (const void *)$arg2)")
   public static int crypto_ahash_import_core(Ptr<ahash_request> req, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1442,7 +1443,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_ahash_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_ahash_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_ahash_setkey(Ptr<crypto_ahash> tfm, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1491,14 +1492,14 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_akcipher_sync_decrypt($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_akcipher_sync_decrypt($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static int crypto_akcipher_sync_decrypt(Ptr<crypto_akcipher> tfm, Ptr<?> src,
       @Unsigned int slen, Ptr<?> dst, @Unsigned int dlen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_akcipher_sync_encrypt($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_akcipher_sync_encrypt($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static int crypto_akcipher_sync_encrypt(Ptr<crypto_akcipher> tfm, Ptr<?> src,
       @Unsigned int slen, Ptr<?> dst, @Unsigned int dlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1530,14 +1531,14 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alg_lookup((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alg_lookup((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_alg> crypto_alg_lookup(String name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alg_mod_lookup((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alg_mod_lookup((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_alg> crypto_alg_mod_lookup(String name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -1550,7 +1551,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alg_tested((const u8*)$arg1, $arg2)")
+  @BuiltinBPFFunction("crypto_alg_tested((const u8 *)$arg1, $arg2)")
   public static void crypto_alg_tested(String name, int err) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1568,98 +1569,98 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_acomp((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alloc_acomp((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_acomp> crypto_alloc_acomp(String alg_name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_acomp_node((const u8*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_alloc_acomp_node((const u8 *)$arg1, $arg2, $arg3, $arg4)")
   public static Ptr<crypto_acomp> crypto_alloc_acomp_node(String alg_name, @Unsigned int type,
       @Unsigned int mask, int node) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_aead((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alloc_aead((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_aead> crypto_alloc_aead(String alg_name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_ahash((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alloc_ahash((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_ahash> crypto_alloc_ahash(String alg_name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_akcipher((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alloc_akcipher((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_akcipher> crypto_alloc_akcipher(String alg_name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_base((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alloc_base((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_tfm> crypto_alloc_base(String alg_name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_kpp((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alloc_kpp((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_kpp> crypto_alloc_kpp(String alg_name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_lskcipher((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alloc_lskcipher((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_lskcipher> crypto_alloc_lskcipher(String alg_name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_rng((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alloc_rng((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_rng> crypto_alloc_rng(String alg_name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_shash((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alloc_shash((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_shash> crypto_alloc_shash(String alg_name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_sig((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alloc_sig((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_sig> crypto_alloc_sig(String alg_name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_skcipher((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alloc_skcipher((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_skcipher> crypto_alloc_skcipher(String alg_name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_sync_skcipher((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_alloc_sync_skcipher((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_sync_skcipher> crypto_alloc_sync_skcipher(String alg_name,
       @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_alloc_tfm_node((const u8*)$arg1, (const struct crypto_type*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_alloc_tfm_node((const u8 *)$arg1, (const struct crypto_type *)$arg2, $arg3, $arg4, $arg5)")
   public static Ptr<?> crypto_alloc_tfm_node(String alg_name, Ptr<crypto_type> frontend,
       @Unsigned int type, @Unsigned int mask, int node) {
     throw new MethodIsBPFRelatedFunction();
@@ -1678,7 +1679,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_cbc_decrypt($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("crypto_cbc_decrypt($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int crypto_cbc_decrypt(Ptr<crypto_lskcipher> tfm, Ptr<java.lang.Character> src,
       Ptr<java.lang.Character> dst, @Unsigned int len, Ptr<java.lang.Character> iv,
       @Unsigned int flags) {
@@ -1693,7 +1694,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_cbc_decrypt_segment($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_cbc_decrypt_segment($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int crypto_cbc_decrypt_segment(Ptr<crypto_lskcipher> tfm,
       Ptr<java.lang.Character> src, Ptr<java.lang.Character> dst, @Unsigned int nbytes,
       Ptr<java.lang.Character> oiv) {
@@ -1701,7 +1702,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_cbc_encrypt($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("crypto_cbc_encrypt($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int crypto_cbc_encrypt(Ptr<crypto_lskcipher> tfm, Ptr<java.lang.Character> src,
       Ptr<java.lang.Character> dst, @Unsigned int len, Ptr<java.lang.Character> iv,
       @Unsigned int flags) {
@@ -1716,7 +1717,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_cbc_encrypt_segment($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_cbc_encrypt_segment($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int crypto_cbc_encrypt_segment(Ptr<crypto_lskcipher> tfm,
       Ptr<java.lang.Character> src, Ptr<java.lang.Character> dst, @Unsigned int nbytes,
       Ptr<java.lang.Character> iv) {
@@ -1749,21 +1750,21 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_cipher_decrypt_one($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("crypto_cipher_decrypt_one($arg1, $arg2, (const u8 *)$arg3)")
   public static void crypto_cipher_decrypt_one(Ptr<crypto_cipher> tfm, Ptr<java.lang.Character> dst,
       Ptr<java.lang.Character> src) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_cipher_encrypt_one($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("crypto_cipher_encrypt_one($arg1, $arg2, (const u8 *)$arg3)")
   public static void crypto_cipher_encrypt_one(Ptr<crypto_cipher> tfm, Ptr<java.lang.Character> dst,
       Ptr<java.lang.Character> src) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_cipher_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_cipher_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_cipher_setkey(Ptr<crypto_cipher> tfm, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1788,13 +1789,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_clone_tfm((const struct crypto_type*)$arg1, $arg2)")
+  @BuiltinBPFFunction("crypto_clone_tfm((const struct crypto_type *)$arg1, $arg2)")
   public static Ptr<?> crypto_clone_tfm(Ptr<crypto_type> frontend, Ptr<crypto_tfm> otfm) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_create_tfm_node($arg1, (const struct crypto_type*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_create_tfm_node($arg1, (const struct crypto_type *)$arg2, $arg3)")
   public static Ptr<?> crypto_create_tfm_node(Ptr<crypto_alg> alg, Ptr<crypto_type> frontend,
       int node) {
     throw new MethodIsBPFRelatedFunction();
@@ -1885,7 +1886,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_cts_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_cts_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_cts_setkey(Ptr<crypto_skcipher> parent, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -1928,19 +1929,19 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_dh_decode_key((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_dh_decode_key((const u8 *)$arg1, $arg2, $arg3)")
   public static int crypto_dh_decode_key(String buf, @Unsigned int len, Ptr<dh> params) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_dh_encode_key($arg1, $arg2, (const struct dh*)$arg3)")
+  @BuiltinBPFFunction("crypto_dh_encode_key($arg1, $arg2, (const struct dh *)$arg3)")
   public static int crypto_dh_encode_key(String buf, @Unsigned int len, Ptr<dh> params) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_dh_key_len((const struct dh*)$arg1)")
+  @BuiltinBPFFunction("crypto_dh_key_len((const struct dh *)$arg1)")
   public static @Unsigned int crypto_dh_key_len(Ptr<dh> p) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1958,7 +1959,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_ecb_decrypt2($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("crypto_ecb_decrypt2($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int crypto_ecb_decrypt2(Ptr<crypto_lskcipher> tfm, Ptr<java.lang.Character> src,
       Ptr<java.lang.Character> dst, @Unsigned int len, Ptr<java.lang.Character> iv,
       @Unsigned int flags) {
@@ -1966,7 +1967,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_ecb_encrypt2($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("crypto_ecb_encrypt2($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int crypto_ecb_encrypt2(Ptr<crypto_lskcipher> tfm, Ptr<java.lang.Character> src,
       Ptr<java.lang.Character> dst, @Unsigned int len, Ptr<java.lang.Character> iv,
       @Unsigned int flags) {
@@ -1986,25 +1987,25 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_ecdh_decode_key((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_ecdh_decode_key((const u8 *)$arg1, $arg2, $arg3)")
   public static int crypto_ecdh_decode_key(String buf, @Unsigned int len, Ptr<ecdh> params) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_ecdh_encode_key($arg1, $arg2, (const struct ecdh*)$arg3)")
+  @BuiltinBPFFunction("crypto_ecdh_encode_key($arg1, $arg2, (const struct ecdh *)$arg3)")
   public static int crypto_ecdh_encode_key(String buf, @Unsigned int len, Ptr<ecdh> params) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_ecdh_key_len((const struct ecdh*)$arg1)")
+  @BuiltinBPFFunction("crypto_ecdh_key_len((const struct ecdh *)$arg1)")
   public static @Unsigned int crypto_ecdh_key_len(Ptr<ecdh> params) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_ecdh_shared_secret($arg1, $arg2, (const long long unsigned int*)$arg3, (const long long unsigned int*)$arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_ecdh_shared_secret($arg1, $arg2, (const long long unsigned int *)$arg3, (const long long unsigned int *)$arg4, $arg5)")
   public static int crypto_ecdh_shared_secret(@Unsigned int curve_id, @Unsigned int ndigits,
       Ptr<java.lang. @Unsigned Long> private_key, Ptr<java.lang. @Unsigned Long> public_key,
       Ptr<java.lang. @Unsigned Long> secret) {
@@ -2044,7 +2045,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_find_alg((const u8*)$arg1, (const struct crypto_type*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_find_alg((const u8 *)$arg1, (const struct crypto_type *)$arg2, $arg3, $arg4)")
   public static Ptr<crypto_alg> crypto_find_alg(String alg_name, Ptr<crypto_type> frontend,
       @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -2075,7 +2076,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_gcm_create_common($arg1, $arg2, (const u8*)$arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("crypto_gcm_create_common($arg1, $arg2, (const u8 *)$arg3, (const u8 *)$arg4)")
   public static int crypto_gcm_create_common(Ptr<crypto_template> tmpl, Ptr<Ptr<rtattr>> tb,
       String ctr_name, String ghash_name) {
     throw new MethodIsBPFRelatedFunction();
@@ -2136,7 +2137,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_gcm_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_gcm_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_gcm_setkey(Ptr<crypto_aead> aead, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -2161,100 +2162,100 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_grab_aead($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_grab_aead($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int crypto_grab_aead(Ptr<crypto_aead_spawn> spawn, Ptr<crypto_instance> inst,
       String name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_grab_ahash($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_grab_ahash($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int crypto_grab_ahash(Ptr<crypto_ahash_spawn> spawn, Ptr<crypto_instance> inst,
       String name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_grab_akcipher($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_grab_akcipher($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int crypto_grab_akcipher(Ptr<crypto_akcipher_spawn> spawn,
       Ptr<crypto_instance> inst, String name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_grab_kpp($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_grab_kpp($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int crypto_grab_kpp(Ptr<crypto_kpp_spawn> spawn, Ptr<crypto_instance> inst,
       String name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_grab_lskcipher($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_grab_lskcipher($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int crypto_grab_lskcipher(Ptr<crypto_lskcipher_spawn> spawn,
       Ptr<crypto_instance> inst, String name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_grab_shash($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_grab_shash($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int crypto_grab_shash(Ptr<crypto_shash_spawn> spawn, Ptr<crypto_instance> inst,
       String name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_grab_sig($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_grab_sig($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int crypto_grab_sig(Ptr<crypto_sig_spawn> spawn, Ptr<crypto_instance> inst,
       String name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_grab_skcipher($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_grab_skcipher($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int crypto_grab_skcipher(Ptr<crypto_skcipher_spawn> spawn,
       Ptr<crypto_instance> inst, String name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_grab_spawn($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_grab_spawn($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int crypto_grab_spawn(Ptr<crypto_spawn> spawn, Ptr<crypto_instance> inst,
       String name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_has_aead((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_has_aead((const u8 *)$arg1, $arg2, $arg3)")
   public static int crypto_has_aead(String alg_name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_has_ahash((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_has_ahash((const u8 *)$arg1, $arg2, $arg3)")
   public static int crypto_has_ahash(String alg_name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_has_alg((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_has_alg((const u8 *)$arg1, $arg2, $arg3)")
   public static int crypto_has_alg(String name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_has_kpp((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_has_kpp((const u8 *)$arg1, $arg2, $arg3)")
   public static int crypto_has_kpp(String alg_name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_has_shash((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_has_shash((const u8 *)$arg1, $arg2, $arg3)")
   public static int crypto_has_shash(String alg_name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_has_skcipher((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_has_skcipher((const u8 *)$arg1, $arg2, $arg3)")
   public static int crypto_has_skcipher(String alg_name, @Unsigned int type, @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2266,7 +2267,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hash_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_hash_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_hash_digest(Ptr<crypto_ahash> tfm, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -2297,7 +2298,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha1_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_hmac_sha1_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_hmac_sha1_digest(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -2322,13 +2323,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha1_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_hmac_sha1_import($arg1, (const void *)$arg2)")
   public static int crypto_hmac_sha1_import(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha1_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_hmac_sha1_import_core($arg1, (const void *)$arg2)")
   public static int crypto_hmac_sha1_import_core(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2340,21 +2341,21 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha1_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_hmac_sha1_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_hmac_sha1_setkey(Ptr<crypto_shash> tfm, Ptr<java.lang.Character> raw_key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha1_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_hmac_sha1_update($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_hmac_sha1_update(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha224_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_hmac_sha224_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_hmac_sha224_digest(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -2379,13 +2380,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha224_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_hmac_sha224_import($arg1, (const void *)$arg2)")
   public static int crypto_hmac_sha224_import(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha224_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_hmac_sha224_import_core($arg1, (const void *)$arg2)")
   public static int crypto_hmac_sha224_import_core(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2397,21 +2398,21 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha224_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_hmac_sha224_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_hmac_sha224_setkey(Ptr<crypto_shash> tfm,
       Ptr<java.lang.Character> raw_key, @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha224_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_hmac_sha224_update($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_hmac_sha224_update(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha256_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_hmac_sha256_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_hmac_sha256_digest(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -2436,13 +2437,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha256_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_hmac_sha256_import($arg1, (const void *)$arg2)")
   public static int crypto_hmac_sha256_import(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha256_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_hmac_sha256_import_core($arg1, (const void *)$arg2)")
   public static int crypto_hmac_sha256_import_core(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2454,21 +2455,21 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha256_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_hmac_sha256_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_hmac_sha256_setkey(Ptr<crypto_shash> tfm,
       Ptr<java.lang.Character> raw_key, @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha256_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_hmac_sha256_update($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_hmac_sha256_update(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha384_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_hmac_sha384_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_hmac_sha384_digest(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -2493,13 +2494,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha384_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_hmac_sha384_import($arg1, (const void *)$arg2)")
   public static int crypto_hmac_sha384_import(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha384_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_hmac_sha384_import_core($arg1, (const void *)$arg2)")
   public static int crypto_hmac_sha384_import_core(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2511,21 +2512,21 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha384_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_hmac_sha384_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_hmac_sha384_setkey(Ptr<crypto_shash> tfm,
       Ptr<java.lang.Character> raw_key, @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha384_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_hmac_sha384_update($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_hmac_sha384_update(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha512_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_hmac_sha512_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_hmac_sha512_digest(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -2550,13 +2551,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha512_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_hmac_sha512_import($arg1, (const void *)$arg2)")
   public static int crypto_hmac_sha512_import(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha512_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_hmac_sha512_import_core($arg1, (const void *)$arg2)")
   public static int crypto_hmac_sha512_import_core(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2568,14 +2569,14 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha512_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_hmac_sha512_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_hmac_sha512_setkey(Ptr<crypto_shash> tfm,
       Ptr<java.lang.Character> raw_key, @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_hmac_sha512_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_hmac_sha512_update($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_hmac_sha512_update(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -2612,7 +2613,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_kdf108_ctr_generate($arg1, (const struct kvec*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_kdf108_ctr_generate($arg1, (const struct kvec *)$arg2, $arg3, $arg4, $arg5)")
   public static int crypto_kdf108_ctr_generate(Ptr<crypto_shash> kmd, Ptr<kvec> info,
       @Unsigned int info_nvec, Ptr<java.lang.Character> dst, @Unsigned int dlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -2631,7 +2632,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_kdf108_setkey($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_kdf108_setkey($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int crypto_kdf108_setkey(Ptr<crypto_shash> kmd, Ptr<java.lang.Character> key,
       @Unsigned long keylen, Ptr<java.lang.Character> ikm, @Unsigned long ikmlen) {
     throw new MethodIsBPFRelatedFunction();
@@ -2674,7 +2675,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_larval_alloc((const u8*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_larval_alloc((const u8 *)$arg1, $arg2, $arg3)")
   public static Ptr<crypto_larval> crypto_larval_alloc(String name, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();
@@ -2700,7 +2701,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_lookup_template((const u8*)$arg1)")
+  @BuiltinBPFFunction("crypto_lookup_template((const u8 *)$arg1)")
   public static Ptr<crypto_template> crypto_lookup_template(String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2712,7 +2713,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_lskcipher_crypt_unaligned($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, (int (*)(struct crypto_lskcipher*, const u8*, u8*, unsigned int, u8*, unsigned int))$arg6)")
+  @BuiltinBPFFunction("crypto_lskcipher_crypt_unaligned($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, (int (*)(struct crypto_lskcipher*, const u8*, u8*, unsigned int, u8*, unsigned int))$arg6)")
   public static int crypto_lskcipher_crypt_unaligned(Ptr<crypto_lskcipher> tfm,
       Ptr<java.lang.Character> src, Ptr<java.lang.Character> dst, @Unsigned int len,
       Ptr<java.lang.Character> iv, Ptr<?> crypt) {
@@ -2720,7 +2721,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_lskcipher_decrypt($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_lskcipher_decrypt($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int crypto_lskcipher_decrypt(Ptr<crypto_lskcipher> tfm,
       Ptr<java.lang.Character> src, Ptr<java.lang.Character> dst, @Unsigned int len,
       Ptr<java.lang.Character> iv) {
@@ -2734,7 +2735,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_lskcipher_encrypt($arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("crypto_lskcipher_encrypt($arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int crypto_lskcipher_encrypt(Ptr<crypto_lskcipher> tfm,
       Ptr<java.lang.Character> src, Ptr<java.lang.Character> dst, @Unsigned int len,
       Ptr<java.lang.Character> iv) {
@@ -2778,7 +2779,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_lskcipher_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_lskcipher_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_lskcipher_setkey(Ptr<crypto_lskcipher> tfm, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -3039,7 +3040,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_rfc3686_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_rfc3686_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_rfc3686_setkey(Ptr<crypto_skcipher> parent, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -3094,7 +3095,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_rfc4106_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_rfc4106_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_rfc4106_setkey(Ptr<crypto_aead> parent, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -3149,7 +3150,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_rfc4543_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_rfc4543_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_rfc4543_setkey(Ptr<crypto_aead> parent, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -3168,7 +3169,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_rng_reset($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_rng_reset($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_rng_reset(Ptr<crypto_rng> tfm, Ptr<java.lang.Character> seed,
       @Unsigned int slen) {
     throw new MethodIsBPFRelatedFunction();
@@ -3211,7 +3212,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha1_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_sha1_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_sha1_digest(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -3236,13 +3237,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha1_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_sha1_import($arg1, (const void *)$arg2)")
   public static int crypto_sha1_import(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha1_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_sha1_import_core($arg1, (const void *)$arg2)")
   public static int crypto_sha1_import_core(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3266,14 +3267,14 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha1_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_sha1_update($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_sha1_update(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha224_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_sha224_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_sha224_digest(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -3298,13 +3299,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha224_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_sha224_import($arg1, (const void *)$arg2)")
   public static int crypto_sha224_import(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha224_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_sha224_import_core($arg1, (const void *)$arg2)")
   public static int crypto_sha224_import_core(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3316,14 +3317,14 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha224_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_sha224_update($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_sha224_update(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha256_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_sha256_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_sha256_digest(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -3348,13 +3349,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha256_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_sha256_import($arg1, (const void *)$arg2)")
   public static int crypto_sha256_import(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha256_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_sha256_import_core($arg1, (const void *)$arg2)")
   public static int crypto_sha256_import_core(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3378,14 +3379,14 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha256_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_sha256_update($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_sha256_update(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha384_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_sha384_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_sha384_digest(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -3410,13 +3411,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha384_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_sha384_import($arg1, (const void *)$arg2)")
   public static int crypto_sha384_import(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha384_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_sha384_import_core($arg1, (const void *)$arg2)")
   public static int crypto_sha384_import_core(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3428,14 +3429,14 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha384_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_sha384_update($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_sha384_update(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha3_finup($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_sha3_finup($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_sha3_finup(Ptr<shash_desc> desc, Ptr<java.lang.Character> src,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -3448,14 +3449,14 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha3_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_sha3_update($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_sha3_update(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha512_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_sha512_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_sha512_digest(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -3480,13 +3481,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha512_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_sha512_import($arg1, (const void *)$arg2)")
   public static int crypto_sha512_import(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha512_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_sha512_import_core($arg1, (const void *)$arg2)")
   public static int crypto_sha512_import_core(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3510,14 +3511,14 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_sha512_update($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_sha512_update($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_sha512_update(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_shash_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_shash_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_shash_digest(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -3542,7 +3543,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_shash_finup((restrict struct shash_desc*)$arg1, (const u8*)$arg2, $arg3, (restrict u8*)$arg4)")
+  @BuiltinBPFFunction("crypto_shash_finup((restrict struct shash_desc*)$arg1, (const u8 *)$arg2, $arg3, (restrict u8*)$arg4)")
   public static int crypto_shash_finup(Ptr<shash_desc> desc, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -3555,13 +3556,13 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_shash_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_shash_import($arg1, (const void *)$arg2)")
   public static int crypto_shash_import(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_shash_import_core($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_shash_import_core($arg1, (const void *)$arg2)")
   public static int crypto_shash_import_core(Ptr<shash_desc> desc, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3585,7 +3586,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_shash_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_shash_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_shash_setkey(Ptr<crypto_shash> tfm, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -3598,7 +3599,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_shash_tfm_digest($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_shash_tfm_digest($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int crypto_shash_tfm_digest(Ptr<crypto_shash> tfm, Ptr<java.lang.Character> data,
       @Unsigned int len, Ptr<java.lang.Character> out) {
     throw new MethodIsBPFRelatedFunction();
@@ -3677,7 +3678,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_skcipher_import($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("crypto_skcipher_import($arg1, (const void *)$arg2)")
   public static int crypto_skcipher_import(Ptr<skcipher_request> req, Ptr<?> in) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -3695,7 +3696,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_skcipher_setkey($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crypto_skcipher_setkey($arg1, (const u8 *)$arg2, $arg3)")
   public static int crypto_skcipher_setkey(Ptr<crypto_skcipher> tfm, Ptr<java.lang.Character> key,
       @Unsigned int keylen) {
     throw new MethodIsBPFRelatedFunction();
@@ -3727,7 +3728,7 @@ public final class CryptoDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crypto_type_has_alg((const u8*)$arg1, (const struct crypto_type*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("crypto_type_has_alg((const u8 *)$arg1, (const struct crypto_type *)$arg2, $arg3, $arg4)")
   public static int crypto_type_has_alg(String name, Ptr<crypto_type> frontend, @Unsigned int type,
       @Unsigned int mask) {
     throw new MethodIsBPFRelatedFunction();

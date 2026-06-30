@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class EdidDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("edid_block_check((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("edid_block_check((const void *)$arg1, $arg2)")
   public static edid_block_status edid_block_check(Ptr<?> _block, boolean is_base_block) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edid_block_dump((const u8*)$arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("edid_block_dump((const u8 *)$arg1, (const void *)$arg2, $arg3)")
   public static void edid_block_dump(String level, Ptr<?> block, int block_num) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1109,7 +1110,7 @@ public final class EdidDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edid_block_status_print($arg1, (const struct edid*)$arg2, $arg3)")
+  @BuiltinBPFFunction("edid_block_status_print($arg1, (const struct edid *)$arg2, $arg3)")
   public static void edid_block_status_print(edid_block_status status, Ptr<edid> block,
       int block_num) {
     throw new MethodIsBPFRelatedFunction();
@@ -1135,7 +1136,7 @@ public final class EdidDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edid_hfeeodb_extension_block_count((const struct edid*)$arg1)")
+  @BuiltinBPFFunction("edid_hfeeodb_extension_block_count((const struct edid *)$arg1)")
   public static int edid_hfeeodb_extension_block_count(Ptr<edid> edid) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1171,7 +1172,7 @@ public final class EdidDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("edid_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("edid_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long edid_write(Ptr<file> file, String ubuf,
       @Unsigned long len, Ptr<java.lang. @OriginalName("loff_t") Long> offp) {
     throw new MethodIsBPFRelatedFunction();

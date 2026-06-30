@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,7 +1103,7 @@ public final class TcxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcx_link_attach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcx_link_attach((const union bpf_attr *)$arg1, $arg2)")
   public static int tcx_link_attach(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1120,13 +1121,13 @@ public final class TcxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcx_link_fdinfo((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcx_link_fdinfo((const struct bpf_link *)$arg1, $arg2)")
   public static void tcx_link_fdinfo(Ptr<bpf_link> link, Ptr<seq_file> seq) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcx_link_fill_info((const struct bpf_link*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcx_link_fill_info((const struct bpf_link *)$arg1, $arg2)")
   public static int tcx_link_fill_info(Ptr<bpf_link> link, Ptr<bpf_link_info> info) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1151,19 +1152,19 @@ public final class TcxDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcx_prog_attach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcx_prog_attach((const union bpf_attr *)$arg1, $arg2)")
   public static int tcx_prog_attach(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcx_prog_detach((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcx_prog_detach((const union bpf_attr *)$arg1, $arg2)")
   public static int tcx_prog_detach(Ptr<bpf_attr> attr, Ptr<bpf_prog> prog) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("tcx_prog_query((const union bpf_attr*)$arg1, $arg2)")
+  @BuiltinBPFFunction("tcx_prog_query((const union bpf_attr *)$arg1, $arg2)")
   public static int tcx_prog_query(Ptr<bpf_attr> attr, Ptr<bpf_attr> uattr) {
     throw new MethodIsBPFRelatedFunction();
   }

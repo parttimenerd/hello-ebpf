@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1109,20 +1110,20 @@ public final class GpiodDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_cansleep((const struct gpio_desc*)$arg1)")
+  @BuiltinBPFFunction("gpiod_cansleep((const struct gpio_desc *)$arg1)")
   public static int gpiod_cansleep(Ptr<gpio_desc> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_configure_flags($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("gpiod_configure_flags($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static int gpiod_configure_flags(Ptr<gpio_desc> desc, String con_id, @Unsigned long lflags,
       gpiod_flags dflags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_count($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("gpiod_count($arg1, (const u8 *)$arg2)")
   public static int gpiod_count(Ptr<device> dev, String con_id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1182,20 +1183,20 @@ public final class GpiodDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_export_link($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("gpiod_export_link($arg1, (const u8 *)$arg2, $arg3)")
   public static int gpiod_export_link(Ptr<device> dev, String name, Ptr<gpio_desc> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_find($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("gpiod_find($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<gpio_desc> gpiod_find(Ptr<device> dev, String con_id, @Unsigned int idx,
       Ptr<java.lang. @Unsigned Long> flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_find_and_request($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, (const u8*)$arg6, $arg7)")
+  @BuiltinBPFFunction("gpiod_find_and_request($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, (const u8 *)$arg6, $arg7)")
   public static Ptr<gpio_desc> gpiod_find_and_request(Ptr<device> consumer,
       Ptr<fwnode_handle> fwnode, String con_id, @Unsigned int idx, gpiod_flags flags, String label,
       boolean platform_lookup_allowed) {
@@ -1203,7 +1204,7 @@ public final class GpiodDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_find_by_fwnode($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("gpiod_find_by_fwnode($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<gpio_desc> gpiod_find_by_fwnode(Ptr<fwnode_handle> fwnode, Ptr<device> consumer,
       String con_id, @Unsigned int idx, Ptr<gpiod_flags> flags,
       Ptr<java.lang. @Unsigned Long> lookupflags) {
@@ -1229,19 +1230,19 @@ public final class GpiodDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_get($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("gpiod_get($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<gpio_desc> gpiod_get(Ptr<device> dev, String con_id, gpiod_flags flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_get_array($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("gpiod_get_array($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<gpio_descs> gpiod_get_array(Ptr<device> dev, String con_id, gpiod_flags flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_get_array_optional($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("gpiod_get_array_optional($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<gpio_descs> gpiod_get_array_optional(Ptr<device> dev, String con_id,
       gpiod_flags flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1277,14 +1278,14 @@ public final class GpiodDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_get_index($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("gpiod_get_index($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<gpio_desc> gpiod_get_index(Ptr<device> dev, String con_id, @Unsigned int idx,
       gpiod_flags flags) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_get_index_optional($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("gpiod_get_index_optional($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static Ptr<gpio_desc> gpiod_get_index_optional(Ptr<device> dev, String con_id,
       @Unsigned int index, gpiod_flags flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1297,7 +1298,7 @@ public final class GpiodDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_get_optional($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("gpiod_get_optional($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<gpio_desc> gpiod_get_optional(Ptr<device> dev, String con_id,
       gpiod_flags flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1320,43 +1321,43 @@ public final class GpiodDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_get_raw_value((const struct gpio_desc*)$arg1)")
+  @BuiltinBPFFunction("gpiod_get_raw_value((const struct gpio_desc *)$arg1)")
   public static int gpiod_get_raw_value(Ptr<gpio_desc> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_get_raw_value_cansleep((const struct gpio_desc*)$arg1)")
+  @BuiltinBPFFunction("gpiod_get_raw_value_cansleep((const struct gpio_desc *)$arg1)")
   public static int gpiod_get_raw_value_cansleep(Ptr<gpio_desc> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_get_raw_value_commit((const struct gpio_desc*)$arg1)")
+  @BuiltinBPFFunction("gpiod_get_raw_value_commit((const struct gpio_desc *)$arg1)")
   public static int gpiod_get_raw_value_commit(Ptr<gpio_desc> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_get_value((const struct gpio_desc*)$arg1)")
+  @BuiltinBPFFunction("gpiod_get_value((const struct gpio_desc *)$arg1)")
   public static int gpiod_get_value(Ptr<gpio_desc> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_get_value_cansleep((const struct gpio_desc*)$arg1)")
+  @BuiltinBPFFunction("gpiod_get_value_cansleep((const struct gpio_desc *)$arg1)")
   public static int gpiod_get_value_cansleep(Ptr<gpio_desc> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_is_active_low((const struct gpio_desc*)$arg1)")
+  @BuiltinBPFFunction("gpiod_is_active_low((const struct gpio_desc *)$arg1)")
   public static int gpiod_is_active_low(Ptr<gpio_desc> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_is_equal((const struct gpio_desc*)$arg1, (const struct gpio_desc*)$arg2)")
+  @BuiltinBPFFunction("gpiod_is_equal((const struct gpio_desc *)$arg1, (const struct gpio_desc *)$arg2)")
   public static boolean gpiod_is_equal(Ptr<gpio_desc> desc, Ptr<gpio_desc> other) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1392,13 +1393,13 @@ public final class GpiodDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_request($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("gpiod_request($arg1, (const u8 *)$arg2)")
   public static int gpiod_request(Ptr<gpio_desc> desc, String label) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_request_commit($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("gpiod_request_commit($arg1, (const u8 *)$arg2)")
   public static int gpiod_request_commit(Ptr<gpio_desc> desc, String label) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1433,7 +1434,7 @@ public final class GpiodDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_set_consumer_name($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("gpiod_set_consumer_name($arg1, (const u8 *)$arg2)")
   public static int gpiod_set_consumer_name(Ptr<gpio_desc> desc, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1503,7 +1504,7 @@ public final class GpiodDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_to_chip((const struct gpio_desc*)$arg1)")
+  @BuiltinBPFFunction("gpiod_to_chip((const struct gpio_desc *)$arg1)")
   public static Ptr<gpio_chip> gpiod_to_chip(Ptr<gpio_desc> desc) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1515,7 +1516,7 @@ public final class GpiodDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpiod_to_irq((const struct gpio_desc*)$arg1)")
+  @BuiltinBPFFunction("gpiod_to_irq((const struct gpio_desc *)$arg1)")
   public static int gpiod_to_irq(Ptr<gpio_desc> desc) {
     throw new MethodIsBPFRelatedFunction();
   }

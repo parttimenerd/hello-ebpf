@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1141,7 +1142,7 @@ public final class IosfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("iosf_mbi_probe($arg1, (const struct pci_device_id*)$arg2)")
+  @BuiltinBPFFunction("iosf_mbi_probe($arg1, (const struct pci_device_id *)$arg2)")
   public static int iosf_mbi_probe(Ptr<pci_dev> pdev, Ptr<pci_device_id> dev_id) {
     throw new MethodIsBPFRelatedFunction();
   }

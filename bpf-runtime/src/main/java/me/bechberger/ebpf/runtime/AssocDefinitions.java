@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1102,61 +1103,61 @@ public final class AssocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("assoc_array_clear($arg1, (const struct assoc_array_ops*)$arg2)")
+  @BuiltinBPFFunction("assoc_array_clear($arg1, (const struct assoc_array_ops *)$arg2)")
   public static Ptr<assoc_array_edit> assoc_array_clear(Ptr<assoc_array> array,
       Ptr<assoc_array_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("assoc_array_delete($arg1, (const struct assoc_array_ops*)$arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("assoc_array_delete($arg1, (const struct assoc_array_ops *)$arg2, (const void *)$arg3)")
   public static Ptr<assoc_array_edit> assoc_array_delete(Ptr<assoc_array> array,
       Ptr<assoc_array_ops> ops, Ptr<?> index_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("assoc_array_delete_collapse_iterator((const void*)$arg1, $arg2)")
+  @BuiltinBPFFunction("assoc_array_delete_collapse_iterator((const void *)$arg1, $arg2)")
   public static int assoc_array_delete_collapse_iterator(Ptr<?> leaf, Ptr<?> iterator_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("assoc_array_destroy($arg1, (const struct assoc_array_ops*)$arg2)")
+  @BuiltinBPFFunction("assoc_array_destroy($arg1, (const struct assoc_array_ops *)$arg2)")
   public static void assoc_array_destroy(Ptr<assoc_array> array, Ptr<assoc_array_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("assoc_array_destroy_subtree($arg1, (const struct assoc_array_ops*)$arg2)")
+  @BuiltinBPFFunction("assoc_array_destroy_subtree($arg1, (const struct assoc_array_ops *)$arg2)")
   public static void assoc_array_destroy_subtree(@OriginalName("assoc_array_ptr") Ptr<?> root,
       Ptr<assoc_array_ops> ops) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("assoc_array_find((const struct assoc_array*)$arg1, (const struct assoc_array_ops*)$arg2, (const void*)$arg3)")
+  @BuiltinBPFFunction("assoc_array_find((const struct assoc_array *)$arg1, (const struct assoc_array_ops *)$arg2, (const void *)$arg3)")
   public static Ptr<?> assoc_array_find(Ptr<assoc_array> array, Ptr<assoc_array_ops> ops,
       Ptr<?> index_key) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("assoc_array_gc($arg1, (const struct assoc_array_ops*)$arg2, (_Bool (*)(void*, void*))$arg3, $arg4)")
+  @BuiltinBPFFunction("assoc_array_gc($arg1, (const struct assoc_array_ops *)$arg2, (_Bool (*)(void*, void*))$arg3, $arg4)")
   public static int assoc_array_gc(Ptr<assoc_array> array, Ptr<assoc_array_ops> ops,
       Ptr<?> iterator, Ptr<?> iterator_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("assoc_array_insert($arg1, (const struct assoc_array_ops*)$arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("assoc_array_insert($arg1, (const struct assoc_array_ops *)$arg2, (const void *)$arg3, $arg4)")
   public static Ptr<assoc_array_edit> assoc_array_insert(Ptr<assoc_array> array,
       Ptr<assoc_array_ops> ops, Ptr<?> index_key, Ptr<?> object) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("assoc_array_insert_into_terminal_node($arg1, (const struct assoc_array_ops*)$arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("assoc_array_insert_into_terminal_node($arg1, (const struct assoc_array_ops *)$arg2, (const void *)$arg3, $arg4)")
   public static boolean assoc_array_insert_into_terminal_node(Ptr<assoc_array_edit> edit,
       Ptr<assoc_array_ops> ops, Ptr<?> index_key, Ptr<assoc_array_walk_result> result) {
     throw new MethodIsBPFRelatedFunction();
@@ -1169,7 +1170,7 @@ public final class AssocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("assoc_array_iterate((const struct assoc_array*)$arg1, (int (*)(const void*, void*))$arg2, $arg3)")
+  @BuiltinBPFFunction("assoc_array_iterate((const struct assoc_array *)$arg1, (int (*)(const void*, void*))$arg2, $arg3)")
   public static int assoc_array_iterate(Ptr<assoc_array> array, Ptr<?> iterator,
       Ptr<?> iterator_data) {
     throw new MethodIsBPFRelatedFunction();
@@ -1182,14 +1183,14 @@ public final class AssocDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("assoc_array_subtree_iterate((const assoc_array_ptr*)$arg1, (const assoc_array_ptr*)$arg2, (int (*)(const void*, void*))$arg3, $arg4)")
+  @BuiltinBPFFunction("assoc_array_subtree_iterate((const assoc_array_ptr *)$arg1, (const assoc_array_ptr *)$arg2, (int (*)(const void*, void*))$arg3, $arg4)")
   public static int assoc_array_subtree_iterate(@OriginalName("assoc_array_ptr") Ptr<?> root,
       @OriginalName("assoc_array_ptr") Ptr<?> stop, Ptr<?> iterator, Ptr<?> iterator_data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("assoc_array_walk((const struct assoc_array*)$arg1, (const struct assoc_array_ops*)$arg2, (const void*)$arg3, $arg4)")
+  @BuiltinBPFFunction("assoc_array_walk((const struct assoc_array *)$arg1, (const struct assoc_array_ops *)$arg2, (const void *)$arg3, $arg4)")
   public static assoc_array_walk_status assoc_array_walk(Ptr<assoc_array> array,
       Ptr<assoc_array_ops> ops, Ptr<?> index_key, Ptr<assoc_array_walk_result> result) {
     throw new MethodIsBPFRelatedFunction();
@@ -1294,9 +1295,9 @@ public final class AssocDefinitions {
 
     public long adjust_count_by;
 
-    public AnonymousType1531782631C58 @Size(2) [] set;
+    public AnonymousType1778801068C58 @Size(2) [] set;
 
-    public AnonymousType834842620C28 @Size(1) [] set_parent_slot;
+    public AnonymousType1490434838C28 @Size(1) [] set_parent_slot;
 
     public char @Size(17) [] segment_cache;
   }
@@ -1366,7 +1367,7 @@ public final class AssocDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType834842620C28 extends Struct {
+  public static class AnonymousType1490434838C28 extends Struct {
     public Ptr<java.lang.Character> p;
 
     public char to;
@@ -1378,7 +1379,7 @@ public final class AssocDefinitions {
   )
   @me.bechberger.ebpf.annotations.KernelBTF
   @NotUsableInJava
-  public static class AnonymousType1531782631C58 extends Struct {
+  public static class AnonymousType1778801068C58 extends Struct {
     public Ptr<@OriginalName("assoc_array_ptr") Ptr<?>> ptr;
 
     public @OriginalName("assoc_array_ptr") Ptr<?> to;

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,13 +1091,13 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class RequestDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("__request_module($arg1, (const u8*)$arg2, $arg3_)")
+  @BuiltinBPFFunction("__request_module($arg1, (const u8 *)$arg2, $arg3_)")
   public static int __request_module(boolean wait, String fmt, java.lang.Object... param2) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__request_percpu_irq($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__request_percpu_irq($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int __request_percpu_irq(@Unsigned int irq,
       @OriginalName("irq_handler_t") Ptr<?> handler, @Unsigned long flags, String devname,
       Ptr<?> dev_id) {
@@ -1104,7 +1105,7 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__request_region($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("__request_region($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static Ptr<resource> __request_region(Ptr<resource> parent,
       @Unsigned @OriginalName("resource_size_t") long start,
       @Unsigned @OriginalName("resource_size_t") long n, String name, int flags) {
@@ -1112,7 +1113,7 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("__request_region_locked($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("__request_region_locked($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int __request_region_locked(Ptr<resource> res, Ptr<resource> parent,
       @Unsigned @OriginalName("resource_size_t") long start,
       @Unsigned @OriginalName("resource_size_t") long n, String name, int flags) {
@@ -1126,7 +1127,7 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_request_firmware((const struct firmware**)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("_request_firmware((const struct firmware**)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int _request_firmware(Ptr<Ptr<firmware>> firmware_p, String name,
       Ptr<device> device, Ptr<?> buf, @Unsigned long size, @Unsigned long offset,
       @Unsigned int opt_flags) {
@@ -1134,7 +1135,7 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("_request_firmware_nowait($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, (void (*)(const struct firmware*, void*))$arg7, $arg8)")
+  @BuiltinBPFFunction("_request_firmware_nowait($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, (void (*)(const struct firmware*, void*))$arg7, $arg8)")
   public static int _request_firmware_nowait(Ptr<module> module, boolean uevent, String name,
       Ptr<device> device, @Unsigned @OriginalName("gfp_t") int gfp, Ptr<?> context, Ptr<?> cont,
       boolean nowarn) {
@@ -1142,7 +1143,7 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_any_context_irq($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("request_any_context_irq($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int request_any_context_irq(@Unsigned int irq,
       @OriginalName("irq_handler_t") Ptr<?> handler, @Unsigned long flags, String name,
       Ptr<?> dev_id) {
@@ -1157,34 +1158,34 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_dma($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("request_dma($arg1, (const u8 *)$arg2)")
   public static int request_dma(@Unsigned int dmanr, String device_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_firmware((const struct firmware**)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("request_firmware((const struct firmware**)$arg1, (const u8 *)$arg2, $arg3)")
   public static int request_firmware(Ptr<Ptr<firmware>> firmware_p, String name,
       Ptr<device> device) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_firmware_direct((const struct firmware**)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("request_firmware_direct((const struct firmware**)$arg1, (const u8 *)$arg2, $arg3)")
   public static int request_firmware_direct(Ptr<Ptr<firmware>> firmware_p, String name,
       Ptr<device> device) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_firmware_into_buf((const struct firmware**)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("request_firmware_into_buf((const struct firmware**)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5)")
   public static int request_firmware_into_buf(Ptr<Ptr<firmware>> firmware_p, String name,
       Ptr<device> device, Ptr<?> buf, @Unsigned long size) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_firmware_nowait($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5, $arg6, (void (*)(const struct firmware*, void*))$arg7)")
+  @BuiltinBPFFunction("request_firmware_nowait($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5, $arg6, (void (*)(const struct firmware*, void*))$arg7)")
   public static int request_firmware_nowait(Ptr<module> module, boolean uevent, String name,
       Ptr<device> device, @Unsigned @OriginalName("gfp_t") int gfp, Ptr<?> context, Ptr<?> cont) {
     throw new MethodIsBPFRelatedFunction();
@@ -1197,14 +1198,14 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_free_mem_region($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("request_free_mem_region($arg1, $arg2, (const u8 *)$arg3)")
   public static Ptr<resource> request_free_mem_region(Ptr<resource> base, @Unsigned long size,
       String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_key_and_link($arg1, (const u8*)$arg2, $arg3, (const void*)$arg4, $arg5, $arg6, $arg7, $arg8)")
+  @BuiltinBPFFunction("request_key_and_link($arg1, (const u8 *)$arg2, $arg3, (const void *)$arg4, $arg5, $arg6, $arg7, $arg8)")
   public static Ptr<key> request_key_and_link(Ptr<key_type> type, String description,
       Ptr<key_tag> domain_tag, Ptr<?> callout_info, @Unsigned long callout_len, Ptr<?> aux,
       Ptr<key> dest_keyring, @Unsigned long flags) {
@@ -1212,7 +1213,7 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_key_auth_describe((const struct key*)$arg1, $arg2)")
+  @BuiltinBPFFunction("request_key_auth_describe((const struct key *)$arg1, $arg2)")
   public static void request_key_auth_describe(Ptr<key> key, Ptr<seq_file> m) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1236,7 +1237,7 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_key_auth_new($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("request_key_auth_new($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static Ptr<key> request_key_auth_new(Ptr<key> target, String op, Ptr<?> callout_info,
       @Unsigned long callout_len, Ptr<key> dest_keyring) {
     throw new MethodIsBPFRelatedFunction();
@@ -1255,7 +1256,7 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_key_auth_read((const struct key*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("request_key_auth_read((const struct key *)$arg1, $arg2, $arg3)")
   public static long request_key_auth_read(Ptr<key> key, String buffer, @Unsigned long buflen) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1267,21 +1268,21 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_key_rcu($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("request_key_rcu($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<key> request_key_rcu(Ptr<key_type> type, String description,
       Ptr<key_tag> domain_tag) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_key_tag($arg1, (const u8*)$arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("request_key_tag($arg1, (const u8 *)$arg2, $arg3, (const u8 *)$arg4)")
   public static Ptr<key> request_key_tag(Ptr<key_type> type, String description,
       Ptr<key_tag> domain_tag, String callout_info) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_key_with_auxdata($arg1, (const u8*)$arg2, $arg3, (const void*)$arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("request_key_with_auxdata($arg1, (const u8 *)$arg2, $arg3, (const void *)$arg4, $arg5, $arg6)")
   public static Ptr<key> request_key_with_auxdata(Ptr<key_type> type, String description,
       Ptr<key_tag> domain_tag, Ptr<?> callout_info, @Unsigned long callout_len, Ptr<?> aux) {
     throw new MethodIsBPFRelatedFunction();
@@ -1307,21 +1308,21 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_nmi($arg1, $arg2, $arg3, (const u8*)$arg4, $arg5)")
+  @BuiltinBPFFunction("request_nmi($arg1, $arg2, $arg3, (const u8 *)$arg4, $arg5)")
   public static int request_nmi(@Unsigned int irq, @OriginalName("irq_handler_t") Ptr<?> handler,
       @Unsigned long irqflags, String name, Ptr<?> dev_id) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_partial_firmware_into_buf((const struct firmware**)$arg1, (const u8*)$arg2, $arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("request_partial_firmware_into_buf((const struct firmware**)$arg1, (const u8 *)$arg2, $arg3, $arg4, $arg5, $arg6)")
   public static int request_partial_firmware_into_buf(Ptr<Ptr<firmware>> firmware_p, String name,
       Ptr<device> device, Ptr<?> buf, @Unsigned long size, @Unsigned long offset) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_percpu_nmi($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("request_percpu_nmi($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static int request_percpu_nmi(@Unsigned int irq,
       @OriginalName("irq_handler_t") Ptr<?> handler, String name, Ptr<?> dev_id) {
     throw new MethodIsBPFRelatedFunction();
@@ -1340,7 +1341,7 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_threaded_irq($arg1, $arg2, $arg3, $arg4, (const u8*)$arg5, $arg6)")
+  @BuiltinBPFFunction("request_threaded_irq($arg1, $arg2, $arg3, $arg4, (const u8 *)$arg5, $arg6)")
   public static int request_threaded_irq(@Unsigned int irq,
       @OriginalName("irq_handler_t") Ptr<?> handler,
       @OriginalName("irq_handler_t") Ptr<?> thread_fn, @Unsigned long irqflags, String devname,
@@ -1349,7 +1350,7 @@ public final class RequestDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("request_trusted_key((const u8*)$arg1, (const u8**)$arg2, $arg3)")
+  @BuiltinBPFFunction("request_trusted_key((const u8 *)$arg1, (const u8**)$arg2, $arg3)")
   public static Ptr<key> request_trusted_key(String trusted_desc,
       Ptr<Ptr<java.lang.Character>> master_key, Ptr<java.lang. @Unsigned Long> master_keylen) {
     throw new MethodIsBPFRelatedFunction();

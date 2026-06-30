@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1178,7 +1179,7 @@ public final class SpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_acpi_controller_match($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("spi_acpi_controller_match($arg1, (const void *)$arg2)")
   public static int spi_acpi_controller_match(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1247,14 +1248,14 @@ public final class SpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_controller_dma_map_mem_op_data($arg1, (const struct spi_mem_op*)$arg2, $arg3)")
+  @BuiltinBPFFunction("spi_controller_dma_map_mem_op_data($arg1, (const struct spi_mem_op *)$arg2, $arg3)")
   public static int spi_controller_dma_map_mem_op_data(Ptr<spi_controller> ctlr, Ptr<spi_mem_op> op,
       Ptr<sg_table> sgt) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_controller_dma_unmap_mem_op_data($arg1, (const struct spi_mem_op*)$arg2, $arg3)")
+  @BuiltinBPFFunction("spi_controller_dma_unmap_mem_op_data($arg1, (const struct spi_mem_op *)$arg2, $arg3)")
   public static void spi_controller_dma_unmap_mem_op_data(Ptr<spi_controller> ctlr,
       Ptr<spi_mem_op> op, Ptr<sg_table> sgt) {
     throw new MethodIsBPFRelatedFunction();
@@ -1711,13 +1712,13 @@ public final class SpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct spi_device_id*)spi_get_device_id((const struct spi_device*)$arg1))")
+  @BuiltinBPFFunction("((const struct spi_device_id*)spi_get_device_id((const struct spi_device *)$arg1))")
   public static Ptr<spi_device_id> spi_get_device_id(Ptr<spi_device> sdev) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)spi_get_device_match_data((const struct spi_device*)$arg1))")
+  @BuiltinBPFFunction("((const void*)spi_get_device_match_data((const struct spi_device *)$arg1))")
   public static Ptr<?> spi_get_device_match_data(Ptr<spi_device> sdev) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1761,7 +1762,7 @@ public final class SpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_match_device($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("spi_match_device($arg1, (const struct device_driver *)$arg2)")
   public static int spi_match_device(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1785,7 +1786,7 @@ public final class SpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_mem_add_op_stats($arg1, (const struct spi_mem_op*)$arg2, $arg3)")
+  @BuiltinBPFFunction("spi_mem_add_op_stats($arg1, (const struct spi_mem_op *)$arg2, $arg3)")
   public static void spi_mem_add_op_stats(Ptr<spi_statistics> pcpu_stats, Ptr<spi_mem_op> op,
       int exec_op_ret) {
     throw new MethodIsBPFRelatedFunction();
@@ -1816,19 +1817,19 @@ public final class SpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_mem_check_op((const struct spi_mem_op*)$arg1)")
+  @BuiltinBPFFunction("spi_mem_check_op((const struct spi_mem_op *)$arg1)")
   public static int spi_mem_check_op(Ptr<spi_mem_op> op) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_mem_default_supports_op($arg1, (const struct spi_mem_op*)$arg2)")
+  @BuiltinBPFFunction("spi_mem_default_supports_op($arg1, (const struct spi_mem_op *)$arg2)")
   public static boolean spi_mem_default_supports_op(Ptr<spi_mem> mem, Ptr<spi_mem_op> op) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_mem_dirmap_create($arg1, (const struct spi_mem_dirmap_info*)$arg2)")
+  @BuiltinBPFFunction("spi_mem_dirmap_create($arg1, (const struct spi_mem_dirmap_info *)$arg2)")
   public static Ptr<spi_mem_dirmap_desc> spi_mem_dirmap_create(Ptr<spi_mem> mem,
       Ptr<spi_mem_dirmap_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1848,7 +1849,7 @@ public final class SpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_mem_dirmap_write($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("spi_mem_dirmap_write($arg1, $arg2, $arg3, (const void *)$arg4)")
   public static @OriginalName("ssize_t") long spi_mem_dirmap_write(Ptr<spi_mem_dirmap_desc> desc,
       @Unsigned long offs, @Unsigned long len, Ptr<?> buf) {
     throw new MethodIsBPFRelatedFunction();
@@ -1868,7 +1869,7 @@ public final class SpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_mem_exec_op($arg1, (const struct spi_mem_op*)$arg2)")
+  @BuiltinBPFFunction("spi_mem_exec_op($arg1, (const struct spi_mem_op *)$arg2)")
   public static int spi_mem_exec_op(Ptr<spi_mem> mem, Ptr<spi_mem_op> op) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1887,14 +1888,14 @@ public final class SpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_mem_no_dirmap_write($arg1, $arg2, $arg3, (const void*)$arg4)")
+  @BuiltinBPFFunction("spi_mem_no_dirmap_write($arg1, $arg2, $arg3, (const void *)$arg4)")
   public static @OriginalName("ssize_t") long spi_mem_no_dirmap_write(Ptr<spi_mem_dirmap_desc> desc,
       @Unsigned long offs, @Unsigned long len, Ptr<?> buf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_mem_poll_status($arg1, (const struct spi_mem_op*)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
+  @BuiltinBPFFunction("spi_mem_poll_status($arg1, (const struct spi_mem_op *)$arg2, $arg3, $arg4, $arg5, $arg6, $arg7)")
   public static int spi_mem_poll_status(Ptr<spi_mem> mem, Ptr<spi_mem_op> op, @Unsigned short mask,
       @Unsigned short match, @Unsigned long initial_delay_us, @Unsigned long polling_delay_us,
       @Unsigned short timeout_ms) {
@@ -1920,7 +1921,7 @@ public final class SpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_mem_supports_op($arg1, (const struct spi_mem_op*)$arg2)")
+  @BuiltinBPFFunction("spi_mem_supports_op($arg1, (const struct spi_mem_op *)$arg2)")
   public static boolean spi_mem_supports_op(Ptr<spi_mem> mem, Ptr<spi_mem_op> op) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2019,7 +2020,7 @@ public final class SpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_register_board_info((const struct spi_board_info*)$arg1, $arg2)")
+  @BuiltinBPFFunction("spi_register_board_info((const struct spi_board_info *)$arg1, $arg2)")
   public static int spi_register_board_info(Ptr<spi_board_info> info, @Unsigned int n) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2152,7 +2153,7 @@ public final class SpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("spi_uevent((const struct device *)$arg1, $arg2)")
   public static int spi_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -2183,13 +2184,13 @@ public final class SpiDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_write($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("spi_write($arg1, (const void *)$arg2, $arg3)")
   public static int spi_write(Ptr<spi_device> spi, Ptr<?> buf, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("spi_write_then_read($arg1, (const void*)$arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("spi_write_then_read($arg1, (const void *)$arg2, $arg3, $arg4, $arg5)")
   public static int spi_write_then_read(Ptr<spi_device> spi, Ptr<?> txbuf, @Unsigned int n_tx,
       Ptr<?> rxbuf, @Unsigned int n_rx) {
     throw new MethodIsBPFRelatedFunction();

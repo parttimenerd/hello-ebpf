@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1320,7 +1321,7 @@ public final class I2cDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct i2c_device_id*)i2c_client_get_device_id((const struct i2c_client*)$arg1))")
+  @BuiltinBPFFunction("((const struct i2c_device_id*)i2c_client_get_device_id((const struct i2c_client *)$arg1))")
   public static Ptr<i2c_device_id> i2c_client_get_device_id(Ptr<i2c_client> client) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1398,20 +1399,20 @@ public final class I2cDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_dev_irq_from_resources((const struct resource*)$arg1, $arg2)")
+  @BuiltinBPFFunction("i2c_dev_irq_from_resources((const struct resource *)$arg1, $arg2)")
   public static int i2c_dev_irq_from_resources(Ptr<resource> resources,
       @Unsigned int num_resources) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_dev_or_parent_fwnode_match($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("i2c_dev_or_parent_fwnode_match($arg1, (const void *)$arg2)")
   public static int i2c_dev_or_parent_fwnode_match(Ptr<device> dev, Ptr<?> data) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_device_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("i2c_device_match($arg1, (const struct device_driver *)$arg2)")
   public static int i2c_device_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1435,7 +1436,7 @@ public final class I2cDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_device_uevent((const struct device*)$arg1, $arg2)")
+  @BuiltinBPFFunction("i2c_device_uevent((const struct device *)$arg1, $arg2)")
   public static int i2c_device_uevent(Ptr<device> dev, Ptr<kobj_uevent_env> env) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1719,7 +1720,7 @@ public final class I2cDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_get_device_id((const struct i2c_client*)$arg1, $arg2)")
+  @BuiltinBPFFunction("i2c_get_device_id((const struct i2c_client *)$arg1, $arg2)")
   public static int i2c_get_device_id(Ptr<i2c_client> client, Ptr<i2c_device_identity> id) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1732,7 +1733,7 @@ public final class I2cDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const void*)i2c_get_match_data((const struct i2c_client*)$arg1))")
+  @BuiltinBPFFunction("((const void*)i2c_get_match_data((const struct i2c_client *)$arg1))")
   public static Ptr<?> i2c_get_match_data(Ptr<i2c_client> client) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1769,20 +1770,20 @@ public final class I2cDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("((const struct i2c_device_id*)i2c_match_id((const struct i2c_device_id*)$arg1, (const struct i2c_client*)$arg2))")
+  @BuiltinBPFFunction("((const struct i2c_device_id*)i2c_match_id((const struct i2c_device_id *)$arg1, (const struct i2c_client *)$arg2))")
   public static Ptr<i2c_device_id> i2c_match_id(Ptr<i2c_device_id> id, Ptr<i2c_client> client) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_new_ancillary_device($arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("i2c_new_ancillary_device($arg1, (const u8 *)$arg2, $arg3)")
   public static Ptr<i2c_client> i2c_new_ancillary_device(Ptr<i2c_client> client, String name,
       @Unsigned short default_addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_new_client_device($arg1, (const struct i2c_board_info*)$arg2)")
+  @BuiltinBPFFunction("i2c_new_client_device($arg1, (const struct i2c_board_info *)$arg2)")
   public static Ptr<i2c_client> i2c_new_client_device(Ptr<i2c_adapter> adap,
       Ptr<i2c_board_info> info) {
     throw new MethodIsBPFRelatedFunction();
@@ -1796,7 +1797,7 @@ public final class I2cDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_new_scanned_device($arg1, $arg2, (const short unsigned int*)$arg3, (int (*)(struct i2c_adapter*, short unsigned int))$arg4)")
+  @BuiltinBPFFunction("i2c_new_scanned_device($arg1, $arg2, (const short unsigned int *)$arg3, (int (*)(struct i2c_adapter*, short unsigned int))$arg4)")
   public static Ptr<i2c_client> i2c_new_scanned_device(Ptr<i2c_adapter> adap,
       Ptr<i2c_board_info> info, Ptr<java.lang. @Unsigned Short> addr_list, Ptr<?> probe) {
     throw new MethodIsBPFRelatedFunction();
@@ -1855,7 +1856,7 @@ public final class I2cDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_register_board_info($arg1, (const struct i2c_board_info*)$arg2, $arg3)")
+  @BuiltinBPFFunction("i2c_register_board_info($arg1, (const struct i2c_board_info *)$arg2, $arg3)")
   public static int i2c_register_board_info(int busnum, Ptr<i2c_board_info> info,
       @Unsigned int len) {
     throw new MethodIsBPFRelatedFunction();
@@ -1899,40 +1900,40 @@ public final class I2cDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_smbus_read_block_data((const struct i2c_client*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("i2c_smbus_read_block_data((const struct i2c_client *)$arg1, $arg2, $arg3)")
   public static int i2c_smbus_read_block_data(Ptr<i2c_client> client, char command,
       Ptr<java.lang.Character> values) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_smbus_read_byte((const struct i2c_client*)$arg1)")
+  @BuiltinBPFFunction("i2c_smbus_read_byte((const struct i2c_client *)$arg1)")
   public static int i2c_smbus_read_byte(Ptr<i2c_client> client) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_smbus_read_byte_data((const struct i2c_client*)$arg1, $arg2)")
+  @BuiltinBPFFunction("i2c_smbus_read_byte_data((const struct i2c_client *)$arg1, $arg2)")
   public static int i2c_smbus_read_byte_data(Ptr<i2c_client> client, char command) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_smbus_read_i2c_block_data((const struct i2c_client*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("i2c_smbus_read_i2c_block_data((const struct i2c_client *)$arg1, $arg2, $arg3, $arg4)")
   public static int i2c_smbus_read_i2c_block_data(Ptr<i2c_client> client, char command, char length,
       Ptr<java.lang.Character> values) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_smbus_read_i2c_block_data_or_emulated((const struct i2c_client*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("i2c_smbus_read_i2c_block_data_or_emulated((const struct i2c_client *)$arg1, $arg2, $arg3, $arg4)")
   public static int i2c_smbus_read_i2c_block_data_or_emulated(Ptr<i2c_client> client, char command,
       char length, Ptr<java.lang.Character> values) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_smbus_read_word_data((const struct i2c_client*)$arg1, $arg2)")
+  @BuiltinBPFFunction("i2c_smbus_read_word_data((const struct i2c_client *)$arg1, $arg2)")
   public static int i2c_smbus_read_word_data(Ptr<i2c_client> client, char command) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1944,33 +1945,33 @@ public final class I2cDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_smbus_write_block_data((const struct i2c_client*)$arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("i2c_smbus_write_block_data((const struct i2c_client *)$arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int i2c_smbus_write_block_data(Ptr<i2c_client> client, char command, char length,
       Ptr<java.lang.Character> values) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_smbus_write_byte((const struct i2c_client*)$arg1, $arg2)")
+  @BuiltinBPFFunction("i2c_smbus_write_byte((const struct i2c_client *)$arg1, $arg2)")
   public static int i2c_smbus_write_byte(Ptr<i2c_client> client, char value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_smbus_write_byte_data((const struct i2c_client*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("i2c_smbus_write_byte_data((const struct i2c_client *)$arg1, $arg2, $arg3)")
   public static int i2c_smbus_write_byte_data(Ptr<i2c_client> client, char command, char value) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_smbus_write_i2c_block_data((const struct i2c_client*)$arg1, $arg2, $arg3, (const u8*)$arg4)")
+  @BuiltinBPFFunction("i2c_smbus_write_i2c_block_data((const struct i2c_client *)$arg1, $arg2, $arg3, (const u8 *)$arg4)")
   public static int i2c_smbus_write_i2c_block_data(Ptr<i2c_client> client, char command,
       char length, Ptr<java.lang.Character> values) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_smbus_write_word_data((const struct i2c_client*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("i2c_smbus_write_word_data((const struct i2c_client *)$arg1, $arg2, $arg3)")
   public static int i2c_smbus_write_word_data(Ptr<i2c_client> client, char command,
       @Unsigned short value) {
     throw new MethodIsBPFRelatedFunction();
@@ -1998,7 +1999,7 @@ public final class I2cDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("i2c_transfer_buffer_flags((const struct i2c_client*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("i2c_transfer_buffer_flags((const struct i2c_client *)$arg1, $arg2, $arg3, $arg4)")
   public static int i2c_transfer_buffer_flags(Ptr<i2c_client> client, String buf, int count,
       @Unsigned short flags) {
     throw new MethodIsBPFRelatedFunction();

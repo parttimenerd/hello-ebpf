@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class GpioDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("gpio_bus_match($arg1, (const struct device_driver*)$arg2)")
+  @BuiltinBPFFunction("gpio_bus_match($arg1, (const struct device_driver *)$arg2)")
   public static int gpio_bus_match(Ptr<device> dev, Ptr<device_driver> drv) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1103,13 +1104,13 @@ public final class GpioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpio_chip_match_by_fwnode($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("gpio_chip_match_by_fwnode($arg1, (const void *)$arg2)")
   public static int gpio_chip_match_by_fwnode(Ptr<gpio_chip> gc, Ptr<?> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpio_chip_match_by_label($arg1, (const void*)$arg2)")
+  @BuiltinBPFFunction("gpio_chip_match_by_label($arg1, (const void *)$arg2)")
   public static int gpio_chip_match_by_label(Ptr<gpio_chip> gc, Ptr<?> label) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1146,19 +1147,19 @@ public final class GpioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpio_device_find((const void*)$arg1, (int (*)(struct gpio_chip*, const void*))$arg2)")
+  @BuiltinBPFFunction("gpio_device_find((const void *)$arg1, (int (*)(struct gpio_chip*, const void*))$arg2)")
   public static Ptr<gpio_device> gpio_device_find(Ptr<?> data, Ptr<?> match) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpio_device_find_by_fwnode((const struct fwnode_handle*)$arg1)")
+  @BuiltinBPFFunction("gpio_device_find_by_fwnode((const struct fwnode_handle *)$arg1)")
   public static Ptr<gpio_device> gpio_device_find_by_fwnode(Ptr<fwnode_handle> fwnode) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpio_device_find_by_label((const u8*)$arg1)")
+  @BuiltinBPFFunction("gpio_device_find_by_label((const u8 *)$arg1)")
   public static Ptr<gpio_device> gpio_device_find_by_label(String label) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1250,13 +1251,13 @@ public final class GpioDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpio_request($arg1, (const u8*)$arg2)")
+  @BuiltinBPFFunction("gpio_request($arg1, (const u8 *)$arg2)")
   public static int gpio_request(@Unsigned int gpio, String label) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("gpio_request_one($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("gpio_request_one($arg1, $arg2, (const u8 *)$arg3)")
   public static int gpio_request_one(@Unsigned int gpio, @Unsigned long flags, String label) {
     throw new MethodIsBPFRelatedFunction();
   }

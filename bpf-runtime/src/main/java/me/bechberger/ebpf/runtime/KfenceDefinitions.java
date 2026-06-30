@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1173,25 +1174,25 @@ public final class KfenceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kfence_ksize((const void*)$arg1)")
+  @BuiltinBPFFunction("kfence_ksize((const void *)$arg1)")
   public static @Unsigned long kfence_ksize(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kfence_object_start((const void*)$arg1)")
+  @BuiltinBPFFunction("kfence_object_start((const void *)$arg1)")
   public static Ptr<?> kfence_object_start(Ptr<?> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kfence_print_object($arg1, (const struct kfence_metadata*)$arg2)")
+  @BuiltinBPFFunction("kfence_print_object($arg1, (const struct kfence_metadata *)$arg2)")
   public static void kfence_print_object(Ptr<seq_file> seq, Ptr<kfence_metadata> meta) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kfence_print_stack($arg1, (const struct kfence_metadata*)$arg2, $arg3)")
+  @BuiltinBPFFunction("kfence_print_stack($arg1, (const struct kfence_metadata *)$arg2, $arg3)")
   public static void kfence_print_stack(Ptr<seq_file> seq, Ptr<kfence_metadata> meta,
       boolean show_alloc) {
     throw new MethodIsBPFRelatedFunction();
@@ -1204,7 +1205,7 @@ public final class KfenceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kfence_report_error($arg1, $arg2, $arg3, (const struct kfence_metadata*)$arg4, $arg5)")
+  @BuiltinBPFFunction("kfence_report_error($arg1, $arg2, $arg3, (const struct kfence_metadata *)$arg4, $arg5)")
   public static void kfence_report_error(@Unsigned long address, boolean is_write,
       Ptr<pt_regs> regs, Ptr<kfence_metadata> meta, kfence_error_type type) {
     throw new MethodIsBPFRelatedFunction();
@@ -1217,7 +1218,7 @@ public final class KfenceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("kfence_to_kp_stack((const struct kfence_track*)$arg1, $arg2)")
+  @BuiltinBPFFunction("kfence_to_kp_stack((const struct kfence_track *)$arg1, $arg2)")
   public static void kfence_to_kp_stack(Ptr<kfence_track> track, Ptr<Ptr<?>> kp_stack) {
     throw new MethodIsBPFRelatedFunction();
   }

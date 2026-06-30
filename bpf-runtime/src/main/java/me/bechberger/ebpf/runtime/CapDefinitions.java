@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,33 +1091,33 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class CapDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("cap_bprm_creds_from_file($arg1, (const struct file*)$arg2)")
+  @BuiltinBPFFunction("cap_bprm_creds_from_file($arg1, (const struct file *)$arg2)")
   public static int cap_bprm_creds_from_file(Ptr<linux_binprm> bprm, Ptr<file> file) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cap_capable((const struct cred*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("cap_capable((const struct cred *)$arg1, $arg2, $arg3, $arg4)")
   public static int cap_capable(Ptr<cred> cred, Ptr<user_namespace> target_ns, int cap,
       @Unsigned int opts) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cap_capget((const struct task_struct*)$arg1, $arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("cap_capget((const struct task_struct *)$arg1, $arg2, $arg3, $arg4)")
   public static int cap_capget(Ptr<task_struct> target, Ptr<kernel_cap_t> effective,
       Ptr<kernel_cap_t> inheritable, Ptr<kernel_cap_t> permitted) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cap_capset($arg1, (const struct cred*)$arg2, (const struct {\n"
+  @BuiltinBPFFunction("cap_capset($arg1, (const struct cred *)$arg2, (const struct {\n"
           + "  long long unsigned int val;\n"
-          + "}*)$arg3, (const struct {\n"
+          + "} *)$arg3, (const struct {\n"
           + "  long long unsigned int val;\n"
-          + "}*)$arg4, (const struct {\n"
+          + "} *)$arg4, (const struct {\n"
           + "  long long unsigned int val;\n"
-          + "}*)$arg5)")
+          + "} *)$arg5)")
   public static int cap_capset(Ptr<cred> _new, Ptr<cred> old, Ptr<kernel_cap_t> effective,
       Ptr<kernel_cap_t> inheritable, Ptr<kernel_cap_t> permitted) {
     throw new MethodIsBPFRelatedFunction();
@@ -1130,7 +1131,7 @@ public final class CapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cap_inode_getsecurity($arg1, $arg2, (const u8*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("cap_inode_getsecurity($arg1, $arg2, (const u8 *)$arg3, $arg4, $arg5)")
   public static int cap_inode_getsecurity(Ptr<mnt_idmap> idmap, Ptr<inode> inode, String name,
       Ptr<Ptr<?>> buffer, boolean alloc) {
     throw new MethodIsBPFRelatedFunction();
@@ -1149,13 +1150,13 @@ public final class CapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cap_inode_removexattr($arg1, $arg2, (const u8*)$arg3)")
+  @BuiltinBPFFunction("cap_inode_removexattr($arg1, $arg2, (const u8 *)$arg3)")
   public static int cap_inode_removexattr(Ptr<mnt_idmap> idmap, Ptr<dentry> dentry, String name) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cap_inode_setxattr($arg1, (const u8*)$arg2, (const void*)$arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("cap_inode_setxattr($arg1, (const u8 *)$arg2, (const void *)$arg3, $arg4, $arg5)")
   public static int cap_inode_setxattr(Ptr<dentry> dentry, String name, Ptr<?> value,
       @Unsigned long size, int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1186,7 +1187,7 @@ public final class CapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cap_settime((const struct timespec64*)$arg1, (const struct timezone*)$arg2)")
+  @BuiltinBPFFunction("cap_settime((const struct timespec64 *)$arg1, (const struct timezone *)$arg2)")
   public static int cap_settime(Ptr<timespec64> ts, Ptr<timezone> tz) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1199,7 +1200,7 @@ public final class CapDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("cap_task_fix_setuid($arg1, (const struct cred*)$arg2, $arg3)")
+  @BuiltinBPFFunction("cap_task_fix_setuid($arg1, (const struct cred *)$arg2, $arg3)")
   public static int cap_task_fix_setuid(Ptr<cred> _new, Ptr<cred> old, int flags) {
     throw new MethodIsBPFRelatedFunction();
   }

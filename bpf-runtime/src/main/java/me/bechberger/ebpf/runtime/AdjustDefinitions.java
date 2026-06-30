@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1159,7 +1160,7 @@ public final class AdjustDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("adjust_ptr_min_max_vals($arg1, $arg2, (const struct bpf_reg_state*)$arg3, (const struct bpf_reg_state*)$arg4)")
+  @BuiltinBPFFunction("adjust_ptr_min_max_vals($arg1, $arg2, (const struct bpf_reg_state *)$arg3, (const struct bpf_reg_state *)$arg4)")
   public static int adjust_ptr_min_max_vals(Ptr<bpf_verifier_env> env, Ptr<bpf_insn> insn,
       Ptr<bpf_reg_state> ptr_reg, Ptr<bpf_reg_state> off_reg) {
     throw new MethodIsBPFRelatedFunction();

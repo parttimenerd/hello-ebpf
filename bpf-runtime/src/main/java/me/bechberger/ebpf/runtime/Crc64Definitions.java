@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class Crc64Definitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("crc64_be($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crc64_be($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long crc64_be(@Unsigned long crc, Ptr<?> p, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1144,7 +1145,7 @@ public final class Crc64Definitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("crc64_nvme($arg1, (const void*)$arg2, $arg3)")
+  @BuiltinBPFFunction("crc64_nvme($arg1, (const void *)$arg2, $arg3)")
   public static @Unsigned long crc64_nvme(@Unsigned long crc, Ptr<?> p, @Unsigned long len) {
     throw new MethodIsBPFRelatedFunction();
   }

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1127,14 +1128,14 @@ public final class ReplaceDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("replace_nexthop($arg1, $arg2, $arg3, (const struct nh_config*)$arg4, $arg5)")
+  @BuiltinBPFFunction("replace_nexthop($arg1, $arg2, $arg3, (const struct nh_config *)$arg4, $arg5)")
   public static int replace_nexthop(Ptr<net> net, Ptr<nexthop> old, Ptr<nexthop> _new,
       Ptr<nh_config> cfg, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("replace_nexthop_grp($arg1, $arg2, $arg3, (const struct nh_config*)$arg4, $arg5)")
+  @BuiltinBPFFunction("replace_nexthop_grp($arg1, $arg2, $arg3, (const struct nh_config *)$arg4, $arg5)")
   public static int replace_nexthop_grp(Ptr<net> net, Ptr<nexthop> old, Ptr<nexthop> _new,
       Ptr<nh_config> cfg, Ptr<netlink_ext_ack> extack) {
     throw new MethodIsBPFRelatedFunction();

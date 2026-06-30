@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1127,7 +1128,7 @@ public final class KDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("k_d_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("k_d_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long k_d_store(Ptr<device> dev,
       Ptr<device_attribute> devattr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1159,7 +1160,7 @@ public final class KDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("k_i_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("k_i_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long k_i_store(Ptr<device> dev,
       Ptr<device_attribute> devattr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1203,7 +1204,7 @@ public final class KDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("k_po_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("k_po_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long k_po_store(Ptr<device> dev,
       Ptr<device_attribute> devattr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
@@ -1217,7 +1218,7 @@ public final class KDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("k_pu_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("k_pu_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long k_pu_store(Ptr<device> dev,
       Ptr<device_attribute> devattr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

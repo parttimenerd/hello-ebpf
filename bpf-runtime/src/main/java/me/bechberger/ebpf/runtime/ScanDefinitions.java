@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1170,14 +1171,14 @@ public final class ScanDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scan_sleep_millisecs_store($arg1, $arg2, (const u8*)$arg3, $arg4)")
+  @BuiltinBPFFunction("scan_sleep_millisecs_store($arg1, $arg2, (const u8 *)$arg3, $arg4)")
   public static @OriginalName("ssize_t") long scan_sleep_millisecs_store(Ptr<kobject> kobj,
       Ptr<kobj_attribute> attr, String buf, @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("scan_store((const struct bus_type*)$arg1, (const u8*)$arg2, $arg3)")
+  @BuiltinBPFFunction("scan_store((const struct bus_type *)$arg1, (const u8 *)$arg2, $arg3)")
   public static @OriginalName("ssize_t") long scan_store(Ptr<bus_type> bus, String buf,
       @Unsigned long count) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1109,7 +1110,7 @@ public final class AddrconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_add_linklocal($arg1, (const struct in6_addr*)$arg2, $arg3)")
+  @BuiltinBPFFunction("addrconf_add_linklocal($arg1, (const struct in6_addr *)$arg2, $arg3)")
   public static void addrconf_add_linklocal(Ptr<inet6_dev> idev, Ptr<in6_addr> addr,
       @Unsigned int flags) {
     throw new MethodIsBPFRelatedFunction();
@@ -1201,7 +1202,7 @@ public final class AddrconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_f6i_alloc($arg1, $arg2, (const struct in6_addr*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("addrconf_f6i_alloc($arg1, $arg2, (const struct in6_addr *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<fib6_info> addrconf_f6i_alloc(Ptr<net> net, Ptr<inet6_dev> idev,
       Ptr<in6_addr> addr, boolean anycast, @Unsigned @OriginalName("gfp_t") int gfp_flags,
       Ptr<netlink_ext_ack> extack) {
@@ -1209,14 +1210,14 @@ public final class AddrconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_fixup_forwarding((const struct ctl_table*)$arg1, $arg2, $arg3)")
+  @BuiltinBPFFunction("addrconf_fixup_forwarding((const struct ctl_table *)$arg1, $arg2, $arg3)")
   public static int addrconf_fixup_forwarding(Ptr<ctl_table> table, Ptr<java.lang.Integer> p,
       int newf) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_get_prefix_route((const struct in6_addr*)$arg1, $arg2, (const struct net_device*)$arg3, $arg4, $arg5, $arg6)")
+  @BuiltinBPFFunction("addrconf_get_prefix_route((const struct in6_addr *)$arg1, $arg2, (const struct net_device *)$arg3, $arg4, $arg5, $arg6)")
   public static Ptr<fib6_info> addrconf_get_prefix_route(Ptr<in6_addr> pfx, int plen,
       Ptr<net_device> dev, @Unsigned int flags, @Unsigned int noflags, boolean no_gw) {
     throw new MethodIsBPFRelatedFunction();
@@ -1271,7 +1272,7 @@ public final class AddrconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_join_solict($arg1, (const struct in6_addr*)$arg2)")
+  @BuiltinBPFFunction("addrconf_join_solict($arg1, (const struct in6_addr *)$arg2)")
   public static void addrconf_join_solict(Ptr<net_device> dev, Ptr<in6_addr> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1283,7 +1284,7 @@ public final class AddrconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_leave_solict($arg1, (const struct in6_addr*)$arg2)")
+  @BuiltinBPFFunction("addrconf_leave_solict($arg1, (const struct in6_addr *)$arg2)")
   public static void addrconf_leave_solict(Ptr<inet6_dev> idev, Ptr<in6_addr> addr) {
     throw new MethodIsBPFRelatedFunction();
   }
@@ -1314,7 +1315,7 @@ public final class AddrconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_prefix_rcv_add_addr($arg1, $arg2, (const struct prefix_info*)$arg3, $arg4, (const struct in6_addr*)$arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
+  @BuiltinBPFFunction("addrconf_prefix_rcv_add_addr($arg1, $arg2, (const struct prefix_info *)$arg3, $arg4, (const struct in6_addr *)$arg5, $arg6, $arg7, $arg8, $arg9, $arg10, $arg11)")
   public static int addrconf_prefix_rcv_add_addr(Ptr<net> net, Ptr<net_device> dev,
       Ptr<prefix_info> pinfo, Ptr<inet6_dev> in6_dev, Ptr<in6_addr> addr, int addr_type,
       @Unsigned int addr_flags, boolean sllao, boolean tokenized, @Unsigned int valid_lft,
@@ -1343,42 +1344,42 @@ public final class AddrconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_sysctl_addr_gen_mode((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("addrconf_sysctl_addr_gen_mode((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int addrconf_sysctl_addr_gen_mode(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_sysctl_disable((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("addrconf_sysctl_disable((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int addrconf_sysctl_disable(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_sysctl_disable_policy((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("addrconf_sysctl_disable_policy((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int addrconf_sysctl_disable_policy(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_sysctl_force_forwarding((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("addrconf_sysctl_force_forwarding((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int addrconf_sysctl_force_forwarding(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_sysctl_forward((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("addrconf_sysctl_forward((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int addrconf_sysctl_forward(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_sysctl_ignore_routes_with_linkdown((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("addrconf_sysctl_ignore_routes_with_linkdown((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int addrconf_sysctl_ignore_routes_with_linkdown(Ptr<ctl_table> ctl, int write,
       Ptr<?> buffer, Ptr<java.lang. @Unsigned Long> lenp,
       Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
@@ -1386,14 +1387,14 @@ public final class AddrconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_sysctl_mtu((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("addrconf_sysctl_mtu((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int addrconf_sysctl_mtu(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_sysctl_proxy_ndp((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("addrconf_sysctl_proxy_ndp((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int addrconf_sysctl_proxy_ndp(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1406,7 +1407,7 @@ public final class AddrconfDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("addrconf_sysctl_stable_secret((const struct ctl_table*)$arg1, $arg2, $arg3, $arg4, $arg5)")
+  @BuiltinBPFFunction("addrconf_sysctl_stable_secret((const struct ctl_table *)$arg1, $arg2, $arg3, $arg4, $arg5)")
   public static int addrconf_sysctl_stable_secret(Ptr<ctl_table> ctl, int write, Ptr<?> buffer,
       Ptr<java.lang. @Unsigned Long> lenp, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();

@@ -6,6 +6,7 @@ import me.bechberger.ebpf.annotations.InlineUnion;
 import me.bechberger.ebpf.annotations.Offset;
 import me.bechberger.ebpf.annotations.OriginalName;
 import me.bechberger.ebpf.annotations.Size;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.Type;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
@@ -1090,7 +1091,7 @@ import static me.bechberger.ebpf.runtime.runtime.*;
 @java.lang.SuppressWarnings("unused")
 public final class SystemDefinitions {
   @NotUsableInJava
-  @BuiltinBPFFunction("system_callback((const u8*)$arg1, $arg2, $arg3, (const struct file_operations**)$arg4)")
+  @BuiltinBPFFunction("system_callback((const u8 *)$arg1, $arg2, $arg3, (const struct file_operations**)$arg4)")
   public static int system_callback(String name,
       Ptr<java.lang. @Unsigned @OriginalName("umode_t") Short> mode, Ptr<Ptr<?>> data,
       Ptr<Ptr<file_operations>> fops) {
@@ -1105,7 +1106,7 @@ public final class SystemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("system_enable_write($arg1, (const u8*)$arg2, $arg3, $arg4)")
+  @BuiltinBPFFunction("system_enable_write($arg1, (const u8 *)$arg2, $arg3, $arg4)")
   public static @OriginalName("ssize_t") long system_enable_write(Ptr<file> filp, String ubuf,
       @Unsigned long cnt, Ptr<java.lang. @OriginalName("loff_t") Long> ppos) {
     throw new MethodIsBPFRelatedFunction();
@@ -1195,7 +1196,7 @@ public final class SystemDefinitions {
   }
 
   @NotUsableInJava
-  @BuiltinBPFFunction("system_pnp_probe($arg1, (const struct pnp_device_id*)$arg2)")
+  @BuiltinBPFFunction("system_pnp_probe($arg1, (const struct pnp_device_id *)$arg2)")
   public static int system_pnp_probe(Ptr<pnp_dev> dev, Ptr<pnp_device_id> dev_id) {
     throw new MethodIsBPFRelatedFunction();
   }
