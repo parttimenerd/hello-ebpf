@@ -7,6 +7,10 @@ import java.lang.annotation.*;
  * declaration or an enclosing {@code @BPFFunction}-annotated method to
  * silence the plugin's structural check that {@code directVal()} must be
  * followed by a field access.
+ *
+ * <p>Applying this annotation to a method that is not also annotated
+ * {@code @BPFFunction} has no effect — the structural check only runs
+ * inside BPF function bodies.
  */
 @Target({ElementType.LOCAL_VARIABLE, ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)
