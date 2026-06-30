@@ -1,7 +1,8 @@
 package me.bechberger.ebpf.type;
 
-import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.BPFJavaInline;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
+import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,19 +26,25 @@ public class Ptr<T> {
     }
 
     /**
-     * Stub for Task 4 scaffolding. Task 5 will replace the body with the proper
-     * {@code @BPFJavaInline} body. Currently identical to {@link #val()} except in name.
+     * Like {@link #val()}, but tells the BPF compiler plugin to emit a <em>direct</em>
+     * field access ({@code (*p).field} -&gt; {@code p->field}) instead of a CO-RE
+     * relocation ({@code BPF_CORE_READ(p, field)}).
      *
-     * <p>The "directVal" identifier suppresses CO-RE lifting because
-     * {@code Translator.stripPtrVal()} matches {@code "val"} exactly; this method's
-     * name falls through that filter and the resulting {@code (*p)} lowers via
-     * {@code MemberSelect} to {@code p->field} with the trusted-pointer annotation
-     * preserved.
+     * <p>Use this only when a kfunc requires a trusted pointer on a field load.
+     * {@code BPF_CORE_READ} strips the trusted annotation; a direct access preserves it.
+     *
+     * <p>The plugin enforces that the result of {@code directVal()} is immediately followed
+     * by a field access. Other uses are a compile error. To override the check,
+     * annotate the call site with {@code @AllowDirectVal} or the kfunc parameter with
+     * {@code @TrustedPtr}.
+     *
+     * <p>Outside a {@code @BPFFunction} body this method is identical to {@link #val()}.
      */
+    @BPFJavaInline
     @BuiltinBPFFunction("(*($this))")
     @NotUsableInJava
     public T directVal() {
-        throw new MethodIsBPFRelatedFunction();
+        return val();
     }
 
     /** Create a pointer of the passed value,
