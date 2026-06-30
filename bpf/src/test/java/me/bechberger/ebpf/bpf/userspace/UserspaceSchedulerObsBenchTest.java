@@ -40,10 +40,18 @@ public class UserspaceSchedulerObsBenchTest {
         };
         Thread runner = new Thread(() -> sched.runUntilExit(Opts.defaults()), "bench-runner");
         runner.setDaemon(true);
+        runner.setUncaughtExceptionHandler((t, e) -> {
+            System.err.println("BENCH runner died: " + e);
+            e.printStackTrace(System.err);
+        });
         runner.start();
         Thread.sleep(500);
         TestUtil.spawnCpuHogs(Runtime.getRuntime().availableProcessors(), 10_000);
         Thread.sleep(11_000);
+
+        System.err.println("BENCH: runner.isAlive=" + runner.isAlive()
+            + " sched.exited=" + sched.exited()
+            + " bpfHandle=" + (sched.bpf() != null));
 
         // Snapshot histograms BEFORE requesting exit — cleanupBpf() nulls bpfHandle.
         var hist = sched.bpf().roundTripHistView();
