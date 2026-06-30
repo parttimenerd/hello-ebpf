@@ -338,7 +338,7 @@ public final class DispatchQueue {
      *
      * <pre>{@code
      * shared.forEach(it, p -> {
-     *     if (!bpf_cpumask_test_cpu(cpu, p.val().cpus_ptr)) return;
+     *     if (!bpf_cpumask_test_cpu(cpu, p.directVal().cpus_ptr)) return;
      *     shared.moveFrom(it, p, EnqFlags.empty());
      *     BPFJ._break();
      * });

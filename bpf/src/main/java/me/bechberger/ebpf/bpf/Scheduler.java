@@ -1037,7 +1037,7 @@ public interface Scheduler {
     @AlwaysInline
     default boolean tryDispatchToLocalCpu(Ptr<BpfDefinitions.bpf_iter_scx_dsq> iter,
                                           Ptr<TaskDefinitions.task_struct> p, int cpu) {
-        if (!bpf_cpumask_test_cpu(cpu, p.val().cpus_ptr)) {
+        if (!bpf_cpumask_test_cpu(cpu, p.directVal().cpus_ptr)) {
             return false;
         }
         return scx_bpf_dsq_move(iter, p, SCX_DSQ_LOCAL_ON.value() | cpu, SCX_ENQ_PREEMPT.value());
