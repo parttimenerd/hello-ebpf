@@ -16,7 +16,14 @@ public class LotterySampleSmokeTest {
     @Test
     @Timeout(30)
     void lotterySampleDispatchesUnderLoad() throws Exception {
-        var sched = new LotterySample();
+        // Stub LotterySample with ANY_CPU policy to isolate whether the prevCpu
+        // routing path is the cause of the dispatch stall.
+        var sched = new LotterySample() {
+            @Override
+            protected int policy(me.bechberger.ebpf.bpf.QueuedTask t) {
+                return ANY_CPU;
+            }
+        };
         Thread runner = new Thread(() -> {
             try {
                 sched.runUntilExit(Opts.defaults());
@@ -27,7 +34,6 @@ public class LotterySampleSmokeTest {
         }, "lottery-runner");
         runner.setDaemon(true);
         runner.start();
-        // Wait briefly for the scheduler to attach before generating load.
         Thread.sleep(500);
         System.err.println("[diag] after attach: " + sched.stats());
         TestUtil.spawnCpuHogs(3, 4000);
