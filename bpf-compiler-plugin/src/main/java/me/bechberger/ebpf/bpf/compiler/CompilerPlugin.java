@@ -56,6 +56,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import me.bechberger.ebpf.bpf.compiler.passes.ArenaAssociationPass;
+
 import static me.bechberger.ebpf.bpf.compiler.NullHelpers.callIfNonNull;
 
 /**
@@ -101,6 +103,13 @@ public class CompilerPlugin implements Plugin {
     static final ThreadLocal<CompilerPlugin> LAST_PLUGIN = new ThreadLocal<>();
 
     /**
+     * The last C code string produced by {@link #processBPFProgramImpl}.
+     * Set just before {@link #LAST_PLUGIN} is populated so that in-process tests can
+     * retrieve the generated C output alongside the side-channel maps.
+     */
+    String lastGeneratedCode = "";
+
+    /**
      * Field-name → resolved C carrier expression for {@code @BPFAbstraction} fields whose
      * carrier was auto-allocated ({@code <auto>}) or otherwise needed processor-time resolution.
      * Key: {@code "qualifiedClassName.fieldName"}.
@@ -127,6 +136,11 @@ public class CompilerPlugin implements Plugin {
     /** Returns the accumulated inter-{@code @BPFFunction} call-graph side-channel collected during translation. */
     public Map<MethodSymbol, Set<MethodSymbol>> getCallGraph() {
         return java.util.Collections.unmodifiableMap(callGraph);
+    }
+
+    /** Returns the last C source string produced by {@link #processBPFProgramImpl}, or empty string. */
+    public String getLastGeneratedCode() {
+        return lastGeneratedCode;
     }
 
     private boolean hasAnnotation(TreePath path, ModifiersTree modifiersTree, Class<?> annotation) {
@@ -319,7 +333,7 @@ public class CompilerPlugin implements Plugin {
      * {@link BPFFunction} itself is absent.
      */
     @Nullable
-    BPFFunction getEffectiveBPFFunction(MethodSymbol method) {
+    public BPFFunction getEffectiveBPFFunction(MethodSymbol method) {
         var direct = getAnnotationOfMethodOrSuper(method, BPFFunction.class);
         if (direct != null) return direct;
         return synthesizeBPFFunction(method);
@@ -849,6 +863,8 @@ public class CompilerPlugin implements Plugin {
         var declsWithDefines = new ArrayList<FuncDeclStatementResult>();
         // Parallel list: declJavaNames[i] is the Java method simple-name for declsWithDefines[i].
         var declJavaNames = new ArrayList<String>();
+        // Parallel list: declMethodSymbols[i] is the MethodSymbol for declsWithDefines[i].
+        var declMethodSymbols = new ArrayList<MethodSymbol>();
         for (var m : methods) {
             var mt = task.getTypes().asMemberOf((DeclaredType) superClassElement.asType(), m);
             if (!(mt instanceof MethodType methodType)) continue;
@@ -856,6 +872,7 @@ public class CompilerPlugin implements Plugin {
             if (result == null) continue;
             declsWithDefines.add(result);
             declJavaNames.add(m.getSimpleName().toString());
+            declMethodSymbols.add((MethodSymbol) m);
         }
 
         var defines = declsWithDefines.stream().flatMap(r -> r.requiredDefines().stream()).collect(Collectors.toSet());
@@ -870,13 +887,25 @@ public class CompilerPlugin implements Plugin {
                 abstractionFieldCarrierOverrides.put(superClassName + "." + fieldName, carrier));
         // Emit #define NAME value for any auto-id carriers so field references that were
         decls = injectAbstractionPrologues(decls, declJavaNames, (JCClassDecl) bpfProgram);
+        // Arena association pass: inject per-arena helper calls into struct_ops entry handlers
+        // that transitively dereference an @InArena pointer.  The helpers ensure that each
+        // struct_ops prog contains a BPF_PSEUDO_MAP_FD ldimm64 for each arena it uses, which
+        // is required for the verifier to set prog->aux->arena.
+        var arenaPassResult = new ArenaAssociationPass().apply(this, declMethodSymbols, decls);
+        decls = arenaPassResult.updatedDecls();
         // Synthetic top-level functions (e.g. lambdas lifted for bpf_loop / bpf_for_each_map_elem).
         // These come BEFORE the main function decls in declarator-emission order so that the
         // helper that takes their address has a forward declaration in scope.
-        var syntheticDecls = declsWithDefines.stream()
+        var syntheticDecls = new ArrayList<FuncDecl>();
+        // Arena association helpers are emitted first so they are in scope when the
+        // entry bodies (and any lambda helpers) call them.
+        for (var helper : arenaPassResult.helperDecls()) {
+            syntheticDecls.add(new FuncDecl(helper, false));
+        }
+        declsWithDefines.stream()
                 .flatMap(d -> d.syntheticFunctions().stream())
                 .map(s -> new FuncDecl(s, true))
-                .toList();
+                .forEach(syntheticDecls::add);
 
         if (decls.size() < toImplement) {
             logError(programPath, bpfProgram, "Not all methods have been processed");
@@ -1073,6 +1102,7 @@ public class CompilerPlugin implements Plugin {
             }
         }
         // Expose this plugin instance for test code that drives javac in-process.
+        lastGeneratedCode = newCode;
         LAST_PLUGIN.set(this);
     }
 
@@ -1225,7 +1255,7 @@ public class CompilerPlugin implements Plugin {
                 .orElse(null);
     }
 
-    record FuncDecl(FunctionDeclarationStatement decl, boolean addDefine) {
+    public record FuncDecl(FunctionDeclarationStatement decl, boolean addDefine) {
     }
 
     boolean canEmitDeclaratorFor(FuncDecl decl) {
