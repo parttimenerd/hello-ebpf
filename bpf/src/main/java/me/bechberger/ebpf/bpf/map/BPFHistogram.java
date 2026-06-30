@@ -129,6 +129,56 @@ public class BPFHistogram extends BPFHashMap<Integer, Long> {
     }
 
     /**
+     * Sum of all bucket counts (total number of recorded samples).
+     *
+     * <p>O(k) in the number of populated buckets — small (≤ 64) but not free.
+     */
+    public long totalCount() {
+        long total = 0;
+        for (var entry : entrySet()) {
+            total += entry.getValue();
+        }
+        return total;
+    }
+
+    /**
+     * Approximate {@code p}-th percentile of recorded samples (0.0 ≤ p ≤ 1.0).
+     *
+     * <p>Each bucket {@code i} ≥ 1 covers {@code [2^(i-1), 2^i)}; bucket 0 covers
+     * {@code value ≤ 0}; bucket 1 is the single value 1. The percentile returned
+     * is the upper bound of the bucket containing the {@code p * total}-th sample,
+     * so a returned value of {@code v} means "at least {@code p}% of samples were
+     * ≤ {@code v}". This is intentionally coarse (log2-bucketed) — use it for
+     * SLO assertions, not for fine-grained latency analysis.
+     *
+     * <p>Returns 0 if the histogram is empty.
+     */
+    public long percentile(double p) {
+        if (p < 0.0 || p > 1.0) throw new IllegalArgumentException("p out of range: " + p);
+        long[] counts = new long[BUCKET_COUNT];
+        for (var entry : entrySet()) {
+            int slot = entry.getKey();
+            if (slot >= 0 && slot < BUCKET_COUNT) counts[slot] = entry.getValue();
+        }
+        long total = 0;
+        for (long c : counts) total += c;
+        if (total == 0) return 0L;
+        long target = (long) Math.ceil(p * total);
+        if (target == 0) target = 1;
+        long running = 0;
+        for (int i = 0; i < BUCKET_COUNT; i++) {
+            running += counts[i];
+            if (running >= target) {
+                if (i == 0) return 0L;
+                if (i == 1) return 1L;
+                // Upper bound of bucket i (which covers [2^(i-1), 2^i))
+                return (1L << i) - 1;
+            }
+        }
+        return Long.MAX_VALUE;
+    }
+
+    /**
      * Java-side: increment the log2 histogram bucket for {@code value}.
      *
      * <p>Mirrors the BPF-side {@link #record(long)} semantics: the bucket index is

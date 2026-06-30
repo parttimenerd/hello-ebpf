@@ -274,6 +274,16 @@ public abstract class UserspaceScheduler {
         return bpfHandle.selectCpuFor(pid, prevCpu, 0L);
     }
 
+    /**
+     * BPF transport handle, exposed so tests (notably {@code UserspaceSchedulerObsBenchTest})
+     * can read raw histogram maps without the public {@code printHistograms} side
+     * effect. May be {@code null} before {@link #runUntilExit} is called or after
+     * the run loop has returned.
+     */
+    public final UserspaceSchedulerBase bpf() {
+        return bpfHandle;
+    }
+
     // ── internal ─────────────────────────────────────────────────────────────
 
     /** BPF transport — set by {@link #loadAndAttachBpf}, cleared by {@link #cleanupBpf}. */
