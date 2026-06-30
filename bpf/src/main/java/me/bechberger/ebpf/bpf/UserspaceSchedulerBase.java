@@ -9,12 +9,14 @@ import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.BPFTimer;
+import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
+import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
+import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.annotations.bpf.Tracepoint;
 import me.bechberger.ebpf.bpf.map.BPFArray;
 import me.bechberger.ebpf.bpf.map.BPFArena;
 import me.bechberger.ebpf.bpf.map.BPFHashMap;
 import me.bechberger.ebpf.bpf.map.BPFHistogram;
-import me.bechberger.ebpf.bpf.map.BPFPerCpuArray;
 import me.bechberger.ebpf.bpf.map.BPFRingBuffer;
 import me.bechberger.ebpf.bpf.map.BPFTaskStorage;
 import me.bechberger.ebpf.bpf.map.BPFUserRingBuffer;
@@ -34,9 +36,6 @@ import static me.bechberger.ebpf.bpf.BPFJ.bpf_probe_read_kernel_str;
 import static me.bechberger.ebpf.bpf.BPFJ.bpfArenaAllocPages;
 import static me.bechberger.ebpf.bpf.BPFJ.currentNs;
 import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_add;
-import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_and;
-import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_or;
-import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask_test_cpu;
 import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_task_from_pid;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_timer_init;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_timer_start;
@@ -206,6 +205,16 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     }
 
     /**
+     * Map-value wrapper for the heartbeat {@code bpf_timer}. The kernel requires
+     * {@code bpf_timer} to be a <em>field</em> inside the map-value struct; it
+     * cannot be the map value itself.
+     */
+    @Type
+    public static class HeartbeatVal {
+        public bpf_timer timer;
+    }
+
+    /**
      * Shared stats arena, mmap'd from Java. 13 counters; slot numbering is
      * part of the BPF↔Java ABI — see {@link Stats}. BPF increments via
      * {@code __sync_fetch_and_add}; Java reads via {@code VarHandle.getOpaque()}.
@@ -291,21 +300,12 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     BPFHashMap<Integer, Byte> frameworkPids;
 
     /**
-     * Per-CPU drain budget — counted down inside {@link #dispatchOne} so each
-     * {@link #dispatch} call cannot consume more slots than
-     * {@code scx_bpf_dispatch_nr_slots()} reports. Single-entry array keyed by 0;
-     * BPFPerCpuArray stamps one counter per CPU automatically.
+     * Single-entry array holding a {@link HeartbeatVal} (which wraps a
+     * {@code bpf_timer} field). The kernel requires {@code bpf_timer} to be a
+     * field inside the map-value struct, not the map value itself.
      */
     @BPFMapDefinition(maxEntries = 1)
-    BPFPerCpuArray<Integer> dispatchBudget;
-
-    /**
-     * Single-entry array holding a {@code bpf_timer} for the heartbeat.
-     * Declared here so the {@code bpf_timer_init}/{@code bpf_timer_start}
-     * calls in {@code initHeartbeat()} can reference it from {@link #init()}.
-     */
-    @BPFMapDefinition(maxEntries = 1)
-    BPFArray<bpf_timer> heartbeat;
+    BPFArray<HeartbeatVal> heartbeat;
 
     // ─── Observability histograms (Task 14) ──────────────────────────────────
     // All five histograms use 64 buckets (BCC log2_hist layout: bucket i counts
@@ -526,19 +526,20 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     // ─── sched_ext ops ───────────────────────────────────────────
 
     /**
-     * Creates both shared and framework DSQs, then arms the heartbeat timer.
+     * Creates the shared DSQ and arms the heartbeat timer.
      *
      * <p>Inlined SchedulerBase.init() body until super.init() lowering is fixed (see project memory: super.init() lowers to circular self-reference in struct_ops entry).
-     * {@link #shared} uses {@link DispatchQueue#attach} so SHARED_DSQ_ID is created
-     * exactly once here rather than double-created. FRAMEWORK_DSQ's return code is
-     * captured; if it fails, the scheduler aborts startup cleanly.
+     * {@link #shared} uses {@link DispatchQueue#attach} so SHARED_DSQ_ID must be
+     * created explicitly here.  {@link #framework} uses {@code new DispatchQueue(FRAMEWORK_DSQ)}
+     * which causes the {@code @BPFAbstraction} processor to auto-inject
+     * {@code scx_bpf_create_dsq(FRAMEWORK_DSQ, -1)} at the very top of the
+     * generated {@code sched_init} body — so we must NOT call it again here.
      */
     @Override
     public int init() {
-        // Inlined SchedulerBase.init() body until super.init() lowering is fixed (see project memory: super.init() lowers to circular self-reference in struct_ops entry).
+        // Create the shared DSQ.  The framework DSQ is already created by the
+        // auto-injected @BPFAbstraction constructor code for `framework`.
         int rc = scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
-        if (rc != 0) return rc;
-        rc = scx_bpf_create_dsq(FRAMEWORK_DSQ, -1);
         if (rc != 0) return rc;
         // Pre-allocate the idle-mask arena page so the verifier tracks the
         // resulting pointer as a valid arena pointer (not a scalar cast).
@@ -648,12 +649,11 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         // 1. Framework DSQ first — unbounded priority
         if (framework.moveToLocal()) return;
 
-        // 2. Drain Java decisions
-        Ptr<Integer> budget = dispatchBudget.bpf_get(0);
-        if (budget == null) return;
-        budget.set(scx_bpf_dispatch_nr_slots());
-        // Routed via ctx: BPF lambdas lower to free C functions and cannot capture locals.
-        int drained = dispatched.drain((d, ctx) -> dispatchOne(d, ctx), budget);
+        // 2. Drain Java decisions — pass null ctx; dispatchOne checks
+        // scx_bpf_dispatch_nr_slots() internally per iteration (mirrors rustland).
+        // Explicit lambda param types force Ctx=Integer so javac does not infer Object.
+        int drained = dispatched.drain(
+                (Ptr<DispatchedTaskCtx> d, Ptr<Integer> ctx) -> dispatchOne(d), null);
         if (drained > 0) {
             lastUserDispatchNs.set(currentNs());
             return;
@@ -669,23 +669,61 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     }
 
     /**
+     * Check whether {@code cpu} is in the task's CPU affinity mask.
+     *
+     * <p>Uses a direct {@code p->cpus_ptr} dereference (not BPF_CORE_READ) so the
+     * BPF verifier preserves the trusted-pointer annotation that kfunc
+     * {@code bpf_cpumask_test_cpu} requires on its second argument.
+     */
+    @BuiltinBPFFunction("bpf_cpumask_test_cpu((u32)$arg1, $arg2->cpus_ptr)")
+    @NotUsableInJava
+    static boolean taskCpuIsAllowed(int cpu, Ptr<task_struct> p) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Non-atomic bitwise OR of a 64-bit arena word.
+     *
+     * <p>BPF atomic instructions ({@code BPF_ATOMIC}) are not allowed on arena
+     * (address-space 1) pointers; use this non-atomic compound assignment instead.
+     * Safe on x86-64 because a 64-bit write is naturally atomic and each CPU sets
+     * only its own bit, so there is no intra-BPF write-write race to the same word.
+     */
+    @BuiltinBPFFunction("*($arg1) |= (s64)($arg2)")
+    @NotUsableInJava
+    static void arena_or_assign(Ptr<Long> ptr, long val) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+    /**
+     * Non-atomic bitwise AND of a 64-bit arena word.
+     *
+     * <p>See {@link #arena_or_assign} for the rationale.
+     */
+    @BuiltinBPFFunction("*($arg1) &= (s64)($arg2)")
+    @NotUsableInJava
+    static void arena_and_assign(Ptr<Long> ptr, long val) {
+        throw new MethodIsBPFRelatedFunction();
+    }
+
+
+    /**
      * Drain callback: dispatch one record from the user→kernel ring-buf.
      *
-     * <p>Returns 0 to continue draining, 1 to stop (budget exhausted).
+     * <p>Returns 0 to continue draining, 1 to stop (no dispatch slots left).
      * Stale dispatches (enqCnt mismatch) are cancelled early: the task ref is
-     * released, STAT_BOUNCED_DISPATCHES is incremented, and budget is decremented.
+     * released, STAT_BOUNCED_DISPATCHES is incremented, and the remaining-slots
+     * check determines whether to stop.
      */
     @BPFFunction
-    int dispatchOne(Ptr<DispatchedTaskCtx> d, Ptr<Integer> budget) {
+    int dispatchOne(Ptr<DispatchedTaskCtx> d) {
         Ptr<task_struct> p = bpf_task_from_pid(d.val().pid);
         if (p == null) { incStat(STAT_BOUNCED_DISPATCHES, 1); return 0; }
         Ptr<TaskCtx> tctx = taskCtx.bpf_get(p);
         if (tctx != null && tctx.val().enqCnt != d.val().enqCnt) {
             bpf_task_release(p);
             incStat(STAT_BOUNCED_DISPATCHES, 1);
-            int remaining0 = budget.val() - 1;
-            budget.set(remaining0);
-            return remaining0 <= 0 ? 1 : 0;
+            return scx_bpf_dispatch_nr_slots() == 0 ? 1 : 0;
         }
         long slice = d.val().sliceNs == 0 ? DEFAULT_SLICE_NS : d.val().sliceNs;
         int targetCpu = d.val().targetCpu;
@@ -693,7 +731,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
             scx_bpf_dsq_insert(p, SHARED_DSQ_ID, slice, d.val().flags);
             DispatchQueue.kickCpu(scx_bpf_task_cpu(p), KickFlags.idle());
         } else {
-            if (!bpf_cpumask_test_cpu(targetCpu, p.val().cpus_ptr)) {
+            if (!taskCpuIsAllowed(targetCpu, p)) {
                 targetCpu = scx_bpf_task_cpu(p);
                 incStat(STAT_BOUNCED_DISPATCHES, 1);
             }
@@ -701,9 +739,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         }
         bpf_task_release(p);
         incStat(STAT_USER_DISPATCHES, 1);
-        int remaining = budget.val() - 1;
-        budget.set(remaining);
-        return remaining <= 0 ? 1 : 0;
+        return scx_bpf_dispatch_nr_slots() == 0 ? 1 : 0;
     }
 
     /**
@@ -787,10 +823,10 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      */
     @BPFTimer
     @BPFFunction
-    int heartbeatTick(Ptr<?> map, Ptr<Integer> key, Ptr<bpf_timer> val) {
+    int heartbeatTick(Ptr<?> map, Ptr<Integer> key, Ptr<HeartbeatVal> val) {
         DispatchQueue.kickCpu(schedulerCpu.get(), KickFlags.idle());
         incStat(Stats.HEARTBEAT_KICKS, 1);
-        bpf_timer_start(val, HEARTBEAT_NS, 0);
+        bpf_timer_start(Ptr.of(val.val().timer), HEARTBEAT_NS, 0);
         return 0;
     }
 
@@ -807,11 +843,11 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     @BPFFunction
     int initHeartbeat() {
         int zero = 0;
-        Ptr<bpf_timer> t = heartbeat.bpf_get(zero);
-        if (t == null) return -1;
-        bpf_timer_init(t, Ptr.of(heartbeat), 1 /* CLOCK_MONOTONIC */);
-        BPFJ.bpf_timer_set_callback(t, this::heartbeatTick);
-        bpf_timer_start(t, HEARTBEAT_NS, 0);
+        Ptr<HeartbeatVal> v = heartbeat.bpf_get(zero);
+        if (v == null) return -1;
+        bpf_timer_init(Ptr.of(v.val().timer), Ptr.of(heartbeat), 1 /* CLOCK_MONOTONIC */);
+        BPFJ.bpf_timer_set_callback(Ptr.of(v.val().timer), this::heartbeatTick);
+        bpf_timer_start(Ptr.of(v.val().timer), HEARTBEAT_NS, 0);
         return 0;
     }
 
@@ -906,9 +942,10 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * Atomically set or clear bit {@code cpu} in the idle-CPU bitmap.
      *
      * <p>Bit {@code cpu} lives in word {@code cpu / 64} at bit position
-     * {@code cpu & 63}. Uses {@code __sync_fetch_and_or} (set) /
-     * {@code __sync_fetch_and_and} (clear) to be safe against concurrent
-     * {@link #updateIdle} calls from different CPUs.
+     * {@code cpu & 63}. Uses non-atomic compound assignment (|= / &=) because BPF
+     * does not allow {@code BPF_ATOMIC} instructions on arena (address-space 1)
+     * pointers. Correctness holds because each CPU only modifies its own bit, so
+     * there is no intra-BPF write-write race to the same word.
      *
      * <p>The bitmap is stored in {@link #idleMask}, a {@code BPFArena} mmap'd
      * from Java (zero-syscall reads via {@link me.bechberger.ebpf.bpf.map.BPFArena#userView()}).
@@ -925,10 +962,11 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         if (idleMaskBase == null) return;        // init() not yet completed
         long wordIdx = cpu / 64;
         long mask = 1L << (cpu & 63);
-        // Inline the add() call to avoid an address-space mismatch: idleMaskBase
-        // is __arena s64 * (AS1) and a local Ptr<Long> would be s64 * (AS0).
-        if (idle) sync_fetch_and_or(idleMaskBase.add(wordIdx), mask);
-        else      sync_fetch_and_and(idleMaskBase.add(wordIdx), ~mask);
+        // Non-atomic compound assignment: BPF does not allow BPF_ATOMIC on arena
+        // (address-space 1) pointers. Each CPU only writes its own bit, so there is
+        // no intra-BPF write-write race and non-atomic ops are safe.
+        if (idle) arena_or_assign(idleMaskBase.add(wordIdx), mask);
+        else      arena_and_assign(idleMaskBase.add(wordIdx), ~mask);
     }
 
     // ─── Wire offsets for DispatchedTaskCtx (Java→BPF) ────────────

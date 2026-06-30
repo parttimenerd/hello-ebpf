@@ -51,6 +51,14 @@ public abstract class UserspaceScheduler {
     private long sDispatched;
     private long sDispatchFailed;
 
+    // Cached BPF-side counters, populated by cleanupBpf() before close so that
+    // stats() returns meaningful values after runUntilExit() has returned.
+    private long cachedRingEnqueued;
+    private long cachedRingDropped;
+    private long cachedRingCanceled;
+    private long cachedStallFallbacks;
+    private long cachedHeartbeatKicks;
+
     /** Task pool — package-private so test subclasses can seed fake tasks via {@link #drainRaw()}. */
     QueuedTask[] taskPool;
 
@@ -148,11 +156,11 @@ public abstract class UserspaceScheduler {
      * only the dispatch seam, or after the run loop returns).
      */
     public SchedStatsSnapshot stats() {
-        long ringEnqueued    = bpfHandle != null ? bpfHandle.readRingEnqueued()    : 0;
-        long ringDropped     = bpfHandle != null ? bpfHandle.readRingDropped()     : 0;
-        long ringCanceled    = bpfHandle != null ? bpfHandle.readRingCanceled()    : 0;
-        long stallFallbacks  = bpfHandle != null ? bpfHandle.readStallFallbacks()  : 0;
-        long heartbeatKicks  = bpfHandle != null ? bpfHandle.readHeartbeatKicks()  : 0;
+        long ringEnqueued    = bpfHandle != null ? bpfHandle.readRingEnqueued()    : cachedRingEnqueued;
+        long ringDropped     = bpfHandle != null ? bpfHandle.readRingDropped()     : cachedRingDropped;
+        long ringCanceled    = bpfHandle != null ? bpfHandle.readRingCanceled()    : cachedRingCanceled;
+        long stallFallbacks  = bpfHandle != null ? bpfHandle.readStallFallbacks()  : cachedStallFallbacks;
+        long heartbeatKicks  = bpfHandle != null ? bpfHandle.readHeartbeatKicks()  : cachedHeartbeatKicks;
         return new SchedStatsSnapshot(
             ringEnqueued, ringDropped, sRingDrained, ringCanceled,
             sDispatched, sDispatchFailed, stallFallbacks, heartbeatKicks);
@@ -192,6 +200,13 @@ public abstract class UserspaceScheduler {
      */
     protected void cleanupBpf() {
         if (bpfHandle != null) {
+            try {
+                cachedRingEnqueued   = bpfHandle.readRingEnqueued();
+                cachedRingDropped    = bpfHandle.readRingDropped();
+                cachedRingCanceled   = bpfHandle.readRingCanceled();
+                cachedStallFallbacks = bpfHandle.readStallFallbacks();
+                cachedHeartbeatKicks = bpfHandle.readHeartbeatKicks();
+            } catch (Exception ignored) {}
             try { bpfHandle.close(); } catch (Exception ignored) {}
             bpfHandle = null;
         }
