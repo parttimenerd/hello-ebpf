@@ -45,6 +45,11 @@ public final class WeightedRRSample extends UserspaceScheduler {
         lastSeenTick.keySet().retainAll(debt.keySet());
     }
 
+    /** Test seam: snapshot of the per-pid debt map. */
+    Map<Integer, Long> debtSnapshot() {
+        return new HashMap<>(debt);
+    }
+
     @Command(name = "WeightedRRSample",
             description = {"Weight-aware userspace scheduler demo.",
                            "Tracks per-pid debt = sum(weight) - elapsed ticks."},
