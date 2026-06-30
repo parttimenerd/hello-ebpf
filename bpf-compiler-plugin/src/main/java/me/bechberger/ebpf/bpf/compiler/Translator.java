@@ -18,9 +18,11 @@ import me.bechberger.cast.CAST.PrimaryExpression.CAnnotation;
 import me.bechberger.cast.CAST.PrimaryExpression.Constant.IntegerConstant;
 import me.bechberger.cast.CAST.PrimaryExpression.VerbatimExpression;
 import me.bechberger.cast.CAST.Statement.*;
+import me.bechberger.ebpf.annotations.AllowDirectVal;
 import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.CustomType;
 import me.bechberger.ebpf.annotations.InArena;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.bpf.BPFAbstraction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
@@ -1059,6 +1061,8 @@ class Translator {
      */
     @Nullable
     Expression translate(MethodInvocationTree methodInvocationTree) {
+        // Structural check: directVal() must be followed by a field access unless overridden.
+        checkDirectValUsage(methodInvocationTree);
         // lives in USER or KERNEL_UNTRACKED memory. Skip for KERNEL_TRACKED / MAP_VALUE / ARENA /
         // STACK / PACKET — those allow direct deref and the existing template handles them.
         if (isPtrVal(methodInvocationTree)
@@ -2311,6 +2315,129 @@ class Translator {
             return mst.getExpression();
         }
         return expr;
+    }
+
+    /**
+     * True if {@code mit} is a {@code Ptr.directVal()} invocation (no arguments,
+     * receiver type is {@code Ptr}).
+     */
+    private boolean isDirectValCall(MethodInvocationTree mit) {
+        if (!mit.getArguments().isEmpty()) return false;
+        if (!(mit.getMethodSelect() instanceof MemberSelectTree mst)) return false;
+        if (!"directVal".contentEquals(mst.getIdentifier())) return false;
+        var recvType = typeOf(mst.getExpression());
+        return recvType instanceof ClassType ct
+                && ct.asElement().getQualifiedName().contentEquals(Ptr.class.getName());
+    }
+
+    /**
+     * Returns {@code true} when a {@code Ptr.directVal()} call at {@code callPath}
+     * is covered by an override (either {@code @TrustedPtr} on the callee parameter
+     * or {@code @AllowDirectVal} on the enclosing variable / method declaration).
+     *
+     * <p>Walk strategy: ascend from {@code callPath} looking for the nearest
+     * {@link MethodInvocationTree}, {@link VariableTree}, or
+     * {@link MethodTree} and apply the annotation checks in that order.
+     */
+    private boolean hasDirectValOverride(TreePath callPath) {
+        // direct child of the enclosing node on the path
+        Tree prevLeaf = callPath.getLeaf();
+        var cursor = callPath.getParentPath();
+        while (cursor != null) {
+            var leaf = cursor.getLeaf();
+
+            if (leaf instanceof MethodInvocationTree enclosingCall) {
+                // Find the index of our expression in the argument list.
+                var args = enclosingCall.getArguments();
+                final Tree finalArgTree = prevLeaf;
+                int idx = -1;
+                for (int i = 0; i < args.size(); i++) {
+                    if (args.get(i) == finalArgTree) { idx = i; break; }
+                }
+                if (idx >= 0) {
+                    // Resolve the callee's MethodSymbol and check @TrustedPtr on that param.
+                    var calleeElement = compilerPlugin.trees.getElement(
+                            methodPath.path(enclosingCall.getMethodSelect()));
+                    if (calleeElement instanceof MethodSymbol calleeSym) {
+                        var calleeTree = compilerPlugin.trees.getTree(calleeSym);
+                        if (calleeTree instanceof MethodTree mt
+                                && idx < mt.getParameters().size()) {
+                            var param = mt.getParameters().get(idx);
+                            if (hasAnnotationInModifiers(
+                                    param.getModifiers(), TrustedPtr.class.getSimpleName())) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                // A MethodInvocationTree terminates the upward search for the other overrides.
+                break;
+            }
+
+            if (leaf instanceof VariableTree vt) {
+                if (hasAnnotationInModifiers(vt.getModifiers(), AllowDirectVal.class.getSimpleName())) {
+                    return true;
+                }
+                // Not annotated — keep walking up to check enclosing MethodTree.
+            }
+
+            if (leaf instanceof MethodTree mt) {
+                if (hasAnnotationInModifiers(mt.getModifiers(), AllowDirectVal.class.getSimpleName())) {
+                    return true;
+                }
+                break; // enclosing BPFFunction method — stop
+            }
+
+            prevLeaf = leaf;
+            cursor = cursor.getParentPath();
+        }
+        return false;
+    }
+
+    /** True if {@code mods} contains an annotation whose simple name equals {@code simpleAnnotationName}. */
+    private static boolean hasAnnotationInModifiers(ModifiersTree mods, String simpleAnnotationName) {
+        for (var ann : mods.getAnnotations()) {
+            var typeName = ann.getAnnotationType().toString();
+            var simple = typeName.contains(".")
+                    ? typeName.substring(typeName.lastIndexOf('.') + 1)
+                    : typeName;
+            if (simple.equals(simpleAnnotationName)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Emit a structural-check error when a {@code Ptr.directVal()} call is not
+     * immediately followed by a field access and no override annotation is present.
+     *
+     * <p>Call this at the top of {@link #translate(MethodInvocationTree)} for every
+     * method invocation; it quickly returns for any call that is not
+     * {@code Ptr.directVal()}.
+     */
+    private void checkDirectValUsage(MethodInvocationTree mit) {
+        if (!isDirectValCall(mit)) return;
+
+        // Build the full TreePath for this call so we can inspect the parent.
+        var callPath = methodPath.path(mit);
+        if (callPath == null) return; // defensive: can't locate tree
+
+        var parentPath = callPath.getParentPath();
+        if (parentPath != null) {
+            var parent = parentPath.getLeaf();
+            // OK: directVal() is the expression of a MemberSelectTree (i.e. directVal().field)
+            if (parent instanceof MemberSelectTree mst && mst.getExpression() == mit) {
+                return;
+            }
+        }
+
+        // Not a direct MemberSelect — check overrides.
+        if (hasDirectValOverride(callPath)) return;
+
+        // No override — emit the structural check error.
+        logError(mit,
+                "directVal() result must be followed by a field access "
+                + "(or annotate the kfunc parameter with @TrustedPtr "
+                + "/ the call site with @AllowDirectVal)");
     }
 
     /**
