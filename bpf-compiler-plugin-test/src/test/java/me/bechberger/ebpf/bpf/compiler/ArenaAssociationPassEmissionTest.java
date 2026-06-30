@@ -301,4 +301,132 @@ public class ArenaAssociationPassEmissionTest {
         assertTrue(helperBPos >= 0 && callBPos >= 0 && helperBPos < callBPos,
                 "Helper arenaB must precede its call site:\n" + code);
     }
+
+    // ─── Test 6 ──────────────────────────────────────────────────────────────
+
+    /**
+     * A handler annotated with {@code section = "struct_ops.s/<name>"} (the sleepable
+     * variant) must receive the same injection as a plain {@code struct_ops/} handler.
+     * The pass accepts both prefixes; this test verifies the {@code .s/} branch.
+     */
+    @Test
+    public void injectsAtSleepableStructOpsEntries() {
+        var plugin = compileAndGetPlugin("SleepableStructOpsArenaInject",
+                "    @BPFMapDefinition(maxEntries = 1) BPFArena arena1;\n"
+                + "    @InArena Ptr<Long> p = bpfArenaAllocPages(arena1, null, 1,"
+                + " MmConstants.NUMA_NO_NODE, 0);\n"
+                + "\n"
+                + "    @BPFFunction(section = \"struct_ops.s/sleepable_handler\")\n"
+                + "    public int handler(int x) {\n"
+                + "        p.val();\n"
+                + "        return 0;\n"
+                + "    }\n");
+
+        String code = plugin.getLastGeneratedCode();
+
+        // The helper must be emitted at file scope.
+        assertTrue(code.contains("static __always_inline void bpf_arena_associate_arena1(void)"),
+                "Expected helper 'bpf_arena_associate_arena1' in generated C for struct_ops.s handler:\n" + code);
+
+        // The call must be injected into the sleepable handler body.
+        assertTrue(code.contains("bpf_arena_associate_arena1();"),
+                "Expected 'bpf_arena_associate_arena1();' injected in struct_ops.s handler body:\n" + code);
+
+        // Helper must precede the call site.
+        int helperPos = code.indexOf("static __always_inline void bpf_arena_associate_arena1(void)");
+        int callPos   = code.indexOf("bpf_arena_associate_arena1();");
+        assertTrue(helperPos >= 0 && callPos >= 0 && helperPos < callPos,
+                "Helper definition must precede the call site in generated C:\n" + code);
+    }
+
+    // ─── Test 7 ──────────────────────────────────────────────────────────────
+
+    /**
+     * Mutual recursion ({@code entry → a → b → a}) must not cause a stack overflow
+     * or hang, and the guard in {@code computeTransitiveArenas} must prevent duplicate
+     * injection.  Exactly one {@code bpf_arena_associate_arena1();} must appear at the
+     * top of the {@code entry} handler body.
+     */
+    @Test
+    public void cycleGuardPreventsDuplicateInjection() {
+        var plugin = compileAndGetPlugin("CycleGuardArenaInject",
+                "    @BPFMapDefinition(maxEntries = 1) BPFArena arena1;\n"
+                + "    @InArena Ptr<Long> p = bpfArenaAllocPages(arena1, null, 1,"
+                + " MmConstants.NUMA_NO_NODE, 0);\n"
+                + "\n"
+                // methodA calls methodB, methodB calls methodA (cycle), methodA accesses arena
+                + "    @BPFFunction\n"
+                + "    public int methodA() {\n"
+                + "        p.val();\n"
+                + "        return methodB();\n"
+                + "    }\n"
+                + "\n"
+                + "    @BPFFunction\n"
+                + "    public int methodB() {\n"
+                + "        return methodA();\n"
+                + "    }\n"
+                + "\n"
+                + "    @BPFFunction(section = \"struct_ops/cycle_entry\")\n"
+                + "    public int entry(int x) {\n"
+                + "        return methodA();\n"
+                + "    }\n");
+
+        String code = plugin.getLastGeneratedCode();
+
+        // The injection must appear exactly once — the cycle must not cause duplication.
+        int count = 0;
+        int idx = 0;
+        while ((idx = code.indexOf("bpf_arena_associate_arena1();", idx)) != -1) {
+            count++;
+            idx++;
+        }
+        assertEquals(1, count,
+                "Expected exactly one 'bpf_arena_associate_arena1();' injection (cycle guard), "
+                + "but found " + count + " in generated C:\n" + code);
+
+        // The helper must still be present.
+        assertTrue(code.contains("static __always_inline void bpf_arena_associate_arena1(void)"),
+                "Expected helper declaration in generated C:\n" + code);
+    }
+
+    // ─── Test 8 ──────────────────────────────────────────────────────────────
+
+    /**
+     * Running the same compilation twice must produce byte-identical generated C.
+     * This locks in determinism against HashMap-iteration order regressions in
+     * the pass (e.g. unsorted arena name sets, non-deterministic helper ordering).
+     */
+    @Test
+    public void outputIsDeterministic() {
+        String body =
+                "    @BPFMapDefinition(maxEntries = 1) BPFArena arenaX;\n"
+                + "    @BPFMapDefinition(maxEntries = 1) BPFArena arenaY;\n"
+                + "    @InArena Ptr<Long> pX = bpfArenaAllocPages(arenaX, null, 1,"
+                + " MmConstants.NUMA_NO_NODE, 0);\n"
+                + "    @InArena Ptr<Long> pY = bpfArenaAllocPages(arenaY, null, 1,"
+                + " MmConstants.NUMA_NO_NODE, 0);\n"
+                + "\n"
+                + "    @BPFFunction(section = \"struct_ops/det_handler\")\n"
+                + "    public int handler(int x) {\n"
+                + "        pX.val();\n"
+                + "        pY.val();\n"
+                + "        return 0;\n"
+                + "    }\n";
+
+        String code1 = compileAndGetPlugin("DeterministicArenaInjectRun1", body)
+                .getLastGeneratedCode();
+        // Second compile uses a different class name so the processor sees a fresh class,
+        // but structurally identical source — the pass output must be the same modulo the
+        // class name, which we normalise before comparing.
+        String code2 = compileAndGetPlugin("DeterministicArenaInjectRun2", body)
+                .getLastGeneratedCode();
+
+        // Normalise the class name so only pass-controlled output is compared.
+        String normalised1 = code1.replace("DeterministicArenaInjectRun1", "DeterministicArenaInject");
+        String normalised2 = code2.replace("DeterministicArenaInjectRun2", "DeterministicArenaInject");
+
+        assertEquals(normalised1, normalised2,
+                "Generated C must be identical across two compilations of the same source.\n"
+                + "First run:\n" + code1 + "\n\nSecond run:\n" + code2);
+    }
 }
