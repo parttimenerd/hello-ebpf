@@ -9,9 +9,6 @@ import me.bechberger.ebpf.annotations.bpf.BPF;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BPFMapDefinition;
 import me.bechberger.ebpf.annotations.bpf.BPFTimer;
-import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
-import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
-import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.annotations.bpf.Tracepoint;
 import me.bechberger.ebpf.bpf.map.BPFArray;
 import me.bechberger.ebpf.bpf.map.BPFArena;
@@ -36,6 +33,7 @@ import static me.bechberger.ebpf.bpf.BPFJ.bpf_probe_read_kernel_str;
 import static me.bechberger.ebpf.bpf.BPFJ.bpfArenaAllocPages;
 import static me.bechberger.ebpf.bpf.BPFJ.currentNs;
 import static me.bechberger.ebpf.bpf.BPFJ.sync_fetch_and_add;
+import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask_test_cpu;
 import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_task_from_pid;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_timer_init;
 import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_timer_start;
@@ -669,45 +667,6 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     }
 
     /**
-     * Check whether {@code cpu} is in the task's CPU affinity mask.
-     *
-     * <p>Uses a direct {@code p->cpus_ptr} dereference (not BPF_CORE_READ) so the
-     * BPF verifier preserves the trusted-pointer annotation that kfunc
-     * {@code bpf_cpumask_test_cpu} requires on its second argument.
-     */
-    @BuiltinBPFFunction("bpf_cpumask_test_cpu((u32)$arg1, $arg2->cpus_ptr)")
-    @NotUsableInJava
-    static boolean taskCpuIsAllowed(int cpu, Ptr<task_struct> p) {
-        throw new MethodIsBPFRelatedFunction();
-    }
-
-    /**
-     * Non-atomic bitwise OR of a 64-bit arena word.
-     *
-     * <p>BPF atomic instructions ({@code BPF_ATOMIC}) are not allowed on arena
-     * (address-space 1) pointers; use this non-atomic compound assignment instead.
-     * Safe on x86-64 because a 64-bit write is naturally atomic and each CPU sets
-     * only its own bit, so there is no intra-BPF write-write race to the same word.
-     */
-    @BuiltinBPFFunction("*($arg1) |= (s64)($arg2)")
-    @NotUsableInJava
-    static void arena_or_assign(Ptr<Long> ptr, long val) {
-        throw new MethodIsBPFRelatedFunction();
-    }
-
-    /**
-     * Non-atomic bitwise AND of a 64-bit arena word.
-     *
-     * <p>See {@link #arena_or_assign} for the rationale.
-     */
-    @BuiltinBPFFunction("*($arg1) &= (s64)($arg2)")
-    @NotUsableInJava
-    static void arena_and_assign(Ptr<Long> ptr, long val) {
-        throw new MethodIsBPFRelatedFunction();
-    }
-
-
-    /**
      * Drain callback: dispatch one record from the user→kernel ring-buf.
      *
      * <p>Returns 0 to continue draining, 1 to stop (no dispatch slots left).
@@ -731,7 +690,7 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
             scx_bpf_dsq_insert(p, SHARED_DSQ_ID, slice, d.val().flags);
             DispatchQueue.kickCpu(scx_bpf_task_cpu(p), KickFlags.idle());
         } else {
-            if (!taskCpuIsAllowed(targetCpu, p)) {
+            if (!bpf_cpumask_test_cpu(targetCpu, p.directVal().cpus_ptr)) {
                 targetCpu = scx_bpf_task_cpu(p);
                 incStat(STAT_BOUNCED_DISPATCHES, 1);
             }
@@ -965,8 +924,9 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         // Non-atomic compound assignment: BPF does not allow BPF_ATOMIC on arena
         // (address-space 1) pointers. Each CPU only writes its own bit, so there is
         // no intra-BPF write-write race and non-atomic ops are safe.
-        if (idle) arena_or_assign(idleMaskBase.add(wordIdx), mask);
-        else      arena_and_assign(idleMaskBase.add(wordIdx), ~mask);
+        Ptr<Long> word = idleMaskBase.add(wordIdx);
+        if (idle) word.set(word.val() | mask);
+        else      word.set(word.val() & ~mask);
     }
 
     // ─── Wire offsets for DispatchedTaskCtx (Java→BPF) ────────────
