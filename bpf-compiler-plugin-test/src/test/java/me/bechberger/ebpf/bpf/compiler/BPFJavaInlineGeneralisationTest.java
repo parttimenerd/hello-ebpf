@@ -197,6 +197,7 @@ class BPFJavaInlineGeneralisationTest {
         @NotUsableInJava
         @BuiltinBPFFunction("0")
         public long passSelf() {
+            long pre = 0;  // dummy intermediate statement to force multi-stmt body and ({}) wrapper
             return identityArg(this);
         }
 
