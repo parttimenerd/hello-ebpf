@@ -6,6 +6,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.tree.JCTree.*;
@@ -50,8 +51,10 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -1054,6 +1057,8 @@ class Translator {
                 var auto = maybeAutoProbeRead(receiver, null, region);
                 if (auto != null) return auto;
             }
+            // Detection site 1: record @InArena deref against the current method.
+            maybeRecordArenaDeref(receiver);
         }
         var calledMethod = methodInvocationTree.getMethodSelect();
         var methodTree = (JCMethodInvocation) methodInvocationTree;
@@ -1180,6 +1185,8 @@ class Translator {
         if (inlined != null) {
             return inlined;
         }
+        // Detection site 2: record inter-@BPFFunction call edges.
+        maybeRecordCallEdge(symbol);
         try {
             var res = compilerPlugin.methodTemplateCache.render(methodPath, methodInvocationTree, symbol,
                     new CallArgs(thisExpression, arguments, declarators, typeDeclarators,
@@ -1858,6 +1865,81 @@ class Translator {
             return CAST.Declarator.pointer(CAST.Declarator.tagged("__arena", pd.declarator()));
         }
         return CAST.Declarator.tagged("__arena", declarator);
+    }
+
+    /**
+     * Detection site 1: if {@code receiver} is an {@code @InArena}-annotated class field,
+     * walk its initializer to find the arena name via the {@code bpfArenaAllocPages} call,
+     * and record {@code (currentMethod, arenaName)} in {@link CompilerPlugin#directArenaRefs}.
+     *
+     * <p>Silently no-ops when the receiver isn't an {@code @InArena} field, or when the
+     * initializer pattern doesn't match {@code bpfArenaAllocPages(arenaField, …)}.
+     * Task C will add the strict guard; here we only collect.
+     */
+    private void maybeRecordArenaDeref(ExpressionTree receiver) {
+        // The receiver must be an identifier that resolves to a class field
+        if (!(receiver instanceof IdentifierTree ident)) return;
+        var element = compilerPlugin.trees.getElement(methodPath.path(ident));
+        if (!(element instanceof com.sun.tools.javac.code.Symbol.VarSymbol fieldSym)) return;
+        // Must be annotated @InArena
+        if (fieldSym.getAnnotation(InArena.class) == null) return;
+        // Must be a class field (not a local variable or parameter)
+        if (!(fieldSym.getEnclosingElement() instanceof com.sun.tools.javac.code.Symbol.ClassSymbol)) return;
+
+        // Walk the field's declaration to find its initializer
+        var fieldTree = compilerPlugin.trees.getTree(fieldSym);
+        if (!(fieldTree instanceof JCVariableDecl varDecl)) return;
+        var init = varDecl.init;
+        if (init == null) return;
+
+        // Expect: bpfArenaAllocPages(arenaField, ...) — possibly wrapped in a cast
+        JCMethodInvocation allocCall = null;
+        if (init instanceof JCMethodInvocation mi) {
+            allocCall = mi;
+        } else if (init instanceof JCTypeCast tc && tc.expr instanceof JCMethodInvocation mi) {
+            allocCall = mi;
+        }
+        if (allocCall == null) return;
+
+        // Verify the method is bpfArenaAllocPages
+        MethodSymbol allocSym = null;
+        if (allocCall.meth instanceof JCFieldAccess fa && fa.sym instanceof MethodSymbol ms) {
+            allocSym = ms;
+        } else if (allocCall.meth instanceof JCIdent id && id.sym instanceof MethodSymbol ms) {
+            allocSym = ms;
+        }
+        if (allocSym == null) return;
+        if (!allocSym.getSimpleName().contentEquals("bpfArenaAllocPages")) return;
+
+        // The first argument should be an identifier referring to the arena field
+        if (allocCall.getArguments().isEmpty()) return;
+        var firstArg = allocCall.getArguments().get(0);
+        if (!(firstArg instanceof JCIdent arenaIdent)) return;
+
+        // Record the arena name
+        var currentMethod = (MethodSymbol) compilerPlugin.trees.getElement(methodPath.path());
+        var arenaName = arenaIdent.getName().toString();
+        compilerPlugin.directArenaRefs
+                .computeIfAbsent(currentMethod, k -> new HashSet<>())
+                .add(arenaName);
+    }
+
+    /**
+     * Detection site 2: if {@code callee} is a {@code @BPFFunction}-annotated method
+     * in the same class as the current method, record the call edge
+     * {@code (currentMethod, callee)} in {@link CompilerPlugin#callGraph}.
+     */
+    private void maybeRecordCallEdge(MethodSymbol callee) {
+        // Check callee has @BPFFunction (via effective lookup to handle inheritance)
+        if (compilerPlugin.getEffectiveBPFFunction(callee) == null) return;
+
+        // Both methods must be in the same enclosing class
+        var currentMethod = (MethodSymbol) compilerPlugin.trees.getElement(methodPath.path());
+        if (!callee.getEnclosingElement().equals(currentMethod.getEnclosingElement())) return;
+
+        compilerPlugin.callGraph
+                .computeIfAbsent(currentMethod, k -> new HashSet<>())
+                .add(callee);
     }
 
 

@@ -54,6 +54,17 @@
           </annotationProcessors>
           <compilerArgs>
             <arg>-Xplugin:BPFCompilerPlugin</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED</arg>
+            <arg>--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
           </compilerArgs>
           <showWarnings>true</showWarnings>
         </configuration>
@@ -95,6 +106,17 @@
             --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
             --add-exports=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED
             --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
+            --add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED
+            --add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED
+            --add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED
+            --add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED
+            --add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED
+            --add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
+            --add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED
+            --add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED
+            --add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
+            --add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED
+            --add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
           </argLine>
         </configuration>
         <dependencies>

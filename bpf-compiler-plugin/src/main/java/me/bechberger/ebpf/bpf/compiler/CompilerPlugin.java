@@ -77,6 +77,30 @@ public class CompilerPlugin implements Plugin {
     private final Map<Type.ClassType, Integer> classToMethodCountToImplement = new HashMap<>();
 
     /**
+     * Side-channel populated during translation: for each translated method, the set of
+     * arena-field names it directly dereferences (via {@code @InArena Ptr<T>}).
+     * Collected by {@link Translator}; consumed by {@code ArenaAssociationPass} in Task B.
+     */
+    final Map<MethodSymbol, Set<String>> directArenaRefs = new HashMap<>();
+
+    /**
+     * Side-channel populated during translation: for each translated method, the set of
+     * other {@code @BPFFunction} method symbols it directly calls (in the same class).
+     * Collected by {@link Translator}; consumed by {@code ArenaAssociationPass} in Task B.
+     */
+    final Map<MethodSymbol, Set<MethodSymbol>> callGraph = new HashMap<>();
+
+    /**
+     * Test hook: when non-null, the plugin instance that most recently finished processing
+     * a BPF program class is stored here. Tests that drive javac in-process can read the
+     * side-channel maps via {@link #getDirectArenaRefs()} / {@link #getCallGraph()}.
+     * <p>
+     * Not written in production builds; the field is only set when the plugin is running
+     * inside an in-process javac invocation that opts in (see {@code ArenaAssociationPassTest}).
+     */
+    static final ThreadLocal<CompilerPlugin> LAST_PLUGIN = new ThreadLocal<>();
+
+    /**
      * Field-name → resolved C carrier expression for {@code @BPFAbstraction} fields whose
      * carrier was auto-allocated ({@code <auto>}) or otherwise needed processor-time resolution.
      * Key: {@code "qualifiedClassName.fieldName"}.
@@ -93,6 +117,16 @@ public class CompilerPlugin implements Plugin {
     @Override
     public String getName() {
         return "BPFCompilerPlugin";
+    }
+
+    /** Returns the accumulated direct-arena-ref side-channel collected during translation. */
+    public Map<MethodSymbol, Set<String>> getDirectArenaRefs() {
+        return java.util.Collections.unmodifiableMap(directArenaRefs);
+    }
+
+    /** Returns the accumulated inter-{@code @BPFFunction} call-graph side-channel collected during translation. */
+    public Map<MethodSymbol, Set<MethodSymbol>> getCallGraph() {
+        return java.util.Collections.unmodifiableMap(callGraph);
     }
 
     private boolean hasAnnotation(TreePath path, ModifiersTree modifiersTree, Class<?> annotation) {
@@ -1038,6 +1072,8 @@ public class CompilerPlugin implements Plugin {
                 }
             }
         }
+        // Expose this plugin instance for test code that drives javac in-process.
+        LAST_PLUGIN.set(this);
     }
 
     private Map<MethodSymbol, String> getInterfaceMethodsWithDefaultCode(Symbol.ClassSymbol superClassElement) {
