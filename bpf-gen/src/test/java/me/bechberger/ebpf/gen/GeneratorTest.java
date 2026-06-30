@@ -282,6 +282,44 @@ class GeneratorTest {
         assertEquals(expected, Objects.requireNonNull(type.toGenericTypeName(gen)).toString());
     }
 
+    @Test
+    public void testKfuncWithCpumaskParamEmitsTrustedPtr() {
+        // A kfunc-style proto with a Ptr<cpumask> argument.
+        // FuncProtoType.toMethodSpec(..., isKfunc=true) must emit @TrustedPtr on
+        // that parameter; the non-kfunc path must not.
+        var cpumaskStruct = new Generator.Type.StructType("cpumask", List.of());
+        var cpumaskPtrType = new Generator.Type.PtrType(cpumaskStruct);
+        var intType = new Generator.Type.IntType(KnownTypes.getKnowIntUnchecked("unsigned int"));
+        var proto = new Generator.Type.FuncProtoType(
+                List.of(new FuncParameter("cpu", intType), new FuncParameter("cpumask", cpumaskPtrType)),
+                intType);
+
+        String specAsKfunc = Objects.requireNonNull(
+                proto.toMethodSpec(gen, "bpf_cpumask_test_cpu", null, true)).toString();
+        assertTrue(specAsKfunc.contains("@TrustedPtr Ptr<cpumask> cpumask"),
+                "kfunc path must annotate Ptr<cpumask> with @TrustedPtr; got:\n" + specAsKfunc);
+
+        String specNonKfunc = Objects.requireNonNull(
+                proto.toMethodSpec(gen, "bpf_cpumask_test_cpu", null, false)).toString();
+        assertFalse(specNonKfunc.contains("@TrustedPtr"),
+                "non-kfunc path must not emit @TrustedPtr; got:\n" + specNonKfunc);
+    }
+
+    @Test
+    public void testKfuncWithNonCpumaskParamDoesNotEmitTrustedPtr() {
+        // A kfunc with a Ptr<task_struct> parameter — not cpumask, must not get @TrustedPtr.
+        var taskStruct = new Generator.Type.StructType("task_struct", List.of());
+        var taskPtrType = new Generator.Type.PtrType(taskStruct);
+        var intType = new Generator.Type.IntType(KnownTypes.getKnowIntUnchecked("unsigned int"));
+        var proto = new Generator.Type.FuncProtoType(
+                List.of(new FuncParameter("task", taskPtrType)), intType);
+
+        String spec = Objects.requireNonNull(
+                proto.toMethodSpec(gen, "some_kfunc", null, true)).toString();
+        assertFalse(spec.contains("@TrustedPtr"),
+                "Ptr<task_struct> kfunc param must not receive @TrustedPtr; got:\n" + spec);
+    }
+
     void assertTypeEquals(String expected, String expectedGeneric, Type type) {
         java.lang.@me.bechberger.ebpf.annotations.Unsigned Integer i = 0;
         assertEquals(expected, type.toTypeName(gen).toString());

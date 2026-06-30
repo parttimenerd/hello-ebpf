@@ -10,6 +10,7 @@ import me.bechberger.cast.CAST.Expression;
 import me.bechberger.ebpf.annotations.*;
 import me.bechberger.ebpf.annotations.EnumMember;
 import me.bechberger.ebpf.annotations.InlineUnion;
+import me.bechberger.ebpf.annotations.TrustedPtr;
 import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
@@ -235,7 +236,8 @@ public class Generator {
             Size.class, Unsigned.class, me.bechberger.ebpf.annotations.Type.class, TypedefBase.class, Ptr.class,
             TypedEnum.class, EnumMember.class,
             InlineUnion.class, Union.class, Ptr.class, BuiltinBPFFunction.class,
-            Nullable.class, MethodIsBPFRelatedFunction.class, NotUsableInJava.class, OriginalName.class);
+            Nullable.class, MethodIsBPFRelatedFunction.class, NotUsableInJava.class, OriginalName.class,
+            TrustedPtr.class);
 
     private static final Set<Class<?>> preimportedClassesSet = new HashSet<>(preimportedClasses);
 
@@ -1414,8 +1416,9 @@ public class Generator {
 
             @Override
             public MethodSpec toMethodSpec(Generator gen) {
-                var spec = impl.toMethodSpec(gen, name, javaDoc);
-                if (spec != null && gen.kfuncFuncIds.contains(id)) {
+                boolean isKfunc = gen.kfuncFuncIds.contains(id);
+                var spec = impl.toMethodSpec(gen, name, javaDoc, isKfunc);
+                if (spec != null && isKfunc) {
                     String signature;
                     try {
                         var stmt = impl.toCType(name).toStatement().toPrettyString();
@@ -1481,6 +1484,38 @@ public class Generator {
                 return toParameterSpec(gen, index, type.resolve().toTypeName(gen));
             }
 
+            /**
+             * Like {@link #toParameterSpec} but also emits {@code @TrustedPtr} when the
+             * parameter type is {@code Ptr<cpumask>}.  Use this when generating a kfunc
+             * stub, where {@code cpumask} arguments are always trusted pointers.
+             */
+            public ParameterSpec toParameterSpecAsKfunc(Generator gen, int index) {
+                TypeName typeName = type.resolve().toTypeName(gen);
+                ParameterSpec base = toParameterSpec(gen, index, typeName);
+                if (isPtrToCpumask(typeName)) {
+                    return base.toBuilder()
+                            .addAnnotation(AnnotationSpec.builder(cts(TrustedPtr.class)).build())
+                            .build();
+                }
+                return base;
+            }
+
+            /**
+             * Returns {@code true} when the given type name represents {@code Ptr<cpumask>}.
+             * kfunc parameters of this type require a trusted pointer and should carry
+             * {@code @TrustedPtr} in the generated Java stub.
+             */
+            private static boolean isPtrToCpumask(TypeName typeName) {
+                if (!(typeName instanceof ParameterizedTypeName pt)) return false;
+                // rawType is just "Ptr" (simple name) because Ptr is in preimportedClasses
+                if (!pt.rawType.simpleName().equals("Ptr")) return false;
+                if (pt.typeArguments.size() != 1) return false;
+                var arg = pt.typeArguments.get(0);
+                // Strip any annotations from the type argument (TypeName carries annotations
+                // as a list; the underlying concrete type class still determines identity).
+                return arg instanceof ClassName cn && cn.simpleName().equals("cpumask");
+            }
+
             public void collectUsedTypes(Generator gen, Predicate<TypeName> goIntoStructOrUnion,
                                          Set<TypeName> typeNames) {
                 type.resolve().collectUsedTypes(gen, goIntoStructOrUnion, typeNames);
@@ -1540,6 +1575,16 @@ public class Generator {
 
             @Override
             public @Nullable MethodSpec toMethodSpec(Generator gen, String name, @Nullable String javaDoc) {
+                return toMethodSpec(gen, name, javaDoc, false);
+            }
+
+            /**
+             * Builds the {@link MethodSpec} for this function prototype.
+             *
+             * @param isKfunc when {@code true}, kfunc-specific annotations are emitted on
+             *                parameters (e.g. {@code @TrustedPtr} on {@code Ptr<cpumask>}).
+             */
+            public @Nullable MethodSpec toMethodSpec(Generator gen, String name, @Nullable String javaDoc, boolean isKfunc) {
                 // ret_type_id may have pointed past the types table (returnType == null) or
                 // a parameter type may be unsupported — in either case skip emission rather
                 // than fabricate a wrong signature.
@@ -1566,7 +1611,9 @@ public class Generator {
                     if (param.type.resolve() instanceof VoidType) { // this can never be
                         throw new IllegalArgumentException("Void type not allowed in function parameters");
                     }
-                    builder.addParameter(param.toParameterSpec(gen, i));
+                    builder.addParameter(isKfunc
+                            ? param.toParameterSpecAsKfunc(gen, i)
+                            : param.toParameterSpec(gen, i));
                 }
                 builder.addCode("throw new $T();", cts(MethodIsBPFRelatedFunction.class));
                 if (javaDoc != null) {
