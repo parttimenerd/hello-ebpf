@@ -44,19 +44,21 @@ public class UserspaceSchedulerObsBenchTest {
         Thread.sleep(500);
         TestUtil.spawnCpuHogs(Runtime.getRuntime().availableProcessors(), 10_000);
         Thread.sleep(11_000);
+
+        // Snapshot histograms BEFORE requesting exit — cleanupBpf() nulls bpfHandle.
+        var hist = sched.bpf().roundTripHistView();
+        long total = hist.totalCount();
+        long p50 = hist.percentile(0.50);
+        long p99 = hist.percentile(0.99);
+
         sched.requestExit();
         runner.join(10_000);
 
-        var hist = sched.bpf().roundTripHistView();
-        long total = hist.totalCount();
         assertTrue(total > 1000, "not enough samples: " + total);
-        long p50 = hist.percentile(0.50);
-        long p99 = hist.percentile(0.99);
         var s = sched.stats();
 
         System.err.println("BENCH summary: " + sched.formatStats());
         System.err.printf("BENCH histogram: samples=%d p50=%dus p99=%dus%n", total, p50, p99);
-        sched.printHistograms(System.err);
 
         assertTrue(p50 < 250,  "p50 too high: " + p50 + "us");
         assertTrue(p99 < 2000, "p99 too high: " + p99 + "us");
