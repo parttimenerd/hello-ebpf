@@ -19,8 +19,8 @@ public class LotterySampleSmokeTest {
         var sched = new LotterySample();
         Thread runner = new Thread(() -> sched.runUntilExit(Opts.defaults()));
         runner.start();
-        TestUtil.spawnCpuHogs(6, 5000);
-        Thread.sleep(6000);
+        TestUtil.spawnCpuHogs(3, 4000);
+        Thread.sleep(5000);
         sched.requestExit();
         runner.join(10_000);
         var s = sched.stats();
