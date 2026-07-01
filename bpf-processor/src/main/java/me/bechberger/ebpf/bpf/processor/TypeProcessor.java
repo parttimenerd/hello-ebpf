@@ -1483,6 +1483,27 @@ public class TypeProcessor {
         }
         List<BPFTypeLike<?>> typeParameters = (List<BPFTypeLike<?>>) (List) typeParams.stream().map(Optional::get).toList();
 
+        // Reject bpf_timer as a direct map value type — the kernel requires bpf_timer
+        // to be embedded as a field inside a struct value, not the bare value itself.
+        // A load-time verifier rejection ("map_check_btf: bpf_timer not found") is much
+        // harder to diagnose than a compile-time error pointing at the field.
+        for (var typeArg : declaredType.getTypeArguments()) {
+            if (typeArg instanceof DeclaredType dt) {
+                var el = dt.asElement();
+                if (el instanceof TypeElement te
+                        && te.getQualifiedName().toString().equals(
+                                "me.bechberger.ebpf.runtime.BpfDefinitions.bpf_timer")) {
+                    this.processingEnv.getMessager().printError(
+                            "bpf_timer cannot be used directly as a map value type — "
+                            + "wrap it in an @Type-annotated struct with a bpf_timer field "
+                            + "(e.g. `public static class MyVal { public bpf_timer timer; }`) "
+                            + "and use that struct as the map value.",
+                            field);
+                    return null;
+                }
+            }
+        }
+
         // now we just have to get the annotation of the fields map type
 
         var mapType = processingEnv.getTypeUtils().asElement(type);
