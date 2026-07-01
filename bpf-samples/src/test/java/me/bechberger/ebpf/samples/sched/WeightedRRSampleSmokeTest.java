@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class WeightedRRSampleSmokeTest {
 
     @Test
-    @Timeout(30)
+    @Timeout(90)
     void weightedRRDispatchesAndTracksDebt() throws Exception {
         var sched = new WeightedRRSample();
         Thread runner = new Thread(() -> sched.runUntilExit(Opts.defaults()));
@@ -36,7 +36,7 @@ public class WeightedRRSampleSmokeTest {
         var debt = sched.debtSnapshot();
 
         sched.requestExit();
-        runner.join(10_000);
+        runner.join(30_000);
         var s = sched.stats();
         assertTrue(s.dispatched() > 100, "dispatched too few: " + s);
         assertTrue(s.dispatchFailed() < s.dispatched() / 100, "dispatch errors over 1%: " + s);

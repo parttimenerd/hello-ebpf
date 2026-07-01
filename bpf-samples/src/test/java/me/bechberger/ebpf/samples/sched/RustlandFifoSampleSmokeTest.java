@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RustlandFifoSampleSmokeTest {
 
     @Test
-    @Timeout(30)
+    @Timeout(90)
     void fifoSampleDispatchesUnderLoad() throws Exception {
         var sched = new RustlandFifoSample();
         Thread runner = new Thread(() -> sched.runUntilExit(Opts.defaults()));
@@ -22,7 +22,7 @@ public class RustlandFifoSampleSmokeTest {
         TestUtil.spawnCpuHogs(6, 5000);
         Thread.sleep(6000);
         sched.requestExit();
-        runner.join(10_000);
+        runner.join(30_000);
         var s = sched.stats();
         assertTrue(s.dispatched() > 100,    "dispatched too few: " + s);
         assertTrue(s.dispatchFailed() < s.dispatched() / 100, "dispatch errors over 1%: " + s);

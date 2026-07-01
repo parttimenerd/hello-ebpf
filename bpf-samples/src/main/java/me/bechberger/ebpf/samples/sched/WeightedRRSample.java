@@ -10,6 +10,7 @@ import me.bechberger.femtocli.annotations.Option;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Weighted round-robin demo scheduler.
@@ -22,8 +23,8 @@ import java.util.Map;
  */
 public final class WeightedRRSample extends UserspaceScheduler {
 
-    private final Map<Integer, Long> debt = new HashMap<>();
-    private final Map<Integer, Long> lastSeenTick = new HashMap<>();
+    private final Map<Integer, Long> debt = new ConcurrentHashMap<>();
+    private final Map<Integer, Long> lastSeenTick = new ConcurrentHashMap<>();
     private long tickCount = 0;
 
     @Override
