@@ -587,9 +587,14 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
         // Kthread fast path: per-CPU kernel threads and the well-known mm
         // helpers (kswapd, khugepaged) bypass userspace and go straight to
         // the task's last CPU to avoid latency from the userspace round-trip.
+        // Migration-disabled tasks (migrate_disable()/local_lock) also bypass
+        // userspace — the kernel rejects SCX_DSQ_LOCAL_ON | otherCpu for them,
+        // detaching the scheduler with exit_code=0 which reads as a clean exit.
         boolean isPerCpuKthread = (p.val().flags & PerProcessFlags.PF_KTHREAD) != 0
                                   && p.val().nr_cpus_allowed == 1;
-        if (isPerCpuKthread || pid == kswapdPid.get() || pid == khugepageDPid.get()) {
+        boolean isMigrationDisabled = p.val().migration_disabled != 0;
+        if (isPerCpuKthread || isMigrationDisabled
+                || pid == kswapdPid.get() || pid == khugepageDPid.get()) {
             scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL_ON.value() | scx_bpf_task_cpu(p),
                                SCX_SLICE_DFL.value(), enq_flags);
             return;
