@@ -275,9 +275,8 @@ Fold these into Spec 1 brief + Spec 2 authoring:
    `hello-ebpf-developing-ebpf-apps-in-java-1`.
 3. **Part 19 URL contains the typo `helle-ebpf`.** Preserve verbatim in any
    cross-link — "correcting" it makes the link 404.
-4. **docs.ebpf.io is not a BCC/Python tutorial site.** It is a modern Linux
-   kernel reference (last updated 2026-06-29). Update Spec 1 brief's stance
-   from cautious to liberal. See
+4. **docs.ebpf.io is a current Linux kernel reference.** Spec 1 brief's
+   stance is liberal linking. See
    [`research-docs-ebpf-io.md`](research-docs-ebpf-io.md).
 5. **scx C-scheduler READMEs no longer exist.** The `scheds/c/scx_simple/`
    path in the earlier Spec 1 brief is stale; C schedulers moved to kernel

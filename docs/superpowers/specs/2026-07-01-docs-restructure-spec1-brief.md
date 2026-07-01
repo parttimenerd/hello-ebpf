@@ -101,14 +101,12 @@ Fix to `hello-ebpf-developing-ebpf-apps-in-java-1`. (Part 19 has a URL typo
 "correcting" it will 404. Not a Spec 1 concern, but flagged so nobody fixes
 it in commit 3 by accident.)
 
-**docs.ebpf.io is a Linux kernel reference, not a BCC/Python tutorial site.**
-An earlier version of this brief characterized docs.ebpf.io as BCC-oriented
-and suggested linking sparingly. The research pass (fetching sitemap +
-sample pages, lastmod 2026-06-29) proved that stale — docs.ebpf.io is a
-current, MkDocs-Material Linux kernel reference. Spec 2 links to it
-liberally per `research-docs-ebpf-io.md`. Not a Spec 1 concern in terms of
-files touched, but the plan writer should not carry forward the older
-"cautious linking" assumption.
+**docs.ebpf.io is a current Linux kernel reference.** Treat it as an
+authoritative link target — Spec 2 links to it liberally per
+`research-docs-ebpf-io.md` (sitemap lastmod 2026-06-29, MkDocs-Material
+site scoped to kernel + libbpf/libxdp/scx reference material). Not a
+Spec 1 concern in terms of files touched, but flagged so the plan
+writer does not treat it as a cautious link target.
 
 **sched-ext `scheds/c/scx_simple/README.md` no longer exists.** Any earlier
 brief suggesting that path is stale — C example schedulers moved to the

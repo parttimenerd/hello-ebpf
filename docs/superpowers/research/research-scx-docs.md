@@ -77,6 +77,8 @@ The scx `README.md` "Additional Resources" section is the canonical curator of e
 
 Do not crawl LWN or blog article bodies from hello-ebpf's docs; just link out. If hello-ebpf needs a stable citation, prefer the scx README anchor over the primary source (scx README is version-controlled and won't rot as fast).
 
+For per-talk detail on the LPC 2024 and LPC 2025 sched_ext microconferences (session IDs, individual contribution URLs, presenter attribution) and for Johannes Bechberger's own sched_ext / hello-ebpf conference talks, see [`research-talks.md`](research-talks.md) — it is the authoritative catalog and the rows above should be treated as high-level pointers into it.
+
 ## Cross-link plan
 
 **`sched-ext/index.md`** — the top of hello-ebpf's sched-ext section. Open with a single sentence pointing to `OVERVIEW.md` as the concept intro, plus a "prereqs" callout linking `INSTALL.md` (for the kernel-version requirement) and the kernel.org HTML rendering (for the authoritative ABI). In the "history and motivation" paragraph, link the Feb 2023 LWN article and David Vernet's Kernel Recipes 2023 talk. Close with "further reading" listing the scx `README.md` "Additional Resources" section by URL so the reader inherits scx's curated blog/talk list without duplication.

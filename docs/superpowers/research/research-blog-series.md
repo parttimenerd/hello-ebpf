@@ -352,3 +352,7 @@ Priorities: rows tagged "hand-drawn diagram" or "state diagram" are the primary 
 4. **Part 15 sample naming drift**: post mentions `FIFOScheduler` and `WeightedScheduler`; the repo's canonical equivalents are `FCFSScheduler` and `WeightedRRSample`. Suggest cross-referencing both names.
 5. **README date drift**: README lists Part 1 as "Jan 01, 2024" but the URL and page metadata are Dec 31, 2023; Part 7 is "Mar 22" in README but "Mar 25" on the page. Minor — probably not worth changing unless updating for Parts 17–20 anyway.
 6. **README count update**: adding Parts 17, 18, 19, 20 brings the README from 19 to 23 bullet items. Coordinate with the "20-part" phrasing in docs/index.md.
+
+## 6. Related talks
+
+The blog series is complemented by conference talks cataloged in [`research-talks.md`](research-talks.md). Blog posts often have a companion talk (for example, Part 15 pairs with the FOSDEM 2025 "Writing Linux Schedulers in Java" session; the sched_ext strand pairs with LPC 2024/2025 microconference material) — see the cross-link table in `research-talks.md` for the full mapping, and use it alongside this document when picking anchors for the sched-ext and getting-started pages.
