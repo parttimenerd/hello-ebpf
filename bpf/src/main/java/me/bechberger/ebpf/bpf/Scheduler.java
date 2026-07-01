@@ -139,10 +139,17 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
                 bool bpf_cpumask_test_cpu(u32 cpu, const struct cpumask *cpumask) __ksym __weak;
                 u64 scx_bpf_now(void) __ksym __weak;
 
-                /* BPF arena kfuncs. Not declared by libbpf; required for BPFArena users. */
-                void *bpf_arena_alloc_pages(void *map, void *addr, __u32 page_cnt,
-                                            int node_id, __u64 flags) __ksym __weak;
-                void bpf_arena_free_pages(void *map, void *ptr, __u32 page_cnt) __ksym __weak;
+                /* BPF arena kfuncs. Not declared by libbpf; required for BPFArena users.
+                 * Return type is `void __arena *` (AS1) — the kernel kfunc returns an arena
+                 * pointer, and the caller assigns to an `__arena T *` field. Declaring it as
+                 * plain `void *` (AS0) makes clang reject the assignment as an address-space
+                 * change. `__arena` is defined by the compiler plugin's arena prelude. */
+                #ifndef __arena
+                #define __arena __attribute__((address_space(1)))
+                #endif
+                void __arena *bpf_arena_alloc_pages(void *map, void __arena *addr, __u32 page_cnt,
+                                                    int node_id, __u64 flags) __ksym __weak;
+                void bpf_arena_free_pages(void *map, void __arena *ptr, __u32 page_cnt) __ksym __weak;
 
                 /*
                  * libbpf <1.4 lacks the __ulong() convenience macro used by BPFArena's
