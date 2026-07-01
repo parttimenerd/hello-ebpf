@@ -118,6 +118,7 @@ samples/         — runnable sample programs
 | Page | Description |
 |------|-------------|
 | [Cheatsheet](cheatsheet.md) | Quick reference for annotations, maps, and helpers |
+| [Cookbook](cookbook.md) | Recipes for the shapes the BPF verifier cares about |
 | [Feature Matrix](feature-matrix.md) | Minimum kernel versions per feature |
 | [Maps](maps.md) | BPF map types and Java API |
 | [Shared maps](shared-maps.md) | Sharing maps across cooperating BPF programs (`@SharedFrom`) |
