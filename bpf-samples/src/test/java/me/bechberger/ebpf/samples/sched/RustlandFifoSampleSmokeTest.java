@@ -25,7 +25,7 @@ public class RustlandFifoSampleSmokeTest {
         runner.join(30_000);
         var s = sched.stats();
         assertTrue(s.dispatched() > 100,    "dispatched too few: " + s);
-        assertTrue(s.dispatchFailed() < s.dispatched() / 100, "dispatch errors over 1%: " + s);
-        assertTrue(s.ringDropped() < s.ringEnqueued() / 100, "ring dropped over 1%: " + s);
+        assertTrue(s.dispatchFailed() < Math.max(1, s.dispatched() / 100), "dispatch errors over 1%: " + s);
+        assertTrue(s.ringDropped() < Math.max(1, s.ringEnqueued() / 100), "ring dropped over 1%: " + s);
     }
 }
