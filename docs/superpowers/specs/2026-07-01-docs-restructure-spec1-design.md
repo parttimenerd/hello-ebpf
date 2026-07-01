@@ -21,14 +21,14 @@ Audiences the docs must serve, in order of expected traffic:
   section headers within existing pages is fine; rewriting sentences is not.
 - No changes to any Java source, samples, or the compiler plugin.
 - No archetype changes. `bpf-archetype/` stays as it is.
-- No new mkdocs plugins beyond `pymdownx.snippets` (needed for `--8<--` includes).
-- No change to `docs-requirements.txt`. `pymdownx.snippets` is part of `pymdown-extensions`, which is already a transitive dependency of `mkdocs-material`. It only needs to be listed under `markdown_extensions` in `mkdocs.yml`.
+- No new mkdocs plugins beyond `pymdownx.snippets` (needed for `--8<--` includes). `pymdownx.snippets` is part of the `pymdown-extensions` PyPI package, which `mkdocs-material` already pulls in transitively.
+- No change to `docs-requirements.txt`. `pymdownx.snippets` is available as soon as it is listed under `markdown_extensions` in `mkdocs.yml`.
 
 ## 2a. Preconditions
 
 Before Spec 1 work starts, verify:
 
-- `mkdocs build --strict` succeeds on `main` at the current commit. If it does not, fix the build first; do not layer restructure on a broken base.
+- `mkdocs build --strict` succeeds on `main` at the current commit. If local mkdocs is not installed (typical on the mac dev machine), `pip install -r docs-requirements.txt` first. If installing locally is impractical, the most recent green CI `docs` job on `main` is sufficient evidence — it runs `mkdocs gh-deploy --force`, which fails on the same conditions as `--strict` for the failure modes we care about (broken links, missing files).
 - The `docs` CI job on the most recent `main` commit is green (already verified as of the commit that lands this spec).
 
 ## 3. Style guide (`docs/superpowers/style-guide.md`)
@@ -95,14 +95,14 @@ Common table schema for all six audits:
   - `Rewrite` — coverage exists but violates the style guide (e.g. no cause section, dead example).
 - **Target page.** The one primary page in the new nav (§6) where the symbol should live. Many rows may point at the same page (e.g. every `@BPF*` annotation → `reference/annotations.md`). If the symbol is also referenced from other pages (e.g. `@InArena` is central to `arenas.md` but also appears in `cheatsheet.md`), that secondary presence is a Spec 2 content decision, not an audit column.
 
-The six audits, in dependency order so downstream tables can reference upstream anchors:
+The six audits, in dependency order so downstream tables can reference upstream anchors. **For each audit, the row set is derived by the audit subagent from a grep sweep of the module — the illustrative lists below are for orientation, not enumeration. The final row set is whatever grep returns.**
 
-1. **`audit-annotations.md`** — every `@` annotation shipped for user code, including non-BPF-prefixed ones (`@Unsigned`, `@Size`, `@InArena`, `@Kptr`, `@TrustedPtr`, `@BPFNullable`, `@BoundedBy`, `@Includes`, `@KernelBTF`, `@AllowDirectVal`, `@JavaOnly`, `@SharedFrom`, `@Requires`, `@Properties/@Property`, `@InlineUnion`, `@PassByRef`, `@Offset`, `@Sizes`, `@CustomType`, `@KFunc`, `@BuiltinBPFFunction`, `@BPFAbstraction`, `@BPFJavaInline`, `@BPFFunction`, `@BPFFunctionAlternative`, `@BPFInline`, `@BPFTimer`, `@BPFMapDefinition`, `@BPFMapClass`, `@BPFImpl`, `@BPFInterface`, `@Kprobe/@Kretprobe`, `@Uprobe/@Uretprobe`, `@LSM`, `@Tracepoint/@RawTracepoint`, `@Ksyscall`, `@Fentry/@Fexit`, `@ProgramType`, `@InternalBody`, `@InternalMethodDefinition`, `@MethodIsBPFRelatedFunction`, `@SuppressBPFWarning`, `@NotUsableInJava`, `@OriginalName/@OriginalNames`, `@EnumMember`).
-2. **`audit-bpfj.md`** — every `public static` in `BPFJ.java` (~52 methods).
-3. **`audit-runtime-api.md`** — `BPFProgram`, `BPFHashMap`, `BPFArray`, `BPFRingBuffer`, `BPFArena`, `BPFPerCpuArray`, `BPFPerCpuHashMap`, `BPFLruHashMap`, `BPFLruPerCpuHashMap`, `BPFQueue`, `BPFStack`, `BPFBloomFilter`, `BPFArrayOfMaps`, `BPFHashOfMaps`, `BPFProgArray` (tail calls), `GlobalVariable`, `BPFTimer` Java API, `StackSymbolizer`, JFR event types, `TailCall*` API, `SchedulerExtension` test infra, `Opts`, `QueuedTask` (userspace scheduler), `Scheduler` abstract class callbacks, error classifier public API. One row per public class or per public method where the method is the primary surface.
-4. **`audit-hooks.md`** — one row per `SEC(...)` shape the plugin can emit. Columns adapted: **Section string**, **Java annotation**, **Min kernel**, **Source (plugin file:line where the section string is chosen)**, **Documented in**, **Gap**, **Target page**. Covers: xdp, xdp/{devmap,cpumap}, tc/*, kprobe, kretprobe, uprobe, uretprobe, fentry, fexit, tracepoint/*, raw_tracepoint/*, ksyscall, lsm/*, cgroup/*, perf_event, sched_ext (struct_ops entries — one row per operation), sockops, sk_msg, sk_skb, cgroup_skb, cgroup_sock.
-5. **`audit-samples.md`** — every `.java` under `bpf-samples/src/main/java/me/bechberger/ebpf/samples/`. Columns adapted: **Sample**, **Hook types used**, **What it demonstrates (≤ 15 words)**, **Reference-quality? (Y/N)**, **Documented in**, **Target page**. `Reference-quality? = Y` means the sample is small, self-contained, and idiomatic enough that Spec 2 may include it via `--8<--`. Everything else is demo-only.
-6. **`audit-plugin.md`** — user-visible extension points of the compiler plugin, marked `[audience: contributor]`: plugin flags (`-Xplugin:BPFCompilerPlugin ...`), error catalog (every enum value in `VerifierFixSuggester`'s classes and every diagnostic key in the annotation processor), code-gen behaviours worth knowing (e.g. `@InArena` deref → `addr_space_cast`, `@Trusted` handling, `@BPFAbstraction` lowering, `.rodata` for `final` globals). One row per user-observable behaviour.
+1. **`audit-annotations.md`** — every `@` annotation shipped for user code. Row source: `grep -rln '^public.*@interface\|^public @interface' annotations/src/main/java/`. Illustrative (non-exhaustive): `@Unsigned`, `@Size`, `@InArena`, `@Kptr`, `@TrustedPtr`, `@BPFNullable`, `@BoundedBy`, `@Includes`, `@KernelBTF`, `@AllowDirectVal`, `@JavaOnly`, `@SharedFrom`, `@Requires`, `@Properties/@Property`, `@InlineUnion`, `@PassByRef`, `@Offset`, `@Sizes`, `@CustomType`, `@KFunc`, `@BuiltinBPFFunction`, `@BPFAbstraction`, `@BPFJavaInline`, `@BPFFunction`, `@BPFFunctionAlternative`, `@BPFInline`, `@BPFTimer`, `@BPFMapDefinition`, `@BPFMapClass`, `@BPFImpl`, `@BPFInterface`, `@Kprobe/@Kretprobe`, `@Uprobe/@Uretprobe`, `@LSM`, `@Tracepoint/@RawTracepoint`, `@Ksyscall`, `@Fentry/@Fexit`, `@ProgramType`, `@InternalBody`, `@InternalMethodDefinition`, `@MethodIsBPFRelatedFunction`, `@SuppressBPFWarning`, `@NotUsableInJava`, `@OriginalName/@OriginalNames`, `@EnumMember`. If grep finds annotations not in this list (or finds none for names in this list), the grep result wins.
+2. **`audit-bpfj.md`** — every `public static` method in `BPFJ.java`. Row source: `grep -n 'public static' bpf/src/main/java/me/bechberger/ebpf/bpf/BPFJ.java`.
+3. **`audit-runtime-api.md`** — public user-facing runtime classes and their primary methods. Row source: enumerate `public class` / `public abstract class` under `bpf/src/main/java/me/bechberger/ebpf/bpf/` and `bpf/src/main/java/me/bechberger/ebpf/bpf/map/` (grep `^public.*class`); one row per class. For classes whose primary surface is a single method (e.g. `BPFHashMap.bpf_get`), add per-method rows underneath. Illustrative surface: `BPFProgram`, `BPFHashMap`, `BPFArray`, `BPFRingBuffer`, `BPFArena`, `BPFPerCpuArray`, `BPFPerCpuHashMap`, `BPFLruHashMap`, `BPFLruPerCpuHashMap`, `BPFQueue`, `BPFStack`, `BPFBloomFilter`, `BPFArrayOfMaps`, `BPFHashOfMaps`, `BPFProgArray`, `GlobalVariable`, `BPFTimer`, `StackSymbolizer`, JFR event types, `TailCall*`, `SchedulerExtension`, `Opts`, `QueuedTask`, `Scheduler`, `UserspaceScheduler`, error classifier public API.
+4. **`audit-hooks.md`** — one row per `SEC(...)` shape the plugin can emit. Row source: `grep -rn 'SEC("' bpf-compiler-plugin/src/main/java/` plus `annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/ProgramType.java` (the ProgramType enum, ~line 44, defines the canonical set). Columns adapted: **Section string**, **Java annotation**, **Min kernel**, **Source (plugin file:line where the section string is chosen)**, **Documented in**, **Gap**, **Target page**.
+5. **`audit-samples.md`** — every `.java` file under `bpf-samples/src/main/java/me/bechberger/ebpf/samples/`. Row source: `find bpf-samples/src/main/java/me/bechberger/ebpf/samples/ -name '*.java'`. Columns adapted: **Sample**, **Hook types used**, **What it demonstrates (≤ 15 words)**, **Reference-quality? (Y/N)**, **Documented in**, **Target page**. Judgment column: `Reference-quality? = Y` means the sample is small, self-contained, and idiomatic enough that Spec 2 may include it via `--8<--`. Everything else is demo-only.
+6. **`audit-plugin.md`** — user-visible extension points of the compiler plugin, marked `[audience: contributor]`. Row sources: (a) plugin flags — grep `bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/CompilerPlugin.java` for command-line options; (b) error catalog — enumerate `VerifierFixSuggester` classes (grep the file — its path can be located via `grep -rln 'class VerifierFixSuggester' bpf-compiler-plugin/`) and every `Diagnostic.Kind.ERROR` / `WARNING` emission in `bpf-processor/`; (c) code-gen behaviours worth knowing (e.g. `@InArena` deref → `addr_space_cast`, `@Trusted` handling, `@BPFAbstraction` lowering, `.rodata` for `final` globals). One row per user-observable behaviour.
 
 Discovery method: **module-by-module**. Concretely, each audit task uses one
 Explore subagent to enumerate symbols by grepping the module for the shape
@@ -308,3 +308,16 @@ At the end of Spec 1:
 - The archetype (`bpf-archetype/`) — its own README stays authoritative.
 - Javadoc rewrites (the audit will flag `TODO:javadoc` rows; fixing them is Spec 2 work).
 - Any changes to `README.md`.
+
+## 12. Commit granularity
+
+Spec 1 lands as a sequence of commits, not one blob. The plan writer should chunk work into roughly six commits so any single commit stays reviewable and the site never leaves an intermediate broken state:
+
+1. Style guide and preconditions.
+2. Six audit tables (may be split further, one commit per audit is fine; audits can also land in parallel from different subagents since they touch disjoint files).
+3. `pymdownx.snippets` wiring plus the proof-of-life snippet migration.
+4. New page stubs and split-page carve (files created, but `mkdocs.yml` nav still points at the old paths).
+5. `mkdocs.yml` nav flip (references the new files) and shim files at the old paths.
+6. CI workflow edit (explicit `mkdocs build --strict` step before `gh-deploy`).
+
+Commit 4 leaves the site building against the old nav while the new files exist unlinked; commit 5 flips the nav; commit 6 tightens the CI gate. Any commit can be reverted independently. The **nav flip (5) is the load-bearing commit**; run `mkdocs build --strict` locally or in a scratch branch before merging.
