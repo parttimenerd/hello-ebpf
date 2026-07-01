@@ -923,8 +923,9 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
     @BPFFunction
     void setBit(int cpu, boolean idle) {
         if (cpu >= MAX_CPUS) return;             // bounded write
+        if (cpu < 0) return;                     // BPF backend rejects signed div/mod
         if (idleMaskBase == null) return;        // init() not yet completed
-        long wordIdx = cpu / 64;
+        long wordIdx = cpu >> 6;                 // cpu / 64 as an unsigned-safe shift
         long mask = 1L << (cpu & 63);
         // Non-atomic compound assignment: BPF does not allow BPF_ATOMIC on arena
         // (address-space 1) pointers. Each CPU only writes its own bit, so there is
