@@ -1,0 +1,1911 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://parttimenerd.github.io/hello-ebpf/superpowers/plans/2026-07-01-cookbook/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>hello-ebpf Cookbook Implementation Plan - hello-ebpf</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hello-ebpf-cookbook-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="hello-ebpf" class="md-header__button md-logo" aria-label="hello-ebpf" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            hello-ebpf
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              hello-ebpf Cookbook Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/parttimenerd/hello-ebpf" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    parttimenerd/hello-ebpf
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../cheatsheet/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Cheat Sheet
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../maps/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../feature-matrix/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="hello-ebpf" class="md-nav__button md-logo" aria-label="hello-ebpf" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    hello-ebpf
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/parttimenerd/hello-ebpf" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    parttimenerd/hello-ebpf
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cheatsheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheat Sheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../maps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../shared-maps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared maps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../xdp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XDP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tracepoints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tracepoints
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kprobes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kprobes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lsm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LSM & Cgroup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sched_ext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    sched_ext
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../global-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Global Variables & Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../helpers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BPFJ Helpers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../feature-matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../diagnostics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagnostics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Design principles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-directory-layout-final-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Directory layout (final target)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-templates-verbatim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Templates (verbatim)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Templates (verbatim)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recipe-page-template-_backingtemplatesmd-recipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recipe page template (_backing/TEMPLATES.md §Recipe)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reference-page-template-_backingtemplatesmd-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference page template (_backing/TEMPLATES.md §Reference)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deep-dive-template-_backingtemplatesmd-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep-dive template (_backing/TEMPLATES.md §Deep-dive)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-migration-mapping-phase-0b-sixteen-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Migration mapping (Phase 0b, sixteen files)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-verifier-hint-invariant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Verifier-hint invariant
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-voice-guidelines-_backingvoicemd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Voice guidelines (_backing/VOICE.md)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-references-ledger-_backingreferencesmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. References ledger (_backing/REFERENCES.md)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-cross-linking-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Cross-linking model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-testing-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Testing conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-blog-post-integration-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Blog-post integration workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-0a-scaffold" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 0a — Scaffold
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-0b-migration-before-new-content-per-the-locked-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 0b — Migration (before new content, per the locked decision)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-verifier-errors-reference-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — Verifier-errors + reference core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-data-kernel-access-deep-dives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Data + kernel-access deep-dives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-programs-getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Programs + getting-started
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-observability-diagnostics-polish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Observability, diagnostics, polish
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope-deferred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of scope (deferred)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="hello-ebpf-cookbook-implementation-plan">hello-ebpf Cookbook Implementation Plan<a class="headerlink" href="#hello-ebpf-cookbook-implementation-plan" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Replace the single <code>docs/cookbook.md</code> with a layered, task-oriented documentation source at <code>docs/cookbook/</code> that covers the modern hello-ebpf feature set (verifier hints, maps, programs, kernel access, diagnostics), migrates the 16 existing topical docs into it, and preserves the file-path invariant that lets <code>VerifierFixSuggester</code> link <code>See: cookbook §X</code> to a real page anchor.</p>
+<p><strong>Architecture:</strong> 47 published <code>.md</code> pages plus a mirrored <code>_backing/</code> tree of 47 rationale/references files. Every page follows a layered template (TL;DR / Recipe / Full example / Why / Pitfalls / See also). Reference pages are symbol-oriented and generated-friendly; recipe pages are task-oriented and hand-written. Deep-dive pages replace the old topical guides one-for-one. A tiny JUnit sample module (<code>bpf-samples/…/cookbook/</code>) compiles the recipe snippets against the real plugin, tagged so the docs build can require them green.</p>
+<p><strong>Tech Stack:</strong> MkDocs Material (existing), <code>pymdownx.superfences</code>/<code>snippets</code> for shared code fragments, JUnit 5 tags for recipe-vs-full-example separation, <code>mkdocs-macros</code> (optional, deferred) for <code>{{ recipe("name") }}</code> injection.</p>
+<hr />
+<h2 id="1-design-principles">1. Design principles<a class="headerlink" href="#1-design-principles" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Recipe vs. reference vs. deep-dive</strong> — three distinct page shapes, each has its own template. Never mix them.</li>
+<li><strong>Layered structure</strong> — every page opens with a one-paragraph TL;DR that a reader-in-a-hurry can copy; the deep material is below the fold.</li>
+<li><strong>Verifier-hint file-path invariant</strong> — every <code>See: cookbook §X</code> in <code>VerifierFixSuggester</code> maps to a stable page + anchor. Section renames require a corresponding suggester patch; the migration commit does both together.</li>
+<li><strong>Backing docs</strong> — every published page has a <code>_backing/&lt;same-path&gt;.md</code> with rationale, sources, blog-post links, and open questions. Backing docs are committed but excluded from <code>nav</code>.</li>
+<li><strong>Existing docs migrate before new content is written</strong> (Phase 0b). Migration is a rename + minor edit, not a rewrite. New material is layered on top of a stable nav.</li>
+<li><strong>Compile every code block</strong> — snippets under <code>bpf-samples/src/test/java/…/cookbook/</code> are compiled as part of the normal Maven build; <code>@Tag("cookbook-recipe")</code> tags them so we can require green before publishing.</li>
+<li><strong>Voice</strong> — terse, active, second-person ("You write…", "The verifier rejects…"). No emojis. No marketing prose. Blog posts are the register to match (see <code>_backing/VOICE.md</code>).</li>
+</ol>
+<h2 id="2-directory-layout-final-target">2. Directory layout (final target)<a class="headerlink" href="#2-directory-layout-final-target" title="Permanent link">&para;</a></h2>
+<p>47 published pages:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docs/cookbook/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  index.md                                  # cookbook landing (replaces docs/cookbook.md)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  getting-started/
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    install.md
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    first-program.md
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    build-and-run.md
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    kernel-and-clang.md                     # (migrates content from feature-matrix.md prereqs)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  verifier-errors/                          # anchors match VerifierFixSuggester See: refs
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    index.md
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    nullability.md                          # §Nullability
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    map-lookups.md                          # §Map lookups
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    bounds.md                               # §Bounds  + §Packet bounds
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    stack.md                                # §Stack
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    memory-regions.md                       # §Memory regions
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    control-flow.md                         # §Control flow
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    loops.md                                # §Loops
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    helpers.md                              # §Helpers
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    program-size.md                         # §Program size
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    timers.md                               # §Timers
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    reading-logs.md                         # §Verifier
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    trusted-pointers.md                     # trusted-pointer / directVal recipe
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    arena-memory.md                         # @InArena recipe
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  programs/                                 # migrates &amp; extends the old per-hook docs
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    index.md
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    xdp.md                                  # &lt;- docs/xdp.md
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    tc.md                                   # &lt;- docs/tc.md
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    tracepoints.md                          # &lt;- docs/tracepoints.md
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    kprobes.md                              # &lt;- docs/kprobes.md
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    uprobes.md                              # &lt;- docs/uprobes.md
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    lsm.md                                  # &lt;- docs/lsm.md
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    sched-ext.md                            # &lt;- docs/sched_ext.md
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    userspace-scheduler.md                  # &lt;- docs/userspace-scheduler.md
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    perf-event.md                           # new; refs CPUProfiler recipe
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    fentry-fexit.md                         # new; extracted from tracepoints/kprobes overlap
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>  data/
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    index.md
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    maps.md                                 # &lt;- docs/maps.md
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    shared-maps.md                          # &lt;- docs/shared-maps.md
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    global-variables.md                     # &lt;- docs/global-variables.md
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    ringbuf.md                              # split out of maps.md
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>    user-ringbuf.md                         # split out of maps.md
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>    arena.md                                # deep-dive to complement verifier-errors/arena-memory.md
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>    types-and-sizes.md                      # @Type, @Size, @Ptr, custom struct patterns
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>  kernel-access/
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    index.md
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>    helpers.md                              # &lt;- docs/helpers.md, renamed for clarity
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>    kfuncs.md                               # @BuiltinBPFFunction template language
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    core-reads.md                           # BPF_CORE_READ, preserve_access_index, directVal boundary
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>    task-and-cpumask.md                     # task_struct, cpumask helpers
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>  observability/
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>    index.md
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>    jfr-events.md                           # new; CPUProfiler + JvmGcPauseTracer
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>    stack-symbolizer.md                     # new
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>    probe-context.md                        # new
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>  diagnostics/
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>    index.md                                # &lt;- docs/diagnostics.md
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>    verifier-log.md                         # reading the raw log (companion to verifier-errors/reading-logs.md)
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>    load-errors.md                          # BPFLoadException, feature probes
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>    performance.md                          # BPF stats, common perf traps
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>  reference/
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>    index.md
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>    cheatsheet.md                           # &lt;- docs/cheatsheet.md
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>    feature-matrix.md                       # &lt;- docs/feature-matrix.md
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>    annotations.md                          # @BPF, @BPFFunction, @Type, @Size, @InArena, @SharedFrom, @TrustedPtr, @AllowDirectVal, @SuppressBPFWarning
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>    map-types.md                            # every BPFMap subclass, one row each
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>    program-types.md                        # every SEC() + Java hook interface
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>    passes.md                               # every compiler pass + its diagnostics
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>    changelog.md                            # &lt;- docs/changelog.md
+</code></pre></div>
+<p>Backing docs mirror the tree under <code>docs/cookbook/_backing/</code> with the same 47 filenames plus <code>VOICE.md</code>, <code>REFERENCES.md</code>, <code>MIGRATION.md</code>, <code>TEMPLATES.md</code> at the root.</p>
+<p>Total: <strong>47 + 51 = 98 markdown files</strong>. (Slightly more than the earlier 94 estimate because we split <code>ringbuf.md</code> / <code>user-ringbuf.md</code> from <code>maps.md</code> and added <code>fentry-fexit.md</code>.)</p>
+<h2 id="3-templates-verbatim">3. Templates (verbatim)<a class="headerlink" href="#3-templates-verbatim" title="Permanent link">&para;</a></h2>
+<h3 id="recipe-page-template-_backingtemplatesmd-recipe">Recipe page template (<code>_backing/TEMPLATES.md</code> §Recipe)<a class="headerlink" href="#recipe-page-template-_backingtemplatesmd-recipe" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gh"># &lt;Recipe title — imperative, e.g. &quot;Null-check a map lookup&quot;&gt;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="gs">**TL;DR.**</span> &lt;One sentence. What problem this solves. Skimmable.&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="gu">## Recipe</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="sb">```java</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">// Smallest self-contained snippet. Compiles under bpf-samples/…/cookbook/.</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="sb">```</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="gu">## Full example</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Full runnable class, with <span class="sb">`main`</span>. <span class="sb">`--8&lt;--`</span> snippet-imported from
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="sb">`bpf-samples/src/test/java/me/bechberger/ebpf/samples/cookbook/&lt;Name&gt;.java`</span>.
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="gu">## Why this shape</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>&lt;2–5 paragraphs. What the verifier / kernel / plugin requires. Reference
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>the actual code (<span class="sb">`Translator.java:1853`</span>, <span class="sb">`bpf_arena_alloc_pages`</span> in kernel
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>6.17, etc.). This is where blog-post depth lives.&gt;
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="gu">## Pitfalls</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="k">-</span><span class="w"> </span>&lt;Concrete failure mode, exact error message, one-line fix.&gt;
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="k">-</span><span class="w"> </span>&lt;…&gt;
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="gu">## See also</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">related recipe</span>](<span class="na">../…</span>)
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">reference page</span>](<span class="na">../reference/…</span>)
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="k">-</span><span class="w"> </span>Blog: [<span class="nt">&lt;title&gt;</span>](<span class="na">&lt;url&gt;</span>)
+</code></pre></div>
+<h3 id="reference-page-template-_backingtemplatesmd-reference">Reference page template (<code>_backing/TEMPLATES.md</code> §Reference)<a class="headerlink" href="#reference-page-template-_backingtemplatesmd-reference" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="gh"># &lt;Symbol / feature name&gt;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="gs">**One-paragraph summary.**</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="gu">## Signature</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="sb">```java</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="o">&lt;</span><span class="n">Java</span><span class="w"> </span><span class="n">signature</span><span class="o">&gt;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="sb">```</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="gu">## Behavior</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>&lt;Bullets or table. Enumerate: inputs, outputs, side effects, kernel version,
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>supported program types.&gt;
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="gu">## Examples</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>&lt;Two or three short snippets. Link to recipes for deep versions.&gt;
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="gu">## See also</span>
+</code></pre></div>
+<h3 id="deep-dive-template-_backingtemplatesmd-deep-dive">Deep-dive template (<code>_backing/TEMPLATES.md</code> §Deep-dive)<a class="headerlink" href="#deep-dive-template-_backingtemplatesmd-deep-dive" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gh"># &lt;Topic, e.g. &quot;XDP&quot;&gt;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="gs">**TL;DR.**</span> &lt;One paragraph.&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="gu">## Recipe</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>&lt;Smallest working program.&gt;
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="gu">## The full picture</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>&lt;Sections as needed: hooks, contexts, verifier idioms, performance,
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>attachment lifecycle.&gt;
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="gu">## Reference</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>&lt;Table of hook methods / helper functions specific to this program type.&gt;
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="gu">## Common pitfalls</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="gu">## See also</span>
+</code></pre></div>
+<h2 id="4-migration-mapping-phase-0b-sixteen-files">4. Migration mapping (Phase 0b, sixteen files)<a class="headerlink" href="#4-migration-mapping-phase-0b-sixteen-files" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Old path</th>
+<th>New path</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>docs/cookbook.md</code></td>
+<td><code>docs/cookbook/verifier-errors/index.md</code></td>
+<td>Move; split anchors across the 11 <code>verifier-errors/*.md</code> pages; keep old sections as h2 within each new page so anchors like <code>#nullability</code> still work verbatim.</td>
+</tr>
+<tr>
+<td><code>docs/cheatsheet.md</code></td>
+<td><code>docs/cookbook/reference/cheatsheet.md</code></td>
+<td>Move. Add landing paragraph pointing to <code>programs/*.md</code> deep-dives.</td>
+</tr>
+<tr>
+<td><code>docs/index.md</code></td>
+<td>(stays; rewrite links)</td>
+<td>Rewrite the doc table to point into <code>cookbook/*</code> paths.</td>
+</tr>
+<tr>
+<td><code>docs/xdp.md</code></td>
+<td><code>docs/cookbook/programs/xdp.md</code></td>
+<td>Move; reshape to deep-dive template. Add TL;DR + Recipe if missing.</td>
+</tr>
+<tr>
+<td><code>docs/tc.md</code></td>
+<td><code>docs/cookbook/programs/tc.md</code></td>
+<td>Move; deep-dive template.</td>
+</tr>
+<tr>
+<td><code>docs/tracepoints.md</code></td>
+<td><code>docs/cookbook/programs/tracepoints.md</code></td>
+<td>Move; deep-dive template.</td>
+</tr>
+<tr>
+<td><code>docs/kprobes.md</code></td>
+<td><code>docs/cookbook/programs/kprobes.md</code></td>
+<td>Move; deep-dive template.</td>
+</tr>
+<tr>
+<td><code>docs/uprobes.md</code></td>
+<td><code>docs/cookbook/programs/uprobes.md</code></td>
+<td>Move; deep-dive template. ProbeContext material moves out to <code>observability/probe-context.md</code>.</td>
+</tr>
+<tr>
+<td><code>docs/lsm.md</code></td>
+<td><code>docs/cookbook/programs/lsm.md</code></td>
+<td>Move; deep-dive template. Cgroup section stays here for now.</td>
+</tr>
+<tr>
+<td><code>docs/sched_ext.md</code></td>
+<td><code>docs/cookbook/programs/sched-ext.md</code></td>
+<td>Move; deep-dive template. Userspace-scheduler content splits out.</td>
+</tr>
+<tr>
+<td><code>docs/userspace-scheduler.md</code></td>
+<td><code>docs/cookbook/programs/userspace-scheduler.md</code></td>
+<td>Move.</td>
+</tr>
+<tr>
+<td><code>docs/profiling.md</code></td>
+<td><code>docs/cookbook/observability/jfr-events.md</code></td>
+<td>Move; rename because content is JFR-shaped, not "profiling".</td>
+</tr>
+<tr>
+<td><code>docs/maps.md</code></td>
+<td><code>docs/cookbook/data/maps.md</code></td>
+<td>Move; split ringbuf/user-ringbuf sections into their own pages.</td>
+</tr>
+<tr>
+<td><code>docs/shared-maps.md</code></td>
+<td><code>docs/cookbook/data/shared-maps.md</code></td>
+<td>Move.</td>
+</tr>
+<tr>
+<td><code>docs/global-variables.md</code></td>
+<td><code>docs/cookbook/data/global-variables.md</code></td>
+<td>Move.</td>
+</tr>
+<tr>
+<td><code>docs/helpers.md</code></td>
+<td><code>docs/cookbook/kernel-access/helpers.md</code></td>
+<td>Move; add cross-links to <code>kfuncs.md</code>.</td>
+</tr>
+<tr>
+<td><code>docs/feature-matrix.md</code></td>
+<td><code>docs/cookbook/reference/feature-matrix.md</code></td>
+<td>Move.</td>
+</tr>
+<tr>
+<td><code>docs/diagnostics.md</code></td>
+<td><code>docs/cookbook/diagnostics/index.md</code></td>
+<td>Move.</td>
+</tr>
+<tr>
+<td><code>docs/changelog.md</code></td>
+<td><code>docs/cookbook/reference/changelog.md</code></td>
+<td>Move; keep a shim <code>docs/changelog.md</code> that redirects (mkdocs-redirects) for release-note URLs already in the wild.</td>
+</tr>
+<tr>
+<td><code>docs/scheduler-article.md</code></td>
+<td>(stays, not part of cookbook)</td>
+<td>Leave.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-verifier-hint-invariant">5. Verifier-hint invariant<a class="headerlink" href="#5-verifier-hint-invariant" title="Permanent link">&para;</a></h2>
+<p><code>VerifierFixSuggester.suggest</code> emits <code>See: cookbook §&lt;Section&gt;</code> for eleven <code>ErrorClass</code>es. Each must map to a real anchor after migration:</p>
+<table>
+<thead>
+<tr>
+<th>ErrorClass</th>
+<th>Current hint text</th>
+<th>Target page</th>
+<th>Anchor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UNCHECKED_NULL_DEREF</code></td>
+<td><code>§Nullability</code></td>
+<td><code>cookbook/verifier-errors/nullability.md</code></td>
+<td><code>#nullability</code></td>
+</tr>
+<tr>
+<td><code>INVALID_MEM_ACCESS</code></td>
+<td><code>§Map lookups, §Packet bounds</code></td>
+<td><code>cookbook/verifier-errors/map-lookups.md</code>, <code>bounds.md</code></td>
+<td><code>#map-lookups</code>, <code>#packet-bounds</code></td>
+</tr>
+<tr>
+<td><code>OUT_OF_BOUNDS</code></td>
+<td><code>§Bounds</code></td>
+<td><code>cookbook/verifier-errors/bounds.md</code></td>
+<td><code>#bounds</code></td>
+</tr>
+<tr>
+<td><code>STACK_OOB</code></td>
+<td><code>§Stack</code></td>
+<td><code>cookbook/verifier-errors/stack.md</code></td>
+<td><code>#stack</code></td>
+</tr>
+<tr>
+<td><code>TYPE_MISMATCH</code></td>
+<td><code>§Memory regions</code></td>
+<td><code>cookbook/verifier-errors/memory-regions.md</code></td>
+<td><code>#memory-regions</code></td>
+</tr>
+<tr>
+<td><code>UNREACHABLE_INSTRUCTION</code></td>
+<td><code>§Control flow</code></td>
+<td><code>cookbook/verifier-errors/control-flow.md</code></td>
+<td><code>#control-flow</code></td>
+</tr>
+<tr>
+<td><code>INFINITE_LOOP</code></td>
+<td><code>§Loops</code></td>
+<td><code>cookbook/verifier-errors/loops.md</code></td>
+<td><code>#loops</code></td>
+</tr>
+<tr>
+<td><code>HELPER_NOT_ALLOWED</code></td>
+<td><code>§Helpers</code></td>
+<td><code>cookbook/verifier-errors/helpers.md</code></td>
+<td><code>#helpers</code></td>
+</tr>
+<tr>
+<td><code>UNRESOLVED_FUNC</code></td>
+<td><code>§Helpers</code></td>
+<td>(same)</td>
+<td><code>#helpers</code></td>
+</tr>
+<tr>
+<td><code>PROGRAM_TOO_LARGE</code></td>
+<td><code>§Program size</code></td>
+<td><code>cookbook/verifier-errors/program-size.md</code></td>
+<td><code>#program-size</code></td>
+</tr>
+<tr>
+<td><code>INVALID_TIMER_DEFINITION</code></td>
+<td><code>§Timers</code></td>
+<td><code>cookbook/verifier-errors/timers.md</code></td>
+<td><code>#timers</code></td>
+</tr>
+<tr>
+<td><code>OTHER</code></td>
+<td><code>§Verifier</code></td>
+<td><code>cookbook/verifier-errors/reading-logs.md</code></td>
+<td><code>#verifier</code></td>
+</tr>
+<tr>
+<td><code>ARENA_NOT_ASSOCIATED</code></td>
+<td>(issue link)</td>
+<td>(unchanged)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Anchor stability rule:</strong> every page whose path a <code>See:</code> line points at MUST have an h2 whose slug matches the current suggester text (e.g. <code>## Nullability</code>). We keep an h2-per-section even when the page is dedicated to that topic, so the anchor URL stays <code>.../nullability.md#nullability</code>. This is boring but non-negotiable — a broken <code>See:</code> link breaks every future compiler error message for that class until a suggester patch ships.</p>
+<h2 id="6-voice-guidelines-_backingvoicemd">6. Voice guidelines (<code>_backing/VOICE.md</code>)<a class="headerlink" href="#6-voice-guidelines-_backingvoicemd" title="Permanent link">&para;</a></h2>
+<p>Match the blog. Concrete markers derived from posts 1, 6, 9, 10, 14.5, 15, 16, 17:</p>
+<ul>
+<li>Second person, active voice. "You annotate…", "The verifier rejects…".</li>
+<li>Terse but never terse-and-arch. Say what the thing does, then why.</li>
+<li>Kernel source references use file + line + version: <code>resolve_pseudo_ldimm64 in kernel/bpf/verifier.c (v6.17)</code>. Not just "the kernel does X".</li>
+<li>Verifier / clang / libbpf are named actors with observable behavior. "clang BPF strips the asm hint" beats "the compiler removes it".</li>
+<li>Every failure mode gets its exact error message quoted.</li>
+<li>No emojis. No "Let's…", no "So…", no exclamation points.</li>
+<li>Two audiences per page: a hurry (TL;DR + Recipe) and a builder (Why + Pitfalls). Serve both, in that order.</li>
+</ul>
+<h2 id="7-references-ledger-_backingreferencesmd">7. References ledger (<code>_backing/REFERENCES.md</code>)<a class="headerlink" href="#7-references-ledger-_backingreferencesmd" title="Permanent link">&para;</a></h2>
+<p><strong>Blog series</strong> (mostlynerdless.de/blog, all authored by Johannes Bechberger):</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Part</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Hello World</td>
+<td>https://mostlynerdless.de/blog/2024/02/11/writing-ebpf-programs-in-java-with-hello-ebpf-1-hello-world/</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Talk to your kernel</td>
+<td>https://mostlynerdless.de/blog/2024/02/29/writing-ebpf-programs-in-java-with-hello-ebpf-2-talk-to-your-kernel/</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Maps</td>
+<td>https://mostlynerdless.de/blog/2024/03/22/writing-ebpf-programs-in-java-with-hello-ebpf-3-hash-maps/</td>
+</tr>
+<tr>
+<td>4</td>
+<td>User-space</td>
+<td>https://mostlynerdless.de/blog/2024/04/12/writing-ebpf-programs-in-java-with-hello-ebpf-4-user-space/</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Ring buffers</td>
+<td>https://mostlynerdless.de/blog/2024/05/10/writing-ebpf-programs-in-java-with-hello-ebpf-5-ring-buffers/</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Perf events</td>
+<td>https://mostlynerdless.de/blog/2024/06/07/writing-ebpf-programs-in-java-with-hello-ebpf-6-perf-events/</td>
+</tr>
+<tr>
+<td>9</td>
+<td>XDP</td>
+<td>https://mostlynerdless.de/blog/2024/09/06/writing-ebpf-programs-in-java-with-hello-ebpf-9-xdp/</td>
+</tr>
+<tr>
+<td>10</td>
+<td>TC</td>
+<td>https://mostlynerdless.de/blog/2024/10/04/writing-ebpf-programs-in-java-with-hello-ebpf-10-tc/</td>
+</tr>
+<tr>
+<td>14.5</td>
+<td>Type system</td>
+<td>https://mostlynerdless.de/blog/2025/02/28/writing-ebpf-programs-in-java-with-hello-ebpf-14-5-type-system/</td>
+</tr>
+<tr>
+<td>15</td>
+<td>sched_ext</td>
+<td>https://mostlynerdless.de/blog/2025/04/25/writing-ebpf-programs-in-java-with-hello-ebpf-15-sched-ext/</td>
+</tr>
+<tr>
+<td>16</td>
+<td>LSM</td>
+<td>https://mostlynerdless.de/blog/2025/06/06/writing-ebpf-programs-in-java-with-hello-ebpf-16-lsm/</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Uprobes</td>
+<td>https://mostlynerdless.de/blog/2025/09/12/writing-ebpf-programs-in-java-with-hello-ebpf-17-uprobes/</td>
+</tr>
+<tr>
+<td>—</td>
+<td>JDK 21 uprobe pitfall</td>
+<td>https://mostlynerdless.de/blog/2025/10/09/objectmonitor-enter-jdk-21-dead-code/</td>
+</tr>
+</tbody>
+</table>
+<p><strong>External ecosystem</strong> (linked from <code>See also</code> in relevant pages):</p>
+<ul>
+<li>ebpf.io — canonical intro</li>
+<li>Brendan Gregg — perf/BCC/bpftrace posts</li>
+<li>Dylan Reimerink — verifier-log deep dives</li>
+<li>Liz Rice, <em>Learning eBPF</em> (O'Reilly)</li>
+<li>Andrii Nakryiko on ringbuf design (facebook.com/nakryiko blog)</li>
+<li>eunomia-bpf tutorials — good beginner recipes to point at</li>
+<li>kernel Documentation/bpf/*.rst (bpf_design_QA, verifier, arenas)</li>
+<li>sched-ext.com and Igalia's sched-ext intro</li>
+<li>Cloudflare's XDP posts (10M packets, XDP eBPF fw)</li>
+</ul>
+<h2 id="8-cross-linking-model">8. Cross-linking model<a class="headerlink" href="#8-cross-linking-model" title="Permanent link">&para;</a></h2>
+<p>Three link buckets per page:</p>
+<ol>
+<li><strong>Peer recipes</strong> — small tasks the reader might do next (up).</li>
+<li><strong>Reference pages</strong> — full symbol tables (down).</li>
+<li><strong>External</strong> — blog posts, ebpf.io, kernel docs.</li>
+</ol>
+<p>Every page ends with a <code>## See also</code> list with all three buckets when applicable. Backing docs list unlinked-but-related pages so we notice missing edges.</p>
+<h2 id="9-testing-conventions">9. Testing conventions<a class="headerlink" href="#9-testing-conventions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>New sample tree: <code>bpf-samples/src/test/java/me/bechberger/ebpf/samples/cookbook/</code>.</li>
+<li>Each recipe class ends with <code>-Recipe.java</code>; each Full example ends with <code>-Example.java</code>.</li>
+<li>JUnit tag <code>cookbook-recipe</code> on recipe smoke tests; <code>cookbook-example</code> on full-example runs.</li>
+<li>MkDocs <code>pymdownx.snippets</code> imports code fences from the sample tree, so the doc is always in lockstep with the compiled version.</li>
+<li>Recipes that require a real kernel are gated on the same <code>@RequiresKernel(...)</code> pattern the existing samples use; docs build does NOT require a kernel — only compilation.</li>
+</ul>
+<h2 id="10-blog-post-integration-workflow">10. Blog-post integration workflow<a class="headerlink" href="#10-blog-post-integration-workflow" title="Permanent link">&para;</a></h2>
+<p>For each blog post, extract:
+- <strong>Recipe</strong> → cookbook recipe page.
+- <strong>Anecdote / why</strong> → backing doc, so we know where the section came from and don't lose the story.
+- <strong>External links</strong> → <code>_backing/REFERENCES.md</code>.</p>
+<p>Backing docs cite blog URLs verbatim so the published pages stay clean (the blog is a companion, not a dependency).</p>
+<hr />
+<h2 id="tasks">Tasks<a class="headerlink" href="#tasks" title="Permanent link">&para;</a></h2>
+<p>Each task ends with a commit. <strong>Never run builds/tests on the local mac</strong> — push to thinkstation via <code>ssh thinkstation</code> and:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  /home/i560383/.m2/wrapper/dists/apache-maven-3.8.7-bin/678cc9d4/apache-maven-3.8.7/bin/mvn &lt;goals&gt;
+</code></pre></div>
+Docs-only tasks (Phase 0a, 0b, most of Phase 1–4) do not need a build; the site is verified with <code>mkdocs build --strict</code> locally on mac. Sample-tree tasks trigger a compile-only build on thinkstation.</p>
+<h3 id="phase-0a-scaffold">Phase 0a — Scaffold<a class="headerlink" href="#phase-0a-scaffold" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] <strong>Task 0a-1: Create the empty tree.</strong> Create every directory and every published <code>.md</code> stub under <code>docs/cookbook/</code>. Each stub is one line: <code># &lt;Page title&gt;</code> and nothing else. This lets the nav render and <code>mkdocs build --strict</code> pass with warnings-as-warnings-only. Also create <code>_backing/</code> mirroring the tree.</li>
+<li>
+<p>Commit: <code>docs: scaffold cookbook directory tree (empty stubs)</code>.</p>
+</li>
+<li>
+<p>[ ] <strong>Task 0a-2: Rewrite <code>mkdocs.yml</code> <code>nav</code></strong> to the layered structure:
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">nav</span><span class="p">:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Home</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">index.md</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Getting started</span><span class="p">:</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overview</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/getting-started/install.md</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">First program</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/getting-started/first-program.md</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Build and run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/getting-started/build-and-run.md</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Kernel and clang</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/getting-started/kernel-and-clang.md</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Cookbook</span><span class="p">:</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Verifier errors</span><span class="p">:</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overview</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/index.md</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Nullability</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/nullability.md</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Map lookups</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/map-lookups.md</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Bounds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/bounds.md</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Stack</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/stack.md</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Memory regions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/memory-regions.md</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Control flow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/control-flow.md</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Loops</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/loops.md</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Helpers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/helpers.md</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Program size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/program-size.md</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Timers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/timers.md</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Reading logs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/reading-logs.md</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Trusted pointers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/trusted-pointers.md</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Arena memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/verifier-errors/arena-memory.md</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Programs</span><span class="p">:</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overview</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/programs/index.md</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">XDP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/programs/xdp.md</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">TC</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/programs/tc.md</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Tracepoints</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/programs/tracepoints.md</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Kprobes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/programs/kprobes.md</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Uprobes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/programs/uprobes.md</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">LSM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/programs/lsm.md</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">sched_ext</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/programs/sched-ext.md</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Userspace scheduler</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/programs/userspace-scheduler.md</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">perf_event</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/programs/perf-event.md</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fentry/fexit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/programs/fentry-fexit.md</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Data</span><span class="p">:</span>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overview</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/data/index.md</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Maps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/data/maps.md</span>
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Shared maps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/data/shared-maps.md</span>
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Global variables</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/data/global-variables.md</span>
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Ring buffers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/data/ringbuf.md</span>
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">User ring buffers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/data/user-ringbuf.md</span>
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Arenas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/data/arena.md</span>
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Types and sizes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/data/types-and-sizes.md</span>
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Kernel access</span><span class="p">:</span>
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overview</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/kernel-access/index.md</span>
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">BPF helpers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/kernel-access/helpers.md</span>
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kfuncs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/kernel-access/kfuncs.md</span>
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">CO-RE reads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/kernel-access/core-reads.md</span>
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Tasks and cpumasks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/kernel-access/task-and-cpumask.md</span>
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Observability</span><span class="p">:</span>
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overview</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/observability/index.md</span>
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">JFR events</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/observability/jfr-events.md</span>
+<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Stack symbolizer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/observability/stack-symbolizer.md</span>
+<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Probe context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/observability/probe-context.md</span>
+<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Diagnostics</span><span class="p">:</span>
+<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overview</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/diagnostics/index.md</span>
+<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Verifier log</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/diagnostics/verifier-log.md</span>
+<a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Load errors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/diagnostics/load-errors.md</span>
+<a id="__codelineno-5-60" name="__codelineno-5-60" href="#__codelineno-5-60"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Performance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/diagnostics/performance.md</span>
+<a id="__codelineno-5-61" name="__codelineno-5-61" href="#__codelineno-5-61"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Reference</span><span class="p">:</span>
+<a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Overview</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/reference/index.md</span>
+<a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Cheat sheet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/reference/cheatsheet.md</span>
+<a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Feature matrix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/reference/feature-matrix.md</span>
+<a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Annotations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/reference/annotations.md</span>
+<a id="__codelineno-5-66" name="__codelineno-5-66" href="#__codelineno-5-66"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Map types</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/reference/map-types.md</span>
+<a id="__codelineno-5-67" name="__codelineno-5-67" href="#__codelineno-5-67"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Program types</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/reference/program-types.md</span>
+<a id="__codelineno-5-68" name="__codelineno-5-68" href="#__codelineno-5-68"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Compiler passes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/reference/passes.md</span>
+<a id="__codelineno-5-69" name="__codelineno-5-69" href="#__codelineno-5-69"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Changelog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cookbook/reference/changelog.md</span>
+</code></pre></div></p>
+</li>
+<li>Verify: <code>mkdocs build --strict</code> succeeds locally (mac is fine for docs-only checks).</li>
+<li>
+<p>Commit: <code>docs: rewrite mkdocs nav for cookbook layout</code>.</p>
+</li>
+<li>
+<p>[ ] <strong>Task 0a-3: Write <code>_backing/TEMPLATES.md</code>, <code>_backing/VOICE.md</code>, <code>_backing/REFERENCES.md</code>, <code>_backing/MIGRATION.md</code></strong> with the content in §3, §6, §7, §4 of this plan (copy-paste, adjust intros).</p>
+</li>
+<li>Commit: <code>docs: cookbook backing templates, voice guide, references ledger</code>.</li>
+</ul>
+<h3 id="phase-0b-migration-before-new-content-per-the-locked-decision">Phase 0b — Migration (before new content, per the locked decision)<a class="headerlink" href="#phase-0b-migration-before-new-content-per-the-locked-decision" title="Permanent link">&para;</a></h3>
+<p>Each of these is one commit. Copy the existing file to its new path, apply minimal edits (heading level, template compliance), and delete the old file in the same commit. Update every intra-doc link in <code>docs/index.md</code> and in <code>README.md</code> (if it links into docs).</p>
+<ul>
+<li>[ ] <strong>Task 0b-1: Move <code>docs/cookbook.md</code> → 11 verifier-errors pages.</strong> This is the highest-risk migration because <code>VerifierFixSuggester</code> <code>See:</code> lines point at it. For each of the 11 anchors in §5, create the target page from a slice of the old cookbook. Keep the h2 slug identical (<code>## Nullability</code> → <code>#nullability</code>). Set <code>verifier-errors/index.md</code> to be the old cookbook's overview + a table linking to each subpage.</li>
+<li>Cross-check: grep <code>VerifierFixSuggester.java</code> for <code>See: cookbook §</code>; every hit must resolve to a real anchor after this commit.</li>
+<li>
+<p>Commit: <code>docs(cookbook): migrate cookbook.md into verifier-errors/ pages</code>.</p>
+</li>
+<li>
+<p>[ ] <strong>Task 0b-2: Move the six data + kernel-access files.</strong> <code>maps.md</code>, <code>shared-maps.md</code>, <code>global-variables.md</code>, <code>helpers.md</code>, plus split ringbuf/user-ringbuf out of maps.md. Rewrite links in <code>docs/index.md</code>.</p>
+</li>
+<li>
+<p>Commit: <code>docs(cookbook): migrate data/ and kernel-access/ from topical docs</code>.</p>
+</li>
+<li>
+<p>[ ] <strong>Task 0b-3: Move the eight program files.</strong> <code>xdp.md</code>, <code>tc.md</code>, <code>tracepoints.md</code>, <code>kprobes.md</code>, <code>uprobes.md</code>, <code>lsm.md</code>, <code>sched_ext.md</code>, <code>userspace-scheduler.md</code>. Extract <code>ProbeContext</code> from <code>uprobes.md</code> into <code>observability/probe-context.md</code>.</p>
+</li>
+<li>
+<p>Commit: <code>docs(cookbook): migrate programs/ from topical docs</code>.</p>
+</li>
+<li>
+<p>[ ] <strong>Task 0b-4: Move reference and diagnostics.</strong> <code>cheatsheet.md</code>, <code>feature-matrix.md</code>, <code>changelog.md</code>, <code>diagnostics.md</code>, <code>profiling.md</code>. Keep <code>docs/changelog.md</code> as a two-line redirect stub (raw HTML meta-refresh) because release URLs may already exist in the wild.</p>
+</li>
+<li>
+<p>Commit: <code>docs(cookbook): migrate reference/ and diagnostics/ from topical docs</code>.</p>
+</li>
+<li>
+<p>[ ] <strong>Task 0b-5: Rewrite <code>docs/index.md</code>.</strong> New Documentation table points at cookbook paths. Update the "Blog series" section link list from <code>_backing/REFERENCES.md</code>.</p>
+</li>
+<li>Verify: <code>mkdocs build --strict</code> still succeeds; no broken links.</li>
+<li>Commit: <code>docs: rewrite index.md for cookbook nav</code>.</li>
+</ul>
+<h3 id="phase-1-verifier-errors-reference-core">Phase 1 — Verifier-errors + reference core<a class="headerlink" href="#phase-1-verifier-errors-reference-core" title="Permanent link">&para;</a></h3>
+<p>These are the pages the compiler links to. They must be complete before we do promotional writing elsewhere.</p>
+<ul>
+<li>[ ] <strong>Task 1-1: Flesh out <code>verifier-errors/nullability.md</code></strong> to the recipe template. Include one recipe (<code>Ptr&lt;Long&gt; p = counters.bpf_get(key); if (p == null) return 0;</code>), a Full example (small counter program in <code>bpf-samples/…/cookbook/NullCheckRecipe.java</code>), Why (verifier tracks <code>map_value_or_null</code>), Pitfalls (inline deref, ternary confusion, register-state dump reading).</li>
+<li>
+<p>Commit: <code>docs(cookbook): write verifier-errors/nullability</code>.</p>
+</li>
+<li>
+<p>[ ] <strong>Task 1-2: Same for <code>map-lookups.md</code>, <code>bounds.md</code>, <code>stack.md</code>, <code>memory-regions.md</code>.</strong> Split across four commits, one page each. Bounds gets a <code>#packet-bounds</code> subsection to catch the XDP form.</p>
+</li>
+<li>
+<p>[ ] <strong>Task 1-3: <code>control-flow.md</code>, <code>loops.md</code>, <code>helpers.md</code>, <code>program-size.md</code>, <code>timers.md</code>.</strong> Five commits. Timers page cross-links <code>bpf-samples/…/BpfTimerMapValueGuardTest</code> and <code>TypeProcessor</code>.</p>
+</li>
+<li>
+<p>[ ] <strong>Task 1-4: <code>reading-logs.md</code>.</strong> How to read the raw verifier log, mapped register-state notation, how <code>VerifierLogParser</code> classifies. Cross-links <code>diagnostics/verifier-log.md</code> (which goes deeper on the log itself).</p>
+</li>
+<li>
+<p>Commit: <code>docs(cookbook): write verifier-errors/reading-logs</code>.</p>
+</li>
+<li>
+<p>[ ] <strong>Task 1-5: <code>trusted-pointers.md</code> and <code>arena-memory.md</code>.</strong> These aren't compiler <code>See:</code> targets but they are the two subtle features. Reference <code>Translator.java:1853</code>, <code>ArenaAssociationPass</code>, the "directVal must be immediately followed by field access" rule.</p>
+</li>
+<li>
+<p>Two commits.</p>
+</li>
+<li>
+<p>[ ] <strong>Task 1-6: <code>reference/annotations.md</code>, <code>reference/map-types.md</code>, <code>reference/program-types.md</code>, <code>reference/passes.md</code>.</strong> Symbol tables generated from a light grep pass (there is no code generator yet — hand-write from source). Every row: name, since-version, one-line summary, link to the recipe/deep-dive that uses it.</p>
+</li>
+<li>Four commits.</li>
+</ul>
+<h3 id="phase-2-data-kernel-access-deep-dives">Phase 2 — Data + kernel-access deep-dives<a class="headerlink" href="#phase-2-data-kernel-access-deep-dives" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] <strong>Task 2-1: <code>data/maps.md</code></strong> — deep-dive on hash/array variants. Cross-link recipes in <code>verifier-errors/map-lookups.md</code>.</li>
+<li>[ ] <strong>Task 2-2: <code>data/shared-maps.md</code>, <code>data/global-variables.md</code></strong> — recipe + reference.</li>
+<li>[ ] <strong>Task 2-3: <code>data/ringbuf.md</code>, <code>data/user-ringbuf.md</code></strong> — the two ringbuf shapes, back-pressure discussion, size tuning.</li>
+<li>[ ] <strong>Task 2-4: <code>data/arena.md</code></strong> — full arena page (allocation, mmap, association pass, when to use vs. per-CPU array).</li>
+<li>[ ] <strong>Task 2-5: <code>data/types-and-sizes.md</code></strong> — <code>@Type</code>, <code>@Size</code>, nested structs, alignment, when the C emitter picks <code>__attribute__((packed))</code>.</li>
+<li>[ ] <strong>Task 2-6: <code>kernel-access/helpers.md</code></strong> — refreshed from the migrated content; group by section (task, network, misc). Cross-link <code>HelperContextPass</code>.</li>
+<li>[ ] <strong>Task 2-7: <code>kernel-access/kfuncs.md</code></strong> — <code>@BuiltinBPFFunction</code> template language, <code>$argN</code>, <code>$deref</code>, <code>$funcN</code>, <code>$lambdaM:code</code>. Pull from <code>reference_method_template_language</code> memory.</li>
+<li>[ ] <strong>Task 2-8: <code>kernel-access/core-reads.md</code></strong> — BPF_CORE_READ semantics, <code>preserve_access_index</code>, the <code>directVal</code> vs. <code>val()</code> boundary. Reference the <code>project_co_re_preserve_access_index</code> memory.</li>
+<li>[ ] <strong>Task 2-9: <code>kernel-access/task-and-cpumask.md</code></strong> — recipes: get current task, walk children, CPU affinity. Reference <code>feedback_cpumask_reference_leak</code> memory.</li>
+</ul>
+<p>One commit per task.</p>
+<h3 id="phase-3-programs-getting-started">Phase 3 — Programs + getting-started<a class="headerlink" href="#phase-3-programs-getting-started" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] <strong>Task 3-1..10: Deepen the ten program pages.</strong> One per commit. Each page keeps the migrated content, adds a TL;DR + Recipe if missing, and adds a Pitfalls section derived from failure modes we've hit (blog posts, memory files, <code>feedback_lsm_hooks</code>, <code>project_userspace_scheduler_*</code>).</li>
+<li>[ ] <strong>Task 3-11..14: Getting-started pages.</strong> <code>install.md</code>, <code>first-program.md</code>, <code>build-and-run.md</code>, <code>kernel-and-clang.md</code>. Aim: someone with zero context runs a real program in 15 minutes.</li>
+</ul>
+<h3 id="phase-4-observability-diagnostics-polish">Phase 4 — Observability, diagnostics, polish<a class="headerlink" href="#phase-4-observability-diagnostics-polish" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] <strong>Task 4-1..3: Observability pages.</strong> <code>jfr-events.md</code> (from migrated profiling.md, extend for CPUProfiler + JvmGcPauseTracer), <code>stack-symbolizer.md</code>, <code>probe-context.md</code>.</li>
+<li>[ ] <strong>Task 4-4..6: Diagnostics pages.</strong> <code>verifier-log.md</code>, <code>load-errors.md</code>, <code>performance.md</code>.</li>
+<li>[ ] <strong>Task 4-7: Cross-link sweep.</strong> For every <code>## See also</code> section on every page, ensure at least one peer + one reference + one external link. <code>mkdocs build --strict</code> still clean.</li>
+<li>[ ] <strong>Task 4-8: Compile-sample harness.</strong> Add <code>bpf-samples/pom.xml</code> config for the <code>cookbook-recipe</code> tag; wire <code>pymdownx.snippets</code> so recipe code blocks import the JUnit source files. Run on thinkstation: <code>HOME=/home/i560383 JAVA_HOME=… mvn -pl bpf-samples -Dtest=CookbookRecipesTest test</code>.</li>
+<li>Commit: <code>test(samples): compile-only cookbook recipe harness</code>.</li>
+<li>[ ] <strong>Task 4-9: <code>VerifierFixSuggester</code> anchor audit.</strong> Verify every <code>See: cookbook §X</code> string in <code>VerifierFixSuggester.java</code> matches an anchor in the migrated tree. If any drifted during migration, patch the suggester in the same commit as the doc fix.</li>
+<li>Commit: <code>chore(plugin): sync VerifierFixSuggester See: refs with cookbook anchors</code>.</li>
+</ul>
+<h2 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Every phase passes <code>mkdocs build --strict</code></strong> (locally on mac — docs-only).</li>
+<li><strong>Post-Phase 0b:</strong> every <code>VerifierFixSuggester</code> <code>See:</code> line resolves to an anchor. Automated grep script: <code>grep -o "cookbook §[^\"]*" bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/verifier/VerifierFixSuggester.java | sort -u</code> — every hit must have a corresponding <code>## &lt;name&gt;</code> in <code>docs/cookbook/verifier-errors/</code>.</li>
+<li><strong>Post-Phase 4-8:</strong> the cookbook JUnit harness passes on thinkstation.</li>
+<li><strong>No mac builds. No <code>.md</code> file created without a <code>_backing/</code> sibling.</strong></li>
+</ol>
+<h2 id="out-of-scope-deferred">Out of scope (deferred)<a class="headerlink" href="#out-of-scope-deferred" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>mkdocs-macros</code> plugin for <code>{{ recipe("name") }}</code> — nice-to-have; not required for correctness.</li>
+<li>A code-generated <code>reference/passes.md</code>. Hand-written for v1; generator later.</li>
+<li>Localisation. English only.</li>
+<li>Diagram overhaul — reuse existing ASCII diagrams from blog posts; no Mermaid until we have a page that genuinely needs it.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "content.code.annotate", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

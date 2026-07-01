@@ -1,0 +1,2040 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://parttimenerd.github.io/hello-ebpf/superpowers/plans/2026-06-30-directval/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Ptr.directVal() + Inline-C Builtin Removal — Implementation Plan - hello-ebpf</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ptrdirectval-inline-c-builtin-removal-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="hello-ebpf" class="md-header__button md-logo" aria-label="hello-ebpf" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            hello-ebpf
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Ptr.directVal() + Inline-C Builtin Removal — Implementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/parttimenerd/hello-ebpf" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    parttimenerd/hello-ebpf
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../cheatsheet/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Cheat Sheet
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../maps/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../feature-matrix/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="hello-ebpf" class="md-nav__button md-logo" aria-label="hello-ebpf" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    hello-ebpf
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/parttimenerd/hello-ebpf" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    parttimenerd/hello-ebpf
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cheatsheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheat Sheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../maps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../shared-maps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared maps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../xdp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XDP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tracepoints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tracepoints
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kprobes.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kprobes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lsm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LSM & Cgroup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../sched_ext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    sched_ext
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../global-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Global Variables & Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../helpers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BPFJ Helpers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../feature-matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../diagnostics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagnostics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-1-add-trustedptr-and-allowdirectval-annotations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1 — Add @TrustedPtr and @AllowDirectVal annotations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-2-generalise-bpfjavainline-in-translator-failing-tests-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2 — Generalise @BPFJavaInline in Translator: failing tests first
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-3-generalise-bpfjavainline-in-translator-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3 — Generalise @BPFJavaInline in Translator: implementation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-4-ptrdirectval-failing-tests-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4 — Ptr.directVal(): failing tests first
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-5-add-ptrdirectval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5 — Add Ptr.directVal()
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-6-extend-stripptrval-to-match-directval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 6 — Extend stripPtrVal to match directVal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-7-structural-check-for-directval-non-memberselect-uses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 7 — Structural check for directVal() non-MemberSelect uses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-8-teach-bpf-gen-to-emit-trustedptr-on-ptrcpumask-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 8 — Teach bpf-gen to emit @TrustedPtr on Ptr&lt;cpumask&gt; parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-9-regenerate-bpfdefinitionsjava" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 9 — Regenerate BpfDefinitions.java
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-10-migrate-userspaceschedulerbase-delete-the-three-builtins-rewrite-callers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 10 — Migrate UserspaceSchedulerBase: delete the three builtins, rewrite callers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-11-migrate-other-pvalcpus_ptr-call-sites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 11 — Migrate other p.val().cpus_ptr call sites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-12-framework-level-integration-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 12 — Framework-level integration test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-13-end-to-end-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 13 — End-to-end verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope-do-not-touch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of Scope (do not touch)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="ptrdirectval-inline-c-builtin-removal-implementation-plan"><code>Ptr.directVal()</code> + Inline-C Builtin Removal — Implementation Plan<a class="headerlink" href="#ptrdirectval-inline-c-builtin-removal-implementation-plan" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>For agentic workers:</strong> REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (<code>- [ ]</code>) syntax for tracking.</p>
+</blockquote>
+<p><strong>Goal:</strong> Replace three inline-C <code>@BuiltinBPFFunction</code> shims in <code>UserspaceSchedulerBase</code> with pure-Java equivalents by introducing <code>Ptr.directVal()</code> (a CO-RE-suppressing sibling of <code>val()</code>), generalising <code>@BPFJavaInline</code> to work on any class, and teaching <code>bpf-gen</code> to emit <code>@TrustedPtr</code> on kfunc parameters that need it.</p>
+<p><strong>Architecture:</strong> <code>Ptr.directVal()</code> is a Java-side method whose body is just <code>return val();</code> annotated <code>@BPFJavaInline</code>. Because the compiler plugin's <code>stripPtrVal()</code> only matches the literal method name <code>"val"</code>, a <code>directVal()</code> call inlines to <code>(*p)</code> but is <em>not</em> lifted to <code>BPF_CORE_READ</code> — so subsequent <code>MemberSelect</code> accesses emit direct field reads (<code>p-&gt;field</code>), preserving the trusted-pointer annotation required by kfuncs like <code>bpf_cpumask_test_cpu</code>. A plugin-side structural check forbids stray <code>directVal()</code> calls (must be followed by <code>MemberSelect</code>, or guarded by <code>@TrustedPtr</code> / <code>@AllowDirectVal</code>). <code>bpf-gen</code> learns to emit <code>@TrustedPtr</code> on <code>Ptr&lt;cpumask&gt;</code> parameters so the marker survives <code>BpfDefinitions.java</code> regeneration.</p>
+<p><strong>Tech Stack:</strong> Java 25, javac compiler plugin (<code>bpf-compiler-plugin</code>), JavaPoet (<code>bpf-gen</code>), JUnit 5, sched_ext + vng for kernel-load integration tests.</p>
+<p><strong>Build &amp; test discipline:</strong> Builds and tests run only on thinkstation. Use <code>ssh thinkstation</code> with <code>HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn</code>. For vng-required tests, prefix <code>PATH=/home/i560383/.local/bin:$PATH</code> and pass <code>-Dmaven.test.skip=false -DskipTests=false</code>. Any plugin change requires a <code>bpf</code> module rebuild (jar-with-dependencies bundles stale plugin classes). Use <code>-Dshow.warnings=true</code> (or equivalent) when checking for plugin diagnostics.</p>
+<hr />
+<h2 id="file-structure">File Structure<a class="headerlink" href="#file-structure" title="Permanent link">&para;</a></h2>
+<p><strong>New files:</strong>
+- <code>annotations/src/main/java/me/bechberger/ebpf/annotations/TrustedPtr.java</code> — <code>@Target(PARAMETER)</code>, source-retention marker
+- <code>annotations/src/main/java/me/bechberger/ebpf/annotations/AllowDirectVal.java</code> — <code>@Target({LOCAL_VARIABLE, METHOD})</code>, source-retention escape hatch
+- <code>bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/BPFJavaInlineGeneralisationTest.java</code> — generalisation unit tests
+- <code>bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/DirectValTest.java</code> — directVal unit tests
+- <code>bpf-samples/src/test/java/me/bechberger/ebpf/bpf/DirectValTaskCpuAllowedTest.java</code> — vng-only integration test
+- <code>bpf-samples/src/test/java/me/bechberger/ebpf/bpf/DirectValTaskCpuAllowedScheduler.java</code> — minimal scheduler used by the integration test</p>
+<p><strong>Modified files:</strong>
+- <code>bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/Translator.java</code> — lift <code>@BPFAbstraction</code> gate, rename <code>tryInlineAbstractionMethod</code> → <code>tryInlineJavaInlineMethod</code>, gate carrier-field substitution, route <code>this</code> through <code>localCarrierMap</code>, extend <code>stripPtrVal()</code> to match <code>directVal</code>, add structural check at <code>MethodInvocationTree</code> emission site
+- <code>annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/BPFJavaInline.java</code> — Javadoc update (no <code>@BPFAbstraction</code> implication)
+- <code>bpf-processor/src/main/java/me/bechberger/ebpf/type/Ptr.java</code> — add <code>directVal()</code>
+- <code>bpf-gen/src/main/java/me/bechberger/ebpf/gen/Generator.java</code> — emit <code>@TrustedPtr</code> on <code>Ptr&lt;cpumask&gt;</code> parameters (or based on helper-defs metadata)
+- <code>bpf-runtime/src/main/java/me/bechberger/ebpf/runtime/BpfDefinitions.java</code> — regenerated; <code>bpf_cpumask_test_cpu</code> second param gains <code>@TrustedPtr</code>
+- <code>bpf/src/main/java/me/bechberger/ebpf/bpf/UserspaceSchedulerBase.java</code> — delete <code>taskCpuIsAllowed</code>, <code>arena_or_assign</code>, <code>arena_and_assign</code>; rewrite callers in Java
+- <code>bpf/src/main/java/me/bechberger/ebpf/bpf/Scheduler.java</code> — <code>tryDispatchToLocalCpu</code> migrated to <code>p.directVal().cpus_ptr</code>
+- <code>bpf/src/main/java/me/bechberger/ebpf/bpf/sched/DispatchQueue.java</code> — Javadoc snippet on line 341 updated
+- <code>bpf-samples/.../LotteryScheduler.java</code> (line 41) — migrated to <code>p.directVal().cpus_ptr</code></p>
+<p><strong>Responsibility split:</strong>
+- Annotations module owns marker types (no plugin coupling).
+- <code>bpf-gen</code> owns generator-side <code>@TrustedPtr</code> placement (keeps regeneration safe).
+- <code>Translator.java</code> owns one new piece of policy: when CO-RE lifting is suppressed, and how <code>@BPFJavaInline</code> bodies are inlined when there is no <code>@BPFAbstraction</code> carrier map.
+- <code>Ptr.directVal()</code> is a 4-line surface that delegates entirely to the plugin.</p>
+<hr />
+<h2 id="task-1-add-trustedptr-and-allowdirectval-annotations">Task 1 — Add <code>@TrustedPtr</code> and <code>@AllowDirectVal</code> annotations<a class="headerlink" href="#task-1-add-trustedptr-and-allowdirectval-annotations" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong>
+- Create: <code>annotations/src/main/java/me/bechberger/ebpf/annotations/TrustedPtr.java</code>
+- Create: <code>annotations/src/main/java/me/bechberger/ebpf/annotations/AllowDirectVal.java</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Create <code>TrustedPtr.java</code></strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">package</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.annotations</span><span class="p">;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.lang.annotation.*</span><span class="p">;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="cm">/**</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="cm"> * Marker for kfunc parameter declarations that require a trusted pointer.</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="cm"> * When this annotation is present on a parameter, {@code Ptr.directVal()}</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="cm"> * may be used in the argument expression without raising a plugin diagnostic,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="cm"> * even if the result is not immediately followed by a field access.</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="cm"> *</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="cm"> * &lt;p&gt;This is purely documentary metadata; the BPF runtime does not see this</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="cm"> * annotation. The compiler plugin reads it during structural validation of</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="cm"> * {@code directVal()} call sites.</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="cm"> */</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nd">@Target</span><span class="p">(</span><span class="n">ElementType</span><span class="p">.</span><span class="na">PARAMETER</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nd">@Retention</span><span class="p">(</span><span class="n">RetentionPolicy</span><span class="p">.</span><span class="na">SOURCE</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="kd">public</span><span class="w"> </span><span class="nd">@interface</span><span class="w"> </span><span class="n">TrustedPtr</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Create <code>AllowDirectVal.java</code></strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">package</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.annotations</span><span class="p">;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.lang.annotation.*</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="cm">/**</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="cm"> * Escape hatch for {@code Ptr.directVal()}. Annotate a local variable</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="cm"> * declaration or an enclosing {@code @BPFFunction}-annotated method to</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="cm"> * silence the plugin&#39;s structural check that {@code directVal()} must be</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="cm"> * followed by a field access.</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="cm"> */</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nd">@Target</span><span class="p">({</span><span class="n">ElementType</span><span class="p">.</span><span class="na">LOCAL_VARIABLE</span><span class="p">,</span><span class="w"> </span><span class="n">ElementType</span><span class="p">.</span><span class="na">METHOD</span><span class="p">})</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nd">@Retention</span><span class="p">(</span><span class="n">RetentionPolicy</span><span class="p">.</span><span class="na">SOURCE</span><span class="p">)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="kd">public</span><span class="w"> </span><span class="nd">@interface</span><span class="w"> </span><span class="n">AllowDirectVal</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 3: Build annotations module on thinkstation</strong></li>
+</ul>
+<p>Run:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  mvn -pl annotations -am install -DskipTests&#39;
+</code></pre></div></p>
+<p>Expected: BUILD SUCCESS. The two new types compile cleanly with no warnings.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git<span class="w"> </span>add<span class="w"> </span>annotations/src/main/java/me/bechberger/ebpf/annotations/TrustedPtr.java<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">        </span>annotations/src/main/java/me/bechberger/ebpf/annotations/AllowDirectVal.java
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(annotations): add @TrustedPtr and @AllowDirectVal markers&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-2-generalise-bpfjavainline-in-translator-failing-tests-first">Task 2 — Generalise <code>@BPFJavaInline</code> in Translator: failing tests first<a class="headerlink" href="#task-2-generalise-bpfjavainline-in-translator-failing-tests-first" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong>
+- Create: <code>bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/BPFJavaInlineGeneralisationTest.java</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Locate the existing <code>@BPFAbstraction + @BPFJavaInline</code> test for reference</strong></li>
+</ul>
+<p>Run:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>grep -rn &quot;BPFJavaInline&quot; /Users/i560383_1/code/experiments/hello-ebpf/bpf-compiler-plugin-test/src/test/java/ | head -20
+</code></pre></div></p>
+<p>Use the discovered pattern (likely in <code>BPFAbstractionTest.java</code>) as the template for fixtures: a small <code>@BPF</code> class compiled in-memory with the plugin enabled, then the generated C asserted via a string-contains check.</p>
+<ul>
+<li>[ ] <strong>Step 2: Write the four failing tests</strong></li>
+</ul>
+<p>The four cases enumerated in the spec — <code>javaInlineWorksOnNonAbstractionClass</code>, <code>javaInlineFieldSubstitutionStillRequiresAbstraction</code>, <code>javaInlineCarrierSubstitutionStillWorksOnAbstraction</code>, <code>javaInlineThisSubstitution</code>.</p>
+<p>Use this skeleton (adapt fixture-loading helpers to whatever the existing test class uses):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">package</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.compiler</span><span class="p">;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Test</span><span class="p">;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="kn">import static</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Assertions.*</span><span class="p">;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="kd">class</span> <span class="nc">BPFJavaInlineGeneralisationTest</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nd">@Test</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">javaInlineWorksOnNonAbstractionClass</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">        </span><span class="c1">// Fixture: a plain class (no @BPFAbstraction) with a @BPFJavaInline instance</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">        </span><span class="c1">// method that calls another method. A @BPF program calls it from a @BPFFunction.</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">        </span><span class="c1">// Assert: the called body is inlined at the call site (statement-expression),</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">        </span><span class="c1">// not emitted as a separate C function call.</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compileAndGetGeneratedC</span><span class="p">(</span><span class="n">NonAbstractionInlineFixture</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">        </span><span class="n">assertTrue</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;({&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;})&quot;</span><span class="p">),</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">                </span><span class="s">&quot;Expected GNU statement expression from inlined body; got:\n&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">        </span><span class="n">assertFalse</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;nonAbstractionHelper(&quot;</span><span class="p">),</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">                </span><span class="s">&quot;Inlined body should not appear as a separate function call&quot;</span><span class="p">);</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span><span class="nd">@Test</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">javaInlineFieldSubstitutionStillRequiresAbstraction</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">        </span><span class="c1">// Fixture: a plain class with an instance field `int counter`,</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">        </span><span class="c1">// a @BPFJavaInline method that references `counter`.</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">        </span><span class="c1">// Assert: the field reference is emitted as `receiver-&gt;counter`</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">        </span><span class="c1">// (regular field access), NOT rewritten as the carrier expression.</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compileAndGetGeneratedC</span><span class="p">(</span><span class="n">NonAbstractionFieldFixture</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">        </span><span class="n">assertTrue</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;-&gt;counter&quot;</span><span class="p">),</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">                </span><span class="s">&quot;Expected regular field access on receiver; got:\n&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">    </span><span class="nd">@Test</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">javaInlineCarrierSubstitutionStillWorksOnAbstraction</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="w">        </span><span class="c1">// Control: re-run the existing @BPFAbstraction case (copy the fixture</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a><span class="w">        </span><span class="c1">// from BPFAbstractionTest) and assert the carrier-substitution behaviour</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="w">        </span><span class="c1">// is unchanged.</span>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compileAndGetGeneratedC</span><span class="p">(</span><span class="n">AbstractionCarrierFixture</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="w">        </span><span class="c1">// Pattern matches whatever the existing test asserts.</span>
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a><span class="w">        </span><span class="n">assertTrue</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;/* expected carrier substitution */&quot;</span><span class="p">));</span>
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="w">    </span><span class="nd">@Test</span>
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">javaInlineThisSubstitution</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a><span class="w">        </span><span class="c1">// Fixture: plain (non-@BPFAbstraction) class with a @BPFJavaInline</span>
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a><span class="w">        </span><span class="c1">// method whose body uses `this` explicitly (e.g. `return foo(this);`).</span>
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a><span class="w">        </span><span class="c1">// Assert: `this` is substituted with the receiver carrier expression.</span>
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compileAndGetGeneratedC</span><span class="p">(</span><span class="n">NonAbstractionThisFixture</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a><span class="w">        </span><span class="n">assertFalse</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;this&quot;</span><span class="p">),</span>
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a><span class="w">                </span><span class="s">&quot;Java `this` should not appear in emitted C; expected receiver substitution&quot;</span><span class="p">);</span>
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a><span class="w">    </span><span class="c1">// Fixture classes go below; copy `compileAndGetGeneratedC` from BPFAbstractionTest.</span>
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a><span class="p">}</span>
+</code></pre></div>
+<p>For each fixture class, build a minimal <code>@BPF</code>-annotated <code>BPFProgram</code> subclass that uses the helper from a <code>@BPFFunction</code>. Look at <code>BPFAbstractionTest</code> (or the closest sibling) for the in-memory compile harness — re-use it verbatim rather than reinventing.</p>
+<ul>
+<li>[ ] <strong>Step 3: Run the tests to confirm they fail</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  mvn -pl bpf-compiler-plugin-test test -Dtest=BPFJavaInlineGeneralisationTest&#39;
+</code></pre></div>
+<p>Expected: <code>javaInlineWorksOnNonAbstractionClass</code>, <code>…FieldSubstitution…</code>, and <code>…ThisSubstitution</code> all FAIL because the <code>@BPFAbstraction</code> gate at <code>Translator.java:2409</code> short-circuits and the call falls through to the regular non-inlined path. <code>…CarrierSubstitutionStillWorksOnAbstraction</code> should PASS (control).</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit the failing tests</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>git<span class="w"> </span>add<span class="w"> </span>bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/BPFJavaInlineGeneralisationTest.java
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;test(plugin): failing tests for @BPFJavaInline generalisation&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-3-generalise-bpfjavainline-in-translator-implementation">Task 3 — Generalise <code>@BPFJavaInline</code> in Translator: implementation<a class="headerlink" href="#task-3-generalise-bpfjavainline-in-translator-implementation" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong>
+- Modify: <code>bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/Translator.java</code></p>
+<p>The relevant Java identifier handler at <code>Translator.java:594-605</code> currently short-circuits on <code>this</code> BEFORE consulting <code>localCarrierMap</code>. We need to reorder so <code>this</code> is routed through <code>localCarrierMap</code> when present.</p>
+<ul>
+<li>[ ] <strong>Step 1: Rename <code>tryInlineAbstractionMethod</code> → <code>tryInlineJavaInlineMethod</code></strong></li>
+</ul>
+<p>In <code>Translator.java</code>, rename the method at line 2400. Update the single caller at line 1187. Update the Javadoc comment block at the rename site to drop the "Only on <code>@BPFAbstraction</code> classes" language; reflect the broader applicability (<code>@BPFJavaInline</code> on any class).</p>
+<ul>
+<li>[ ] <strong>Step 2: Lift the <code>@BPFAbstraction</code> gate and conditionally apply field substitution</strong></li>
+</ul>
+<p>Replace the current short-circuit and carrier-field collection (lines 2409-2456) with this structure. Annotate any new local variables in the body but do NOT change variable names that are already in scope at lines 2418-2435 (<code>methodTree</code>, <code>methodPath</code>, <code>carrierExpr</code>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// Method must carry @BPFJavaInline; @BPFAbstraction is no longer required.</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kd">var</span><span class="w"> </span><span class="n">javaInlineAnn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">symbol</span><span class="p">.</span><span class="na">getAnnotation</span><span class="p">(</span><span class="n">BPFJavaInline</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">javaInlineAnn</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">}</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="kt">boolean</span><span class="w"> </span><span class="n">isAbstraction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">enclosingClass</span><span class="p">.</span><span class="na">getAnnotation</span><span class="p">(</span><span class="n">BPFAbstraction</span><span class="p">.</span><span class="na">class</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1">// ... existing methodTree / methodPath resolution stays unchanged ...</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1">// Determine the carrier expression: the receiver translated to C.</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="n">String</span><span class="w"> </span><span class="n">carrierExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">receiverExpr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">translated</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">translate</span><span class="p">(</span><span class="n">receiverExpr</span><span class="p">);</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">translated</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">        </span><span class="n">carrierExpr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">translated</span><span class="p">.</span><span class="na">toPrettyString</span><span class="p">();</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="p">}</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1">// Build the carrier map for the inner translator.</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="kd">var</span><span class="w"> </span><span class="n">innerCarrierMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="c1">// Carrier-field substitution stays gated behind @BPFAbstraction.</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isAbstraction</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">carrierExpr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">carrierFields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">var</span><span class="w"> </span><span class="n">enc</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">enclosingClass</span><span class="p">.</span><span class="na">getEnclosedElements</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">enc</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">javax</span><span class="p">.</span><span class="na">lang</span><span class="p">.</span><span class="na">model</span><span class="p">.</span><span class="na">element</span><span class="p">.</span><span class="na">VariableElement</span><span class="w"> </span><span class="n">ve</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">                </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">enc</span><span class="p">.</span><span class="na">getKind</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ElementKind</span><span class="p">.</span><span class="na">FIELD</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">                </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">enc</span><span class="p">.</span><span class="na">getModifiers</span><span class="p">().</span><span class="na">contains</span><span class="p">(</span><span class="n">Modifier</span><span class="p">.</span><span class="na">STATIC</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="w">            </span><span class="n">carrierFields</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">ve</span><span class="p">.</span><span class="na">getSimpleName</span><span class="p">().</span><span class="na">toString</span><span class="p">());</span>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">var</span><span class="w"> </span><span class="n">fieldName</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">carrierFields</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="w">        </span><span class="n">innerCarrierMap</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">fieldName</span><span class="p">,</span><span class="w"> </span><span class="n">carrierExpr</span><span class="p">);</span>
+<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a><span class="p">}</span>
+<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a>
+<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a><span class="c1">// `this` substitution applies to every @BPFJavaInline call site that has a</span>
+<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a><span class="c1">// receiver, regardless of @BPFAbstraction. Non-abstraction callees that</span>
+<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a><span class="c1">// reference `this` (e.g. `return val();` on `Ptr`) resolve correctly here.</span>
+<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">carrierExpr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a><span class="w">    </span><span class="n">innerCarrierMap</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;this&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">carrierExpr</span><span class="p">);</span>
+<a id="__codelineno-8-42" name="__codelineno-8-42" href="#__codelineno-8-42"></a><span class="p">}</span>
+</code></pre></div>
+<p>Keep the existing parameter-binding loop (lines 2458-2471) unchanged.</p>
+<ul>
+<li>[ ] <strong>Step 3: Route <code>this</code> through <code>localCarrierMap</code> in the identifier handler</strong></li>
+</ul>
+<p>At <code>Translator.java:594-605</code>, the current code is:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">identifierTree</span><span class="p">.</span><span class="na">getName</span><span class="p">().</span><span class="na">contentEquals</span><span class="p">(</span><span class="s">&quot;this&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">identifierTree</span><span class="p">.</span><span class="na">getName</span><span class="p">().</span><span class="na">contentEquals</span><span class="p">(</span><span class="s">&quot;super&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span><span class="kd">yield</span><span class="w"> </span><span class="n">defaultReturn</span><span class="p">;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="p">}</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="kd">var</span><span class="w"> </span><span class="n">localName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">identifierTree</span><span class="p">.</span><span class="na">getName</span><span class="p">().</span><span class="na">toString</span><span class="p">();</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">localCarrierMap</span><span class="p">.</span><span class="na">containsKey</span><span class="p">(</span><span class="n">localName</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="kd">yield</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">VerbatimExpression</span><span class="p">(</span><span class="n">localCarrierMap</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">localName</span><span class="p">));</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>Reorder so <code>this</code> (but NOT <code>super</code>) checks <code>localCarrierMap</code> first:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kd">var</span><span class="w"> </span><span class="n">localName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">identifierTree</span><span class="p">.</span><span class="na">getName</span><span class="p">().</span><span class="na">toString</span><span class="p">();</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="s">&quot;this&quot;</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">localName</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">localCarrierMap</span><span class="p">.</span><span class="na">containsKey</span><span class="p">(</span><span class="s">&quot;this&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="kd">yield</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">VerbatimExpression</span><span class="p">(</span><span class="n">localCarrierMap</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;this&quot;</span><span class="p">));</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">}</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1">// &#39;this&#39; and &#39;super&#39; are not class members; treat them as verbatim C identifiers.</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">identifierTree</span><span class="p">.</span><span class="na">getName</span><span class="p">().</span><span class="na">contentEquals</span><span class="p">(</span><span class="s">&quot;this&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">identifierTree</span><span class="p">.</span><span class="na">getName</span><span class="p">().</span><span class="na">contentEquals</span><span class="p">(</span><span class="s">&quot;super&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="kd">yield</span><span class="w"> </span><span class="n">defaultReturn</span><span class="p">;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">}</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">localCarrierMap</span><span class="p">.</span><span class="na">containsKey</span><span class="p">(</span><span class="n">localName</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span><span class="kd">yield</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">VerbatimExpression</span><span class="p">(</span><span class="n">localCarrierMap</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">localName</span><span class="p">));</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="p">}</span>
+</code></pre></div>
+<p>This ensures the existing <code>defaultReturn</code> path for <code>this</code> still fires outside of an inlined body (where <code>localCarrierMap.get("this")</code> is null), preserving current behaviour for non-inlined code.</p>
+<ul>
+<li>[ ] <strong>Step 4: Rebuild plugin AND bpf jar on thinkstation, re-run the failing tests</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  mvn -pl bpf-compiler-plugin,bpf -am install -DskipTests&#39;
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  mvn -pl bpf-compiler-plugin-test test -Dtest=BPFJavaInlineGeneralisationTest&#39;
+</code></pre></div>
+<p>Expected: all four tests PASS.</p>
+<ul>
+<li>[ ] <strong>Step 5: Update <code>BPFJavaInline</code> Javadoc</strong></li>
+</ul>
+<p>In <code>annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/BPFJavaInline.java</code>, drop any "only on <code>@BPFAbstraction</code>" implication. Add a one-paragraph note: "Carrier-field substitution (every instance field rewritten to the receiver expression) applies only on <code>@BPFAbstraction</code> classes. On other classes, <code>this</code> is the only thing rewritten — instance fields keep their normal <code>receiver-&gt;field</code> access."</p>
+<ul>
+<li>[ ] <strong>Step 6: Run the full plugin test suite to catch regressions</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>  mvn -pl bpf-compiler-plugin-test test&#39;
+</code></pre></div>
+<p>Expected: all existing tests still pass (especially the <code>BPFAbstraction</code> ones — <code>javaInlineCarrierSubstitutionStillWorksOnAbstraction</code> is the control case).</p>
+<ul>
+<li>[ ] <strong>Step 7: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>git<span class="w"> </span>add<span class="w"> </span>bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/Translator.java<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">        </span>annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/BPFJavaInline.java
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(plugin): generalise @BPFJavaInline beyond @BPFAbstraction classes</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="s2">Lift the @BPFAbstraction gate in tryInlineJavaInlineMethod (renamed from</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="s2">tryInlineAbstractionMethod). Carrier-field substitution stays gated. \`this\`</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="s2">is always substituted when a receiver is present, routed through</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="s2">localCarrierMap before the verbatim short-circuit.&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-4-ptrdirectval-failing-tests-first">Task 4 — <code>Ptr.directVal()</code>: failing tests first<a class="headerlink" href="#task-4-ptrdirectval-failing-tests-first" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong>
+- Create: <code>bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/DirectValTest.java</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write the seven directVal cases as failing tests</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">package</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.compiler</span><span class="p">;</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Test</span><span class="p">;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="kn">import static</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Assertions.*</span><span class="p">;</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="kd">class</span> <span class="nc">DirectValTest</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span><span class="nd">@Test</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">directValBeforeMemberSelectEmitsDirectAccess</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">        </span><span class="c1">// Fixture: a @BPFFunction calls `kfunc(p.directVal().field)` where</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">        </span><span class="c1">// `field` belongs to a kernel-BTF struct (e.g. task_struct).</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compileAndGetGeneratedC</span><span class="p">(</span><span class="n">DirectValFixtures</span><span class="p">.</span><span class="na">MemberSelectOk</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">        </span><span class="n">assertTrue</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;p-&gt;field&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;(*(p)).field&quot;</span><span class="p">),</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">                </span><span class="s">&quot;Expected direct field access; got:\n&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">        </span><span class="n">assertFalse</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;BPF_CORE_READ(p, field)&quot;</span><span class="p">),</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">                </span><span class="s">&quot;directVal() must suppress BPF_CORE_READ lifting&quot;</span><span class="p">);</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="w">    </span><span class="nd">@Test</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">directValWithoutMemberSelectErrors</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="w">        </span><span class="c1">// Fixture: `long x = p.directVal();` (assigned to a local; no MemberSelect).</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="n">diagnostics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compileAndCollectDiagnostics</span><span class="p">(</span><span class="n">DirectValFixtures</span><span class="p">.</span><span class="na">NoMemberSelect</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="w">        </span><span class="n">assertTrue</span><span class="p">(</span><span class="n">diagnostics</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">anyMatch</span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">-&gt;</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="w">                </span><span class="n">d</span><span class="p">.</span><span class="na">kind</span><span class="p">().</span><span class="na">name</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;ERROR&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="w">                </span><span class="n">d</span><span class="p">.</span><span class="na">message</span><span class="p">().</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;directVal()&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="w">                </span><span class="n">d</span><span class="p">.</span><span class="na">message</span><span class="p">().</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;field access&quot;</span><span class="p">)),</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a><span class="w">                </span><span class="s">&quot;Expected directVal-must-be-followed-by-field-access error; got: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">diagnostics</span><span class="p">);</span>
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a><span class="w">    </span><span class="nd">@Test</span>
+<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">directValWithTrustedPtrParamSilent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a><span class="w">        </span><span class="c1">// Fixture: `kfunc(p.directVal())` where the kfunc parameter is</span>
+<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a><span class="w">        </span><span class="c1">// annotated @TrustedPtr — even though directVal() is not followed</span>
+<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a><span class="w">        </span><span class="c1">// by a MemberSelect, no error should fire.</span>
+<a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a><span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="n">diagnostics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compileAndCollectDiagnostics</span><span class="p">(</span><span class="n">DirectValFixtures</span><span class="p">.</span><span class="na">TrustedPtrParam</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<a id="__codelineno-14-36" name="__codelineno-14-36" href="#__codelineno-14-36"></a><span class="w">        </span><span class="n">assertTrue</span><span class="p">(</span><span class="n">diagnostics</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">noneMatch</span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="na">kind</span><span class="p">().</span><span class="na">name</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;ERROR&quot;</span><span class="p">)),</span>
+<a id="__codelineno-14-37" name="__codelineno-14-37" href="#__codelineno-14-37"></a><span class="w">                </span><span class="s">&quot;Expected no errors; got: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">diagnostics</span><span class="p">);</span>
+<a id="__codelineno-14-38" name="__codelineno-14-38" href="#__codelineno-14-38"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-14-39" name="__codelineno-14-39" href="#__codelineno-14-39"></a>
+<a id="__codelineno-14-40" name="__codelineno-14-40" href="#__codelineno-14-40"></a><span class="w">    </span><span class="nd">@Test</span>
+<a id="__codelineno-14-41" name="__codelineno-14-41" href="#__codelineno-14-41"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">directValWithAllowDirectValOnStatementSilent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-42" name="__codelineno-14-42" href="#__codelineno-14-42"></a><span class="w">        </span><span class="c1">// Fixture: `@AllowDirectVal long x = p.directVal();` — annotation on local.</span>
+<a id="__codelineno-14-43" name="__codelineno-14-43" href="#__codelineno-14-43"></a><span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="n">diagnostics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compileAndCollectDiagnostics</span><span class="p">(</span><span class="n">DirectValFixtures</span><span class="p">.</span><span class="na">AllowDirectValLocal</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<a id="__codelineno-14-44" name="__codelineno-14-44" href="#__codelineno-14-44"></a><span class="w">        </span><span class="n">assertTrue</span><span class="p">(</span><span class="n">diagnostics</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">noneMatch</span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="na">kind</span><span class="p">().</span><span class="na">name</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;ERROR&quot;</span><span class="p">)),</span>
+<a id="__codelineno-14-45" name="__codelineno-14-45" href="#__codelineno-14-45"></a><span class="w">                </span><span class="s">&quot;@AllowDirectVal on local should silence the check; got: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">diagnostics</span><span class="p">);</span>
+<a id="__codelineno-14-46" name="__codelineno-14-46" href="#__codelineno-14-46"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-14-47" name="__codelineno-14-47" href="#__codelineno-14-47"></a>
+<a id="__codelineno-14-48" name="__codelineno-14-48" href="#__codelineno-14-48"></a><span class="w">    </span><span class="nd">@Test</span>
+<a id="__codelineno-14-49" name="__codelineno-14-49" href="#__codelineno-14-49"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">directValWithAllowDirectValOnMethodSilent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-50" name="__codelineno-14-50" href="#__codelineno-14-50"></a><span class="w">        </span><span class="c1">// Fixture: `@AllowDirectVal @BPFFunction void foo() { long x = p.directVal(); }`</span>
+<a id="__codelineno-14-51" name="__codelineno-14-51" href="#__codelineno-14-51"></a><span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="n">diagnostics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compileAndCollectDiagnostics</span><span class="p">(</span><span class="n">DirectValFixtures</span><span class="p">.</span><span class="na">AllowDirectValMethod</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<a id="__codelineno-14-52" name="__codelineno-14-52" href="#__codelineno-14-52"></a><span class="w">        </span><span class="n">assertTrue</span><span class="p">(</span><span class="n">diagnostics</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">noneMatch</span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="na">kind</span><span class="p">().</span><span class="na">name</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;ERROR&quot;</span><span class="p">)),</span>
+<a id="__codelineno-14-53" name="__codelineno-14-53" href="#__codelineno-14-53"></a><span class="w">                </span><span class="s">&quot;@AllowDirectVal on method should silence the check; got: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">diagnostics</span><span class="p">);</span>
+<a id="__codelineno-14-54" name="__codelineno-14-54" href="#__codelineno-14-54"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-14-55" name="__codelineno-14-55" href="#__codelineno-14-55"></a>
+<a id="__codelineno-14-56" name="__codelineno-14-56" href="#__codelineno-14-56"></a><span class="w">    </span><span class="nd">@Test</span>
+<a id="__codelineno-14-57" name="__codelineno-14-57" href="#__codelineno-14-57"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">valCallStillEmitsCoreRead</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-58" name="__codelineno-14-58" href="#__codelineno-14-58"></a><span class="w">        </span><span class="c1">// Control: ensure `p.val().field` still lifts to BPF_CORE_READ.</span>
+<a id="__codelineno-14-59" name="__codelineno-14-59" href="#__codelineno-14-59"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compileAndGetGeneratedC</span><span class="p">(</span><span class="n">DirectValFixtures</span><span class="p">.</span><span class="na">ValControl</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<a id="__codelineno-14-60" name="__codelineno-14-60" href="#__codelineno-14-60"></a><span class="w">        </span><span class="n">assertTrue</span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;BPF_CORE_READ(p, field)&quot;</span><span class="p">),</span>
+<a id="__codelineno-14-61" name="__codelineno-14-61" href="#__codelineno-14-61"></a><span class="w">                </span><span class="s">&quot;val() must still lift to CO-RE; got:\n&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">c</span><span class="p">);</span>
+<a id="__codelineno-14-62" name="__codelineno-14-62" href="#__codelineno-14-62"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-14-63" name="__codelineno-14-63" href="#__codelineno-14-63"></a>
+<a id="__codelineno-14-64" name="__codelineno-14-64" href="#__codelineno-14-64"></a><span class="w">    </span><span class="nd">@Test</span>
+<a id="__codelineno-14-65" name="__codelineno-14-65" href="#__codelineno-14-65"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">directValOnNonPtrReceiverDoesNotCrash</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-66" name="__codelineno-14-66" href="#__codelineno-14-66"></a><span class="w">        </span><span class="c1">// Fixture: a class with its own `directVal()` method (NOT Ptr) — the</span>
+<a id="__codelineno-14-67" name="__codelineno-14-67" href="#__codelineno-14-67"></a><span class="w">        </span><span class="c1">// plugin must not crash and must not emit a false error.</span>
+<a id="__codelineno-14-68" name="__codelineno-14-68" href="#__codelineno-14-68"></a><span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="n">diagnostics</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compileAndCollectDiagnostics</span><span class="p">(</span><span class="n">DirectValFixtures</span><span class="p">.</span><span class="na">NonPtrDirectVal</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<a id="__codelineno-14-69" name="__codelineno-14-69" href="#__codelineno-14-69"></a><span class="w">        </span><span class="n">assertTrue</span><span class="p">(</span><span class="n">diagnostics</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">noneMatch</span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">-&gt;</span>
+<a id="__codelineno-14-70" name="__codelineno-14-70" href="#__codelineno-14-70"></a><span class="w">                </span><span class="n">d</span><span class="p">.</span><span class="na">kind</span><span class="p">().</span><span class="na">name</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;ERROR&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="na">message</span><span class="p">().</span><span class="na">contains</span><span class="p">(</span><span class="s">&quot;directVal&quot;</span><span class="p">)),</span>
+<a id="__codelineno-14-71" name="__codelineno-14-71" href="#__codelineno-14-71"></a><span class="w">                </span><span class="s">&quot;Non-Ptr directVal must not trigger the structural check; got: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">diagnostics</span><span class="p">);</span>
+<a id="__codelineno-14-72" name="__codelineno-14-72" href="#__codelineno-14-72"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-14-73" name="__codelineno-14-73" href="#__codelineno-14-73"></a><span class="p">}</span>
+</code></pre></div>
+<p>Build the fixture classes (<code>DirectValFixtures.*</code>) as small in-memory <code>@BPF</code> sources. Re-use the existing compile-harness helpers from <code>BPFAbstractionTest</code> or <code>CompilerPluginTest</code>.</p>
+<ul>
+<li>[ ] <strong>Step 2: Run to confirm failures</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  mvn -pl bpf-compiler-plugin-test test -Dtest=DirectValTest&#39;
+</code></pre></div>
+<p>Expected: all seven FAIL — <code>directVal()</code> doesn't exist yet (compile error inside fixtures), or compiles but emits no special handling.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit failing tests</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>git<span class="w"> </span>add<span class="w"> </span>bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/DirectValTest.java
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;test(plugin): failing tests for Ptr.directVal() structural check&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-5-add-ptrdirectval">Task 5 — Add <code>Ptr.directVal()</code><a class="headerlink" href="#task-5-add-ptrdirectval" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong>
+- Modify: <code>bpf-processor/src/main/java/me/bechberger/ebpf/type/Ptr.java</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Add <code>directVal()</code> method to <code>Ptr</code></strong></li>
+</ul>
+<p>Place after the existing <code>val()</code> method (search for <code>public T val()</code> in <code>Ptr.java</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="cm">/**</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="cm"> * Like {@link #val()}, but tells the BPF compiler plugin to emit a &lt;em&gt;direct&lt;/em&gt;</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="cm"> * field access ({@code (*p).field} → {@code p-&gt;field}) instead of a CO-RE</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="cm"> * relocation ({@code BPF_CORE_READ(p, field)}).</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="cm"> *</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="cm"> * &lt;p&gt;Use this only when a kfunc requires a trusted pointer on a field load.</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="cm"> * {@code BPF_CORE_READ} strips the trusted annotation; a direct access preserves it.</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="cm"> *</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="cm"> * &lt;p&gt;The plugin enforces that the result of {@code directVal()} is immediately</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="cm"> * followed by a field access. Other uses are a compile error. To override the</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="cm"> * check, annotate the call site with {@link me.bechberger.ebpf.annotations.AllowDirectVal}</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="cm"> * or the kfunc parameter with {@link me.bechberger.ebpf.annotations.TrustedPtr}.</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="cm"> *</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="cm"> * &lt;p&gt;Outside a {@code @BPFFunction} body this method is identical to {@link #val()}.</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="cm"> */</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="nd">@BPFJavaInline</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="nd">@NotUsableInJava</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="kd">public</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="nf">directVal</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">val</span><span class="p">();</span>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="p">}</span>
+</code></pre></div>
+<p>Add <code>import</code> statements at the top of <code>Ptr.java</code> if needed (<code>BPFJavaInline</code>, <code>NotUsableInJava</code>).</p>
+<ul>
+<li>[ ] <strong>Step 2: Compile <code>bpf-processor</code> on thinkstation</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>  mvn -pl bpf-processor -am install -DskipTests&#39;
+</code></pre></div>
+<p>Expected: BUILD SUCCESS.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>git<span class="w"> </span>add<span class="w"> </span>bpf-processor/src/main/java/me/bechberger/ebpf/type/Ptr.java
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(Ptr): add directVal() — sibling of val() that suppresses CO-RE lifting&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-6-extend-stripptrval-to-match-directval">Task 6 — Extend <code>stripPtrVal</code> to match <code>directVal</code><a class="headerlink" href="#task-6-extend-stripptrval-to-match-directval" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong>
+- Modify: <code>bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/Translator.java</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Update <code>stripPtrVal</code> at line 2293</strong></li>
+</ul>
+<p>Change:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="s">&quot;val&quot;</span><span class="p">.</span><span class="na">contentEquals</span><span class="p">(</span><span class="n">mst</span><span class="p">.</span><span class="na">getIdentifier</span><span class="p">()))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">expr</span><span class="p">;</span>
+</code></pre></div>
+<p>To:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kd">var</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mst</span><span class="p">.</span><span class="na">getIdentifier</span><span class="p">();</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="s">&quot;val&quot;</span><span class="p">.</span><span class="na">contentEquals</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="s">&quot;directVal&quot;</span><span class="p">.</span><span class="na">contentEquals</span><span class="p">(</span><span class="n">name</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">expr</span><span class="p">;</span>
+</code></pre></div>
+<p>This ensures the receiver of <code>directVal()</code> is exposed when the result is later used in a CO-RE context — though since <code>directVal()</code> is supposed to suppress CO-RE, the more important effect is that the <code>(*p)</code> produced by the inlined body gets pierced cleanly for subsequent <code>MemberSelect</code> lowering. The control test <code>valCallStillEmitsCoreRead</code> keeps the original <code>val</code> path honest.</p>
+<p>Update the method's Javadoc to mention both names.</p>
+<ul>
+<li>[ ] <strong>Step 2: Rebuild plugin + bpf, partial test run</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>  mvn -pl bpf-compiler-plugin,bpf -am install -DskipTests&#39;
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>  mvn -pl bpf-compiler-plugin-test test -Dtest=DirectValTest#directValBeforeMemberSelectEmitsDirectAccess,DirectValTest#valCallStillEmitsCoreRead&#39;
+</code></pre></div>
+<p>Expected: <code>directValBeforeMemberSelectEmitsDirectAccess</code> and <code>valCallStillEmitsCoreRead</code> PASS. The other five still fail until Task 7.</p>
+<ul>
+<li>[ ] <strong>Step 3: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>git<span class="w"> </span>add<span class="w"> </span>bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/Translator.java
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(plugin): stripPtrVal also pierces Ptr.directVal()&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-7-structural-check-for-directval-non-memberselect-uses">Task 7 — Structural check for <code>directVal()</code> non-MemberSelect uses<a class="headerlink" href="#task-7-structural-check-for-directval-non-memberselect-uses" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong>
+- Modify: <code>bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/Translator.java</code></p>
+<p>The check runs at the <code>MethodInvocationTree</code> translation site. Locate the existing handler (grep for <code>MethodInvocationTree</code> or <code>JCMethodInvocation</code> in the expression-translation switch). It must run AFTER we've confirmed the receiver is <code>Ptr</code> and the method name is <code>directVal</code>, but BEFORE emission.</p>
+<ul>
+<li>[ ] <strong>Step 1: Add a helper <code>isDirectValCall(MethodInvocationTree mit)</code></strong></li>
+</ul>
+<p>Mirror the <code>stripPtrVal</code> structure: argless invocation, MemberSelect select, identifier <code>"directVal"</code>, receiver typed as <code>Ptr&lt;...&gt;</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kd">private</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isDirectValCall</span><span class="p">(</span><span class="n">MethodInvocationTree</span><span class="w"> </span><span class="n">mit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mit</span><span class="p">.</span><span class="na">getArguments</span><span class="p">().</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">mit</span><span class="p">.</span><span class="na">getMethodSelect</span><span class="p">()</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">MemberSelectTree</span><span class="w"> </span><span class="n">mst</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="s">&quot;directVal&quot;</span><span class="p">.</span><span class="na">contentEquals</span><span class="p">(</span><span class="n">mst</span><span class="p">.</span><span class="na">getIdentifier</span><span class="p">()))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">recvType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeOf</span><span class="p">(</span><span class="n">mst</span><span class="p">.</span><span class="na">getExpression</span><span class="p">());</span>
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">recvType</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">ClassType</span><span class="w"> </span><span class="n">ct</span>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">            </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">ct</span><span class="p">.</span><span class="na">asElement</span><span class="p">().</span><span class="na">getQualifiedName</span><span class="p">().</span><span class="na">contentEquals</span><span class="p">(</span><span class="n">Ptr</span><span class="p">.</span><span class="na">class</span><span class="p">.</span><span class="na">getName</span><span class="p">());</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Inspect the parent context for each <code>directVal()</code> call</strong></li>
+</ul>
+<p>Build a helper <code>validateDirectValContext(MethodInvocationTree mit, TreePath path)</code> that returns void on success and emits an error via <code>compilerPlugin.messager.printMessage(Diagnostic.Kind.ERROR, ..., element)</code> on failure. Logic:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">validateDirectValContext</span><span class="p">(</span><span class="n">MethodInvocationTree</span><span class="w"> </span><span class="n">mit</span><span class="p">,</span><span class="w"> </span><span class="n">TreePath</span><span class="w"> </span><span class="n">path</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">path</span><span class="p">.</span><span class="na">getParentPath</span><span class="p">().</span><span class="na">getLeaf</span><span class="p">();</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">    </span><span class="c1">// (a) Direct MemberSelect parent → OK.</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">parent</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">MemberSelectTree</span><span class="w"> </span><span class="n">mst</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">mst</span><span class="p">.</span><span class="na">getExpression</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">mit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="w">    </span><span class="c1">// (b) Walk up to find: an enclosing call with a @TrustedPtr param,</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="w">    </span><span class="c1">//     an enclosing VariableTree / @BPFFunction with @AllowDirectVal.</span>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">cursor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">path</span><span class="p">.</span><span class="na">getParentPath</span><span class="p">();</span>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">cursor</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="n">leaf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cursor</span><span class="p">.</span><span class="na">getLeaf</span><span class="p">();</span>
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leaf</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">MethodInvocationTree</span><span class="w"> </span><span class="n">callerMit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a><span class="w">            </span><span class="c1">// Find parameter index of `mit` in callerMit&#39;s arguments.</span>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a><span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">callerMit</span><span class="p">.</span><span class="na">getArguments</span><span class="p">().</span><span class="na">indexOf</span><span class="p">(</span><span class="n">mit</span><span class="p">);</span>
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a><span class="w">                </span><span class="kd">var</span><span class="w"> </span><span class="n">calleeSym</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveMethodSymbol</span><span class="p">(</span><span class="n">callerMit</span><span class="p">);</span>
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">calleeSym</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">calleeSym</span><span class="p">.</span><span class="na">getParameters</span><span class="p">().</span><span class="na">size</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a><span class="w">                    </span><span class="kd">var</span><span class="w"> </span><span class="n">paramSym</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calleeSym</span><span class="p">.</span><span class="na">getParameters</span><span class="p">().</span><span class="na">get</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a><span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">paramSym</span><span class="p">.</span><span class="na">getAnnotation</span><span class="p">(</span><span class="n">TrustedPtr</span><span class="p">.</span><span class="na">class</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a><span class="w">                        </span><span class="k">return</span><span class="p">;</span>
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a><span class="w">                    </span><span class="p">}</span>
+<a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a><span class="w">            </span><span class="c1">// Once we&#39;ve passed through the immediately enclosing call, stop:</span>
+<a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a><span class="w">            </span><span class="c1">// further outer calls don&#39;t apply to this argument.</span>
+<a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a><span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-25-28" name="__codelineno-25-28" href="#__codelineno-25-28"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leaf</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">VariableTree</span><span class="w"> </span><span class="n">vt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-25-29" name="__codelineno-25-29" href="#__codelineno-25-29"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hasAnnotation</span><span class="p">(</span><span class="n">vt</span><span class="p">.</span><span class="na">getModifiers</span><span class="p">(),</span><span class="w"> </span><span class="n">AllowDirectVal</span><span class="p">.</span><span class="na">class</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<a id="__codelineno-25-30" name="__codelineno-25-30" href="#__codelineno-25-30"></a><span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-25-31" name="__codelineno-25-31" href="#__codelineno-25-31"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-25-32" name="__codelineno-25-32" href="#__codelineno-25-32"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">leaf</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">MethodTree</span><span class="w"> </span><span class="n">mt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-25-33" name="__codelineno-25-33" href="#__codelineno-25-33"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hasAnnotation</span><span class="p">(</span><span class="n">mt</span><span class="p">.</span><span class="na">getModifiers</span><span class="p">(),</span><span class="w"> </span><span class="n">AllowDirectVal</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<a id="__codelineno-25-34" name="__codelineno-25-34" href="#__codelineno-25-34"></a><span class="w">                    </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">hasAnnotation</span><span class="p">(</span><span class="n">mt</span><span class="p">.</span><span class="na">getModifiers</span><span class="p">(),</span><span class="w"> </span><span class="n">BPFFunction</span><span class="p">.</span><span class="na">class</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-25-35" name="__codelineno-25-35" href="#__codelineno-25-35"></a><span class="w">                </span><span class="k">return</span><span class="p">;</span>
+<a id="__codelineno-25-36" name="__codelineno-25-36" href="#__codelineno-25-36"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-25-37" name="__codelineno-25-37" href="#__codelineno-25-37"></a><span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<a id="__codelineno-25-38" name="__codelineno-25-38" href="#__codelineno-25-38"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-25-39" name="__codelineno-25-39" href="#__codelineno-25-39"></a><span class="w">        </span><span class="n">cursor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cursor</span><span class="p">.</span><span class="na">getParentPath</span><span class="p">();</span>
+<a id="__codelineno-25-40" name="__codelineno-25-40" href="#__codelineno-25-40"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-25-41" name="__codelineno-25-41" href="#__codelineno-25-41"></a><span class="w">    </span><span class="n">compilerPlugin</span><span class="p">.</span><span class="na">messager</span><span class="p">.</span><span class="na">printMessage</span><span class="p">(</span>
+<a id="__codelineno-25-42" name="__codelineno-25-42" href="#__codelineno-25-42"></a><span class="w">            </span><span class="n">javax</span><span class="p">.</span><span class="na">tools</span><span class="p">.</span><span class="na">Diagnostic</span><span class="p">.</span><span class="na">Kind</span><span class="p">.</span><span class="na">ERROR</span><span class="p">,</span>
+<a id="__codelineno-25-43" name="__codelineno-25-43" href="#__codelineno-25-43"></a><span class="w">            </span><span class="s">&quot;directVal() result must be followed by a field access &quot;</span>
+<a id="__codelineno-25-44" name="__codelineno-25-44" href="#__codelineno-25-44"></a><span class="w">            </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;(or annotate the kfunc parameter with @TrustedPtr / &quot;</span>
+<a id="__codelineno-25-45" name="__codelineno-25-45" href="#__codelineno-25-45"></a><span class="w">            </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;the call site with @AllowDirectVal)&quot;</span><span class="p">,</span>
+<a id="__codelineno-25-46" name="__codelineno-25-46" href="#__codelineno-25-46"></a><span class="w">            </span><span class="c1">// pass a JCTree.JCMethodInvocation for source-position attribution</span>
+<a id="__codelineno-25-47" name="__codelineno-25-47" href="#__codelineno-25-47"></a><span class="w">            </span><span class="p">(</span><span class="n">com</span><span class="p">.</span><span class="na">sun</span><span class="p">.</span><span class="na">tools</span><span class="p">.</span><span class="na">javac</span><span class="p">.</span><span class="na">tree</span><span class="p">.</span><span class="na">JCTree</span><span class="p">)</span><span class="w"> </span><span class="n">mit</span><span class="p">);</span>
+<a id="__codelineno-25-48" name="__codelineno-25-48" href="#__codelineno-25-48"></a><span class="p">}</span>
+</code></pre></div>
+<p>Use whatever helper already exists in this file to resolve <code>MethodInvocationTree</code> to its <code>MethodSymbol</code> (likely <code>TreeInfo.symbol(...)</code> or a wrapper). Don't invent — re-use the surrounding code's idiom.</p>
+<p><code>hasAnnotation</code> walks <code>ModifiersTree.getAnnotations()</code> and checks the fully-qualified name against the marker.</p>
+<ul>
+<li>[ ] <strong>Step 3: Wire the check at the call site</strong></li>
+</ul>
+<p>In the <code>MethodInvocationTree</code> translation branch, after detecting <code>isDirectValCall(mit)</code>, call <code>validateDirectValContext(mit, currentPath)</code> and proceed with normal emission. The check only emits diagnostics; it doesn't change emitted C.</p>
+<ul>
+<li>[ ] <strong>Step 4: Rebuild plugin + bpf, full test run</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>  mvn -pl bpf-compiler-plugin,bpf -am install -DskipTests&#39;
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>  mvn -pl bpf-compiler-plugin-test test -Dtest=DirectValTest&#39;
+</code></pre></div>
+<p>Expected: all seven <code>DirectValTest</code> cases PASS.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>git<span class="w"> </span>add<span class="w"> </span>bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/Translator.java
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(plugin): structural check for Ptr.directVal() — must be followed by field access&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-8-teach-bpf-gen-to-emit-trustedptr-on-ptrcpumask-parameters">Task 8 — Teach <code>bpf-gen</code> to emit <code>@TrustedPtr</code> on <code>Ptr&lt;cpumask&gt;</code> parameters<a class="headerlink" href="#task-8-teach-bpf-gen-to-emit-trustedptr-on-ptrcpumask-parameters" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong>
+- Modify: <code>bpf-gen/src/main/java/me/bechberger/ebpf/gen/Generator.java</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Locate where parameter <code>@</code>-annotations are added</strong></li>
+</ul>
+<p>Open <code>Generator.java</code> and search for <code>toParameterSpec</code> (in the <code>Parameter</code> or similar inner type/class). That's where existing per-parameter annotations (e.g. <code>@Unsigned</code>, <code>@Size</code>) are emitted. Confirm by reading 30 lines around the hit. The intent: add <code>@TrustedPtr</code> to the emitted <code>ParameterSpec</code> whenever the parameter type matches <code>Ptr&lt;cpumask&gt;</code>.</p>
+<ul>
+<li>[ ] <strong>Step 2: Decide the trigger — type-based vs. metadata-based</strong></li>
+</ul>
+<p>The simplest correct trigger is <strong>type-based</strong>: any kfunc parameter whose Java type is <code>Ptr&lt;cpumask&gt;</code> is a trusted-pointer parameter. (The kernel's verifier semantics for <code>bpf_cpumask_*</code> kfuncs make this a property of the type, not the helper.) If <code>helper-defs.json</code> already carries some "trusted" marker, prefer that; otherwise hardcode the type check.</p>
+<p>Add to <code>toParameterSpec</code> (or wherever annotations are appended to the builder):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1">// @TrustedPtr: kfuncs taking Ptr&lt;cpumask&gt; require a trusted-pointer argument.</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="c1">// Emitting this here keeps the marker stable across BpfDefinitions regenerations.</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isPtrToCpumask</span><span class="p">(</span><span class="n">parameterType</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span><span class="n">builder</span><span class="p">.</span><span class="na">addAnnotation</span><span class="p">(</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">            </span><span class="n">com</span><span class="p">.</span><span class="na">squareup</span><span class="p">.</span><span class="na">javapoet</span><span class="p">.</span><span class="na">ClassName</span><span class="p">.</span><span class="na">get</span><span class="p">(</span>
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">                    </span><span class="s">&quot;me.bechberger.ebpf.annotations&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;TrustedPtr&quot;</span><span class="p">));</span>
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>Where <code>isPtrToCpumask</code> checks the JavaPoet <code>TypeName</code> / <code>ParameterizedTypeName</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isPtrToCpumask</span><span class="p">(</span><span class="n">TypeName</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">ParameterizedTypeName</span><span class="w"> </span><span class="n">pt</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">pt</span><span class="p">.</span><span class="na">rawType</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">ClassName</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;me.bechberger.ebpf.type&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ptr&quot;</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pt</span><span class="p">.</span><span class="na">typeArguments</span><span class="p">.</span><span class="na">size</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="n">arg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pt</span><span class="p">.</span><span class="na">typeArguments</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">arg</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">ClassName</span><span class="w"> </span><span class="n">cn</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">cn</span><span class="p">.</span><span class="na">simpleName</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;cpumask&quot;</span><span class="p">);</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>Adjust the exact class-name resolution to match this file's existing helpers (it may already have a <code>ptrOf(...)</code> factory or a <code>BTFType</code> enum).</p>
+<ul>
+<li>[ ] <strong>Step 3: Build <code>bpf-gen</code> on thinkstation</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>  mvn -pl bpf-gen -am install -DskipTests&#39;
+</code></pre></div>
+<p>Expected: BUILD SUCCESS.</p>
+<ul>
+<li>[ ] <strong>Step 4: Add a generator unit test</strong></li>
+</ul>
+<p>If <code>bpf-gen</code> already has a test module (look for <code>bpf-gen/src/test/java</code>), add a small case that feeds a fake <code>bpf_cpumask_test_cpu</code> declaration through the generator and asserts the produced <code>MethodSpec</code>'s second <code>ParameterSpec</code> carries <code>@TrustedPtr</code>. If no test infrastructure exists, skip and rely on Task 9's regen check.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>git<span class="w"> </span>add<span class="w"> </span>bpf-gen/src/main/java/me/bechberger/ebpf/gen/Generator.java
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="c1"># also any new generator test</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(bpf-gen): emit @TrustedPtr on Ptr&lt;cpumask&gt; kfunc parameters&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-9-regenerate-bpfdefinitionsjava">Task 9 — Regenerate <code>BpfDefinitions.java</code><a class="headerlink" href="#task-9-regenerate-bpfdefinitionsjava" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong>
+- Regenerate: <code>bpf-runtime/src/main/java/me/bechberger/ebpf/runtime/BpfDefinitions.java</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Run the regen pipeline on thinkstation</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>  bash bpf-runtime/build.sh 2&gt;&amp;1 | tail -40&#39;
+</code></pre></div>
+<p>Inspect the output for the build steps. If <code>build.sh</code> uses a different entry point (the spec referenced <code>bpf-gen/target/bpf-gen.jar</code>), align the command.</p>
+<ul>
+<li>[ ] <strong>Step 2: Pull the regenerated file to mac for committing</strong></li>
+</ul>
+<p>After regen on thinkstation, sync the file back:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>scp thinkstation:/home/i560383/code/experiments/hello-ebpf/bpf-runtime/src/main/java/me/bechberger/ebpf/runtime/BpfDefinitions.java \
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>    /Users/i560383_1/code/experiments/hello-ebpf/bpf-runtime/src/main/java/me/bechberger/ebpf/runtime/BpfDefinitions.java
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 3: Verify the annotation lands on <code>bpf_cpumask_test_cpu</code>'s second parameter</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>grep<span class="w"> </span>-B1<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;bpf_cpumask_test_cpu&quot;</span><span class="w"> </span>/Users/i560383_1/code/experiments/hello-ebpf/bpf-runtime/src/main/java/me/bechberger/ebpf/runtime/BpfDefinitions.java<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</code></pre></div>
+<p>Expected: the second parameter (<code>Ptr&lt;cpumask&gt;</code>) carries <code>@TrustedPtr</code>.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit regenerated file</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>git<span class="w"> </span>add<span class="w"> </span>bpf-runtime/src/main/java/me/bechberger/ebpf/runtime/BpfDefinitions.java
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore(bpf-runtime): regenerate BpfDefinitions.java with @TrustedPtr&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-10-migrate-userspaceschedulerbase-delete-the-three-builtins-rewrite-callers">Task 10 — Migrate <code>UserspaceSchedulerBase</code>: delete the three builtins, rewrite callers<a class="headerlink" href="#task-10-migrate-userspaceschedulerbase-delete-the-three-builtins-rewrite-callers" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong>
+- Modify: <code>bpf/src/main/java/me/bechberger/ebpf/bpf/UserspaceSchedulerBase.java</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Delete <code>taskCpuIsAllowed</code>, <code>arena_or_assign</code>, <code>arena_and_assign</code></strong></li>
+</ul>
+<p>Search for <code>@BuiltinBPFFunction\("bpf_cpumask_test_cpu</code> and <code>@BuiltinBPFFunction\("\*\(\$arg1\)</code> in <code>UserspaceSchedulerBase.java</code>. Delete each of the three methods (and their preceding Javadoc).</p>
+<ul>
+<li>[ ] <strong>Step 2: Rewrite <code>taskCpuIsAllowed</code> call site</strong></li>
+</ul>
+<p>Find the single caller (e.g. around line 734 — <code>if (!taskCpuIsAllowed(targetCpu, p)) { ... }</code>). Replace with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">bpf_cpumask_test_cpu</span><span class="p">(</span><span class="n">targetCpu</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="na">directVal</span><span class="p">().</span><span class="na">cpus_ptr</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="w">    </span><span class="c1">// ... existing body ...</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="p">}</span>
+</code></pre></div>
+<p>Make sure <code>bpf_cpumask_test_cpu</code> is in scope (import or static-import per the existing usage in this file).</p>
+<ul>
+<li>[ ] <strong>Step 3: Rewrite <code>setBit</code> / <code>clearBit</code></strong></li>
+</ul>
+<p>Find the two call sites (around line 960):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idle</span><span class="p">)</span><span class="w"> </span><span class="n">arena_or_assign</span><span class="p">(</span><span class="n">idleMaskBase</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">wordIdx</span><span class="p">),</span><span class="w"> </span><span class="n">mask</span><span class="p">);</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="k">else</span><span class="w">      </span><span class="n">arena_and_assign</span><span class="p">(</span><span class="n">idleMaskBase</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">wordIdx</span><span class="p">),</span><span class="w"> </span><span class="o">~</span><span class="n">mask</span><span class="p">);</span>
+</code></pre></div>
+<p>Replace each with the local-variable form to preserve once-evaluation semantics:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idleMaskBase</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">wordIdx</span><span class="p">);</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idle</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="w">    </span><span class="n">word</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">word</span><span class="p">.</span><span class="na">val</span><span class="p">()</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">mask</span><span class="p">);</span>
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a><span class="w">    </span><span class="n">word</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">word</span><span class="p">.</span><span class="na">val</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="o">~</span><span class="n">mask</span><span class="p">);</span>
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a><span class="p">}</span>
+</code></pre></div>
+<p>Place the local in the smallest enclosing scope. If <code>setBit</code> and <code>clearBit</code> are separate methods, each gets its own local with the appropriate assignment (no <code>if</code>).</p>
+<ul>
+<li>[ ] <strong>Step 4: Rebuild bpf module and inspect generated C</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>  mvn -pl bpf -am install -DskipTests&#39;
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>ssh thinkstation &#39;grep -n &quot;taskCpuIsAllowed\|arena_or_assign\|arena_and_assign\|bpf_cpumask_test_cpu&quot; \
+<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>    /home/i560383/code/experiments/hello-ebpf/bpf/target/generated-sources/annotations/me/bechberger/ebpf/bpf/UserspaceSchedulerBaseImpl.c \
+<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a>    | head -20&#39;
+</code></pre></div>
+<p>Expected:
+- No occurrences of <code>taskCpuIsAllowed</code>, <code>arena_or_assign</code>, <code>arena_and_assign</code>.
+- <code>bpf_cpumask_test_cpu(targetCpu, p-&gt;cpus_ptr)</code> (or equivalent) at the affinity-check site — NOT <code>BPF_CORE_READ(p, cpus_ptr)</code>.
+- <code>setBit</code>/<code>clearBit</code> lower to <code>*(word) = (*(word)) | mask;</code> and <code>*(word) = (*(word)) &amp; ~mask;</code>.</p>
+<p>If <code>BPF_CORE_READ</code> still appears at the affinity site, the structural check passed but <code>stripPtrVal</code>/inlining didn't cover the path — re-check Task 6.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>git<span class="w"> </span>add<span class="w"> </span>bpf/src/main/java/me/bechberger/ebpf/bpf/UserspaceSchedulerBase.java
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(UserspaceSchedulerBase): replace 3 inline-C builtins with Java equivalents</span>
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="s2">- taskCpuIsAllowed → bpf_cpumask_test_cpu(cpu, p.directVal().cpus_ptr)</span>
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a><span class="s2">- arena_or_assign / arena_and_assign → word.set(word.val() | mask) etc.</span>
+<a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>
+<a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a><span class="s2">Relies on Ptr.directVal() (suppresses CO-RE lifting, preserves trusted-pointer</span>
+<a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a><span class="s2">annotation) and the generalised @BPFJavaInline.&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-11-migrate-other-pvalcpus_ptr-call-sites">Task 11 — Migrate other <code>p.val().cpus_ptr</code> call sites<a class="headerlink" href="#task-11-migrate-other-pvalcpus_ptr-call-sites" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong>
+- Modify: <code>bpf/src/main/java/me/bechberger/ebpf/bpf/Scheduler.java</code> (line 1040, <code>tryDispatchToLocalCpu</code>)
+- Modify: <code>bpf-samples/src/main/java/.../LotteryScheduler.java</code> (line 41)
+- Modify: <code>bpf/src/main/java/me/bechberger/ebpf/bpf/sched/DispatchQueue.java</code> (line 341 Javadoc snippet)</p>
+<ul>
+<li>[ ] <strong>Step 1: <code>Scheduler.tryDispatchToLocalCpu</code></strong></li>
+</ul>
+<p>At line ~1040, change:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">bpf_cpumask_test_cpu</span><span class="p">(</span><span class="n">cpu</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="na">val</span><span class="p">().</span><span class="na">cpus_ptr</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a><span class="p">}</span>
+</code></pre></div>
+<p>To:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">bpf_cpumask_test_cpu</span><span class="p">(</span><span class="n">cpu</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="na">directVal</span><span class="p">().</span><span class="na">cpus_ptr</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: <code>LotteryScheduler.java:41</code></strong></li>
+</ul>
+<p>Same migration: <code>p.val().cpus_ptr</code> → <code>p.directVal().cpus_ptr</code>.</p>
+<ul>
+<li>[ ] <strong>Step 3: <code>DispatchQueue.java:341</code></strong></li>
+</ul>
+<p>This is a Javadoc snippet, not live code. Find the code block in the Javadoc that shows <code>p.val().cpus_ptr</code> and update to <code>p.directVal().cpus_ptr</code>. Add a one-line note in the Javadoc: "Use <code>directVal()</code> (not <code>val()</code>) to preserve the trusted-pointer annotation that <code>bpf_cpumask_test_cpu</code> requires."</p>
+<ul>
+<li>[ ] <strong>Step 4: Rebuild and inspect generated C for <code>tryDispatchToLocalCpu</code></strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>  mvn -pl bpf,bpf-samples -am install -DskipTests&#39;
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a>
+<a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a>ssh thinkstation &#39;grep -n &quot;bpf_cpumask_test_cpu&quot; \
+<a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a>    /home/i560383/code/experiments/hello-ebpf/bpf/target/generated-sources/annotations/me/bechberger/ebpf/bpf/UserspaceSchedulerBaseImpl.c \
+<a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a>    | head -5&#39;
+</code></pre></div>
+<p>Expected: <code>bpf_cpumask_test_cpu(cpu, p-&gt;cpus_ptr)</code> at <code>tryDispatchToLocalCpu</code>'s call site. NOT <code>BPF_CORE_READ</code>.</p>
+<ul>
+<li>[ ] <strong>Step 5: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>git<span class="w"> </span>add<span class="w"> </span>bpf/src/main/java/me/bechberger/ebpf/bpf/Scheduler.java<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a><span class="w">        </span>bpf/src/main/java/me/bechberger/ebpf/bpf/sched/DispatchQueue.java<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="w">        </span>bpf-samples/src/main/java/me/bechberger/ebpf/bpf/samples/sched/LotteryScheduler.java
+<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;refactor(sched): migrate p.val().cpus_ptr → p.directVal().cpus_ptr</span>
+<a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>
+<a id="__codelineno-44-6" name="__codelineno-44-6" href="#__codelineno-44-6"></a><span class="s2">Scheduler.tryDispatchToLocalCpu and LotteryScheduler emitted BPF_CORE_READ on</span>
+<a id="__codelineno-44-7" name="__codelineno-44-7" href="#__codelineno-44-7"></a><span class="s2">p.cpus_ptr, which strips the trusted-pointer annotation bpf_cpumask_test_cpu</span>
+<a id="__codelineno-44-8" name="__codelineno-44-8" href="#__codelineno-44-8"></a><span class="s2">requires on its second argument. directVal() emits a direct field access that</span>
+<a id="__codelineno-44-9" name="__codelineno-44-9" href="#__codelineno-44-9"></a><span class="s2">preserves the annotation. DispatchQueue Javadoc snippet updated to match.&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-12-framework-level-integration-test">Task 12 — Framework-level integration test<a class="headerlink" href="#task-12-framework-level-integration-test" title="Permanent link">&para;</a></h2>
+<p><strong>Files:</strong>
+- Create: <code>bpf-samples/src/test/java/me/bechberger/ebpf/bpf/DirectValTaskCpuAllowedTest.java</code>
+- Create: <code>bpf-samples/src/test/java/me/bechberger/ebpf/bpf/DirectValTaskCpuAllowedScheduler.java</code></p>
+<ul>
+<li>[ ] <strong>Step 1: Write the test scheduler</strong></li>
+</ul>
+<p>Model after <code>ArenaFromStructOpsHandlerScheduler.java</code> for structure (the JUnit-extension + <code>@TestScheduler</code> pattern):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="kn">package</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf</span><span class="p">;</span>
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>
+<a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.annotations.bpf.BPF</span><span class="p">;</span>
+<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.annotations.bpf.Property</span><span class="p">;</span>
+<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.sched.DispatchQueue</span><span class="p">;</span>
+<a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.sched.EnqFlags</span><span class="p">;</span>
+<a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.runtime.TaskDefinitions.task_struct</span><span class="p">;</span>
+<a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.type.Ptr</span><span class="p">;</span>
+<a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a>
+<a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a><span class="kn">import static</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask_test_cpu</span><span class="p">;</span>
+<a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a><span class="kn">import static</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_create_dsq</span><span class="p">;</span>
+<a id="__codelineno-45-12" name="__codelineno-45-12" href="#__codelineno-45-12"></a>
+<a id="__codelineno-45-13" name="__codelineno-45-13" href="#__codelineno-45-13"></a><span class="cm">/**</span>
+<a id="__codelineno-45-14" name="__codelineno-45-14" href="#__codelineno-45-14"></a><span class="cm"> * Minimal scheduler that exercises {@code p.directVal().cpus_ptr} in a</span>
+<a id="__codelineno-45-15" name="__codelineno-45-15" href="#__codelineno-45-15"></a><span class="cm"> * non-sleepable {@code struct_ops} handler ({@code enqueue}). The kernel</span>
+<a id="__codelineno-45-16" name="__codelineno-45-16" href="#__codelineno-45-16"></a><span class="cm"> * verifier accepts the load only because {@code directVal()} suppresses</span>
+<a id="__codelineno-45-17" name="__codelineno-45-17" href="#__codelineno-45-17"></a><span class="cm"> * CO-RE lifting on {@code cpus_ptr}, preserving the trusted-pointer</span>
+<a id="__codelineno-45-18" name="__codelineno-45-18" href="#__codelineno-45-18"></a><span class="cm"> * annotation that {@code bpf_cpumask_test_cpu} requires.</span>
+<a id="__codelineno-45-19" name="__codelineno-45-19" href="#__codelineno-45-19"></a><span class="cm"> *</span>
+<a id="__codelineno-45-20" name="__codelineno-45-20" href="#__codelineno-45-20"></a><span class="cm"> * &lt;p&gt;If {@code directVal()} regresses to {@code BPF_CORE_READ(p, cpus_ptr)},</span>
+<a id="__codelineno-45-21" name="__codelineno-45-21" href="#__codelineno-45-21"></a><span class="cm"> * the verifier rejects the load with a trusted-pointer error and the test</span>
+<a id="__codelineno-45-22" name="__codelineno-45-22" href="#__codelineno-45-22"></a><span class="cm"> * fails.</span>
+<a id="__codelineno-45-23" name="__codelineno-45-23" href="#__codelineno-45-23"></a><span class="cm"> */</span>
+<a id="__codelineno-45-24" name="__codelineno-45-24" href="#__codelineno-45-24"></a><span class="nd">@BPF</span><span class="p">(</span><span class="n">license</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;GPL&quot;</span><span class="p">)</span>
+<a id="__codelineno-45-25" name="__codelineno-45-25" href="#__codelineno-45-25"></a><span class="nd">@Property</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sched_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;directval_taskcpu_test&quot;</span><span class="p">)</span>
+<a id="__codelineno-45-26" name="__codelineno-45-26" href="#__codelineno-45-26"></a><span class="nd">@Property</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;timeout_ms&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;10000&quot;</span><span class="p">)</span>
+<a id="__codelineno-45-27" name="__codelineno-45-27" href="#__codelineno-45-27"></a><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DirectValTaskCpuAllowedScheduler</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">SchedulerBase</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Scheduler</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-45-28" name="__codelineno-45-28" href="#__codelineno-45-28"></a>
+<a id="__codelineno-45-29" name="__codelineno-45-29" href="#__codelineno-45-29"></a><span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">DispatchQueue</span><span class="w"> </span><span class="n">shared</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DispatchQueue</span><span class="p">.</span><span class="na">attach</span><span class="p">(</span><span class="n">SHARED_DSQ_ID</span><span class="p">);</span>
+<a id="__codelineno-45-30" name="__codelineno-45-30" href="#__codelineno-45-30"></a>
+<a id="__codelineno-45-31" name="__codelineno-45-31" href="#__codelineno-45-31"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-45-32" name="__codelineno-45-32" href="#__codelineno-45-32"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">init</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-45-33" name="__codelineno-45-33" href="#__codelineno-45-33"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">scx_bpf_create_dsq</span><span class="p">(</span><span class="n">SHARED_DSQ_ID</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<a id="__codelineno-45-34" name="__codelineno-45-34" href="#__codelineno-45-34"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-45-35" name="__codelineno-45-35" href="#__codelineno-45-35"></a>
+<a id="__codelineno-45-36" name="__codelineno-45-36" href="#__codelineno-45-36"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-45-37" name="__codelineno-45-37" href="#__codelineno-45-37"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">enqueue</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">task_struct</span><span class="o">&gt;</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">enq_flags</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-45-38" name="__codelineno-45-38" href="#__codelineno-45-38"></a><span class="w">        </span><span class="c1">// Direct trusted-pointer load: must NOT lower to BPF_CORE_READ.</span>
+<a id="__codelineno-45-39" name="__codelineno-45-39" href="#__codelineno-45-39"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bpf_cpumask_test_cpu</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="na">directVal</span><span class="p">().</span><span class="na">cpus_ptr</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-45-40" name="__codelineno-45-40" href="#__codelineno-45-40"></a><span class="w">            </span><span class="n">shared</span><span class="p">.</span><span class="na">insertScaled</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">EnqFlags</span><span class="p">.</span><span class="na">passThrough</span><span class="p">(</span><span class="n">enq_flags</span><span class="p">));</span>
+<a id="__codelineno-45-41" name="__codelineno-45-41" href="#__codelineno-45-41"></a><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-45-42" name="__codelineno-45-42" href="#__codelineno-45-42"></a><span class="w">            </span><span class="n">shared</span><span class="p">.</span><span class="na">insertScaled</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">EnqFlags</span><span class="p">.</span><span class="na">passThrough</span><span class="p">(</span><span class="n">enq_flags</span><span class="p">));</span>
+<a id="__codelineno-45-43" name="__codelineno-45-43" href="#__codelineno-45-43"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-45-44" name="__codelineno-45-44" href="#__codelineno-45-44"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-45-45" name="__codelineno-45-45" href="#__codelineno-45-45"></a>
+<a id="__codelineno-45-46" name="__codelineno-45-46" href="#__codelineno-45-46"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-45-47" name="__codelineno-45-47" href="#__codelineno-45-47"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">dispatch</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">cpu</span><span class="p">,</span><span class="w"> </span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">task_struct</span><span class="o">&gt;</span><span class="w"> </span><span class="n">prev</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-45-48" name="__codelineno-45-48" href="#__codelineno-45-48"></a><span class="w">        </span><span class="n">shared</span><span class="p">.</span><span class="na">moveToLocal</span><span class="p">();</span>
+<a id="__codelineno-45-49" name="__codelineno-45-49" href="#__codelineno-45-49"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-45-50" name="__codelineno-45-50" href="#__codelineno-45-50"></a><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 2: Write the test</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="kn">package</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf</span><span class="p">;</span>
+<a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a>
+<a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Test</span><span class="p">;</span>
+<a id="__codelineno-46-4" name="__codelineno-46-4" href="#__codelineno-46-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Timeout</span><span class="p">;</span>
+<a id="__codelineno-46-5" name="__codelineno-46-5" href="#__codelineno-46-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.extension.ExtendWith</span><span class="p">;</span>
+<a id="__codelineno-46-6" name="__codelineno-46-6" href="#__codelineno-46-6"></a><span class="kn">import static</span><span class="w"> </span><span class="nn">org.junit.jupiter.api.Assertions.assertTrue</span><span class="p">;</span>
+<a id="__codelineno-46-7" name="__codelineno-46-7" href="#__codelineno-46-7"></a>
+<a id="__codelineno-46-8" name="__codelineno-46-8" href="#__codelineno-46-8"></a><span class="cm">/**</span>
+<a id="__codelineno-46-9" name="__codelineno-46-9" href="#__codelineno-46-9"></a><span class="cm"> * Framework-level integration test for {@link me.bechberger.ebpf.type.Ptr#directVal()}.</span>
+<a id="__codelineno-46-10" name="__codelineno-46-10" href="#__codelineno-46-10"></a><span class="cm"> *</span>
+<a id="__codelineno-46-11" name="__codelineno-46-11" href="#__codelineno-46-11"></a><span class="cm"> * &lt;p&gt;Loads a scheduler whose {@code enqueue} handler calls</span>
+<a id="__codelineno-46-12" name="__codelineno-46-12" href="#__codelineno-46-12"></a><span class="cm"> * {@code bpf_cpumask_test_cpu(0, p.directVal().cpus_ptr)}. The kernel</span>
+<a id="__codelineno-46-13" name="__codelineno-46-13" href="#__codelineno-46-13"></a><span class="cm"> * verifier accepts the load only when {@code directVal()} suppresses</span>
+<a id="__codelineno-46-14" name="__codelineno-46-14" href="#__codelineno-46-14"></a><span class="cm"> * CO-RE lifting on {@code cpus_ptr} — a regression that re-introduces</span>
+<a id="__codelineno-46-15" name="__codelineno-46-15" href="#__codelineno-46-15"></a><span class="cm"> * {@code BPF_CORE_READ} is rejected with a trusted-pointer error.</span>
+<a id="__codelineno-46-16" name="__codelineno-46-16" href="#__codelineno-46-16"></a><span class="cm"> */</span>
+<a id="__codelineno-46-17" name="__codelineno-46-17" href="#__codelineno-46-17"></a><span class="nd">@ExtendWith</span><span class="p">(</span><span class="n">SchedulerExtension</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<a id="__codelineno-46-18" name="__codelineno-46-18" href="#__codelineno-46-18"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DirectValTaskCpuAllowedTest</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-46-19" name="__codelineno-46-19" href="#__codelineno-46-19"></a>
+<a id="__codelineno-46-20" name="__codelineno-46-20" href="#__codelineno-46-20"></a><span class="w">    </span><span class="nd">@Test</span>
+<a id="__codelineno-46-21" name="__codelineno-46-21" href="#__codelineno-46-21"></a><span class="w">    </span><span class="nd">@Timeout</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<a id="__codelineno-46-22" name="__codelineno-46-22" href="#__codelineno-46-22"></a><span class="w">    </span><span class="nd">@TestScheduler</span><span class="p">(</span><span class="n">DirectValTaskCpuAllowedScheduler</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<a id="__codelineno-46-23" name="__codelineno-46-23" href="#__codelineno-46-23"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">schedulerAttachesWithTrustedCpumaskLoad</span><span class="p">(</span>
+<a id="__codelineno-46-24" name="__codelineno-46-24" href="#__codelineno-46-24"></a><span class="w">            </span><span class="n">DirectValTaskCpuAllowedScheduler</span><span class="w"> </span><span class="n">sched</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-46-25" name="__codelineno-46-25" href="#__codelineno-46-25"></a><span class="w">        </span><span class="n">Thread</span><span class="p">.</span><span class="na">sleep</span><span class="p">(</span><span class="mi">300</span><span class="p">);</span>
+<a id="__codelineno-46-26" name="__codelineno-46-26" href="#__codelineno-46-26"></a><span class="w">        </span><span class="n">assertTrue</span><span class="p">(</span><span class="n">sched</span><span class="p">.</span><span class="na">isSchedulerAttachedProperly</span><span class="p">(),</span>
+<a id="__codelineno-46-27" name="__codelineno-46-27" href="#__codelineno-46-27"></a><span class="w">                </span><span class="s">&quot;Scheduler must remain attached after 300 ms — if the verifier &quot;</span>
+<a id="__codelineno-46-28" name="__codelineno-46-28" href="#__codelineno-46-28"></a><span class="w">                </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;rejected the load, directVal() regressed to BPF_CORE_READ.&quot;</span><span class="p">);</span>
+<a id="__codelineno-46-29" name="__codelineno-46-29" href="#__codelineno-46-29"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-46-30" name="__codelineno-46-30" href="#__codelineno-46-30"></a><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>[ ] <strong>Step 3: Run on thinkstation under vng</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a>  PATH=/home/i560383/.local/bin:$PATH \
+<a id="__codelineno-47-3" name="__codelineno-47-3" href="#__codelineno-47-3"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-47-4" name="__codelineno-47-4" href="#__codelineno-47-4"></a>  vng -p ./vng.profile -- mvn -pl bpf-samples -Dtest=DirectValTaskCpuAllowedTest \
+<a id="__codelineno-47-5" name="__codelineno-47-5" href="#__codelineno-47-5"></a>      -Dmaven.test.skip=false -DskipTests=false test 2&gt;&amp;1 | tail -40&#39;
+</code></pre></div>
+<p>Expected: PASS. If FAIL with "trusted pointer required" or similar verifier error → the structural check passed but emission is still lifting; revisit Task 6/7.</p>
+<ul>
+<li>[ ] <strong>Step 4: Commit</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>git<span class="w"> </span>add<span class="w"> </span>bpf-samples/src/test/java/me/bechberger/ebpf/bpf/DirectValTaskCpuAllowedTest.java<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a><span class="w">        </span>bpf-samples/src/test/java/me/bechberger/ebpf/bpf/DirectValTaskCpuAllowedScheduler.java
+<a id="__codelineno-48-3" name="__codelineno-48-3" href="#__codelineno-48-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;test(directval): framework integration test for p.directVal().cpus_ptr&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="task-13-end-to-end-verification">Task 13 — End-to-end verification<a class="headerlink" href="#task-13-end-to-end-verification" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] <strong>Step 1: Re-run the existing arena/sched smoke tests on thinkstation</strong></li>
+</ul>
+<p>The migrations in Tasks 10-11 touch <code>UserspaceSchedulerBase</code>, which is exercised by <code>RustlandFifoSampleSmokeTest</code> and <code>ArenaFromStructOpsHandlerTest</code>. Confirm no regression.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a>  PATH=/home/i560383/.local/bin:$PATH \
+<a id="__codelineno-49-3" name="__codelineno-49-3" href="#__codelineno-49-3"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-49-4" name="__codelineno-49-4" href="#__codelineno-49-4"></a>  vng -p ./vng.profile -- mvn -pl bpf-samples \
+<a id="__codelineno-49-5" name="__codelineno-49-5" href="#__codelineno-49-5"></a>      -Dtest=RustlandFifoSampleSmokeTest,ArenaFromStructOpsHandlerTest,DirectValTaskCpuAllowedTest \
+<a id="__codelineno-49-6" name="__codelineno-49-6" href="#__codelineno-49-6"></a>      -Dmaven.test.skip=false -DskipTests=false test 2&gt;&amp;1 | tail -30&#39;
+</code></pre></div>
+<p>Expected: all three PASS.</p>
+<ul>
+<li>[ ] <strong>Step 2: Inspect final generated C</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>ssh thinkstation &#39;grep -c &quot;BPF_CORE_READ&quot; \
+<a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a>    /home/i560383/code/experiments/hello-ebpf/bpf/target/generated-sources/annotations/me/bechberger/ebpf/bpf/UserspaceSchedulerBaseImpl.c&#39;
+<a id="__codelineno-50-3" name="__codelineno-50-3" href="#__codelineno-50-3"></a>ssh thinkstation &#39;grep -c &quot;taskCpuIsAllowed\|arena_or_assign\|arena_and_assign&quot; \
+<a id="__codelineno-50-4" name="__codelineno-50-4" href="#__codelineno-50-4"></a>    /home/i560383/code/experiments/hello-ebpf/bpf/target/generated-sources/annotations/me/bechberger/ebpf/bpf/UserspaceSchedulerBaseImpl.c&#39;
+</code></pre></div>
+<p>Expected: zero occurrences of any of the three deleted builtins. <code>BPF_CORE_READ</code> count may still be non-zero (other unrelated field accesses) — that's fine.</p>
+<ul>
+<li>[ ] <strong>Step 3: Full plugin test suite</strong></li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>ssh thinkstation &#39;cd /home/i560383/code/experiments/hello-ebpf &amp;&amp; \
+<a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a>  HOME=/home/i560383 JAVA_HOME=/home/i560383/.sdkman/candidates/java/25-sapmchn \
+<a id="__codelineno-51-3" name="__codelineno-51-3" href="#__codelineno-51-3"></a>  mvn -pl bpf-compiler-plugin-test test&#39;
+</code></pre></div>
+<p>Expected: all tests PASS.</p>
+<ul>
+<li>[ ] <strong>Step 4: No commit (verification-only task). Note any anomalies for follow-up.</strong></li>
+</ul>
+<hr />
+<h2 id="out-of-scope-do-not-touch">Out of Scope (do not touch)<a class="headerlink" href="#out-of-scope-do-not-touch" title="Permanent link">&para;</a></h2>
+<ul>
+<li>New trusted-pointer mechanisms beyond field-access. The structural check is intentionally minimal.</li>
+<li>Atomic arena writes (<code>__sync_fetch_and_or</code> etc.). The non-atomic <code>|=</code> is correct because each CPU writes only its own bit; if multi-CPU contention on the same word ever becomes a requirement, that's a separate design.</li>
+<li>Auditing every <code>@BuiltinBPFFunction</code> in the codebase. Focused scope: only the three in <code>UserspaceSchedulerBase</code> plus <code>bpf_cpumask_test_cpu</code> migrations.</li>
+<li>A pre-pass architecture (<code>DirectValGuardPass</code>). The structural check is one inspection at the call site — no pass needed.</li>
+<li>Other kfuncs that may also need <code>@TrustedPtr</code>. The bpf-gen rule keys on <code>Ptr&lt;cpumask&gt;</code>; if a future kfunc needs the marker for a different type, extend the predicate then.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "content.code.annotate", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
