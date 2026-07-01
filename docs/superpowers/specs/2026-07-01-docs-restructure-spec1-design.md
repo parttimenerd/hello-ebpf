@@ -22,6 +22,14 @@ Audiences the docs must serve, in order of expected traffic:
 - No changes to any Java source, samples, or the compiler plugin.
 - No archetype changes. `bpf-archetype/` stays as it is.
 - No new mkdocs plugins beyond `pymdownx.snippets` (needed for `--8<--` includes).
+- No change to `docs-requirements.txt`. `pymdownx.snippets` is part of `pymdown-extensions`, which is already a transitive dependency of `mkdocs-material`. It only needs to be listed under `markdown_extensions` in `mkdocs.yml`.
+
+## 2a. Preconditions
+
+Before Spec 1 work starts, verify:
+
+- `mkdocs build --strict` succeeds on `main` at the current commit. If it does not, fix the build first; do not layer restructure on a broken base.
+- The `docs` CI job on the most recent `main` commit is green (already verified as of the commit that lands this spec).
 
 ## 3. Style guide (`docs/superpowers/style-guide.md`)
 
@@ -85,7 +93,7 @@ Common table schema for all six audits:
   - `Partial` — symbol is named or shown in a table but has no dedicated coverage.
   - `Missing` — symbol is not mentioned in any page.
   - `Rewrite` — coverage exists but violates the style guide (e.g. no cause section, dead example).
-- **Target page.** The page in the new nav (§5) where the symbol should end up. May be shared across many rows (e.g. all `@BPF*` annotations land on `reference/annotations.md`).
+- **Target page.** The one primary page in the new nav (§6) where the symbol should live. Many rows may point at the same page (e.g. every `@BPF*` annotation → `reference/annotations.md`). If the symbol is also referenced from other pages (e.g. `@InArena` is central to `arenas.md` but also appears in `cheatsheet.md`), that secondary presence is a Spec 2 content decision, not an audit column.
 
 The six audits, in dependency order so downstream tables can reference upstream anchors:
 
@@ -106,6 +114,8 @@ intermediate format the audit subagent produces.
 The audit files are checked into `docs/superpowers/audit/`. They are living
 documents: Spec 2's per-page tasks tick rows to `OK` as they land content,
 and the audit becomes the completion record for Spec 2.
+
+**Audit cadence.** Audits are point-in-time snapshots. If new user-visible surface lands between Spec 1 and Spec 2 completion (e.g. a new `@BPF*` annotation), it does *not* trigger an audit rerun — it becomes a review-time flag in the affected Spec 2 page task. This keeps Spec 2 tractable; a background chore can regenerate the audit tables after Spec 2 lands.
 
 ## 5. Includes-based examples pipeline
 
@@ -203,8 +213,32 @@ Stubs exist so the new nav is fully wired the moment Spec 1 ships. Spec 2 replac
 
 ### 6.1 Notes on splits
 
-- `sched_ext.md` (703 lines) is carved into `sched-ext/{index,kernel-side,callbacks}.md`. Content is moved verbatim; no sentence is rewritten. The split task begins by proposing the exact H2-to-file carve for review (this cannot be encoded in the spec because the current H2 structure of `sched_ext.md` has not been re-verified against the head of the file at plan time). Section anchors inside the moved content are preserved so external deep-links do not rot.
-- `scheduler-article.md` (magazine-style tutorial, currently orphaned from nav) moves to `sched-ext/cookbook.md` unchanged.
+`sched_ext.md` (703 lines) is carved along its existing 16 H2 boundaries. The mapping is:
+
+| H2 in current `sched_ext.md` | Target file |
+|------------------------------|-------------|
+| Prerequisites | `sched-ext/index.md` |
+| Why sched_ext? | `sched-ext/index.md` |
+| Quick start | `sched-ext/index.md` |
+| The `@Property` annotation | `sched-ext/kernel-side.md` |
+| DispatchQueue — typed DSQ wrapper | `sched-ext/kernel-side.md` |
+| CpuMask — typed CPU affinity wrapper | `sched-ext/kernel-side.md` |
+| Key scx kfuncs (low-level, use DispatchQueue instead) | `sched-ext/kernel-side.md` |
+| Scheduler callback reference | `sched-ext/callbacks.md` |
+| Stats and observability | `sched-ext/kernel-side.md` |
+| Per-task storage | `sched-ext/kernel-side.md` |
+| Loading and running | `sched-ext/index.md` |
+| Exit info | `sched-ext/kernel-side.md` |
+| PerCpuSchedulerBase — per-CPU DSQ layout | `sched-ext/kernel-side.md` |
+| Boosting a process tree for performance testing | `sched-ext/cookbook.md` |
+| Inspecting generated BPF C code | `sched-ext/kernel-side.md` |
+| Sample schedulers | `sched-ext/cookbook.md` |
+
+Content is moved verbatim within each cell; no sentence is rewritten. Each H2 becomes an H1 in its target file. If the split task, on reading the actual sections, finds a section that clearly belongs elsewhere (e.g. a callback described inside "Stats and observability" that fits `callbacks.md` better), the task is allowed to move that subsection — but only within the four `sched-ext/*.md` files; the boundary to other pages (`Guides/`, `Reference/`) is fixed. Section anchors inside the moved content are preserved so external deep-links do not rot.
+
+Other file moves:
+
+- `scheduler-article.md` (magazine-style tutorial, currently orphaned from nav) moves to `sched-ext/cookbook.md` unchanged. It joins the two H2 sections above (`Boosting a process tree`, `Sample schedulers`) as siblings.
 - `helpers.md` is renamed to `reference/bpfj.md`. The file content is unchanged in Spec 1; Spec 2 rewrites it into a catalog against the BPFJ audit.
 - `userspace-scheduler.md` moves to `sched-ext/userspace.md`. Content unchanged except for one relative link: the original page links to `superpowers/specs/2026-06-29-userspace-scheduler-design.md` (one level up from `docs/`). At the new location, `docs/sched-ext/userspace.md`, the same target is reached via `../superpowers/specs/2026-06-29-userspace-scheduler-design.md` (two levels up). Update that link as part of the move task.
 
@@ -261,8 +295,8 @@ At the end of Spec 1:
 - [ ] `mkdocs.yml` updated with new nav, snippets extension, `not_in_nav` list, and shim entries.
 - [ ] Stubs created for all new pages.
 - [ ] Split pages carved out; `sched_ext.md`, `helpers.md`, `userspace-scheduler.md`, `scheduler-article.md` replaced by shim files at their original paths (§7).
-- [ ] `pymdownx.snippets` wired; one existing snippet migrated end-to-end as a proof (candidate: the XDP example in `index.md` — the smallest, safest migration).
-- [ ] CI `docs` job runs `mkdocs build --strict` before deploy.
+- [ ] `pymdownx.snippets` wired; one snippet migrated end-to-end as a proof. The current XDP example in `index.md` is a hand-simplified inline class (`DropEveryThird`) with no matching source file, so it is not a viable candidate. The proof-of-life task instead adds `// --8<-- [start:...]/[end:...]` markers to an existing sample under `bpf-samples/src/main/java/me/bechberger/ebpf/samples/demo/` (e.g. `HelloWorld.java` or `XDPDropEveryThirdPacket.java`) and switches one existing doc block to use the include. The task chooses the smallest viable diff.
+- [ ] `.github/workflows/ci.yml`'s `docs` job gains an explicit `mkdocs build --strict` step before the `mkdocs gh-deploy --force` step. This is the only workflow change in Spec 1.
 - [ ] Local + CI `mkdocs build --strict` both green.
 
 ## 11. Out of scope (explicit)
