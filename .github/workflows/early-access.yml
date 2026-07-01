@@ -6,7 +6,7 @@ on:
 
 env:
   JAVA_VERSION: '22'
-  JAVA_DISTRO: 'temurin'
+  JAVA_DISTRO: 'sapmachine'
 
 jobs:
   precheck:
