@@ -128,6 +128,19 @@ public final class VerifierFixSuggester {
                     implementation detail.
                     See: https://github.com/parttimenerd/hello-ebpf/issues""";
 
+            case INVALID_TIMER_DEFINITION -> """
+                    The verifier rejected a program using bpf_timer.
+                    Why: the kernel requires bpf_timer to be embedded as a field inside a struct \
+                    used as the map value, not the map value type itself. A bare-value declaration \
+                    (e.g. BPFHashMap<Integer, bpf_timer>) or a bpf_timer_init call against a map \
+                    whose value struct lacks a bpf_timer field triggers this rejection.
+                    Fix: wrap bpf_timer in a @Type-annotated struct with a bpf_timer field, and \
+                    use that struct as the map value:
+                      @Type public static class TimerVal { public bpf_timer timer; }
+                      @BPFMapDefinition(maxEntries = 1) BPFHashMap<Integer, TimerVal> timerMap;
+                    The TypeProcessor also catches the bare-value case at compile time (#57).
+                    See: cookbook §Timers""";
+
             case OTHER -> """
                     The verifier rejected the program with a message we do not yet pattern-match.
                     Why: see the verifier message above for the kernel's own explanation.
