@@ -58,6 +58,11 @@ public abstract class SchedulerBase extends BPFProgram implements Scheduler {
      *  {@link #onSchedulerExit(long)}. */
     protected final GlobalVariable<Long> _exitCode = new GlobalVariable<>(0L);
 
+    /** Raw {@code kind} from {@link ScxDefinitions.scx_exit_kind}; populated alongside {@link #_exitCode}.
+     *  Zero means the kernel never called {@code exit()} (SCX_EXIT_NONE); non-zero encodes
+     *  the reason (1=DONE, 64=UNREG, 66=UNREG_KERN, 1024=ERROR, 1026=ERROR_STALL, …). */
+    protected final GlobalVariable<Long> _exitKind = new GlobalVariable<>(0L);
+
     /**
      * Creates the shared DSQ on the local NUMA node.
      * Override to create additional DSQs or pin to a specific node.
@@ -76,6 +81,7 @@ public abstract class SchedulerBase extends BPFProgram implements Scheduler {
     @BPFFunction(headerTemplate = "void BPF_STRUCT_OPS(sched_exit, struct scx_exit_info *ei)", addDefinition = false)
     public void exit(Ptr<ScxDefinitions.scx_exit_info> ei) {
         _exitCode.set(ei.val().exit_code);
+        _exitKind.set((long) ei.val().kind.value());
     }
 
     /**
@@ -97,6 +103,16 @@ public abstract class SchedulerBase extends BPFProgram implements Scheduler {
      */
     public long getExitCode() {
         return _exitCode.get();
+    }
+
+    /**
+     * Returns the raw {@code kind} from {@code scx_exit_info}, populated alongside
+     * {@link #getExitCode()}.  Zero means SCX_EXIT_NONE (the kernel never called
+     * {@code exit()}, typically because we detached ourselves cleanly).
+     * Non-zero encodes the reason: 1=DONE, 64=UNREG, 66=UNREG_KERN, 1024=ERROR, 1026=ERROR_STALL, …
+     */
+    public long getExitKindRaw() {
+        return _exitKind.get();
     }
 
     /**

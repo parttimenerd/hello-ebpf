@@ -1139,7 +1139,7 @@ public interface Scheduler {
     default boolean isSchedulerAttachedProperly() {
         try (BufferedReader reader = new BufferedReader(new FileReader("/sys/kernel/sched_ext/root/ops"))) {
             String line = reader.readLine();
-            return line.equals(getSchedulerName());
+            return getSchedulerName().equals(line);
         } catch (IOException e) {
             return false;
         }

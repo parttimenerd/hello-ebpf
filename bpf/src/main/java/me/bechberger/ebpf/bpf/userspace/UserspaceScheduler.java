@@ -165,10 +165,12 @@ public abstract class UserspaceScheduler {
      */
     private void logExitDiagnostic() {
         long scxExitCode = 0L;
+        long scxExitKind = 0L;
         String schedName = "?";
         String opsContent = "?";
         if (bpfHandle != null) {
             try { scxExitCode = bpfHandle.getExitCode(); } catch (Exception ignored) {}
+            try { scxExitKind = bpfHandle.getExitKindRaw(); } catch (Exception ignored) {}
             try { schedName = bpfHandle.getSchedulerName(); } catch (Exception ignored) {}
         }
         try {
@@ -177,8 +179,8 @@ public abstract class UserspaceScheduler {
         } catch (Exception e) {
             opsContent = "<read-failed: " + e.getClass().getSimpleName() + ">";
         }
-        System.err.printf("[sched] runLoop exited: cause=%s scxExitCode=0x%x schedName=%s opsFile=%s %s%n",
-                exitCause, scxExitCode, schedName, opsContent, formatStats());
+        System.err.printf("[sched] runLoop exited: cause=%s scxExitCode=0x%x scxExitKind=0x%x schedName=%s opsFile=%s %s%n",
+                exitCause, scxExitCode, scxExitKind, schedName, opsContent, formatStats());
     }
 
     /** Ask the run loop to exit at the next batch boundary. Safe from any thread. */
