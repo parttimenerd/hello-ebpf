@@ -72,6 +72,13 @@ lifted from existing pages (or fabricated when no natural bad example exists).
     want to see — not `// TODO`, not `// XXX`, not "obvious from context"
     scratch notes. If a comment is only useful to a developer reading the
     file in isolation, put it outside the `[start:x]/[end:x]` markers.
+11. **External content attribution.** Every mirrored diagram from ebpf.io,
+    docs.ebpf.io, or the maintainer's blog series carries the caption
+    template and lands in `docs/assets/{ebpf-io,blog}/` with a row in the
+    matching `CREDITS.md`. Third-party logos (Cilium, Falco, Linux, LLVM,
+    etc.) are never mirrored — the CC-BY grant covers ebpf.io's own content,
+    not third-party trademarks that happen to appear on the site. Full rules
+    and caption templates are in [`../research/research-external-attribution.md`](../research/research-external-attribution.md).
 
 The style guide also documents the **reader test** review gate borrowed from
 the `doc-coauthoring` skill: for every new page in Spec 2, a fresh subagent
@@ -168,6 +175,36 @@ Mechanics:
    `mkdocs build --strict` step before the deploy in the `docs` job, so
    broken snippets or dead links break the build. This is the only workflow
    change in Spec 1.
+
+## 5a. External-content scaffolding
+
+Spec 2 will mirror diagrams from ebpf.io (CC-BY 4.0) and from the maintainer's
+"Hello eBPF" blog series into `docs/assets/`. Spec 1 lands the empty scaffolding
+so Spec 2 tasks can add rows without also arguing about attribution rules or
+directory layout. Concretely:
+
+1. **`docs/assets/ebpf-io/CREDITS.md`** — stub file with the CC-BY 4.0 preamble
+   and an empty table (headers only). Rows get added by Spec 2 page-authoring
+   tasks as diagrams are mirrored.
+2. **`docs/assets/blog/CREDITS.md`** — stub file for maintainer-blog diagrams,
+   same shape. Blog diagrams are first-party (same author) but source-attributed
+   for provenance.
+3. **`docs/LICENSE-CC-BY-4.0.md`** — full CC-BY 4.0 legalcode, mirrored once so
+   the caption template's license link resolves to a stable in-tree anchor
+   even if `creativecommons.org` restructures its URLs.
+4. **Correction to `docs/index.md`.** Two lines need fixing regardless of Spec 2:
+   - The claim "18-part blog series" is stale — the series has 20 numbered posts
+     plus Part 14.5 (verified 2026-07-01 by fetching Parts 17–20 directly). Fix
+     to "20-part".
+   - The Part 1 link in `docs/index.md` is a hard 404 — the linked slug
+     `writing-ebpf-programs-in-java-with-hello-ebpf-1-hello-world` does not
+     exist. The correct slug is `hello-ebpf-developing-ebpf-apps-in-java-1`.
+
+Full rules for caption templates, CREDITS row shape, filename conventions, and
+the legal-safety checklist are in
+[`../research/research-external-attribution.md`](../research/research-external-attribution.md).
+Spec 2's page-authoring tasks reference that doc directly rather than duplicating
+its content.
 
 ## 6. Target nav
 
@@ -285,6 +322,17 @@ Sites that link to `#anchor` within a moved page: anchors are preserved because 
 - Every runnable code snippet is an `--8<--` include from a real source file.
 - The `_.md` audit tables are ticked to `OK` as content lands; the audit is the completion record.
 - `getting-started/install.md` links out to `bpf-archetype/` as the one-command scaffolding path — the archetype's own README stays authoritative, but the install page treats it as the recommended starting point rather than leaving readers to discover it.
+- **External cross-linking.** Each page-authoring task consults
+  [`../research/research-cornerstone-cross-refs.md`](../research/research-cornerstone-cross-refs.md)
+  for which blog post(s), ebpf.io diagram(s), scx anchor(s), and docs.ebpf.io
+  page(s) belong on that page. The doc's "red line" §1 also drives Spec 2's
+  page-authoring order — pages are written along the arc (observe → stream →
+  filter → govern → compose → decide → extend) rather than nav order, so
+  accumulated framework vocabulary stays consistent.
+- **Sample-drift footnote convention.** Blog Parts 2, 3, 8, 14, and 20
+  reference renamed or removed samples. Spec 2's cross-linking tasks add a
+  one-line footnote of the form: *"In the blog post this sample is called `X`;
+  it is now `Y` in the repo."* — the blog posts themselves are not edited.
 
 **Open questions for Spec 2 (recorded here so they are not lost between specs):**
 
@@ -320,6 +368,9 @@ At the end of Spec 1:
 - [ ] Stubs created for all new pages.
 - [ ] Split pages carved out; `sched_ext.md`, `helpers.md`, `userspace-scheduler.md`, `scheduler-article.md` replaced by shim files at their original paths (§7).
 - [ ] `pymdownx.snippets` wired; one snippet migrated end-to-end as a proof. The current XDP example in `index.md` is a hand-simplified inline class (`DropEveryThird`) with no matching source file, so it is not a viable candidate. The proof-of-life task instead adds `// --8<-- [start:...]/[end:...]` markers to an existing sample under `bpf-samples/src/main/java/me/bechberger/ebpf/samples/demo/` (e.g. `HelloWorld.java` or `XDPDropEveryThirdPacket.java`) and switches one existing doc block to use the include. The task chooses the smallest viable diff.
+- [ ] `docs/assets/ebpf-io/CREDITS.md` and `docs/assets/blog/CREDITS.md` stub files created (headers only, empty tables).
+- [ ] `docs/LICENSE-CC-BY-4.0.md` created with full CC-BY 4.0 legalcode from `creativecommons.org/licenses/by/4.0/legalcode.txt`.
+- [ ] `docs/index.md` corrected: "18-part" → "20-part", Part 1 URL fixed to `hello-ebpf-developing-ebpf-apps-in-java-1`.
 - [ ] `.github/workflows/ci.yml`'s `docs` job gains an explicit `mkdocs build --strict` step before the `mkdocs gh-deploy --force` step. This is the only workflow change in Spec 1.
 - [ ] Local + CI `mkdocs build --strict` both green.
 
@@ -340,7 +391,7 @@ Spec 1 lands as a sequence of commits, not one blob. The plan writer should chun
 
 1. Style guide and preconditions.
 2. Six audit tables (may be split further, one commit per audit is fine; audits can also land in parallel from different subagents since they touch disjoint files).
-3. `pymdownx.snippets` wiring plus the proof-of-life snippet migration.
+3. `pymdownx.snippets` wiring plus the proof-of-life snippet migration. Also lands `docs/assets/{ebpf-io,blog}/CREDITS.md` stubs, `docs/LICENSE-CC-BY-4.0.md`, and the two `docs/index.md` corrections (§5a). These external-content scaffolding items are grouped here because they touch the same `docs/` tree and none of them changes user-visible nav.
 4. New page stubs and split-page carve (files created, but `mkdocs.yml` nav still points at the old paths).
 5. `mkdocs.yml` nav flip (references the new files) and shim files at the old paths.
 6. CI workflow edit (explicit `mkdocs build --strict` step before `gh-deploy`).
