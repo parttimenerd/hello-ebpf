@@ -138,7 +138,25 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
                 bool scx_bpf_dsq_move_vtime(struct bpf_iter_scx_dsq *it__iter, struct task_struct *p, u64 dsq_id, u64 enq_flags) __ksym __weak;
                 bool bpf_cpumask_test_cpu(u32 cpu, const struct cpumask *cpumask) __ksym __weak;
                 u64 scx_bpf_now(void) __ksym __weak;
-                
+
+                /* BPF arena kfuncs. Not declared by libbpf; required for BPFArena users. */
+                void *bpf_arena_alloc_pages(void *map, void *addr, __u32 page_cnt,
+                                            int node_id, __u64 flags) __ksym __weak;
+                void bpf_arena_free_pages(void *map, void *ptr, __u32 page_cnt) __ksym __weak;
+
+                /*
+                 * libbpf <1.4 lacks the __ulong() convenience macro used by BPFArena's
+                 * cTemplate to set map_extra. Provide a fallback that mirrors the
+                 * libbpf 1.4+ definition: emit an anonymous enum with the value bound to
+                 * `name`, so `__ulong(map_extra, X)` becomes a field of the anonymous map
+                 * struct that libbpf's BTF walker picks up as map_extra=X.
+                 */
+                #ifndef __ulong
+                #define ___bpf_ulong_concat(a, b) a##b
+                #define ___bpf_ulong_join(a, b) ___bpf_ulong_concat(a, b)
+                #define __ulong(name, val) enum { ___bpf_ulong_join(__unique_value_, __COUNTER__) = val } name
+                #endif
+
                 #define BPF_STRUCT_OPS(name, args...)						\\
                 SEC("struct_ops/"#name)	BPF_PROG(name, ##args)
                 
