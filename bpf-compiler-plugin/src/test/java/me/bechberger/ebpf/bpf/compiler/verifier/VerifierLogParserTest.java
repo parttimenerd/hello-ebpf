@@ -514,4 +514,38 @@ class VerifierLogParserTest {
                 VerifierLogParser.classify(
                         "addr_space_cast insn can only be used in a program that has an associated arena"));
     }
+
+    // --- INVALID_TIMER_DEFINITION ---
+
+    @Test
+    void bpfTimerAsMapValueClassifiesAsInvalidTimerDefinition() {
+        // Kernel path: map_check_btf rejects a map whose value type is bare bpf_timer.
+        assertEquals(VerifierLogParser.ErrorClass.INVALID_TIMER_DEFINITION,
+                VerifierLogParser.classify(
+                        "bpf_timer is not allowed in map value"));
+    }
+
+    @Test
+    void bpfTimerNotFoundClassifiesAsInvalidTimerDefinition() {
+        // Kernel path: bpf_timer_init helper on a map whose value struct lacks a bpf_timer field.
+        assertEquals(VerifierLogParser.ErrorClass.INVALID_TIMER_DEFINITION,
+                VerifierLogParser.classify(
+                        "map value has no timer"));
+    }
+
+    @Test
+    void bpfTimerNotOwnedClassifiesAsInvalidTimerDefinition() {
+        // Verifier path: check_map_func_compatibility, timer field from a different map.
+        assertEquals(VerifierLogParser.ErrorClass.INVALID_TIMER_DEFINITION,
+                VerifierLogParser.classify(
+                        "bpf_timer field not owned by this map"));
+    }
+
+    @Test
+    void plainBpfTimerMentionWithoutContextIsNotTimerDefinitionError() {
+        // Just seeing "bpf_timer" alone (e.g. in an unrelated helper trace) must not misclassify.
+        assertEquals(VerifierLogParser.ErrorClass.OTHER,
+                VerifierLogParser.classify(
+                        "R1 type=bpf_timer some unrelated message"));
+    }
 }

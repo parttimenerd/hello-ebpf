@@ -66,6 +66,7 @@ public final class VerifierLogParser {
         UNRESOLVED_FUNC,               // call to '...' is not allowed / unknown opcode
         PROGRAM_TOO_LARGE,             // BPF program is too large / processed insn count exceeded
         ARENA_NOT_ASSOCIATED,          // addr_space_cast insn can only be used in a program that has an associated arena
+        INVALID_TIMER_DEFINITION,      // bpf_timer used as bare map value, or missing bpf_timer field where required
         OTHER                          // catch-all
     }
 
@@ -279,6 +280,19 @@ public final class VerifierLogParser {
 
         if (m.contains("addr_space_cast insn can only be used in a program that has an associated arena")) {
             return ErrorClass.ARENA_NOT_ASSOCIATED;
+        }
+
+        // bpf_timer signals from kernel/bpf/btf.c (map_check_btf) and kernel/bpf/verifier.c
+        // (check_map_func_compatibility). The common thread is a mention of "bpf_timer" in an
+        // error context — misusing bpf_timer as a bare map value is the most frequent trigger.
+        if (m.contains("bpf_timer")
+                && (m.contains("map value")
+                    || m.contains("not allowed")
+                    || m.contains("not found")
+                    || m.contains("not owned")
+                    || m.contains("no timer")
+                    || m.contains("expected"))) {
+            return ErrorClass.INVALID_TIMER_DEFINITION;
         }
 
         return ErrorClass.OTHER;
