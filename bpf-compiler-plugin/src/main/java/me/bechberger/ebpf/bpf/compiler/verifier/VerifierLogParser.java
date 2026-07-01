@@ -283,8 +283,9 @@ public final class VerifierLogParser {
         }
 
         // bpf_timer signals from kernel/bpf/btf.c (map_check_btf) and kernel/bpf/verifier.c
-        // (check_map_func_compatibility). The common thread is a mention of "bpf_timer" in an
-        // error context — misusing bpf_timer as a bare map value is the most frequent trigger.
+        // (check_map_func_compatibility). Two shapes: (a) "bpf_timer" plus a context word, and
+        // (b) standalone "no [valid] timer" / "timer field not owned" phrasings the kernel uses
+        // when the value struct lacks a bpf_timer.
         if (m.contains("bpf_timer")
                 && (m.contains("map value")
                     || m.contains("not allowed")
@@ -292,6 +293,11 @@ public final class VerifierLogParser {
                     || m.contains("not owned")
                     || m.contains("no timer")
                     || m.contains("expected"))) {
+            return ErrorClass.INVALID_TIMER_DEFINITION;
+        }
+        if (m.contains("no timer")
+                || m.contains("no valid timer")
+                || (m.contains("timer field") && m.contains("not owned"))) {
             return ErrorClass.INVALID_TIMER_DEFINITION;
         }
 
