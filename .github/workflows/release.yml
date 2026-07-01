@@ -9,7 +9,7 @@ on:
 
 env:
   JAVA_VERSION: '22'
-  JAVA_DISTRO: 'adopt'
+  JAVA_DISTRO: 'temurin'
 
 jobs:
   precheck:
