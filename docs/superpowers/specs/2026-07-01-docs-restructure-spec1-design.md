@@ -65,6 +65,13 @@ lifted from existing pages (or fabricated when no natural bad example exists).
 9. **No emoji. No exclamation marks. Admonitions (`!!! warning`, `!!! note`)
    only for hazards, kernel gates, or "this doc lags the code" warnings —
    never for filler emphasis.**
+10. **Snippet-comment discipline.** Comments inside code regions included via
+    `--8<--` are documentation for two audiences at once: they render in the
+    published docs *and* they sit in a compiled source file. Every comment
+    inside an included region must read as a doc sentence a reader would
+    want to see — not `// TODO`, not `// XXX`, not "obvious from context"
+    scratch notes. If a comment is only useful to a developer reading the
+    file in isolation, put it outside the `[start:x]/[end:x]` markers.
 
 The style guide also documents the **reader test** review gate borrowed from
 the `doc-coauthoring` skill: for every new page in Spec 2, a fresh subagent
@@ -98,9 +105,19 @@ Common table schema for all six audits:
 The six audits, in dependency order so downstream tables can reference upstream anchors. **For each audit, the row set is derived by the audit subagent from a grep sweep of the module — the illustrative lists below are for orientation, not enumeration. The final row set is whatever grep returns.**
 
 1. **`audit-annotations.md`** — every `@` annotation shipped for user code. Row source: `grep -rln '^public.*@interface\|^public @interface' annotations/src/main/java/`. Illustrative (non-exhaustive): `@Unsigned`, `@Size`, `@InArena`, `@Kptr`, `@TrustedPtr`, `@BPFNullable`, `@BoundedBy`, `@Includes`, `@KernelBTF`, `@AllowDirectVal`, `@JavaOnly`, `@SharedFrom`, `@Requires`, `@Properties/@Property`, `@InlineUnion`, `@PassByRef`, `@Offset`, `@Sizes`, `@CustomType`, `@KFunc`, `@BuiltinBPFFunction`, `@BPFAbstraction`, `@BPFJavaInline`, `@BPFFunction`, `@BPFFunctionAlternative`, `@BPFInline`, `@BPFTimer`, `@BPFMapDefinition`, `@BPFMapClass`, `@BPFImpl`, `@BPFInterface`, `@Kprobe/@Kretprobe`, `@Uprobe/@Uretprobe`, `@LSM`, `@Tracepoint/@RawTracepoint`, `@Ksyscall`, `@Fentry/@Fexit`, `@ProgramType`, `@InternalBody`, `@InternalMethodDefinition`, `@MethodIsBPFRelatedFunction`, `@SuppressBPFWarning`, `@NotUsableInJava`, `@OriginalName/@OriginalNames`, `@EnumMember`. If grep finds annotations not in this list (or finds none for names in this list), the grep result wins.
-2. **`audit-bpfj.md`** — every `public static` method in `BPFJ.java`. Row source: `grep -n 'public static' bpf/src/main/java/me/bechberger/ebpf/bpf/BPFJ.java`.
+
+   **Bucketing.** The `Target page` column for annotation rows is `reference/annotations.md` in all cases, but the catalog page itself is organized into five buckets. The audit assigns each row a bucket for downstream ordering:
+
+   - **program-shape** — annotations that identify a hook or program kind: `@Kprobe/@Kretprobe`, `@Uprobe/@Uretprobe`, `@LSM`, `@Tracepoint/@RawTracepoint`, `@Ksyscall`, `@Fentry/@Fexit`, `@ProgramType`, `@Properties/@Property`, `@BPFFunction`, `@BPFInline`, `@BPFTimer`, `@BPFMapDefinition`, `@BPFMapClass`.
+   - **type-system** — annotations that affect type layout or lowering: `@Unsigned`, `@Size`, `@Sizes`, `@Offset`, `@InlineUnion`, `@PassByRef`, `@CustomType`, `@EnumMember`, `@OriginalName/@OriginalNames`.
+   - **pointer-flavour** — annotations that qualify pointer semantics: `@InArena`, `@Kptr`, `@TrustedPtr`, `@BPFNullable`, `@BoundedBy`, `@AllowDirectVal`.
+   - **build/load** — annotations that shape compilation or loading: `@Includes`, `@KernelBTF`, `@Requires`, `@SharedFrom`, `@KFunc`, `@BuiltinBPFFunction`.
+   - **plugin-internal** — annotations users generally do not write: `@BPFImpl`, `@BPFInterface`, `@BPFAbstraction`, `@BPFJavaInline`, `@BPFFunctionAlternative`, `@InternalBody`, `@InternalMethodDefinition`, `@MethodIsBPFRelatedFunction`, `@SuppressBPFWarning`, `@NotUsableInJava`, `@JavaOnly`.
+
+   Buckets are a hint for Spec 2's catalog structure, not a claim of exhaustive membership; grep results override this list.
+2. **`audit-bpfj.md`** — every `public static` method in `BPFJ.java`. Row source: `grep -n 'public static' bpf/src/main/java/me/bechberger/ebpf/bpf/BPFJ.java`. Extra column: **Kernel-facing name** — the C-side helper or kfunc the Java method lowers to (e.g. `bpfArenaAllocPages` → `bpf_arena_alloc_pages`, `bpfProbeReadKernel` → `bpf_probe_read_kernel`). Blank when the Java helper has no direct kernel counterpart (pure Java-side sugar). This column is what eBPF-fluent readers scan first; it also lets Spec 2 emit two lookup axes (Java name and C name) on the catalog page.
 3. **`audit-runtime-api.md`** — public user-facing runtime classes and their primary methods. Row source: enumerate `public class` / `public abstract class` under `bpf/src/main/java/me/bechberger/ebpf/bpf/` and `bpf/src/main/java/me/bechberger/ebpf/bpf/map/` (grep `^public.*class`); one row per class. For classes whose primary surface is a single method (e.g. `BPFHashMap.bpf_get`), add per-method rows underneath. Illustrative surface: `BPFProgram`, `BPFHashMap`, `BPFArray`, `BPFRingBuffer`, `BPFArena`, `BPFPerCpuArray`, `BPFPerCpuHashMap`, `BPFLruHashMap`, `BPFLruPerCpuHashMap`, `BPFQueue`, `BPFStack`, `BPFBloomFilter`, `BPFArrayOfMaps`, `BPFHashOfMaps`, `BPFProgArray`, `GlobalVariable`, `BPFTimer`, `StackSymbolizer`, JFR event types, `TailCall*`, `SchedulerExtension`, `Opts`, `QueuedTask`, `Scheduler`, `UserspaceScheduler`, error classifier public API.
-4. **`audit-hooks.md`** — one row per `SEC(...)` shape the plugin can emit. Row source: `grep -rn 'SEC("' bpf-compiler-plugin/src/main/java/` plus `annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/ProgramType.java` (the ProgramType enum, ~line 44, defines the canonical set). Columns adapted: **Section string**, **Java annotation**, **Min kernel**, **Source (plugin file:line where the section string is chosen)**, **Documented in**, **Gap**, **Target page**.
+4. **`audit-hooks.md`** — one row per `SEC(...)` shape the plugin can emit. Row source: `grep -rn 'SEC("' bpf-compiler-plugin/src/main/java/` plus `annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/ProgramType.java` (the ProgramType enum, ~line 44, defines the canonical set). Columns adapted: **Section string**, **`bpf_prog_type`** (the kernel `BPF_PROG_TYPE_*` enum value the section string maps to; derived from libbpf's `section_defs[]` or kernel `bpf/syscall.c`), **Java annotation**, **Min kernel**, **Source (plugin file:line where the section string is chosen)**, **Documented in**, **Gap**, **Target page**.
 5. **`audit-samples.md`** — every `.java` file under `bpf-samples/src/main/java/me/bechberger/ebpf/samples/`. Row source: `find bpf-samples/src/main/java/me/bechberger/ebpf/samples/ -name '*.java'`. Columns adapted: **Sample**, **Hook types used**, **What it demonstrates (≤ 15 words)**, **Reference-quality? (Y/N)**, **Documented in**, **Target page**. Judgment column: `Reference-quality? = Y` means the sample is small, self-contained, and idiomatic enough that Spec 2 may include it via `--8<--`. Everything else is demo-only.
 6. **`audit-plugin.md`** — user-visible extension points of the compiler plugin, marked `[audience: contributor]`. Row sources: (a) plugin flags — grep `bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/CompilerPlugin.java` for command-line options; (b) error catalog — enumerate `VerifierFixSuggester` classes (grep the file — its path can be located via `grep -rln 'class VerifierFixSuggester' bpf-compiler-plugin/`) and every `Diagnostic.Kind.ERROR` / `WARNING` emission in `bpf-processor/`; (c) code-gen behaviours worth knowing (e.g. `@InArena` deref → `addr_space_cast`, `@Trusted` handling, `@BPFAbstraction` lowering, `.rodata` for `final` globals). One row per user-observable behaviour.
 
@@ -267,6 +284,13 @@ Sites that link to `#anchor` within a moved page: anchors are preserved because 
 - Every new / rewritten page passes the style guide (§3) and the reader-test gate.
 - Every runnable code snippet is an `--8<--` include from a real source file.
 - The `_.md` audit tables are ticked to `OK` as content lands; the audit is the completion record.
+- `getting-started/install.md` links out to `bpf-archetype/` as the one-command scaffolding path — the archetype's own README stays authoritative, but the install page treats it as the recommended starting point rather than leaving readers to discover it.
+
+**Open questions for Spec 2 (recorded here so they are not lost between specs):**
+
+- **Verifier-features matrix refresh.** `feature-matrix.md` predates several 6.14–6.17 kernel changes (arena support, updated `bpf_link` semantics, sched_ext maturation). Spec 2 refreshes the matrix against 6.17 and adds one row per verifier feature the framework depends on, with the kernel version it landed in.
+- **Generated-C reference page.** The framework's most useful debugging output for eBPF-fluent readers is the generated `.bpf.c` file the plugin emits. Spec 2 evaluates whether this warrants its own reference page (how to enable, how to read, common patterns to look for) versus a section inside `architecture/plugin.md`.
+- **CO-RE / BTF coverage page.** CO-RE and BTF are load-bearing for cross-kernel portability but are not currently documented as such. Spec 2 decides whether they get a dedicated page under Reference or a section inside `getting-started/how-it-works.md`.
 
 Spec 2 sequences work by audience priority: Getting Started + hero Guides (audience 1) → sched_ext (audience 3) → Reference (audience 2) → Architecture (audience 4). Samples index straddles audiences 1 and 2 and lands mid-sequence.
 
@@ -307,6 +331,7 @@ At the end of Spec 1:
 - Migrating any snippet other than the one proof-of-life snippet named in §10.
 - The archetype (`bpf-archetype/`) — its own README stays authoritative.
 - Javadoc rewrites (the audit will flag `TODO:javadoc` rows; fixing them is Spec 2 work).
+- **Publishing Javadoc HTML.** Whether to build and host generated Javadoc alongside the mkdocs site is a separate spec. Spec 1 audits Javadoc *presence* (via the `Purpose` column and `TODO:javadoc` markers), Spec 2 rewrites missing/wrong Javadoc, but neither spec touches the Maven `javadoc` plugin config or the site-publishing pipeline for Javadoc.
 - Any changes to `README.md`.
 
 ## 12. Commit granularity
