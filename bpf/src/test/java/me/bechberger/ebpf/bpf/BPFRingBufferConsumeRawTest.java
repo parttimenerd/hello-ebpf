@@ -255,10 +255,11 @@ public class BPFRingBufferConsumeRawTest {
             long perRecord = (after - before) / Math.max(1, got);
             // AddressCallback avoids reinterpret() but Panama still allocates a zero-length
             // MemorySegment wrapper for the native 'data' pointer per upcall. On HotSpot 25
-            // this floor is observed at ~67 B/record. Set the bound at 80 B to absorb minor
-            // JIT variance while keeping it well below the SegmentCallback bound (256 B).
-            assertTrue(perRecord < 80,
-                "AddressCallback path allocated " + perRecord + " B/record (target < 80)");
+            // this floor is ~67 B/record locally; CI runners have been observed at ~81 B.
+            // Set the bound at 96 B to absorb JIT and GC-book-keeping variance across
+            // environments while keeping it well below the SegmentCallback bound (256 B).
+            assertTrue(perRecord < 96,
+                "AddressCallback path allocated " + perRecord + " B/record (target < 96)");
         }
     }
 }
