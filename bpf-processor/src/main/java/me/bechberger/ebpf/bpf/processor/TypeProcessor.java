@@ -57,6 +57,8 @@ public class TypeProcessor {
     public final static String BPF_MAP_DEFINITION = "me.bechberger.ebpf.annotations.bpf.BPFMapDefinition";
     public final static String SHARED_FROM_ANNOTATION = "me.bechberger.ebpf.annotations.bpf.SharedFrom";
     public final static String BPF_MAP_CLASS = "me.bechberger.ebpf.annotations.bpf.BPFMapClass";
+    public final static String BPF_TAIL_CALL_TABLE = "me.bechberger.ebpf.annotations.bpf.BPFTailCallTable";
+    public final static String TAIL_CALL_SLOT = "me.bechberger.ebpf.annotations.bpf.TailCallSlot";
 
     private final ProcessingEnvironment processingEnv;
     private final boolean allowUnsizedStrings;
@@ -224,13 +226,14 @@ public class TypeProcessor {
                                @Nullable Statement licenseDefinition, List<MapDefinition> mapDefinitions,
                                List<GlobalVariableDefinition> globalVariableDefinitions, InterfaceAdditions additions,
                                Map<String, List<String>> abstractionFieldPrologues,
-                               Map<String, String> abstractionFieldCarriers) {
+                               Map<String, String> abstractionFieldCarriers,
+                               List<TailCallTableInfo> tailCallTables) {
         /** Back-compat constructor for call-sites that don't supply abstractionFieldPrologues/Carriers. */
         public TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements,
                                    @Nullable Statement licenseDefinition, List<MapDefinition> mapDefinitions,
                                    List<GlobalVariableDefinition> globalVariableDefinitions, InterfaceAdditions additions) {
             this(fields, defines, definingStatements, licenseDefinition, mapDefinitions, globalVariableDefinitions,
-                    additions, Map.of(), Map.of());
+                    additions, Map.of(), Map.of(), List.of());
         }
         /** Back-compat constructor without carriers. */
         public TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements,
@@ -238,7 +241,16 @@ public class TypeProcessor {
                                    List<GlobalVariableDefinition> globalVariableDefinitions, InterfaceAdditions additions,
                                    Map<String, List<String>> abstractionFieldPrologues) {
             this(fields, defines, definingStatements, licenseDefinition, mapDefinitions, globalVariableDefinitions,
-                    additions, abstractionFieldPrologues, Map.of());
+                    additions, abstractionFieldPrologues, Map.of(), List.of());
+        }
+        /** Back-compat constructor without tail-call tables. */
+        public TypeProcessorResult(List<FieldSpec> fields, List<Define> defines, List<CAST.Statement> definingStatements,
+                                   @Nullable Statement licenseDefinition, List<MapDefinition> mapDefinitions,
+                                   List<GlobalVariableDefinition> globalVariableDefinitions, InterfaceAdditions additions,
+                                   Map<String, List<String>> abstractionFieldPrologues,
+                                   Map<String, String> abstractionFieldCarriers) {
+            this(fields, defines, definingStatements, licenseDefinition, mapDefinitions, globalVariableDefinitions,
+                    additions, abstractionFieldPrologues, abstractionFieldCarriers, List.of());
         }
     }
 
@@ -293,6 +305,8 @@ public class TypeProcessor {
                 field -> getBPFTypeForJavaName(definedTypes.bpfNameToName(definedTypes.specFieldNameToName(field))),
                 type -> definedTypes.getSpecFieldName(type.getBPFName()).get());
 
+        var tailCallTables = processTailCallTables(outerTypeElement, mapDefinitions);
+
         var globals = createGlobalVariableDefinitions(outerTypeElement, typeToSpecField);
 
         var defines = createDefineStatements(outerTypeElement);
@@ -332,7 +346,8 @@ public class TypeProcessor {
                 globals,
                 additions,
                 abstractionResult.prologues(),
-                abstractionResult.carriers());
+                abstractionResult.carriers(),
+                tailCallTables);
     }
 
     private static final String IN_ARENA_ANNOTATION = "me.bechberger.ebpf.annotations.InArena";
@@ -1450,6 +1465,138 @@ public class TypeProcessor {
         return outerElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e)
                 .filter(e -> getAnnotationMirror(e.asType(), BPF_MAP_DEFINITION).isPresent())
                 .map(f -> processMapDefiningField(f, fieldToType, typeToSpecFieldName)).filter(Objects::nonNull).toList();
+    }
+
+    /**
+     * Discover {@code @BPFTailCallTable} fields on {@code outerElement} and match
+     * every {@code @TailCallSlot}-annotated method against them. Emits compile-time
+     * errors on any inconsistency and returns the successfully validated tables.
+     * Called after {@link #processDefinedMaps} so we can cross-check that each
+     * table field also carries {@code @BPFMapDefinition}.
+     */
+    List<TailCallTableInfo> processTailCallTables(TypeElement outerElement,
+                                                  List<MapDefinition> alreadyKnownMaps) {
+        var messager = this.processingEnv.getMessager();
+        var typeUtil = this.processingEnv.getTypeUtils();
+
+        // fieldName -> mutable info accumulator
+        var tables = new LinkedHashMap<String, TailCallTableInfo>();
+
+        // 1. Find every field carrying @BPFTailCallTable and validate its shape.
+        for (var enc : outerElement.getEnclosedElements()) {
+            if (enc.getKind() != ElementKind.FIELD) continue;
+            VariableElement vf = (VariableElement) enc;
+            var tblAnn = getAnnotationMirror(vf, BPF_TAIL_CALL_TABLE);
+            if (tblAnn.isEmpty()) continue;
+
+            String fieldName = vf.getSimpleName().toString();
+
+            // 1a. Must be BPFProgArray.
+            TypeMirror fieldType = vf.asType();
+            String fieldTypeStr = typeUtil.erasure(fieldType).toString();
+            if (!fieldTypeStr.equals("me.bechberger.ebpf.bpf.map.BPFProgArray")) {
+                messager.printError("@BPFTailCallTable only applies to BPFProgArray fields — "
+                        + "found " + fieldTypeStr, vf);
+                continue;
+            }
+
+            // 1b. Must have @BPFMapDefinition on the same field.
+            boolean hasMapDef = alreadyKnownMaps.stream()
+                    .anyMatch(m -> m.javaFieldName().equals(fieldName));
+            if (!hasMapDef) {
+                messager.printError("@BPFTailCallTable requires @BPFMapDefinition on the same "
+                        + "field '" + fieldName + "' — the map must be declared to be discovered", vf);
+                continue;
+            }
+
+            // 1c. Extract the slots enum and its constants.
+            TypeMirror slotsMirror = getAnnotationValue(tblAnn.get(), "slots", (TypeMirror) null);
+            if (!(slotsMirror instanceof DeclaredType slotsDecl)) {
+                messager.printError("@BPFTailCallTable.slots() must be a Class literal", vf);
+                continue;
+            }
+            TypeElement slotEnum = (TypeElement) slotsDecl.asElement();
+            if (slotEnum.getKind() != ElementKind.ENUM) {
+                messager.printError("@BPFTailCallTable.slots() must reference an enum type — "
+                        + slotEnum.getQualifiedName() + " is not an enum", vf);
+                continue;
+            }
+            var slotNames = slotEnum.getEnclosedElements().stream()
+                    .filter(e -> e.getKind() == ElementKind.ENUM_CONSTANT)
+                    .map(e -> e.getSimpleName().toString())
+                    .toList();
+            if (slotNames.isEmpty()) {
+                messager.printError("@BPFTailCallTable.slots() enum "
+                        + slotEnum.getQualifiedName() + " has no constants", vf);
+                continue;
+            }
+
+            // 1d. maxEntries must equal slotNames.size(). @BPFMapDefinition is @Target(TYPE_USE),
+            //     so it sits on the field's type, not on vf itself.
+            var mapDefAnn = getAnnotationMirror(vf.asType(), BPF_MAP_DEFINITION).orElse(null);
+            if (mapDefAnn != null) {
+                int maxEntries = getAnnotationValue(mapDefAnn, "maxEntries", 0);
+                if (maxEntries != slotNames.size()) {
+                    messager.printError("@BPFTailCallTable slots enum has " + slotNames.size()
+                            + " constant(s) but @BPFMapDefinition(maxEntries=" + maxEntries
+                            + ") disagrees — set maxEntries = " + slotNames.size(), vf);
+                    continue;
+                }
+            }
+
+            tables.put(fieldName, new TailCallTableInfo(
+                    fieldName,
+                    slotEnum.getQualifiedName().toString(),
+                    slotNames,
+                    new ArrayList<>()));
+        }
+
+        // 2. Match every @TailCallSlot method against the discovered tables.
+        boolean multipleTables = tables.size() > 1;
+        for (var enc : outerElement.getEnclosedElements()) {
+            if (enc.getKind() != ElementKind.METHOD) continue;
+            ExecutableElement me = (ExecutableElement) enc;
+            var slotAnn = getAnnotationMirror(me, TAIL_CALL_SLOT);
+            if (slotAnn.isEmpty()) continue;
+
+            String slotConstant = getAnnotationValue(slotAnn.get(), "value", "");
+            String requestedTable = getAnnotationValue(slotAnn.get(), "table", "");
+
+            TailCallTableInfo target;
+            if (!requestedTable.isEmpty()) {
+                target = tables.get(requestedTable);
+                if (target == null) {
+                    messager.printError("@TailCallSlot(table=\"" + requestedTable
+                            + "\") — no @BPFTailCallTable field with that name. "
+                            + "Known tables: " + tables.keySet(), me);
+                    continue;
+                }
+            } else if (tables.size() == 1) {
+                target = tables.values().iterator().next();
+            } else if (multipleTables) {
+                messager.printError("@TailCallSlot without table=\"...\" but this class declares "
+                        + tables.size() + " @BPFTailCallTable fields: " + tables.keySet()
+                        + " — disambiguate with table=\"<fieldName>\"", me);
+                continue;
+            } else {
+                messager.printError("@TailCallSlot on method '" + me.getSimpleName()
+                        + "' but no @BPFTailCallTable field found in this class", me);
+                continue;
+            }
+
+            int ordinal = target.slotNames().indexOf(slotConstant);
+            if (ordinal < 0) {
+                messager.printError("@TailCallSlot(\"" + slotConstant
+                        + "\") — no such constant in enum " + target.slotEnumFqn()
+                        + ". Known: " + target.slotNames(), me);
+                continue;
+            }
+
+            target.registrations().add(new TailCallTableInfo.Registration(
+                    me.getSimpleName().toString(), slotConstant, ordinal));
+        }
+
+        return List.copyOf(tables.values());
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
