@@ -924,6 +924,94 @@ public abstract class BPFProgram implements AutoCloseable {
         return attachKProbe(prog, symbol, false);
     }
 
+    /**
+     * Package-visible validator shared by {@link #attachKProbeMulti} and
+     * {@link #attachUprobeMulti}. Extracted so unit tests can drive it without
+     * loading a real BPF program.
+     */
+    static void validateMultiArrays(String[] symbols, long[] cookies) {
+        if (symbols == null || symbols.length == 0) {
+            throw new IllegalArgumentException("multi attach requires at least one symbol");
+        }
+        if (cookies != null && cookies.length != symbols.length) {
+            throw new IllegalArgumentException(
+                    "cookies.length (" + cookies.length +
+                    ") must equal symbols.length (" + symbols.length + ")");
+        }
+    }
+
+    /**
+     * Attach a single BPF program to many kernel symbols in one syscall via
+     * libbpf's {@code bpf_program__attach_kprobe_multi_opts}.
+     *
+     * <p>The BPF program must be compiled with a {@code SEC("kprobe.multi/...")}
+     * or {@code SEC("kretprobe.multi/...")} section (see
+     * {@link me.bechberger.ebpf.annotations.bpf.KProbeMulti}).
+     *
+     * <p>Per-symbol {@code cookies} let one BPF program disambiguate which
+     * symbol fired; retrieve inside the program via
+     * {@link BPFJ#bpf_get_attach_cookie(me.bechberger.ebpf.type.Ptr)}.
+     *
+     * <p>Requires kernel &ge; 5.18. On older kernels this method throws
+     * {@link BPFLoadError.UnsupportedKernel} before touching libbpf.
+     *
+     * @param prog     the program to attach
+     * @param symbols  kernel symbols to trace (at least one)
+     * @param cookies  per-symbol cookies. Must be either {@code null} (no
+     *                 cookies) or the same length as {@code symbols}.
+     * @param retprobe {@code true} to attach on function return
+     * @return the single {@link BPFLink} covering all attachments
+     * @throws BPFAttachError if libbpf rejects the attach
+     */
+    public BPFLink attachKProbeMulti(ProgramHandle prog, String[] symbols,
+                                     long[] cookies, boolean retprobe) {
+        validateMultiArrays(symbols, cookies);
+        if (!me.bechberger.ebpf.bpf.features.Features.hasAttachType(
+                me.bechberger.ebpf.bpf.features.BPFAttachType.TRACE_KPROBE_MULTI)) {
+            throw new BPFLoadError.UnsupportedKernel(
+                    "attach_type TRACE_KPROBE_MULTI", "5.18");
+        }
+        try (Arena arena = Arena.ofConfined()) {
+            var symsArr = arena.allocate(PanamaUtil.POINTER, symbols.length);
+            for (int i = 0; i < symbols.length; i++) {
+                symsArr.setAtIndex(PanamaUtil.POINTER, i, arena.allocateFrom(symbols[i]));
+            }
+            MemorySegment cookiesArr = MemorySegment.NULL;
+            if (cookies != null) {
+                cookiesArr = arena.allocate(JAVA_LONG, cookies.length);
+                for (int i = 0; i < cookies.length; i++) {
+                    cookiesArr.setAtIndex(JAVA_LONG, i, cookies[i]);
+                }
+            }
+
+            var opts = arena.allocate(KPROBE_MULTI_OPTS_LAYOUT);
+            opts.set(JAVA_LONG,          0,  KPROBE_MULTI_OPTS_LAYOUT.byteSize()); // sz
+            opts.set(PanamaUtil.POINTER, 8,  symsArr);                             // syms
+            opts.set(PanamaUtil.POINTER, 16, MemorySegment.NULL);                  // addrs
+            opts.set(PanamaUtil.POINTER, 24, cookiesArr);                          // cookies
+            opts.set(JAVA_LONG,          32, (long) symbols.length);               // cnt
+            opts.set(JAVA_BOOLEAN,       40, retprobe);                            // retprobe
+            opts.set(JAVA_BOOLEAN,       41, false);                               // session
+            opts.set(JAVA_BOOLEAN,       42, false);                               // unique_match
+
+            var ret = BPF_PROGRAM__ATTACH_KPROBE_MULTI_OPTS.call(
+                    prog.prog(),
+                    MemorySegment.NULL /* pattern; syms takes precedence */,
+                    opts);
+            if (ret.result() == MemorySegment.NULL) {
+                throw new BPFAttachError(prog.name +
+                        " (kprobe.multi over " + symbols.length + " symbols)",
+                        ret.err());
+            }
+            var link = new BPFLink(ret.result());
+            if (link.segment.address() == 0) {
+                throw new BPFAttachError(prog.name, ret.err());
+            }
+            attachedPrograms.add(link);
+            return link;
+        }
+    }
+
     // -----------------------------------------------------------------------
     // uprobe / uretprobe — dynamic attachment to user-space function symbols
     // -----------------------------------------------------------------------
