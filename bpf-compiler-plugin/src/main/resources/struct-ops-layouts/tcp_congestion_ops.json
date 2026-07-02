@@ -1,0 +1,221 @@
+{
+  "kernelName": "tcp_congestion_ops",
+  "since": "5.6",
+  "fields": [
+    {
+      "name": "ssthresh",
+      "kind": "function",
+      "returnType": "u32",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sock *"
+        }
+      ]
+    },
+    {
+      "name": "cong_avoid",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sock *"
+        },
+        {
+          "name": "arg1",
+          "type": "u32"
+        },
+        {
+          "name": "arg2",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "set_state",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sock *"
+        },
+        {
+          "name": "arg1",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "cwnd_event",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sock *"
+        },
+        {
+          "name": "arg1",
+          "type": "enum tcp_ca_event"
+        }
+      ]
+    },
+    {
+      "name": "in_ack_event",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sock *"
+        },
+        {
+          "name": "arg1",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "pkts_acked",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sock *"
+        },
+        {
+          "name": "arg1",
+          "type": "const struct ack_sample *"
+        }
+      ]
+    },
+    {
+      "name": "min_tso_segs",
+      "kind": "function",
+      "returnType": "u32",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sock *"
+        }
+      ]
+    },
+    {
+      "name": "cong_control",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sock *"
+        },
+        {
+          "name": "arg1",
+          "type": "u32"
+        },
+        {
+          "name": "arg2",
+          "type": "int"
+        },
+        {
+          "name": "arg3",
+          "type": "const struct rate_sample *"
+        }
+      ]
+    },
+    {
+      "name": "undo_cwnd",
+      "kind": "function",
+      "returnType": "u32",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sock *"
+        }
+      ]
+    },
+    {
+      "name": "sndbuf_expand",
+      "kind": "function",
+      "returnType": "u32",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sock *"
+        }
+      ]
+    },
+    {
+      "name": "get_info",
+      "kind": "function",
+      "returnType": "size_t",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sock *"
+        },
+        {
+          "name": "arg1",
+          "type": "u32"
+        },
+        {
+          "name": "arg2",
+          "type": "int *"
+        },
+        {
+          "name": "arg3",
+          "type": "union tcp_cc_info *"
+        }
+      ]
+    },
+    {
+      "name": "name",
+      "kind": "data",
+      "returnType": "char[16]",
+      "args": []
+    },
+    {
+      "name": "list",
+      "kind": "data",
+      "returnType": "struct list_head",
+      "args": []
+    },
+    {
+      "name": "key",
+      "kind": "data",
+      "returnType": "u32",
+      "args": []
+    },
+    {
+      "name": "flags",
+      "kind": "data",
+      "returnType": "u32",
+      "args": []
+    },
+    {
+      "name": "init",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sock *"
+        }
+      ]
+    },
+    {
+      "name": "release",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sock *"
+        }
+      ]
+    }
+  ]
+}

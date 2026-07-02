@@ -1,0 +1,248 @@
+{
+  "kernelName": "Qdisc_ops",
+  "since": "6.10",
+  "fields": [
+    {
+      "name": "id",
+      "kind": "data",
+      "returnType": "char[16]",
+      "args": []
+    },
+    {
+      "name": "priv_size",
+      "kind": "data",
+      "returnType": "int",
+      "args": []
+    },
+    {
+      "name": "static_flags",
+      "kind": "data",
+      "returnType": "unsigned int",
+      "args": []
+    },
+    {
+      "name": "enqueue",
+      "kind": "function",
+      "returnType": "int",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct sk_buff *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct Qdisc *"
+        },
+        {
+          "name": "arg2",
+          "type": "struct sk_buff **"
+        }
+      ]
+    },
+    {
+      "name": "dequeue",
+      "kind": "function",
+      "returnType": "struct sk_buff *",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        }
+      ]
+    },
+    {
+      "name": "peek",
+      "kind": "function",
+      "returnType": "struct sk_buff *",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        }
+      ]
+    },
+    {
+      "name": "init",
+      "kind": "function",
+      "returnType": "int",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct nlattr *"
+        },
+        {
+          "name": "arg2",
+          "type": "struct netlink_ext_ack *"
+        }
+      ]
+    },
+    {
+      "name": "reset",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        }
+      ]
+    },
+    {
+      "name": "destroy",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        }
+      ]
+    },
+    {
+      "name": "change",
+      "kind": "function",
+      "returnType": "int",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct nlattr *"
+        },
+        {
+          "name": "arg2",
+          "type": "struct netlink_ext_ack *"
+        }
+      ]
+    },
+    {
+      "name": "attach",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        }
+      ]
+    },
+    {
+      "name": "change_tx_queue_len",
+      "kind": "function",
+      "returnType": "int",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        },
+        {
+          "name": "arg1",
+          "type": "unsigned int"
+        }
+      ]
+    },
+    {
+      "name": "change_real_num_tx",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        },
+        {
+          "name": "arg1",
+          "type": "unsigned int"
+        }
+      ]
+    },
+    {
+      "name": "dump",
+      "kind": "function",
+      "returnType": "int",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct sk_buff *"
+        }
+      ]
+    },
+    {
+      "name": "dump_stats",
+      "kind": "function",
+      "returnType": "int",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct gnet_dump *"
+        }
+      ]
+    },
+    {
+      "name": "ingress_block_set",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        },
+        {
+          "name": "arg1",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "egress_block_set",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        },
+        {
+          "name": "arg1",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "ingress_block_get",
+      "kind": "function",
+      "returnType": "u32",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        }
+      ]
+    },
+    {
+      "name": "egress_block_get",
+      "kind": "function",
+      "returnType": "u32",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct Qdisc *"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "kernelName": "hid_bpf_ops",
+  "since": "6.11",
+  "fields": [
+    {
+      "name": "hid_id",
+      "kind": "data",
+      "returnType": "int",
+      "args": []
+    },
+    {
+      "name": "flags",
+      "kind": "data",
+      "returnType": "u32",
+      "args": []
+    },
+    {
+      "name": "list",
+      "kind": "data",
+      "returnType": "struct list_head",
+      "args": []
+    },
+    {
+      "name": "hid_device_event",
+      "kind": "function",
+      "returnType": "int",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct hid_bpf_ctx *"
+        },
+        {
+          "name": "arg1",
+          "type": "enum hid_report_type"
+        },
+        {
+          "name": "arg2",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "hid_rdesc_fixup",
+      "kind": "function",
+      "returnType": "int",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct hid_bpf_ctx *"
+        }
+      ]
+    },
+    {
+      "name": "hid_hw_request",
+      "kind": "function",
+      "returnType": "int",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct hid_bpf_ctx *"
+        },
+        {
+          "name": "arg1",
+          "type": "unsigned char"
+        },
+        {
+          "name": "arg2",
+          "type": "enum hid_report_type"
+        },
+        {
+          "name": "arg3",
+          "type": "enum hid_class_request"
+        },
+        {
+          "name": "arg4",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "hid_hw_output_report",
+      "kind": "function",
+      "returnType": "int",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct hid_bpf_ctx *"
+        },
+        {
+          "name": "arg1",
+          "type": "u64"
+        }
+      ]
+    }
+  ]
+}

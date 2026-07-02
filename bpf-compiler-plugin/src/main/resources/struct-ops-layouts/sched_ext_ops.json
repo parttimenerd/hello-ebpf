@@ -1,0 +1,535 @@
+{
+  "kernelName": "sched_ext_ops",
+  "since": "6.12",
+  "fields": [
+    {
+      "name": "select_cpu",
+      "kind": "function",
+      "returnType": "s32",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "s32"
+        },
+        {
+          "name": "arg2",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "enqueue",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "dequeue",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "dispatch",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "s32"
+        },
+        {
+          "name": "arg1",
+          "type": "struct task_struct *"
+        }
+      ]
+    },
+    {
+      "name": "tick",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        }
+      ]
+    },
+    {
+      "name": "runnable",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "running",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        }
+      ]
+    },
+    {
+      "name": "stopping",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "quiescent",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "yield",
+      "kind": "function",
+      "returnType": "bool",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct task_struct *"
+        }
+      ]
+    },
+    {
+      "name": "core_sched_before",
+      "kind": "function",
+      "returnType": "bool",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct task_struct *"
+        }
+      ]
+    },
+    {
+      "name": "set_weight",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "set_cpumask",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "const struct cpumask *"
+        }
+      ]
+    },
+    {
+      "name": "update_idle",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "s32"
+        },
+        {
+          "name": "arg1",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "cpu_acquire",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "s32"
+        },
+        {
+          "name": "arg1",
+          "type": "struct scx_cpu_acquire_args *"
+        }
+      ]
+    },
+    {
+      "name": "cpu_release",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "s32"
+        },
+        {
+          "name": "arg1",
+          "type": "struct scx_cpu_release_args *"
+        }
+      ]
+    },
+    {
+      "name": "init_task",
+      "kind": "function",
+      "returnType": "s32",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct scx_init_task_args *"
+        }
+      ]
+    },
+    {
+      "name": "exit_task",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct scx_exit_task_args *"
+        }
+      ]
+    },
+    {
+      "name": "enable",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        }
+      ]
+    },
+    {
+      "name": "disable",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        }
+      ]
+    },
+    {
+      "name": "dump",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct scx_dump_ctx *"
+        }
+      ]
+    },
+    {
+      "name": "dump_cpu",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct scx_dump_ctx *"
+        },
+        {
+          "name": "arg1",
+          "type": "s32"
+        },
+        {
+          "name": "arg2",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "dump_task",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct scx_dump_ctx *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct task_struct *"
+        }
+      ]
+    },
+    {
+      "name": "cgroup_init",
+      "kind": "function",
+      "returnType": "s32",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct cgroup *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct scx_cgroup_init_args *"
+        }
+      ]
+    },
+    {
+      "name": "cgroup_exit",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct cgroup *"
+        }
+      ]
+    },
+    {
+      "name": "cgroup_prep_move",
+      "kind": "function",
+      "returnType": "s32",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct cgroup *"
+        },
+        {
+          "name": "arg2",
+          "type": "struct cgroup *"
+        }
+      ]
+    },
+    {
+      "name": "cgroup_move",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct cgroup *"
+        },
+        {
+          "name": "arg2",
+          "type": "struct cgroup *"
+        }
+      ]
+    },
+    {
+      "name": "cgroup_cancel_move",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct task_struct *"
+        },
+        {
+          "name": "arg1",
+          "type": "struct cgroup *"
+        },
+        {
+          "name": "arg2",
+          "type": "struct cgroup *"
+        }
+      ]
+    },
+    {
+      "name": "cgroup_set_weight",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct cgroup *"
+        },
+        {
+          "name": "arg1",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "cgroup_set_bandwidth",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct cgroup *"
+        },
+        {
+          "name": "arg1",
+          "type": "u64"
+        },
+        {
+          "name": "arg2",
+          "type": "u64"
+        },
+        {
+          "name": "arg3",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "cpu_online",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "s32"
+        }
+      ]
+    },
+    {
+      "name": "cpu_offline",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "s32"
+        }
+      ]
+    },
+    {
+      "name": "init",
+      "kind": "function",
+      "returnType": "s32",
+      "args": []
+    },
+    {
+      "name": "exit",
+      "kind": "function",
+      "returnType": "void",
+      "args": [
+        {
+          "name": "arg0",
+          "type": "struct scx_exit_info *"
+        }
+      ]
+    },
+    {
+      "name": "dispatch_max_batch",
+      "kind": "data",
+      "returnType": "u32",
+      "args": []
+    },
+    {
+      "name": "flags",
+      "kind": "data",
+      "returnType": "u64",
+      "args": []
+    },
+    {
+      "name": "timeout_ms",
+      "kind": "data",
+      "returnType": "u32",
+      "args": []
+    },
+    {
+      "name": "exit_dump_len",
+      "kind": "data",
+      "returnType": "u32",
+      "args": []
+    },
+    {
+      "name": "hotplug_seq",
+      "kind": "data",
+      "returnType": "u64",
+      "args": []
+    },
+    {
+      "name": "name",
+      "kind": "data",
+      "returnType": "char[128]",
+      "args": []
+    }
+  ]
+}
