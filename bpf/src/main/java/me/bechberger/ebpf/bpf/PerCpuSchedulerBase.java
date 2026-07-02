@@ -3,7 +3,6 @@ package me.bechberger.ebpf.bpf;
 
 import me.bechberger.ebpf.annotations.BoundedBy;
 import me.bechberger.ebpf.annotations.Unsigned;
-import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.annotations.bpf.BuiltinBPFFunction;
 import me.bechberger.ebpf.bpf.sched.DispatchQueue;
 import me.bechberger.ebpf.bpf.sched.EnqFlags;
@@ -60,7 +59,7 @@ public abstract class PerCpuSchedulerBase extends SchedulerBase {
      * Creates the shared DSQ and one per-CPU DSQ for each logical CPU.
      */
     @Override
-    @BPFFunction(headerTemplate = "s32 BPF_STRUCT_OPS_SLEEPABLE(sched_init)", addDefinition = false)
+    @me.bechberger.ebpf.annotations.bpf.Sleepable
     public int init() {
         int ret = scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
         if (ret < 0) return ret;
@@ -78,7 +77,6 @@ public abstract class PerCpuSchedulerBase extends SchedulerBase {
      * without dispatching anything — the kernel will call again.
      */
     @Override
-    @BPFFunction(headerTemplate = "void BPF_STRUCT_OPS(sched_dispatch, s32 cpu, struct task_struct *prev)", addDefinition = false)
     public void dispatch(int cpu, Ptr<task_struct> prev) {
         if (!DispatchQueue.attach(PER_CPU_DSQ_BASE + cpu).moveToLocal()) {
             DispatchQueue.attach(SHARED_DSQ_ID).moveToLocal();

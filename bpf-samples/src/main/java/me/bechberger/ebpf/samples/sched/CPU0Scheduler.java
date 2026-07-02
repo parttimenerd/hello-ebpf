@@ -50,6 +50,7 @@ public abstract class CPU0Scheduler extends BPFProgram implements Scheduler {
     final DispatchQueue cpu0 = new DispatchQueue(CPU0_DSQ_ID);
 
     @Override
+    @me.bechberger.ebpf.annotations.bpf.Sleepable
     public int init() {
         // scx_bpf_create_dsq(CPU0_DSQ_ID, -1) is injected before this line
         // by the compiler plugin (from the DispatchQueue field initializer above).

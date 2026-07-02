@@ -534,8 +534,8 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
      * generated {@code sched_init} body — so we must NOT call it again here.
      */
     @Override
+    @me.bechberger.ebpf.annotations.bpf.Sleepable
     public int init() {
-        // Create the shared DSQ.  The framework DSQ is already created by the
         // auto-injected @BPFAbstraction constructor code for `framework`.
         int rc = scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
         if (rc != 0) return rc;

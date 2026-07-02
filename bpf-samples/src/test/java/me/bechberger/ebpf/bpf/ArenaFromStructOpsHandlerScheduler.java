@@ -46,6 +46,7 @@ public abstract class ArenaFromStructOpsHandlerScheduler extends SchedulerBase i
     final DispatchQueue shared = DispatchQueue.attach(SHARED_DSQ_ID);
 
     @Override
+    @me.bechberger.ebpf.annotations.bpf.Sleepable
     public int init() {
         int rc = scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
         if (rc != 0) return rc;

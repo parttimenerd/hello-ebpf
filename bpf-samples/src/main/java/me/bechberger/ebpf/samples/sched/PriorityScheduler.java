@@ -70,6 +70,7 @@ public abstract class PriorityScheduler extends BPFProgram implements Scheduler 
     }
 
     @Override
+    @me.bechberger.ebpf.annotations.bpf.Sleepable
     public int init() {
         // DSQs 0-4 are created in a loop; DispatchQueue.attach() wraps them for insert/dispatch.
         for (int i = 0; i < NUM_QUEUES; i++) {

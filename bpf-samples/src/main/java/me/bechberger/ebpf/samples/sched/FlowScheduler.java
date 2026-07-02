@@ -292,6 +292,7 @@ public abstract class FlowScheduler extends BPFProgram implements Scheduler {
     // -------------------------------------------------------------------------
 
     @Override
+    @me.bechberger.ebpf.annotations.bpf.Sleepable
     public int init() {
         long nrCpuIds = scx_bpf_nr_cpu_ids();
         for (@BoundedBy(MAX_CPUS) int cpu = 0; (@Unsigned long) cpu < (@Unsigned long) nrCpuIds; cpu++) {

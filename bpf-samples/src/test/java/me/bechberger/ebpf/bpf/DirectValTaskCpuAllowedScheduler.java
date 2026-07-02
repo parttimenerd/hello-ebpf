@@ -31,6 +31,7 @@ public abstract class DirectValTaskCpuAllowedScheduler extends SchedulerBase imp
     final DispatchQueue shared = DispatchQueue.attach(SHARED_DSQ_ID);
 
     @Override
+    @me.bechberger.ebpf.annotations.bpf.Sleepable
     public int init() {
         return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
     }

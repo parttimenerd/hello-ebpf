@@ -19,6 +19,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_create_dsq;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_dsq_insert;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_dsq_move_to_local;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -228,22 +232,21 @@ class SchedulerBehaviorTest {
         final GlobalVariable<@Unsigned Long> runningCount = new GlobalVariable<>(0L);
         final GlobalVariable<@Unsigned Long> stoppingCount = new GlobalVariable<>(0L);
 
-        // Prologue (scx_bpf_create_dsq) is injected before init() body by the compiler plugin.
-        final DispatchQueue shared = new DispatchQueue(SHARED_DSQ_ID);
-
         @Override
+        @me.bechberger.ebpf.annotations.bpf.Sleepable
         public int init() {
-            return 0;
+            return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
         }
 
         @Override
         public void enqueue(Ptr<task_struct> p, long enq_flags) {
-            shared.insert(p, SCX_SLICE_DFL.value(), EnqFlags.passThrough(enq_flags));
+            scx_bpf_dsq_insert(p, SHARED_DSQ_ID,
+                    scx_public_consts.SCX_SLICE_DFL.value(), enq_flags);
         }
 
         @Override
         public void dispatch(int cpu, Ptr<task_struct> prev) {
-            shared.moveToLocal();
+            scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
         }
 
         @Override

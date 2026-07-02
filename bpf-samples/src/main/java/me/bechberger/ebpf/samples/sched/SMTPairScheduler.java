@@ -104,6 +104,7 @@ public abstract class SMTPairScheduler extends BPFProgram implements Scheduler {
     final DispatchQueue shared = new DispatchQueue(SHARED_DSQ_ID);
 
     @Override
+    @me.bechberger.ebpf.annotations.bpf.Sleepable
     public int init() {
         // scx_bpf_create_dsq(SHARED_DSQ_ID, -1) is injected before this line
         // by the compiler plugin (from the DispatchQueue field initializer above).

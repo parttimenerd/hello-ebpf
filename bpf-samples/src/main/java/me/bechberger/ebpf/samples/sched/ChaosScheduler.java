@@ -115,6 +115,7 @@ public abstract class ChaosScheduler extends SchedulerBase implements Scheduler 
     final DispatchQueue chaos  = new DispatchQueue(CHAOS_DSQ_ID);
 
     @Override
+    @me.bechberger.ebpf.annotations.bpf.Sleepable
     public int init() {
         // chaos DSQ create is injected before this line by the compiler plugin.
         return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);

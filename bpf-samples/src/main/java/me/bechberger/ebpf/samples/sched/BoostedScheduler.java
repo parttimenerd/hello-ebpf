@@ -100,6 +100,7 @@ public abstract class BoostedScheduler extends SchedulerBase implements Schedule
     final DispatchQueue shared  = DispatchQueue.attach(SHARED_DSQ_ID);
 
     @Override
+    @me.bechberger.ebpf.annotations.bpf.Sleepable
     public int init() {
         // scx_bpf_create_dsq for boosted and normal DSQs is injected before this
         // line by the compiler plugin (from the DispatchQueue field initializers above).
