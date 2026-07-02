@@ -56,6 +56,7 @@ public class TypeProcessor {
     public final static String BPF_TYPE = "me.bechberger.ebpf.type.BPFType";
     public final static String BPF_MAP_DEFINITION = "me.bechberger.ebpf.annotations.bpf.BPFMapDefinition";
     public final static String SHARED_FROM_ANNOTATION = "me.bechberger.ebpf.annotations.bpf.SharedFrom";
+    public final static String INNER_MAP_ANNOTATION = "me.bechberger.ebpf.annotations.bpf.InnerMap";
     public final static String BPF_MAP_CLASS = "me.bechberger.ebpf.annotations.bpf.BPFMapClass";
 
     private final ProcessingEnvironment processingEnv;
@@ -1133,6 +1134,15 @@ public class TypeProcessor {
             return Optional.of(t -> BPFTypeLike.of(BPFType.VOID));
         }
 
+        // Map-of-maps: when an outer map wrapper (e.g. BPFHashOfMaps<K, InnerMap>)
+        // carries an inner-map wrapper class (e.g. BPFHashMap<Long, Long>) as a
+        // type parameter, treat that type-argument as an opaque BPF value. The
+        // inner map's actual layout is supplied to libbpf at load time via
+        // bpf_map__set_inner_map_fd(), not via BTF derived from this parameter.
+        if (getAnnotationMirror(typeElem, BPF_MAP_CLASS).isPresent()) {
+            return Optional.of(t -> BPFTypeLike.of(BPFType.VOID));
+        }
+
         if (!(typeElem instanceof TypeElement typeElement)) {
             this.processingEnv.getMessager().printError("Unsupported type " + type + " in " + element, element);
             return Optional.empty();
@@ -1450,6 +1460,66 @@ public class TypeProcessor {
         return outerElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e)
                 .filter(e -> getAnnotationMirror(e.asType(), BPF_MAP_DEFINITION).isPresent())
                 .map(f -> processMapDefiningField(f, fieldToType, typeToSpecFieldName)).filter(Objects::nonNull).toList();
+    }
+
+    /**
+     * Collect {@code @InnerMap} wiring for map-of-maps fields on {@code outerElement}.
+     * Each returned entry is {@code [outerFieldName, innerFieldName]} where
+     * {@code innerFieldName} is a sibling {@code @BPFMapDefinition} field to be used
+     * as the inner-map template. The generated impl-class's {@code preLoad()} calls
+     * {@code setInnerMapFd(outer, inner)} once per pair.
+     *
+     * <p>Errors reported to the annotation processor's messager:
+     * <ul>
+     *   <li>{@code @InnerMap} on a field that is not {@code @BPFMapDefinition}.</li>
+     *   <li>Empty {@code value()} on {@code @InnerMap}.</li>
+     *   <li>Referenced sibling name does not resolve to a {@code @BPFMapDefinition} field.</li>
+     * </ul>
+     *
+     * <p>Static so callers holding only a {@link ProcessingEnvironment} can invoke it
+     * (e.g. {@link Processor} without needing the fully-configured TypeProcessor).
+     */
+    public static List<String[]> processInnerMapWiring(ProcessingEnvironment env, TypeElement outerElement) {
+        var pairs = new java.util.ArrayList<String[]>();
+        // Collect every @BPFMapDefinition field name for cross-check.
+        var mapFieldNames = new java.util.LinkedHashSet<String>();
+        for (var enc : outerElement.getEnclosedElements()) {
+            if (enc.getKind() != ElementKind.FIELD) continue;
+            VariableElement vf = (VariableElement) enc;
+            if (AnnotationUtils.getAnnotationMirror(vf.asType(), BPF_MAP_DEFINITION).isPresent()) {
+                mapFieldNames.add(vf.getSimpleName().toString());
+            }
+        }
+        for (var enc : outerElement.getEnclosedElements()) {
+            if (enc.getKind() != ElementKind.FIELD) continue;
+            VariableElement vf = (VariableElement) enc;
+            var inner = AnnotationUtils.getAnnotationMirror(vf, INNER_MAP_ANNOTATION);
+            if (inner.isEmpty()) continue;
+
+            // Outer field must be @BPFMapDefinition — pinning the fd only makes sense
+            // for map fields.
+            if (AnnotationUtils.getAnnotationMirror(vf.asType(), BPF_MAP_DEFINITION).isEmpty()) {
+                env.getMessager().printError(
+                        "@InnerMap requires @BPFMapDefinition on the same field — "
+                                + "the annotation only applies to BPF map-of-maps fields.", vf);
+                continue;
+            }
+            String innerName = AnnotationUtils.getAnnotationValue(inner.get(), "value", "");
+            if (innerName.isEmpty()) {
+                env.getMessager().printError(
+                        "@InnerMap value must be a non-empty field name", vf);
+                continue;
+            }
+            if (!mapFieldNames.contains(innerName)) {
+                env.getMessager().printError(
+                        "@InnerMap references sibling '" + innerName
+                                + "' but no @BPFMapDefinition field of that name exists"
+                                + " (fields: " + mapFieldNames + ")", vf);
+                continue;
+            }
+            pairs.add(new String[]{ vf.getSimpleName().toString(), innerName });
+        }
+        return pairs;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

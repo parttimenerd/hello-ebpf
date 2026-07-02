@@ -413,12 +413,17 @@ public class Processor extends AbstractProcessor {
         //   (b) this is a PRODUCER (some consumer has @SharedFrom on this class) —
         //       wipe stale pins via unpinAllForClass(<UserClass>) for fresh-on-each-run,
         //       then call setMapPinPath for each map referenced by some consumer.
-        // A class can be both, in which case both blocks are emitted in the same method.
+        //   (c) this class has @InnerMap-annotated map-of-maps fields — wire the
+        //       inner-map fd into libbpf via setInnerMapFd before load.
+        // A class can be any subset of the above, in which case all applicable
+        // blocks are emitted in the same method.
         String thisFqn = outerTypeElement.getQualifiedName().toString();
         var producedMaps = sharedFromIndex.getOrDefault(thisFqn, java.util.Collections.emptySet());
         boolean isProducer = !producedMaps.isEmpty();
         boolean isConsumer = !sharedMaps.isEmpty();
-        if (isConsumer || isProducer) {
+        var innerMapPairs = TypeProcessor.processInnerMapWiring(processingEnv, outerTypeElement);
+        boolean hasInnerMaps = !innerMapPairs.isEmpty();
+        if (isConsumer || isProducer || hasInnerMaps) {
             var preLoad = MethodSpec.methodBuilder("preLoad")
                     .addAnnotation(Override.class)
                     .addModifiers(Modifier.PROTECTED)
@@ -440,6 +445,11 @@ public class Processor extends AbstractProcessor {
                     var sf = m.sharedFrom();
                     preLoad.addStatement("setMapPinPath($S, me.bechberger.ebpf.bpf.BPFProgram.defaultPinPath($L.class, $S))",
                             m.javaFieldName(), sf.producerFqn(), sf.mapName());
+                }
+            }
+            if (hasInnerMaps) {
+                for (var pair : innerMapPairs) {
+                    preLoad.addStatement("setInnerMapFd($S, $S)", pair[0], pair[1]);
                 }
             }
             spec.addMethod(preLoad.build());

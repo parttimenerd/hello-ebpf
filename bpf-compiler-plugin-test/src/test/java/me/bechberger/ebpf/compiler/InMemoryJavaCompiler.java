@@ -19,7 +19,15 @@ public final class InMemoryJavaCompiler {
     /** Result of one compilation attempt. */
     public record Result(boolean success,
                          List<Diagnostic<? extends JavaFileObject>> diagnostics,
-                         String compilerOutput) {
+                         String compilerOutput,
+                         java.util.Map<String, String> generatedSources) {
+
+        /** Backwards-compatible constructor without generated-source capture. */
+        public Result(boolean success,
+                      List<Diagnostic<? extends JavaFileObject>> diagnostics,
+                      String compilerOutput) {
+            this(success, diagnostics, compilerOutput, java.util.Map.of());
+        }
 
         /** All error-level diagnostic messages joined with newlines. */
         public String errorMessages() {
@@ -37,6 +45,16 @@ public final class InMemoryJavaCompiler {
             if (success) {
                 throw new AssertionError(why + " — but compilation succeeded.\n"
                         + "Compiler output:\n" + compilerOutput);
+            }
+            return this;
+        }
+
+        /** Throws if compilation failed — used by codegen tests. */
+        public Result requireSuccess(String why) {
+            if (!success) {
+                throw new AssertionError(why + " — but compilation failed.\n"
+                        + "Errors:\n" + errorMessages()
+                        + "\nCompiler output:\n" + compilerOutput);
             }
             return this;
         }
@@ -94,8 +112,22 @@ public final class InMemoryJavaCompiler {
         task.setProcessors(List.of(processor));
 
         boolean success;
+        java.util.Map<String, String> generated = new java.util.LinkedHashMap<>();
         try {
             success = task.call();
+            // Capture any .java files the processor emitted into -s tmp/ before we
+            // wipe the temp tree. Keyed by the source's relative path (e.g.
+            // "com/example/FooImpl.java") which mirrors how the processor names them.
+            try (var stream = java.nio.file.Files.walk(tmp)) {
+                stream.filter(java.nio.file.Files::isRegularFile)
+                        .filter(p -> p.toString().endsWith(".java"))
+                        .forEach(p -> {
+                            try {
+                                String rel = tmp.relativize(p).toString();
+                                generated.put(rel, java.nio.file.Files.readString(p));
+                            } catch (IOException ignored) {}
+                        });
+            } catch (IOException ignored) {}
         } finally {
             try { fileManager.close(); } catch (IOException ignored) {}
             // Best-effort cleanup of the temp tree.
@@ -105,6 +137,6 @@ public final class InMemoryJavaCompiler {
                         .forEach(p -> { try { java.nio.file.Files.deleteIfExists(p); } catch (IOException ignored) {} });
             } catch (IOException ignored) {}
         }
-        return new Result(success, diagnostics.getDiagnostics(), output.toString());
+        return new Result(success, diagnostics.getDiagnostics(), output.toString(), generated);
     }
 }
