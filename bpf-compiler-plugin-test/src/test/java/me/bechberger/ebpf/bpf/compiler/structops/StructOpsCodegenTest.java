@@ -9,18 +9,16 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * End-to-end integration for {@code @StructOps}: verifies that a {@code @BPF}
  * class implementing a {@code @StructOps}-annotated interface produces
  *   (a) the SEC-tagged BPF_PROG stubs for each overridden virtual field,
  *   (b) the {@code SEC(".struct_ops.link") struct tcp_congestion_ops ...} instance,
- *   (c) a companion {@link me.bechberger.ebpf.bpf.structops.StructOpsManifest}
- *       source file emitted via the annotation processor's {@code Filer}.
+ *   (c) a {@code META-INF/ebpf-struct-ops/<userClass>.json} manifest resource
+ *       emitted via the annotation processor's {@code Filer}.
  */
 class StructOpsCodegenTest {
 
@@ -50,43 +48,52 @@ class StructOpsCodegenTest {
     /**
      * The CompilerPlugin hooks into javac at {@code TaskEvent.Kind.ANALYZE},
      * i.e. after annotation-processing rounds have closed. Filer-emitted
-     * source files therefore land on disk but javac no longer compiles them,
-     * so we cannot resolve the manifest class at test-runtime via
-     * {@code Class.forName}. Instead, verify the manifest source was written
-     * and contains the expected entry — the runtime {@code ServiceLoader}
-     * consumers of {@link StructOpsManifest} pick it up on the next compile
-     * cycle when the file is part of the initial input set.
+     * source files therefore land on disk but javac no longer compiles them.
+     * We therefore emit the manifest as a JSON classpath resource
+     * ({@code META-INF/ebpf-struct-ops/<userClass>.json}) via
+     * {@code Filer.createResource(CLASS_OUTPUT, ...)}, which packages regardless
+     * of processing phase. The runtime loads it via {@code getResourceAsStream}.
+     * The resource path uses {@code Class.getName()} form so nested-class binary
+     * names (e.g. {@code Outer$Inner}) round-trip correctly.
      */
     @Test
-    void manifestSourceGenerated() throws Exception {
-        // Manifest .java file is written under generated-test-sources.
-        Path root = Path.of(System.getProperty("user.dir"));
-        Path manifest = root.resolve(
-                "target/generated-test-sources/test-annotations/"
-                        + "me/bechberger/ebpf/bpf/compiler/structops/"
-                        + "HelloCcStructOpsManifest.java");
-        if (!Files.exists(manifest)) {
-            // Fallback: locate it anywhere under target/ (Surefire may cwd differently).
-            try (var stream = Files.walk(Path.of("target"))) {
-                manifest = stream
-                        .filter(p -> p.getFileName().toString().equals("HelloCcStructOpsManifest.java"))
+    void manifestResourceGenerated() throws Exception {
+        // Resource is written to target/test-classes/META-INF/ebpf-struct-ops/...
+        // Prefer the classloader lookup so the test does not depend on Surefire cwd.
+        String resourceName = "META-INF/ebpf-struct-ops/"
+                + HelloCc.class.getName() + ".json";
+        var url = HelloCc.class.getClassLoader().getResource(resourceName);
+        String src;
+        if (url != null) {
+            src = Files.readString(Path.of(url.toURI()));
+        } else {
+            // Fallback: scan target/ for the JSON file (older builds, quirky cwds).
+            Path root = Path.of(System.getProperty("user.dir"));
+            try (var stream = Files.walk(root.resolve("target"))) {
+                Path found = stream
+                        .filter(p -> p.toString().replace('\\', '/').endsWith(
+                                "META-INF/ebpf-struct-ops/" + HelloCc.class.getName() + ".json"))
                         .findFirst()
                         .orElseThrow(() -> new AssertionError(
-                                "HelloCcStructOpsManifest.java not found under target/"));
+                                resourceName + " not found on classpath or under target/"));
+                src = Files.readString(found);
             }
         }
-        List<String> lines = Files.readAllLines(manifest);
-        String src = String.join("\n", lines);
-        assertTrue(src.contains("package me.bechberger.ebpf.bpf.compiler.structops;"),
-                "manifest must declare correct package:\n" + src);
-        assertTrue(src.contains("implements me.bechberger.ebpf.bpf.structops.StructOpsManifest"),
-                "manifest must implement SPI:\n" + src);
+        // String-contains checks match the existing test style and avoid
+        // adding a femtojson dep to this module just for a shape check.
+        assertTrue(src.contains("\"userClass\""),
+                "manifest must declare a userClass field:\n" + src);
+        assertTrue(src.contains(HelloCc.class.getName()),
+                "manifest userClass must match the runtime binary name:\n" + src);
+        assertTrue(src.contains("\"kernelName\""),
+                "manifest must declare a kernelName field:\n" + src);
         assertTrue(src.contains("\"tcp_congestion_ops\""),
                 "manifest must list tcp_congestion_ops kernel name:\n" + src);
+        assertTrue(src.contains("\"mapName\""),
+                "manifest must declare a mapName field:\n" + src);
         assertTrue(src.contains("\"HelloCc\""),
                 "manifest must list HelloCc map name:\n" + src);
         assertTrue(src.contains("\"5.6\""),
                 "manifest must list 5.6 since-version:\n" + src);
     }
 }
-

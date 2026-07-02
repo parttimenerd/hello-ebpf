@@ -340,8 +340,8 @@ public abstract class BPFProgram implements AutoCloseable {
 
     /**
      * Wire the user-supplied @BPF class handle and attach any struct_ops
-     * declared in the plugin-generated {@code <UserClass>StructOpsManifest}.
-     * Called only from {@link #load(Class)} / {@link #load(Class, BPFProgram...)}.
+     * declared in the plugin-generated {@code META-INF/ebpf-struct-ops/<userClass>.json}
+     * resource. Called only from {@link #load(Class)} / {@link #load(Class, BPFProgram...)}.
      */
     private static void installStructOps(BPFProgram program, Class<?> clazz) {
         program.setUserClass(clazz);

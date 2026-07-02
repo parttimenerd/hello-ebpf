@@ -60,7 +60,6 @@ import me.bechberger.ebpf.bpf.compiler.passes.ArenaAssociationPass;
 import me.bechberger.ebpf.bpf.compiler.structops.JavaToCTypeRenderer;
 import me.bechberger.ebpf.bpf.compiler.structops.StructOpsDiscovery;
 import me.bechberger.ebpf.bpf.compiler.structops.StructOpsLayout;
-import me.bechberger.ebpf.bpf.compiler.structops.StructOpsManifestWriter;
 import me.bechberger.ebpf.bpf.compiler.structops.StructOpsSynthesizer;
 import me.bechberger.ebpf.bpf.compiler.structops.StructOpsValidator;
 
@@ -146,12 +145,31 @@ public class CompilerPlugin implements Plugin {
     private final Map<TypeElement, StructOpsSynthesizer.Result> structOpsCache = new HashMap<>();
 
     /**
-     * Guard against emitting the {@code <BpfClass>StructOpsManifest.java} source file more than once
-     * per compilation unit. {@link javax.annotation.processing.Filer#createSourceFile} throws
-     * {@link javax.annotation.processing.FilerException} on the second call for the same FQN,
-     * which would otherwise surface as a spurious compile error under incremental builds.
+     * Guard against emitting the {@code META-INF/ebpf-struct-ops/<userClass>.json} resource more
+     * than once per compilation unit. {@link javax.annotation.processing.Filer#createResource}
+     * throws {@link javax.annotation.processing.FilerException} on the second call for the same
+     * path, which would otherwise surface as a spurious compile error under incremental builds.
      */
     private final Set<String> emittedManifestFqns = new HashSet<>();
+
+    /**
+     * Renders {@code t} as its JVM binary name (e.g. {@code p.Outer$Inner} for a
+     * nested type), matching {@code Class.getName()} — so runtime lookups using
+     * {@code Class.getName()} round-trip against the manifest resource path.
+     */
+    private static String binaryName(TypeElement t) {
+        StringBuilder sb = new StringBuilder();
+        javax.lang.model.element.Element e = t;
+        while (e instanceof TypeElement te) {
+            if (sb.length() == 0) sb.append(te.getSimpleName());
+            else sb.insert(0, te.getSimpleName() + "$");
+            e = te.getEnclosingElement();
+        }
+        if (e instanceof javax.lang.model.element.PackageElement pe && !pe.isUnnamed()) {
+            sb.insert(0, pe.getQualifiedName() + ".");
+        }
+        return sb.toString();
+    }
 
     @Override
     public String getName() {
@@ -1123,8 +1141,8 @@ public class CompilerPlugin implements Plugin {
         var properties = getAllPropertyValues(programPath, superClassElement);
 
         // @StructOps: append the SEC(".struct_ops.link") instance snippets (one per
-        // implemented @StructOps interface) and emit a companion StructOpsManifest
-        // source file so the runtime knows what to attach without reflection.
+        // implemented @StructOps interface) and emit a META-INF/ebpf-struct-ops JSON
+        // manifest resource so the runtime knows what to attach without reflection.
         // The instance block references the SEC("struct_ops/...") entry-point
         // functions by identifier ((void *)ssthresh, …), so it must be spliced
         // AFTER combineCode has emitted the function bodies — hence we defer
@@ -1149,22 +1167,37 @@ public class CompilerPlugin implements Plugin {
                 }
             }
             if (layoutLoadFailed) return;
-            String pkg = task.getElements().getPackageOf(superClassElement).getQualifiedName().toString();
-            String fqn = (pkg.isEmpty() ? "" : pkg + ".")
-                    + superClassElement.getSimpleName() + "StructOpsManifest";
-            if (emittedManifestFqns.add(fqn)) {
-                var manifestSrc = new StructOpsManifestWriter().render(
-                        superClassElement, structOpsSynth.instances(), layoutsByKind);
+            String userBinaryName = binaryName(superClassElement);
+            String resourcePath = "META-INF/ebpf-struct-ops/" + userBinaryName + ".json";
+            if (emittedManifestFqns.add(resourcePath)) {
+                // Build JSON payload: { "userClass": "p.Foo$Bar",
+                //                        "entries": [ {"kernelName":"tcp_congestion_ops",
+                //                                       "mapName":"HelloCcSample",
+                //                                       "since":"5.6"} ] }
+                java.util.Map<String, Object> root = new java.util.LinkedHashMap<>();
+                root.put("userClass", userBinaryName);
+                java.util.List<Object> entries = new java.util.ArrayList<>();
+                for (var inst : structOpsSynth.instances()) {
+                    java.util.Map<String, Object> e = new java.util.LinkedHashMap<>();
+                    e.put("kernelName", inst.kernelName());
+                    e.put("mapName",    inst.mapName());
+                    e.put("since",      layoutsByKind.get(inst.kernelName()).since());
+                    entries.add(e);
+                }
+                root.put("entries", entries);
+                String json = me.bechberger.util.json.PrettyPrinter.prettyPrint(root);
                 try (var w = createProcessingEnvironment().getFiler()
-                        .createSourceFile(fqn, superClassElement).openWriter()) {
-                    w.write(manifestSrc);
+                        .createResource(javax.tools.StandardLocation.CLASS_OUTPUT,
+                                        "", resourcePath, superClassElement)
+                        .openWriter()) {
+                    w.write(json);
                 } catch (javax.annotation.processing.FilerException fe) {
                     // Manifest already exists (incremental compile) — that's expected and safe.
                     logWarning(programPath, bpfProgram,
-                            "skipping StructOpsManifest emission (already generated): " + fe.getMessage());
+                            "skipping struct-ops manifest emission (already generated): " + fe.getMessage());
                 } catch (IOException e) {
                     logError(programPath, bpfProgram,
-                            "failed to write " + fqn + ": " + e.getMessage());
+                            "failed to write " + resourcePath + ": " + e.getMessage());
                 }
             }
         }
