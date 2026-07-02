@@ -2,6 +2,7 @@ package me.bechberger.ebpf.bpf.features.probes;
 
 import me.bechberger.ebpf.bpf.features.BPFProgramType;
 import me.bechberger.ebpf.bpf.features.ProbeResult;
+import me.bechberger.ebpf.bpf.raw.LibraryLoader;
 import me.bechberger.ebpf.shared.LibC;
 import me.bechberger.ebpf.shared.PanamaUtil;
 import me.bechberger.ebpf.shared.PanamaUtil.HandlerWithErrno;
@@ -28,6 +29,8 @@ import static java.lang.foreign.ValueLayout.JAVA_LONG;
  * </ul>
  */
 public final class ProgramTypeProbe {
+
+    static { LibraryLoader.load(); }
 
     private ProgramTypeProbe() {}
 

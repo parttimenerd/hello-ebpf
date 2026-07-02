@@ -2,6 +2,7 @@ package me.bechberger.ebpf.bpf.features.probes;
 
 import me.bechberger.ebpf.bpf.features.ProbeResult;
 import me.bechberger.ebpf.bpf.map.MapTypeId;
+import me.bechberger.ebpf.bpf.raw.LibraryLoader;
 import me.bechberger.ebpf.shared.LibC;
 import me.bechberger.ebpf.shared.PanamaUtil;
 import me.bechberger.ebpf.shared.PanamaUtil.HandlerWithErrno;
@@ -17,6 +18,8 @@ import static java.lang.foreign.ValueLayout.JAVA_INT;
  * per-kind-appropriate key/value sizes and a single entry.
  */
 public final class MapTypeProbe {
+
+    static { LibraryLoader.load(); }
 
     private MapTypeProbe() {}
 
