@@ -7,6 +7,7 @@ import me.bechberger.ebpf.bpf.map.BPFRingBuffer.BPFRingBufferError;
 import me.bechberger.ebpf.bpf.processor.Processor;
 import me.bechberger.ebpf.bpf.raw.*;
 import me.bechberger.ebpf.shared.KernelFeatures;
+import me.bechberger.ebpf.bpf.features.FeatureRequirements;
 import me.bechberger.ebpf.shared.LibC;
 import me.bechberger.ebpf.type.BPFType;
 import me.bechberger.ebpf.shared.PanamaUtil;
@@ -175,6 +176,7 @@ public abstract class BPFProgram implements AutoCloseable {
             }
             KernelFeatures.requireMinimumKernel();
             KernelFeatures.checkRequirements("Loading BPF program", clazz);
+            enforceFeatureRequirements(clazz);
             long t0 = System.currentTimeMillis();
             var program = BPFProgram.<T, S>getImplClass(clazz).getConstructor().newInstance();
             program.initGlobals();
@@ -235,6 +237,7 @@ public abstract class BPFProgram implements AutoCloseable {
             }
             KernelFeatures.requireMinimumKernel();
             KernelFeatures.checkRequirements("Loading BPF program", clazz);
+            enforceFeatureRequirements(clazz);
             long t0 = System.currentTimeMillis();
             Class<S> implClass = BPFProgram.<T, S>getImplClass(clazz);
             // Find a constructor whose parameter list is assignable from the supplied
@@ -436,6 +439,46 @@ public abstract class BPFProgram implements AutoCloseable {
      * {@code finalizeLoad()}.
      */
     protected void preLoad() {
+    }
+
+    /**
+     * Feature requirements this program declares. The base implementation
+     * returns an empty requirements set; the annotation-processor-generated
+     * impl class overrides this to list the features the program actually
+     * needs. Consulted by {@link #load(Class)} and
+     * {@link #load(Class, BPFProgram...)} before the constructor is called.
+     */
+    protected FeatureRequirements getFeatureRequirements() {
+        return new FeatureRequirements.Builder()
+                .programName(getClass().getSimpleName())
+                .build();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void enforceFeatureRequirements(Class<?> clazz) {
+        try {
+            var implClass = BPFProgram.<BPFProgram, BPFProgram>getImplClass(
+                    (Class<BPFProgram>) clazz);
+            var m = implClass.getDeclaredMethod("getStaticFeatureRequirements");
+            m.setAccessible(true);
+            FeatureRequirements req = (FeatureRequirements) m.invoke(null);
+            FeatureRequirements.enforce(req);
+        } catch (NoSuchMethodException e) {
+            // Generated impl class has not been updated yet — skip the check.
+        } catch (BPFProgram.BPFLoadError e) {
+            throw e;
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            if (e.getCause() instanceof BPFProgram.BPFLoadError ble) throw ble;
+            System.getLogger(BPFProgram.class.getName())
+                    .log(System.Logger.Level.DEBUG,
+                            "feature-requirements probe skipped for "
+                                    + clazz.getSimpleName() + ": " + e.getCause());
+        } catch (Exception e) {
+            System.getLogger(BPFProgram.class.getName())
+                    .log(System.Logger.Level.DEBUG,
+                            "feature-requirements probe skipped for "
+                                    + clazz.getSimpleName() + ": " + e);
+        }
     }
 
     /**
