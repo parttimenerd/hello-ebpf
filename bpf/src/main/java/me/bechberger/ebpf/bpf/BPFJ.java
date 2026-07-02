@@ -703,4 +703,20 @@ public class BPFJ {
     public static @Unsigned long bpfRedirectMap(Ptr<?> map, @Unsigned long key, @Unsigned long flags) {
         throw new MethodIsBPFRelatedFunction();
     }
+
+    /**
+     * Returns the {@code u64} cookie set at attach time by
+     * {@link BPFProgram#attachKProbe(BPFProgram.ProgramHandle, String, boolean, long)}
+     * or the per-symbol cookie from
+     * {@link BPFProgram#attachKProbeMulti(BPFProgram.ProgramHandle, String[], long[], boolean)}.
+     *
+     * <p>Call from BPF-side (kprobe / uprobe / kprobe.multi / uprobe.multi)
+     * to disambiguate one BPF program attached to multiple targets.
+     *
+     * <p>Java-side is a stub - throws when invoked outside eBPF codegen.
+     */
+    @BuiltinBPFFunction("bpf_get_attach_cookie((void *) $arg1)")
+    public static long bpf_get_attach_cookie(Ptr<?> ctx) {
+        throw new MethodIsBPFRelatedFunction();
+    }
 }

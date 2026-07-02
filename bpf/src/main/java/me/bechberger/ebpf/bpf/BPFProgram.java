@@ -729,6 +729,105 @@ public abstract class BPFProgram implements AutoCloseable {
                     FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER,
                             JAVA_BOOLEAN, PanamaUtil.POINTER));
 
+    // --------------------------------------------------------------------
+    // libbpf attach opts layouts (LP64, x86-64). Kernel floor 6.14 /
+    // libbpf 1.4+, so we hard-code the current member set.
+    // --------------------------------------------------------------------
+
+    // struct bpf_kprobe_opts {
+    //     size_t sz;              off  0, 8
+    //     __u64  bpf_cookie;      off  8, 8
+    //     size_t offset;          off 16, 8
+    //     bool   retprobe;        off 24, 1  + 7 pad -> 32
+    // };
+    private static final StructLayout KPROBE_OPTS_LAYOUT = MemoryLayout.structLayout(
+            JAVA_LONG.withName("sz"),
+            JAVA_LONG.withName("bpf_cookie"),
+            JAVA_LONG.withName("offset"),
+            JAVA_BOOLEAN.withName("retprobe"),
+            MemoryLayout.paddingLayout(7)
+    );
+
+    // struct bpf_kprobe_multi_opts {
+    //     size_t sz;              off  0, 8
+    //     const char **syms;      off  8, 8
+    //     const ulong *addrs;     off 16, 8
+    //     const __u64 *cookies;   off 24, 8
+    //     size_t cnt;             off 32, 8
+    //     bool retprobe;          off 40, 1
+    //     bool session;           off 41, 1
+    //     bool unique_match;      off 42, 1  + 5 pad -> 48
+    //     // reserved padding rounded up to natural 8-byte multiple
+    // };
+    // Total struct byte size on this libbpf: 56 (an 8-byte reserved tail).
+    private static final StructLayout KPROBE_MULTI_OPTS_LAYOUT = MemoryLayout.structLayout(
+            JAVA_LONG.withName("sz"),
+            PanamaUtil.POINTER.withName("syms"),
+            PanamaUtil.POINTER.withName("addrs"),
+            PanamaUtil.POINTER.withName("cookies"),
+            JAVA_LONG.withName("cnt"),
+            JAVA_BOOLEAN.withName("retprobe"),
+            JAVA_BOOLEAN.withName("session"),
+            JAVA_BOOLEAN.withName("unique_match"),
+            MemoryLayout.paddingLayout(5),
+            MemoryLayout.paddingLayout(8)   // libbpf tail padding
+    );
+
+    // struct bpf_uprobe_multi_opts {
+    //     size_t sz;                       off  0, 8
+    //     const char **syms;               off  8, 8
+    //     const ulong *offsets;            off 16, 8
+    //     const ulong *ref_ctr_offsets;    off 24, 8
+    //     const __u64 *cookies;            off 32, 8
+    //     size_t cnt;                      off 40, 8
+    //     unsigned int flags;              off 48, 4
+    //     pid_t pid;                       off 52, 4
+    //     const char *path;                off 56, 8
+    // };
+    private static final StructLayout UPROBE_MULTI_OPTS_LAYOUT = MemoryLayout.structLayout(
+            JAVA_LONG.withName("sz"),
+            PanamaUtil.POINTER.withName("syms"),
+            PanamaUtil.POINTER.withName("offsets"),
+            PanamaUtil.POINTER.withName("ref_ctr_offsets"),
+            PanamaUtil.POINTER.withName("cookies"),
+            JAVA_LONG.withName("cnt"),
+            JAVA_INT.withName("flags"),
+            JAVA_INT.withName("pid"),
+            PanamaUtil.POINTER.withName("path")
+    );
+
+    /** Test hook - size of {@code struct bpf_kprobe_opts} on this platform. */
+    static long internalKprobeOptsSize()      { return KPROBE_OPTS_LAYOUT.byteSize(); }
+    /** Test hook - size of {@code struct bpf_kprobe_multi_opts}. */
+    static long internalKprobeMultiOptsSize() { return KPROBE_MULTI_OPTS_LAYOUT.byteSize(); }
+    /** Test hook - size of {@code struct bpf_uprobe_multi_opts}. */
+    static long internalUprobeMultiOptsSize() { return UPROBE_MULTI_OPTS_LAYOUT.byteSize(); }
+
+    // struct bpf_link * bpf_program__attach_kprobe_opts(
+    //     const struct bpf_program *prog, const char *func_name,
+    //     const struct bpf_kprobe_opts *opts);
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_KPROBE_OPTS =
+            new HandlerWithErrno<>("bpf_program__attach_kprobe_opts",
+                    FunctionDescriptor.of(PanamaUtil.POINTER,
+                            PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
+
+    // struct bpf_link * bpf_program__attach_kprobe_multi_opts(
+    //     const struct bpf_program *prog, const char *pattern,
+    //     const struct bpf_kprobe_multi_opts *opts);
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_KPROBE_MULTI_OPTS =
+            new HandlerWithErrno<>("bpf_program__attach_kprobe_multi_opts",
+                    FunctionDescriptor.of(PanamaUtil.POINTER,
+                            PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
+
+    // struct bpf_link * bpf_program__attach_uprobe_multi(
+    //     const struct bpf_program *prog, pid_t pid, const char *binary_path,
+    //     const char *func_pattern, const struct bpf_uprobe_multi_opts *opts);
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_UPROBE_MULTI =
+            new HandlerWithErrno<>("bpf_program__attach_uprobe_multi",
+                    FunctionDescriptor.of(PanamaUtil.POINTER,
+                            PanamaUtil.POINTER, JAVA_INT, PanamaUtil.POINTER,
+                            PanamaUtil.POINTER, PanamaUtil.POINTER));
+
     /**
      * Dynamically attach a kprobe (or kretprobe) to a kernel symbol by name.
      *
