@@ -6,9 +6,13 @@ import me.bechberger.ebpf.annotations.bpf.MethodIsBPFRelatedFunction;
 import me.bechberger.ebpf.annotations.bpf.NotUsableInJava;
 import me.bechberger.ebpf.bpf.BPFError;
 import me.bechberger.ebpf.bpf.BPFProgram;
+import me.bechberger.ebpf.bpf.features.BPFProgramType;
+import me.bechberger.ebpf.bpf.features.Features;
 import me.bechberger.ebpf.bpf.raw.Lib;
+import me.bechberger.ebpf.bpf.raw.Lib_2;
 
 import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 
 /**
@@ -92,5 +96,49 @@ public class BPFProgArray extends BPFMap {
                 throw new BPFError("Failed to register program at slot " + slot, ret);
             }
         }
+    }
+
+    /**
+     * Hot-swap the program at {@code slot} for {@code newHandle} using libbpf's
+     * {@code freplace} facility (kernel &ge; 5.10, requires {@link BPFProgramType#EXT}).
+     * The new program's BPF program type must be {@code BPF_PROG_TYPE_EXT};
+     * typically it is loaded via {@code SEC("freplace/<target>")}.
+     *
+     * <p>The freplace mechanism transparently redirects execution; the old
+     * program remains loaded but is no longer reachable through this slot.
+     * The returned link keeps the freplace attachment alive.
+     *
+     * @param slot      slot index (0 &le; slot &lt; maxEntries)
+     * @param newHandle handle of an {@code EXT}-type program in the same
+     *                  {@code BPFProgram} object
+     * @return a link owning the freplace attachment
+     * @throws BPFError if the kernel lacks {@code BPF_PROG_TYPE_EXT}, the slot
+     *                  is out of range, {@code newHandle} is null, or the
+     *                  {@code bpf_program__attach_freplace} syscall fails
+     */
+    public BPFProgram.BPFLink replaceSlot(int slot, BPFProgram.ProgramHandle newHandle) {
+        if (slot < 0 || slot >= maxEntries) {
+            throw new BPFError("Program slot " + slot + " out of bounds [0, "
+                    + maxEntries + ")", -1);
+        }
+        if (newHandle == null) {
+            throw new BPFError("replaceSlot: newHandle is null", -1);
+        }
+        if (!Features.hasProgramType(BPFProgramType.EXT)) {
+            throw new BPFError("freplace hot-swap requires BPF_PROG_TYPE_EXT "
+                    + "(kernel >= 5.10) - not supported on this kernel", -1);
+        }
+        // libbpf: struct bpf_link *bpf_program__attach_freplace(
+        //             struct bpf_program *prog, int target_fd, const char *attach_func_name);
+        // We swap the ENTIRE slot binding: target_fd is the prog-array fd,
+        // attach_func_name is null (libbpf resolves via the EXT program's
+        // set_attach_target).
+        MemorySegment linkPtr = Lib_2.bpf_program__attach_freplace(
+                newHandle.prog(), fd.fd(), MemorySegment.NULL);
+        if (linkPtr == null || linkPtr.address() == 0) {
+            throw new BPFError("bpf_program__attach_freplace failed for slot "
+                    + slot, -1);
+        }
+        return new BPFProgram.BPFLink(linkPtr);
     }
 }
