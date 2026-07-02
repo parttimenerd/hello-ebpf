@@ -14,13 +14,18 @@ public final class StructOpsValidator {
         public ValidationException(String msg) { super(msg); }
     }
 
-    /** camelCase -&gt; snake_case per spec section 6.1. */
+    /** camelCase -&gt; snake_case per spec section 6.1; acronym-aware (e.g. selectCPU -&gt; select_cpu). */
     public static String camelToSnake(String s) {
         var sb = new StringBuilder(s.length() + 4);
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (Character.isUpperCase(c)) {
-                if (i > 0) sb.append('_');
+                boolean atStart = i == 0;
+                boolean prevLower = !atStart && Character.isLowerCase(s.charAt(i - 1));
+                boolean nextLower = i + 1 < s.length() && Character.isLowerCase(s.charAt(i + 1));
+                if (!atStart && (prevLower || nextLower)) {
+                    sb.append('_');
+                }
                 sb.append(Character.toLowerCase(c));
             } else {
                 sb.append(c);
@@ -82,25 +87,42 @@ public final class StructOpsValidator {
      * render the same way; exact string equality after normalization suffices for
      * the four supported kinds. If a mismatch surfaces in real use, tighten this
      * here rather than silently coercing.
+     *
+     * <p>Sub-word integers ({@code unsigned char}, {@code short}, etc.) match wider
+     * Java ints — the BPF calling convention passes all args through 64-bit
+     * registers, so signed/unsigned width mismatches are wire-safe below 64 bits.
      */
     private static boolean typesMatch(String btfType, String rendered) {
-        return normalise(btfType).equals(normalise(rendered));
+        String a = normalise(btfType);
+        String b = normalise(rendered);
+        if (a.equals(b)) return true;
+        // All int widths below 64 bits are ABI-compatible in the BPF call convention.
+        return isSubWordInt(a) && isSubWordInt(b);
+    }
+
+    private static boolean isSubWordInt(String norm) {
+        return switch (norm) {
+            case "i8", "i16", "i32" -> true;
+            default -> false;
+        };
     }
 
     private static String normalise(String t) {
         String n = t.replaceAll("\\s+", " ").replace(" *", "*").trim();
-        // BTF renders unsigned ints as "u8/u16/u32/u64"; the renderer uses the
-        // double-underscore BPF-header spelling "__u8/…". Same type, different
-        // spelling — collapse both to the underscore form for comparison.
+        // Enum tags in BTF (e.g. "enum hid_report_type") are int-width at the ABI —
+        // callers pass Java int / __u32 for them.
+        if (n.startsWith("enum ")) return "i32";
+        // Collapse all 8/16/32/64-bit integer type spellings to a canonical form
+        // that ignores signed/unsigned differences and the __u/__s BPF header prefix.
+        // Java uses plain int/long regardless of sign; BTF uses s32/u32/s64/u64;
+        // the renderer may emit __u32/__u64 for @Unsigned params.  All of these
+        // are wire-compatible at the struct_ops ABI level.
         return switch (n) {
-            case "u8"  -> "__u8";
-            case "u16" -> "__u16";
-            case "u32" -> "__u32";
-            case "u64" -> "__u64";
-            case "s8"  -> "__s8";
-            case "s16" -> "__s16";
-            case "s32" -> "__s32";
-            case "s64" -> "__s64";
+            case "u8",  "s8",  "__u8",  "__s8",
+                 "char", "unsigned char", "signed char"    -> "i8";
+            case "u16", "s16", "__u16", "__s16", "short"  -> "i16";
+            case "u32", "s32", "__u32", "__s32", "int"    -> "i32";
+            case "u64", "s64", "__u64", "__s64", "long"   -> "i64";
             default    -> n;
         };
     }

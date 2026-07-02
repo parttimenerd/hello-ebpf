@@ -51,4 +51,30 @@ public final class TreeConstants {
         if (lit.getKind() != Tree.Kind.STRING_LITERAL) return Optional.empty();
         return Optional.of((String) lit.getValue());
     }
+
+    /**
+     * If the method body is exactly {@code return <int-literal>;}, returns the
+     * literal as a Long. Any other shape yields {@link Optional#empty()}.
+     * Used by struct_ops synthesis for int-typed data fields (e.g.
+     * {@code hid_bpf_ops.hid_id}).
+     */
+    public static Optional<Long> integerReturnLiteral(
+            ProcessingEnvironment env, ExecutableElement m) {
+        Trees trees;
+        try {
+            trees = Trees.instance(env);
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
+        var mt = trees.getTree(m);
+        if (mt == null || mt.getBody() == null) return Optional.empty();
+        var stmts = mt.getBody().getStatements();
+        if (stmts.size() != 1) return Optional.empty();
+        if (!(stmts.get(0) instanceof ReturnTree rt)) return Optional.empty();
+        if (!(rt.getExpression() instanceof LiteralTree lit)) return Optional.empty();
+        return switch (lit.getKind()) {
+            case INT_LITERAL, LONG_LITERAL -> Optional.of(((Number) lit.getValue()).longValue());
+            default -> Optional.empty();
+        };
+    }
 }

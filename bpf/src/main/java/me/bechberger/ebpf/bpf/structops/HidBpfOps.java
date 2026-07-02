@@ -19,10 +19,10 @@ import me.bechberger.ebpf.type.Ptr;
 @StructOps("hid_bpf_ops")
 public interface HidBpfOps {
 
-    default int hidDeviceEvent(Ptr<HidDefinitions.hid_bpf_ctx> ctx,
+    default int hidDeviceEvent(Ptr<HidDefinitions.hid_bpf_ctx> hctx,
                                int type, @Unsigned long source)          { return 0; }
-    default int hidRdescFixup(Ptr<HidDefinitions.hid_bpf_ctx> ctx)       { return 0; }
-    default int hidHwRequest(Ptr<HidDefinitions.hid_bpf_ctx> ctx,
+    default int hidRdescFixup(Ptr<HidDefinitions.hid_bpf_ctx> hctx)       { return 0; }
+    default int hidHwRequest(Ptr<HidDefinitions.hid_bpf_ctx> hctx,
                              @Unsigned int reportnum,
                              int rtype, int reqtype,
                              @Unsigned long source)                       { return 0; }

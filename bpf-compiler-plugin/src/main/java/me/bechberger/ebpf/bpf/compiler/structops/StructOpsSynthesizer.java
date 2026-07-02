@@ -5,10 +5,13 @@ import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.bpf.compiler.util.TreeConstants;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import org.jetbrains.annotations.Nullable;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 import java.lang.reflect.Proxy;
@@ -75,6 +78,10 @@ public final class StructOpsSynthesizer {
             for (ExecutableElement ifaceMethod : kind.overriddenMethods()) {
                 String fieldName = StructOpsValidator.camelToSnake(
                         ifaceMethod.getSimpleName().toString());
+                // Skip utility methods declared on the interface that have no
+                // matching field in the kernel layout (e.g. runSchedulerLoop,
+                // attachScheduler, getSchedulerName, isSchedulerAttachedProperly).
+                if (!layout.hasField(fieldName)) continue;
                 StructOpsValidator.validateFieldExists(layout, fieldName);
                 StructOpsLayout.Field field = layout.field(fieldName);
 
@@ -89,16 +96,24 @@ public final class StructOpsSynthesizer {
                     ExecutableElement concrete = findConcreteMethod(bpfClass, ifaceMethod);
                     ExecutableElement target = concrete != null ? concrete : ifaceMethod;
                     String prefix = kind.sectionPrefix();
-                    if (concrete != null && concrete.getAnnotation(
-                            me.bechberger.ebpf.annotations.bpf.Sleepable.class) != null) {
+                    boolean sleepable = (concrete != null
+                            && concrete.getAnnotation(me.bechberger.ebpf.annotations.bpf.Sleepable.class) != null)
+                            || ifaceMethod.getAnnotation(me.bechberger.ebpf.annotations.bpf.Sleepable.class) != null;
+                    if (sleepable) {
                         prefix = "struct_ops.s/";
                     }
                     String section = prefix + fieldName;
-                    String header = renderHeader(field, ifaceMethod);
+                    // Prefer concrete method for parameter names: abstract interface methods
+                    // compiled into a .jar without -parameters lose their names (arg0, arg1, …)
+                    // while default methods and concrete overrides retain them.
+                    String header = renderHeader(field, ifaceMethod, concrete);
                     // Function name matches the kernel field so the init below can
                     // reference it without a Java-vs-C name gap (e.g. congAvoid vs cong_avoid).
-                    functions.add(new SynthFunction(target, makeProxy(section, header, fieldName)));
-                    initializerLines.add("    ." + fieldName + " = (void *)" + fieldName);
+                    // emittedName may carry a prefix (e.g. "sched_") from the @StructOps annotation;
+                    // fieldName is still the BTF field name used on the left of the initializer.
+                    String emittedName = kind.emittedNamePrefix() + fieldName;
+                    functions.add(new SynthFunction(target, makeProxy(section, header, emittedName)));
+                    initializerLines.add("    ." + fieldName + " = (void *)" + emittedName);
                 }
             }
 
@@ -133,26 +148,41 @@ public final class StructOpsSynthesizer {
     }
 
     /**
-     * Renders the {@code $return BPF_PROG($name, args…)} header string. Return
+     * Renders the {@code $return BPF_PROG($name, args...)} header string. Return
      * and arg types come from the pre-dumped BTF layout (with a small
-     * fixed-width rename so {@code u32 → __u32}), and parameter names come
-     * from the Java interface method — libbpf's {@code BPF_PROG} macro
-     * doesn't need arg names to match, but readable diagnostics do.
+     * fixed-width rename so {@code u32} to {@code __u32}), and parameter names come
+     * from the Java interface method. When the interface method's parameters have
+     * synthesized names ({@code arg0}, {@code arg1}, ...) — which happens for abstract
+     * interface methods compiled without {@code -parameters} — the concrete
+     * override's parameter names are used instead for readability.
+     * libbpf's {@code BPF_PROG} macro does not require arg names to match the
+     * kernel, but readable diagnostics do.
      */
-    private String renderHeader(StructOpsLayout.Field field, ExecutableElement ifaceMethod) {
+    private String renderHeader(StructOpsLayout.Field field, ExecutableElement ifaceMethod,
+                                @Nullable ExecutableElement concreteMethod) {
         String ret = mapBtfType(field.returnType(), returnAnnotatedUnsigned(ifaceMethod));
 
-        var params = ifaceMethod.getParameters();
+        var ifaceParams = ifaceMethod.getParameters();
+        // Prefer concrete method params for names when the interface has synthesized names (arg0, arg1, ...).
+        // Abstract interface methods compiled without -parameters lose original names in the .class.
+        // However, always use the interface params for @Unsigned type-use annotations since the
+        // concrete override may not redeclare them.
+        boolean useConcreteNames = concreteMethod != null
+                && ifaceParams.stream().allMatch(p -> p.getSimpleName().toString().matches("arg\\d+"));
+        var nameParams = useConcreteNames ? concreteMethod.getParameters() : ifaceParams;
         var btfArgs = field.args();
         // validateArgCount has already run — sizes match.
-        int n = params.size();
+        int n = nameParams.size();
         var parts = new ArrayList<String>(n);
         for (int i = 0; i < n; i++) {
-            VariableElement p = params.get(i);
-            boolean unsigned = p.getAnnotation(Unsigned.class) != null;
+            VariableElement namePar = nameParams.get(i);
+            // @Unsigned check: prefer interface param (has canonical type-use annotations),
+            // fall back to concrete param.
+            VariableElement unsignedPar = i < ifaceParams.size() ? ifaceParams.get(i) : namePar;
+            boolean unsigned = unsignedPar.getAnnotation(Unsigned.class) != null;
             if (!unsigned) {
                 // TYPE_USE-scoped @Unsigned lives on the parameter's type mirror.
-                for (var a : p.asType().getAnnotationMirrors()) {
+                for (var a : unsignedPar.asType().getAnnotationMirrors()) {
                     String fqn = ((TypeElement) a.getAnnotationType().asElement())
                             .getQualifiedName().toString();
                     if (fqn.equals(Unsigned.class.getName())) {
@@ -162,8 +192,8 @@ public final class StructOpsSynthesizer {
                 }
             }
             String cType = mapBtfType(btfArgs.get(i).type(), unsigned);
-            parts.add(cType.endsWith("*") ? cType + p.getSimpleName()
-                                          : cType + " " + p.getSimpleName());
+            parts.add(cType.endsWith("*") ? cType + namePar.getSimpleName()
+                                          : cType + " " + namePar.getSimpleName());
         }
         String args = String.join(", ", parts);
         return ret + " BPF_PROG($name" + (args.isEmpty() ? "" : ", " + args) + ")";
@@ -177,6 +207,9 @@ public final class StructOpsSynthesizer {
      * their {@code __uN} equivalents, matching {@code JavaToCTypeRenderer}.
      */
     private String mapBtfType(String btfType, boolean unsigned) {
+        // Enum tags pass through as-is: the emitted C header can use them directly
+        // (the kernel headers included in the BPF program already declare them).
+        if (btfType.startsWith("enum ")) return btfType;
         return switch (btfType) {
             case "u8"  -> "__u8";
             case "u16" -> "__u16";
@@ -186,6 +219,7 @@ public final class StructOpsSynthesizer {
             case "long"   -> unsigned ? "__u64" : "long";
             case "short"  -> unsigned ? "__u16" : "short";
             case "signed char", "char" -> unsigned ? "__u8" : "signed char";
+            case "unsigned char"       -> "unsigned char";
             default -> btfType;
         };
     }
@@ -211,11 +245,34 @@ public final class StructOpsSynthesizer {
     /**
      * For a data field like {@code name}, emits {@code    .name = "hellocc"}
      * — reading the string literal from the concrete class's overriding
-     * method body via {@link TreeConstants}.
+     * method body via {@link TreeConstants}. Integer-typed data fields
+     * (e.g. {@code hid_bpf_ops.hid_id}) accept an int-literal body and emit
+     * {@code    .hid_id = 0}.
      */
     private String renderDataInitializer(TypeElement bpfClass, ExecutableElement ifaceMethod,
                                          StructOpsLayout.Field field) {
         ExecutableElement concrete = findConcreteMethod(bpfClass, ifaceMethod);
+        String btf = field.returnType();
+        boolean isInt = switch (btf) {
+            case "int", "long", "short", "u8", "u16", "u32", "u64",
+                 "s8", "s16", "s32", "s64", "signed char", "unsigned char", "char" -> true;
+            default -> false;
+        };
+        if (isInt) {
+            Optional<Long> lit = concrete != null
+                    ? TreeConstants.integerReturnLiteral(env, concrete)
+                    : Optional.empty();
+            if (lit.isEmpty()) {
+                env.getMessager().printMessage(
+                        Diagnostic.Kind.ERROR,
+                        "@StructOps data field '" + field.name()
+                                + "' must be initialised with an integer literal — "
+                                + "dynamic values not supported",
+                        concrete != null ? concrete : ifaceMethod);
+                return null;
+            }
+            return "    ." + field.name() + " = " + lit.get();
+        }
         Optional<String> literal = concrete != null
                 ? TreeConstants.stringReturnLiteral(env, concrete)
                 : Optional.empty();
@@ -249,17 +306,24 @@ public final class StructOpsSynthesizer {
     }
 
     /**
-     * Locates the concrete override of {@code ifaceMethod} declared directly
-     * on {@code bpfClass}. Match by simple name + arity — {@link StructOpsDiscovery}
-     * has already vetted that the override exists and is non-abstract.
+     * Locates the concrete override of {@code ifaceMethod} starting from
+     * {@code bpfClass} and walking the superclass chain up to (not including)
+     * {@code java.lang.Object}. Match by simple name + arity — the most-derived
+     * non-abstract declaration is returned.
      */
     private ExecutableElement findConcreteMethod(TypeElement bpfClass,
                                                  ExecutableElement ifaceMethod) {
-        for (ExecutableElement m : ElementFilter.methodsIn(bpfClass.getEnclosedElements())) {
-            if (m.getModifiers().contains(Modifier.ABSTRACT)) continue;
-            if (!m.getSimpleName().contentEquals(ifaceMethod.getSimpleName())) continue;
-            if (m.getParameters().size() != ifaceMethod.getParameters().size()) continue;
-            return m;
+        TypeElement cursor = bpfClass;
+        while (cursor != null) {
+            if (cursor.getQualifiedName().contentEquals("java.lang.Object")) break;
+            for (ExecutableElement m : ElementFilter.methodsIn(cursor.getEnclosedElements())) {
+                if (m.getModifiers().contains(Modifier.ABSTRACT)) continue;
+                if (!m.getSimpleName().contentEquals(ifaceMethod.getSimpleName())) continue;
+                if (m.getParameters().size() != ifaceMethod.getParameters().size()) continue;
+                return m;
+            }
+            TypeMirror sup = cursor.getSuperclass();
+            cursor = (sup instanceof DeclaredType d) ? (TypeElement) d.asElement() : null;
         }
         return null;
     }
@@ -284,7 +348,15 @@ public final class StructOpsSynthesizer {
                     // bpf_map__attach_struct_ops, not autoAttachPrograms.
                     case "autoAttach"     -> false;
                     case "name"           -> name;
-                    case "addDefinition"  -> true;
+                    // struct_ops entry points are referenced by (void*)name in the
+                    // struct instance, which is emitted after all function bodies.
+                    // A forward declaration would conflict when BPF_PROG/BPF_STRUCT_OPS
+                    // expands to the same identifier (especially for no-arg functions
+                    // where the macro-with-args regex in canEmitDeclaratorFor does not
+                    // suppress the forward-decl).  Original hand-written @BPFFunction
+                    // annotations on Scheduler.java all used addDefinition=false for
+                    // the same reason.
+                    case "addDefinition"  -> false;
                     // entry points must not be inlined
                     case "inline"         -> false;
                     case "annotationType" -> BPFFunction.class;
