@@ -19,7 +19,8 @@ public final class InMemoryJavaCompiler {
     /** Result of one compilation attempt. */
     public record Result(boolean success,
                          List<Diagnostic<? extends JavaFileObject>> diagnostics,
-                         String compilerOutput) {
+                         String compilerOutput,
+                         java.util.Map<String, String> generatedSources) {
 
         /** All error-level diagnostic messages joined with newlines. */
         public String errorMessages() {
@@ -39,6 +40,21 @@ public final class InMemoryJavaCompiler {
                         + "Compiler output:\n" + compilerOutput);
             }
             return this;
+        }
+
+        /** Throws if compilation failed — used by codegen tests. */
+        public Result requireSuccess(String why) {
+            if (!success) {
+                throw new AssertionError(why + " — compilation failed.\n"
+                        + "Diagnostics:\n" + errorMessages()
+                        + "Compiler output:\n" + compilerOutput);
+            }
+            return this;
+        }
+
+        /** Retrieve a generated source file by its fully-qualified class name. */
+        public java.util.Optional<String> generatedSource(String fqcn) {
+            return java.util.Optional.ofNullable(generatedSources.get(fqcn));
         }
     }
 
@@ -94,8 +110,23 @@ public final class InMemoryJavaCompiler {
         task.setProcessors(List.of(processor));
 
         boolean success;
+        java.util.Map<String, String> generatedSources = new java.util.LinkedHashMap<>();
         try {
             success = task.call();
+            // Collect all generated .java files before we wipe the temp dir.
+            try {
+                java.nio.file.Files.walk(tmp)
+                        .filter(p -> p.toString().endsWith(".java"))
+                        .forEach(p -> {
+                            try {
+                                String rel = tmp.relativize(p).toString();
+                                // Strip .java and convert path separators to dots.
+                                String fqcn = rel.substring(0, rel.length() - ".java".length())
+                                        .replace(java.io.File.separatorChar, '.');
+                                generatedSources.put(fqcn, java.nio.file.Files.readString(p));
+                            } catch (IOException ignored) {}
+                        });
+            } catch (IOException ignored) {}
         } finally {
             try { fileManager.close(); } catch (IOException ignored) {}
             // Best-effort cleanup of the temp tree.
@@ -105,6 +136,6 @@ public final class InMemoryJavaCompiler {
                         .forEach(p -> { try { java.nio.file.Files.deleteIfExists(p); } catch (IOException ignored) {} });
             } catch (IOException ignored) {}
         }
-        return new Result(success, diagnostics.getDiagnostics(), output.toString());
+        return new Result(success, diagnostics.getDiagnostics(), output.toString(), generatedSources);
     }
 }

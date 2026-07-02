@@ -405,6 +405,15 @@ public class Processor extends AbstractProcessor {
         code.tp.mapDefinitions().forEach(m -> {
             constructor.addStatement("$L", m.javaFieldInitializer());
         });
+        // Auto-register @BPFTailCallTable slots. Emits, for each table:
+        //   <fieldName>.register(<ordinal>, getProgramByName("<methodName>"));
+        for (var table : code.tp.tailCallTables()) {
+            for (var reg : table.registrations()) {
+                constructor.addStatement(
+                        "$L.register($L, getProgramByName($S))",
+                        table.fieldName(), reg.ordinal(), reg.methodName());
+            }
+        }
         spec.addMethod(constructor.build());
 
         // Generate preLoad() override on the impl class when:
