@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * annotated directly — the plugin does not follow chains of extending
  * interfaces.
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 @Documented
 public @interface StructOps {
