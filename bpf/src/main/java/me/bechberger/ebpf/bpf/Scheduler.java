@@ -10,7 +10,6 @@ import me.bechberger.ebpf.annotations.AlwaysInline;
 import me.bechberger.ebpf.annotations.BoundedBy;
 import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.*;
-import me.bechberger.ebpf.runtime.BpfDefinitions;
 import me.bechberger.ebpf.runtime.ScxDefinitions;
 import me.bechberger.ebpf.runtime.TaskDefinitions;
 import me.bechberger.ebpf.runtime.runtime;
@@ -20,13 +19,8 @@ import me.bechberger.ebpf.type.Ptr;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.function.Consumer;
 
-import static me.bechberger.ebpf.runtime.BpfDefinitions.bpf_cpumask_test_cpu;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_dsq_id_flags.SCX_DSQ_LOCAL_ON;
-import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_enq_flags.SCX_ENQ_PREEMPT;
 import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_public_consts.SCX_SLICE_DFL;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
@@ -78,17 +72,14 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
                  */
                 void scx_bpf_error_bstr(char *fmt, unsigned long long *data, u32 data_len) __ksym;
 
-                #define scx_bpf_bstr_preamble(fmt, args...)					\\
+                #define scx_bpf_error(fmt, args...)						\\
+                ({										\\
                 	static char ___fmt[] = fmt;						\\
                 	unsigned long long ___param[___bpf_narg(args) ?: 1] = {};		\\
                 	_Pragma("GCC diagnostic push")						\\
                 	_Pragma("GCC diagnostic ignored \\"-Wint-conversion\\"")			\\
                 	___bpf_fill(___param, args);						\\
-                	_Pragma("GCC diagnostic pop")
-
-                #define scx_bpf_error(fmt, args...)						\\
-                ({										\\
-                	scx_bpf_bstr_preamble(fmt, args)					\\
+                	_Pragma("GCC diagnostic pop")						\\
                 	scx_bpf_error_bstr(___fmt, ___param, sizeof(___param));			\\
                 })
                 """
@@ -99,71 +90,10 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 @PropertyDefinition(name = "extra_flags", defaultValue = "0", regexp = "[A-Z0-9_| ()]+")
 public interface Scheduler {
 
-    /** No such process error code */
-    final int ESRCH = 3;
-
+    /** Subset of Linux {@code PF_*} process flags actually referenced by hello-ebpf schedulers. */
     final class PerProcessFlags {
-        /** I'm a virtual CPU */
-        public static final int PF_VCPU = 0x00000001;
-        /** I am an IDLE thread */
-        public static final int PF_IDLE = 0x00000002;
-        /** Getting shut down */
-        public static final int PF_EXITING = 0x00000004;
-        /** Coredumps should ignore this task */
-        public static final int PF_POSTCOREDUMP = 0x00000008;
-        /** Task is an IO worker */
-        public static final int PF_IO_WORKER = 0x00000010;
-        /** I'm a workqueue worker */
-        public static final int PF_WQ_WORKER = 0x00000020;
-        /** Forked but didn't exec */
-        public static final int PF_FORKNOEXEC = 0x00000040;
-        /** Process policy on mce errors */
-        public static final int PF_MCE_PROCESS = 0x00000080;
-        /** Used super-user privileges */
-        public static final int PF_SUPERPRIV = 0x00000100;
-        /** Dumped core */
-        public static final int PF_DUMPCORE = 0x00000200;
-        /** Killed by a signal */
-        public static final int PF_SIGNALED = 0x00000400;
-        /** Allocating memory to free memory. See memalloc\_noreclaim\_save() */
-        public static final int PF_MEMALLOC = 0x00000800;
-        /** set\_user() noticed that RLIMIT\_NPROC was exceeded */
-        public static final int PF_NPROC_EXCEEDED = 0x00001000;
-        /** If unset the fpu must be initialized before use */
-        public static final int PF_USED_MATH = 0x00002000;
-        /** Kernel thread cloned from userspace thread */
-        public static final int PF_USER_WORKER = 0x00004000;
-        /** This thread should not be frozen */
-        public static final int PF_NOFREEZE = 0x00008000;
-        public static final int PF__HOLE__00010000 = 0x00010000;
-        /** I am kswapd */
-        public static final int PF_KSWAPD = 0x00020000;
-        /** All allocations inherit GFP\_NOFS. See memalloc\_nfs\_save() */
-        public static final int PF_MEMALLOC_NOFS = 0x00040000;
-        /** All allocations inherit GFP\_NOIO. See memalloc\_noio\_save() */
-        public static final int PF_MEMALLOC_NOIO = 0x00080000;
-        /** Throttle writes only against the bdi I write to, I am cleaning dirty pages from some other bdi. */
-        public static final int PF_LOCAL_THROTTLE = 0x00100000;
-        /** I am a kernel thread */
+        /** I am a kernel thread. */
         public static final int PF_KTHREAD = 0x00200000;
-        /** Randomize virtual address space */
-        public static final int PF_RANDOMIZE = 0x00400000;
-        /** All allocation requests will clear \_\_GFP\_DIRECT\_RECLAIM */
-        public static final int PF_MEMALLOC_NORECLAIM = 0x00800000;
-        /** All allocation requests will inherit \_\_GFP\_NOWARN */
-        public static final int PF_MEMALLOC_NOWARN = 0x01000000;
-        public static final int PF__HOLE__02000000 = 0x02000000;
-        /** Userland is not allowed to meddle with cpus\_mask */
-        public static final int PF_NO_SETAFFINITY = 0x04000000;
-        /** Early kill for mce process policy */
-        public static final int PF_MCE_EARLY = 0x08000000;
-        /** Allocations constrained to zones which allow long term pinning. See memalloc\_pin\_save() */
-        public static final int PF_MEMALLOC_PIN = 0x10000000;
-        /** plug has ts that needs updating */
-        public static final int PF_BLOCK_TS = 0x20000000;
-        public static final int PF__HOLE__40000000 = 0x40000000;
-        /** This thread called freeze\_processes() and should not be frozen */
-        public static final int PF_SUSPEND_TASK = 0x80000000;
     }
 
     /**
@@ -182,8 +112,8 @@ public interface Scheduler {
      *
      * <p>Called before the task is enqueued.  Returning an idle CPU causes the kernel
      * to attempt a fast-path dispatch directly to {@code SCX_DSQ_LOCAL} of that CPU —
-     * use {@link #selectCpuDefault} or {@link #selectCpuFifoIdleOrFallback} to take
-     * advantage of this.  If you pre-insert the task into a DSQ here, {@link #enqueue}
+     * use {@link #selectCpuFifoIdleOrFallback} to take advantage of this.
+     * If you pre-insert the task into a DSQ here, {@link #enqueue}
      * will <em>not</em> be called.
      *
      * <p>This decision is <b>not final</b>: the kernel may move the task to a different
@@ -191,7 +121,7 @@ public interface Scheduler {
      * not a guarantee.
      *
      * <p>The default implementation always returns 0 (CPU 0), which is safe but
-     * suboptimal.  Most schedulers should delegate to {@link #selectCpuDefault} or
+     * suboptimal.  Most schedulers should delegate to {@link #selectCpuDfl} or
      * {@link #selectCpuFifoIdleOrFallback}.
      *
      * @param p          task being woken up
@@ -209,9 +139,10 @@ public interface Scheduler {
      *
      * <p><b>Ownership:</b> when this is called, the scheduler <em>owns</em> the task.
      * It <em>must</em> be placed into a DSQ before returning — either by calling
-     * {@link #dsqInsert}, {@link #vtimeEnqueue}, {@code scx_bpf_dsq_insert}, or
-     * {@code scx_bpf_dsq_insert_vtime}.  Failing to enqueue leaves the task orphaned
-     * and will trigger a watchdog stall.
+     * {@link me.bechberger.ebpf.bpf.sched.DispatchQueue#insertScaled},
+     * {@link me.bechberger.ebpf.bpf.sched.DispatchQueue#insertVtimeClamped},
+     * {@code scx_bpf_dsq_insert}, or {@code scx_bpf_dsq_insert_vtime}.
+     * Failing to enqueue leaves the task orphaned and will trigger a watchdog stall.
      *
      * <p>This is the <b>only mandatory callback</b>.  All other callbacks have
      * no-op defaults.
@@ -746,62 +677,6 @@ public interface Scheduler {
     }
 
     /**
-     * Iterate over all tasks in the DSQ, using the {@code bpf_for_each} macro.
-     * <p>
-     * This inserts the body of the lambda into the macro,
-     * so {@code return} works differently,
-     * for {@code break;} use {@link BPFJ#_break()} and for {@code continue;} use {@link BPFJ#_continue()}.
-     * Use {@link me.bechberger.ebpf.type.Box} for using non-final variables from outside the lambda.
-     * @param dsq_id queue id
-     * @param cur current task in the loop
-     * @param body lambda to execute for each task
-     */
-    @BuiltinBPFFunction("""
-            bpf_for_each(scx_dsq, $arg2, $arg1, 0) {
-                $lambda3:param1:type $lambda3:param1:name = BPF_FOR_EACH_ITER;
-                $lambda3:code
-            }
-            """)
-    default void bpf_for_each_dsq(int dsq_id,
-                                  Ptr<TaskDefinitions.task_struct> cur,
-                                  Consumer<Ptr<BpfDefinitions.bpf_iter_scx_dsq>> body) {
-        throw new MethodIsBPFRelatedFunction();
-    }
-
-    /**
-     * Moves task {@code p} from the DSQ iterator position to the local queue of {@code cpu},
-     * but only if {@code cpu} is in the task's allowed CPU mask.
-     *
-     * <p>This is the canonical dispatch helper for schedulers that use
-     * {@link #bpf_for_each_dsq} to scan a shared DSQ and dispatch each task to a
-     * specific CPU (rather than the caller's local queue).  It corresponds to the
-     * pattern used in {@code scx_pair} and other per-CPU-targeted schedulers.
-     *
-     * <p><b>Note:</b> This method calls {@code bpf_cpumask_test_cpu(cpu, p->cpus_ptr)}, which
-     * requires {@code cpus_ptr} to be a BTF-tracked pointer (stack or map value).
-     * When {@code p} is an {@code rcu_ptr_task_struct} obtained from a
-     * {@link #bpf_for_each_dsq} iterator, the BPF verifier rejects this call with
-     * {@code R2 type=scalar expected=fp}. Prefer {@code scx_bpf_dsq_move_to_local}
-     * in dispatch, which handles CPU affinity automatically.
-     *
-     * <p>Returns {@code true} if the task was moved (the caller should stop iterating);
-     * {@code false} if the CPU was not in the task's affinity mask.
-     *
-     * @param iter the DSQ iterator from the {@code bpf_for_each_dsq} lambda parameter
-     * @param p    the current task from the iterator
-     * @param cpu  target CPU to dispatch to
-     */
-    @BPFFunction
-    @AlwaysInline
-    default boolean tryDispatchToLocalCpu(Ptr<BpfDefinitions.bpf_iter_scx_dsq> iter,
-                                          Ptr<TaskDefinitions.task_struct> p, int cpu) {
-        if (!bpf_cpumask_test_cpu(cpu, p.directVal().cpus_ptr)) {
-            return false;
-        }
-        return scx_bpf_dsq_move(iter, p, SCX_DSQ_LOCAL_ON.value() | cpu, SCX_ENQ_PREEMPT.value());
-    }
-
-    /**
      * Returns {@code true} if the task has scheduling constraints that prevent it
      * from being placed on an arbitrary CPU: it is a kernel thread
      * ({@code PF_KTHREAD}) or its CPU affinity mask is narrower than the full set
@@ -972,22 +847,6 @@ public interface Scheduler {
     }
 
     /**
-     * Selects a CPU using the kernel default; pre-dispatches to
-     * {@code SCX_DSQ_LOCAL} when an idle CPU is found.
-     *
-     * <p><b>Only safe for FIFO DSQs.</b>
-     */
-    @BPFFunction
-    default int selectCpuDefault(Ptr<task_struct> p, int prev_cpu, long wake_flags) {
-        boolean is_idle = false;
-        int cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, Ptr.of(is_idle));
-        if (is_idle) {
-            scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL.value(), SCX_SLICE_DFL.value(), 0);
-        }
-        return cpu;
-    }
-
-    /**
      * Selects a CPU for a waking task; pre-dispatches into {@code dsqId} when an idle
      * CPU is found (avoids a full enqueue/dispatch round-trip).
      *
@@ -1008,42 +867,12 @@ public interface Scheduler {
     }
 
     /**
-     * @deprecated Renamed to {@link #selectCpuFifoIdleOrFallback} to clarify it is only
-     *             safe for FIFO DSQs.  Use {@link #selectCpuDfl} for vtime-ordered DSQs.
-     */
-    @Deprecated
-    @BPFFunction
-    default int selectCpuIdleOrFallback(Ptr<task_struct> p, int prev_cpu, long wake_flags,
-                                        @Unsigned long dsqId) {
-        return selectCpuFifoIdleOrFallback(p, prev_cpu, wake_flags, dsqId);
-    }
-
-    /**
      * Unsigned-safe {@code a < b} comparison for virtual time values.
      */
     @BPFFunction
     @AlwaysInline
     default boolean isSmaller(@Unsigned long a, @Unsigned long b) {
         return (long) (a - b) < 0;
-    }
-
-    /**
-     * Inserts {@code p} into DSQ 0 using vtime-ordered priority.
-     *
-     * <p>Clamps the task's accumulated vtime so that idle tasks cannot build up
-     * more than one {@code SCX_SLICE_DFL} of budget ahead of the global vtime.
-     *
-     * @param vtimeNow current global virtual time
-     * @deprecated Prefer {@link me.bechberger.ebpf.bpf.sched.DispatchQueue#insertVtimeClamped} for new code.
-     */
-    @Deprecated
-    @BPFFunction
-    default void vtimeEnqueue(Ptr<task_struct> p, long enq_flags, @Unsigned long vtimeNow) {
-        @Unsigned long vtime = p.val().scx.dsq_vtime;
-        if (isSmaller(vtime, vtimeNow - SCX_SLICE_DFL.value())) {
-            vtime = vtimeNow - SCX_SLICE_DFL.value();
-        }
-        scx_bpf_dsq_insert_vtime(p, 0L, SCX_SLICE_DFL.value(), vtime, enq_flags);
     }
 
     /**
@@ -1056,19 +885,5 @@ public interface Scheduler {
     default void vtimeCharge(Ptr<task_struct> p) {
         p.val().scx.dsq_vtime +=
                 (SCX_SLICE_DFL.value() - p.val().scx.slice) * 100 / p.val().scx.weight;
-    }
-
-    /**
-     * Signals a fatal scheduler error from Java user-space: detaches the scheduler and
-     * logs {@code message} to the kernel ring buffer (visible via {@code dmesg}).
-     *
-     * <p>This is the Java-side companion to the BPF-side {@link #scx_bpf_error(String, Object...)}
-     * macro.  It detaches the scheduler (causing an immediate watchdog-style exit) and
-     * prints the message through the {@code BPFProgram} error mechanism.
-     *
-     * @param message human-readable error description (visible in kernel log)
-     */
-    default void scxError(String message) {
-        throw new BPFError("sched_ext scheduler error: " + message);
     }
 }

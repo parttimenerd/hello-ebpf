@@ -171,8 +171,8 @@ class SchedulerSmokeTest {
     }
 
     /**
-     * Exercises {@link Scheduler#bpf_for_each_dsq}, {@link Scheduler#tryDispatchToLocalCpu},
-     * {@link Scheduler#hasSchedulingConstraints}, and {@link me.bechberger.ebpf.type.Box} usage.
+     * Exercises {@link Scheduler#hasSchedulingConstraints} and
+     * {@link me.bechberger.ebpf.type.Box} usage.
      */
     @Test
     @Timeout(15)

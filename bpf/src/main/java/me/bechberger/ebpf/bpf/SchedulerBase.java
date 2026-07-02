@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0
 package me.bechberger.ebpf.bpf;
 
-import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.runtime.ScxDefinitions;
 import me.bechberger.ebpf.type.Ptr;
 
-import static me.bechberger.ebpf.runtime.ScxDefinitions.*;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_create_dsq;
+import static me.bechberger.ebpf.runtime.ScxDefinitions.scx_bpf_dsq_move_to_local;
 import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
 
 /**
@@ -17,7 +17,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  * {@link Scheduler#enqueue(Ptr, long)}.
  *
  * <p>BPF-side helpers such as {@code dsqInsert}, {@code selectCpuDfl},
- * {@code selectCpuFifoIdleOrFallback}, {@code isSmaller}, {@code vtimeEnqueue},
+ * {@code selectCpuFifoIdleOrFallback}, {@code isSmaller},
  * and {@code vtimeCharge} are inherited from the {@link Scheduler} interface and
  * are available in BPF context to any class that implements {@link Scheduler}.
  *
@@ -52,8 +52,7 @@ public abstract class SchedulerBase extends BPFProgram implements Scheduler {
     /** DSQ ID used by the pre-wired shared queue. */
     public static final long SHARED_DSQ_ID = 0;
 
-
-    /** Raw {@code exit_code} from {@link ScxDefinitions#scx_exit_info}; populated by {@link #exit(Ptr)}.
+    /** Raw {@code exit_code} populated by {@link #exit(Ptr)}.
      *  Prefixed with {@code _} to avoid name clash with the {@code exitCode} parameter in
      *  {@link #onSchedulerExit(long)}. */
     protected final GlobalVariable<Long> _exitCode = new GlobalVariable<>(0L);
@@ -64,11 +63,12 @@ public abstract class SchedulerBase extends BPFProgram implements Scheduler {
     protected final GlobalVariable<Long> _exitKind = new GlobalVariable<>(0L);
 
     /**
-     * Creates the shared DSQ on the local NUMA node.
-     * Override to create additional DSQs or pin to a specific node.
+     * Default init: creates the shared FIFO DSQ.  Subclasses that override
+     * {@code init()} should call {@code super.init()} first and propagate a
+     * non-zero return value.
      */
     @Override
-    @BPFFunction(headerTemplate = "s32 BPF_STRUCT_OPS_SLEEPABLE(sched_init)", addDefinition = false)
+    @me.bechberger.ebpf.annotations.bpf.Sleepable
     public int init() {
         return scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
     }
@@ -78,7 +78,6 @@ public abstract class SchedulerBase extends BPFProgram implements Scheduler {
      * scheduler unloads.  Override and call {@code super.exit(ei)} to add custom cleanup.
      */
     @Override
-    @BPFFunction(headerTemplate = "void BPF_STRUCT_OPS(sched_exit, struct scx_exit_info *ei)", addDefinition = false)
     public void exit(Ptr<ScxDefinitions.scx_exit_info> ei) {
         _exitCode.set(ei.val().exit_code);
         _exitKind.set((long) ei.val().kind.value());
@@ -89,7 +88,6 @@ public abstract class SchedulerBase extends BPFProgram implements Scheduler {
      * local dispatch queue.
      */
     @Override
-    @BPFFunction(headerTemplate = "void BPF_STRUCT_OPS(sched_dispatch, s32 cpu, struct task_struct *prev)", addDefinition = false)
     public void dispatch(int cpu, Ptr<task_struct> prev) {
         scx_bpf_dsq_move_to_local(SHARED_DSQ_ID);
     }
@@ -130,12 +128,12 @@ public abstract class SchedulerBase extends BPFProgram implements Scheduler {
     }
 
     /**
-     * Attaches the scheduler, blocks until it detaches, then calls
+     * Blocks until the scheduler detaches, then calls
      * {@link #onSchedulerExit(long)} with the captured exit code.
+     * {@link BPFProgram#load(Class)} already attached all struct_ops automatically.
      */
     @Override
     public void runSchedulerLoop() {
-        attachScheduler();
         waitWhileSchedulerIsAttachedProperly();
         onSchedulerExit(getExitCode());
     }
