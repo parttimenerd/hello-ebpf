@@ -56,10 +56,9 @@ public interface SchedExtOps {
     default int  cgroupInit(Ptr<runtime.cgroup> cgrp, Ptr<ScxDefinitions.scx_cgroup_init_args> args) { return 0; }
     default void cgroupExit(Ptr<runtime.cgroup> cgrp) { }
     default int  cgroupPrepMove(Ptr<TaskDefinitions.task_struct> p, Ptr<runtime.cgroup> from, Ptr<runtime.cgroup> to) { return 0; }
-    default void cgroupCancelMove(Ptr<TaskDefinitions.task_struct> p) { }
-    default void cgroupMove(Ptr<TaskDefinitions.task_struct> p) { }
+    default void cgroupCancelMove(Ptr<TaskDefinitions.task_struct> p, Ptr<runtime.cgroup> from, Ptr<runtime.cgroup> to) { }
+    default void cgroupMove(Ptr<TaskDefinitions.task_struct> p, Ptr<runtime.cgroup> from, Ptr<runtime.cgroup> to) { }
     default void cgroupSetWeight(Ptr<runtime.cgroup> cgrp, @Unsigned int weight) { }
     default void cgroupSetBandwidth(Ptr<runtime.cgroup> cgrp, @Unsigned long period, @Unsigned long quota, @Unsigned long burst) { }
-    // "name" is a data field — String default; plugin lowers to char[16].
     default String name() { return "hello_ext"; }
 }

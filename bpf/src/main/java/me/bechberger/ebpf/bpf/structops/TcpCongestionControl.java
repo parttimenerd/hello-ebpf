@@ -27,8 +27,8 @@ public interface TcpCongestionControl {
     default void setState(Ptr<runtime.sock> sk, @Unsigned int newState) { }
     default void cwndEvent(Ptr<runtime.sock> sk, @Unsigned int event) { }
     default @Unsigned int undoCwnd(Ptr<runtime.sock> sk)    { return 0; }
-    default void pktsAcked(Ptr<runtime.sock> sk, Ptr<misc.rate_sample> rs) { }
-    default @Unsigned int minTso(Ptr<runtime.sock> sk)      { return 0; }
+    default void pktsAcked(Ptr<runtime.sock> sk, Ptr<misc.ack_sample> sample) { }
+    default @Unsigned int minTsoSegs(Ptr<runtime.sock> sk)  { return 0; }
 
     /** Algorithm name. Registered as the identifier the kernel selects on. */
     default String name() { return "hello_cc"; }
