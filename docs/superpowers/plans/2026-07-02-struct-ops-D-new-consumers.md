@@ -225,16 +225,16 @@ git commit -m "test(bpf): TCP CC smoke covers /proc visibility + close cleanup"
 
 ---
 
-### Task 3: `QdiscOps` smoke test — attach a `bpf_qdisc_ops`
+### Task 3: `QdiscOps` smoke test — attach a `Qdisc_ops`
 
 **Files:**
 - Create: `bpf/src/test/java/me/bechberger/ebpf/bpf/structops/QdiscOpsSmokeTest.java`
 
 - [ ] **Step 1: Write the test**
 
-`bpf_qdisc_ops` requires `CONFIG_NET_SCH_BPF` and a kernel ≥ 6.10. thinkstation is 6.14+, so both are satisfied.
+`Qdisc_ops` requires `CONFIG_NET_SCH_BPF` and a kernel ≥ 6.10. thinkstation is 6.14+, so both are satisfied.
 
-Callbacks include `enqueue`, `dequeue`, `init`, `reset`, `destroy`. The minimum viable set for a load-only test is `enqueue` returning `NET_XMIT_SUCCESS` (= 0) and `init` returning 0. Signatures come from the BTF layout in Sub-plan A's `bpf_qdisc_ops.json`.
+Callbacks include `enqueue`, `dequeue`, `init`, `reset`, `destroy`. The minimum viable set for a load-only test is `enqueue` returning `NET_XMIT_SUCCESS` (= 0) and `init` returning 0. Signatures come from the BTF layout in Sub-plan A's `Qdisc_ops.json`.
 
 ```java
 package me.bechberger.ebpf.bpf.structops;
@@ -249,7 +249,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class QdiscOpsSmokeTest {
 
     /**
-     * Minimum viable bpf_qdisc_ops. Passing sk_buff and Qdisc as opaque
+     * Minimum viable Qdisc_ops. Passing sk_buff and Qdisc as opaque
      * Ptr — we don't need to inspect fields, just satisfy the attach.
      */
     @BPF
@@ -268,7 +268,7 @@ class QdiscOpsSmokeTest {
         try (var prog = BPFProgram.load(MinimalQdisc.class)) {
             var infos = prog.structOpsInfo();
             assertThat(infos).hasSize(1);
-            assertThat(infos.get(0).kernelName()).isEqualTo("bpf_qdisc_ops");
+            assertThat(infos.get(0).kernelName()).isEqualTo("Qdisc_ops");
             assertThat(infos.get(0).mapName()).isEqualTo("MinimalQdisc");
             assertThat(infos.get(0).bpfLinkId()).isNotZero();
         }
@@ -280,7 +280,7 @@ class QdiscOpsSmokeTest {
 }
 ```
 
-Note on `id` vs `name`: `bpf_qdisc_ops` uses a `char[16] id` slot rather than `name` (see Sub-plan A's layout JSON). If the layout says the field is `id`, the Java method is `id()`; the synthesizer emits `.id = "bpftest_qdisc"`. Adjust field name to match the layout — if unclear, `cat bpf-compiler-plugin/src/main/resources/struct-ops-layouts/bpf_qdisc_ops.json | grep -A2 '"kind": "data"'`.
+Note on `id` vs `name`: `Qdisc_ops` uses a `char[16] id` slot rather than `name` (see Sub-plan A's layout JSON). If the layout says the field is `id`, the Java method is `id()`; the synthesizer emits `.id = "bpftest_qdisc"`. Adjust field name to match the layout — if unclear, `cat bpf-compiler-plugin/src/main/resources/struct-ops-layouts/Qdisc_ops.json | grep -A2 '"kind": "data"'`.
 
 - [ ] **Step 2: Ensure required type stubs land**
 
@@ -302,14 +302,14 @@ ssh thinkstation 'cd /home/i560383/code/experiments/hello-ebpf && \
   ./scripts/run-tests-vng.sh bpf QdiscOpsSmokeTest 2>&1 | tail -25'
 ```
 
-Expected: PASS. If load fails with "kernel does not support struct_ops bpf_qdisc_ops": verify `CONFIG_NET_SCH_BPF=y` in the vng kernel config. If it's disabled, mark the test `@EnabledIf("bpf_qdisc_ops feature-probe positive")` — using the `Features.hasStructOps("bpf_qdisc_ops")` gate as a JUnit 5 `assumeTrue`.
+Expected: PASS. If load fails with "kernel does not support struct_ops Qdisc_ops": verify `CONFIG_NET_SCH_BPF=y` in the vng kernel config. If it's disabled, mark the test `@EnabledIf("Qdisc_ops feature-probe positive")` — using the `Features.hasStructOps("Qdisc_ops")` gate as a JUnit 5 `assumeTrue`.
 
 - [ ] **Step 4: Commit**
 
 ```bash
 git add bpf/src/test/java/me/bechberger/ebpf/bpf/structops/QdiscOpsSmokeTest.java
 # plus any type-stub additions
-git commit -m "test(bpf): QdiscOpsSmokeTest — minimal bpf_qdisc_ops attach round-trip"
+git commit -m "test(bpf): QdiscOpsSmokeTest — minimal Qdisc_ops attach round-trip"
 ```
 
 ---
@@ -410,7 +410,7 @@ kernel — all in one step.
 |--------------------------|-------------------------|-------------:|
 | `SchedExtOps`            | `sched_ext_ops`         |         6.12 |
 | `TcpCongestionControl`   | `tcp_congestion_ops`    |          5.6 |
-| `QdiscOps`               | `bpf_qdisc_ops`         |         6.10 |
+| `QdiscOps`               | `Qdisc_ops`         |         6.10 |
 | `HidBpfOps`              | `hid_bpf_ops`           |         6.11 |
 
 hello-ebpf's kernel floor is 6.14, so all four are available without

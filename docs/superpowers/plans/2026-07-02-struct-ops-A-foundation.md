@@ -19,7 +19,7 @@
 - `annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/StructOps.java` — the annotation (SOURCE retention, TYPE target).
 - `bpf-compiler-plugin/src/main/resources/struct-ops-layouts/sched_ext_ops.json` — field list for `sched_ext_ops`.
 - `bpf-compiler-plugin/src/main/resources/struct-ops-layouts/tcp_congestion_ops.json` — field list for `tcp_congestion_ops`.
-- `bpf-compiler-plugin/src/main/resources/struct-ops-layouts/bpf_qdisc_ops.json` — field list for `bpf_qdisc_ops`.
+- `bpf-compiler-plugin/src/main/resources/struct-ops-layouts/Qdisc_ops.json` — field list for `Qdisc_ops`.
 - `bpf-compiler-plugin/src/main/resources/struct-ops-layouts/hid_bpf_ops.json` — field list for `hid_bpf_ops`.
 - `bpf-compiler-plugin/src/main/resources/struct-ops-layouts/README.md` — refresh procedure.
 - `bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/structops/StructOpsLayout.java` — record + JSON loader.
@@ -61,6 +61,8 @@ Expected: one of
 Record the finding in this file inline as a comment above Task 1 so the implementer knows which API to use. Do NOT commit at this step — it feeds Task 1.
 
 ---
+
+<!-- Task 0 finding (2026-07-02): No JSON libraries (Jackson or Gson) found on bpf-compiler-plugin classpath. Only compile-time dependencies are javapoet, ebpf-annotations, JColor, and ebpf-shared. Task 1 should hand-roll a minimal recursive-descent JSON parser for the fixed schema {kernelName, since, fields[{name, kind, returnType, args[{name, type}]}]}. -->
 
 ### Task 1: `StructOpsLayout` record + JSON loader
 
@@ -115,7 +117,7 @@ class StructOpsLayoutTest {
     void allFourLayoutsLoadClean() {
         for (String k : java.util.List.of("sched_ext_ops",
                                          "tcp_congestion_ops",
-                                         "bpf_qdisc_ops",
+                                         "Qdisc_ops",
                                          "hid_bpf_ops")) {
             StructOpsLayout l = StructOpsLayout.load(k);
             assertEquals(k, l.kernelName());
@@ -165,7 +167,7 @@ public record StructOpsLayout(
     }
 
     private static final Set<String> SUPPORTED = Set.of(
-            "sched_ext_ops", "tcp_congestion_ops", "bpf_qdisc_ops", "hid_bpf_ops");
+            "sched_ext_ops", "tcp_congestion_ops", "Qdisc_ops", "hid_bpf_ops");
 
     public static StructOpsLayout load(String kernelName) {
         if (!SUPPORTED.contains(kernelName)) {
@@ -264,7 +266,7 @@ from pathlib import Path
 TARGETS = {
     "sched_ext_ops":     "6.12",
     "tcp_congestion_ops": "5.6",   # below our 6.14 floor; effectively no gate
-    "bpf_qdisc_ops":     "6.10",
+    "Qdisc_ops":     "6.10",
     "hid_bpf_ops":       "6.11",
 }
 
@@ -405,7 +407,7 @@ git commit -m "feat(scripts): extract-struct-ops-layouts.py for BTF→JSON"
 **Files:**
 - Create: `bpf-compiler-plugin/src/main/resources/struct-ops-layouts/sched_ext_ops.json`
 - Create: `bpf-compiler-plugin/src/main/resources/struct-ops-layouts/tcp_congestion_ops.json`
-- Create: `bpf-compiler-plugin/src/main/resources/struct-ops-layouts/bpf_qdisc_ops.json`
+- Create: `bpf-compiler-plugin/src/main/resources/struct-ops-layouts/Qdisc_ops.json`
 - Create: `bpf-compiler-plugin/src/main/resources/struct-ops-layouts/hid_bpf_ops.json`
 
 - [ ] **Step 1: Sync worktree to thinkstation and run the extractor**
@@ -547,7 +549,7 @@ public @interface StructOps {
 
     /** Kernel BTF type name of the struct_ops kind, e.g.
      *  {@code "sched_ext_ops"}, {@code "tcp_congestion_ops"},
-     *  {@code "bpf_qdisc_ops"}, {@code "hid_bpf_ops"}. Must match a
+     *  {@code "Qdisc_ops"}, {@code "hid_bpf_ops"}. Must match a
      *  bundled layout file. */
     String value();
 
@@ -772,14 +774,14 @@ import me.bechberger.ebpf.runtime.NetworkingDefinitions.Qdisc;
 import me.bechberger.ebpf.type.Ptr;
 
 /**
- * Marker interface for {@code bpf_qdisc_ops}. Implement to register a
+ * Marker interface for {@code Qdisc_ops}. Implement to register a
  * BPF-driven queueing discipline (qdisc) — used by the traffic-control
  * subsystem to queue and dequeue packets on a network interface.
  *
  * <p>{@link #enqueue(Ptr, Ptr)} returns an {@code __u32} kernel status
  * ({@code NET_XMIT_SUCCESS} = 0, {@code NET_XMIT_DROP} = 1, etc.).
  */
-@StructOps("bpf_qdisc_ops")
+@StructOps("Qdisc_ops")
 public interface QdiscOps {
 
     default int  enqueue(Ptr<sk_buff> skb, Ptr<Qdisc> sch) { return 0; /* NET_XMIT_SUCCESS */ }

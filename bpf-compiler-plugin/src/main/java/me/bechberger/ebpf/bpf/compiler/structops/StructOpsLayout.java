@@ -22,7 +22,7 @@ public record StructOpsLayout(
     }
 
     private static final Set<String> SUPPORTED = Set.of(
-            "sched_ext_ops", "tcp_congestion_ops", "bpf_qdisc_ops", "hid_bpf_ops");
+            "sched_ext_ops", "tcp_congestion_ops", "Qdisc_ops", "hid_bpf_ops");
 
     public static StructOpsLayout load(String kernelName) {
         if (!SUPPORTED.contains(kernelName)) {

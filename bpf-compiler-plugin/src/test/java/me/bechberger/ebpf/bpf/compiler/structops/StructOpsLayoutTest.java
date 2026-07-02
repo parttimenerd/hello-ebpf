@@ -41,7 +41,7 @@ class StructOpsLayoutTest {
     void allFourLayoutsLoadClean() {
         for (String k : java.util.List.of("sched_ext_ops",
                                          "tcp_congestion_ops",
-                                         "bpf_qdisc_ops",
+                                         "Qdisc_ops",
                                          "hid_bpf_ops")) {
             StructOpsLayout l = StructOpsLayout.load(k);
             assertEquals(k, l.kernelName());

@@ -18,7 +18,7 @@ from pathlib import Path
 TARGETS = {
     "sched_ext_ops":     "6.12",
     "tcp_congestion_ops": "5.6",
-    "bpf_qdisc_ops":     "6.10",
+    "Qdisc_ops":         "6.10",
     "hid_bpf_ops":       "6.11",
 }
 
