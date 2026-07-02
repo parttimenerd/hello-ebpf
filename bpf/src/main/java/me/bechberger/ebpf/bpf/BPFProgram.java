@@ -1176,6 +1176,79 @@ public abstract class BPFProgram implements AutoCloseable {
         return links;
     }
 
+    /**
+     * Attach a single BPF program to many user-space functions in one syscall
+     * via libbpf's {@code bpf_program__attach_uprobe_multi}.
+     *
+     * <p>The BPF program must be compiled with {@code SEC("uprobe.multi/...")}
+     * or {@code SEC("uretprobe.multi/...")} (see
+     * {@link me.bechberger.ebpf.annotations.bpf.UProbeMulti}).
+     *
+     * <p>Requires kernel &ge; 6.6. On older kernels this method throws
+     * {@link BPFLoadError.UnsupportedKernel} before touching libbpf.
+     *
+     * @param prog       program to attach
+     * @param binaryPath path to the ELF binary containing the target symbols
+     * @param funcNames  function symbols to trace (at least one)
+     * @param cookies    per-symbol cookies, or {@code null} for none. If
+     *                   non-null, must have the same length as {@code funcNames}.
+     * @param retprobe   {@code true} to attach on function return
+     */
+    public BPFLink attachUprobeMulti(ProgramHandle prog, String binaryPath,
+                                     String[] funcNames, long[] cookies,
+                                     boolean retprobe) {
+        validateMultiArrays(funcNames, cookies);
+        if (!me.bechberger.ebpf.bpf.features.Features.hasAttachType(
+                me.bechberger.ebpf.bpf.features.BPFAttachType.TRACE_UPROBE_MULTI)) {
+            throw new BPFLoadError.UnsupportedKernel(
+                    "attach_type TRACE_UPROBE_MULTI", "6.6");
+        }
+        try (Arena arena = Arena.ofConfined()) {
+            var symsArr = arena.allocate(PanamaUtil.POINTER, funcNames.length);
+            for (int i = 0; i < funcNames.length; i++) {
+                symsArr.setAtIndex(PanamaUtil.POINTER, i, arena.allocateFrom(funcNames[i]));
+            }
+            MemorySegment cookiesArr = MemorySegment.NULL;
+            if (cookies != null) {
+                cookiesArr = arena.allocate(JAVA_LONG, cookies.length);
+                for (int i = 0; i < cookies.length; i++) {
+                    cookiesArr.setAtIndex(JAVA_LONG, i, cookies[i]);
+                }
+            }
+
+            final int BPF_F_UPROBE_MULTI_RETURN = 1;
+
+            var opts = arena.allocate(UPROBE_MULTI_OPTS_LAYOUT);
+            opts.set(JAVA_LONG,          0,  UPROBE_MULTI_OPTS_LAYOUT.byteSize()); // sz
+            opts.set(PanamaUtil.POINTER, 8,  symsArr);                             // syms
+            opts.set(PanamaUtil.POINTER, 16, MemorySegment.NULL);                  // offsets
+            opts.set(PanamaUtil.POINTER, 24, MemorySegment.NULL);                  // ref_ctr_offsets
+            opts.set(PanamaUtil.POINTER, 32, cookiesArr);                          // cookies
+            opts.set(JAVA_LONG,          40, (long) funcNames.length);             // cnt
+            opts.set(JAVA_INT,           48, retprobe ? BPF_F_UPROBE_MULTI_RETURN : 0); // flags
+            opts.set(JAVA_INT,           52, -1);                                  // pid = all
+            opts.set(PanamaUtil.POINTER, 56, MemorySegment.NULL);                  // path (via arg)
+
+            var ret = BPF_PROGRAM__ATTACH_UPROBE_MULTI.call(
+                    prog.prog(),
+                    -1,                                       // pid
+                    arena.allocateFrom(binaryPath),           // binary_path
+                    MemorySegment.NULL,                       // func_pattern
+                    opts);
+            if (ret.result() == MemorySegment.NULL) {
+                throw new BPFAttachError(prog.name +
+                        " (uprobe.multi over " + funcNames.length +
+                        " symbols in " + binaryPath + ")", ret.err());
+            }
+            var link = new BPFLink(ret.result());
+            if (link.segment.address() == 0) {
+                throw new BPFAttachError(prog.name, ret.err());
+            }
+            attachedPrograms.add(link);
+            return link;
+        }
+    }
+
     private <T extends Annotation> @Nullable T findParentAnnotation(Class<?> programClass, Method method, Class<T> annotationClass) {
         var annotation = method.getAnnotation(annotationClass);
         if (annotation != null) {

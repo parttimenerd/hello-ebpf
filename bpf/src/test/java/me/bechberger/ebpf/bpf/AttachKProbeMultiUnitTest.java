@@ -21,4 +21,12 @@ class AttachKProbeMultiUnitTest {
                 () -> BPFProgram.validateMultiArrays(
                         new String[]{"a", "b"}, new long[]{1L}));
     }
+
+    @Test
+    void attachUprobeMultiIsPublicWithExpectedSignature() throws NoSuchMethodException {
+        Method m = BPFProgram.class.getMethod("attachUprobeMulti",
+                BPFProgram.ProgramHandle.class, String.class,
+                String[].class, long[].class, boolean.class);
+        assertEquals(BPFProgram.BPFLink.class, m.getReturnType());
+    }
 }
