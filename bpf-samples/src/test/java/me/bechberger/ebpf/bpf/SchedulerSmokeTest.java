@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -150,6 +151,20 @@ class SchedulerSmokeTest {
         Thread.sleep(300);
         assertTrue(sched.isSchedulerAttachedProperly(),
                 "MinimalScheduler should remain attached 300 ms after start");
+
+        // structOpsInfo() should reflect the single sched_ext_ops attach.
+        var info = sched.structOpsInfo();
+        assertEquals(1, info.size(),
+                "expected exactly one struct_ops attach for MinimalScheduler; got " + info);
+        var only = info.get(0);
+        assertEquals("sched_ext_ops", only.kernelName(),
+                "kernelName should match the BTF struct type");
+        assertEquals("sched_ops", only.mapName(),
+                "mapName should match the C-side struct variable name");
+        assertTrue(only.mapFd() > 0,
+                "mapFd should be a valid file descriptor; got " + only.mapFd());
+        assertTrue(only.bpfLinkId() != 0L,
+                "bpfLinkId should be non-zero after attach; got " + only.bpfLinkId());
     }
 
     @Test
