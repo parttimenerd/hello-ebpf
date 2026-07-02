@@ -12,9 +12,26 @@ import java.lang.annotation.Target;
  *
  * <p>The kernel accepts both prefixes for methods declared sleepable in
  * their BTF metadata (see {@code libbpf} {@code find_struct_ops_map}
- * lookup logic). Only sched-ext's {@code sched_init} needs this today,
+ * lookup logic). Only sched-ext's {@code init} needs this today,
  * but the marker is written generically so any future struct_ops kind
  * can opt in.
+ *
+ * <h2>Example</h2>
+ * <pre>{@code
+ * @BPF(license = "GPL")
+ * public abstract class MyScheduler extends BPFProgram implements Scheduler {
+ *     @Override
+ *     @Sleepable
+ *     public int init() {
+ *         // Sleepable context — may call helpers that would block.
+ *         return scx_bpf_create_dsq(0L, -1);
+ *     }
+ * }
+ * }</pre>
+ *
+ * <p>Only kernel struct_ops slots that carry the sleepable BTF flag accept a
+ * sleepable program. As of kernel 6.14, sched-ext's {@code init} is the
+ * canonical sleepable slot.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.CLASS)

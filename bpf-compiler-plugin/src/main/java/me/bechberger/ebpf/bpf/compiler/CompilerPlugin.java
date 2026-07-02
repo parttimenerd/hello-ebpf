@@ -424,6 +424,9 @@ public class CompilerPlugin implements Plugin {
             }
             for (var m : kind.overriddenMethods()) {
                 String fieldName = StructOpsValidator.camelToSnake(m.getSimpleName().toString());
+                // Skip utility methods on the interface that have no matching kernel field
+                // (e.g. runSchedulerLoop, attachScheduler, getSchedulerName).
+                if (!layout.hasField(fieldName)) continue;
                 try {
                     StructOpsValidator.validateFieldExists(layout, fieldName);
                     var field = layout.field(fieldName);
@@ -1216,10 +1219,8 @@ public class CompilerPlugin implements Plugin {
             }
         }
 
-        var newCode = replaceProperties(combineCode(code, syntheticDecls, decls, defines) + "\n\n" + implAnn.after(), properties);
-        if (!structOpsInstanceBlock.isEmpty()) {
-            newCode = newCode + "\n\n" + structOpsInstanceBlock;
-        }
+        var newCode = replaceProperties(combineCode(code, syntheticDecls, decls, defines) + "\n\n" + implAnn.after()
+                + (structOpsInstanceBlock.isEmpty() ? "" : "\n\n" + structOpsInstanceBlock), properties);
 
         // Define __arena (clang AS1 qualifier) when the program references
         // it but no header has supplied the define. Kernel selftests provide

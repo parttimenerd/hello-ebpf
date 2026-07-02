@@ -491,30 +491,135 @@ git commit -m "feat(plugin): walk superclass chain when collecting @StructOps ov
 
 ---
 
-### Task 3: Convert `Scheduler` to `@StructOps` — annotation flip + `@Sleepable` on `sched_init`
+### Task 2d: `@StructOps.emittedNamePrefix` SPI + synthesizer support
 
-**BLOCKED ON DESIGN DECISION — read this before starting Task 3.**
+**Naming-convention decision: Option B1 — single `emittedNamePrefix` on the interface, retire the six `simple_*` symbols.**
 
-The migration removes `@BPFFunction(headerTemplate = "... BPF_STRUCT_OPS(sched_<field>, ...)")` from 47 methods across `Scheduler.java` + `SchedulerBase.java`. The synthesizer emits BPF function names as the `snake_case` field name — `select_cpu`, `enqueue`, `dispatch`, etc. But the current pre-migration C uses prefixed names — `sched_select_cpu`, `sched_enqueue`, `simple_stopping`, etc. — and sample schedulers (e.g. `MinimalScheduler`) hand-write `BPF_STRUCT_OPS(myscheduler_something, ...)` blocks with their own per-sample prefix.
+The synthesizer previously emitted BPF function names as `<snake_case_field>`. To preserve existing framework symbol names (which the kernel doesn't care about — only `.field =` pointers in the struct instance matter for attach), extend `@StructOps` with a new field:
 
-**Decision required:** pick ONE of the following before proceeding.
+```java
+/** Prefix prepended to each emitted BPF function name and to the ".field ="
+ *  initializer's function-pointer reference. Default empty. Set to
+ *  {@code "sched_"} on the sched-ext interface so emitted symbols match
+ *  the existing scheduler C. */
+String emittedNamePrefix() default "";
+```
 
-- **Option A — drop all prefixes, use bare `snake_case`.** Synthesizer emits `.select_cpu = (void *)select_cpu`; the emitted function is named `select_cpu`. Every sample scheduler that hand-wrote `BPF_STRUCT_OPS(mysched_select_cpu, ...)` must rename to `select_cpu` (or delete the hand-written block entirely if it duplicates what the synthesizer now emits). Simpler runtime; cleaner diff going forward; a one-time churn across every sample. **Preferred if we want @StructOps to be "the obvious way".**
+Sched-ext's `Scheduler` interface uses `emittedNamePrefix = "sched_"`. Every emitted function name becomes `sched_<field>` and every initializer line becomes `.<field> = (void *)sched_<field>`.
 
-- **Option B — teach the synthesizer a per-kind or per-class emitted-name prefix.** Add an `emittedNamePrefix` field on `@StructOps` (default empty). For sched-ext, set it to `sched_` on the `Scheduler` interface so the emitted function is `sched_select_cpu`. Samples that want their own prefix (`mysched_`) can override at the concrete class via a new `@BPFEmittedNamePrefix("mysched")` class-level annotation or similar. Preserves symbol names in every existing bpf.o; smaller churn to samples; adds SPI surface.
+**Six historical `simple_*` symbols** (`simple_running`, `simple_enable`, `simple_disable`, `simple_stopping`, `simple_dequeue`, `simple_tick`) are renamed to `sched_running` etc. Grep confirms no in-tree consumer references them by name; trace_pipe output for those callbacks will show `sched_running` instead of `simple_running` going forward.
 
-- **Option C — leave sched-ext migration deferred until after 0.2.** Keep Tasks 1, 2, 2b, 2c as landed (they benefit any future struct_ops consumer). Drop Tasks 3-6 from this sub-plan. `attachScheduler()` stays as-is; sched-ext keeps its `@BPFInterface(after=…)` block. Revisit once we have a second user of `@StructOps` (Sub-plan D's `HelloCubicSample`) actually shipping and can measure the value of unifying.
-
-Once a decision is made, edit the tasks below (specifically the "Edit `Scheduler.java`" step) to reflect the chosen naming convention, then remove this block.
+**Prerequisite tasks 2b + 2c already extend the synthesizer** for acronym-safe snake_case and superclass-walking discovery; Task 2d adds the `emittedNamePrefix` SPI; Task 3 layers on top.
 
 ---
 
-**Original Task 3 content (Options A / B — depends on decision):**
+**Files:**
+- Modify: `annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/StructOps.java`
+- Modify: `bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/structops/StructOpsSynthesizer.java`
+- Modify: `bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/structops/StructOpsDiscovery.java` (thread prefix into `Kind` record)
+- Test: `bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/structops/EmittedNamePrefixTest.java`
+
+**Contract:** if `emittedNamePrefix` is set (non-empty):
+- The emitted BPF function name is `<prefix><snake_case_field>` (was: `<snake_case_field>`).
+- The initializer line becomes `.<field> = (void *)<prefix><field>`.
+- The `@BPFFunction(name = ...)` annotation on the proxy uses the prefixed name so `$name` in the header template resolves consistently.
+
+- [ ] **Step 1: Add the annotation field** to `StructOps.java`:
+
+```java
+/** Prefix prepended to each emitted BPF function name and to the corresponding
+ *  {@code .field = (void *)<name>} initializer entry. Default empty.
+ *
+ *  <p>Set to {@code "sched_"} on the sched-ext {@code Scheduler} interface so
+ *  emitted symbols match the pre-@StructOps scheduler C exactly. The kernel
+ *  doesn't care about emitted C function names — only the field pointers in
+ *  the struct instance matter for attach — but preserving symbol names avoids
+ *  a spurious diff in trace_pipe output and in {@code .c} files consumers may
+ *  have inspected. */
+String emittedNamePrefix() default "";
+```
+
+- [ ] **Step 2: Thread it through `Kind`**
+
+Add `String emittedNamePrefix` to `StructOpsDiscovery.Kind`. Populate from `ann.emittedNamePrefix()` in `discover(...)`.
+
+- [ ] **Step 3: Apply in `StructOpsSynthesizer.synthesize(...)`**
+
+Replace the two sites that use bare `fieldName` for the emitted symbol:
+
+```java
+String emittedName = kind.emittedNamePrefix() + fieldName;
+functions.add(new SynthFunction(target, makeProxy(section, header, emittedName)));
+initializerLines.add("    ." + fieldName + " = (void *)" + emittedName);
+```
+
+`fieldName` still drives the BTF-field-name side; only the pointer target changes.
+
+- [ ] **Step 4: Tests** in `EmittedNamePrefixTest.java`:
+
+```java
+@Test
+void prefixAppliedToEmittedSymbolAndInitializer() {
+    String src = """
+        package p;
+        import me.bechberger.ebpf.annotations.bpf.*;
+        import me.bechberger.ebpf.annotations.bpf.StructOps;
+        import me.bechberger.ebpf.bpf.BPFProgram;
+        @StructOps(value = "sched_ext_ops", emittedNamePrefix = "sched_")
+        interface Sched {
+            default int init() { return 0; }
+        }
+        @BPF abstract class S extends BPFProgram implements Sched {
+            @Override public int init() { return 0; }
+        }
+        """;
+    var fixture = CompilerFixture.compile("p.S", src);
+    var cls = fixture.getClass("p.S");
+    var kinds = StructOpsDiscovery.discover(cls, fixture.env());
+    var result = new StructOpsSynthesizer(fixture.env()).synthesize(cls, kinds);
+    assertThat(result.functions().get(0).bpfFunction().name())
+            .isEqualTo("sched_init");
+    assertThat(result.instances().get(0).cSource())
+            .contains(".init = (void *)sched_init");
+}
+
+@Test
+void emptyPrefixLeavesNamesUnchanged() { /* tcp_congestion_ops case */ }
+```
+
+- [ ] **Step 5: No standalone commit — batched with Task 3 (see "Batching strategy" below).**
+
+---
+
+### Task 3: Convert `Scheduler` to `@StructOps` — annotation flip + `@Sleepable` on `sched_init`
 
 **Files:**
 - Modify: `bpf/src/main/java/me/bechberger/ebpf/bpf/Scheduler.java`
 - Modify: `bpf/src/main/java/me/bechberger/ebpf/bpf/SchedulerBase.java`
-- Modify (Option A only): every sample scheduler's hand-written `BPF_STRUCT_OPS(<prefix>_<name>, ...)` block
+
+**Java-method rename plan:** Java method names on the interface must be the pure `snake_case_field` in camelCase form, WITHOUT the `sched` prefix, so that `emittedNamePrefix + snake_case = <existing symbol>`. Example: what's currently `schedInit` becomes `init` on the interface (`sched_` + `init` = `sched_init`). Existing methods without the prefix (`selectCPU`, `enqueue`, `dispatch`, etc.) stay as-is.
+
+**Rename table:**
+
+| Currently emitted C     | Was Java method   | New Java method   | New snake_case_field       | New emitted C           |
+|-------------------------|-------------------|-------------------|----------------------------|-------------------------|
+| `sched_init`            | `schedInit`       | `init`            | `init`                     | `sched_init`            |
+| `sched_exit`            | `schedExit`       | `exit`            | `exit`                     | `sched_exit`            |
+| `sched_select_cpu`      | `selectCPU`       | `selectCPU`       | `select_cpu` (via Task 2b) | `sched_select_cpu`      |
+| `sched_enqueue`         | `enqueue`         | `enqueue`         | `enqueue`                  | `sched_enqueue`         |
+| `sched_dispatch`        | `dispatch`        | `dispatch`        | `dispatch`                 | `sched_dispatch`        |
+| `sched_update_idle`     | `updateIdle`      | `updateIdle`      | `update_idle`              | `sched_update_idle`     |
+| `sched_init_task`       | `initTask`        | `initTask`        | `init_task`                | `sched_init_task`       |
+| `sched_runnable`        | `runnable`        | `runnable`        | `runnable`                 | `sched_runnable`        |
+| `simple_running` **(!)**| `running`         | `running`         | `running`                  | `sched_running`         |
+| `simple_enable` **(!)** | `enable`          | `enable`          | `enable`                   | `sched_enable`          |
+| `simple_disable` **(!)**| `disable`         | `disable`         | `disable`                  | `sched_disable`         |
+| `simple_stopping` **(!)**| `stopping`       | `stopping`        | `stopping`                 | `sched_stopping`        |
+| `simple_dequeue` **(!)**| `dequeue`         | `dequeue`         | `dequeue`                  | `sched_dequeue`         |
+| `simple_tick` **(!)**   | `tick`            | `tick`            | `tick`                     | `sched_tick`            |
+| (all remaining `sched_*` methods: Java name is the field-name camelCase, symbol pattern is uniform) |||||
+
+The 6 `simple_*` symbols become `sched_*`. Grep confirmed no in-tree consumer references any of them by name; trace_pipe output for those callbacks changes accordingly.
 
 - [ ] **Step 1: Snapshot the pre-migration generated C**
 
@@ -606,6 +711,172 @@ Expected: the only differences are (a) macro-comment ordering (harmless) and (b)
 git add bpf/src/main/java/me/bechberger/ebpf/bpf/Scheduler.java
 git commit -m "refactor(sched): retarget Scheduler at @StructOps pipeline, deprecate attachScheduler"
 ```
+
+---
+
+### Task 3d: Documentation pass — `@StructOps` + `@Sleepable` code examples, per-method sched-ext Javadoc
+
+**Files:**
+- Modify: `annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/StructOps.java` — expand class Javadoc with runnable code examples for all four supported kinds (sched-ext, TCP CC, Qdisc, HID); document each field with example values.
+- Modify: `annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Sleepable.java` — expand Javadoc with a concrete `@Override @Sleepable public int init() { … }` example and cross-link to `@StructOps`.
+- Modify: `bpf/src/main/java/me/bechberger/ebpf/bpf/Scheduler.java` — every sched-ext callback method gets a research-derived Javadoc describing: when the kernel invokes it, what the args mean, return-value semantics, non-sleepable/sleepable contract, and a one-line example use case. Pull from `include/linux/sched/ext.h`, `kernel/sched/ext.c`, and `Documentation/scheduler/sched-ext.rst` in the upstream kernel tree.
+
+**Why this task exists:** The current in-tree Javadoc on scheduler callbacks is sparse and often just restates the method name. For an `@StructOps` public API to be usable without reading kernel source, each callback needs a paragraph explaining its role in the scheduler lifecycle. Same for `@StructOps` itself — a user encountering the annotation for the first time should see a full working example, not an abstract description.
+
+**Approach: subagent research pass.** For each of the ~34 sched-ext callbacks:
+1. Look up the kernel header comment on the matching `struct sched_ext_ops` field.
+2. Look up the call site in `kernel/sched/ext.c` for the calling context.
+3. Cross-reference `Documentation/scheduler/sched-ext.rst` for prose explanation.
+4. Write 3-6 lines of Javadoc: what it's for, when it's called, what to return.
+
+The kernel is at v6.14+ (thinkstation's floor); pin research to that revision. Where a callback is optional and un-overriding is the common case, say so explicitly.
+
+- [ ] **Step 1: `@StructOps` Javadoc**
+
+Rewrite the class Javadoc to include a working example for each kind. Draft:
+
+```java
+/**
+ * Marks an interface as the Java mirror of a kernel {@code bpf_struct_ops}
+ * table. …
+ *
+ * <h2>Example: TCP congestion control</h2>
+ * <pre>{@code
+ * @StructOps("tcp_congestion_ops")
+ * public interface TcpCongestionControl {
+ *     default int ssthresh(Ptr<sock> sk) { return 4; }
+ *     default void congAvoid(Ptr<sock> sk, int ack, int acked) {}
+ *     default String name() { return "myalgo"; }
+ * }
+ *
+ * @BPF
+ * public abstract class MyCc extends BPFProgram implements TcpCongestionControl {
+ *     @Override public int ssthresh(Ptr<sock> sk) { return 4; }
+ *     @Override public void congAvoid(Ptr<sock> sk, int ack, int acked) {
+ *         BPFJ.bpf_printk("myalgo ack=%u acked=%u", ack, acked);
+ *     }
+ *     @Override public String name() { return "myalgo"; }
+ * }
+ *
+ * try (var prog = BPFProgram.load(MyCc.class)) {
+ *     // "myalgo" now appears in /proc/sys/net/ipv4/tcp_available_congestion_control
+ *     Thread.sleep(Long.MAX_VALUE);
+ * }
+ * }</pre>
+ *
+ * <h2>Example: sched-ext</h2>
+ * <pre>{@code
+ * @StructOps(value = "sched_ext_ops", instanceName = "sched_ops", emittedNamePrefix = "sched_")
+ * public interface Scheduler {
+ *     @Sleepable default int init() { return 0; }
+ *     default int enqueue(Ptr<task_struct> p, long enqFlags) { … }
+ *     …
+ * }
+ * }</pre>
+ *
+ * <h2>Fields</h2>
+ * (Existing per-field Javadoc for value/sectionPrefix/instanceName/emittedNamePrefix,
+ * each with a one-line example.)
+ */
+```
+
+Add similar snippets for `Qdisc_ops` and `hid_bpf_ops`.
+
+- [ ] **Step 2: `@Sleepable` Javadoc**
+
+Extend with:
+
+```java
+/**
+ * …existing text…
+ *
+ * <h2>Example</h2>
+ * <pre>{@code
+ * @BPF
+ * public abstract class MyScheduler extends BPFProgram implements Scheduler {
+ *     @Override
+ *     @Sleepable
+ *     public int init() {
+ *         // Sleepable context — may call bpf_kfunc_alloc_and_move_arena_area, etc.
+ *         return 0;
+ *     }
+ * }
+ * }</pre>
+ *
+ * <p>Only kernel struct_ops slots that carry the sleepable BTF flag can
+ * accept a sleepable program. As of kernel 6.14, sched-ext's {@code init}
+ * is the only widely-used sleepable slot; others may follow.
+ */
+```
+
+- [ ] **Step 3: Per-method Javadoc on `Scheduler.java`**
+
+Dispatch a research subagent (see Subagent Prompt below) to produce Javadoc drafts for all ~34 methods. Review each draft: verify calling context, argument semantics, and return-value rules against the kernel source and scx docs. Edit the file in place.
+
+For each method the Javadoc should cover:
+1. **What the callback is for** in one sentence.
+2. **When the kernel calls it** — trigger and calling context (sleepable? IRQ-safe? preemptible?).
+3. **What the arguments mean** — one line per non-trivial arg.
+4. **What to return** and what the return value controls.
+5. **Whether it's optional** and what happens if you don't override it.
+
+Example (for `select_cpu`, which currently has a paragraph but is a good template):
+
+```java
+/**
+ * Pick a target CPU for a waking task before it enqueues.
+ *
+ * <p>Called during {@code sched_class::select_task_rq}. Returning a valid
+ * CPU number places the task on that CPU's local DSQ (SCX_DSQ_LOCAL) if
+ * {@code SCX_ENQ_HEAD} is included in the returned flags; returning
+ * {@code prev_cpu} keeps the task where it was.
+ *
+ * @param p          the waking task
+ * @param prev_cpu   the CPU the task last ran on
+ * @param wake_flags kernel wake-up flags ({@code WF_TTWU}, {@code WF_FORK}, …)
+ * @return the chosen CPU number, or {@code prev_cpu} to keep affinity
+ *
+ * <p>Non-sleepable. Called with preemption disabled. If not overridden,
+ * the kernel picks {@code prev_cpu}.
+ */
+```
+
+- [ ] **Step 4: Subagent Prompt** (research-only, produces Javadoc drafts as its output — controller applies them)
+
+```
+Research each sched_ext_ops callback and produce a Javadoc paragraph for each. Kernel is v6.14+; pin research to that. For each Java method listed below, output a Javadoc block covering:
+
+  1) One-sentence purpose.
+  2) Trigger: what kernel event causes the call. Include the call site
+     (e.g. "called from ttwu_do_wakeup" or "invoked when a task on this
+     runqueue is about to sleep").
+  3) Sleepable vs non-sleepable context; whether preemption is disabled.
+  4) Per-argument semantics for any non-trivial arg. Ignore obvious args
+     like `struct task_struct *p`.
+  5) Return-value contract. If void, note any side-effect expectations.
+  6) Optional-or-required: if it's optional, note the kernel default.
+
+Sources: prefer the header comment on the matching field in
+`include/linux/sched/ext.h` first; then the call site in
+`kernel/sched/ext.c`; then Documentation/scheduler/sched-ext.rst. Cite
+each source with a file:line. Do NOT paraphrase Documentation as if it's
+your own — quote it directly if you're using its exact wording.
+
+Java methods on `Scheduler` after Task 3 rename (list all ~34 from the
+rename table). For each, produce a Javadoc block. Keep it to 6-10 lines
+each; don't pad. If you find no meaningful documentation for a method,
+say so explicitly — a "no upstream doc; see kernel/sched/ext.c:1234"
+pointer is more useful than fabricated prose.
+
+Return all Javadoc blocks in a single output file so the controller can
+paste them into Scheduler.java. Under 4000 words total.
+```
+
+- [ ] **Step 5: Apply the subagent's Javadoc drafts to `Scheduler.java`**
+
+Read the subagent's output; for each method, replace the existing Javadoc (if any) with the researched version. Preserve any implementation-specific notes already in-tree that the subagent's kernel-focused research would have missed.
+
+- [ ] **Step 6: No standalone commit — bundled into the Task 3 batch (see Batching strategy).**
 
 ---
 

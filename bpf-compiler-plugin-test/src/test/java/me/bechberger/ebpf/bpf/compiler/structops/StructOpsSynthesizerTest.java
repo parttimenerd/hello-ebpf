@@ -98,7 +98,8 @@ class StructOpsSynthesizerTest {
                 "struct_ops entries attach via bpf_map__attach_struct_ops, not auto-attach");
         assertEquals("ssthresh", bpfFn.name(),
                 "name is set to the kernel field name so the initializer can reference it without a camelCase-vs-snake_case gap");
-        assertTrue(bpfFn.addDefinition());
+        assertFalse(bpfFn.addDefinition(),
+                "struct_ops entries must not emit forward declarations — BPF_PROG/BPF_STRUCT_OPS expands to the same identifier and a forward decl would conflict (esp. for no-arg entries like init)");
         assertFalse(bpfFn.inline(),
                 "entry points must not be inlined");
         assertEquals(BPFFunction.class, bpfFn.annotationType());
