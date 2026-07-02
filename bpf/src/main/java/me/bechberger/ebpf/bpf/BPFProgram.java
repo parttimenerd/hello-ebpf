@@ -847,9 +847,35 @@ public abstract class BPFProgram implements AutoCloseable {
      * @throws BPFAttachError if libbpf reports an error
      */
     public BPFLink attachKProbe(ProgramHandle prog, String symbol, boolean retprobe) {
+        return attachKProbe(prog, symbol, retprobe, 0L);
+    }
+
+    /**
+     * Attach a kprobe (or kretprobe) with a BPF attach cookie.
+     *
+     * <p>The cookie is retrievable from BPF-side code via
+     * {@link BPFJ#bpf_get_attach_cookie(me.bechberger.ebpf.type.Ptr)}. Use it
+     * to disambiguate when the same BPF program is attached to multiple
+     * kernel symbols.
+     *
+     * @param prog     program to attach (prog_type KPROBE)
+     * @param symbol   kernel function name, e.g. {@code "do_sys_openat2"}
+     * @param retprobe {@code true} for return probe
+     * @param cookie   {@code u64} value returned by
+     *                 {@code bpf_get_attach_cookie(ctx)} inside the program.
+     *                 Pass {@code 0L} for none.
+     */
+    public BPFLink attachKProbe(ProgramHandle prog, String symbol,
+                                boolean retprobe, long cookie) {
         try (Arena arena = Arena.ofConfined()) {
-            var ret = BPF_PROGRAM__ATTACH_KPROBE.call(
-                    prog.prog(), retprobe, arena.allocateFrom(symbol));
+            var opts = arena.allocate(KPROBE_OPTS_LAYOUT);
+            opts.set(JAVA_LONG,    0,  KPROBE_OPTS_LAYOUT.byteSize()); // sz
+            opts.set(JAVA_LONG,    8,  cookie);                        // bpf_cookie
+            opts.set(JAVA_LONG,    16, 0L);                            // offset
+            opts.set(JAVA_BOOLEAN, 24, retprobe);                      // retprobe
+
+            var ret = BPF_PROGRAM__ATTACH_KPROBE_OPTS.call(
+                    prog.prog(), arena.allocateFrom(symbol), opts);
             if (ret.result() == MemorySegment.NULL) {
                 throw kprobeAttachError(prog.name, symbol, ret.err());
             }

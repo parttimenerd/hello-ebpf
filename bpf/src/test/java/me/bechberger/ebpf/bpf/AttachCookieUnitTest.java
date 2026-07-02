@@ -34,4 +34,11 @@ class AttachCookieUnitTest {
         //  const char *path; size_t :0; }
         assertEquals(64L, BPFProgram.internalUprobeMultiOptsSize());
     }
+
+    @Test
+    void attachKProbeCookieOverloadExistsWithCookieParam() throws NoSuchMethodException {
+        var m = BPFProgram.class.getMethod("attachKProbe",
+                BPFProgram.ProgramHandle.class, String.class, boolean.class, long.class);
+        assertEquals(long.class, m.getParameterTypes()[3]);
+    }
 }
