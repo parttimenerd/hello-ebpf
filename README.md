@@ -57,6 +57,11 @@ public abstract class XDPDropEveryThirdPacket extends BPFProgram implements XDPH
 
 You can find this example as [XDPDropEveryThirdPacket.java](bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPDropEveryThirdPacket.java).
 
+Features
+--------
+
+- **struct_ops in Java** — implement sched-ext, TCP CC, qdisc, or HID BPF via a Java interface; [see docs/struct-ops.md](docs/struct-ops.md).
+
 Goals
 -----
 Provide a library (and documentation) for Java developers to explore eBPF and
