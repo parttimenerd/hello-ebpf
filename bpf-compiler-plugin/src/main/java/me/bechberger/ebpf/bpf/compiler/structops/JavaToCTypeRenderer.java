@@ -25,12 +25,17 @@ public final class JavaToCTypeRenderer {
             case "boolean" -> "bool";
             case "java.lang.String" -> "char *";
             default -> {
-                // Ptr<X>: extract X and render as "struct <X_simple> *"
+                // Ptr<X>: extract X and render.
+                //   Ptr<Foo>       -> "struct Foo *"
+                //   Ptr<Ptr<Foo>>  -> "struct Foo **" (recurse, append '*')
                 if (javaType.startsWith("me.bechberger.ebpf.type.Ptr<")
                         && javaType.endsWith(">")) {
                     String inner = javaType.substring(
                             "me.bechberger.ebpf.type.Ptr<".length(),
                             javaType.length() - 1);
+                    if (inner.startsWith("me.bechberger.ebpf.type.Ptr<")) {
+                        yield renderWithAnnotation(inner, unsigned) + "*";
+                    }
                     // "me.bechberger.ebpf.runtime.NetworkingDefinitions.sock" → "sock"
                     int dot = inner.lastIndexOf('.');
                     String simple = (dot >= 0) ? inner.substring(dot + 1) : inner;

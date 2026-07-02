@@ -45,6 +45,16 @@ class JavaToCTypeRendererTest {
     }
 
     @Test
+    void nestedPtrRendersAsDoublePointer() {
+        var r = new JavaToCTypeRenderer();
+        // Ptr<Ptr<sk_buff>> — used by Qdisc_ops.enqueue's toFree slot,
+        // which the kernel types as `struct sk_buff **`.
+        assertEquals("struct sk_buff **",
+                r.render("me.bechberger.ebpf.type.Ptr<me.bechberger.ebpf.type.Ptr<"
+                        + "me.bechberger.ebpf.runtime.SkDefinitions.sk_buff>>"));
+    }
+
+    @Test
     void unsupportedTypeThrows() {
         var r = new JavaToCTypeRenderer();
         assertThrows(IllegalArgumentException.class, () -> r.render("java.util.List"));
