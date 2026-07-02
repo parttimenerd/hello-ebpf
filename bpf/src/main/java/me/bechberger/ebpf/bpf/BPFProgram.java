@@ -828,6 +828,15 @@ public abstract class BPFProgram implements AutoCloseable {
                             PanamaUtil.POINTER, JAVA_INT, PanamaUtil.POINTER,
                             PanamaUtil.POINTER, PanamaUtil.POINTER));
 
+    /** Returns {@code true} if a section string names a multi-attach probe. */
+    public static boolean isMultiAttachSection(String section) {
+        if (section == null) return false;
+        return section.startsWith("kprobe.multi/")
+                || section.startsWith("kretprobe.multi/")
+                || section.startsWith("uprobe.multi/")
+                || section.startsWith("uretprobe.multi/");
+    }
+
     /**
      * Dynamically attach a kprobe (or kretprobe) to a kernel symbol by name.
      *
@@ -1165,6 +1174,11 @@ public abstract class BPFProgram implements AutoCloseable {
             BPFFunction ann = getAnnotationOfSelfOrOverriden(method, BPFFunction.class);
             if (ann == null) continue;
             String section = ann.section();
+            if (isMultiAttachSection(section)) {
+                // Multi-attach is not iterable per-symbol from an annotation; the caller
+                // must invoke attachUprobeMulti(...) explicitly.
+                continue;
+            }
             boolean isUprobe    = section.startsWith("uprobe/");
             boolean isUretprobe = section.startsWith("uretprobe/");
             if (!isUprobe && !isUretprobe) continue;
@@ -1523,7 +1537,21 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public BPFProgram autoAttachPrograms() {
         var lsmNames = getLSMProgramNames();
+        var multiNames = getMultiAttachProgramNames();
         for (var name : getAllAutoAttachablePrograms()) {
+            if (multiNames.contains(name)) {
+                // Multi-attach programs cannot be attached via bpf_program__attach.
+                // The user MUST call attachKProbeMulti / attachUprobeMulti explicitly
+                // with the symbol list and cookies. Skipping silently would mask a
+                // configuration mistake; emit a JFR event so it shows up in tracing.
+                var evt = new BPFEvents.ProgramAttach();
+                if (evt.isEnabled()) {
+                    evt.programName = name;
+                    evt.section = "SKIPPED_MULTI";
+                    evt.commit();
+                }
+                continue;
+            }
             if (lsmNames.contains(name)) {
                 attachLSMHook(getProgramByName(name));
             } else {
@@ -1531,6 +1559,19 @@ public abstract class BPFProgram implements AutoCloseable {
             }
         }
         return this;
+    }
+
+    /** Names of programs whose section marks them as multi-attach. */
+    private java.util.Set<String> getMultiAttachProgramNames() {
+        var names = new java.util.HashSet<String>();
+        var programClass = getClass().getSuperclass();
+        for (var method : programClass.getDeclaredMethods()) {
+            var annotation = findParentAnnotation(programClass, method, BPFFunction.class);
+            if (annotation != null && isMultiAttachSection(annotation.section())) {
+                names.add(getBPFFunctionName(method));
+            }
+        }
+        return names;
     }
 
     /** Returns the C function names of all methods annotated with {@code @LSM} or having an lsm/ section. */

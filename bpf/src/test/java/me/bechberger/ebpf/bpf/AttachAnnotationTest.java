@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Tests for shorthand attach annotations ({@code @Kprobe}, {@code @Fentry}, etc.).
@@ -64,5 +65,15 @@ public class AttachAnnotationTest {
         assertTrue(s.contains("kretprobe.multi"));
         assertTrue(s.contains("uprobe.multi"));
         assertTrue(s.contains("uretprobe.multi"));
+    }
+
+    @Test
+    void isMultiSectionRecognized() {
+        assertTrue(BPFProgram.isMultiAttachSection("kprobe.multi/foo"));
+        assertTrue(BPFProgram.isMultiAttachSection("kretprobe.multi/foo"));
+        assertTrue(BPFProgram.isMultiAttachSection("uprobe.multi/foo"));
+        assertTrue(BPFProgram.isMultiAttachSection("uretprobe.multi/foo"));
+        assertFalse(BPFProgram.isMultiAttachSection("kprobe/foo"));
+        assertFalse(BPFProgram.isMultiAttachSection("uprobe/foo"));
     }
 }
