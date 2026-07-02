@@ -272,10 +272,249 @@ git commit -m "feat(plugin): pass through sched-ext __property_ placeholders in 
 
 ---
 
+### Task 2b: `camelToSnake` — acronym-aware conversion
+
+**Files:**
+- Modify: `bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/structops/StructOpsValidator.java`
+- Modify: `bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/structops/StructOpsValidatorTest.java` (add a table-driven test if it exists; else create)
+
+**Why this task exists:** The current `camelToSnake` implementation lowercases each uppercase letter and inserts an underscore before it, which turns `selectCPU` into `select_c_p_u`. The kernel BTF field is `select_cpu`. Runs of uppercase letters must stay grouped as one word segment. This is a prerequisite for Task 3 — without it, sched-ext method-to-BTF-field lookup fails for `selectCPU`, and any similar acronym-carrying method on other struct_ops kinds hits the same bug.
+
+**Algorithm:** Insert an underscore before an uppercase letter only when the previous letter is lowercase OR the next letter is lowercase (i.e., the current uppercase is at a word boundary). This is the same rule Guava/Apache Commons uses for `LOWER_CAMEL` → `LOWER_UNDERSCORE`.
+
+Cases the new rule must handle:
+- `selectCPU` → `select_cpu` (was `select_c_p_u`)
+- `congAvoid` → `cong_avoid` (unchanged from current behaviour)
+- `HTTPServer` → `http_server` (all-caps prefix followed by mixed case)
+- `parseXMLDoc` → `parse_xml_doc` (all-caps middle segment)
+- `ssthresh` → `ssthresh` (all lowercase — no change)
+- `undoCwnd` → `undo_cwnd` (unchanged)
+
+- [ ] **Step 1: Add a table-driven test**
+
+```java
+package me.bechberger.ebpf.bpf.compiler.structops;
+
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class CamelToSnakeTest {
+
+    @Test
+    void handlesAcronyms() {
+        assertThat(StructOpsValidator.camelToSnake("selectCPU")).isEqualTo("select_cpu");
+        assertThat(StructOpsValidator.camelToSnake("congAvoid")).isEqualTo("cong_avoid");
+        assertThat(StructOpsValidator.camelToSnake("HTTPServer")).isEqualTo("http_server");
+        assertThat(StructOpsValidator.camelToSnake("parseXMLDoc")).isEqualTo("parse_xml_doc");
+        assertThat(StructOpsValidator.camelToSnake("ssthresh")).isEqualTo("ssthresh");
+        assertThat(StructOpsValidator.camelToSnake("undoCwnd")).isEqualTo("undo_cwnd");
+        assertThat(StructOpsValidator.camelToSnake("schedInit")).isEqualTo("sched_init");
+        assertThat(StructOpsValidator.camelToSnake("initTask")).isEqualTo("init_task");
+    }
+}
+```
+
+- [ ] **Step 2: Run — expect FAIL** on `selectCPU`, `HTTPServer`, `parseXMLDoc`.
+
+- [ ] **Step 3: Replace the implementation**
+
+```java
+public static String camelToSnake(String s) {
+    var sb = new StringBuilder(s.length() + 4);
+    for (int i = 0; i < s.length(); i++) {
+        char c = s.charAt(i);
+        if (Character.isUpperCase(c)) {
+            boolean atStart = i == 0;
+            boolean prevLower = !atStart && Character.isLowerCase(s.charAt(i - 1));
+            boolean nextLower = i + 1 < s.length() && Character.isLowerCase(s.charAt(i + 1));
+            if (!atStart && (prevLower || nextLower)) {
+                sb.append('_');
+            }
+            sb.append(Character.toLowerCase(c));
+        } else {
+            sb.append(c);
+        }
+    }
+    return sb.toString();
+}
+```
+
+The `nextLower` clause is the acronym-boundary rule: for `HTTPServer`, when we're at `S` (index 4), prev is `P` (upper), next is `e` (lower) → insert underscore. For `HTTPS` (imaginary continuation), when we're at `S` (last), prev is `P`, next doesn't exist → no underscore.
+
+- [ ] **Step 4: Run — expect PASS**
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/structops/StructOpsValidator.java
+git add bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/structops/CamelToSnakeTest.java
+git commit -m "fix(plugin): camelToSnake groups acronym runs (selectCPU -> select_cpu)"
+```
+
+---
+
+### Task 2c: `StructOpsDiscovery` — walk superclass chain for inherited overrides
+
+**Files:**
+- Modify: `bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/structops/StructOpsDiscovery.java`
+- Modify: `bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/structops/StructOpsDiscoveryTest.java` (extend if present, else create)
+
+**Why this task exists:** `StructOpsDiscovery.collectOverriddenMethods` currently calls `bpfClass.getEnclosedElements()`, which returns only the class's **directly declared** methods. In-tree scheduler samples like `MinimalScheduler` inherit `init`, `exit`, `dispatch`, etc. from `SchedulerBase` (an abstract class), not by declaring them directly. Under the current discovery rule, these inherited overrides go undetected and the synthesizer emits no initializer line for them — the resulting `sched_ext_ops` struct is missing crucial callbacks and kernel attach fails.
+
+The fix is to walk the superclass chain from `bpfClass` up to (but not including) `Object` / `BPFProgram`, collecting non-abstract methods at every level. A subclass override shadows a superclass override with the same signature — take the closest (most-derived) match.
+
+- [ ] **Step 1: Failing test**
+
+```java
+package me.bechberger.ebpf.bpf.compiler.structops;
+
+import me.bechberger.ebpf.bpf.compiler.testutil.CompilerFixture;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class StructOpsDiscoveryInheritanceTest {
+
+    @Test
+    void collectsOverridesInheritedFromAbstractSuperclass() {
+        String src = """
+            package p;
+            import me.bechberger.ebpf.annotations.bpf.*;
+            import me.bechberger.ebpf.annotations.bpf.StructOps;
+            import me.bechberger.ebpf.bpf.BPFProgram;
+
+            @StructOps("sched_ext_ops")
+            interface Sched {
+                default int schedInit() { return 0; }
+                default int schedExit() { return 0; }
+            }
+
+            abstract class Base extends BPFProgram implements Sched {
+                @Override public int schedInit() { return 0; }
+                // schedExit stays defaulted
+            }
+
+            @BPF abstract class Derived extends Base {
+                // Inherits Base.schedInit; no direct declaration.
+            }
+            """;
+        var fixture = CompilerFixture.compile("p.Derived", src);
+        var cls = fixture.getClass("p.Derived");
+        var kinds = StructOpsDiscovery.discover(cls, fixture.env());
+        assertThat(kinds).hasSize(1);
+        var methodNames = kinds.get(0).overriddenMethods().stream()
+                .map(m -> m.getSimpleName().toString())
+                .toList();
+        assertThat(methodNames).contains("schedInit").doesNotContain("schedExit");
+    }
+}
+```
+
+- [ ] **Step 2: Run — expect FAIL** (`schedInit` not in the list — only direct members walked).
+
+- [ ] **Step 3: Extend `collectOverriddenMethods`**
+
+Replace the single-level walk with a superclass-walking version:
+
+```java
+private static List<ExecutableElement> collectOverriddenMethods(
+        TypeElement iface, TypeElement bpfClass, ProcessingEnvironment env) {
+    var elements = env.getElementUtils();
+    // Walk bpfClass and all its non-Object, non-BPFProgram ancestors, gathering
+    // concrete methods. Closer-to-bpfClass declarations shadow farther ones.
+    List<ExecutableElement> concreteChain = new ArrayList<>();
+    TypeElement cursor = bpfClass;
+    while (cursor != null) {
+        String fqn = cursor.getQualifiedName().toString();
+        if (fqn.equals("java.lang.Object")) break;
+        for (ExecutableElement m : ElementFilter.methodsIn(cursor.getEnclosedElements())) {
+            if (m.getModifiers().contains(Modifier.ABSTRACT)) continue;
+            concreteChain.add(m);
+        }
+        TypeMirror sup = cursor.getSuperclass();
+        cursor = (sup instanceof DeclaredType d) ? (TypeElement) d.asElement() : null;
+    }
+    List<ExecutableElement> out = new ArrayList<>();
+    for (ExecutableElement m : ElementFilter.methodsIn(iface.getEnclosedElements())) {
+        if (m.getModifiers().contains(Modifier.STATIC)) continue;
+        for (ExecutableElement candidate : concreteChain) {
+            if (!candidate.getSimpleName().contentEquals(m.getSimpleName())) continue;
+            if (elements.overrides(candidate, m, (TypeElement) candidate.getEnclosingElement())) {
+                out.add(m);
+                break;   // most-derived wins (concreteChain is ordered bpfClass -> super)
+            }
+        }
+    }
+    return out;
+}
+```
+
+Note the third argument to `elements.overrides(candidate, m, container)`: `container` must be the class where `candidate` is declared, not `bpfClass` (which was correct only when `candidate` was directly declared there). Passing `(TypeElement) candidate.getEnclosingElement()` handles both direct and inherited overrides.
+
+- [ ] **Step 4: Extend `StructOpsSynthesizer.findConcreteMethod` similarly**
+
+The synthesizer also needs to look up the concrete method for `@Sleepable` and data-field initializer purposes. `StructOpsSynthesizer.findConcreteMethod` currently walks `bpfClass.getEnclosedElements()` too. Apply the same superclass walk. Extract as a small private helper if the shape ends up duplicated in two places:
+
+```java
+private ExecutableElement findConcreteMethod(TypeElement bpfClass,
+                                             ExecutableElement ifaceMethod) {
+    TypeElement cursor = bpfClass;
+    while (cursor != null) {
+        String fqn = cursor.getQualifiedName().toString();
+        if (fqn.equals("java.lang.Object")) break;
+        for (ExecutableElement m : ElementFilter.methodsIn(cursor.getEnclosedElements())) {
+            if (m.getModifiers().contains(Modifier.ABSTRACT)) continue;
+            if (!m.getSimpleName().contentEquals(ifaceMethod.getSimpleName())) continue;
+            if (m.getParameters().size() != ifaceMethod.getParameters().size()) continue;
+            return m;
+        }
+        TypeMirror sup = cursor.getSuperclass();
+        cursor = (sup instanceof DeclaredType d) ? (TypeElement) d.asElement() : null;
+    }
+    return null;
+}
+```
+
+- [ ] **Step 5: Run — expect PASS**
+
+Also re-run the existing `StructOpsSynthesizerTest` and Sub-plan B tests to confirm no regression on direct-override cases.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/structops/StructOpsDiscovery.java
+git add bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/structops/StructOpsSynthesizer.java
+git add bpf-compiler-plugin-test/src/test/java/me/bechberger/ebpf/bpf/compiler/structops/StructOpsDiscoveryInheritanceTest.java
+git commit -m "feat(plugin): walk superclass chain when collecting @StructOps overrides"
+```
+
+---
+
 ### Task 3: Convert `Scheduler` to `@StructOps` — annotation flip + `@Sleepable` on `sched_init`
+
+**BLOCKED ON DESIGN DECISION — read this before starting Task 3.**
+
+The migration removes `@BPFFunction(headerTemplate = "... BPF_STRUCT_OPS(sched_<field>, ...)")` from 47 methods across `Scheduler.java` + `SchedulerBase.java`. The synthesizer emits BPF function names as the `snake_case` field name — `select_cpu`, `enqueue`, `dispatch`, etc. But the current pre-migration C uses prefixed names — `sched_select_cpu`, `sched_enqueue`, `simple_stopping`, etc. — and sample schedulers (e.g. `MinimalScheduler`) hand-write `BPF_STRUCT_OPS(myscheduler_something, ...)` blocks with their own per-sample prefix.
+
+**Decision required:** pick ONE of the following before proceeding.
+
+- **Option A — drop all prefixes, use bare `snake_case`.** Synthesizer emits `.select_cpu = (void *)select_cpu`; the emitted function is named `select_cpu`. Every sample scheduler that hand-wrote `BPF_STRUCT_OPS(mysched_select_cpu, ...)` must rename to `select_cpu` (or delete the hand-written block entirely if it duplicates what the synthesizer now emits). Simpler runtime; cleaner diff going forward; a one-time churn across every sample. **Preferred if we want @StructOps to be "the obvious way".**
+
+- **Option B — teach the synthesizer a per-kind or per-class emitted-name prefix.** Add an `emittedNamePrefix` field on `@StructOps` (default empty). For sched-ext, set it to `sched_` on the `Scheduler` interface so the emitted function is `sched_select_cpu`. Samples that want their own prefix (`mysched_`) can override at the concrete class via a new `@BPFEmittedNamePrefix("mysched")` class-level annotation or similar. Preserves symbol names in every existing bpf.o; smaller churn to samples; adds SPI surface.
+
+- **Option C — leave sched-ext migration deferred until after 0.2.** Keep Tasks 1, 2, 2b, 2c as landed (they benefit any future struct_ops consumer). Drop Tasks 3-6 from this sub-plan. `attachScheduler()` stays as-is; sched-ext keeps its `@BPFInterface(after=…)` block. Revisit once we have a second user of `@StructOps` (Sub-plan D's `HelloCubicSample`) actually shipping and can measure the value of unifying.
+
+Once a decision is made, edit the tasks below (specifically the "Edit `Scheduler.java`" step) to reflect the chosen naming convention, then remove this block.
+
+---
+
+**Original Task 3 content (Options A / B — depends on decision):**
 
 **Files:**
 - Modify: `bpf/src/main/java/me/bechberger/ebpf/bpf/Scheduler.java`
+- Modify: `bpf/src/main/java/me/bechberger/ebpf/bpf/SchedulerBase.java`
+- Modify (Option A only): every sample scheduler's hand-written `BPF_STRUCT_OPS(<prefix>_<name>, ...)` block
 
 - [ ] **Step 1: Snapshot the pre-migration generated C**
 
