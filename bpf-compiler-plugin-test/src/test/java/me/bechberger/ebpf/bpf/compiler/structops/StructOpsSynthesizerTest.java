@@ -215,4 +215,58 @@ class StructOpsSynthesizerTest {
         assertEquals("struct_ops/ssthresh", bpfFn.section(),
                 "no-@Sleepable default must remain struct_ops/");
     }
+
+    @Test
+    void schedExtInitializerCarriesPropertyPlaceholders() {
+        // A @BPF class implementing @StructOps("sched_ext_ops") without
+        // overriding flags/timeout_ms/name must still see the __property_
+        // placeholders in the generated struct instance so BPFProgram.load's
+        // property-substitution pass has something to substitute.
+        String body = """
+            package p;
+            import me.bechberger.ebpf.annotations.bpf.*;
+            import me.bechberger.ebpf.annotations.bpf.StructOps;
+            import me.bechberger.ebpf.bpf.BPFProgram;
+
+            @StructOps("sched_ext_ops")
+            interface Sched {}
+
+            @BPF abstract class MyS extends BPFProgram implements Sched {}
+            """;
+        var proc = new CapturingProcessor("p.MyS");
+        var res = InMemoryJavaCompiler.compile(
+                List.of(new Source("p.MyS", body)), proc);
+        failIfCompileErrors(res);
+        assertNotNull(proc.captured);
+        assertEquals(1, proc.captured.instances().size());
+        String c = proc.captured.instances().get(0).cSource();
+        assertTrue(c.contains(
+                ".flags = SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE | (__property_extra_flags)"),
+                "cSource missing .flags override:\n" + c);
+        assertTrue(c.contains(".timeout_ms = __property_timeout_ms"),
+                "cSource missing .timeout_ms placeholder:\n" + c);
+        assertTrue(c.contains(".name = \"__property_sched_name\""),
+                "cSource missing .name placeholder:\n" + c);
+    }
+
+    @Test
+    void propertyOverridesSkipKindsThatDontUseThem() {
+        // tcp_congestion_ops has no property-substitution — the initializer
+        // must NOT get any __property_ placeholders.
+        String body = """
+            package p;
+            import me.bechberger.ebpf.annotations.bpf.*;
+            import me.bechberger.ebpf.bpf.structops.TcpCongestionControl;
+            import me.bechberger.ebpf.bpf.BPFProgram;
+            @BPF abstract class Cc extends BPFProgram implements TcpCongestionControl {}
+            """;
+        var proc = new CapturingProcessor("p.Cc");
+        var res = InMemoryJavaCompiler.compile(
+                List.of(new Source("p.Cc", body)), proc);
+        failIfCompileErrors(res);
+        assertNotNull(proc.captured);
+        String c = proc.captured.instances().get(0).cSource();
+        assertFalse(c.contains("__property_"),
+                "non-sched_ext kind must not leak __property_ placeholders:\n" + c);
+    }
 }

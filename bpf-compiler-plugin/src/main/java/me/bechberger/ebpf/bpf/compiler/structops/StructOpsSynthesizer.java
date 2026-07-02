@@ -41,6 +41,25 @@ public final class StructOpsSynthesizer {
         this.env = env;
     }
 
+    /**
+     * Kernel-specific override table: {@code (kernelName + "." + fieldName)} -&gt;
+     * literal C expression to emit instead of the default {@code (void *)name}
+     * / string-literal initializer. Populated only for kinds that use
+     * hello-ebpf's property-substitution mechanism (currently just
+     * {@code sched_ext_ops}).
+     *
+     * <p>These placeholders are resolved at {@code BPFProgram.load()} time
+     * via {@code getPropertyValue()} string substitution. The plugin's role
+     * is verbatim passthrough.
+     */
+    private static final java.util.Map<String, String> PROPERTY_OVERRIDES =
+            java.util.Map.of(
+                "sched_ext_ops.flags",
+                    "SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE | (__property_extra_flags)",
+                "sched_ext_ops.timeout_ms", "__property_timeout_ms",
+                "sched_ext_ops.name",       "\"__property_sched_name\""
+            );
+
     public Result synthesize(TypeElement bpfClass, List<StructOpsDiscovery.Kind> kinds) {
         List<SynthFunction> functions = new ArrayList<>();
         List<SynthInstance> instances = new ArrayList<>();
@@ -81,6 +100,23 @@ public final class StructOpsSynthesizer {
                     functions.add(new SynthFunction(target, makeProxy(section, header, fieldName)));
                     initializerLines.add("    ." + fieldName + " = (void *)" + fieldName);
                 }
+            }
+
+            // Property-substituted defaults: fields like sched_ext_ops.flags /
+            // .timeout_ms / .name aren't shaped as Java methods on the interface,
+            // but the runtime property-substitution pass still needs their
+            // __property_ placeholders in the generated C. Emit any override
+            // whose kernelName matches this kind's, unless the user already
+            // covered that field via an @Override method above.
+            for (var entry : PROPERTY_OVERRIDES.entrySet()) {
+                String[] parts = entry.getKey().split("\\.", 2);
+                if (!parts[0].equals(kind.kernelName())) continue;
+                String fname = parts[1];
+                String prefix = "    ." + fname + " =";
+                boolean alreadyPresent = initializerLines.stream()
+                        .anyMatch(l -> l.startsWith(prefix));
+                if (alreadyPresent) continue;
+                initializerLines.add("    ." + fname + " = " + entry.getValue());
             }
 
             StringBuilder src = new StringBuilder()
