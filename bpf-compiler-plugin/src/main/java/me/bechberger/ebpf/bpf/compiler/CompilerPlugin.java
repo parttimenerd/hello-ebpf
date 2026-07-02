@@ -57,6 +57,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import me.bechberger.ebpf.bpf.compiler.passes.ArenaAssociationPass;
+import me.bechberger.ebpf.bpf.compiler.structops.JavaToCTypeRenderer;
+import me.bechberger.ebpf.bpf.compiler.structops.StructOpsDiscovery;
+import me.bechberger.ebpf.bpf.compiler.structops.StructOpsLayout;
+import me.bechberger.ebpf.bpf.compiler.structops.StructOpsManifestWriter;
+import me.bechberger.ebpf.bpf.compiler.structops.StructOpsSynthesizer;
+import me.bechberger.ebpf.bpf.compiler.structops.StructOpsValidator;
 
 import static me.bechberger.ebpf.bpf.compiler.NullHelpers.callIfNonNull;
 
@@ -129,6 +135,23 @@ public class CompilerPlugin implements Plugin {
      * Default "true" (write .c file next to source). Set to "false" to suppress.
      */
     private String dumpCArg = "true";
+
+    /**
+     * Per-{@code @BPF} class memoization of struct-ops discovery / validation / synthesis.
+     * Keyed by the user's {@code @BPF} class {@link TypeElement} (the superclass of {@code @BPFImpl}).
+     * Computed lazily by {@link #getStructOpsSynthesis} so that the earliest caller
+     * ({@link #getEffectiveBPFFunction}) triggers method-level BTF validation once,
+     * and later callers reuse the same {@link StructOpsSynthesizer.Result}.
+     */
+    private final Map<TypeElement, StructOpsSynthesizer.Result> structOpsCache = new HashMap<>();
+
+    /**
+     * Guard against emitting the {@code <BpfClass>StructOpsManifest.java} source file more than once
+     * per compilation unit. {@link javax.annotation.processing.Filer#createSourceFile} throws
+     * {@link javax.annotation.processing.FilerException} on the second call for the same FQN,
+     * which would otherwise surface as a spurious compile error under incremental builds.
+     */
+    private final Set<String> emittedManifestFqns = new HashSet<>();
 
     @Override
     public String getName() {
@@ -343,7 +366,69 @@ public class CompilerPlugin implements Plugin {
     public BPFFunction getEffectiveBPFFunction(MethodSymbol method) {
         var direct = getAnnotationOfMethodOrSuper(method, BPFFunction.class);
         if (direct != null) return direct;
+        // @StructOps override method? Look up (and lazily compute) the per-class synthesis.
+        var enclosing = method.getEnclosingElement();
+        if (enclosing instanceof TypeElement te) {
+            var synth = getStructOpsSynthesis(te);
+            for (var sf : synth.functions()) {
+                if (sf.method().equals(method)) return sf.bpfFunction();
+            }
+        }
         return synthesizeBPFFunction(method);
+    }
+
+    /**
+     * Lazily discovers, validates, and synthesizes {@code @StructOps} interfaces implemented
+     * by {@code bpfClass}. Result is memoized per class so that method-level BTF validation
+     * errors are printed exactly once, not once per {@link #getEffectiveBPFFunction} call.
+     */
+    StructOpsSynthesizer.Result getStructOpsSynthesis(TypeElement bpfClass) {
+        var cached = structOpsCache.get(bpfClass);
+        if (cached != null) return cached;
+        var env = createProcessingEnvironment();
+        var kinds = StructOpsDiscovery.discover(bpfClass, env);
+        if (kinds.isEmpty()) {
+            var empty = new StructOpsSynthesizer.Result(List.of(), List.of());
+            structOpsCache.put(bpfClass, empty);
+            return empty;
+        }
+        // Validate every overridden interface method against its pre-dumped BTF layout.
+        // Errors are surfaced as javac diagnostics at the method's source position; we
+        // continue past them so multiple problems surface in one compile pass.
+        var renderer = new JavaToCTypeRenderer();
+        for (var kind : kinds) {
+            StructOpsLayout layout;
+            try {
+                layout = StructOpsLayout.load(kind.kernelName());
+            } catch (RuntimeException ex) {
+                env.getMessager().printMessage(Diagnostic.Kind.ERROR, ex.getMessage(), kind.iface());
+                continue;
+            }
+            for (var m : kind.overriddenMethods()) {
+                String fieldName = StructOpsValidator.camelToSnake(m.getSimpleName().toString());
+                try {
+                    StructOpsValidator.validateFieldExists(layout, fieldName);
+                    var field = layout.field(fieldName);
+                    // Only function fields carry args/return; data fields are literal-initialized.
+                    if (!"data".equals(field.kind())) {
+                        StructOpsValidator.validateArgCount(field, m.getParameters().size(), fieldName);
+                        String ret = renderer.render(m.getReturnType().toString());
+                        StructOpsValidator.validateReturnType(field, ret, fieldName);
+                        for (int i = 0; i < m.getParameters().size(); i++) {
+                            var p = m.getParameters().get(i);
+                            boolean unsigned = p.getAnnotation(me.bechberger.ebpf.annotations.Unsigned.class) != null;
+                            String rArg = renderer.renderWithAnnotation(p.asType().toString(), unsigned);
+                            StructOpsValidator.validateArgType(field.args().get(i), rArg, i, fieldName);
+                        }
+                    }
+                } catch (StructOpsValidator.ValidationException ex) {
+                    env.getMessager().printMessage(Diagnostic.Kind.ERROR, ex.getMessage(), m);
+                }
+            }
+        }
+        var result = new StructOpsSynthesizer(env).synthesize(bpfClass, kinds);
+        structOpsCache.put(bpfClass, result);
+        return result;
     }
 
     /** Synthesises a {@link BPFFunction} proxy from a shorthand attach annotation, or null. */
@@ -1020,6 +1105,49 @@ public class CompilerPlugin implements Plugin {
         }
 
         var properties = getAllPropertyValues(programPath, superClassElement);
+
+        // @StructOps: append the SEC(".struct_ops.link") instance snippets (one per
+        // implemented @StructOps interface) and emit a companion StructOpsManifest
+        // source file so the runtime knows what to attach without reflection.
+        var structOpsSynth = getStructOpsSynthesis(superClassElement);
+        if (!structOpsSynth.instances().isEmpty()) {
+            var instanceBlock = structOpsSynth.instances().stream()
+                    .map(StructOpsSynthesizer.SynthInstance::cSource)
+                    .collect(Collectors.joining("\n\n"));
+            code = code + "\n\n" + instanceBlock;
+
+            var layoutsByKind = new HashMap<String, StructOpsLayout>();
+            boolean layoutLoadFailed = false;
+            for (var inst : structOpsSynth.instances()) {
+                try {
+                    layoutsByKind.put(inst.kernelName(), StructOpsLayout.load(inst.kernelName()));
+                } catch (RuntimeException ex) {
+                    logError(programPath, bpfProgram,
+                            "failed to load layout for " + inst.kernelName()
+                                    + " during manifest emission: " + ex.getMessage());
+                    layoutLoadFailed = true;
+                }
+            }
+            if (layoutLoadFailed) return;
+            String pkg = task.getElements().getPackageOf(superClassElement).getQualifiedName().toString();
+            String fqn = (pkg.isEmpty() ? "" : pkg + ".")
+                    + superClassElement.getSimpleName() + "StructOpsManifest";
+            if (emittedManifestFqns.add(fqn)) {
+                var manifestSrc = new StructOpsManifestWriter().render(
+                        superClassElement, structOpsSynth.instances(), layoutsByKind);
+                try (var w = createProcessingEnvironment().getFiler()
+                        .createSourceFile(fqn, superClassElement).openWriter()) {
+                    w.write(manifestSrc);
+                } catch (javax.annotation.processing.FilerException fe) {
+                    // Manifest already exists (incremental compile) — that's expected and safe.
+                    logWarning(programPath, bpfProgram,
+                            "skipping StructOpsManifest emission (already generated): " + fe.getMessage());
+                } catch (IOException e) {
+                    logError(programPath, bpfProgram,
+                            "failed to write " + fqn + ": " + e.getMessage());
+                }
+            }
+        }
 
         var newCode = replaceProperties(combineCode(code, syntheticDecls, decls, defines) + "\n\n" + implAnn.after(), properties);
 
