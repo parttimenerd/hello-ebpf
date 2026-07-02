@@ -41,4 +41,12 @@ class AttachCookieUnitTest {
                 BPFProgram.ProgramHandle.class, String.class, boolean.class, long.class);
         assertEquals(long.class, m.getParameterTypes()[3]);
     }
+
+    @Test
+    void attachUprobeCookieOverloadExistsWithCookieParam() throws NoSuchMethodException {
+        var m = BPFProgram.class.getMethod("attachUprobe",
+                BPFProgram.ProgramHandle.class, boolean.class, int.class,
+                String.class, String.class, long.class);
+        assertEquals(long.class, m.getParameterTypes()[5]);
+    }
 }

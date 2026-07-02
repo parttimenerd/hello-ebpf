@@ -953,34 +953,26 @@ public abstract class BPFProgram implements AutoCloseable {
                             PanamaUtil.POINTER, JAVA_LONG, PanamaUtil.POINTER));
 
     /**
-     * Dynamically attach a uprobe (or uretprobe) to a user-space function by symbol name.
+     * Attach a uprobe with an explicit BPF attach cookie.
      *
-     * <p>Resolves the symbol within {@code binaryPath} via libbpf's
-     * {@code bpf_program__attach_uprobe_opts}, so no manual ELF parsing is required.
-     * Pass {@code pid = -1} to trace all processes, or a specific PID to trace only
-     * that process.
-     *
-     * <p>The returned {@link BPFLink} is managed by this program's lifetime and is
-     * automatically destroyed when the program is closed.
-     *
-     * @param prog       the BPF program to attach (must have prog_type KPROBE)
-     * @param retprobe   {@code true} to attach on function return (uretprobe)
-     * @param pid        process ID to trace ({@code -1} = all processes)
-     * @param binaryPath path to the ELF binary, e.g. {@code "/usr/lib/libc.so.6"}
-     * @param funcName   function symbol name, e.g. {@code "malloc"}
-     * @return the link representing the attachment
-     * @throws BPFAttachError if libbpf reports an error
+     * @param prog       program to attach (prog_type KPROBE / SEC uprobe)
+     * @param retprobe   {@code true} for return probe
+     * @param pid        target PID, {@code -1} for all processes
+     * @param binaryPath path to the ELF binary
+     * @param funcName   function symbol name
+     * @param cookie     {@code u64} cookie retrievable from
+     *                   {@code bpf_get_attach_cookie(ctx)}. Pass 0 for none.
      */
     public BPFLink attachUprobe(ProgramHandle prog, boolean retprobe, int pid,
-                                String binaryPath, String funcName) {
+                                String binaryPath, String funcName, long cookie) {
         try (Arena arena = Arena.ofConfined()) {
             var opts = arena.allocate(UPROBE_OPTS_LAYOUT);
-            opts.set(JAVA_LONG, 0, UPROBE_OPTS_LAYOUT.byteSize());    // sz
-            opts.set(JAVA_LONG, 8, 0L);                                // ref_ctr_offset
-            opts.set(JAVA_LONG, 16, 0L);                               // bpf_cookie
-            opts.set(JAVA_BOOLEAN, 24, retprobe);                      // retprobe
-            opts.set(PanamaUtil.POINTER, 32, arena.allocateFrom(funcName)); // func_name
-            opts.set(JAVA_INT, 40, 0);                                 // attach_mode = default
+            opts.set(JAVA_LONG,    0,  UPROBE_OPTS_LAYOUT.byteSize());          // sz
+            opts.set(JAVA_LONG,    8,  0L);                                     // ref_ctr_offset
+            opts.set(JAVA_LONG,    16, cookie);                                 // bpf_cookie
+            opts.set(JAVA_BOOLEAN, 24, retprobe);                               // retprobe
+            opts.set(PanamaUtil.POINTER, 32, arena.allocateFrom(funcName));     // func_name
+            opts.set(JAVA_INT,     40, 0);                                      // attach_mode
 
             var ret = BPF_PROGRAM__ATTACH_UPROBE_OPTS.call(
                     prog.prog(),
@@ -998,6 +990,33 @@ public abstract class BPFProgram implements AutoCloseable {
             attachedPrograms.add(link);
             return link;
         }
+    }
+
+    /**
+     * Dynamically attach a uprobe (or uretprobe) to a user-space function by symbol name.
+     *
+     * <p>Resolves the symbol within {@code binaryPath} via libbpf's
+     * {@code bpf_program__attach_uprobe_opts}, so no manual ELF parsing is required.
+     * Pass {@code pid = -1} to trace all processes, or a specific PID to trace only
+     * that process.
+     *
+     * <p>The returned {@link BPFLink} is managed by this program's lifetime and is
+     * automatically destroyed when the program is closed.
+     *
+     * <p>Cookie-less delegator kept for source compatibility — delegates to the
+     * cookie overload with {@code cookie = 0L}.
+     *
+     * @param prog       the BPF program to attach (must have prog_type KPROBE)
+     * @param retprobe   {@code true} to attach on function return (uretprobe)
+     * @param pid        process ID to trace ({@code -1} = all processes)
+     * @param binaryPath path to the ELF binary, e.g. {@code "/usr/lib/libc.so.6"}
+     * @param funcName   function symbol name, e.g. {@code "malloc"}
+     * @return the link representing the attachment
+     * @throws BPFAttachError if libbpf reports an error
+     */
+    public BPFLink attachUprobe(ProgramHandle prog, boolean retprobe, int pid,
+                                String binaryPath, String funcName) {
+        return attachUprobe(prog, retprobe, pid, binaryPath, funcName, 0L);
     }
 
     /**
