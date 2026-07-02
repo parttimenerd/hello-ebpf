@@ -412,12 +412,28 @@ public class CompilerPlugin implements Plugin {
                     // Only function fields carry args/return; data fields are literal-initialized.
                     if (!"data".equals(field.kind())) {
                         StructOpsValidator.validateArgCount(field, m.getParameters().size(), fieldName);
-                        String ret = renderer.render(m.getReturnType().toString());
+                        // @Unsigned is TYPE_USE-scoped on the return type; TypeMirror.toString()
+                        // prefixes the FQN annotation ("@me...Unsigned int") which JavaToCTypeRenderer
+                        // can't parse. Read the annotation off the return-type mirror and strip
+                        // any leading "@Foo " tokens so the renderer sees the bare Java type.
+                        boolean retUnsigned = false;
+                        for (var a : m.getReturnType().getAnnotationMirrors()) {
+                            String fqn = ((javax.lang.model.element.TypeElement)
+                                    a.getAnnotationType().asElement())
+                                    .getQualifiedName().toString();
+                            if (fqn.equals(me.bechberger.ebpf.annotations.Unsigned.class.getName())) {
+                                retUnsigned = true;
+                            }
+                        }
+                        String retTypeStr = m.getReturnType().toString().replaceAll("@\\S+\\s+", "");
+                        String ret = renderer.renderWithAnnotation(retTypeStr, retUnsigned);
                         StructOpsValidator.validateReturnType(field, ret, fieldName);
                         for (int i = 0; i < m.getParameters().size(); i++) {
                             var p = m.getParameters().get(i);
                             boolean unsigned = p.getAnnotation(me.bechberger.ebpf.annotations.Unsigned.class) != null;
-                            String rArg = renderer.renderWithAnnotation(p.asType().toString(), unsigned);
+                            // Strip TYPE_USE annotations (e.g. "@Unsigned int") from the type string.
+                            String argTypeStr = p.asType().toString().replaceAll("@\\S+\\s+", "");
+                            String rArg = renderer.renderWithAnnotation(argTypeStr, unsigned);
                             StructOpsValidator.validateArgType(field.args().get(i), rArg, i, fieldName);
                         }
                     }
@@ -1109,12 +1125,16 @@ public class CompilerPlugin implements Plugin {
         // @StructOps: append the SEC(".struct_ops.link") instance snippets (one per
         // implemented @StructOps interface) and emit a companion StructOpsManifest
         // source file so the runtime knows what to attach without reflection.
+        // The instance block references the SEC("struct_ops/...") entry-point
+        // functions by identifier ((void *)ssthresh, …), so it must be spliced
+        // AFTER combineCode has emitted the function bodies — hence we defer
+        // the append until after `newCode` is built.
         var structOpsSynth = getStructOpsSynthesis(superClassElement);
+        String structOpsInstanceBlock = "";
         if (!structOpsSynth.instances().isEmpty()) {
-            var instanceBlock = structOpsSynth.instances().stream()
+            structOpsInstanceBlock = structOpsSynth.instances().stream()
                     .map(StructOpsSynthesizer.SynthInstance::cSource)
                     .collect(Collectors.joining("\n\n"));
-            code = code + "\n\n" + instanceBlock;
 
             var layoutsByKind = new HashMap<String, StructOpsLayout>();
             boolean layoutLoadFailed = false;
@@ -1150,6 +1170,9 @@ public class CompilerPlugin implements Plugin {
         }
 
         var newCode = replaceProperties(combineCode(code, syntheticDecls, decls, defines) + "\n\n" + implAnn.after(), properties);
+        if (!structOpsInstanceBlock.isEmpty()) {
+            newCode = newCode + "\n\n" + structOpsInstanceBlock;
+        }
 
         // Define __arena (clang AS1 qualifier) when the program references
         // it but no header has supplied the define. Kernel selftests provide

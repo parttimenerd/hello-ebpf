@@ -88,6 +88,20 @@ public final class StructOpsValidator {
     }
 
     private static String normalise(String t) {
-        return t.replaceAll("\\s+", " ").replace(" *", "*").trim();
+        String n = t.replaceAll("\\s+", " ").replace(" *", "*").trim();
+        // BTF renders unsigned ints as "u8/u16/u32/u64"; the renderer uses the
+        // double-underscore BPF-header spelling "__u8/…". Same type, different
+        // spelling — collapse both to the underscore form for comparison.
+        return switch (n) {
+            case "u8"  -> "__u8";
+            case "u16" -> "__u16";
+            case "u32" -> "__u32";
+            case "u64" -> "__u64";
+            case "s8"  -> "__s8";
+            case "s16" -> "__s16";
+            case "s32" -> "__s32";
+            case "s64" -> "__s64";
+            default    -> n;
+        };
     }
 }

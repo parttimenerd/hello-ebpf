@@ -54,8 +54,15 @@ public final class StructOpsManifestWriter {
     }
 
     private String pkg(TypeElement bpfClass) {
-        var enclosing = bpfClass.getEnclosingElement();
-        return (enclosing instanceof javax.lang.model.element.PackageElement pe)
+        // Walk up through any enclosing types (nested @BPF classes) until we
+        // hit the containing PackageElement. Nested @BPF classes are common
+        // in tests, so `bpfClass.getEnclosingElement()` may return another
+        // TypeElement rather than the package directly.
+        javax.lang.model.element.Element e = bpfClass.getEnclosingElement();
+        while (e != null && !(e instanceof javax.lang.model.element.PackageElement)) {
+            e = e.getEnclosingElement();
+        }
+        return (e instanceof javax.lang.model.element.PackageElement pe)
                 ? pe.getQualifiedName().toString()
                 : "";
     }
