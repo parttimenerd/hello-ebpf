@@ -339,14 +339,43 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     /**
-     * Wire the user-supplied @BPF class handle and attach any struct_ops
-     * declared in the plugin-generated {@code META-INF/ebpf-struct-ops/<userClass>.json}
-     * resource. Called only from {@link #load(Class)} / {@link #load(Class, BPFProgram...)}.
+     * Records the user-supplied @BPF class handle so the struct_ops manifest
+     * (emitted by the compiler plugin at build time under
+     * {@code META-INF/ebpf-struct-ops/<userClass>.json}) can be located later,
+     * then auto-attaches for non-{@link Scheduler} consumers so
+     * {@code try (var p = BPFProgram.load(MyCc.class)) {...}} registers the
+     * struct_ops without an explicit attach call — matching the pattern
+     * documented on {@link me.bechberger.ebpf.annotations.bpf.StructOps}.
+     *
+     * <p>Sched-ext programs (any class implementing {@link Scheduler}) skip
+     * the auto-attach because they follow a configure-then-attach flow:
+     * {@code SMTPairScheduler.configure(...)} writes {@code @GlobalVariable}
+     * values that the kernel {@code init} callback must observe on first
+     * attach. Those callers invoke {@link Scheduler#attachScheduler()}
+     * explicitly after configuration.
      */
     private static void installStructOps(BPFProgram program, Class<?> clazz) {
         program.setUserClass(clazz);
-        program.setStructOpsInfo(
-                me.bechberger.ebpf.bpf.structops.StructOpsAttach.attachAll(program));
+        if (!Scheduler.class.isAssignableFrom(clazz)) {
+            program.attachStructOps();
+        }
+    }
+
+    /**
+     * Attach every {@code SEC(".struct_ops.link") struct <kind>} recorded in
+     * the compiler-plugin manifest for this program's user class. Idempotent:
+     * a second call returns the previously-recorded {@link
+     * me.bechberger.ebpf.bpf.structops.StructOpsInfo} list without touching
+     * the kernel. Called by convenience shims like
+     * {@code Scheduler.attachScheduler()}; user code with configure-then-attach
+     * semantics can also invoke it directly.
+     */
+    public java.util.List<me.bechberger.ebpf.bpf.structops.StructOpsInfo> attachStructOps() {
+        var already = structOpsInfo();
+        if (already != null && !already.isEmpty()) return already;
+        var attached = me.bechberger.ebpf.bpf.structops.StructOpsAttach.attachAll(this);
+        setStructOpsInfo(attached);
+        return attached;
     }
 
     /** Called by {@code StructOpsAttach}; throws
