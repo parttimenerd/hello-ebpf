@@ -25,9 +25,26 @@ public final class Features {
         ProbeResult probe(ProbeKey key);
     }
 
-    private static volatile Dispatcher dispatcher = null;
+    private static volatile Dispatcher dispatcher = defaultDispatcher();
     private static final ConcurrentHashMap<ProbeKey, ProbeResult> CACHE =
             new ConcurrentHashMap<>();
+
+    private static Dispatcher defaultDispatcher() {
+        return key -> switch (key) {
+            case ProbeKey.ProgramTypeKey k ->
+                    me.bechberger.ebpf.bpf.features.probes.ProgramTypeProbe.probe(k.t());
+            case ProbeKey.MapTypeKey k ->
+                    me.bechberger.ebpf.bpf.features.probes.MapTypeProbe.probe(k.t());
+            case ProbeKey.HelperKey k ->
+                    me.bechberger.ebpf.bpf.features.probes.HelperProbe.probe(k.h());
+            case ProbeKey.KfuncKey k ->
+                    me.bechberger.ebpf.bpf.features.probes.KfuncProbe.probe(k.name(), k.mod());
+            case ProbeKey.StructOpsKey k ->
+                    me.bechberger.ebpf.bpf.features.probes.StructOpsProbe.probe(k.name());
+            case ProbeKey.AttachTypeKey k ->
+                    me.bechberger.ebpf.bpf.features.probes.AttachTypeProbe.probe(k.t());
+        };
+    }
 
     public static boolean hasProgramType(BPFProgramType t) {
         return probeProgramType(t).isSupported();
@@ -112,9 +129,9 @@ public final class Features {
         CACHED_VERSION = null;
     }
 
-    /** Substitute the dispatcher. Test-only. */
+    /** Substitute the dispatcher. Test-only. Pass {@code null} to restore the default. */
     static void setDispatcherForTest(Dispatcher d) {
-        dispatcher = d;
+        dispatcher = d == null ? defaultDispatcher() : d;
     }
 
     private static ProbeResult cached(ProbeKey key) {
