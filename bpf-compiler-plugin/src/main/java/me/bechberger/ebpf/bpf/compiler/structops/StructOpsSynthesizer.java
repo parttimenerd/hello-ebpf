@@ -69,7 +69,12 @@ public final class StructOpsSynthesizer {
                     // Function field → synthetic @BPFFunction on the concrete method.
                     ExecutableElement concrete = findConcreteMethod(bpfClass, ifaceMethod);
                     ExecutableElement target = concrete != null ? concrete : ifaceMethod;
-                    String section = kind.sectionPrefix() + fieldName;
+                    String prefix = kind.sectionPrefix();
+                    if (concrete != null && concrete.getAnnotation(
+                            me.bechberger.ebpf.annotations.bpf.Sleepable.class) != null) {
+                        prefix = "struct_ops.s/";
+                    }
+                    String section = prefix + fieldName;
                     String header = renderHeader(field, ifaceMethod);
                     // Function name matches the kernel field so the init below can
                     // reference it without a Java-vs-C name gap (e.g. congAvoid vs cong_avoid).

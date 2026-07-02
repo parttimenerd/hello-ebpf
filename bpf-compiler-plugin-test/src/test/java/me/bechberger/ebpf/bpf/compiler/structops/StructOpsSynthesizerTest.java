@@ -96,7 +96,8 @@ class StructOpsSynthesizerTest {
         assertEquals("", bpfFn.lastStatement());
         assertFalse(bpfFn.autoAttach(),
                 "struct_ops entries attach via bpf_map__attach_struct_ops, not auto-attach");
-        assertEquals("", bpfFn.name());
+        assertEquals("ssthresh", bpfFn.name(),
+                "name is set to the kernel field name so the initializer can reference it without a camelCase-vs-snake_case gap");
         assertTrue(bpfFn.addDefinition());
         assertFalse(bpfFn.inline(),
                 "entry points must not be inlined");
@@ -164,5 +165,54 @@ class StructOpsSynthesizerTest {
         assertNotNull(proc.captured);
         assertEquals(1, proc.captured.instances().size());
         assertEquals("my_sched", proc.captured.instances().get(0).mapName());
+    }
+
+    @Test
+    void sleepableFlipsSectionPrefixToStructOpsSDot() {
+        String body = """
+            package p;
+            import me.bechberger.ebpf.annotations.bpf.*;
+            import me.bechberger.ebpf.bpf.structops.TcpCongestionControl;
+            import me.bechberger.ebpf.bpf.BPFProgram;
+            import me.bechberger.ebpf.type.Ptr;
+            import me.bechberger.ebpf.runtime.runtime.sock;
+            @BPF abstract class Cc extends BPFProgram implements TcpCongestionControl {
+                @Override @Sleepable public int ssthresh(Ptr<sock> sk) { return 42; }
+            }
+            """;
+        var proc = new CapturingProcessor("p.Cc");
+        var res = InMemoryJavaCompiler.compile(
+                List.of(new Source("p.Cc", body)), proc);
+        failIfCompileErrors(res);
+        assertNotNull(proc.captured);
+
+        assertEquals(1, proc.captured.functions().size());
+        BPFFunction bpfFn = proc.captured.functions().get(0).bpfFunction();
+        assertEquals("struct_ops.s/ssthresh", bpfFn.section(),
+                "@Sleepable must flip section prefix to struct_ops.s/");
+    }
+
+    @Test
+    void nonSleepableKeepsStructOpsSlash() {
+        String body = """
+            package p;
+            import me.bechberger.ebpf.annotations.bpf.*;
+            import me.bechberger.ebpf.bpf.structops.TcpCongestionControl;
+            import me.bechberger.ebpf.bpf.BPFProgram;
+            import me.bechberger.ebpf.type.Ptr;
+            import me.bechberger.ebpf.runtime.runtime.sock;
+            @BPF abstract class Cc extends BPFProgram implements TcpCongestionControl {
+                @Override public int ssthresh(Ptr<sock> sk) { return 42; }
+            }
+            """;
+        var proc = new CapturingProcessor("p.Cc");
+        var res = InMemoryJavaCompiler.compile(
+                List.of(new Source("p.Cc", body)), proc);
+        failIfCompileErrors(res);
+        assertNotNull(proc.captured);
+
+        BPFFunction bpfFn = proc.captured.functions().get(0).bpfFunction();
+        assertEquals("struct_ops/ssthresh", bpfFn.section(),
+                "no-@Sleepable default must remain struct_ops/");
     }
 }
