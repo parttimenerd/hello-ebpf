@@ -998,7 +998,7 @@ public interface Scheduler {
         BPFProgram bpfProgram = (BPFProgram)this;
         try {
             bpfProgram.attachStructOps("sched_ops");
-        } catch (BPFProgram.BPFAttachError err) {
+        } catch (BPFProgram.BPFAttachError | BPFProgram.BPFLoadError.StructOpsAttachFailed err) {
             throw new BPFError("Could not attach scheduler, " +
                     "maybe stop the current sched-ext scheduler via 'systemctl stop scx'", err);
         }
