@@ -1934,13 +1934,26 @@ public abstract class BPFProgram implements AutoCloseable {
         if (opsDescriptor == null) {
             throw new BPFLoadError.StructOpsAttachFailed(name, "map not found");
         }
+        VerifierLogCapture.install();
+        VerifierLogCapture.drainAndReset();
         var res = BPF_MAP__ATTACH_STRUCT_OPS.call(opsDescriptor.map());
-        if (res.result() == MemorySegment.NULL && res.hasError()) {
-            throw new BPFLoadError.StructOpsAttachFailed(name,
-                    "bpf_map__attach_struct_ops errno=" + res.err());
+        var link = res.result();
+        // libbpf returns an ERR_PTR (encoded -errno) on failure, not NULL, so
+        // the caller must funnel the return through libbpf_get_error to detect
+        // the error case. A plain NULL check misses ERR_PTR errors and silently
+        // records a bogus link.
+        long err = Lib.libbpf_get_error(link);
+        if (err != 0 || link == MemorySegment.NULL) {
+            String libbpfLog = VerifierLogCapture.drainAndReset();
+            long errno = err != 0 ? -err : res.err();
+            String detail = "bpf_map__attach_struct_ops errno=" + errno;
+            if (!libbpfLog.isEmpty()) {
+                detail += "\nlibbpf: " + libbpfLog.stripTrailing();
+            }
+            throw new BPFLoadError.StructOpsAttachFailed(name, detail);
         }
-        attachedStructOps.add(res.result());
-        lastAttachedStructOpsLinkId = res.result().address();
+        attachedStructOps.add(link);
+        lastAttachedStructOpsLinkId = link.address();
     }
 
     /**

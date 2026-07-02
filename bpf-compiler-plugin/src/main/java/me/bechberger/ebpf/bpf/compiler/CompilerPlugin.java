@@ -448,7 +448,21 @@ public class CompilerPlugin implements Plugin {
                         StructOpsValidator.validateReturnType(field, ret, fieldName);
                         for (int i = 0; i < m.getParameters().size(); i++) {
                             var p = m.getParameters().get(i);
+                            // @Unsigned is TYPE_USE-scoped, so it appears on the type mirror,
+                            // not as an element-scope annotation on the parameter. Fall back
+                            // to element-scope for compilers that mirror it there.
                             boolean unsigned = p.getAnnotation(me.bechberger.ebpf.annotations.Unsigned.class) != null;
+                            if (!unsigned) {
+                                for (var a : p.asType().getAnnotationMirrors()) {
+                                    String fqn = ((javax.lang.model.element.TypeElement)
+                                            a.getAnnotationType().asElement())
+                                            .getQualifiedName().toString();
+                                    if (fqn.equals(me.bechberger.ebpf.annotations.Unsigned.class.getName())) {
+                                        unsigned = true;
+                                        break;
+                                    }
+                                }
+                            }
                             // Strip TYPE_USE annotations (e.g. "@Unsigned int") from the type string.
                             String argTypeStr = p.asType().toString().replaceAll("@\\S+\\s+", "");
                             String rArg = renderer.renderWithAnnotation(argTypeStr, unsigned);

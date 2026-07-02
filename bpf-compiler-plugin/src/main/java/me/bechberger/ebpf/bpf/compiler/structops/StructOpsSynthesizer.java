@@ -71,7 +71,9 @@ public final class StructOpsSynthesizer {
                     ExecutableElement target = concrete != null ? concrete : ifaceMethod;
                     String section = kind.sectionPrefix() + fieldName;
                     String header = renderHeader(field, ifaceMethod);
-                    functions.add(new SynthFunction(target, makeProxy(section, header)));
+                    // Function name matches the kernel field so the init below can
+                    // reference it without a Java-vs-C name gap (e.g. congAvoid vs cong_avoid).
+                    functions.add(new SynthFunction(target, makeProxy(section, header, fieldName)));
                     initializerLines.add("    ." + fieldName + " = (void *)" + fieldName);
                 }
             }
@@ -107,6 +109,17 @@ public final class StructOpsSynthesizer {
         for (int i = 0; i < n; i++) {
             VariableElement p = params.get(i);
             boolean unsigned = p.getAnnotation(Unsigned.class) != null;
+            if (!unsigned) {
+                // TYPE_USE-scoped @Unsigned lives on the parameter's type mirror.
+                for (var a : p.asType().getAnnotationMirrors()) {
+                    String fqn = ((TypeElement) a.getAnnotationType().asElement())
+                            .getQualifiedName().toString();
+                    if (fqn.equals(Unsigned.class.getName())) {
+                        unsigned = true;
+                        break;
+                    }
+                }
+            }
             String cType = mapBtfType(btfArgs.get(i).type(), unsigned);
             parts.add(cType.endsWith("*") ? cType + p.getSimpleName()
                                           : cType + " " + p.getSimpleName());
@@ -217,7 +230,7 @@ public final class StructOpsSynthesizer {
      * fields are covered so the downstream pipeline never reads a
      * {@code null}.
      */
-    private BPFFunction makeProxy(String section, String headerTemplate) {
+    private BPFFunction makeProxy(String section, String headerTemplate, String name) {
         return (BPFFunction) Proxy.newProxyInstance(
                 BPFFunction.class.getClassLoader(),
                 new Class[]{BPFFunction.class},
@@ -229,7 +242,7 @@ public final class StructOpsSynthesizer {
                     // struct_ops entries are wired up via
                     // bpf_map__attach_struct_ops, not autoAttachPrograms.
                     case "autoAttach"     -> false;
-                    case "name"           -> "";
+                    case "name"           -> name;
                     case "addDefinition"  -> true;
                     // entry points must not be inlined
                     case "inline"         -> false;
