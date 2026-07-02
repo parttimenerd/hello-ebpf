@@ -56,4 +56,13 @@ public class AttachAnnotationTest {
             assertTrue(program.triggered.get(), "@Fentry should have fired");
         }
     }
+
+    @Test
+    void kprobeMultiAndUprobeMultiSectionsAreAutoAttachable() {
+        var s = me.bechberger.ebpf.annotations.bpf.BPFFunction.autoAttachableSections;
+        assertTrue(s.contains("kprobe.multi"));
+        assertTrue(s.contains("kretprobe.multi"));
+        assertTrue(s.contains("uprobe.multi"));
+        assertTrue(s.contains("uretprobe.multi"));
+    }
 }
