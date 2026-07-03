@@ -36,7 +36,7 @@ public abstract class PerCpuInnerMapSample extends BPFProgram {
             headerTemplate = "int BPF_PROG($name, $params)",
             lastStatement = "return 0;",
             section = "raw_tracepoint/sys_enter",
-            autoAttach = true
+            autoAttach = false
     )
     public void countSyscall(Ptr<PtDefinitions.pt_regs> regs, @Unsigned long nr) {
         int cpu = BPFJ.currentCpuId();
@@ -64,7 +64,7 @@ public abstract class PerCpuInnerMapSample extends BPFProgram {
         for (int cpu = 0; cpu < numCpus; cpu++) {
             perCpu.register(cpu, innerTemplate);
         }
-        autoAttachPrograms();
+        rawTracepointAttach("countSyscall", "sys_enter");
         Thread.sleep(seconds * 1000L);
 
         HashMap<Long, Long> total = new HashMap<>();
