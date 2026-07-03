@@ -151,4 +151,4 @@ private static final long __NR_perf_event_open = 298L;
 
 ## 0.1.3 and earlier
 
-See git history. Kernel BTF snapshot diffs are documented in [MIGRATIONS.md](../MIGRATIONS.md).
+See git history. Kernel BTF snapshot diffs are documented in [MIGRATIONS.md](https://github.com/parttimenerd/hello-ebpf/blob/main/MIGRATIONS.md).

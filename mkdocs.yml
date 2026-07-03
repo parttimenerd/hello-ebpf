@@ -2,6 +2,8 @@ site_name: hello-ebpf
 site_url: https://parttimenerd.github.io/hello-ebpf/
 repo_url: https://github.com/parttimenerd/hello-ebpf
 repo_name: parttimenerd/hello-ebpf
+exclude_docs: |
+  superpowers/
 theme:
   name: material
   features:
@@ -16,17 +18,26 @@ theme:
 nav:
   - Home: index.md
   - Cheat Sheet: cheatsheet.md
+  - Cookbook: cookbook.md
   - Guides:
     - Maps: maps.md
-    - Shared maps: shared-maps.md
+    - Shared Maps: shared-maps.md
+    - Map-of-Maps: map-of-maps.md
+    - Tail Calls: tail-calls.md
     - XDP: xdp.md
     - TC: tc.md
     - Tracepoints: tracepoints.md
     - Kprobes: kprobes.md
+    - Uprobes: uprobes.md
+    - Attach Cookies & Multi-Attach: attach-cookies-multi.md
     - LSM & Cgroup: lsm.md
     - sched_ext: sched_ext.md
+    - struct_ops in Java: struct-ops.md
+    - Writing Schedulers in Java: scheduler-article.md
+    - Userspace Scheduler: userspace-scheduler.md
     - Global Variables & Types: global-variables.md
     - BPFJ Helpers: helpers.md
+    - Profiling: profiling.md
   - Reference:
     - Feature Matrix: feature-matrix.md
     - Diagnostics: diagnostics.md

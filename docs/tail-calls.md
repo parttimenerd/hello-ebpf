@@ -8,7 +8,7 @@ for this pattern:
 
 1. **Raw `BPFProgArray`** — the primitive. `progs.register(slot, handle)`
    plus `progs.tailCall(ctx, slot)`. See
-   [`TailCallDemo.java`](../bpf-samples/src/main/java/me/bechberger/ebpf/samples/TailCallDemo.java).
+   [`TailCallDemo.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/TailCallDemo.java).
 2. **`@BPFTailCallTable`** — auto-registers slots from an enum. This page.
 
 ## `@BPFTailCallTable` in 60 seconds
@@ -80,5 +80,5 @@ This works with any program type and requires no special load-time wiring.
 
 ## See also
 
-- [`HelloTailCall.java`](../bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloTailCall.java) — canonical sample.
-- [`BPFProgArray.java`](../bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFProgArray.java) — the underlying primitive.
+- [`HelloTailCall.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloTailCall.java) — canonical sample.
+- [`BPFProgArray.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFProgArray.java) — the underlying primitive.

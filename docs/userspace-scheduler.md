@@ -1,6 +1,5 @@
 # Userspace Scheduler
 
-> Design rationale: see [docs/superpowers/specs/2026-06-29-userspace-scheduler-design.md](superpowers/specs/2026-06-29-userspace-scheduler-design.md).
 
 A framework for writing Linux CPU schedulers whose policy lives in **Java**, on top of
 sched_ext. The BPF side is a generic transport — it forwards every queued task to
@@ -66,9 +65,9 @@ the schedule. If you need periodic work (e.g. recompute weights) override
 `tick()`, which fires once per second.
 
 For a slightly larger example see
-[`RustlandFifoSample`](../bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandFifoSample.java)
+[`RustlandFifoSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandFifoSample.java)
 (periodic stats printing, shutdown hook) and
-[`WeightedRRSample`](../bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/WeightedRRSample.java)
+[`WeightedRRSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/WeightedRRSample.java)
 (weighted round-robin using `QueuedTask.weight`).
 
 ## 4. Running
@@ -103,7 +102,7 @@ batch boundary, the scheduler is detached, and the JVM exits cleanly.
 
 ## 5. Tuning
 
-All knobs are on [`Opts`](../bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/Opts.java).
+All knobs are on [`Opts`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/Opts.java).
 The defaults are reasonable; only override what you have measured.
 
 | Option | Default | Effect |
@@ -126,7 +125,7 @@ JVM flags worth setting:
 ### Stats (cheap, always on)
 
 `scheduler.stats()` returns an immutable
-[`SchedStatsSnapshot`](../bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/SchedStatsSnapshot.java)
+[`SchedStatsSnapshot`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/SchedStatsSnapshot.java)
 with counters from both BPF and Java sides:
 
 - `ringEnqueued` — BPF wrote to queued ringbuf
@@ -184,7 +183,7 @@ The framework needs `CAP_BPF + CAP_PERFMON + CAP_SYS_ADMIN`.
 `systemctl stop scx` and any other scx user, then retry.
 
 **Verifier rejection at load** — wrapped in a
-[`UserspaceSchedulerStartupException`](../bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/UserspaceSchedulerStartupException.java)
+[`UserspaceSchedulerStartupException`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/UserspaceSchedulerStartupException.java)
 with the libbpf log attached. These are framework bugs — open an issue with the log.
 
 **Watchdog kills the scheduler after ~30 s under load** — this is the
