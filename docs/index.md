@@ -98,9 +98,9 @@ sudo java -cp target/myapp.jar DropEveryThird
 
 ## Blog series
 
-This project is accompanied by an 18-part blog series that walks through each feature step by step:
+This project is accompanied by a 20-part blog series that walks through each feature step by step:
 
-[Writing eBPF programs in Java with hello-ebpf (Part 1: Hello World)](https://mostlynerdless.de/blog/2024/02/11/writing-ebpf-programs-in-java-with-hello-ebpf-1-hello-world/)
+[Writing eBPF programs in Java with hello-ebpf (Part 1: Hello World)](https://mostlynerdless.de/blog/2024/02/11/hello-ebpf-developing-ebpf-apps-in-java-1/)
 
 The series covers XDP, TC, tracepoints, kprobes, maps, ring buffers, LSM, sched_ext, and more.
 

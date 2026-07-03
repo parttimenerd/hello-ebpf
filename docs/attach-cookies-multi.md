@@ -28,20 +28,7 @@ still work (they pass `cookie = 0L`).
 ## kprobe.multi
 
 ```java
-@BPFFunction(section = "kprobe.multi/all", autoAttach = false)
-@KProbeMulti("*")
-int onSyscall(Ptr<?> ctx) {
-    long cookie = BPFJ.bpf_get_attach_cookie(ctx);
-    // ...
-    return 0;
-}
-
-// ...
-
-String[] syms = {"__x64_sys_read", "__x64_sys_write", /* ... */};
-long[] cookies = new long[syms.length];
-for (int i = 0; i < syms.length; i++) cookies[i] = i;
-prog.attachKProbeMulti(prog.getProgramByName("onSyscall"), syms, cookies, false);
+--8<-- "bpf-samples/src/main/java/me/bechberger/ebpf/samples/KProbeMultiCounter.java:kprobe_multi_handler"
 ```
 
 Feature gate: `Features.hasAttachType(BPFAttachType.TRACE_KPROBE_MULTI)`

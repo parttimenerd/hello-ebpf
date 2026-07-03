@@ -26,6 +26,7 @@ public abstract class KProbeMultiCounter extends BPFProgram {
     @BPFMapDefinition(maxEntries = 64)
     BPFHashMap<Long, Long> counts;
 
+    // --8<-- [start:kprobe_multi_handler]
     @BPFFunction(section = "kprobe.multi/all", autoAttach = false)
     @KProbeMulti("*")
     int onSyscall(Ptr<?> ctx) {
@@ -40,6 +41,7 @@ public abstract class KProbeMultiCounter extends BPFProgram {
         counts.put(cookie, next);
         return 0;
     }
+    // --8<-- [end:kprobe_multi_handler]
 
     public static void main(String[] args) throws Exception {
         String[] syms = {
