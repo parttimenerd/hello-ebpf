@@ -630,7 +630,7 @@ static void tracePrintk(String fmt, Object... args) {
 The `carrier` attribute names the C expression that becomes `$this` at subsequent call sites
 (used with `@BPFAbstraction`).
 
-See also: [helpers guide](../helpers.md)
+See also: [helpers guide](bpfj.md)
 
 ---
 

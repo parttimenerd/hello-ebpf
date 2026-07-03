@@ -117,11 +117,10 @@ custom DSQs and initialize global state.
 ```java
 @Override
 @Sleepable
-public void init() {
-    super.init();
-    if (scx_bpf_create_dsq(SHARED_DSQ, -1) != 0) {
-        throw new IllegalStateException("failed to create DSQ");
-    }
+public int init() {
+    int rc = super.init();
+    if (rc != 0) return rc;
+    return scx_bpf_create_dsq(SHARED_DSQ, -1);
 }
 ```
 
@@ -152,24 +151,24 @@ leaves. Use a `BPFHashMap` keyed by PID (the task's `pid` field, typed `int` but
 as `long` to fit the map key type) to associate state with each task.
 
 ```java
-@BPF.Field
-BPFHashMap<Long, TaskData> taskData = BPFHashMap.newInstance();
+@BPFMapDefinition(maxEntries = 4096)
+BPFHashMap<Integer, TaskData> taskData = BPFHashMap.newInstance();
 
 @Override
 public void initTask(Ptr<task_struct> p, Ptr<scx_init_task_args> args) {
     TaskData td = new TaskData();
     td.vruntime = 0;
-    taskData.update(p.val().pid, td);
+    taskData.bpf_put(p.val().pid, td);
 }
 
 @Override
 public void exitTask(Ptr<task_struct> p, Ptr<scx_exit_task_args> args) {
-    taskData.delete(p.val().pid);
+    taskData.bpf_delete(p.val().pid);
 }
 ```
 
 Failing to clean up in `exitTask` leaks map entries. BPF hash maps have a fixed maximum
-size set at creation time, so leaks eventually cause `update` to fail with `-E2BIG`.
+size set at creation time, so leaks eventually cause `bpf_put` to fail with `-E2BIG`.
 
 ---
 

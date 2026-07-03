@@ -13,9 +13,9 @@ A single `mvn package` run triggers two distinct javac phases for every
 
 **Phase 1 — Annotation processor (`bpf-processor`).**
 Runs at round 1 of javac annotation processing
-(`bpf-processor/src/main/java/me/bechberger/ebpf/bpf/processor/TypeProcessor.java`).
+(`bpf-processor/src/main/java/me/bechberger/ebpf/bpf/processor/Processor.java`).
 It discovers `@BPFMapClass`/`@BPFMapDefinition` fields and `@Type`-annotated
-records, resolves their BTF struct layouts, and writes a `.bpf.json` manifest
+records, resolves their BTF struct layouts via `TypeProcessor.java`, and writes a `.bpf.json` manifest
 that the compiler plugin reads in phase 2.
 
 **Phase 2 — Compiler plugin (`bpf-compiler-plugin`).**

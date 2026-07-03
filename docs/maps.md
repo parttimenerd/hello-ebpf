@@ -131,7 +131,7 @@ if (e != null) {
 **Java-side API:**
 ```java
 prog.events.setCallback((event) -> System.out.println("pid=" + event.pid));
-BPFProgram.ringBufferManager().consumeAll();   // poll in a loop
+prog.consumeAndThrow();   // poll ring buffer (or prog.consumeAndSleep(intervalMs))
 ```
 
 ---
@@ -174,17 +174,17 @@ final BPFBloomFilter<Integer> blocklist = BPFBloomFilter.newInstance();
 
 **BPF-side API:**
 ```java
-if (blocklist.bpf_peek(suspectIp) == 0) {
-    // Definitely not in set — pass
-    return XDP_PASS;
+if (blocklist.peek(suspectIp)) {
+    // Probably in set — apply heavier check or drop
+    return XDP_DROP;
 }
-// Probably in set — apply heavier check or drop
-return XDP_DROP;
+// Definitely not in set — pass
+return XDP_PASS;
 ```
 
 **Java-side API:**
 ```java
-prog.blocklist.add(0xC0A80001);   // 192.168.0.1
+prog.blocklist.put(0xC0A80001);   // 192.168.0.1
 ```
 
 ---
@@ -263,12 +263,13 @@ final BPFQueue<Event> queue = BPFQueue.newInstance();
 ```java
 Event e = new Event();
 e.pid = BPFJ.currentPid();
-queue.bpf_push(e);
+queue.push(e);
 ```
 
 **Java-side API:**
 ```java
-Optional<Event> e = prog.queue.pop();
+Event e = prog.queue.pop();   // returns null if empty
+if (e != null) { ... }
 ```
 
 ---
@@ -305,8 +306,8 @@ jumptable.bpf_tail_call(ctx, index);
 
 **Java-side setup:**
 ```java
-prog.jumptable.set(0, prog.getFd("handle_ipv4"));
-prog.jumptable.set(1, prog.getFd("handle_ipv6"));
+prog.jumptable.register(0, prog.getProgramByName("handle_ipv4"));
+prog.jumptable.register(1, prog.getProgramByName("handle_ipv6"));
 ```
 
 ---

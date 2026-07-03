@@ -116,20 +116,23 @@ Expands to: `(u32)(bpf_get_current_uid_gid() >> 32)`
 Use these to safely read memory that may be in user-space or in potentially-faulting kernel
 addresses. Direct pointer dereference of user pointers will be rejected by the BPF verifier.
 
-### `BPFJ.bpf_probe_read_user(dst, size, src)`
+### `BPFJ.bpf_probe_read_user(dst, src)`
 
-Read `size` bytes from user-space address `src` into `dst`.
+Read the value at user-space pointer `src` into `dst`. The size is inferred from the type `T`.
 
 ```java
-BPFJ.bpf_probe_read_user(Ptr.cast(myBuf), 64, userPtr);
+MyStruct s = new MyStruct();
+BPFJ.bpf_probe_read_user(s, userPtr);
 ```
 
-### `BPFJ.bpf_probe_read_kernel(dst, size, src)`
+Expands to: `bpf_probe_read_user(&dst, sizeof(dst), src)`
 
-Read `size` bytes from a kernel address.
+### `BPFJ.bpf_probe_read_kernel(dst, src)`
+
+Read a value from kernel address `src` into `dst`.
 
 ```java
-BPFJ.bpf_probe_read_kernel(Ptr.cast(dst), sizeof(dst), Ptr.of(kernelObj));
+BPFJ.bpf_probe_read_kernel(dst, Ptr.of(kernelObj));
 ```
 
 ### `BPFJ.bpf_probe_read_user_str(dst, size, src)`
@@ -149,27 +152,34 @@ Read a null-terminated string from kernel memory.
 
 ## Packet / Socket Helpers
 
-### `BPFJ.bpf_skb_store_bytes(skb, offset, from, len, flags)`
+These helpers are in `me.bechberger.ebpf.runtime.helpers.BPFHelpers` and must be imported
+statically: `import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.*;`
+
+### `bpf_skb_store_bytes(skb, offset, from, len, flags)`
 
 Write `len` bytes from `from` into the socket buffer at `offset`.
 Available in TC programs.
 
 ```java
 short newProto = bpf_htons(ETH_P_IP);
-BPFJ.bpf_skb_store_bytes(skb, 12, Ptr.of(newProto), 2, BPF_F_RECOMPUTE_CSUM);
+bpf_skb_store_bytes(skb, 12, Ptr.of(newProto), 2, BPF_F_RECOMPUTE_CSUM);
 ```
 
-### `BPFJ.bpf_l3_csum_replace(skb, offset, from, to, flags)`
+### `bpf_l3_csum_replace(skb, offset, from, to, flags)`
 
 Incrementally update the L3 (IP) checksum after rewriting a field.
 
-### `BPFJ.bpf_l4_csum_replace(skb, offset, from, to, flags)`
+### `bpf_l4_csum_replace(skb, offset, from, to, flags)`
 
 Incrementally update the L4 (TCP/UDP) checksum.
 
-### `BPFJ.bpf_redirect(ifindex, flags)`
+### `BPFJ.bpfRedirect(ifindex, flags)`
 
-Redirect a packet to another interface (use in XDP or TC).
+Redirect a packet to another interface (use in XDP or TC). This helper is on `BPFJ`.
+
+```java
+return BPFJ.bpfRedirect(targetIfIndex, 0);
+```
 
 ---
 
@@ -178,43 +188,45 @@ Redirect a packet to another interface (use in XDP or TC).
 BPF verifier-approved atomic operations for shared counters. These are needed when multiple
 CPUs may update the same map value concurrently without per-CPU maps.
 
-### `BPFJ.bpf_atomic_add(ptr, delta)`
+### `BPFJ.sync_fetch_and_add(ptr, delta)`
 
 Atomically add `delta` to `*ptr`. Returns the old value.
 
 ```java
 Ptr<Long> val = myMap.bpf_get(key);
 if (val != null) {
-    BPFJ.bpf_atomic_add(val, 1L);
+    BPFJ.sync_fetch_and_add(val, 1L);
 }
 ```
 
-Expands to: `__sync_fetch_and_add(ptr, delta)` (kernel) or `BPF_ATOMIC_ADD` (newer kernels).
+Expands to: `__sync_fetch_and_add(ptr, delta)`
 
-### `BPFJ.bpf_atomic_cmpxchg(ptr, expected, desired)`
+### `BPFJ.sync_add_and_fetch(ptr, delta)`
 
-Atomic compare-and-exchange. Returns the original value at `*ptr`.
+Atomically add `delta` to `*ptr`. Returns the new value.
+
+Other variants: `sync_sub_and_fetch`, `sync_fetch_and_sub`, `sync_fetch_and_or`, `sync_fetch_and_and`.
 
 ---
 
 ## Control Flow
 
-### `BPFJ.bpf_loop(nr_loops, callback, ctx, flags)`
+### `BPFJ.bpfLoop(count, body, ctx)`
 
-Execute `callback` up to `nr_loops` times. This is a bounded loop construct that satisfies
+Execute `body` up to `count` times. This satisfies
 the BPF verifier when the loop count is not a compile-time constant.
 
 ```java
-BPFJ.bpf_loop(packetCount, (i, data) -> {
-    // process packet i
-    return 0;   // continue; return 1 to break
-}, ctx, 0);
+BPFJ.bpfLoop(packetCount, (i, ctx) -> {
+    // process packet i; return 0 to continue, 1 to break
+    return 0;
+}, ctx);
 ```
 
-Expands to: `bpf_loop(nr_loops, callback, ctx, flags)`
+Expands to: `bpf_loop(count, &__bpf_lambda_..., ctx, 0)`
 
 !!! note "Kernel ≥5.17"
-    `bpf_loop` requires kernel 5.17. For older kernels, use bounded `for` loops with a
+    `bpfLoop` requires kernel 5.17. For older kernels, use bounded `for` loops with a
     compile-time constant upper bound.
 
 ### `BPFJ.bpf_tail_call(ctx, prog_array, index)`
@@ -231,27 +243,31 @@ return XDP_DROP;
 
 ## Miscellaneous
 
-### `BPFJ.bpf_get_smp_processor_id()`
+### `BPFJ.currentCpuId()`
 
 Returns the current CPU index. Useful for indexing per-CPU data structures.
 
 ```java
-int cpu = BPFJ.bpf_get_smp_processor_id();
+int cpu = BPFJ.currentCpuId();
 ```
 
-### `BPFJ.bpf_perf_event_output(ctx, map, flags, data, size)`
+Expands to: `bpf_get_smp_processor_id()`
+
+The following are available via `BPFHelpers.*` (import `me.bechberger.ebpf.runtime.helpers.BPFHelpers`):
+
+### `bpf_perf_event_output(ctx, map, flags, data, size)`
 
 Write data to a perf event array (older alternative to ring buffer).
 
-### `BPFJ.bpf_get_stack(ctx, buf, size, flags)`
+### `bpf_get_stack(ctx, buf, size, flags)`
 
 Capture a kernel or user-space stack trace into `buf`.
 
-### `BPFJ.bpf_csum_diff(from, from_size, to, to_size, seed)`
+### `bpf_csum_diff(from, from_size, to, to_size, seed)`
 
 Compute the incremental checksum difference when rewriting packet fields.
 
-### `BPFJ.bpf_skb_pull_data(skb, len)`
+### `bpf_skb_pull_data(skb, len)`
 
 Ensure `len` bytes of the socket buffer are linearly accessible. Required before
 `bpf_skb_store_bytes` on non-linear skbs.
@@ -260,50 +276,32 @@ Ensure `len` bytes of the socket buffer are linearly accessible. Required before
 
 ## Ring Buffer
 
-### `BPFJ.bpf_ringbuf_reserve(map, size, flags)`
+`BPFRingBuffer` exposes typed BPF-side methods directly on the map object — no `BPFJ` call needed.
 
-Reserve `size` bytes in the ring buffer map. Returns a pointer to the reserved slot, or null
-if the ring buffer is full.
+### `events.reserve()`
+
+Reserve a slot for one event. Returns a `Ptr<E>` to the slot, or `null` if the ring buffer is full.
 
 ```java
-Ptr<Event> e = BPFJ.bpf_ringbuf_reserve(events, BPFType.sizeOf(Event.class), 0);
-if (e == null) {
-    return 0;
-}
+Ptr<Event> e = events.reserve();
+if (e == null) return 0;
 e.val().pid = BPFJ.currentPid();
-BPFJ.bpf_ringbuf_submit(e, 0);
+events.submit(e);
 ```
 
-Expands to: `bpf_ringbuf_reserve(map, size, flags)`
+### `events.submit(slot)`
 
-### `BPFJ.bpf_ringbuf_submit(data, flags)`
+Submit a reserved slot, making it visible to userspace. Always call either `submit` or `discard` — a leaked reservation stalls the consumer.
 
-Submit a previously reserved slot. The slot becomes visible to userspace readers after this call.
+### `events.discard(slot)`
+
+Discard a reserved slot without making it visible to userspace.
 
 ```java
-Ptr<Event> e = BPFJ.bpf_ringbuf_reserve(events, BPFType.sizeOf(Event.class), 0);
-if (e == null) {
-    return 0;
-}
-e.val().pid = BPFJ.currentPid();
-BPFJ.bpf_ringbuf_submit(e, 0);
+events.discard(e);
 ```
 
-Expands to: `bpf_ringbuf_submit(data, flags)`
-
-!!! note
-    Always call either `bpf_ringbuf_submit` or `bpf_ringbuf_discard` for every reserved slot.
-    Leaking a reservation stalls the ring buffer consumer.
-
-### `BPFJ.bpf_ringbuf_discard(data, flags)`
-
-Discard a previously reserved slot without making it visible to userspace.
-
-```java
-BPFJ.bpf_ringbuf_discard(e, 0);
-```
-
-Expands to: `bpf_ringbuf_discard(data, flags)`
+**Java-side polling:** call `prog.consumeAndThrow()` (or `prog.consumeAndSleep(intervalMs)`) in a loop. Set the callback first: `prog.events.setCallback(e -> ...)`.
 
 ---
 
