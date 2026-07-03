@@ -20,9 +20,13 @@ The hello-ebpf kernelspace path builds on three types:
 and the lottery variant in
 [Part 17: Writing a lottery scheduler in Java with sched_ext](https://mostlynerdless.de/blog/2024/12/17/hello-ebpf-writing-a-lottery-scheduler-in-java-with-sched-ext-17/).
 
+![Tasks flow from the scheduler into a global DSQ, then into per-CPU local queues](https://mostlynerdless.de/wp-content/uploads/2024/09/scheduler_dance-2000x1847.png)
+
 ---
 
-## Worked example — Lottery Scheduler
+## Example: Lottery Scheduler
+
+![Visualization of lottery scheduling: tasks enqueue into a bowl, CPUs draw randomly](https://mostlynerdless.de/wp-content/uploads/2024/12/lottery_bowl.png)
 
 The lottery scheduler assigns each task a random time slice drawn from a uniform
 distribution. Tasks that get a longer slice run first (they advance less in a

@@ -13,6 +13,8 @@ ordinary Java, the framework hides the BPF.
 and the userspace lottery variant in
 [Part 18: Writing a lottery scheduler in pure Java with BPF for-each support](https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/).
 
+![Tasks enqueue into a scheduling queue; CPUs ask for new tasks and return finished ones; a task-settings map controls policy](https://mostlynerdless.de/wp-content/uploads/2024/12/task_control_diagram-2000x1680.png)
+
 ---
 
 ## 1. What is this
@@ -72,7 +74,9 @@ the schedule. If you need periodic work (e.g. recompute weights) override
 
 ---
 
-## Worked example — Lottery Scheduler (userspace)
+## Example: Lottery Scheduler (userspace)
+
+![Visualization of lottery scheduling: tasks enqueue into a bowl, CPUs draw randomly](https://mostlynerdless.de/wp-content/uploads/2024/12/lottery_bowl.png)
 
 The classic [lottery scheduling](https://www.usenix.org/conference/osdi-94/lottery-and-stride-scheduling-flexible-proportional-share-resource-management)
 paper (Waldspurger & Weihl, OSDI '94) assigns each task a proportional number of
