@@ -82,6 +82,9 @@ jobs:
       - name: Install mkdocs-material
         run: pip install -r docs-requirements.txt
 
+      - name: Build docs (strict)
+        run: mkdocs build --strict
+
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force
 
