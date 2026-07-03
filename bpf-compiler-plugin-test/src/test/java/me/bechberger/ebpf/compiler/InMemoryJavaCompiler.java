@@ -22,6 +22,13 @@ public final class InMemoryJavaCompiler {
                          String compilerOutput,
                          java.util.Map<String, String> generatedSources) {
 
+        /** Backwards-compatible constructor without generated-source capture. */
+        public Result(boolean success,
+                      List<Diagnostic<? extends JavaFileObject>> diagnostics,
+                      String compilerOutput) {
+            this(success, diagnostics, compilerOutput, java.util.Map.of());
+        }
+
         /** All error-level diagnostic messages joined with newlines. */
         public String errorMessages() {
             var sb = new StringBuilder();
@@ -116,6 +123,7 @@ public final class InMemoryJavaCompiler {
             // Collect all generated .java files before we wipe the temp dir.
             try {
                 java.nio.file.Files.walk(tmp)
+                        .filter(java.nio.file.Files::isRegularFile)
                         .filter(p -> p.toString().endsWith(".java"))
                         .forEach(p -> {
                             try {

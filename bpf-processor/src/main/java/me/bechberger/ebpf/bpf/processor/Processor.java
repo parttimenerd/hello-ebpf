@@ -422,7 +422,8 @@ public class Processor extends AbstractProcessor {
         //   (b) this is a PRODUCER (some consumer has @SharedFrom on this class) —
         //       wipe stale pins via unpinAllForClass(<UserClass>) for fresh-on-each-run,
         //       then call setMapPinPath for each map referenced by some consumer.
-        // A class can be both, in which case both blocks are emitted in the same method.
+        // A class can be any subset of the above, in which case all applicable
+        // blocks are emitted in the same method.
         String thisFqn = outerTypeElement.getQualifiedName().toString();
         var producedMaps = sharedFromIndex.getOrDefault(thisFqn, java.util.Collections.emptySet());
         boolean isProducer = !producedMaps.isEmpty();
