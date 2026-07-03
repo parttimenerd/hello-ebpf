@@ -1,13 +1,19 @@
 # Userspace Scheduler
 
-
-A framework for writing Linux CPU schedulers whose policy lives in **Java**, on top of
-sched_ext. The BPF side is a generic transport — it forwards every queued task to
-userspace through a ring buffer, the Java side decides where it should run, and the
-result flows back through a second ring buffer for the kernel to dispatch.
+A userspace scheduler moves the scheduling policy to **Java**, running in user space.
+The BPF side is a thin transport: it forwards every queued task through a ring buffer,
+Java decides where it should run, and the decision flows back through a second ring
+buffer for the kernel to dispatch.
 
 This is the "rustland" pattern (cf. `scx_rustland_core`) ported to hello-ebpf: you write
 ordinary Java, the framework hides the BPF.
+
+**Blog series** — the userspace scheduler is introduced in
+[Part 16: Control task scheduling with a custom scheduler written in Java](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/)
+and the userspace lottery variant in
+[Part 18: Writing a lottery scheduler in pure Java with BPF for-each support](https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/).
+
+---
 
 ## 1. What is this
 
@@ -63,6 +69,62 @@ public final class MyFifo extends UserspaceScheduler {
 There is **no `schedule` callback** — the per-task `policy()` returning a CPU *is*
 the schedule. If you need periodic work (e.g. recompute weights) override
 `tick()`, which fires once per second.
+
+---
+
+## Worked example — Lottery Scheduler (userspace)
+
+The classic [lottery scheduling](https://www.usenix.org/conference/osdi-94/lottery-and-stride-scheduling-flexible-proportional-share-resource-management)
+paper (Waldspurger & Weihl, OSDI '94) assigns each task a proportional number of
+"tickets" and selects the next task by drawing a random ticket. The per-task
+`policy()` model adapts this naturally: for each task dequeued, draw a random
+ticket and compare it to the task's weight — if the task "wins" the lottery, load-
+balance it to any idle CPU; otherwise pin it to its last CPU for cache warmth.
+
+```java
+import me.bechberger.ebpf.bpf.QueuedTask;
+import me.bechberger.ebpf.bpf.userspace.Opts;
+import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
+import java.util.concurrent.ThreadLocalRandom;
+
+public class LotterySample extends UserspaceScheduler {
+
+    private static final long WEIGHT_DENOMINATOR = 10_000L;
+
+    @Override
+    protected int policy(QueuedTask t) {
+        // Draw a random ticket in [0, 10000)
+        long ticket = ThreadLocalRandom.current().nextLong(WEIGHT_DENOMINATOR);
+        if (ticket < Math.max(1L, t.weight)) {
+            // Task wins the lottery — load-balance to any idle CPU
+            return ANY_CPU;
+        }
+        // Task loses — keep it on its last CPU for cache warmth
+        return t.prevCpu >= 0 ? t.prevCpu : ANY_CPU;
+    }
+
+    public static void main(String[] args) {
+        new LotterySample().runUntilExit(Opts.defaults());
+    }
+}
+```
+
+`QueuedTask.weight` is in [1, 10000]; the kernel default is 100 (nice 0). Tasks
+with high nice/weight win the lottery more often and get load-balanced more
+aggressively; low-priority tasks mostly stay cache-pinned.
+
+Full source with CLI + stats + shutdown hook:
+[`LotterySample.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LotterySample.java)
+
+---
+
+## Sample schedulers
+
+| Scheduler | What it demonstrates |
+|-----------|---------------------|
+| [`RustlandFifoSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandFifoSample.java) | Minimal FIFO with periodic stats |
+| [`WeightedRRSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/WeightedRRSample.java) | Weighted round-robin using `QueuedTask.weight` |
+| [`LotterySample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LotterySample.java) | Weight-proportional lottery placement (above) |
 
 For a slightly larger example see
 [`RustlandFifoSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandFifoSample.java)

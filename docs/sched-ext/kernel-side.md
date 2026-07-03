@@ -1,4 +1,119 @@
-# sched_ext — Kernel-side Scheduler
+# sched_ext — Kernelspace Scheduler
+
+A kernelspace scheduler runs entirely inside the kernel: every scheduling decision
+happens in BPF, directly in kernel context, with no round-trip to user space.
+This gives you the lowest possible latency and the full sched_ext API surface.
+
+The hello-ebpf kernelspace path builds on three types:
+
+- **`SchedulerBase`** — extends `BPFProgram`, implements sensible defaults for
+  `init`, `dispatch`, and `exit`. Extend it unless you need `BPFProgram` directly.
+- **`DispatchQueue`** — a compile-time abstraction over DSQ IDs. Field
+  declarations of `new DispatchQueue(id)` auto-inject `scx_bpf_create_dsq` into
+  `init()`. All insert/move operations inline to the correct kfuncs.
+- **`Scheduler`** interface — declares the callback signatures. Extend
+  `SchedulerBase implements Scheduler` to get IDE support and the correct method
+  signatures.
+
+**Blog series** — the kernel-side scheduler is introduced in
+[Part 15: Writing a Linux scheduler in Java with eBPF](https://mostlynerdless.de/blog/2024/09/10/hello-ebpf-writing-a-linux-scheduler-in-java-with-ebpf-15/)
+and the lottery variant in
+[Part 17: Writing a lottery scheduler in Java with sched_ext](https://mostlynerdless.de/blog/2024/12/17/hello-ebpf-writing-a-lottery-scheduler-in-java-with-sched-ext-17/).
+
+---
+
+## Worked example — Lottery Scheduler
+
+The lottery scheduler assigns each task a random time slice drawn from a uniform
+distribution. Tasks that get a longer slice run first (they advance less in a
+virtual-time DSQ), producing a fair lottery among runnable tasks without per-task
+bookkeeping.
+
+This is the simplest example that goes beyond a trivial FIFO, because it uses
+`bpf_get_prandom_u32` and the `nrQueued()` introspection call, and it extends
+`BPFProgram` directly (instead of `SchedulerBase`) to show the DSQ setup clearly.
+
+```java
+import me.bechberger.ebpf.annotations.Unsigned;
+import me.bechberger.ebpf.annotations.bpf.*;
+import me.bechberger.ebpf.bpf.BPFProgram;
+import me.bechberger.ebpf.bpf.Scheduler;
+import me.bechberger.ebpf.bpf.sched.DispatchQueue;
+import me.bechberger.ebpf.bpf.sched.EnqFlags;
+import me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
+import me.bechberger.ebpf.type.Ptr;
+import static me.bechberger.ebpf.runtime.helpers.BPFHelpers.bpf_get_prandom_u32;
+
+@BPF(license = "GPL")
+@Property(name = "sched_name", value = "lottery_scheduler")
+public abstract class LotteryScheduler extends BPFProgram implements Scheduler {
+
+    private static final long SHARED_DSQ_ID = 0;
+
+    // Declaring new DispatchQueue(...) auto-injects scx_bpf_create_dsq into init().
+    final DispatchQueue shared = new DispatchQueue(SHARED_DSQ_ID);
+
+    @Override
+    @Sleepable
+    public int init() {
+        // scx_bpf_create_dsq(SHARED_DSQ_ID, -1) is injected here by the compiler plugin
+        return 0;
+    }
+
+    @Override
+    public void enqueue(Ptr<task_struct> p, long enq_flags) {
+        int nr = shared.nrQueued();
+        // Random slice in [0, 10ms], scaled down if many tasks are waiting
+        int maxSlice = 10_000_000; // 10ms in ns
+        int slice = nr > 0
+            ? ((@Unsigned int) (bpf_get_prandom_u32() % maxSlice)) / nr
+            : ((@Unsigned int) (bpf_get_prandom_u32() % maxSlice));
+        if (slice == 0) slice = 1_000_000; // minimum 1ms
+        shared.insert(p, slice, EnqFlags.passThrough(enq_flags));
+    }
+
+    @Override
+    public void dispatch(int cpu, Ptr<task_struct> prev) {
+        shared.moveToLocal();
+    }
+
+    public static void main(String[] args) throws Exception {
+        try (var sched = BPFProgram.load(LotteryScheduler.class)) {
+            sched.runSchedulerLoop();
+        }
+    }
+}
+```
+
+Full runnable source:
+[`LotteryScheduler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LotteryScheduler.java)
+
+Key differences from a `SchedulerBase` scheduler:
+- You **must** declare `init()` explicitly when extending `BPFProgram` directly —
+  otherwise the `scx_bpf_create_dsq` injection has no method to land in.
+- `@Sleepable` is required on `init()` because `scx_bpf_create_dsq` is a sleepable
+  kfunc and the kernel rejects it in a non-sleepable BPF program.
+- `dispatch` is not optional here — `SchedulerBase` provides a default, but
+  `BPFProgram` does not.
+
+---
+
+## Sample schedulers
+
+| Scheduler | What it demonstrates |
+|-----------|---------------------|
+| [`MinimalScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/MinimalScheduler.java) | Simplest possible FIFO via `SchedulerBase` |
+| [`LotteryScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LotteryScheduler.java) | Random time-slice lottery (above) |
+| [`SimpleScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/SimpleScheduler.java) | FIFO + vtime switchable at runtime |
+| [`VTimeScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/VTimeScheduler.java) | Weighted fair-queuing |
+| [`NestScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/NestScheduler.java) | Idle-CPU nesting with `CpuMask` |
+| [`PriorityScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/PriorityScheduler.java) | Multiple priority-level DSQs |
+| [`DeadlineScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/DeadlineScheduler.java) | EDF scheduling via vtime = deadline |
+| [`PerCpuSchedulerSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/PerCpuSchedulerSample.java) | Per-CPU DSQs via `PerCpuSchedulerBase` |
+| [`TaskStorageScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/TaskStorageScheduler.java) | Per-task metadata via `BPFTaskStorage` |
+| [`SMTPairScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/SMTPairScheduler.java) | SMT-aware pairing for sibling cores |
+
+---
 
 ## The `@Property` annotation
 

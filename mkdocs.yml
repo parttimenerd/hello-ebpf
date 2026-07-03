@@ -46,7 +46,7 @@ nav:
   - sched_ext:
     - Overview: sched-ext/index.md
     - Writing a Scheduler: sched-ext/guide.md
-    - Kernel-side Scheduler: sched-ext/kernel-side.md
+    - Kernelspace Scheduler: sched-ext/kernel-side.md
     - Userspace Scheduler: sched-ext/userspace.md
     - Callbacks Reference: sched-ext/callbacks.md
     - Cookbook: sched-ext/cookbook.md
