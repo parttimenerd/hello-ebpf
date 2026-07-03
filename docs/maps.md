@@ -189,6 +189,63 @@ prog.blocklist.add(0xC0A80001);   // 192.168.0.1
 
 ---
 
+## BPFPerCpuHashMap<K, V>
+
+**When to use:** Per-CPU hash map for lock-free counters keyed by an arbitrary value. Each CPU
+has its own value slot; aggregate Java-side by summing across CPUs.
+
+**Map type:** `BPF_MAP_TYPE_PERCPU_HASH`
+
+**Declaration:**
+```java
+@BPFMapDefinition(maxEntries = 4096)
+final BPFPerCpuHashMap<Integer, Long> pidBytes = BPFPerCpuHashMap.newInstance();
+```
+
+**BPF-side API:** identical to `BPFHashMap` (`bpf_get`, `bpf_put`, `bpf_delete`).
+
+**Java-side API:**
+```java
+List<Long> perCpuValues = prog.pidBytes.getAll(pid);   // one value per CPU
+long total = perCpuValues.stream().mapToLong(Long::longValue).sum();
+```
+
+---
+
+## BPFHashOfMaps<K, InnerMap> / BPFArrayOfMaps<InnerMap>
+
+**When to use:** A map whose values are themselves maps — e.g. per-CPU, per-connection, or
+per-user maps where each key needs its own independent state. See [Map-of-Maps](map-of-maps.md)
+for full documentation.
+
+**Map types:** `BPF_MAP_TYPE_HASH_OF_MAPS` / `BPF_MAP_TYPE_ARRAY_OF_MAPS` (kernel ≥ 4.12)
+
+**Declaration:**
+```java
+@BPFMapDefinition(maxEntries = 1)   // inner-map template
+BPFHashMap<Long, Long> innerTemplate;
+
+@InnerMap("innerTemplate")
+@BPFMapDefinition(maxEntries = 256)
+BPFHashOfMaps<Integer, BPFHashMap<Long, Long>> outer;
+```
+
+**BPF-side API:**
+```java
+Ptr<BPFHashMap<Long, Long>> inner = outer.lookup(cpuId);
+if (inner != null) {
+    inner.bpf_put(syscallNr, count + 1);
+}
+```
+
+**Java-side API:**
+```java
+prog.outer.register(cpuId, innerMapHandle);   // insert inner map fd
+prog.outer.get(cpuId);                        // retrieve fresh fd handle
+```
+
+---
+
 ## BPFQueue<V>
 
 **When to use:** FIFO queue. BPF enqueues events; Java dequeues them. Simpler than ring buffer
