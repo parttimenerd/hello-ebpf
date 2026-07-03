@@ -74,51 +74,114 @@ the schedule. If you need periodic work (e.g. recompute weights) override
 
 ---
 
-## Example: Lottery Scheduler (userspace)
+## Example: Interactive-vs-batch partitioner
 
-![Visualization of lottery scheduling: tasks enqueue into a bowl, CPUs draw randomly](https://mostlynerdless.de/wp-content/uploads/2024/12/lottery_bowl.png)
+The standout advantage of a userspace scheduler over a kernelspace one is **access
+to the full Linux process tree**. BPF can read `comm` (a 15-character kernel thread
+name), but it has no way to read `/proc/<pid>/cmdline` — the full command line
+including all arguments. A Java process whose `comm` is `java` can be identified
+as `gradle`, `mvn`, or `kotlinc` from its cmdline. That identification is
+impossible in BPF.
 
-The classic [lottery scheduling](https://www.usenix.org/conference/osdi-94/lottery-and-stride-scheduling-flexible-proportional-share-resource-management)
-paper (Waldspurger & Weihl, OSDI '94) assigns each task a proportional number of
-"tickets" and selects the next task by drawing a random ticket. The per-task
-`policy()` model adapts this naturally: for each task dequeued, draw a random
-ticket and compare it to the task's weight — if the task "wins" the lottery, load-
-balance it to any idle CPU; otherwise pin it to its last CPU for cache warmth.
+`CmdlineBoostSample` exploits this: it reads `/proc/<pid>/cmdline` once per new
+PID (cached), extracts the binary basename, and classifies each task as
+*interactive* or *batch*:
+
+- **Interactive** (shells, editors, terminals, browsers) → `ANY_CPU`: sched_ext picks
+  any idle CPU for minimum wake-up latency.
+- **Batch** (compilers, build tools, test runners) → pinned to the **upper half** of
+  available CPUs, leaving the lower half free for interactive work.
+- **Everything else** → `ANY_CPU`.
+
+The `tick()` callback runs once per second to purge dead PIDs from the cache by
+checking whether `/proc/<pid>` still exists — another thing BPF cannot do cheaply.
 
 ```java
 import me.bechberger.ebpf.bpf.QueuedTask;
 import me.bechberger.ebpf.bpf.userspace.Opts;
 import me.bechberger.ebpf.bpf.userspace.UserspaceScheduler;
-import java.util.concurrent.ThreadLocalRandom;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class LotterySample extends UserspaceScheduler {
+public final class CmdlineBoostSample extends UserspaceScheduler {
 
-    private static final long WEIGHT_DENOMINATOR = 10_000L;
+    private static final Set<String> INTERACTIVE = Set.of(
+            "bash", "sh", "zsh", "vim", "nvim", "emacs",
+            "alacritty", "kitty", "gnome-terminal", "firefox");
+
+    private static final Set<String> BATCH = Set.of(
+            "gcc", "g++", "clang", "make", "ninja",
+            "gradle", "mvn", "javac", "cargo", "pytest");
+
+    private final Map<Integer, String> cmdlineCache = new ConcurrentHashMap<>();
+    private final Map<Integer, Long>   lastSeen     = new ConcurrentHashMap<>();
+    private long tickCount   = 0;
+    private int  batchRobin  = 0;
 
     @Override
     protected int policy(QueuedTask t) {
-        // Draw a random ticket in [0, 10000)
-        long ticket = ThreadLocalRandom.current().nextLong(WEIGHT_DENOMINATOR);
-        if (ticket < Math.max(1L, t.weight)) {
-            // Task wins the lottery — load-balance to any idle CPU
-            return ANY_CPU;
-        }
-        // Task loses — keep it on its last CPU for cache warmth
-        return t.prevCpu >= 0 ? t.prevCpu : ANY_CPU;
+        String bin = resolveBin(t.pid);
+        lastSeen.put(t.pid, tickCount);
+
+        if (bin != null && INTERACTIVE.contains(bin)) return ANY_CPU;
+        if (bin != null && BATCH.contains(bin))       return nextBatchCpu();
+        return ANY_CPU;
     }
 
-    public static void main(String[] args) {
-        new LotterySample().runUntilExit(Opts.defaults());
+    /** Purge dead PIDs once per second. */
+    @Override
+    protected void tick() {
+        tickCount++;
+        Iterator<Map.Entry<Integer, String>> it = cmdlineCache.entrySet().iterator();
+        while (it.hasNext()) {
+            int pid = it.next().getKey();
+            long age = tickCount - lastSeen.getOrDefault(pid, tickCount);
+            if (age > 5 || !Files.exists(Path.of("/proc/" + pid))) {
+                it.remove();
+                lastSeen.remove(pid);
+            }
+        }
+    }
+
+    private String resolveBin(int pid) {
+        return cmdlineCache.computeIfAbsent(pid, p -> {
+            try {
+                byte[] raw = Files.readAllBytes(Path.of("/proc/" + p + "/cmdline"));
+                if (raw.length == 0) return null;
+                int end = 0;
+                while (end < raw.length && raw[end] != 0) end++;
+                String argv0 = new String(raw, 0, end);
+                int slash = argv0.lastIndexOf('/');
+                return slash >= 0 ? argv0.substring(slash + 1) : argv0;
+            } catch (IOException e) { return null; }
+        });
+    }
+
+    private synchronized int nextBatchCpu() {
+        int n = Runtime.getRuntime().availableProcessors();
+        int batchStart = Math.max(1, n / 2);
+        return batchStart + (batchRobin++ % (n - batchStart));
     }
 }
 ```
 
-`QueuedTask.weight` is in [1, 10000]; the kernel default is 100 (nice 0). Tasks
-with high nice/weight win the lottery more often and get load-balanced more
-aggressively; low-priority tasks mostly stay cache-pinned.
+What's only possible here and not in kernelspace BPF:
 
-Full source with CLI + stats + shutdown hook:
-[`LotterySample.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LotterySample.java)
+| Capability | Userspace | BPF |
+|---|---|---|
+| Read `/proc/<pid>/cmdline` | `Files.readAllBytes(...)` | Not available |
+| Identify `java` as `gradle` vs `mvn` | argv[0] from cmdline | comm is always `java` |
+| Check `/proc/<pid>` exists | `Files.exists(...)` | Not available |
+| `Runtime.availableProcessors()` | Yes | `scx_bpf_nr_cpu_ids()` (ids, not count) |
+| Arbitrary Java data structures | Yes — `HashMap`, trees, etc. | Stack-limited maps only |
+
+Full source with CLI, stats, and shutdown hook:
+[`CmdlineBoostSample.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CmdlineBoostSample.java)
 
 ---
 
@@ -127,14 +190,9 @@ Full source with CLI + stats + shutdown hook:
 | Scheduler | What it demonstrates |
 |-----------|---------------------|
 | [`RustlandFifoSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandFifoSample.java) | Minimal FIFO with periodic stats |
-| [`WeightedRRSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/WeightedRRSample.java) | Weighted round-robin using `QueuedTask.weight` |
-| [`LotterySample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LotterySample.java) | Weight-proportional lottery placement (above) |
-
-For a slightly larger example see
-[`RustlandFifoSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandFifoSample.java)
-(periodic stats printing, shutdown hook) and
-[`WeightedRRSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/WeightedRRSample.java)
-(weighted round-robin using `QueuedTask.weight`).
+| [`WeightedRRSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/WeightedRRSample.java) | Per-task state and `QueuedTask.weight` |
+| [`LotterySample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LotterySample.java) | Weight-biased probabilistic CPU placement |
+| [`CmdlineBoostSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CmdlineBoostSample.java) | `/proc` reads, cmdline classification, CPU partitioning (above) |
 
 ## 4. Running
 
