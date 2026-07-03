@@ -15,7 +15,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Showcase scheduler: demonstrates capabilities impossible in kernelspace BPF.
+ * <b>Experimental</b> — API may change without notice.
+ *
+ * <p>Showcase scheduler: demonstrates capabilities impossible in kernelspace BPF.
  *
  * <h2>What only userspace can do</h2>
  * <ul>

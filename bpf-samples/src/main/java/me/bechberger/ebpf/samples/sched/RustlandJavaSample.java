@@ -15,7 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Java port of the scx_rustland algorithm.
+ * <b>Experimental</b> — API may change without notice.
+ *
+ * <p>Java port of the scx_rustland algorithm.
  *
  * <h2>Algorithm</h2>
  * <p>Maintains per-task virtual time ({@code vtime}) and orders the whole batch by

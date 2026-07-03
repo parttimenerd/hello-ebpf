@@ -11,7 +11,9 @@ import me.bechberger.femtocli.annotations.Option;
 import java.util.ArrayDeque;
 
 /**
- * Two-queue FIFO scheduler with persistent cross-batch queues.
+ * <b>Experimental</b> — API may change without notice.
+ *
+ * <p>Two-queue FIFO scheduler with persistent cross-batch queues.
  *
  * <p>Demonstrates {@link QueuedTask#copy()} — tasks are copied out of the
  * flyweight pool and held in {@link ArrayDeque}s that survive across drain

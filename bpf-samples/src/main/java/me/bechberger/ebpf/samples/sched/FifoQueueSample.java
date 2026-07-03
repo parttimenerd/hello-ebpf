@@ -11,7 +11,9 @@ import me.bechberger.femtocli.annotations.Option;
 import java.util.ArrayDeque;
 
 /**
- * Pure FIFO scheduler backed by a userland {@link ArrayDeque}.
+ * <b>Experimental</b> — API may change without notice.
+ *
+ * <p>Pure FIFO scheduler backed by a userland {@link ArrayDeque}.
  *
  * <p>Every arriving task is copied out of the flyweight pool via
  * {@link QueuedTask#copy()} and appended to a persistent queue. On each

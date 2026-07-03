@@ -13,7 +13,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Weight-proportional vtime fair-share scheduler.
+ * <b>Experimental</b> — API may change without notice.
+ *
+ * <p>Weight-proportional vtime fair-share scheduler.
  *
  * <h2>Why this requires {@code schedule()} not {@code policy()}</h2>
  * <p>Fair-share scheduling requires dispatching the task with the <em>lowest
