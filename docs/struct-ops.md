@@ -99,3 +99,81 @@ object.
   must also add a `your_kind.json` layout under
   `bpf-compiler-plugin/src/main/resources/struct-ops-layouts/` for BTF
   validation — see `struct-ops-layouts/README.md` for the schema.
+
+## TCP Congestion Control — worked example
+
+The snippet below shows a minimal BIC/Cubic-inspired congestion controller.
+It overrides `ssthresh` (reduce window on loss), `congAvoid` (additive
+increase), and `name` (kernel registration name) — enough to be loaded and
+recognised by the kernel.
+
+```java
+@BPF(license = "GPL")
+public abstract class MyCubic extends BPFProgram implements TcpCongestionControl {
+
+    // camelCase → snake_case: congAvoid → cong_avoid
+    @Override
+    public void congAvoid(Ptr<tcp_sock> tp, int ack, int acked) {
+        // Read current congestion window via CO-RE
+        int cwnd = tp.val().snd_cwnd;
+        int ssthresh = tp.val().snd_ssthresh;
+        if (cwnd < ssthresh) {
+            // Slow start: double each RTT
+            tp.val().snd_cwnd = cwnd + acked;
+        } else {
+            // Congestion avoidance: AIMD increase
+            tp.val().snd_cwnd = cwnd + 1;
+        }
+    }
+
+    @Override
+    public int ssthresh(Ptr<tcp_sock> tp) {
+        // Reduce window by half on loss (cubic-style floor at 2)
+        int cwnd = tp.val().snd_cwnd;
+        return Math.max(cwnd >> 1, 2);
+    }
+
+    // name() emits .name = "my_cc" — not compiled as a BPF program
+    @Override
+    public String name() { return "my_cc"; }
+}
+```
+
+**Key points:**
+
+- The arg is named `tp`, not `ctx`. The `BPF_PROG` tracing macro that
+  libbpf expands internally reserves the name `ctx`; using it causes a
+  compile error. See [Common pitfalls](#common-pitfalls) below.
+- `tp.val().snd_cwnd` uses CO-RE field access; the compiler rewrites it to
+  a `BPF_CORE_READ` call automatically.
+- `name()` returns a string literal. The synthesiser emits `.name = "my_cc"`
+  directly — do not annotate `name()` with `@BPFFunction`.
+- Sleepable callbacks (none in TCP CC, but common in sched-ext) need
+  `@Sleepable`; see the [`@Sleepable` section](#sleepable) above and
+  [timers.md](timers.md) for background on sleepable contexts.
+
+## Common pitfalls
+
+- **Args named `ctx` collide with the `BPF_PROG` macro.** libbpf's
+  `BPF_PROG` tracing macro injects a local variable named `ctx` for every
+  struct_ops program. If your Java method declares a parameter named `ctx`,
+  clang sees a redeclaration and the build fails. Rename to `tp`, `tsk`,
+  `hctx`, `sk`, or any other non-`ctx` identifier.
+
+- **`Qdisc_ops` requires all five handlers.** The kernel's
+  `bpf_qdisc_reg()` rejects registrations that leave any of `enqueue`,
+  `dequeue`, `reset`, `destroy`, or `init` as NULL, returning `ENOENT`.
+  Override all five even if the body is a no-op.
+
+- **Forgetting `@Sleepable` on a sleepable slot.** If the kernel BTF marks
+  a callback as sleepable (e.g. `sched_ext_ops.init`) but the emitted
+  section header says `SEC("struct_ops/init")` instead of
+  `SEC("struct_ops.s/init")`, the verifier rejects the program at load
+  time. Add `@Sleepable` to the Java override; the plugin then emits the
+  correct `.s/` suffix. See [sched-ext/index.md](sched-ext/index.md) for
+  a sched-ext example.
+
+- **`name()` must not be annotated with `@BPFFunction`.** The method maps
+  to a literal `.name = "…"` field initializer in the kernel struct, not
+  to a compiled BPF program. Annotating it with `@BPFFunction` confuses
+  the synthesiser and produces an invalid object.

@@ -258,6 +258,135 @@ Ensure `len` bytes of the socket buffer are linearly accessible. Required before
 
 ---
 
+## Ring Buffer
+
+### `BPFJ.bpf_ringbuf_reserve(map, size, flags)`
+
+Reserve `size` bytes in the ring buffer map. Returns a pointer to the reserved slot, or null
+if the ring buffer is full.
+
+```java
+Ptr<Event> e = BPFJ.bpf_ringbuf_reserve(events, BPFType.sizeOf(Event.class), 0);
+if (e == null) {
+    return 0;
+}
+e.val().pid = BPFJ.currentPid();
+BPFJ.bpf_ringbuf_submit(e, 0);
+```
+
+Expands to: `bpf_ringbuf_reserve(map, size, flags)`
+
+### `BPFJ.bpf_ringbuf_submit(data, flags)`
+
+Submit a previously reserved slot. The slot becomes visible to userspace readers after this call.
+
+```java
+Ptr<Event> e = BPFJ.bpf_ringbuf_reserve(events, BPFType.sizeOf(Event.class), 0);
+if (e == null) {
+    return 0;
+}
+e.val().pid = BPFJ.currentPid();
+BPFJ.bpf_ringbuf_submit(e, 0);
+```
+
+Expands to: `bpf_ringbuf_submit(data, flags)`
+
+!!! note
+    Always call either `bpf_ringbuf_submit` or `bpf_ringbuf_discard` for every reserved slot.
+    Leaking a reservation stalls the ring buffer consumer.
+
+### `BPFJ.bpf_ringbuf_discard(data, flags)`
+
+Discard a previously reserved slot without making it visible to userspace.
+
+```java
+BPFJ.bpf_ringbuf_discard(e, 0);
+```
+
+Expands to: `bpf_ringbuf_discard(data, flags)`
+
+---
+
+## Attach cookies
+
+### `BPFJ.bpf_get_attach_cookie(ctx)`
+
+Read the `u64` cookie bound to this particular attachment of the program. Returns 0 if no
+cookie was set at attach time.
+
+```java
+long cookie = BPFJ.bpf_get_attach_cookie(ctx);
+switch ((int) cookie) {
+    case 1 -> handleOpen(ctx);
+    case 2 -> handleClose(ctx);
+}
+```
+
+Expands to: `bpf_get_attach_cookie(ctx)`
+
+!!! note "Kernel ≥ 5.15"
+    Attach-cookie support for kprobes requires kernel 5.15. See
+    [Attach cookies with multi-kprobe](../attach-cookies-multi.md) for usage patterns.
+
+---
+
+## Arena helpers
+
+### `BPFJ.bpfArenaAllocPages(arena, user_addr, page_cnt, node, flags)`
+
+Allocate `page_cnt` pages inside a BPF arena. Returns null on failure.
+
+```java
+Ptr<Void> mem = BPFJ.bpfArenaAllocPages(myArena, 0L, 4, -1, 0);
+if (mem == null) {
+    return 0;
+}
+```
+
+Expands to: `bpf_arena_alloc_pages(&arena, user_addr, page_cnt, node, flags)`
+
+!!! note "Kernel ≥ 6.9"
+    BPF arenas require kernel 6.9.
+
+!!! note "page_cnt = 0"
+    Passing `page_cnt = 0` returns null immediately. The compiler plugin uses this call to
+    anchor the arena to a program without allocating any pages.
+
+---
+
+## Timers
+
+### `BPFJ.newZeroedTimer()`
+
+Return a zero-initialised `bpf_timer` suitable for insertion into a BPF map. The default
+constructor leaves the internal opaque pointer null, which causes the kernel to fault when
+the map entry is serialised — always use this factory.
+
+```java
+TimerVal v = new TimerVal();
+v.timer = BPFJ.newZeroedTimer();
+prog.timerMap.put(0, v);
+```
+
+See [Timers](../timers.md) for full timer usage including `bpf_timer_init` and
+`bpf_timer_start`.
+
+### `BPFJ.bpf_timer_set_callback(timer, method)`
+
+Register a BPF timer callback. Accepts a method reference; the compiler plugin lowers it to
+the bare C identifier expected by the kernel.
+
+```java
+TimerVal val = prog.timerMap.bpf_get(0);
+if (val != null) {
+    BPFJ.bpf_timer_set_callback(Ptr.of(val.val().timer), this::onTick);
+}
+```
+
+Expands to: `bpf_timer_set_callback(timer, callback)`
+
+---
+
 ## Byte-order helpers
 
 These are available as C macros in the generated code (not `BPFJ` methods but imported
