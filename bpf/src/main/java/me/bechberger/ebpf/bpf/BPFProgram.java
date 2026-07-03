@@ -729,6 +729,114 @@ public abstract class BPFProgram implements AutoCloseable {
                     FunctionDescriptor.of(PanamaUtil.POINTER, PanamaUtil.POINTER,
                             JAVA_BOOLEAN, PanamaUtil.POINTER));
 
+    // --------------------------------------------------------------------
+    // libbpf attach opts layouts (LP64, x86-64). Kernel floor 6.14 /
+    // libbpf 1.4+, so we hard-code the current member set.
+    // --------------------------------------------------------------------
+
+    // struct bpf_kprobe_opts {
+    //     size_t sz;              off  0, 8
+    //     __u64  bpf_cookie;      off  8, 8
+    //     size_t offset;          off 16, 8
+    //     bool   retprobe;        off 24, 1  + 7 pad -> 32
+    // };
+    private static final StructLayout KPROBE_OPTS_LAYOUT = MemoryLayout.structLayout(
+            JAVA_LONG.withName("sz"),
+            JAVA_LONG.withName("bpf_cookie"),
+            JAVA_LONG.withName("offset"),
+            JAVA_BOOLEAN.withName("retprobe"),
+            MemoryLayout.paddingLayout(7)
+    );
+
+    // struct bpf_kprobe_multi_opts {
+    //     size_t sz;              off  0, 8
+    //     const char **syms;      off  8, 8
+    //     const ulong *addrs;     off 16, 8
+    //     const __u64 *cookies;   off 24, 8
+    //     size_t cnt;             off 32, 8
+    //     bool retprobe;          off 40, 1
+    //     bool session;           off 41, 1
+    //     bool unique_match;      off 42, 1  + 5 pad -> 48
+    //     // reserved padding rounded up to natural 8-byte multiple
+    // };
+    // Total struct byte size on this libbpf: 56 (an 8-byte reserved tail).
+    private static final StructLayout KPROBE_MULTI_OPTS_LAYOUT = MemoryLayout.structLayout(
+            JAVA_LONG.withName("sz"),
+            PanamaUtil.POINTER.withName("syms"),
+            PanamaUtil.POINTER.withName("addrs"),
+            PanamaUtil.POINTER.withName("cookies"),
+            JAVA_LONG.withName("cnt"),
+            JAVA_BOOLEAN.withName("retprobe"),
+            JAVA_BOOLEAN.withName("session"),
+            JAVA_BOOLEAN.withName("unique_match"),
+            MemoryLayout.paddingLayout(5),
+            MemoryLayout.paddingLayout(8)   // libbpf tail padding
+    );
+
+    // struct bpf_uprobe_multi_opts {
+    //     size_t sz;                       off  0, 8
+    //     const char **syms;               off  8, 8
+    //     const ulong *offsets;            off 16, 8
+    //     const ulong *ref_ctr_offsets;    off 24, 8
+    //     const __u64 *cookies;            off 32, 8
+    //     size_t cnt;                      off 40, 8
+    //     unsigned int flags;              off 48, 4
+    //     pid_t pid;                       off 52, 4
+    //     const char *path;                off 56, 8
+    // };
+    private static final StructLayout UPROBE_MULTI_OPTS_LAYOUT = MemoryLayout.structLayout(
+            JAVA_LONG.withName("sz"),
+            PanamaUtil.POINTER.withName("syms"),
+            PanamaUtil.POINTER.withName("offsets"),
+            PanamaUtil.POINTER.withName("ref_ctr_offsets"),
+            PanamaUtil.POINTER.withName("cookies"),
+            JAVA_LONG.withName("cnt"),
+            JAVA_INT.withName("flags"),
+            JAVA_INT.withName("pid"),
+            PanamaUtil.POINTER.withName("path")
+    );
+
+    /** Test hook - size of {@code struct bpf_kprobe_opts} on this platform. */
+    static long internalKprobeOptsSize()      { return KPROBE_OPTS_LAYOUT.byteSize(); }
+    /** Test hook - size of {@code struct bpf_kprobe_multi_opts}. */
+    static long internalKprobeMultiOptsSize() { return KPROBE_MULTI_OPTS_LAYOUT.byteSize(); }
+    /** Test hook - size of {@code struct bpf_uprobe_multi_opts}. */
+    static long internalUprobeMultiOptsSize() { return UPROBE_MULTI_OPTS_LAYOUT.byteSize(); }
+
+    // struct bpf_link * bpf_program__attach_kprobe_opts(
+    //     const struct bpf_program *prog, const char *func_name,
+    //     const struct bpf_kprobe_opts *opts);
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_KPROBE_OPTS =
+            new HandlerWithErrno<>("bpf_program__attach_kprobe_opts",
+                    FunctionDescriptor.of(PanamaUtil.POINTER,
+                            PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
+
+    // struct bpf_link * bpf_program__attach_kprobe_multi_opts(
+    //     const struct bpf_program *prog, const char *pattern,
+    //     const struct bpf_kprobe_multi_opts *opts);
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_KPROBE_MULTI_OPTS =
+            new HandlerWithErrno<>("bpf_program__attach_kprobe_multi_opts",
+                    FunctionDescriptor.of(PanamaUtil.POINTER,
+                            PanamaUtil.POINTER, PanamaUtil.POINTER, PanamaUtil.POINTER));
+
+    // struct bpf_link * bpf_program__attach_uprobe_multi(
+    //     const struct bpf_program *prog, pid_t pid, const char *binary_path,
+    //     const char *func_pattern, const struct bpf_uprobe_multi_opts *opts);
+    private static final HandlerWithErrno<MemorySegment> BPF_PROGRAM__ATTACH_UPROBE_MULTI =
+            new HandlerWithErrno<>("bpf_program__attach_uprobe_multi",
+                    FunctionDescriptor.of(PanamaUtil.POINTER,
+                            PanamaUtil.POINTER, JAVA_INT, PanamaUtil.POINTER,
+                            PanamaUtil.POINTER, PanamaUtil.POINTER));
+
+    /** Returns {@code true} if a section string names a multi-attach probe. */
+    public static boolean isMultiAttachSection(String section) {
+        if (section == null) return false;
+        return section.startsWith("kprobe.multi/")
+                || section.startsWith("kretprobe.multi/")
+                || section.startsWith("uprobe.multi/")
+                || section.startsWith("uretprobe.multi/");
+    }
+
     /**
      * Dynamically attach a kprobe (or kretprobe) to a kernel symbol by name.
      *
@@ -748,9 +856,35 @@ public abstract class BPFProgram implements AutoCloseable {
      * @throws BPFAttachError if libbpf reports an error
      */
     public BPFLink attachKProbe(ProgramHandle prog, String symbol, boolean retprobe) {
+        return attachKProbe(prog, symbol, retprobe, 0L);
+    }
+
+    /**
+     * Attach a kprobe (or kretprobe) with a BPF attach cookie.
+     *
+     * <p>The cookie is retrievable from BPF-side code via
+     * {@link BPFJ#bpf_get_attach_cookie(me.bechberger.ebpf.type.Ptr)}. Use it
+     * to disambiguate when the same BPF program is attached to multiple
+     * kernel symbols.
+     *
+     * @param prog     program to attach (prog_type KPROBE)
+     * @param symbol   kernel function name, e.g. {@code "do_sys_openat2"}
+     * @param retprobe {@code true} for return probe
+     * @param cookie   {@code u64} value returned by
+     *                 {@code bpf_get_attach_cookie(ctx)} inside the program.
+     *                 Pass {@code 0L} for none.
+     */
+    public BPFLink attachKProbe(ProgramHandle prog, String symbol,
+                                boolean retprobe, long cookie) {
         try (Arena arena = Arena.ofConfined()) {
-            var ret = BPF_PROGRAM__ATTACH_KPROBE.call(
-                    prog.prog(), retprobe, arena.allocateFrom(symbol));
+            var opts = arena.allocate(KPROBE_OPTS_LAYOUT);
+            opts.set(JAVA_LONG,    0,  KPROBE_OPTS_LAYOUT.byteSize()); // sz
+            opts.set(JAVA_LONG,    8,  cookie);                        // bpf_cookie
+            opts.set(JAVA_LONG,    16, 0L);                            // offset
+            opts.set(JAVA_BOOLEAN, 24, retprobe);                      // retprobe
+
+            var ret = BPF_PROGRAM__ATTACH_KPROBE_OPTS.call(
+                    prog.prog(), arena.allocateFrom(symbol), opts);
             if (ret.result() == MemorySegment.NULL) {
                 throw kprobeAttachError(prog.name, symbol, ret.err());
             }
@@ -799,6 +933,94 @@ public abstract class BPFProgram implements AutoCloseable {
         return attachKProbe(prog, symbol, false);
     }
 
+    /**
+     * Package-visible validator shared by {@link #attachKProbeMulti} and
+     * {@link #attachUprobeMulti}. Extracted so unit tests can drive it without
+     * loading a real BPF program.
+     */
+    static void validateMultiArrays(String[] symbols, long[] cookies) {
+        if (symbols == null || symbols.length == 0) {
+            throw new IllegalArgumentException("multi attach requires at least one symbol");
+        }
+        if (cookies != null && cookies.length != symbols.length) {
+            throw new IllegalArgumentException(
+                    "cookies.length (" + cookies.length +
+                    ") must equal symbols.length (" + symbols.length + ")");
+        }
+    }
+
+    /**
+     * Attach a single BPF program to many kernel symbols in one syscall via
+     * libbpf's {@code bpf_program__attach_kprobe_multi_opts}.
+     *
+     * <p>The BPF program must be compiled with a {@code SEC("kprobe.multi/...")}
+     * or {@code SEC("kretprobe.multi/...")} section (see
+     * {@link me.bechberger.ebpf.annotations.bpf.KProbeMulti}).
+     *
+     * <p>Per-symbol {@code cookies} let one BPF program disambiguate which
+     * symbol fired; retrieve inside the program via
+     * {@link BPFJ#bpf_get_attach_cookie(me.bechberger.ebpf.type.Ptr)}.
+     *
+     * <p>Requires kernel &ge; 5.18. On older kernels this method throws
+     * {@link BPFLoadError.UnsupportedKernel} before touching libbpf.
+     *
+     * @param prog     the program to attach
+     * @param symbols  kernel symbols to trace (at least one)
+     * @param cookies  per-symbol cookies. Must be either {@code null} (no
+     *                 cookies) or the same length as {@code symbols}.
+     * @param retprobe {@code true} to attach on function return
+     * @return the single {@link BPFLink} covering all attachments
+     * @throws BPFAttachError if libbpf rejects the attach
+     */
+    public BPFLink attachKProbeMulti(ProgramHandle prog, String[] symbols,
+                                     long[] cookies, boolean retprobe) {
+        validateMultiArrays(symbols, cookies);
+        if (!me.bechberger.ebpf.bpf.features.Features.hasAttachType(
+                me.bechberger.ebpf.bpf.features.BPFAttachType.TRACE_KPROBE_MULTI)) {
+            throw new BPFLoadError.UnsupportedKernel(
+                    "attach_type TRACE_KPROBE_MULTI", "5.18");
+        }
+        try (Arena arena = Arena.ofConfined()) {
+            var symsArr = arena.allocate(PanamaUtil.POINTER, symbols.length);
+            for (int i = 0; i < symbols.length; i++) {
+                symsArr.setAtIndex(PanamaUtil.POINTER, i, arena.allocateFrom(symbols[i]));
+            }
+            MemorySegment cookiesArr = MemorySegment.NULL;
+            if (cookies != null) {
+                cookiesArr = arena.allocate(JAVA_LONG, cookies.length);
+                for (int i = 0; i < cookies.length; i++) {
+                    cookiesArr.setAtIndex(JAVA_LONG, i, cookies[i]);
+                }
+            }
+
+            var opts = arena.allocate(KPROBE_MULTI_OPTS_LAYOUT);
+            opts.set(JAVA_LONG,          0,  KPROBE_MULTI_OPTS_LAYOUT.byteSize()); // sz
+            opts.set(PanamaUtil.POINTER, 8,  symsArr);                             // syms
+            opts.set(PanamaUtil.POINTER, 16, MemorySegment.NULL);                  // addrs
+            opts.set(PanamaUtil.POINTER, 24, cookiesArr);                          // cookies
+            opts.set(JAVA_LONG,          32, (long) symbols.length);               // cnt
+            opts.set(JAVA_BOOLEAN,       40, retprobe);                            // retprobe
+            opts.set(JAVA_BOOLEAN,       41, false);                               // session
+            opts.set(JAVA_BOOLEAN,       42, false);                               // unique_match
+
+            var ret = BPF_PROGRAM__ATTACH_KPROBE_MULTI_OPTS.call(
+                    prog.prog(),
+                    MemorySegment.NULL /* pattern; syms takes precedence */,
+                    opts);
+            if (ret.result() == MemorySegment.NULL) {
+                throw new BPFAttachError(prog.name +
+                        " (kprobe.multi over " + symbols.length + " symbols)",
+                        ret.err());
+            }
+            var link = new BPFLink(ret.result());
+            if (link.segment.address() == 0) {
+                throw new BPFAttachError(prog.name, ret.err());
+            }
+            attachedPrograms.add(link);
+            return link;
+        }
+    }
+
     // -----------------------------------------------------------------------
     // uprobe / uretprobe — dynamic attachment to user-space function symbols
     // -----------------------------------------------------------------------
@@ -828,34 +1050,26 @@ public abstract class BPFProgram implements AutoCloseable {
                             PanamaUtil.POINTER, JAVA_LONG, PanamaUtil.POINTER));
 
     /**
-     * Dynamically attach a uprobe (or uretprobe) to a user-space function by symbol name.
+     * Attach a uprobe with an explicit BPF attach cookie.
      *
-     * <p>Resolves the symbol within {@code binaryPath} via libbpf's
-     * {@code bpf_program__attach_uprobe_opts}, so no manual ELF parsing is required.
-     * Pass {@code pid = -1} to trace all processes, or a specific PID to trace only
-     * that process.
-     *
-     * <p>The returned {@link BPFLink} is managed by this program's lifetime and is
-     * automatically destroyed when the program is closed.
-     *
-     * @param prog       the BPF program to attach (must have prog_type KPROBE)
-     * @param retprobe   {@code true} to attach on function return (uretprobe)
-     * @param pid        process ID to trace ({@code -1} = all processes)
-     * @param binaryPath path to the ELF binary, e.g. {@code "/usr/lib/libc.so.6"}
-     * @param funcName   function symbol name, e.g. {@code "malloc"}
-     * @return the link representing the attachment
-     * @throws BPFAttachError if libbpf reports an error
+     * @param prog       program to attach (prog_type KPROBE / SEC uprobe)
+     * @param retprobe   {@code true} for return probe
+     * @param pid        target PID, {@code -1} for all processes
+     * @param binaryPath path to the ELF binary
+     * @param funcName   function symbol name
+     * @param cookie     {@code u64} cookie retrievable from
+     *                   {@code bpf_get_attach_cookie(ctx)}. Pass 0 for none.
      */
     public BPFLink attachUprobe(ProgramHandle prog, boolean retprobe, int pid,
-                                String binaryPath, String funcName) {
+                                String binaryPath, String funcName, long cookie) {
         try (Arena arena = Arena.ofConfined()) {
             var opts = arena.allocate(UPROBE_OPTS_LAYOUT);
-            opts.set(JAVA_LONG, 0, UPROBE_OPTS_LAYOUT.byteSize());    // sz
-            opts.set(JAVA_LONG, 8, 0L);                                // ref_ctr_offset
-            opts.set(JAVA_LONG, 16, 0L);                               // bpf_cookie
-            opts.set(JAVA_BOOLEAN, 24, retprobe);                      // retprobe
-            opts.set(PanamaUtil.POINTER, 32, arena.allocateFrom(funcName)); // func_name
-            opts.set(JAVA_INT, 40, 0);                                 // attach_mode = default
+            opts.set(JAVA_LONG,    0,  UPROBE_OPTS_LAYOUT.byteSize());          // sz
+            opts.set(JAVA_LONG,    8,  0L);                                     // ref_ctr_offset
+            opts.set(JAVA_LONG,    16, cookie);                                 // bpf_cookie
+            opts.set(JAVA_BOOLEAN, 24, retprobe);                               // retprobe
+            opts.set(PanamaUtil.POINTER, 32, arena.allocateFrom(funcName));     // func_name
+            opts.set(JAVA_INT,     40, 0);                                      // attach_mode
 
             var ret = BPF_PROGRAM__ATTACH_UPROBE_OPTS.call(
                     prog.prog(),
@@ -873,6 +1087,33 @@ public abstract class BPFProgram implements AutoCloseable {
             attachedPrograms.add(link);
             return link;
         }
+    }
+
+    /**
+     * Dynamically attach a uprobe (or uretprobe) to a user-space function by symbol name.
+     *
+     * <p>Resolves the symbol within {@code binaryPath} via libbpf's
+     * {@code bpf_program__attach_uprobe_opts}, so no manual ELF parsing is required.
+     * Pass {@code pid = -1} to trace all processes, or a specific PID to trace only
+     * that process.
+     *
+     * <p>The returned {@link BPFLink} is managed by this program's lifetime and is
+     * automatically destroyed when the program is closed.
+     *
+     * <p>Cookie-less delegator kept for source compatibility — delegates to the
+     * cookie overload with {@code cookie = 0L}.
+     *
+     * @param prog       the BPF program to attach (must have prog_type KPROBE)
+     * @param retprobe   {@code true} to attach on function return (uretprobe)
+     * @param pid        process ID to trace ({@code -1} = all processes)
+     * @param binaryPath path to the ELF binary, e.g. {@code "/usr/lib/libc.so.6"}
+     * @param funcName   function symbol name, e.g. {@code "malloc"}
+     * @return the link representing the attachment
+     * @throws BPFAttachError if libbpf reports an error
+     */
+    public BPFLink attachUprobe(ProgramHandle prog, boolean retprobe, int pid,
+                                String binaryPath, String funcName) {
+        return attachUprobe(prog, retprobe, pid, binaryPath, funcName, 0L);
     }
 
     /**
@@ -933,6 +1174,11 @@ public abstract class BPFProgram implements AutoCloseable {
             BPFFunction ann = getAnnotationOfSelfOrOverriden(method, BPFFunction.class);
             if (ann == null) continue;
             String section = ann.section();
+            if (isMultiAttachSection(section)) {
+                // Multi-attach is not iterable per-symbol from an annotation; the caller
+                // must invoke attachUprobeMulti(...) explicitly.
+                continue;
+            }
             boolean isUprobe    = section.startsWith("uprobe/");
             boolean isUretprobe = section.startsWith("uretprobe/");
             if (!isUprobe && !isUretprobe) continue;
@@ -942,6 +1188,79 @@ public abstract class BPFProgram implements AutoCloseable {
             links.add(attachUprobe(handle, isUretprobe, pid, binaryPath, symbol));
         }
         return links;
+    }
+
+    /**
+     * Attach a single BPF program to many user-space functions in one syscall
+     * via libbpf's {@code bpf_program__attach_uprobe_multi}.
+     *
+     * <p>The BPF program must be compiled with {@code SEC("uprobe.multi/...")}
+     * or {@code SEC("uretprobe.multi/...")} (see
+     * {@link me.bechberger.ebpf.annotations.bpf.UProbeMulti}).
+     *
+     * <p>Requires kernel &ge; 6.6. On older kernels this method throws
+     * {@link BPFLoadError.UnsupportedKernel} before touching libbpf.
+     *
+     * @param prog       program to attach
+     * @param binaryPath path to the ELF binary containing the target symbols
+     * @param funcNames  function symbols to trace (at least one)
+     * @param cookies    per-symbol cookies, or {@code null} for none. If
+     *                   non-null, must have the same length as {@code funcNames}.
+     * @param retprobe   {@code true} to attach on function return
+     */
+    public BPFLink attachUprobeMulti(ProgramHandle prog, String binaryPath,
+                                     String[] funcNames, long[] cookies,
+                                     boolean retprobe) {
+        validateMultiArrays(funcNames, cookies);
+        if (!me.bechberger.ebpf.bpf.features.Features.hasAttachType(
+                me.bechberger.ebpf.bpf.features.BPFAttachType.TRACE_UPROBE_MULTI)) {
+            throw new BPFLoadError.UnsupportedKernel(
+                    "attach_type TRACE_UPROBE_MULTI", "6.6");
+        }
+        try (Arena arena = Arena.ofConfined()) {
+            var symsArr = arena.allocate(PanamaUtil.POINTER, funcNames.length);
+            for (int i = 0; i < funcNames.length; i++) {
+                symsArr.setAtIndex(PanamaUtil.POINTER, i, arena.allocateFrom(funcNames[i]));
+            }
+            MemorySegment cookiesArr = MemorySegment.NULL;
+            if (cookies != null) {
+                cookiesArr = arena.allocate(JAVA_LONG, cookies.length);
+                for (int i = 0; i < cookies.length; i++) {
+                    cookiesArr.setAtIndex(JAVA_LONG, i, cookies[i]);
+                }
+            }
+
+            final int BPF_F_UPROBE_MULTI_RETURN = 1;
+
+            var opts = arena.allocate(UPROBE_MULTI_OPTS_LAYOUT);
+            opts.set(JAVA_LONG,          0,  UPROBE_MULTI_OPTS_LAYOUT.byteSize()); // sz
+            opts.set(PanamaUtil.POINTER, 8,  symsArr);                             // syms
+            opts.set(PanamaUtil.POINTER, 16, MemorySegment.NULL);                  // offsets
+            opts.set(PanamaUtil.POINTER, 24, MemorySegment.NULL);                  // ref_ctr_offsets
+            opts.set(PanamaUtil.POINTER, 32, cookiesArr);                          // cookies
+            opts.set(JAVA_LONG,          40, (long) funcNames.length);             // cnt
+            opts.set(JAVA_INT,           48, retprobe ? BPF_F_UPROBE_MULTI_RETURN : 0); // flags
+            opts.set(JAVA_INT,           52, -1);                                  // pid = all
+            opts.set(PanamaUtil.POINTER, 56, MemorySegment.NULL);                  // path (via arg)
+
+            var ret = BPF_PROGRAM__ATTACH_UPROBE_MULTI.call(
+                    prog.prog(),
+                    -1,                                       // pid
+                    arena.allocateFrom(binaryPath),           // binary_path
+                    MemorySegment.NULL,                       // func_pattern
+                    opts);
+            if (ret.result() == MemorySegment.NULL) {
+                throw new BPFAttachError(prog.name +
+                        " (uprobe.multi over " + funcNames.length +
+                        " symbols in " + binaryPath + ")", ret.err());
+            }
+            var link = new BPFLink(ret.result());
+            if (link.segment.address() == 0) {
+                throw new BPFAttachError(prog.name, ret.err());
+            }
+            attachedPrograms.add(link);
+            return link;
+        }
     }
 
     private <T extends Annotation> @Nullable T findParentAnnotation(Class<?> programClass, Method method, Class<T> annotationClass) {
@@ -1218,7 +1537,21 @@ public abstract class BPFProgram implements AutoCloseable {
      */
     public BPFProgram autoAttachPrograms() {
         var lsmNames = getLSMProgramNames();
+        var multiNames = getMultiAttachProgramNames();
         for (var name : getAllAutoAttachablePrograms()) {
+            if (multiNames.contains(name)) {
+                // Multi-attach programs cannot be attached via bpf_program__attach.
+                // The user MUST call attachKProbeMulti / attachUprobeMulti explicitly
+                // with the symbol list and cookies. Skipping silently would mask a
+                // configuration mistake; emit a JFR event so it shows up in tracing.
+                var evt = new BPFEvents.ProgramAttach();
+                if (evt.isEnabled()) {
+                    evt.programName = name;
+                    evt.section = "SKIPPED_MULTI";
+                    evt.commit();
+                }
+                continue;
+            }
             if (lsmNames.contains(name)) {
                 attachLSMHook(getProgramByName(name));
             } else {
@@ -1226,6 +1559,19 @@ public abstract class BPFProgram implements AutoCloseable {
             }
         }
         return this;
+    }
+
+    /** Names of programs whose section marks them as multi-attach. */
+    private java.util.Set<String> getMultiAttachProgramNames() {
+        var names = new java.util.HashSet<String>();
+        var programClass = getClass().getSuperclass();
+        for (var method : programClass.getDeclaredMethods()) {
+            var annotation = findParentAnnotation(programClass, method, BPFFunction.class);
+            if (annotation != null && isMultiAttachSection(annotation.section())) {
+                names.add(getBPFFunctionName(method));
+            }
+        }
+        return names;
     }
 
     /** Returns the C function names of all methods annotated with {@code @LSM} or having an lsm/ section. */
