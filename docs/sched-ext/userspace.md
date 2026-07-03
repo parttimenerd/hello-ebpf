@@ -139,6 +139,52 @@ There is **no `schedule` callback** — the per-task `policy()` returning a CPU 
 the schedule. If you need periodic work (e.g. recompute weights) override
 `tick()`, which fires once per second.
 
+### Batch `schedule()` callback (**Experimental**)
+
+For algorithms that need to look at the full batch before assigning CPUs (e.g.
+deadline sorting across the whole batch), override `schedule(QueuedTask[], int)`
+instead of `policy()`:
+
+```java
+@Override
+protected void schedule(QueuedTask[] tasks, int count) {
+    // Sort by some criteria across the whole batch
+    Arrays.sort(tasks, 0, count, Comparator.comparingLong(t -> t.sumExecRuntime));
+    for (int i = 0; i < count; i++) {
+        dispatchTask(tasks[i], ANY_CPU);
+    }
+}
+```
+
+`dispatchTask(task, cpu)` dispatches a single task — call it once per task in
+the batch before returning. Every task in the array **must** be dispatched before
+`schedule()` returns (the kernel stall watchdog fires if any task waits > 50 ms).
+
+### Persistent queues with `QueuedTask.copy()` (**Experimental**)
+
+The `QueuedTask[]` array is a **flyweight pool** — each entry is reused across
+batches. To store a task in a data structure that persists beyond the current
+`schedule()` call, use `QueuedTask.copy()`:
+
+```java
+private final ArrayDeque<QueuedTask> deferred = new ArrayDeque<>();
+
+@Override
+protected void schedule(QueuedTask[] tasks, int count) {
+    for (int i = 0; i < count; i++) {
+        deferred.addLast(tasks[i].copy());   // heap copy, safe to keep
+    }
+    while (!deferred.isEmpty()) {
+        dispatchTask(deferred.pollFirst(), ANY_CPU);
+    }
+}
+```
+
+A copied `QueuedTask` is fully dispatchable via `dispatchTask()` in any future
+batch. The `enqCnt` stale-dispatch guard still applies — if the copied task was
+re-enqueued before you dispatch it, the dispatch is silently cancelled by the BPF
+transport and `ringCanceled` is incremented.
+
 ---
 
 ## Example: Interactive-vs-batch partitioner
@@ -259,9 +305,12 @@ Full source with CLI, stats, and shutdown hook:
 | [`RustlandFifoSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandFifoSample.java) | Minimal FIFO with periodic stats |
 | [`WeightedRRSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/WeightedRRSample.java) | Per-task state and `QueuedTask.weight` |
 | [`LotterySample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LotterySample.java) | Weight-biased probabilistic CPU placement |
-| [`VtimeSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/VtimeSample.java) | Batch vtime ordering with `schedule()`, `TreeMap` sort |
-| [`RustlandJavaSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandJavaSample.java) | Full scx_rustland port: `deadline = vtime + exec_runtime`, interactive/batch separation |
+| [`VtimeSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/VtimeSample.java) | Batch vtime ordering with `schedule()`, `TreeMap` sort (**Experimental**) |
+| [`RustlandJavaSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandJavaSample.java) | Full scx_rustland port: `deadline = vtime + exec_runtime`, idle-CPU bitmap, interactive/batch separation (**Experimental**) |
+| [`FifoQueueSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/FifoQueueSample.java) | Persistent `ArrayDeque` queue across batches using `QueuedTask.copy()` (**Experimental**) |
+| [`TwoQueueFifoSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/TwoQueueFifoSample.java) | Two-tier FIFO: interactive (< 10 ms exec) vs batch (**Experimental**) |
 | [`CmdlineBoostSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CmdlineBoostSample.java) | `/proc` reads, cmdline classification, CPU partitioning |
+| [`ShowcaseScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/ShowcaseScheduler.java) | Six-tier /proc-powered scheduler: cmdline + cgroup detection + I/O bytes/s + container CPU partition (**Experimental**) |
 
 ## 4. Running
 

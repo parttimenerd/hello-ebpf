@@ -1,5 +1,7 @@
 # User-space Probes (uprobes / uretprobes)
 
+**Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) (kprobe/uprobe attachment) · [Part 16 — Userspace scheduler with uprobes for lock detection](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/)
+
 Uprobes let you attach BPF programs to arbitrary user-space function entry and
 return points, without modifying the target binary. hello-ebpf provides both a
 dynamic attachment API and a typed context abstraction.

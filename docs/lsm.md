@@ -1,5 +1,8 @@
 # LSM & Cgroup Hooks
 
+**Blog series:** [Part 20 — BPF LSM security hooks](https://mostlynerdless.de/blog/2025/01/27/helle-ebpf-writing-an-lsm-policy-in-pure-java-20/)
+**Javadoc:** [`LSMHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/LSMHook.html) · [`CGroupHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/CGroupHook.html)
+
 ## BPF LSM
 
 BPF LSM (Linux Security Module) lets you attach BPF programs to the same hook points as

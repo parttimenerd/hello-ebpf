@@ -1,5 +1,9 @@
 # XDP — Express Data Path
 
+**Blog series:** [Part 9 — XDP-based packet filter](https://mostlynerdless.de/blog/2024/04/22/hello-ebpf-xdp-based-packet-filter-9/) · [Part 13 — Packet logger with TC and XDP](https://mostlynerdless.de/blog/2024/08/13/hello-ebpf-a-packet-logger-in-pure-java-using-tc-and-xdp-hooks-13/) · [Part 14 — Firewall with Java & eBPF](https://mostlynerdless.de/blog/2024/08/27/hello-ebpf-building-a-lightning-fast-firewall-with-java-ebpf-14/)
+
+![Java config/log component talking to the XDP kernel program](https://mostlynerdless.de/wp-content/uploads/2024/04/xdp_filter-1-2000x1005.png)
+
 XDP (eXpress Data Path) is the fastest hook point in the Linux network stack. BPF programs run
 directly in the network driver, before any SKB allocation, achieving multi-million-packets-per-second
 rates on commodity hardware.

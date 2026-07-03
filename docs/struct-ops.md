@@ -1,5 +1,8 @@
 # `@StructOps`: implementing kernel struct_ops in Java
 
+**Blog series:** [Part 15 — Custom scheduler with sched_ext struct_ops](https://mostlynerdless.de/blog/2024/10/17/hello-ebpf-writing-a-custom-scheduler-in-pure-java-15/) · [Part 19 — Scheduler cookbook](https://mostlynerdless.de/blog/2025/01/20/helle-ebpf-a-scheduler-cookbook-19/)
+**Javadoc:** [`@StructOps`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/StructOps.html)
+
 A `@StructOps` interface bundles the kernel's C-level callback table for a
 `bpf_struct_ops` kind (sched-ext, TCP congestion control, qdisc, HID) into
 a Java interface. Extending a class with the interface, overriding the

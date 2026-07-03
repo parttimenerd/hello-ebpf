@@ -1,5 +1,7 @@
 # sched_ext — Cookbook
 
+**Blog series:** [Part 15 — Custom scheduler basics](https://mostlynerdless.de/blog/2024/10/17/hello-ebpf-writing-a-custom-scheduler-in-pure-java-15/) · [Part 16 — Userspace scheduler](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/) · [Part 17 — Lottery scheduler](https://mostlynerdless.de/blog/2024/12/13/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-17/) · [Part 18 — bpf_for_each lambda](https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/) · [Part 19 — Scheduler cookbook](https://mostlynerdless.de/blog/2025/01/20/helle-ebpf-a-scheduler-cookbook-19/) · [Part 20 — LSM + scheduler hardening](https://mostlynerdless.de/blog/2025/01/27/helle-ebpf-writing-an-lsm-policy-in-pure-java-20/)
+
 With sched_ext (available since Linux 6.11), you can replace the kernel's default
 process scheduler with your own policy — written entirely in Java, compiled to BPF
 under the hood, and deployed without rebooting or touching kernel source.
@@ -415,8 +417,10 @@ fair scheduling resumes without any detach/reload cycle.
 
 ## Sample schedulers
 
-Eighteen ready-to-run schedulers are available in
-`bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/`:
+Ready-to-run schedulers are available in
+`bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/`.
+
+### Kernel-side (BPF) schedulers
 
 | Class | Strategy | Highlights |
 |-------|----------|-----------|
@@ -438,3 +442,20 @@ Eighteen ready-to-run schedulers are available in
 | `ChaosScheduler` | Fuzzing | Random vtimes, CPU throttling, per-task state machine |
 | `PerCpuSchedulerSample` | Per-CPU FIFO | `PerCpuSchedulerBase` demo; pinned vs migratable routing |
 | `BoostedScheduler` | Priority boost | Nominated process trees get max priority + long slices; runtime toggle |
+
+### Userspace schedulers (policy in Java — **Experimental**)
+
+These schedulers run the scheduling policy entirely in Java. See
+[Userspace Scheduler](./userspace.md) for how the BPF transport works.
+
+| Class | Strategy | Highlights |
+|-------|----------|-----------|
+| `RustlandFifoSample` | FIFO | Minimal userspace scheduler with stats |
+| `WeightedRRSample` | Weighted round-robin | Per-task state; uses `QueuedTask.weight` |
+| `LotterySample` | Lottery | Weight-biased probabilistic CPU placement |
+| `VtimeSample` | Virtual-time batch | `schedule()` callback; `TreeMap` sort |
+| `RustlandJavaSample` | Deadline (scx_rustland port) | `deadline = vtime + exec_runtime`; idle-CPU bitmap; I/O-bias |
+| `CmdlineBoostSample` | cmdline-based partitioner | Reads `/proc/<pid>/cmdline`; CPU partitioning |
+| `FifoQueueSample` ⚗ | Persistent FIFO queue | `QueuedTask.copy()` across batches; `ArrayDeque` |
+| `TwoQueueFifoSample` ⚗ | Two-tier FIFO | Interactive (< 10 ms) vs batch queues |
+| `ShowcaseScheduler` ⚗ | Six-tier /proc-powered | cmdline + cgroup + I/O bytes; container CPU partition |

@@ -4,6 +4,10 @@ Maps are the primary mechanism for sharing data between BPF programs and user-sp
 hello-ebpf provides typed Java wrappers for all major map types. Maps are declared as fields on
 your `@BPF` class and annotated with `@BPFMapDefinition`.
 
+**Blog series:** [Part 2 — Recording data in basic eBPF maps](https://mostlynerdless.de/blog/2024/01/12/hello-ebpf-recording-data-in-basic-ebpf-maps-2/) · [Part 6 — Ring buffers in libbpf](https://mostlynerdless.de/blog/2024/03/12/hello-ebpf-ring-buffers-in-libbpf-6/)
+
+![eBPF map as bidirectional bridge between kernel and user space](https://mostlynerdless.de/wp-content/uploads/2024/01/ebpf_maps-2000x425.png)
+
 ## Declaration pattern
 
 ```java

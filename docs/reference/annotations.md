@@ -1,5 +1,9 @@
 # Annotations Catalog
 
+**Blog series:** [Part 7 — Auto-layouting structs](https://mostlynerdless.de/blog/2024/03/22/hello-ebpf-auto-layouting-structs-7/) · [Part 12 — Write eBPF in pure Java](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/)
+
+![Struct memory layout: e_pid / e_filename / e_comm](https://mostlynerdless.de/wp-content/uploads/2024/03/struct_layout-2000x760.png)
+
 All hello-ebpf annotations fall into five buckets:
 
 - **Program shape** — annotations that declare BPF programs, probe types, maps, and timers.

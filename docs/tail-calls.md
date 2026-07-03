@@ -1,5 +1,9 @@
 # Tail calls in hello-ebpf
 
+**Blog series:** [Part 4 — Tail calls and your first eBPF application](https://mostlynerdless.de/blog/2024/02/12/hello-ebpf-tail-calls-and-your-first-ebpf-application-4/)
+
+![Stack frames with vs without a tail call — no stack growth with tail calls](https://mostlynerdless.de/wp-content/uploads/2024/02/tail_call-2000x599.png)
+
 BPF programs cannot recurse or exceed the verifier's instruction budget, so
 long dispatch chains are split into stages connected by **tail calls**:
 `bpf_tail_call(ctx, &prog_array, slot)` transfers execution to the program

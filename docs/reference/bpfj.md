@@ -1,5 +1,8 @@
 # BPFJ Helpers Reference
 
+**Blog series:** [Part 12 — Write eBPF in pure Java](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/) · [Part 18 — bpf_for_each lambda support](https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/)
+**Javadoc:** [`BPFJ`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFJ.html)
+
 `BPFJ` is a utility class containing static methods that map to BPF kernel helper functions.
 Use these inside `@BPFFunction` methods. Each call is translated to the corresponding C
 `bpf_*` function by the compiler plugin.

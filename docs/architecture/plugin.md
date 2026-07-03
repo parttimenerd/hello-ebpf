@@ -1,5 +1,9 @@
 # Compiler Plugin Overview
 
+**Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) · [Part 8 — Generating C code from Java](https://mostlynerdless.de/blog/2024/04/09/hello-ebpf-generating-c-code-8/) · [Part 11 — BTF and 13,000 generated Java classes](https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/) · [Part 12 — Write eBPF in pure Java](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/)
+
+![Annotation processor + compiler plugin pipeline](https://mostlynerdless.de/wp-content/uploads/2024/07/compiler_pipeline-2000x1125.png)
+
 The compiler plugin is a javac `Plugin` (not an annotation processor) that intercepts the compilation of `@BPF`-annotated classes. It runs after annotation processing, walks the AST of each `@BPFFunction`-annotated method, and emits C. The annotation processor (`Processor`) generates an implementation class with a `getByteCode()` override; the compiler plugin fills in that bytecode by translating Java method bodies to C, invoking clang, and embedding the resulting `.o` as a jar resource.
 
 ## Entry point

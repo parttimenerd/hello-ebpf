@@ -1,5 +1,7 @@
 # sched_ext — Overview
 
+**Blog series:** [Part 15 — Write a custom scheduler in Java](https://mostlynerdless.de/blog/2024/10/17/hello-ebpf-writing-a-custom-scheduler-in-pure-java-15/) · [Part 16 — Userspace scheduler](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/) · [Part 17 — Lottery scheduler](https://mostlynerdless.de/blog/2024/12/13/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-17/) · [Part 18 — bpf_for_each lambda support](https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/)
+
 sched_ext is a Linux scheduling class introduced in kernel 6.11 that lets you implement
 CPU schedulers entirely in BPF. Instead of patching the kernel, you can prototype and
 deploy custom scheduling policies from a user-space Java program.

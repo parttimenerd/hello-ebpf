@@ -1,5 +1,9 @@
 # TC — Traffic Control Classifier
 
+**Blog series:** [Part 13 — Packet logger with TC and XDP hooks](https://mostlynerdless.de/blog/2024/08/13/hello-ebpf-a-packet-logger-in-pure-java-using-tc-and-xdp-hooks-13/) · [Part 14 — Firewall with Java & eBPF](https://mostlynerdless.de/blog/2024/08/27/hello-ebpf-building-a-lightning-fast-firewall-with-java-ebpf-14/)
+
+![Linux network stack showing XDP (driver) and TC (after SKB allocation) hook points](https://mostlynerdless.de/wp-content/uploads/2024/08/network_stack-1.png)
+
 TC (Traffic Control) hooks let you inspect and modify packets at the Linux TC subsystem layer.
 Unlike XDP which runs in the driver, TC programs operate on full `sk_buff` (socket buffer) objects,
 giving you access to more metadata and the ability to modify packet contents after the kernel has

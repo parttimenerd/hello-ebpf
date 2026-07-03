@@ -1,5 +1,9 @@
 # Global Variables & Types
 
+**Blog series:** [Part 10 — Global variables](https://mostlynerdless.de/blog/2024/05/21/hello-ebpf-global-variables-10/)
+
+![Process memory segments — stack, heap, data, bss, text](https://mostlynerdless.de/wp-content/uploads/2024/05/memory_segments.png)
+
 hello-ebpf provides a rich type system for sharing structured data between BPF programs and
 Java. This page covers `GlobalVariable<T>`, `@Type` records, `@Size(N)`, and `@Unsigned`.
 

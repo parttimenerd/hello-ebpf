@@ -1,5 +1,7 @@
 # Kprobes, Kretprobes, Fentry & Fexit
 
+**Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) (introduces kprobe-style attachment)
+
 Kprobes let you attach BPF programs to almost any kernel function. They are flexible
 but depend on kernel internals that can change between versions. For stable interfaces
 prefer tracepoints; use kprobes when no tracepoint covers the function you need.
