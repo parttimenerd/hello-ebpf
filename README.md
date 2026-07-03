@@ -62,6 +62,7 @@ Features
 
 - **struct_ops in Java** — implement sched-ext, TCP CC, qdisc, or HID BPF via a Java interface; [see docs/struct-ops.md](docs/struct-ops.md).
 - **Attach cookies and multi-attach** — per-attachment `u64` cookies and `kprobe.multi` / `uprobe.multi`; [see docs/attach-cookies-multi.md](docs/attach-cookies-multi.md).
+- **Tail-call tables** — declare an enum, mark methods with `@TailCallSlot`, and slots auto-register at load; slot hot-swap included. [See docs/tail-calls.md](docs/tail-calls.md).
 
 Goals
 -----

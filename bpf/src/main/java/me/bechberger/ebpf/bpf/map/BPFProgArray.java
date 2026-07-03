@@ -93,4 +93,32 @@ public class BPFProgArray extends BPFMap {
             }
         }
     }
+
+    /**
+     * Hot-swap the program at {@code slot} by updating the prog-array entry to
+     * point at {@code newHandle}. This is an atomic {@code bpf_map_update_elem}
+     * on the underlying {@code BPF_MAP_TYPE_PROG_ARRAY}; live tail-calls see the
+     * new target immediately without any kernel restart.
+     *
+     * <p>Unlike {@code freplace}, this approach works with any program type and
+     * does not require the replacement program to have been loaded with an
+     * explicit attach target. It is the idiomatic way to swap tail-call slots
+     * at runtime.
+     *
+     * @param slot      slot index (0 &le; slot &lt; maxEntries)
+     * @param newHandle handle of the replacement program obtained from
+     *                  {@link BPFProgram#getProgramByName(String)}
+     * @throws BPFError if the slot is out of range, {@code newHandle} is null,
+     *                  or the map-update syscall fails
+     */
+    public void replaceSlot(int slot, BPFProgram.ProgramHandle newHandle) {
+        if (slot < 0 || slot >= maxEntries) {
+            throw new BPFError("Program slot " + slot + " out of bounds [0, "
+                    + maxEntries + ")", -1);
+        }
+        if (newHandle == null) {
+            throw new BPFError("replaceSlot: newHandle is null", -1);
+        }
+        register(slot, newHandle);
+    }
 }
