@@ -28,6 +28,9 @@ against this table before using a feature.
 | uretprobes | 4.1 | `SEC("uretprobe/...")` — user-space function return probe |
 | BPF LSM | 5.7 | CONFIG_BPF_LSM=y; lsm=bpf kernel param |
 | sched_ext | 6.11 | CONFIG_SCHED_CLASS_EXT=y |
+| struct_ops (general) | 5.6 | TCP congestion control; sched_ext requires 6.11 |
+| struct_ops qdisc | 6.10 | `Qdisc_ops` via `BPF_MAP_TYPE_STRUCT_OPS` |
+| struct_ops HID BPF | 6.11 | `hid_bpf_ops` |
 | cgroup ingress/egress | 4.10 | cgroup v2 required |
 | cgroup socket create | 4.17 | |
 
@@ -66,6 +69,12 @@ against this table before using a feature.
 | Atomics (BPF_ATOMIC) | 5.12 | Proper atomic instructions |
 | `__sync_fetch_and_add` | 3.19 | Older atomic form |
 | Sleepable BPF programs | 5.10 | BPF_F_SLEEPABLE flag |
+| kfunc calls | 5.13 | Kernel function calls from BPF; kfunc set must be registered |
+| kprobe.multi | 5.18 | Attach one program to N symbols atomically |
+| uprobe.multi | 6.6 | User-space multi-attach |
+| Attach cookies (kprobe) | 5.15 | bpf_get_attach_cookie() |
+| Attach cookies (uprobe) | 5.15 | |
+| BPF arenas (language) | 6.9 | @InArena Ptr<T>; auto-association via compiler plugin |
 
 ## Verifier and security
 
