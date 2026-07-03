@@ -74,6 +74,19 @@ public final class QueuedTask {
         MemorySegment.copy(seg, ValueLayout.JAVA_BYTE, QT_COMM, out.comm, 0, 16);
     }
 
+    /**
+     * Returns a deep copy of this task that is safe to retain across batch boundaries.
+     *
+     * <p>The framework reuses flyweight instances in {@code taskPool} on every drain;
+     * call {@code copy()} if you need to store a task in a queue or data structure
+     * that outlives the current {@link UserspaceScheduler#schedule} call.
+     * The copy is fully dispatchable via
+     * {@link UserspaceScheduler#dispatchTask(QueuedTask, int)}.
+     */
+    public QueuedTask copy() {
+        return new QueuedTask(this);
+    }
+
     public String commStr() {
         int n = 0; while (n < 16 && comm[n] != 0) n++;
         return new String(comm, 0, n, java.nio.charset.StandardCharsets.UTF_8);

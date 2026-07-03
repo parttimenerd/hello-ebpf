@@ -131,7 +131,10 @@ public abstract class UserspaceScheduler {
      * BPF will handle them via the stall fallback after 50 ms.
      *
      * <p>{@code tasks} is a flyweight pool: entries beyond index {@code count-1}
-     * are stale from a previous batch. Do not retain references past this call.
+     * are stale from a previous batch. Do not retain raw references past this call.
+     * To store a task in a persistent data structure (queue, map, …) call
+     * {@link QueuedTask#copy()} — the copy is fully dispatchable in a future batch
+     * via {@link #dispatchTask(QueuedTask, int)}.
      *
      * <p>Must not block. Called on the run-loop thread.
      *
@@ -479,7 +482,22 @@ public abstract class UserspaceScheduler {
      * Dispatch one task to the given CPU. Call this from {@link #schedule} for
      * each task you want to run.
      *
-     * @param t   task to dispatch (must be from the current batch)
+     * <p>Accepts both flyweight tasks from the current batch and copies produced
+     * by {@link QueuedTask#copy()} that were saved from an earlier batch. This
+     * enables persistent queues across drain cycles:
+     * <pre>{@code
+     * private final ArrayDeque<QueuedTask> deferred = new ArrayDeque<>();
+     *
+     * protected void schedule(QueuedTask[] tasks, int count) {
+     *     for (int i = 0; i < count; i++) {
+     *         deferred.addLast(tasks[i].copy());   // safe to keep
+     *     }
+     *     // dispatch in whatever order you like, from any batch
+     *     while (!deferred.isEmpty()) dispatchTask(deferred.pollFirst(), ANY_CPU);
+     * }
+     * }</pre>
+     *
+     * @param t   task to dispatch (flyweight from current batch, or a {@link QueuedTask#copy()})
      * @param cpu target CPU, or {@link #ANY_CPU} to let BPF pick any idle CPU
      */
     public final void dispatchTask(QueuedTask t, int cpu) {
