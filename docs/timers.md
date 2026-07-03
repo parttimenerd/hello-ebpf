@@ -121,3 +121,9 @@ An element delete via `bpf_map_delete_elem` also cancels automatically.
 `bpf-samples/src/main/java/me/bechberger/ebpf/samples/TimerDemo.java` — an XDP program
 that arms a 1-second self-rearming timer on the first incoming packet and exposes the tick
 count as a `GlobalVariable` readable from Java.
+
+---
+
+## Examples
+
+- [`TimerDemo.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/TimerDemo.java) — periodic BPF timer with ring buffer output

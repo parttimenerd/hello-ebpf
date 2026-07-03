@@ -82,10 +82,10 @@ object.
 
 | Kind                    | Sample                                                                       |
 |-------------------------|------------------------------------------------------------------------------|
-| `SchedExtOps`           | `bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/MinimalScheduler.java` |
-| `TcpCongestionControl`  | `bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloCubicSample.java` |
-| `QdiscOps`              | `bpf/src/test/java/me/bechberger/ebpf/bpf/structops/QdiscOpsSmokeTest.java`  |
-| `HidBpfOps`             | `bpf/src/test/java/me/bechberger/ebpf/bpf/structops/HidBpfOpsSmokeTest.java` |
+| `SchedExtOps`           | [`MinimalScheduler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/MinimalScheduler.java) |
+| `TcpCongestionControl`  | [`HelloCubicSample.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloCubicSample.java) |
+| `QdiscOps`              | [`QdiscOpsSmokeTest.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/test/java/me/bechberger/ebpf/bpf/structops/QdiscOpsSmokeTest.java) |
+| `HidBpfOps`             | [`HidBpfOpsSmokeTest.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/test/java/me/bechberger/ebpf/bpf/structops/HidBpfOpsSmokeTest.java) |
 
 ## Escape hatches
 

@@ -45,6 +45,7 @@ nav:
     - Profiling: profiling.md
   - sched_ext:
     - Overview: sched-ext/index.md
+    - Writing a Scheduler: sched-ext/guide.md
     - Kernel-side Scheduler: sched-ext/kernel-side.md
     - Userspace Scheduler: sched-ext/userspace.md
     - Callbacks Reference: sched-ext/callbacks.md
@@ -54,6 +55,7 @@ nav:
     - Feature Matrix: feature-matrix.md
     - Annotations Catalog: reference/annotations.md
     - BPFJ Helpers Catalog: reference/bpfj.md
+    - JavaDoc API: reference/javadoc.md
     - Diagnostics: diagnostics.md
     - Cookbook: cookbook.md
   - Samples:

@@ -152,3 +152,10 @@ void rewriteDstPort(Ptr<__sk_buff> skb, int offset, short newPort) {
 | Overhead | Lowest | Low |
 | Virtual interfaces | Limited | Yes |
 | Kernel minimum | 4.8 | 4.1 |
+
+---
+
+## Examples
+
+- [`TCDropEveryThirdOutgoingPacket.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/TCDropEveryThirdOutgoingPacket.java) — drop every third egress packet
+- [`PacketLogger.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/PacketLogger.java) — log packets via TC + ring buffer

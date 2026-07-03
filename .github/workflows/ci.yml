@@ -82,8 +82,37 @@ jobs:
       - name: Install mkdocs-material
         run: pip install -r docs-requirements.txt
 
+      - name: Setup Java 22
+        uses: actions/setup-java@v5
+        with:
+          java-version: '22'
+          distribution: 'sapmachine'
+
+      - name: Cache Maven
+        uses: actions/cache@v5
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2-docs-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Install reactor prerequisites (annotations + bpf-processor)
+        run: ./mvnw -ntp -B install -DskipTests -N && ./mvnw -ntp -B install -DskipTests -pl annotations,shared,bpf-processor
+
+      - name: Install bpf-runtime
+        run: ./mvnw -ntp -B install -DskipTests -f bpf-runtime/pom.xml -Dmaven.compiler.proc=none
+        env:
+          MAVEN_OPTS: "-Xss16m -Xmx5g"
+
+      - name: Generate JavaDoc
+        run: ./mvnw -ntp -B javadoc:javadoc -DskipTests -pl bpf
+        env:
+          MAVEN_OPTS: "-Xss16m -Xmx3g"
+
       - name: Build docs (strict)
         run: mkdocs build --strict
+
+      - name: Copy JavaDoc into site
+        run: cp -r bpf/target/reports/apidocs site/javadoc
 
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force

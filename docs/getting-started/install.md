@@ -4,15 +4,14 @@
 
 | Requirement | Minimum | Recommended |
 |-------------|---------|-------------|
-| Linux kernel | 6.6 | 6.14+ |
+| Linux kernel | 6.14 | 6.14+ |
 | clang / llvm | 19 | 19 |
 | libbpf-dev | 1.0 | — |
 | bpftool | optional | for debugging |
 | JDK | 22 | 25 |
 | Privileges | root or CAP_BPF + CAP_NET_ADMIN | — |
 
-The framework runs from kernel 6.6. Kernel 6.14+ is required for sched_ext and
-arena features. Most distro kernels ship with `CONFIG_BPF=y` and
+The framework requires kernel 6.14. Most distro kernels ship with `CONFIG_BPF=y` and
 `CONFIG_BPF_SYSCALL=y`; verify with:
 
 ```bash

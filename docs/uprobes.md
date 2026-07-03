@@ -233,3 +233,11 @@ nm /path/to/libjvm.so | grep notify_gc_begin
 program.attachUprobe(prog, false, pid, libjvmPath,
     "_ZN15VM_GC_Operation15notify_gc_beginEb");
 ```
+
+---
+
+## Examples
+
+- [`JvmGcPauseTracer.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/JvmGcPauseTracer.java) — uprobe on JVM GC functions
+- [`StackSymbolizer.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/StackSymbolizer.java) — uretprobe + stack symbolization
+- [`sched/LockHolderBoostUprobes.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LockHolderBoostUprobes.java) — uprobes for lock contention detection

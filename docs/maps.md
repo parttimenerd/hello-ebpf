@@ -336,3 +336,12 @@ prog.counts.forEach((k, v) -> {
     prog.counts.delete(k);   // reset as we read
 });
 ```
+
+---
+
+## Examples
+
+- [`HashMapSample.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HashMapSample.java) — BPFHashMap for syscall counting
+- [`RingSample.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/RingSample.java) — BPFRingBuffer event streaming
+- [`HelloArrayOfMaps.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloArrayOfMaps.java) — BPFArrayOfMaps / BPFHashOfMaps
+- [`PerCpuInnerMapSample.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/PerCpuInnerMapSample.java) — per-CPU inner maps

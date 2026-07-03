@@ -11,7 +11,7 @@ time.  A `BPFHashMap` involves a hash-table lookup per read/write; an arena
 pointer is a plain memory dereference.
 
 Kernel requirement: ≥ 6.9 (`BPF_MAP_TYPE_ARENA` merged in 6.9).
-This project's floor is 6.17; all examples assume that floor.
+This project requires kernel 6.14.
 
 ---
 
@@ -160,3 +160,9 @@ public MemorySegment idleMaskView() {
   pattern.
 - Arena pointers cannot be stored in regular BPF maps.  The verifier rejects
   cross-address-space stores.
+
+---
+
+## Examples
+
+- [`sched/UserspaceSchedulerBase.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/UserspaceSchedulerBase.java) — arena-backed idle CPU bitmask in a scheduler

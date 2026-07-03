@@ -154,3 +154,10 @@ Some commonly useful tracepoint categories:
 | `block` | `block_rq_insert`, `block_rq_complete` |
 | `kmem` | `kmalloc`, `kfree`, `mm_page_alloc` |
 | `signal` | `signal_generate`, `signal_deliver` |
+
+---
+
+## Examples
+
+- [`SyscallCounter.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/SyscallCounter.java) — count syscalls per PID via tracepoints
+- [`SyscallProgramDemo.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/SyscallProgramDemo.java) — `@Ksyscall` demo

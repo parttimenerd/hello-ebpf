@@ -156,3 +156,10 @@ public static void main(String[] args) throws Exception {
 | `cgroupSockRelease` | `BPF_CGROUP_INET_SOCK_RELEASE` | Socket close |
 | `cgroupConnect4` | `BPF_CGROUP_INET4_CONNECT` | IPv4 connect() |
 | `cgroupConnect6` | `BPF_CGROUP_INET6_CONNECT` | IPv6 connect() |
+
+---
+
+## Examples
+
+- [`LSMDemo.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/LSMDemo.java) — BPF LSM hook demo
+- [`CGroupBlockHTTPEgress.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/CGroupBlockHTTPEgress.java) — cgroup egress filter

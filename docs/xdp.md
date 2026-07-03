@@ -151,3 +151,12 @@ public abstract class BlockIP extends BPFProgram implements XDPHook {
 - Process as much as possible inside the BPF program. Passing packets up to the kernel incurs SKB allocation overhead.
 - Use `BPFPerCpuArray` for counters to avoid inter-CPU synchronisation.
 - Return `XDP_DROP` as early as possible after the bounds checks.
+
+---
+
+## Examples
+
+- [`XDPDropEveryThirdPacket.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPDropEveryThirdPacket.java) — XDP_DROP based packet filter
+- [`XDPPacketFilter.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPPacketFilter.java) — IP-based firewall
+- [`PacketCountByLength.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/PacketCountByLength.java) — packet length histogram
+- [`Firewall.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/Firewall.java) — stateful firewall with blocklist map
