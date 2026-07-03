@@ -1,5 +1,12 @@
 # Map-of-Maps (HASH_OF_MAPS, ARRAY_OF_MAPS)
 
+Use a map-of-maps when you need a different map *per key* — e.g. per-CPU
+accounting, per-connection state, or per-user rate limits. A plain
+`BPFHashMap<K, V>` requires a fixed value type; a
+`BPFHashOfMaps<K, BPFHashMap<...>>` lets each key point at its own independent
+map, registered at load time or dynamically. Kernel requirement: Linux ≥ 4.12
+for both `HASH_OF_MAPS` and `ARRAY_OF_MAPS`.
+
 hello-ebpf exposes the kernel's `BPF_MAP_TYPE_HASH_OF_MAPS` and
 `BPF_MAP_TYPE_ARRAY_OF_MAPS` via two wrapper classes:
 
@@ -19,12 +26,14 @@ map's C struct as `__array(values, innerFieldName)`, which is libbpf's BTF
 idiom for declaring an inner-map template. libbpf resolves the inner-map fd
 automatically during `bpf_object__load`.
 
-    @BPFMapDefinition(maxEntries = 1)
-    BPFHashMap<Long, Long> innerTemplate;
+```java
+@BPFMapDefinition(maxEntries = 1)
+BPFHashMap<Long, Long> innerTemplate;
 
-    @InnerMap("innerTemplate")
-    @BPFMapDefinition(maxEntries = 256)
-    BPFHashOfMaps<Integer, BPFHashMap<Long, Long>> outer;
+@InnerMap("innerTemplate")
+@BPFMapDefinition(maxEntries = 256)
+BPFHashOfMaps<Integer, BPFHashMap<Long, Long>> outer;
+```
 
 The annotation processor validates at compile time that the name passed to
 `@InnerMap` matches a sibling `@BPFMapDefinition` field.
@@ -38,6 +47,17 @@ The annotation processor validates at compile time that the name passed to
   (`bpf_map_get_fd_by_id`); caller must close it. Returns `null` if no
   inner is registered at `key`.
 
+## When to use which outer type
+
+`BPFHashOfMaps<K, Inner>`: arbitrary keys up to `max_entries` inner slots;
+suitable for per-CPU, per-connection, or per-user maps where the key space is
+not contiguous.
+
+`BPFArrayOfMaps<Inner>`: u32 keys in `[0, max_entries)`; lookup is a direct
+index into the outer array, which is faster than a hash probe; use when your
+key is a CPU id, socket id, or another small integer whose range is known at
+load time.
+
 ## BPF API
 
 - `Ptr<InnerMap> outer.lookup(key)` — inside a BPF function, resolve the
@@ -48,12 +68,30 @@ The annotation processor validates at compile time that the name passed to
 Programs using `raw_tracepoint` sections cannot be auto-attached; call
 `rawTracepointAttach(methodName, tracepointName)` explicitly:
 
-    rawTracepointAttach("countSyscall", "sys_enter");
+```java
+rawTracepointAttach("countSyscall", "sys_enter");
+```
 
-## Sample
+## Samples
 
-`bpf-samples/src/main/java/.../PerCpuInnerMapSample.java` demonstrates a
-HASH_OF_MAPS keyed by CPU id, with per-CPU inner hash maps of syscall counts.
+**`PerCpuInnerMapSample`** — `HASH_OF_MAPS` keyed by CPU id, with a per-CPU
+inner hash map of syscall counts; userspace aggregates the inners at read time
+and prints the top-10 syscalls by invocation count.
+
+```
+mvn -pl bpf-samples exec:java \
+    -Dexec.mainClass=me.bechberger.ebpf.samples.PerCpuInnerMapSample
+```
+
+**`HelloArrayOfMaps`** — `ARRAY_OF_MAPS` with `NUM_SLOTS=4` buckets;
+syscalls are routed to bucket `syscall_nr % NUM_SLOTS` and counted in the
+corresponding inner map; demonstrates `BPFArrayOfMaps` and index-based
+`lookup`.
+
+```
+mvn -pl bpf-samples exec:java \
+    -Dexec.mainClass=me.bechberger.ebpf.samples.HelloArrayOfMaps
+```
 
 ## Limitations (v1)
 

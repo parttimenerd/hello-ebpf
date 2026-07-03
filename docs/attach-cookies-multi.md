@@ -1,5 +1,15 @@
 # Attach cookies and multi-attach (kprobe.multi / uprobe.multi)
 
+Without attach cookies, a single BPF program attached to two different kernel
+functions cannot determine at runtime which entry point fired — all context
+pointers look the same. Attach cookies solve this: each attachment carries a
+`u64` that the BPF side reads via `bpf_get_attach_cookie(ctx)`, giving
+zero-cost disambiguation with no extra map lookups. Multi-attach compounds the
+benefit: instead of N separate `attachKProbe` calls (N syscalls, N BPF links),
+one `attachKProbeMulti` call wires the program to all N symbols atomically and
+returns a single `BPFLink` handle. Kernel support gates: kprobe cookies require
+kernel ≥ 5.15; `kprobe.multi` requires ≥ 5.18; `uprobe.multi` requires ≥ 6.6.
+
 Two related capabilities landed in `BPFProgram`:
 
 - Attach cookies - a `u64` value bound to each attachment. Retrievable from
@@ -50,6 +60,18 @@ prog.attachUprobeMulti(
 Feature gate: `Features.hasAttachType(BPFAttachType.TRACE_UPROBE_MULTI)`
 (kernel >= 6.6).
 
+## Choosing between single-attach and multi-attach
+
+| | Single-attach | Multi-attach |
+|---|---|---|
+| BPF link handles | One per symbol | One for all N symbols |
+| Independent detach | Yes — detach any subset | No — all detach together |
+| Syscall cost | N `bpf(BPF_LINK_CREATE)` calls | 1 `bpf(BPF_LINK_CREATE)` call |
+
+Use single-attach when you need to detach individual symbols at different
+points in the program's lifetime. Use multi-attach when all N attachment
+points share the same lifecycle and you want the lower syscall overhead.
+
 ## Auto-attach interaction
 
 `autoAttachPrograms()` and `attachAllUprobes(pid, path)` deliberately SKIP
@@ -59,5 +81,29 @@ array - you must call `attachKProbeMulti` / `attachUprobeMulti` explicitly.
 
 ## Sample
 
-See `bpf-samples/src/main/java/me/bechberger/ebpf/samples/KProbeMultiCounter.java`
-- attaches to 20 syscall entries and prints the top-10 by call count.
+`bpf-samples/src/main/java/me/bechberger/ebpf/samples/KProbeMultiCounter.java`
+attaches one BPF program to 20 x86_64 syscall entry points via
+`attachKProbeMulti`. Each symbol receives a cookie equal to its index in the
+array. The BPF handler reads the cookie and increments a per-cookie counter in
+a `BPFHashMap`. After 5 seconds the Java side reads the map, sorts by count,
+and prints the top 10.
+
+Run (kernel ≥ 5.18 required):
+
+```
+sudo java -cp bpf-samples.jar me.bechberger.ebpf.samples.KProbeMultiCounter
+```
+
+Expected output:
+
+```
+Sampling for 5s...
+Top 10:
+  __x64_sys_read                   1482
+  __x64_sys_write                  1203
+  __x64_sys_poll                    847
+  ...
+```
+
+Each line shows the symbol name and the number of calls observed during the
+5-second window.
