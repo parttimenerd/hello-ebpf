@@ -153,6 +153,8 @@ you can use them as a starting point for your own eBPF programs.
 |             | [CPUProfiler](bpf-samples/src/main/java/me/bechberger/ebpf/samples/CPUProfiler.java)                                       | CPU profiler using perf_event; outputs an interactive HTML flamegraph      |
 |             | [JvmGcPauseTracer](bpf-samples/src/main/java/me/bechberger/ebpf/samples/JvmGcPauseTracer.java)                             | Traces JVM stop-the-world GC pauses via uprobes on libjvm.so               |
 |             | [PerCpuInnerMapSample](bpf-samples/src/main/java/me/bechberger/ebpf/samples/PerCpuInnerMapSample.java)                     | HASH_OF_MAPS: per-CPU inner hash maps of syscall counts — see [Map-of-Maps](docs/map-of-maps.md) |
+|             | [HelloArrayOfMaps](bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloArrayOfMaps.java)                             | ARRAY_OF_MAPS: outer array dispatching syscalls to per-priority inner maps  |
+| | [KProbeMultiCounter](bpf-samples/src/main/java/me/bechberger/ebpf/samples/KProbeMultiCounter.java) | Count syscalls across 20 entry points using kprobe.multi with per-symbol cookies |
 
 Profiling
 ---------

@@ -112,7 +112,7 @@ public class CompilerPlugin implements Plugin {
      * Not written in production builds; the field is only set when the plugin is running
      * inside an in-process javac invocation that opts in (see {@code ArenaAssociationPassTest}).
      */
-    static final ThreadLocal<CompilerPlugin> LAST_PLUGIN = new ThreadLocal<>();
+    public static final ThreadLocal<CompilerPlugin> LAST_PLUGIN = new ThreadLocal<>();
 
     /**
      * The last C code string produced by {@link #processBPFProgramImpl}.
