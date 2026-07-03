@@ -17,6 +17,73 @@ and the userspace lottery variant in
 
 ---
 
+## How it works
+
+```
+kernel                                  Java (your policy)
+──────                                  ──────────────────
+task becomes runnable
+  │
+  ▼
+UserspaceSchedulerBase.enqueue()        ┌─────────────────────┐
+  • framework PID? → FRAMEWORK_DSQ      │  runUntilExit()      │
+  • kthread fast path? → SHARED_DSQ     │    loop              │
+  • else → write QueuedTaskCtx          │      drainBatchOnce()│
+      into queued ring buffer  ─────────►        policy(t)     │
+                                        │        → cpu         │
+UserspaceSchedulerBase.dispatch()  ◄────┤      submitDispatch()│
+  • read DispatchedTaskCtx from         │      tick() / 1s     │
+      dispatched user ring buffer       └─────────────────────┘
+  • scx_bpf_dsq_insert(task, cpu)
+  • 50 ms stall fallback if Java stalls
+```
+
+There are **two ring buffers** between kernel and Java:
+
+- **`queued` (kernel→Java, `BPFRingBuffer`)** — BPF `enqueue` writes a
+  `QueuedTaskCtx` record for every task that needs a scheduling decision. If
+  the ring is full the task falls back to `SHARED_DSQ` immediately
+  (`ringDropped` counter).
+- **`dispatched` (Java→kernel, `BPFUserRingBuffer`)** — Java reserves a slot,
+  fills a `DispatchedTaskCtx` (pid, targetCpu, sliceNs, vtime), and commits.
+  BPF `dispatch` drains this ring on every `dispatch()` callback.
+
+**Fast paths that bypass Java entirely:**
+
+| Situation | BPF action | Why |
+|---|---|---|
+| Task is a JVM thread (`frameworkPids` map hit) | → `FRAMEWORK_DSQ` | Drain thread must not wait on itself |
+| `kswapd` / `khugepaged` | → `SHARED_DSQ` | Memory reclaim must not stall |
+| `selectCPU` finds an idle CPU | dispatch immediately to `LOCAL` | No ring-trip at all |
+| Java stalls for > 50 ms | promote from `SHARED_DSQ` | Watchdog safety net |
+
+**The run loop (`runUntilExit`):**
+
+1. Load `UserspaceSchedulerBase` BPF program and attach as `struct_ops`.
+2. Seed JVM thread IDs (`/proc/self/task`) into the `frameworkPids` BPF hash map *before* attaching, so the drain thread is never routed through its own ring.
+3. Loop:
+   - Drain up to `batchSize` records from `queued` ring into a pre-allocated `QueuedTask[]` pool (zero allocation on hot path).
+   - Call `policy(t)` for each task; catch exceptions individually.
+   - Submit dispatch decisions via `submitDispatch`.
+   - Every ~1 s: rescan `/proc/self/task` for new JVM threads; call `tick()`.
+4. Exit when `requestExit()` is called or `isAttached()` returns false (kernel detached us).
+
+**Idle-CPU lookup** (`ANY_CPU` path): the framework `mmap`s an arena-backed
+bitmap that BPF `updateIdle` keeps current. `pickIdleCpu()` reads that bitmap
+with zero syscalls, round-robins to spread load, and falls back to `ANY_CPU`
+if no idle CPU is found. You can also call `selectCpu(pid, prevCpu)` from
+`policy()` to ask the kernel's own `scx_bpf_select_cpu_dfl` for a recommendation.
+
+**`enqCnt` stale-dispatch prevention:** each task has a per-task `enqCnt`
+counter in BPF task storage, incremented on every `enqueue`. The ring record
+carries the counter value at enqueue time. When Java submits a dispatch, BPF
+checks whether the task's current `enqCnt` still matches — if the task was
+re-enqueued in the meantime the dispatch is silently cancelled (`ringCanceled`
+counter). This prevents dispatching a task to a stale CPU after it already
+woke and was re-queued.
+
+---
+
 ## 1. What is this
 
 `UserspaceScheduler` is an abstract class. You subclass it, override
@@ -192,7 +259,9 @@ Full source with CLI, stats, and shutdown hook:
 | [`RustlandFifoSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandFifoSample.java) | Minimal FIFO with periodic stats |
 | [`WeightedRRSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/WeightedRRSample.java) | Per-task state and `QueuedTask.weight` |
 | [`LotterySample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LotterySample.java) | Weight-biased probabilistic CPU placement |
-| [`CmdlineBoostSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CmdlineBoostSample.java) | `/proc` reads, cmdline classification, CPU partitioning (above) |
+| [`VtimeSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/VtimeSample.java) | Batch vtime ordering with `schedule()`, `TreeMap` sort |
+| [`RustlandJavaSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandJavaSample.java) | Full scx_rustland port: `deadline = vtime + exec_runtime`, interactive/batch separation |
+| [`CmdlineBoostSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CmdlineBoostSample.java) | `/proc` reads, cmdline classification, CPU partitioning |
 
 ## 4. Running
 
