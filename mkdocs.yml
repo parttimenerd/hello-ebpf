@@ -4,6 +4,11 @@ repo_url: https://github.com/parttimenerd/hello-ebpf
 repo_name: parttimenerd/hello-ebpf
 exclude_docs: |
   superpowers/
+not_in_nav: |
+  helpers.md
+  userspace-scheduler.md
+  scheduler-article.md
+  sched_ext.md
 theme:
   name: material
   features:
@@ -17,13 +22,15 @@ theme:
       accent: indigo
 nav:
   - Home: index.md
-  - Cheat Sheet: cheatsheet.md
-  - Cookbook: cookbook.md
+  - Getting Started:
+    - Install & Prerequisites: getting-started/install.md
+    - Your First BPF Program: getting-started/hello.md
+    - How the Plugin Works: getting-started/how-it-works.md
   - Guides:
     - Maps: maps.md
-    - Shared Maps: shared-maps.md
-    - Map-of-Maps: map-of-maps.md
-    - Tail Calls: tail-calls.md
+    - Global Variables & Types: global-variables.md
+    - Shared Maps (@SharedFrom): shared-maps.md
+    - BPF Arenas (@InArena): arenas.md
     - XDP: xdp.md
     - TC: tc.md
     - Tracepoints: tracepoints.md
@@ -31,17 +38,32 @@ nav:
     - Uprobes: uprobes.md
     - Attach Cookies & Multi-Attach: attach-cookies-multi.md
     - LSM & Cgroup: lsm.md
-    - sched_ext: sched_ext.md
+    - Tail Calls: tail-calls.md
+    - Map-of-Maps: map-of-maps.md
     - struct_ops in Java: struct-ops.md
-    - Writing Schedulers in Java: scheduler-article.md
-    - Userspace Scheduler: userspace-scheduler.md
-    - Global Variables & Types: global-variables.md
-    - BPFJ Helpers: helpers.md
+    - Timers: timers.md
     - Profiling: profiling.md
+  - sched_ext:
+    - Overview: sched-ext/index.md
+    - Kernel-side Scheduler: sched-ext/kernel-side.md
+    - Userspace Scheduler: sched-ext/userspace.md
+    - Callbacks Reference: sched-ext/callbacks.md
+    - Cookbook: sched-ext/cookbook.md
   - Reference:
+    - Cheat Sheet: cheatsheet.md
     - Feature Matrix: feature-matrix.md
+    - Annotations Catalog: reference/annotations.md
+    - BPFJ Helpers Catalog: reference/bpfj.md
     - Diagnostics: diagnostics.md
-    - Changelog: changelog.md
+    - Cookbook: cookbook.md
+  - Samples:
+    - Index & Selection Guide: samples/index.md
+  - Architecture:
+    - Compiler Plugin: architecture/plugin.md
+    - Annotation Processor: architecture/processor.md
+    - Error Classifier: architecture/errors.md
+    - Contributing: architecture/contributing.md
+  - Changelog: changelog.md
 markdown_extensions:
   - admonition
   - pymdownx.highlight:
