@@ -105,8 +105,52 @@ public abstract class UserspaceScheduler {
      * let BPF pick any idle CPU. Default: {@link #ANY_CPU}.
      *
      * <p>Must not block. Called on the run-loop thread.
+     *
+     * <p>Only called when {@link #schedule} is not overridden. Override
+     * {@link #schedule} instead when you need to compare or reorder tasks
+     * across the whole batch (e.g. vtime scheduling, EDF, work-stealing).
      */
     protected int policy(QueuedTask t) { return ANY_CPU; }
+
+    /**
+     * Batch scheduling decision — called once per drained batch with all tasks
+     * in the batch visible at once.
+     *
+     * <p>This is the right override for policies that need to <em>compare tasks
+     * against each other</em>: virtual-time fair-share, EDF, priority queues,
+     * or any policy where the dispatch order matters (e.g. "dispatch the task
+     * with the lowest vtime first"). It is the direct equivalent of what
+     * {@code scx_rustland} does with its {@code BTreeSet} ordered by deadline.
+     *
+     * <p>The default implementation calls {@link #policy} for each task in
+     * arrival order, preserving full backwards compatibility.
+     *
+     * <p>When you override this method, call {@link #dispatchTask(QueuedTask, int)}
+     * for each task you want to dispatch. You may reorder, skip (drop), or
+     * dispatch in any order. Tasks not dispatched here are silently dropped —
+     * BPF will handle them via the stall fallback after 50 ms.
+     *
+     * <p>{@code tasks} is a flyweight pool: entries beyond index {@code count-1}
+     * are stale from a previous batch. Do not retain references past this call.
+     *
+     * <p>Must not block. Called on the run-loop thread.
+     *
+     * @param tasks the drained task array; valid indices are {@code [0, count)}
+     * @param count number of valid tasks in {@code tasks}
+     */
+    protected void schedule(QueuedTask[] tasks, int count) {
+        for (int i = 0; i < count; i++) {
+            QueuedTask t = tasks[i];
+            int cpu;
+            try {
+                cpu = policy(t);
+            } catch (Throwable th) {
+                onPolicyException(t, th);
+                continue;
+            }
+            dispatchTask(t, cpu);
+        }
+    }
 
     /**
      * Called once per heartbeat (approximately every second).
@@ -406,34 +450,21 @@ public abstract class UserspaceScheduler {
 
         long dispBefore = sDispatched;
         long nowNs = System.nanoTime();
+
+        // Record round-trip latency for all tasks in the batch before handing off
+        // to schedule(). nowNs is hoisted so all tasks share the same snapshot.
+        for (int i = 0; i < batchCtx.count; i++) {
+            QueuedTask t = taskPool[i];
+            if (t.stopTs > 0) {
+                long deltaUs = (nowNs - t.stopTs) / 1_000L;
+                if (deltaUs >= 0) recordRoundTrip(deltaUs);
+            }
+        }
+
         var ev = new BatchEvent();
         ev.begin();
         try {
-            for (int i = 0; i < batchCtx.count; i++) {
-                QueuedTask t = taskPool[i];
-                int cpu;
-                try {
-                    cpu = policy(t);
-                } catch (Throwable th) {
-                    onPolicyException(t, th);
-                    continue;          // skip — do NOT fall through to dispatchInternal
-                }
-                // Record round-trip: stopTs is the BPF ktime when the task was last
-                // context-switched out, which is a close proxy for the enqueue ktime.
-                // System.nanoTime() is not directly comparable with BPF ktime (which uses
-                // CLOCK_MONOTONIC), but both are ns-resolution monotonic clocks and are
-                // equal on most kernels. Recorded here for observability; exact semantics
-                // are documented in UserspaceSchedulerBase.roundTripUsHist.
-                // nowNs is hoisted out of the loop so all tasks in one batch share the
-                // same "end of batch" snapshot — cheaper and more meaningful semantically.
-                // The guard rejects negative deltas that can occur on clock skew or when
-                // stopTs is stale (zero is already excluded by the outer check).
-                if (t.stopTs > 0) {
-                    long deltaUs = (nowNs - t.stopTs) / 1_000L;
-                    if (deltaUs >= 0) recordRoundTrip(deltaUs);
-                }
-                dispatchInternal(t, cpu);
-            }
+            schedule(taskPool, batchCtx.count);
         } finally {
             ev.end();
             if (ev.shouldCommit()) {
@@ -442,6 +473,17 @@ public abstract class UserspaceScheduler {
                 ev.commit();
             }
         }
+    }
+
+    /**
+     * Dispatch one task to the given CPU. Call this from {@link #schedule} for
+     * each task you want to run.
+     *
+     * @param t   task to dispatch (must be from the current batch)
+     * @param cpu target CPU, or {@link #ANY_CPU} to let BPF pick any idle CPU
+     */
+    public final void dispatchTask(QueuedTask t, int cpu) {
+        dispatchInternal(t, cpu);
     }
 
     /**
