@@ -31,6 +31,7 @@ import java.util.Objects;
             __type (key, u32);
             __type (value, __u32);
             __uint (max_entries, $maxEntries);
+            __array (values, $innerName);
         } $field SEC(".maps");
         """,
         javaTemplate = """

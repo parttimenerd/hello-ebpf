@@ -1811,53 +1811,6 @@ public abstract class BPFProgram implements AutoCloseable {
     }
 
     /**
-     * Set the inner-map fd for an outer HASH_OF_MAPS / ARRAY_OF_MAPS.
-     *
-     * <p>Wraps {@code bpf_map__set_inner_map_fd(outer, inner_fd)}. Must be
-     * called between {@link #openProgram()} and {@link #finalizeLoad()}. The
-     * processor-generated {@code preLoad()} calls this for every field annotated
-     * with {@code @InnerMap("innerFieldName")}.
-     *
-     * <p>The outer map is resolved by libbpf name; the inner map's fd is
-     * obtained by first fetching the inner {@code struct bpf_map *} via
-     * {@code bpf_object__find_map_by_name} and then {@code bpf_map__fd}.
-     *
-     * @param outerMapName libbpf name of the outer HASH_OF_MAPS / ARRAY_OF_MAPS
-     * @param innerMapName libbpf name of the inner-map template field
-     * @throws IllegalStateException if called after {@code finalizeLoad()}
-     * @throws BPFError              if lookup or the libbpf call fails
-     */
-    protected final void setInnerMapFd(String outerMapName, String innerMapName) {
-        if (loaded) {
-            throw new IllegalStateException(
-                    "setInnerMapFd('" + outerMapName + "','" + innerMapName
-                    + "') called after finalizeLoad(); must run between super() and finalizeLoad()");
-        }
-        try (Arena arena = Arena.ofConfined()) {
-            MemorySegment outer = Lib.bpf_object__find_map_by_name(
-                    this.ebpf_object, arena.allocateFrom(outerMapName));
-            if (outer == MemorySegment.NULL || outer.address() == 0) {
-                throw new BPFMapNotFoundError(outerMapName);
-            }
-            MemorySegment inner = Lib.bpf_object__find_map_by_name(
-                    this.ebpf_object, arena.allocateFrom(innerMapName));
-            if (inner == MemorySegment.NULL || inner.address() == 0) {
-                throw new BPFMapNotFoundError(innerMapName);
-            }
-            int innerFd = Lib.bpf_map__fd(inner);
-            if (innerFd < 0) {
-                throw new BPFError("bpf_map__fd on inner '" + innerMapName
-                        + "' returned " + innerFd, innerFd);
-            }
-            int ret = Lib_2.bpf_map__set_inner_map_fd(outer, innerFd);
-            if (ret != 0) {
-                throw new BPFError("bpf_map__set_inner_map_fd(" + outerMapName
-                        + "," + innerMapName + ") failed: " + Util.errnoString(-ret), ret);
-            }
-        }
-    }
-
-    /**
      * @return the registered pin path for {@code mapName}, or {@code null} if
      *         this program does not pin a map of that name.
      */

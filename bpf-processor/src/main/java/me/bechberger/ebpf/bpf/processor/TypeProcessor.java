@@ -1445,6 +1445,15 @@ public class TypeProcessor {
         // Sanity check: @SharedFrom on a field without @BPFMapDefinition is meaningless —
         // pin reuse only applies to maps. Flag it so the user doesn't silently lose the
         // sharing they thought they declared.
+        // Also validate @InnerMap: the referenced sibling must be a @BPFMapDefinition field.
+        var mapFieldNames = new java.util.LinkedHashSet<String>();
+        for (var enc : outerElement.getEnclosedElements()) {
+            if (enc.getKind() != ElementKind.FIELD) continue;
+            VariableElement vf = (VariableElement) enc;
+            if (getAnnotationMirror(vf.asType(), BPF_MAP_DEFINITION).isPresent()) {
+                mapFieldNames.add(vf.getSimpleName().toString());
+            }
+        }
         for (var enc : outerElement.getEnclosedElements()) {
             if (enc.getKind() != ElementKind.FIELD) continue;
             VariableElement vf = (VariableElement) enc;
@@ -1455,6 +1464,25 @@ public class TypeProcessor {
                         "@SharedFrom requires @BPFMapDefinition on the same field — "
                                 + "the annotation only applies to BPF map fields.", vf);
             }
+            var innerMapAnn = getAnnotationMirror(vf, INNER_MAP_ANNOTATION);
+            if (innerMapAnn.isPresent()) {
+                if (!hasMapDef) {
+                    this.processingEnv.getMessager().printError(
+                            "@InnerMap requires @BPFMapDefinition on the same field — "
+                                    + "the annotation only applies to BPF map-of-maps fields.", vf);
+                } else {
+                    String refName = AnnotationUtils.getAnnotationValue(innerMapAnn.get(), "value", "");
+                    if (refName.isEmpty()) {
+                        this.processingEnv.getMessager().printError(
+                                "@InnerMap value must be a non-empty field name", vf);
+                    } else if (!mapFieldNames.contains(refName)) {
+                        this.processingEnv.getMessager().printError(
+                                "@InnerMap references sibling '" + refName
+                                        + "' but no @BPFMapDefinition field of that name exists"
+                                        + " (fields: " + mapFieldNames + ")", vf);
+                    }
+                }
+            }
         }
         // take all @BPFMapDefinition annotated fields
         return outerElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e)
@@ -1462,65 +1490,6 @@ public class TypeProcessor {
                 .map(f -> processMapDefiningField(f, fieldToType, typeToSpecFieldName)).filter(Objects::nonNull).toList();
     }
 
-    /**
-     * Collect {@code @InnerMap} wiring for map-of-maps fields on {@code outerElement}.
-     * Each returned entry is {@code [outerFieldName, innerFieldName]} where
-     * {@code innerFieldName} is a sibling {@code @BPFMapDefinition} field to be used
-     * as the inner-map template. The generated impl-class's {@code preLoad()} calls
-     * {@code setInnerMapFd(outer, inner)} once per pair.
-     *
-     * <p>Errors reported to the annotation processor's messager:
-     * <ul>
-     *   <li>{@code @InnerMap} on a field that is not {@code @BPFMapDefinition}.</li>
-     *   <li>Empty {@code value()} on {@code @InnerMap}.</li>
-     *   <li>Referenced sibling name does not resolve to a {@code @BPFMapDefinition} field.</li>
-     * </ul>
-     *
-     * <p>Static so callers holding only a {@link ProcessingEnvironment} can invoke it
-     * (e.g. {@link Processor} without needing the fully-configured TypeProcessor).
-     */
-    public static List<String[]> processInnerMapWiring(ProcessingEnvironment env, TypeElement outerElement) {
-        var pairs = new java.util.ArrayList<String[]>();
-        // Collect every @BPFMapDefinition field name for cross-check.
-        var mapFieldNames = new java.util.LinkedHashSet<String>();
-        for (var enc : outerElement.getEnclosedElements()) {
-            if (enc.getKind() != ElementKind.FIELD) continue;
-            VariableElement vf = (VariableElement) enc;
-            if (AnnotationUtils.getAnnotationMirror(vf.asType(), BPF_MAP_DEFINITION).isPresent()) {
-                mapFieldNames.add(vf.getSimpleName().toString());
-            }
-        }
-        for (var enc : outerElement.getEnclosedElements()) {
-            if (enc.getKind() != ElementKind.FIELD) continue;
-            VariableElement vf = (VariableElement) enc;
-            var inner = AnnotationUtils.getAnnotationMirror(vf, INNER_MAP_ANNOTATION);
-            if (inner.isEmpty()) continue;
-
-            // Outer field must be @BPFMapDefinition — pinning the fd only makes sense
-            // for map fields.
-            if (AnnotationUtils.getAnnotationMirror(vf.asType(), BPF_MAP_DEFINITION).isEmpty()) {
-                env.getMessager().printError(
-                        "@InnerMap requires @BPFMapDefinition on the same field — "
-                                + "the annotation only applies to BPF map-of-maps fields.", vf);
-                continue;
-            }
-            String innerName = AnnotationUtils.getAnnotationValue(inner.get(), "value", "");
-            if (innerName.isEmpty()) {
-                env.getMessager().printError(
-                        "@InnerMap value must be a non-empty field name", vf);
-                continue;
-            }
-            if (!mapFieldNames.contains(innerName)) {
-                env.getMessager().printError(
-                        "@InnerMap references sibling '" + innerName
-                                + "' but no @BPFMapDefinition field of that name exists"
-                                + " (fields: " + mapFieldNames + ")", vf);
-                continue;
-            }
-            pairs.add(new String[]{ vf.getSimpleName().toString(), innerName });
-        }
-        return pairs;
-    }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Nullable MapDefinition processMapDefiningField(VariableElement field,
@@ -1849,13 +1818,23 @@ public class TypeProcessor {
     Statement processBPFClassCTemplate(VariableElement field, String cTemplate, List<BPFTypeLike<?>> typeParameters,
                                        Integer maxEntries, String fieldName, String className,
                                        Function<BPFTypeLike<?>, SpecFieldName> typeToSpecFieldName) {
+        // Resolve $innerName from @InnerMap on this field, if present.
+        String innerName = AnnotationUtils.getAnnotationMirror(field, INNER_MAP_ANNOTATION)
+                .map(a -> AnnotationUtils.getAnnotationValue(a, "value", ""))
+                .orElse("");
         String raw = processBPFClassTemplate(cTemplate, typeParameters,
-                maxEntries, fieldName, fieldName, className, typeToSpecFieldName);
+                maxEntries, fieldName, fieldName, className, innerName, typeToSpecFieldName);
         return new VerbatimStatement(raw);
     }
 
     String processBPFClassTemplate(String template, List<BPFTypeLike<?>> typeParams, int maxEntries, String fieldName,
                                    String lookupName, String className, Function<BPFTypeLike<?>, SpecFieldName> typeToSpecFieldName) {
+        return processBPFClassTemplate(template, typeParams, maxEntries, fieldName, lookupName, className, "", typeToSpecFieldName);
+    }
+
+    String processBPFClassTemplate(String template, List<BPFTypeLike<?>> typeParams, int maxEntries, String fieldName,
+                                   String lookupName, String className, String innerName,
+                                   Function<BPFTypeLike<?>, SpecFieldName> typeToSpecFieldName) {
         var classNames = typeParams.stream().map(BPFTypeLike::getJavaName).map(JavaName::toString).toList();
         var cTypeNames = typeParams.stream().map(BPFTypeLike::getBPFNameWithStructPrefixIfNeeded).toList();
         var bFields = typeParams.stream().map(t -> t.toJavaFieldSpecUse(tm -> typeToSpecFieldName.apply(BPFTypeLike.of(tm)).name())).toList();
@@ -1868,6 +1847,7 @@ public class TypeProcessor {
         return res.replace("$maxEntries", Integer.toString(maxEntries))
                 .replace("$field", fieldName)
                 .replace("$class", className)
+                .replace("$innerName", innerName)
                 .replace("$fd", "getMapDescriptorByName(" + CAST.toStringLiteral(lookupName) + ")");
     }
 }

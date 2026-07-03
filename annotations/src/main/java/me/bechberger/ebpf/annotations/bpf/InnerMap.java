@@ -8,10 +8,10 @@ import java.lang.annotation.Target;
 /**
  * Marks a {@code @BPFMapDefinition} map-of-maps field with the name of a
  * sibling {@code @BPFMapDefinition} field that supplies the inner-map
- * template. The processor emits a runtime call to
- * {@code bpf_map__set_inner_map_fd(outer, inner->fd)} between
- * {@code bpf_object__open_file} and {@code bpf_object__load} so libbpf
- * knows the inner-map layout before load.
+ * template. The processor substitutes the sibling field name into the outer
+ * map's C template as {@code __array(values, innerFieldName)}, which is
+ * libbpf's BTF idiom for declaring an inner-map template. libbpf then
+ * resolves the inner-map fd automatically during {@code bpf_object__load}.
  *
  * <p>Example:
  * <pre>{@code

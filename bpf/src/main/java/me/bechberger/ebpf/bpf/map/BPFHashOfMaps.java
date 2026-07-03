@@ -19,9 +19,10 @@ import java.util.Objects;
  * All inner maps share the same template (type/key_size/value_size/max_entries/flags),
  * enforced by the kernel at {@code bpf_map_update_elem} time.
  *
- * <p>The outer map's inner-map layout is supplied at load time via
- * {@code bpf_map__set_inner_map_fd}; see {@code @InnerMap} for the
- * companion annotation that wires this up.
+ * <p>The outer map's inner-map layout is supplied at load time via the BTF
+ * {@code __array(values, innerTemplate)} idiom in the generated C struct.
+ * libbpf resolves the inner-map fd automatically during {@code bpf_object__load};
+ * see {@code @InnerMap} for the companion annotation.
  *
  * <p>Java API:
  * <ul>
@@ -46,6 +47,7 @@ import java.util.Objects;
             __type (key, $c1);
             __type (value, __u32);
             __uint (max_entries, $maxEntries);
+            __array (values, $innerName);
         } $field SEC(".maps");
         """,
         javaTemplate = """
