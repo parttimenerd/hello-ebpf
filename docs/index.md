@@ -192,26 +192,26 @@ This project is accompanied by a 20-part blog series on [mostlynerdless.de](http
 
 | Part | Topic |
 |------|-------|
-| [1](https://mostlynerdless.de/blog/2023/12/31/hello-ebpf-developing-ebpf-apps-in-java-1/) | Hello World — first eBPF program in Java |
-| [2](https://mostlynerdless.de/blog/2024/01/12/hello-ebpf-recording-data-in-basic-ebpf-maps-2/) | eBPF maps — hash maps and counters |
-| [3](https://mostlynerdless.de/blog/2024/01/29/hello-ebpf-recording-data-in-event-buffers-3/) | Perf event buffers |
-| [4](https://mostlynerdless.de/blog/2024/02/12/hello-ebpf-tail-calls-and-your-first-ebpf-application-4/) | Tail calls and your first eBPF application |
-| [5](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) | First steps with libbpf |
-| [6](https://mostlynerdless.de/blog/2024/03/12/hello-ebpf-ring-buffers-in-libbpf-6/) | Ring buffers |
-| [7](https://mostlynerdless.de/blog/2024/03/22/hello-ebpf-auto-layouting-structs-7/) | Auto-layouting structs |
-| [8](https://mostlynerdless.de/blog/2024/04/09/hello-ebpf-generating-c-code-8/) | Generating C code from Java |
-| [9](https://mostlynerdless.de/blog/2024/04/22/hello-ebpf-xdp-based-packet-filter-9/) | XDP-based packet filter |
-| [10](https://mostlynerdless.de/blog/2024/05/21/hello-ebpf-global-variables-10/) | Global variables |
-| [11](https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/) | BTF and 13,000 generated Java classes |
-| [12](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/) | Write your eBPF application in pure Java |
-| [13](https://mostlynerdless.de/blog/2024/08/13/hello-ebpf-a-packet-logger-in-pure-java-using-tc-and-xdp-hooks-13/) | Packet logger with TC and XDP hooks |
-| [14](https://mostlynerdless.de/blog/2024/08/27/hello-ebpf-building-a-lightning-fast-firewall-with-java-ebpf-14/) | Lightning-fast firewall with Java & eBPF |
-| [15](https://mostlynerdless.de/blog/2024/09/10/hello-ebpf-writing-a-linux-scheduler-in-java-with-ebpf-15/) | Writing a Linux scheduler in Java |
-| [16](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/) | Controlling task scheduling from Java |
-| [17](https://mostlynerdless.de/blog/2024/12/17/hello-ebpf-writing-a-lottery-scheduler-in-java-with-sched-ext-17/) | Lottery scheduler with sched_ext |
-| [18](https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/) | Lottery scheduler in pure Java (bpf_for_each) |
-| [19](https://mostlynerdless.de/blog/2025/02/25/helle-ebpf-concurrency-testing-using-custom-linux-schedulers-19/) | Concurrency testing with custom schedulers |
-| [20](https://mostlynerdless.de/blog/2025/03/25/hello-ebpf-a-scheduler-controlled-by-sound-20/) | A scheduler controlled by sound |
+| 1 | [Hello World — first eBPF program in Java](https://mostlynerdless.de/blog/2023/12/31/hello-ebpf-developing-ebpf-apps-in-java-1/) |
+| 2 | [eBPF maps — hash maps and counters](https://mostlynerdless.de/blog/2024/01/12/hello-ebpf-recording-data-in-basic-ebpf-maps-2/) |
+| 3 | [Perf event buffers](https://mostlynerdless.de/blog/2024/01/29/hello-ebpf-recording-data-in-event-buffers-3/) |
+| 4 | [Tail calls and your first eBPF application](https://mostlynerdless.de/blog/2024/02/12/hello-ebpf-tail-calls-and-your-first-ebpf-application-4/) |
+| 5 | [First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) |
+| 6 | [Ring buffers](https://mostlynerdless.de/blog/2024/03/12/hello-ebpf-ring-buffers-in-libbpf-6/) |
+| 7 | [Auto-layouting structs](https://mostlynerdless.de/blog/2024/03/22/hello-ebpf-auto-layouting-structs-7/) |
+| 8 | [Generating C code from Java](https://mostlynerdless.de/blog/2024/04/09/hello-ebpf-generating-c-code-8/) |
+| 9 | [XDP-based packet filter](https://mostlynerdless.de/blog/2024/04/22/hello-ebpf-xdp-based-packet-filter-9/) |
+| 10 | [Global variables](https://mostlynerdless.de/blog/2024/05/21/hello-ebpf-global-variables-10/) |
+| 11 | [BTF and 13,000 generated Java classes](https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/) |
+| 12 | [Write your eBPF application in pure Java](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/) |
+| 13 | [Packet logger with TC and XDP hooks](https://mostlynerdless.de/blog/2024/08/13/hello-ebpf-a-packet-logger-in-pure-java-using-tc-and-xdp-hooks-13/) |
+| 14 | [Lightning-fast firewall with Java & eBPF](https://mostlynerdless.de/blog/2024/08/27/hello-ebpf-building-a-lightning-fast-firewall-with-java-ebpf-14/) |
+| 15 | [Writing a Linux scheduler in Java](https://mostlynerdless.de/blog/2024/09/10/hello-ebpf-writing-a-linux-scheduler-in-java-with-ebpf-15/) |
+| 16 | [Controlling task scheduling from Java](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/) |
+| 17 | [Lottery scheduler with sched_ext](https://mostlynerdless.de/blog/2024/12/17/hello-ebpf-writing-a-lottery-scheduler-in-java-with-sched-ext-17/) |
+| 18 | [Lottery scheduler in pure Java (bpf_for_each)](https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/) |
+| 19 | [Concurrency testing with custom schedulers](https://mostlynerdless.de/blog/2025/02/25/helle-ebpf-concurrency-testing-using-custom-linux-schedulers-19/) |
+| 20 | [A scheduler controlled by sound](https://mostlynerdless.de/blog/2025/03/25/hello-ebpf-a-scheduler-controlled-by-sound-20/) |
 
 ## Project layout
 
