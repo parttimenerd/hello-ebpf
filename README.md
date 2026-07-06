@@ -60,9 +60,28 @@ You can find this example as [XDPDropEveryThirdPacket.java](bpf-samples/src/main
 Features
 --------
 
-- **struct_ops in Java** — implement sched-ext, TCP CC, qdisc, or HID BPF via a Java interface; [see docs/struct-ops.md](docs/struct-ops.md).
-- **Attach cookies and multi-attach** — per-attachment `u64` cookies and `kprobe.multi` / `uprobe.multi`; [see docs/attach-cookies-multi.md](docs/attach-cookies-multi.md).
-- **Tail-call tables** — declare an enum, mark methods with `@TailCallSlot`, and slots auto-register at load; slot hot-swap included. [See docs/tail-calls.md](docs/tail-calls.md).
+**Hooks**
+- **XDP** — attach to network interfaces for high-speed packet filtering and forwarding. [docs/xdp.md](docs/xdp.md)
+- **TC (Traffic Control)** — classify and manipulate packets at the TC layer for both ingress and egress. [docs/tc.md](docs/tc.md)
+- **Kprobes / Kretprobes / Fentry / Fexit** — instrument kernel functions dynamically, with multi-attach (`kprobe.multi`) support. [docs/kprobes.md](docs/kprobes.md)
+- **Uprobes / Uretprobes** — instrument user-space functions in any process or library. [docs/uprobes.md](docs/uprobes.md)
+- **Tracepoints** — attach to stable kernel tracepoints and raw tracepoints. [docs/tracepoints.md](docs/tracepoints.md)
+- **LSM & cgroup hooks** — enforce security policies and resource controls directly from Java. [docs/lsm.md](docs/lsm.md)
+- **`@StructOps`** — implement kernel `struct_ops` in Java: write a sched-ext CPU scheduler, TCP congestion controller, qdisc, or HID BPF driver as a plain Java interface. [docs/struct-ops.md](docs/struct-ops.md)
+- **sched_ext schedulers** — full CPU scheduler framework built on `@StructOps`, including a userspace-scheduler bridge. [docs/sched-ext/](docs/sched-ext/index.md)
+
+**Data & Communication**
+- **BPF maps** — hash, array, LRU, per-CPU, ring buffer, perf event buffer, and more, all declared as typed Java fields. [docs/maps.md](docs/maps.md)
+- **Map-of-maps** — `HASH_OF_MAPS` and `ARRAY_OF_MAPS` for dynamic inner-map selection. [docs/map-of-maps.md](docs/map-of-maps.md)
+- **Shared maps** — share maps across multiple `@BPF` programs with `@SharedFrom`. [docs/shared-maps.md](docs/shared-maps.md)
+- **Global variables** — read/write kernel-side globals from Java user-space without a map round-trip. [docs/global-variables.md](docs/global-variables.md)
+- **BPF arenas** — allocate shared kernel/user memory with `@InArena` pointers for zero-copy data exchange. [docs/arenas.md](docs/arenas.md)
+- **BPF timers** — schedule periodic or deferred kernel-side callbacks with `@BPFTimer`. [docs/timers.md](docs/timers.md)
+
+**Program Structure**
+- **Tail-call tables** — declare an enum, mark methods with `@TailCallSlot`, and slots auto-register at load; hot-swap included. [docs/tail-calls.md](docs/tail-calls.md)
+- **Attach cookies and multi-attach** — per-attachment `u64` cookies and `kprobe.multi` / `uprobe.multi`. [docs/attach-cookies-multi.md](docs/attach-cookies-multi.md)
+- **Pure-Java BPF programs** — write the kernel-side logic entirely in Java; the annotation processor compiles it to BPF bytecode via Clang. [docs/getting-started/how-it-works.md](docs/getting-started/how-it-works.md)
 
 Goals
 -----
