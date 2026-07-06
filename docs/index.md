@@ -9,6 +9,8 @@ At runtime, `BPFProgram.load(MyClass.class)` loads the program via libbpf.
 
 No C files, no Makefiles, no separate build step. Just Java.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bWs5GHYpYxg" title="hello-ebpf demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## How it works
 
 ```
