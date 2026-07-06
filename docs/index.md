@@ -55,6 +55,8 @@ Install the native dependencies on Debian/Ubuntu:
 sudo apt install -y clang-19 llvm-19 libbpf-dev linux-headers-$(uname -r)
 ```
 
+See [Install & Prerequisites](getting-started/install.md) to add hello-ebpf to your Maven project.
+
 ## Quick example: XDP drop every 3rd packet
 
 ```java
