@@ -115,7 +115,7 @@ sudo java --enable-native-access=ALL-UNNAMED -cp target/myapp.jar DropEveryThird
 
 See also: [XDP hook docs](xdp.md) · [BPF Maps](maps.md) · [Global Variables](global-variables.md)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/WYwHiDyMK68" title="hello-ebpf XDP demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/16Rv7IWGoDk" title="hello-ebpf XDP demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Quick example: custom Linux scheduler
 
