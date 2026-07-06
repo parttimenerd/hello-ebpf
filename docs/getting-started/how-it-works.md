@@ -119,10 +119,138 @@ The template source and parser live in
 `bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/MethodTemplate.java`.
 Real-world examples are in `BPFBaseMap.java`, `XDPContext.java`, and `TCContext.java`.
 
+## §4 Adding your own C code — the four extension hooks
 
+**Javadoc:** [`@BPFInterface`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFInterface.html) · [`@BPFMapClass`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFMapClass.html) · [`@BPFAbstraction`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFAbstraction.html) · [`@AlwaysInline`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/AlwaysInline.html)
 
-The generated `.bpf.c` is written to the annotation output directory after
-`mvn package`:
+hello-ebpf exposes four annotation-driven hooks for injecting raw C into the generated `.bpf.c`. They are listed here in order of how often you'll need them.
+
+### 1. `@BPFInterface(before=…, after=…)` — inject C at file scope
+
+`@BPFInterface` turns a Java interface into a plugin-visible BPF interface. Any `@BPF` class that `implements` it gets the interface's default `@BPFFunction` methods compiled in. The `before` and `after` attributes let you inject verbatim C at the top or bottom of the generated file — the right place for `#define` macros, `#include` directives, helper C functions, or kfunc declarations that your `@BPFFunction` bodies need.
+
+```java
+@BPFInterface(
+    before = """
+        #define MY_THRESHOLD 1024
+
+        static __always_inline int clamp_to_threshold(int v) {
+            return v > MY_THRESHOLD ? MY_THRESHOLD : v;
+        }
+        """)
+public interface MyHelpers {
+
+    @BuiltinBPFFunction("clamp_to_threshold($arg1)")
+    @BPFFunction
+    default int clamp(int value) { throw new MethodIsBPFRelatedFunction(); }
+}
+
+// Then implement it on your @BPF class:
+@BPF(license = "GPL")
+public abstract class MyProg extends BPFProgram implements XDPHook, MyHelpers {
+    @Override
+    @BPFFunction
+    public int xdpHandlePacket(Ptr<xdp_md> ctx) {
+        int len = clamp(ctx.val().data_end - ctx.val().data);
+        // …
+        return XDP_PASS;
+    }
+}
+```
+
+The generated `.bpf.c` will open with your `#define` and `clamp_to_threshold` function, and `clamp(…)` calls will expand to `clamp_to_threshold(…)` at every call site.
+
+Real-world uses: `SchedulerHelpers.java` (injects `scx_bpf_error` wrapper macro), `CGroupHook.java` (injects cgroup attach boilerplate).
+
+### 2. `@BPFMapClass(cTemplate=…, javaTemplate=…)` — define a new map type
+
+`@BPFMapClass` on a class that extends `BPFMap` (or any subclass) registers a new BPF map type. The plugin uses `cTemplate` to emit the map's C struct into `.bpf.c` whenever a field of this type is declared with `@BPFMapDefinition`, and `javaTemplate` to instantiate the Java wrapper at load time.
+
+**Placeholders in both templates:**
+
+| Placeholder | Value |
+|-------------|-------|
+| `$field` | C variable name (the Java field name) |
+| `$maxEntries` | The `maxEntries` value from `@BPFMapDefinition` |
+| `$class` | Fully-qualified Java class name |
+| `$c1`, `$c2`, … | C type names of the generic type parameters |
+| `$b1`, `$b2`, … | `BPFType` expressions for the generic type parameters |
+| `$j1`, `$j2`, … | Java class names of the generic type parameters |
+| `$fd` | Expression that creates the Java `FileDescriptor` for `javaTemplate` |
+
+```java
+@BPFMapClass(
+    cTemplate = """
+        struct {
+            __uint(type, BPF_MAP_TYPE_ARRAY);
+            __type(key, u32);
+            __type(value, $c1);
+            __uint(max_entries, $maxEntries);
+        } $field SEC(".maps");
+        """,
+    javaTemplate = "new $class<>($fd, $b1, $maxEntries)")
+public class BPFArray<V> extends BPFBaseMap<@Unsigned Integer, V> { … }
+```
+
+A `@BPFMapDefinition` field using this class:
+
+```java
+@BPFMapDefinition(maxEntries = 512)
+BPFArray<Long> counters;
+```
+
+…emits exactly the struct above with `$field = counters` and `$maxEntries = 512`.
+
+### 3. `@BPFAbstraction` — zero-cost compile-time wrappers
+
+`@BPFAbstraction` marks a class as a pure compile-time alias — it has no C representation at all. Locals and fields of this type are inlined away; every method call is rewritten via `@BuiltinBPFFunction` templates. Use it to give a friendly Java API to a kernel concept (a dispatch queue, a CPU mask, a flag set) without adding any runtime overhead.
+
+```java
+@BPFAbstraction(constructorPrependTo = "init")
+public final class DispatchQueue {
+
+    // Constructor: C side-effect + carrier expression
+    @BuiltinBPFFunction(value = "scx_bpf_create_dsq($arg1, -1)", carrier = "$arg1")
+    @NotUsableInJava
+    public DispatchQueue(@Unsigned long id) { throw new MethodIsBPFRelatedFunction(); }
+
+    @BuiltinBPFFunction("scx_bpf_dsq_move_to_local($this)")
+    @NotUsableInJava
+    public boolean moveToLocal() { throw new MethodIsBPFRelatedFunction(); }
+}
+```
+
+In a `@BPF` class:
+
+```java
+// Field declaration — no C struct member emitted
+final DispatchQueue shared = new DispatchQueue(SHARED_DSQ_ID);
+// → injected into init() prologue:  scx_bpf_create_dsq(SHARED_DSQ_ID, -1);
+// → everywhere 'shared' appears:    SHARED_DSQ_ID
+
+shared.moveToLocal();
+// → scx_bpf_dsq_move_to_local(SHARED_DSQ_ID)
+```
+
+`constructorPrependTo` names the `@BPFFunction` method into whose generated C body the constructor side-effect is injected (default `"init"`). Set it to `""` to require explicit construction inside a `@BPFFunction` instead.
+
+Real-world uses: `DispatchQueue.java`, `CpuMask.java`, `EnqFlags.java`, `KickFlags.java`.
+
+### 4. `@AlwaysInline` / `@BPFInline` — force-inline a `@BPFFunction`
+
+Adding `@AlwaysInline` (or its alias `@BPFInline`) to a `@BPFFunction` method causes the plugin to emit `static __always_inline` instead of `static` in the C output. The BPF verifier inlines `__always_inline` functions at the call site, which eliminates the function-call overhead and is required for some helper patterns that the verifier won't accept across a call boundary.
+
+```java
+@BPFFunction
+@AlwaysInline
+boolean shouldDrop() {
+    return nextPseudoRandomNumber() % 3 == 0;
+}
+```
+
+---
+
+## §5 Inspecting the generated C
 
 ```
 target/generated-sources/annotations/me/bechberger/ebpf/.../YourClass.bpf.c
@@ -132,7 +260,7 @@ The file is plain C. Verifier errors reported by `dmesg` or libbpf refer to
 symbols defined in it. `bpftool prog dump xlated` output maps back to the same
 symbol names.
 
-## §4 CO-RE and portability
+## §6 CO-RE and portability
 
 The generated C uses `BPF_CORE_READ` for every struct field access. This macro
 emits BTF relocations into the `.o`; libbpf resolves them at load time against
@@ -140,7 +268,7 @@ the running kernel's BTF. The result is a single `.o` that loads on any kernel
 ≥ 5.2 that exports BTF (`CONFIG_DEBUG_INFO_BTF=y`), without recompilation or
 per-kernel headers.
 
-## §5 What the processor and plugin do not touch
+## §7 What the processor and plugin do not touch
 
 `main()` and all non-`@BPFFunction` methods run unchanged on the JVM. Map
 field access from Java (e.g. `myMap.get(key)`) uses the Panama/libbpf binding,
