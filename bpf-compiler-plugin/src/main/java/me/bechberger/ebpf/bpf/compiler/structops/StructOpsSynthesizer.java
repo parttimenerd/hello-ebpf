@@ -55,13 +55,15 @@ public final class StructOpsSynthesizer {
      * via {@code getPropertyValue()} string substitution. The plugin's role
      * is verbatim passthrough.
      */
-    private static final java.util.Map<String, String> PROPERTY_OVERRIDES =
-            java.util.Map.of(
-                "sched_ext_ops.flags",
-                    "SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE | (__property_extra_flags)",
-                "sched_ext_ops.timeout_ms", "__property_timeout_ms",
-                "sched_ext_ops.name",       "\"__property_sched_name\""
-            );
+    private static final java.util.Map<String, String> PROPERTY_OVERRIDES;
+    static {
+        var m = new java.util.LinkedHashMap<String, String>();
+        m.put("sched_ext_ops.timeout_ms", "__property_timeout_ms");
+        m.put("sched_ext_ops.name",       "\"__property_sched_name\"");
+        m.put("sched_ext_ops.flags",
+              "SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE | (__property_extra_flags)");
+        PROPERTY_OVERRIDES = java.util.Collections.unmodifiableMap(m);
+    }
 
     public Result synthesize(TypeElement bpfClass, List<StructOpsDiscovery.Kind> kinds) {
         List<SynthFunction> functions = new ArrayList<>();

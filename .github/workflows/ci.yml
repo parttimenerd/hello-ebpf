@@ -144,7 +144,7 @@ jobs:
         run: mkdocs build --strict
 
       - name: Copy JavaDoc into site
-        run: cp -r bpf/target/reports/apidocs site/javadoc
+        run: cp -r bpf/target/site/apidocs site/javadoc
 
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force
