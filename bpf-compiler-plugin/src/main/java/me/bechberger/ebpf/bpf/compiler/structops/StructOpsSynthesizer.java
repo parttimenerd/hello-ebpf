@@ -4,6 +4,7 @@ import me.bechberger.ebpf.annotations.Unsigned;
 import me.bechberger.ebpf.annotations.bpf.BPFFunction;
 import me.bechberger.ebpf.bpf.compiler.util.TreeConstants;
 
+import com.sun.source.util.Trees;
 import javax.annotation.processing.ProcessingEnvironment;
 import org.jetbrains.annotations.Nullable;
 import javax.lang.model.element.ExecutableElement;
@@ -39,9 +40,23 @@ public final class StructOpsSynthesizer {
     public record Result(List<SynthFunction> functions, List<SynthInstance> instances) {}
 
     private final ProcessingEnvironment env;
+    private final Trees trees;
 
+    public StructOpsSynthesizer(ProcessingEnvironment env, Trees trees) {
+        this.env = env;
+        this.trees = trees;
+    }
+
+    /** Convenience overload for test callers that don't have a javac task Trees. */
     public StructOpsSynthesizer(ProcessingEnvironment env) {
         this.env = env;
+        Trees t;
+        try {
+            t = Trees.instance(env);
+        } catch (IllegalArgumentException e) {
+            t = null;
+        }
+        this.trees = t;
     }
 
     /**
@@ -264,14 +279,12 @@ public final class StructOpsSynthesizer {
             default -> false;
         };
         if (isInt) {
-            Optional<Long> lit = concrete != null
-                    ? TreeConstants.integerReturnLiteral(env, concrete)
-                    : Optional.empty();
+            Optional<Long> lit = (concrete != null && trees != null)
+                    ? TreeConstants.integerReturnLiteral(trees, concrete)
+                    : concrete != null
+                        ? TreeConstants.integerReturnLiteral(env, concrete)
+                        : Optional.empty();
             if (lit.isEmpty()) {
-                System.err.println("DEBUG_STRUCTOPS: int data field '" + field.name()
-                        + "' on class=" + bpfClass.getQualifiedName()
-                        + " concrete=" + (concrete != null ? concrete.getEnclosingElement() + "." + concrete.getSimpleName() : "null")
-                        + " ifaceMethod=" + ifaceMethod.getEnclosingElement() + "." + ifaceMethod.getSimpleName());
                 env.getMessager().printMessage(
                         Diagnostic.Kind.ERROR,
                         "@StructOps data field '" + field.name()
@@ -282,14 +295,12 @@ public final class StructOpsSynthesizer {
             }
             return "    ." + field.name() + " = " + lit.get();
         }
-        Optional<String> literal = concrete != null
-                ? TreeConstants.stringReturnLiteral(env, concrete)
-                : Optional.empty();
+        Optional<String> literal = (concrete != null && trees != null)
+                ? TreeConstants.stringReturnLiteral(trees, concrete)
+                : concrete != null
+                    ? TreeConstants.stringReturnLiteral(env, concrete)
+                    : Optional.empty();
         if (literal.isEmpty()) {
-            System.err.println("DEBUG_STRUCTOPS: data field '" + field.name()
-                    + "' on class=" + bpfClass.getQualifiedName()
-                    + " concrete=" + (concrete != null ? concrete.getEnclosingElement() + "." + concrete.getSimpleName() : "null")
-                    + " ifaceMethod=" + ifaceMethod.getEnclosingElement() + "." + ifaceMethod.getSimpleName());
             env.getMessager().printMessage(
                     Diagnostic.Kind.ERROR,
                     "@StructOps data field '" + field.name()

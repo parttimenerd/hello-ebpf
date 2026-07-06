@@ -29,9 +29,29 @@ public final class TreeConstants {
      * {@link Optional#empty()}. Callers can then emit a targeted diagnostic
      * pointing at the method.
      *
-     * <p>Requires that the compilation was launched with an environment
-     * that exposes {@link Trees} — the standard javac processing round
-     * does, including {@code -proc:only} mode.
+     * <p>Requires a {@link Trees} instance from the enclosing javac task,
+     * obtained via {@code Trees.instance(task)} in the plugin's {@code init()}.
+     * Using {@code Trees.instance(env)} (annotation-processor round) fails for
+     * methods compiled in earlier rounds because the round-env trees are
+     * discarded; the task-level trees span the full compilation.
+     */
+    public static Optional<String> stringReturnLiteral(Trees trees, ExecutableElement m) {
+        var mt = trees.getTree(m);
+        if (mt == null || mt.getBody() == null) return Optional.empty();
+        var stmts = mt.getBody().getStatements();
+        if (stmts.size() != 1) return Optional.empty();
+        if (!(stmts.get(0) instanceof ReturnTree rt)) return Optional.empty();
+        if (!(rt.getExpression() instanceof LiteralTree lit)) return Optional.empty();
+        if (lit.getKind() != Tree.Kind.STRING_LITERAL) return Optional.empty();
+        return Optional.of((String) lit.getValue());
+    }
+
+    /**
+     * {@link ProcessingEnvironment}-based overload for callers that don't have access to the
+     * javac task's {@link Trees}. Note: returns {@link Optional#empty()} for methods compiled
+     * in prior annotation-processing rounds because round-env trees are discarded by javac.
+     * Prefer {@link #stringReturnLiteral(Trees, ExecutableElement)} when the plugin's task
+     * trees are available.
      */
     public static Optional<String> stringReturnLiteral(
             ProcessingEnvironment env, ExecutableElement m) {
@@ -42,17 +62,7 @@ public final class TreeConstants {
             // Non-javac processing environment: Trees not available.
             return Optional.empty();
         }
-        var mt = trees.getTree(m);
-        if (mt == null || mt.getBody() == null) {
-            System.err.println("DEBUG_TREECONSTANTS: stringReturnLiteral mt=" + mt + " for " + m.getEnclosingElement() + "." + m.getSimpleName() + " mClass=" + m.getClass().getName());
-            return Optional.empty();
-        }
-        var stmts = mt.getBody().getStatements();
-        if (stmts.size() != 1) return Optional.empty();
-        if (!(stmts.get(0) instanceof ReturnTree rt)) return Optional.empty();
-        if (!(rt.getExpression() instanceof LiteralTree lit)) return Optional.empty();
-        if (lit.getKind() != Tree.Kind.STRING_LITERAL) return Optional.empty();
-        return Optional.of((String) lit.getValue());
+        return stringReturnLiteral(trees, m);
     }
 
     /**
@@ -60,15 +70,10 @@ public final class TreeConstants {
      * literal as a Long. Any other shape yields {@link Optional#empty()}.
      * Used by struct_ops synthesis for int-typed data fields (e.g.
      * {@code hid_bpf_ops.hid_id}).
+     *
+     * <p>Uses the javac task's {@link Trees} which span all compilation rounds.
      */
-    public static Optional<Long> integerReturnLiteral(
-            ProcessingEnvironment env, ExecutableElement m) {
-        Trees trees;
-        try {
-            trees = Trees.instance(env);
-        } catch (IllegalArgumentException e) {
-            return Optional.empty();
-        }
+    public static Optional<Long> integerReturnLiteral(Trees trees, ExecutableElement m) {
         var mt = trees.getTree(m);
         if (mt == null || mt.getBody() == null) return Optional.empty();
         var stmts = mt.getBody().getStatements();
@@ -79,5 +84,21 @@ public final class TreeConstants {
             case INT_LITERAL, LONG_LITERAL -> Optional.of(((Number) lit.getValue()).longValue());
             default -> Optional.empty();
         };
+    }
+
+    /**
+     * {@link ProcessingEnvironment}-based overload. Prefer
+     * {@link #integerReturnLiteral(Trees, ExecutableElement)} when the plugin's task trees
+     * are available.
+     */
+    public static Optional<Long> integerReturnLiteral(
+            ProcessingEnvironment env, ExecutableElement m) {
+        Trees trees;
+        try {
+            trees = Trees.instance(env);
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
+        return integerReturnLiteral(trees, m);
     }
 }

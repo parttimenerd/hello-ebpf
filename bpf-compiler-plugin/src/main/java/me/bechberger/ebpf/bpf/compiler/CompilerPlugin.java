@@ -487,7 +487,7 @@ public class CompilerPlugin implements Plugin {
                 }
             }
         }
-        var result = new StructOpsSynthesizer(env).synthesize(bpfClass, kinds);
+        var result = new StructOpsSynthesizer(env, trees).synthesize(bpfClass, kinds);
         structOpsCache.put(bpfClass, result);
         return result;
     }
