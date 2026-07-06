@@ -113,6 +113,50 @@ sudo java --enable-native-access=ALL-UNNAMED -cp target/myapp.jar DropEveryThird
     `--enable-native-access=ALL-UNNAMED` on every `java` invocation to suppress the
     module-system warning (required on JDK 24+).
 
+See also: [XDP hook docs](xdp.md) · [BPF Maps](maps.md) · [Global Variables](global-variables.md)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/WYwHiDyMK68" title="hello-ebpf XDP demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## Quick example: custom Linux scheduler
+
+hello-ebpf can replace the Linux CPU scheduler with pure Java code via [sched_ext](sched_ext.md).
+Here is the minimal FIFO scheduler — the complete program, nothing omitted:
+
+```java
+@BPF(license = "GPL")
+@Property(name = "sched_name", value = "minimal_scheduler")
+@Property(name = "timeout_ms", value = "10000")
+public abstract class MinimalScheduler extends SchedulerBase implements Scheduler {
+
+    // SchedulerBase.init() creates the shared dispatch queue automatically
+    final DispatchQueue shared = DispatchQueue.attach(SHARED_DSQ_ID);
+
+    @Override
+    public void enqueue(Ptr<task_struct> p, long enq_flags) {
+        // Put every task into the shared FIFO queue
+        shared.insertScaled(p, EnqFlags.passThrough(enq_flags));
+    }
+
+    @Override
+    public void dispatch(int cpu, Ptr<task_struct> prev) {
+        // Each CPU pulls the next task from the shared queue
+        shared.moveToLocal();
+    }
+
+    public static void main(String[] args) throws Exception {
+        try (var program = BPFProgram.load(MinimalScheduler.class)) {
+            program.runSchedulerLoop();
+        }
+    }
+}
+```
+
+```bash
+sudo ./run.sh MinimalScheduler
+```
+
+The scheduler runs until you press `Ctrl-C`, at which point the kernel falls back to the default scheduler. See [sched_ext documentation](sched_ext.md) for priority queues, per-CPU dispatch, and userspace scheduling policies.
+
 ## Samples
 
 Ready-to-run programs in [`bpf-samples/`](https://github.com/parttimenerd/hello-ebpf/tree/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples):
