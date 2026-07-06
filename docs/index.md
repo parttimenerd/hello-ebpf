@@ -1,11 +1,12 @@
 # hello-ebpf
 
-hello-ebpf is a Java-to-eBPF compiler plugin that lets you write Linux kernel BPF programs entirely in Java.
-You annotate a Java class with `@BPF`, extend `BPFProgram`, and mark individual methods with `@BPFFunction`.
-A javac compiler plugin translates those method bodies to C, compiles them with clang, and bundles the resulting
-`.o` bytecode into your jar. At runtime, `BPFProgram.load(MyClass.class)` loads the program via libbpf.
+hello-ebpf lets you write Linux kernel BPF programs directly in Java.
+Annotate a class with `@BPF`, extend `BPFProgram`, mark methods with `@BPFFunction`,
+and the build toolchain takes care of the rest: it translates your Java method bodies to C,
+compiles them with clang, and bundles the resulting `.o` into your jar.
+At runtime, `BPFProgram.load(MyClass.class)` loads the program via libbpf.
 
-No C files, no Makefiles, no separate build step — just Java.
+No C files, no Makefiles, no separate build step. Just Java.
 
 ## How it works
 
@@ -43,7 +44,7 @@ Install the native dependencies on Debian/Ubuntu:
 sudo apt install -y clang-19 llvm-19 libbpf-dev linux-headers-$(uname -r)
 ```
 
-## Quick example — XDP drop every 3rd packet
+## Quick example: XDP drop every 3rd packet
 
 ```java
 import me.bechberger.ebpf.annotations.bpf.BPF;
@@ -126,10 +127,10 @@ This project is accompanied by a 20-part blog series on [mostlynerdless.de](http
 ## Project layout
 
 ```
-bpf-processor/   — javac compiler plugin (Java → C translation)
-bpf/             — runtime library (BPFProgram, map types, helpers)
-annotations/     — @BPF, @BPFFunction, @Type, @Size, …
-samples/         — runnable sample programs
+bpf-processor/   # javac compiler plugin (Java to C translation)
+bpf/             # runtime library (BPFProgram, map types, helpers)
+annotations/     # @BPF, @BPFFunction, @Type, @Size, ...
+samples/         # runnable sample programs
 ```
 
 ## Documentation
