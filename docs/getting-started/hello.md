@@ -1,5 +1,7 @@
 # Your First BPF Program
 
+**Javadoc:** [`BPFProgram`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html) · [`SystemCallHooks`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/runtime/interfaces/SystemCallHooks.html) · [`TCHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/TCHook.html) · [`BasePacketParser`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BasePacketParser.html) · [`BPFHashMap`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFHashMap.html)
+
 This guide walks through two short programs: one that **prints filenames** as they are opened, and one that **blocks network ports** using a TC hook. Both are complete, runnable Java programs — no C, no Makefile.
 
 ## Print opened filenames
@@ -144,6 +146,30 @@ For a full-featured firewall with per-IP rules, LRU caching, and ring-buffer eve
 - [Maps](../maps.md) — share typed data between BPF programs and Java at runtime.
 - [TC](../tc.md) — full TC hook documentation.
 - [XDP](../xdp.md) — driver-level packet hook for maximum throughput.
+
+### Run more samples
+
+The repo ships a `run.sh` helper that builds the samples jar once and runs any sample by short name:
+
+```sh
+# build once
+cd bpf-samples && mvn package && cd ..
+
+# run any sample — no need to type the full class name or java flags
+sudo ./run.sh HelloWorld
+sudo ./run.sh TCFirewall 80 443
+sudo ./run.sh XDPDropEveryThirdPacket
+sudo ./run.sh KProbeMultiCounter
+sudo ./run.sh TimerDemo
+
+# check prerequisites
+./run.sh doctor
+
+# tail bpf_trace_printk output in a separate terminal
+./run.sh trace
+```
+
+`run.sh` automatically passes `--enable-native-access=ALL-UNNAMED` and sets the classpath. See the [full samples index](../samples/index.md) for everything available.
 
 ---
 
