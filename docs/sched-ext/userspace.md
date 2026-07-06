@@ -1,5 +1,7 @@
 # Userspace Scheduler
 
+**Javadoc:** [`UserspaceScheduler`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/userspace/UserspaceScheduler.html) · [`QueuedTask`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/QueuedTask.html) · [`Opts`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/userspace/Opts.html)
+
 A userspace scheduler moves the scheduling policy to **Java**, running in user space.
 The BPF side is a thin transport: it forwards every queued task through a ring buffer,
 Java decides where it should run, and the decision flows back through a second ring

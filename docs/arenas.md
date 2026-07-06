@@ -1,5 +1,7 @@
 # BPF Arenas (`@InArena`)
 
+**Javadoc:** [`BPFArena`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFArena.html)
+
 A `BPF_MAP_TYPE_ARENA` is a page-granular memory region backed by a BPF map.
 Both the BPF program and userspace address it directly — the BPF side through
 clang address-space 1 (`__arena`), the Java side through a `mmap`'d

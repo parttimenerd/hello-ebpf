@@ -1,6 +1,7 @@
 # Tail calls in hello-ebpf
 
 **Blog series:** [Part 4 — Tail calls and your first eBPF application](https://mostlynerdless.de/blog/2024/02/12/hello-ebpf-tail-calls-and-your-first-ebpf-application-4/)
+**Javadoc:** [`BPFProgArray`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFProgArray.html)
 
 ![Stack frames with vs without a tail call — no stack growth with tail calls](https://mostlynerdless.de/wp-content/uploads/2024/02/tail_call-2000x599.png)
 

@@ -1,5 +1,7 @@
 # Diagnostics — Compiler Plugin Errors
 
+**Javadoc:** [`BPFProgram`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html)
+
 This page documents every error the hello-ebpf javac compiler plugin can emit, what causes
 each one, and how to fix it.
 
