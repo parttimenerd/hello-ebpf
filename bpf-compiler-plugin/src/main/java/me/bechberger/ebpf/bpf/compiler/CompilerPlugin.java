@@ -385,9 +385,19 @@ public class CompilerPlugin implements Plugin {
         var direct = getAnnotationOfMethodOrSuper(method, BPFFunction.class);
         if (direct != null) return direct;
         // @StructOps override method? Look up (and lazily compute) the per-class synthesis.
+        // First try the method's direct enclosing class (fast path, works when the method is
+        // declared directly on the @BPF class).
         var enclosing = method.getEnclosingElement();
         if (enclosing instanceof TypeElement te) {
             var synth = getStructOpsSynthesis(te);
+            for (var sf : synth.functions()) {
+                if (sf.method().equals(method)) return sf.bpfFunction();
+            }
+        }
+        // Slow path: the method may be inherited from an intermediate abstract class
+        // (e.g. PerCpuSchedulerBase.init overrides Scheduler.init, but the @BPF class is
+        // PerCpuSchedulerSample). Walk all cached syntheses to find a match.
+        for (var synth : structOpsCache.values()) {
             for (var sf : synth.functions()) {
                 if (sf.method().equals(method)) return sf.bpfFunction();
             }
