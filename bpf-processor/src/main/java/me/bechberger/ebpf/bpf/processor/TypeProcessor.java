@@ -94,7 +94,39 @@ public class TypeProcessor {
 
     /** Returns all records annotated with {@code @Type} and types specified in the {@link me.bechberger.ebpf.annotations.bpf.BPF} annotation */
     private List<TypeElement> getRequiredBPFTypeElements(TypeElement typeElement) {
-        return Stream.concat(getInnerBPFTypeElements(typeElement).stream(), getBPFSpecifiedTypeElements(typeElement).stream()).toList();
+        // Start with the class's own @Type inner types and @BPF(includeTypes=…) extras.
+        var direct = Stream.concat(getInnerBPFTypeElements(typeElement).stream(),
+                getBPFSpecifiedTypeElements(typeElement).stream()).toList();
+        // Also collect @Type inner types from every @BPFInterface this class implements
+        // (transitively). These live in a pre-compiled jar, so the compiler plugin's
+        // processBPFInterface() was never run in this compilation round — the struct/enum
+        // definitions would be absent from the generated C without this extra walk.
+        var fromInterfaces = getBPFInterfaceTypeElements(typeElement.asType());
+        if (fromInterfaces.isEmpty()) {
+            return direct;
+        }
+        // Deduplicate: class-level declarations take precedence; interface types fill gaps.
+        var seen = new java.util.LinkedHashSet<TypeElement>(direct);
+        fromInterfaces.stream().filter(e -> !seen.contains(e)).forEach(seen::add);
+        return List.copyOf(seen);
+    }
+
+    private List<TypeElement> getBPFInterfaceTypeElements(TypeMirror type) {
+        if (!(type instanceof DeclaredType declaredType)) return List.of();
+        var result = new ArrayList<TypeElement>();
+        for (TypeMirror iface : ((TypeElement) declaredType.asElement()).getInterfaces()) {
+            if (!(iface instanceof DeclaredType ifaceDeclared)) continue;
+            var ifaceElem = (TypeElement) ifaceDeclared.asElement();
+            if (getAnnotationMirror(ifaceElem, BPFInterface.class.getName()).isPresent()) {
+                ifaceElem.getEnclosedElements().stream()
+                        .filter(this::isTypeAnnotatedRecord)
+                        .map(e -> (TypeElement) e)
+                        .forEach(result::add);
+            }
+            // Recurse into super-interfaces regardless of @BPFInterface presence
+            result.addAll(getBPFInterfaceTypeElements(iface));
+        }
+        return result;
     }
 
     private List<TypeElement> getInnerBPFTypeElements(TypeElement typeElement) {
@@ -257,7 +289,16 @@ public class TypeProcessor {
 
     boolean shouldGenerateCCode(TypeElement innerElement) {
         if (innerElement.getEnclosingElement().getKind() == ElementKind.INTERFACE && outerTypeElement.getKind() != ElementKind.INTERFACE) {
-            return false;
+            // Suppress when the interface was processed in this compilation round and
+            // already emitted the type in @InternalBody. But for cross-module @BPFInterface
+            // (loaded from a pre-compiled jar), @InternalBody is never populated, so we must
+            // emit the C definition here instead.
+            var enclosing = (TypeElement) innerElement.getEnclosingElement();
+            var internalBody = enclosing.getAnnotation(me.bechberger.ebpf.annotations.bpf.InternalBody.class);
+            if (internalBody != null && !internalBody.value().isBlank()) {
+                return false; // interface was processed in this round — structs are in @InternalBody
+            }
+            // cross-module interface: fall through and emit the C definition
         }
         return !getAnnotationMirror(innerElement, TYPE_ANNOTATION).map(a -> getAnnotationValue(a, "noCCodeGeneration", false)).orElse(false);
     }
@@ -765,10 +806,37 @@ public class TypeProcessor {
     }
 
     private List<Define> createDefineStatements(TypeElement typeElement) {
-        // idea: find all static final fields with type boolean, ..., int, long, float, double or String of the typeElement
-        // create a #define statement for each of them (name is the field name)
-        // return the list of #define statements
-        return typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD).map(e -> (VariableElement) e).map(this::processField).filter(Objects::nonNull).toList();
+        var seen = new java.util.LinkedHashSet<String>();
+        var result = new ArrayList<Define>();
+        // Own fields first
+        typeElement.getEnclosedElements().stream()
+                .filter(e -> e.getKind() == ElementKind.FIELD)
+                .map(e -> (VariableElement) e)
+                .map(this::processField)
+                .filter(Objects::nonNull)
+                .filter(d -> seen.add(d.name()))
+                .forEach(result::add);
+        // Constants from @BPFInterface interfaces (transitively)
+        collectBPFInterfaceDefines(typeElement.asType(), seen, result);
+        return result;
+    }
+
+    private void collectBPFInterfaceDefines(TypeMirror type, java.util.Set<String> seen, List<Define> out) {
+        if (!(type instanceof DeclaredType declaredType)) return;
+        for (TypeMirror iface : ((TypeElement) declaredType.asElement()).getInterfaces()) {
+            if (!(iface instanceof DeclaredType ifaceDeclared)) continue;
+            var ifaceElem = (TypeElement) ifaceDeclared.asElement();
+            if (getAnnotationMirror(ifaceElem, BPFInterface.class.getName()).isPresent()) {
+                ifaceElem.getEnclosedElements().stream()
+                        .filter(e -> e.getKind() == ElementKind.FIELD)
+                        .map(e -> (VariableElement) e)
+                        .map(this::processField)
+                        .filter(Objects::nonNull)
+                        .filter(d -> seen.add(d.name()))
+                        .forEach(out::add);
+            }
+            collectBPFInterfaceDefines(iface, seen, out);
+        }
     }
 
     /**

@@ -1076,15 +1076,9 @@ public class CompilerPlugin implements Plugin {
         }
 
         // now get the "body" value of all BPFInterface annotations of all interfaces of the super class
-        var bpfInterfaceBodies = superClassElement.getInterfaces().stream()
-                .map(i -> {
-                    var ann = i.getAnnotation(InternalBody.class);
-                    if (ann == null && i instanceof Type.ClassType klass && klass.tsym != null) {
-                        ann = klass.tsym.getAnnotation(InternalBody.class);
-                    }
-                    return ann;
-                })
-                .filter(Objects::nonNull).map(InternalBody::value).filter(b -> !b.isEmpty()).toList();
+        // Walk transitively so that cross-module interfaces (loaded from a pre-compiled jar) whose
+        // @InternalBody lives on a transitive superinterface are also discovered.
+        var bpfInterfaceBodies = collectInternalBodies(superClassElement);
 
         // add the code of the interfaces to the code
         var interfaceCode = bpfInterfaceBodies.stream().collect(Collectors.joining("\n\n"));
@@ -1436,6 +1430,43 @@ public class CompilerPlugin implements Plugin {
         return element.getInterfaces().stream().flatMap(i -> {
             return Stream.concat(i.asElement().getEnclosedElements().stream().filter(m -> m instanceof MethodSymbol).map(m -> (MethodSymbol)m), getInterfaceMethods((Symbol.ClassSymbol) i.asElement()).stream());
         }).toList();
+    }
+
+    /**
+     * Transitively collect all non-blank {@link InternalBody#value()} strings from the
+     * interface hierarchy of {@code element} (including superclass interfaces) so that
+     * cross-module {@code @BPFInterface} types whose {@code @InternalBody} lives on a
+     * transitive superinterface (loaded from a pre-compiled jar) are also discovered.
+     */
+    private List<String> collectInternalBodies(TypeElement element) {
+        var result = new ArrayList<String>();
+        collectInternalBodiesInto(element, new java.util.LinkedHashSet<>(), result);
+        return result;
+    }
+
+    private void collectInternalBodiesInto(TypeElement element, java.util.Set<String> seen, List<String> out) {
+        for (TypeMirror iface : element.getInterfaces()) {
+            var ifaceElem = (TypeElement) ((DeclaredType) iface).asElement();
+            var qualName = ifaceElem.getQualifiedName().toString();
+            if (!seen.add(qualName)) continue;
+            InternalBody ann = ifaceElem.getAnnotation(InternalBody.class);
+            if (ann == null && iface instanceof Type.ClassType klass && klass.tsym != null) {
+                ann = klass.tsym.getAnnotation(InternalBody.class);
+            }
+            if (ann != null && !ann.value().isBlank()) {
+                out.add(ann.value());
+            }
+            collectInternalBodiesInto(ifaceElem, seen, out);
+        }
+        // Also walk superclasses so that interfaces declared on abstract parent classes are found.
+        var superClass = element.getSuperclass();
+        if (superClass instanceof DeclaredType dt && dt.asElement() instanceof TypeElement superElem
+                && !superElem.getQualifiedName().toString().equals("java.lang.Object")) {
+            var qualName = superElem.getQualifiedName().toString();
+            if (seen.add(qualName)) {
+                collectInternalBodiesInto(superElem, seen, out);
+            }
+        }
     }
 
     private Processor.CompileResult compile(String code, Path file) {

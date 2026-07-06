@@ -1067,6 +1067,16 @@ extern void scx_bpf_dsq_insert_vtime(struct task_struct *p, __u64 dsq_id, __u64 
 #define scx_bpf_select_cpu_dfl_declared__
 extern __s32 scx_bpf_select_cpu_dfl(struct task_struct *p, __s32 prev_cpu, __u64 wake_flags, bool *is_idle) __weak __ksym;
 #endif
+
+/* sched_ext kfuncs present in 6.14+ (absent from kernel 6.8 vmlinux.h) */
+#ifndef scx_bpf_now_declared__
+#define scx_bpf_now_declared__
+extern u64 scx_bpf_now(void) __weak __ksym;
+#endif
+#ifndef scx_bpf_task_cpu_declared__
+#define scx_bpf_task_cpu_declared__
+extern s32 scx_bpf_task_cpu(const struct task_struct *p) __weak __ksym;
+#endif
 """;
         Files.writeString(vmLinuxFile, current + fallbacks);
     }
