@@ -1,5 +1,9 @@
 # CPU Profiling and JVM GC Tracing
 
+**Javadoc:** [`BPFProgram`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html) · [`BPFStackTraceMap`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFStackTraceMap.html) · [`PerfEvent`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/perf/PerfEvent.html)
+**Source:** [`CPUProfiler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/CPUProfiler.java) · [`JvmGcPauseTracer.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/JvmGcPauseTracer.java)
+**See also:** [Uprobes](uprobes.md) · [BPF Maps](maps.md) · [Tracepoints](tracepoints.md)
+
 hello-ebpf ships two profiling tools that use `SEC("perf_event")` and uprobe BPF
 programs to observe running JVM processes.
 
@@ -59,28 +63,59 @@ String kernelSym = sym.symKernel(ip);         // /proc/kallsyms lookup
 String userSym   = sym.symUser(ip, ranges);   // ELF lookup
 ```
 
-### BPF API used
-
-- `PerfEvent.of(ctx)` — wraps the `struct bpf_perf_event_data *` context.
-- `PerfEvent.getStackId(map, flags)` — calls `bpf_get_stackid`.
-- `BPFProgram.attachPerfEvent(prog, pfd)` — attaches a BPF program to a perf fd.
-- `BPFStackTraceMap` — stores instruction-pointer arrays keyed by stack ID.
+### BPF program
 
 ```java
 @BPF(license = "GPL")
-abstract class MyProfiler extends BPFProgram {
+public abstract class CPUProfiler extends BPFProgram {
 
-    @BPFMapDefinition(maxEntries = 10_000)
+    static final int MAX_STACK_ENTRIES = 10_000;
+    static final int MAX_COUNT_ENTRIES = 10_000;
+
+    @Type
+    record StackKey(@Unsigned int pid, int kStackId, int uStackId) {}
+
+    /** How many times each (pid, kStack, uStack) combination was sampled. */
+    @BPFMapDefinition(maxEntries = MAX_COUNT_ENTRIES)
+    BPFHashMap<StackKey, Long> counts;
+
+    /** Raw instruction-pointer arrays keyed by stack ID. */
+    @BPFMapDefinition(maxEntries = MAX_STACK_ENTRIES)
     BPFStackTraceMap stacks;
 
+    /** Fires on every CPU-clock perf event. */
     @BPFFunction(section = "perf_event", autoAttach = false)
     public void onSample(Ptr<bpf_perf_event_data> data) {
         PerfEvent pe = PerfEvent.of(data);
-        int stackId = (int) pe.getStackId(stacks, PerfEvent.STACK_USER | PerfEvent.STACK_REUSE);
-        // ...
+        @Unsigned int pid = (int) bpf_get_current_pid_tgid();
+
+        int kStackId = (int) pe.getStackId(stacks, PerfEvent.STACK_REUSE);
+        int uStackId = (int) pe.getStackId(stacks, PerfEvent.STACK_USER | PerfEvent.STACK_REUSE);
+
+        StackKey key = new StackKey(pid, kStackId, uStackId);
+        Ptr<Long> val = counts.bpf_get(key);
+        if (val == null) {
+            long one = 1L;
+            counts.bpf_put(key, one);
+        } else {
+            BPFJ.sync_fetch_and_add(val, 1L);
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        try (CPUProfiler profiler = BPFProgram.load(CPUProfiler.class)) {
+            int ncpus = Runtime.getRuntime().availableProcessors();
+            List<Integer> perfFds = profiler.attachPerfEventOnAllCpus(
+                profiler.getProgramByName("onSample"), ncpus, 1_000_000 /*period*/);
+            System.out.println("Profiling for 10s...");
+            Thread.sleep(10_000);
+            // Read maps, symbolize, emit HTML flamegraph
+        }
     }
 }
 ```
+
+Full source: [`CPUProfiler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/CPUProfiler.java)
 
 ---
 
@@ -153,10 +188,91 @@ TOTAL            60        3
 - Concurrent GC collectors (ZGC, Shenandoah) have shorter STW phases; the tracer
   still captures them but durations will be very short.
 
-### BPF API used
+### BPF program
 
-- `BPFProgram.attachUprobe(prog, false, pid, lib, funcName)` — entry probe.
-- `BPFProgram.attachUprobe(prog, true, pid, lib, funcName)` — return probe.
-- `BPFRingBuffer` — sends completed `GcEvent` records to user space.
-- `bpf_ktime_get_ns()` — nanosecond wall-clock for duration measurement.
-- `bpf_get_smp_processor_id()` — per-CPU scratch map key.
+```java
+@BPF(license = "GPL")
+public abstract class JvmGcPauseTracer extends BPFProgram {
+
+    @BPFMapDefinition(maxEntries = 512)
+    BPFHashMap<Integer, GcStart> startMap;   // keyed by CPU id
+
+    @BPFMapDefinition(maxEntries = 256 * 1024)
+    BPFRingBuffer<GcEvent> events;
+
+    @Type
+    static class GcStart {
+        @Unsigned long startNs;
+        @Unsigned int full;
+    }
+
+    @Type
+    static class GcEvent {
+        @Unsigned int pid;
+        @Unsigned int tid;
+        @Unsigned long durationNs;
+        @Unsigned int full;
+    }
+
+    /** Uprobe on VM_GC_Operation::notify_gc_begin(bool full). */
+    @BPFFunction(section = "uprobe/notify_gc_begin", autoAttach = false)
+    public void onGcBegin(Ptr<pt_regs> ctx) {
+        @Unsigned long now  = bpf_ktime_get_ns();
+        @Unsigned int  cpu  = (int) bpf_get_smp_processor_id();
+        @Unsigned int  full = (int) ProbeContext.of(ctx).arg0();
+        GcStart s = new GcStart();
+        s.startNs = now;
+        s.full    = full;
+        startMap.bpf_put(cpu, s);
+    }
+
+    /** Uretprobe on VM_GC_Operation::notify_gc_end(). */
+    @BPFFunction(section = "uretprobe/notify_gc_end", autoAttach = false)
+    public void onGcEnd(Ptr<pt_regs> ctx) {
+        @Unsigned long now = bpf_ktime_get_ns();
+        @Unsigned int  cpu = (int) bpf_get_smp_processor_id();
+        Ptr<GcStart> sp = startMap.bpf_get(cpu);
+        if (sp == null) return;
+
+        @Unsigned long pidTid = bpf_get_current_pid_tgid();
+        @Unsigned int  pid    = (int)(pidTid >> 32);
+        @Unsigned int  tid    = (int) pidTid;
+
+        Ptr<GcEvent> evt = events.reserve();
+        if (evt == null) return;
+        evt.val().pid        = pid;
+        evt.val().tid        = tid;
+        evt.val().durationNs = now - sp.val().startNs;
+        evt.val().full       = sp.val().full;
+        startMap.bpf_delete(cpu);
+        events.submit(evt);
+    }
+
+    public static void main(String[] args) throws Exception {
+        int pid = Integer.parseInt(args[0]);  // target JVM pid
+        String lib = findLibjvm(pid);         // scans /proc/pid/maps
+        try (JvmGcPauseTracer prog = BPFProgram.load(JvmGcPauseTracer.class)) {
+            prog.attachUprobe(prog.getProgramByName("onGcBegin"),  false, pid, lib,
+                "_ZN15VM_GC_Operation15notify_gc_beginEb");
+            prog.attachUprobe(prog.getProgramByName("onGcEnd"),    true,  pid, lib,
+                "_ZN15VM_GC_Operation13notify_gc_endEv");
+            prog.events.setCallback((buf, evt) ->
+                System.out.printf("%-6s  pid=%-6d  tid=%-6d  %.3f ms%n",
+                    evt.full != 0 ? "FULL" : "YOUNG",
+                    evt.pid, evt.tid, evt.durationNs / 1e6));
+            while (true) prog.consumeAndThrow();
+        }
+    }
+}
+```
+
+Full source: [`JvmGcPauseTracer.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/JvmGcPauseTracer.java)
+
+---
+
+## Further reading
+
+- [perf_event BPF programs — docs.ebpf.io](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_PERF_EVENT/)
+- [bpf_get_stackid — docs.ebpf.io](https://docs.ebpf.io/linux/helper-function/bpf_get_stackid/)
+- [Uprobes / uretprobes](uprobes.md) — attaching to user-space function entry/return
+- [BPF Maps](maps.md) — `BPFHashMap`, `BPFRingBuffer`, `BPFStackTraceMap`
