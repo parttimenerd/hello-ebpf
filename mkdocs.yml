@@ -9,6 +9,7 @@ not_in_nav: |
   userspace-scheduler.md
   scheduler-article.md
   sched_ext.md
+  sched-ext/sound-scheduler.md
 theme:
   name: material
   features:
@@ -50,7 +51,7 @@ nav:
     - Userspace Scheduler: sched-ext/userspace.md
     - Callbacks Reference: sched-ext/callbacks.md
     - Cookbook: sched-ext/cookbook.md
-    - Sound Scheduler: sched-ext/sound-scheduler.md
+    - Chaos Scheduler: sched-ext/chaos-scheduler.md
     - Fun Schedulers: sched-ext/fun-schedulers.md
   - Reference:
     - Cheat Sheet: cheatsheet.md

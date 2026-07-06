@@ -331,11 +331,11 @@ in the output map each BPF instruction back to the original Java source line.
 
 - **Reference**: [Callback Reference](callbacks.md) — full callback table, DSQ
   kfunc reference, `@Property` options, per-task storage patterns, exit info API
-- **18 sample schedulers** in `bpf-samples/src/main/java/…/samples/sched/`,
-  ranging from `MinimalScheduler` (one method) to `ChaosScheduler` (random vtimes,
-  CPU throttling, per-task state machines), `FlowScheduler` (weight-based CPU
-  affinity, port of `scx_flow`), and `BoostedScheduler` (priority boost for
-  nominated process trees — useful for performance testing)
+- **18 sample schedulers** linked in the [Sample schedulers](#sample-schedulers)
+  table below, ranging from `MinimalScheduler` (one method) to `ChaosScheduler`
+  (random vtimes, CPU throttling, per-task state machines — see [Chaos Scheduler](chaos-scheduler.md)),
+  `FlowScheduler` (weight-based CPU affinity, port of `scx_flow`), and
+  `BoostedScheduler` (priority boost for nominated process trees)
 - **Behavioral tests** in `SchedulerBehaviorTest` — show how to assert on stats,
   callback invocations, and mode switches in a real kernel environment
 
@@ -415,33 +415,58 @@ fair scheduling resumes without any detach/reload cycle.
   tight loops. Adjust the constant if your workload needs coarser or finer
   granularity.
 
+## Running the samples
+
+All sample schedulers live in `bpf-samples/`. The `run.sh` helper builds the samples
+jar once and runs any sample by short class name:
+
+```bash
+# Build once
+cd bpf-samples && mvn package && cd ..
+
+# Run any scheduler (root required — sched_ext needs CAP_BPF + CAP_SYS_ADMIN)
+sudo ./run.sh MinimalScheduler
+sudo ./run.sh ChaosScheduler           # chaos all user tasks
+sudo ./run.sh ChaosScheduler 12345     # target PID subtree
+sudo ./run.sh BoostedScheduler
+
+# Check prerequisites
+./run.sh doctor
+
+# Tail bpf_trace_printk output in a second terminal
+./run.sh trace
+```
+
+Press `Ctrl-C` to stop. The `try`-with-resources in `main()` closes the program,
+which atomically detaches the scheduler and restores the previous one.
+
 ## Sample schedulers
 
 Ready-to-run schedulers are available in
-`bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/`.
+[`bpf-samples/src/main/java/…/sched/`](https://github.com/parttimenerd/hello-ebpf/tree/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/).
 
 ### Kernel-side (BPF) schedulers
 
 | Class | Strategy | Highlights |
 |-------|----------|-----------|
-| `MinimalScheduler` | FIFO | Fewest lines; only `enqueue()` needed |
-| `SimpleScheduler` | FIFO / vtime | Runtime-switchable; stats tracking |
-| `VTimeScheduler` | Weighted fair queuing | Idle budget clamping |
-| `FCFSScheduler` | FIFO | First-come first-served |
-| `LotteryScheduler` | Random slice | Proportional via random time slices |
-| `PriorityScheduler` | Weight-based queues | 5 DSQs mapped by task weight |
-| `CPU0Scheduler` | Single-core | All work concentrated on CPU 0 |
-| `PrevCpuScheduler` | Sticky CPUs | Bias towards last-used CPU |
-| `CentralScheduler` | Central DSQ | Centralised dispatch |
-| `DeadlineScheduler` | EDF | Earliest-deadline-first via per-task storage |
-| `SMTPairScheduler` | SMT pairing | Related tasks on sibling threads |
-| `NestScheduler` | Hierarchical | Nested DSQ group scheduling |
-| `TaskStorageScheduler` | vtime + per-task | `BPFTaskStorage<T>` demo |
-| `RunnableScheduler` | FIFO | `runnable()` callback + migration disabled |
-| `FlowScheduler` | Work-conserving | Port of `scx_flow`; weight-based CPU affinity |
-| `ChaosScheduler` | Fuzzing | Random vtimes, CPU throttling, per-task state machine |
-| `PerCpuSchedulerSample` | Per-CPU FIFO | `PerCpuSchedulerBase` demo; pinned vs migratable routing |
-| `BoostedScheduler` | Priority boost | Nominated process trees get max priority + long slices; runtime toggle |
+| [`MinimalScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/MinimalScheduler.java) | FIFO | Fewest lines; only `enqueue()` needed |
+| [`SimpleScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/SimpleScheduler.java) | FIFO / vtime | Runtime-switchable; stats tracking |
+| [`VTimeScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/VTimeScheduler.java) | Weighted fair queuing | Idle budget clamping |
+| [`FCFSScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/FCFSScheduler.java) | FIFO | First-come first-served |
+| [`LotteryScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LotteryScheduler.java) | Random slice | Proportional via random time slices |
+| [`PriorityScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/PriorityScheduler.java) | Weight-based queues | 5 DSQs mapped by task weight |
+| [`CPU0Scheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CPU0Scheduler.java) | Single-core | All work concentrated on CPU 0 |
+| [`PrevCpuScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/PrevCpuScheduler.java) | Sticky CPUs | Bias towards last-used CPU |
+| [`CentralScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CentralScheduler.java) | Central DSQ | Centralised dispatch |
+| [`DeadlineScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/DeadlineScheduler.java) | EDF | Earliest-deadline-first via per-task storage |
+| [`SMTPairScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/SMTPairScheduler.java) | SMT pairing | Related tasks on sibling threads |
+| [`NestScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/NestScheduler.java) | Hierarchical | Nested DSQ group scheduling |
+| [`TaskStorageScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/TaskStorageScheduler.java) | vtime + per-task | `BPFTaskStorage<T>` demo |
+| [`RunnableScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RunnableScheduler.java) | FIFO | `runnable()` callback + migration disabled |
+| [`FlowScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/FlowScheduler.java) | Work-conserving | Port of `scx_flow`; weight-based CPU affinity |
+| [`ChaosScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/ChaosScheduler.java) | Fuzzing | Random vtimes, CPU throttling, per-task state machine — see [Chaos Scheduler](chaos-scheduler.md) |
+| [`PerCpuSchedulerSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/PerCpuSchedulerSample.java) | Per-CPU FIFO | `PerCpuSchedulerBase` demo; pinned vs migratable routing |
+| [`BoostedScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/BoostedScheduler.java) | Priority boost | Nominated process trees get max priority + long slices; runtime toggle |
 
 ### Userspace schedulers (policy in Java — **Experimental**)
 
@@ -450,16 +475,16 @@ These schedulers run the scheduling policy entirely in Java. See
 
 | Class | Strategy | Highlights |
 |-------|----------|-----------|
-| `RustlandFifoSample` | FIFO | Minimal userspace scheduler with stats |
-| `WeightedRRSample` | Weighted round-robin | Per-task state; uses `QueuedTask.weight` |
-| `LotterySample` | Lottery | Weight-biased probabilistic CPU placement |
-| `VtimeSample` | Virtual-time batch | `schedule()` callback; `TreeMap` sort |
-| `RustlandJavaSample` | Deadline (scx_rustland port) | `deadline = vtime + exec_runtime`; idle-CPU bitmap; I/O-bias |
-| `CmdlineBoostSample` | cmdline-based partitioner | Reads `/proc/<pid>/cmdline`; CPU partitioning |
-| `FifoQueueSample` ⚗ | Persistent FIFO queue | `QueuedTask.copy()` across batches; `ArrayDeque` |
-| `TwoQueueFifoSample` ⚗ | Two-tier FIFO | Interactive (< 10 ms) vs batch queues |
-| `ShowcaseScheduler` ⚗ | Six-tier /proc-powered | cmdline + cgroup + I/O bytes; container CPU partition |
+| [`RustlandFifoSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandFifoSample.java) | FIFO | Minimal userspace scheduler with stats |
+| [`WeightedRRSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/WeightedRRSample.java) | Weighted round-robin | Per-task state; uses `QueuedTask.weight` |
+| [`LotterySample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LotterySample.java) | Lottery | Weight-biased probabilistic CPU placement |
+| [`VtimeSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/VtimeSample.java) | Virtual-time batch | `schedule()` callback; `TreeMap` sort |
+| [`RustlandJavaSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandJavaSample.java) | Deadline (scx_rustland port) | `deadline = vtime + exec_runtime`; idle-CPU bitmap; I/O-bias |
+| [`CmdlineBoostSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CmdlineBoostSample.java) | cmdline-based partitioner | Reads `/proc/<pid>/cmdline`; CPU partitioning |
+| [`FifoQueueSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/FifoQueueSample.java) ⚗ | Persistent FIFO queue | `QueuedTask.copy()` across batches; `ArrayDeque` |
+| [`TwoQueueFifoSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/TwoQueueFifoSample.java) ⚗ | Two-tier FIFO | Interactive (< 10 ms) vs batch queues |
+| [`ShowcaseScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/ShowcaseScheduler.java) ⚗ | Six-tier /proc-powered | cmdline + cgroup + I/O bytes; container CPU partition |
 
 ---
 
-*Next: [Sound Scheduler](sound-scheduler.md)*
+*Next: [Chaos Scheduler](chaos-scheduler.md)*

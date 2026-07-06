@@ -86,7 +86,7 @@ Minimum kernel versions for hello-ebpf features. The project requires kernel 6.1
 // Check kernel version
 try (var prog = BPFProgram.load(MyProg.class)) {
     // If loading succeeds, all required features are available
-} catch (BPFLoadException e) {
+} catch (BPFProgram.BPFLoadError e) {
     System.err.println("Failed to load: " + e.getMessage());
 }
 ```
