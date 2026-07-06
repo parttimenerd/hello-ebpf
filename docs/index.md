@@ -13,13 +13,12 @@ No C files, no Makefiles, no separate build step. Just Java.
 
 ## Features
 
-- XDP, TC, kprobe/fentry, tracepoint, uprobe, LSM hooks
-- sched_ext: write a Linux CPU scheduler in Java, or run the policy entirely in userspace
-- BPF maps: hash, array, ring buffer, per-CPU, task storage, map-of-maps, shared maps
-- Global variables, tail calls, BPF arenas, timers, struct_ops, attach cookies
+- [XDP](xdp.md), [TC](tc.md), [kprobe/fentry](kprobes.md), [tracepoint](tracepoints.md), [uprobe](uprobes.md), [LSM](lsm.md) hooks
+- [sched_ext](sched-ext/index.md): write a Linux CPU scheduler in Java, or run the policy entirely in [userspace](sched-ext/userspace.md)
+- [BPF maps](maps.md): hash, array, ring buffer, per-CPU, task storage, [map-of-maps](map-of-maps.md), [shared maps](shared-maps.md)
+- [Global variables](global-variables.md), [tail calls](tail-calls.md), [BPF arenas](arenas.md), [timers](timers.md), [struct_ops](struct-ops.md), [attach cookies](attach-cookies-multi.md)
 - CO-RE: compile once, run on any kernel with BTF
-- Human-readable verifier diagnostics
-
+- Human-readable [verifier diagnostics](diagnostics.md)
 
 
 ```
