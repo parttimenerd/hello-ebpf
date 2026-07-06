@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  *   ... bpf_printk("Count: %d\n", count); // just a normal global variable
  *}
  *
- * @param <T>
+ * @param <T> the Java type of the global variable
  */
 public class GlobalVariable<T> {
 

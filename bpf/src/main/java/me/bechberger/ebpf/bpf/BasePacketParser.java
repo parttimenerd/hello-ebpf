@@ -33,7 +33,13 @@ public interface BasePacketParser {
     int HTTP_PORT = 80;
     int HTTPS_PORT = 443;
 
-    /** An IPv4 or IPv6 address. */
+    /**
+     * An IPv4 or IPv6 address.
+     *
+     * @param v4   {@code true} if this is an IPv4 address, {@code false} for IPv6
+     * @param ipv4 the IPv4 address (valid when {@code v4} is {@code true})
+     * @param ipv6 the IPv6 address (valid when {@code v4} is {@code false})
+     */
     @Type
     record IPAddress(boolean v4, @Unsigned int ipv4, BPFType.BPFIntType.UnsignedInt128 ipv6) {}
 

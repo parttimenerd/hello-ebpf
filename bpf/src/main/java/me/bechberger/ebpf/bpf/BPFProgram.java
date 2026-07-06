@@ -50,7 +50,6 @@ import static me.bechberger.ebpf.bpf.raw.Lib.*;
 
 /**
  * Base class for bpf programs.
- * <p></p>
  * {@snippet :
  *     @BPF
  *     public static abstract class HelloWorldProgram extends BPFProgram {
@@ -315,6 +314,8 @@ public abstract class BPFProgram implements AutoCloseable {
 
     /**
      * Link to an attached program
+     *
+     * @param segment the native {@code struct bpf_link *} pointer
      */
     public record BPFLink(MemorySegment segment) {}
 
@@ -1379,6 +1380,9 @@ public abstract class BPFProgram implements AutoCloseable {
 
     /**
      * A handle to an ebpf program (an entry point function in the eBPF program)
+     *
+     * @param name the BPF program's name (the C function name)
+     * @param prog the native {@code struct bpf_program *} pointer
      */
     public record ProgramHandle(String name, MemorySegment prog) {
     }
@@ -1455,6 +1459,10 @@ public abstract class BPFProgram implements AutoCloseable {
     /**
      * Result of {@link #runSyscallProgram(String, Object)}: the program's return value and the
      * post-call ctx state.
+     *
+     * @param <T>    the type of the ctx object
+     * @param retval the integer value returned by the BPF program
+     * @param ctx    the updated ctx object after the program ran
      */
     public record SyscallResult<T>(int retval, T ctx) {}
 

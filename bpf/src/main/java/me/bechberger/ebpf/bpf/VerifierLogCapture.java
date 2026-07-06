@@ -17,7 +17,7 @@ import static java.lang.foreign.ValueLayout.JAVA_LONG;
 
 /**
  * Captures libbpf's print output (which on Linux includes the kernel verifier's log
- * after a failed {@code bpf_object__load}). Used by {@link BPFProgram#loadProgram()}
+ * after a failed {@code bpf_object__load}). Used by {@link BPFProgram}
  * so that verifier errors can be surfaced as part of the thrown
  * {@link BPFVerifierException} instead of being silently lost.
  *

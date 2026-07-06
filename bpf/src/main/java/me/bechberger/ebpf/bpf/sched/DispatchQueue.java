@@ -18,7 +18,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  *
  * <p>This is a pure compile-time abstraction ({@link BPFAbstraction}):
  * the carrier is the {@code u64} DSQ id stored in the {@link #id} field; no struct is
- * emitted in C, and every {@link BPFJavaInline} method call is inlined by the BPF
+ * emitted in C, and every {@code @BPFJavaInline} method call is inlined by the BPF
  * compiler plugin at the call site.  When a {@code DispatchQueue} field is declared on a
  * {@code @BPF} program class the constructor's {@code scx_bpf_create_dsq()} call is
  * automatically lifted into {@code init()} in source-declaration order.
@@ -73,7 +73,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  *     return 0;
  * }
  * }</pre>
- * <h2>Java method bodies ({@link BPFJavaInline})</h2>
+ * <h2>Java method bodies ({@code @BPFJavaInline})</h2>
  * All instance methods are written as plain Java and inlined at call sites by the BPF
  * compiler plugin.  The {@link #id} field resolves to the caller's carrier expression
  * (the DSQ id) — no C template string is required.

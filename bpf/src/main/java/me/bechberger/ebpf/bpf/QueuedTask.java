@@ -10,7 +10,7 @@ import java.lang.foreign.ValueLayout;
  * callback.
  *
  * <p>Wire-layout-equivalent to BPF's {@code queued_task_ctx} struct.
- * See {@link UserspaceScheduler} for the lifecycle contract — the flyweight
+ * See {@code UserspaceScheduler} for the lifecycle contract — the flyweight
  * is invalidated on the next {@code dequeueTask()} or {@code batch.next()}.
  */
 public final class QueuedTask {

@@ -63,7 +63,7 @@ import static me.bechberger.ebpf.runtime.TaskDefinitions.task_struct;
  * </ul>
  *
  * <p>Concrete scheduler samples extend this class, declare a {@code @BPF} annotation,
- * and pair it with a {@link UserspaceScheduler} subclass that implements the Java-side
+ * and pair it with a {@code UserspaceScheduler} subclass that implements the Java-side
  * scheduling policy.
  */
 @BPF(license = "GPL")
@@ -372,12 +372,12 @@ public abstract class UserspaceSchedulerBase extends SchedulerBase implements Sc
 
     /**
      * Test seam. Returns the {@link BPFHistogram} for batch sizes so that
-     * {@link UserspaceScheduler#printHistograms} can read it without touching the
+     * {@code UserspaceScheduler#printHistograms} can read it without touching the
      * field directly across the package boundary.
      *
      * <p>Public to allow cross-package access from {@code UserspaceScheduler}
      * (which is not a subclass). Production code uses this for reading; histogram
-     * writes go through {@link #recordBatchSizeHist}.
+     * writes go through {@code #recordBatchSizeHist}.
      */
     public BPFHistogram batchSizeHistView()       { return batchSizeHist; }
 
