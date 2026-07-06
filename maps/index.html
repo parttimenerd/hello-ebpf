@@ -11,10 +11,10 @@
         <link rel="canonical" href="https://parttimenerd.github.io/hello-ebpf/maps/">
       
       
-        <link rel="prev" href="../cheatsheet/">
+        <link rel="prev" href="../getting-started/how-it-works/">
       
       
-        <link rel="next" href="../shared-maps/">
+        <link rel="next" href="../global-variables/">
       
       
         
@@ -225,17 +225,18 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="../cheatsheet/" class="md-tabs__link">
-        
-  
-  
     
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/install/" class="md-tabs__link">
+          
   
-  Cheat Sheet
+  
+  Getting Started
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -269,7 +270,27 @@
     
     
       <li class="md-tabs__item">
-        <a href="../feature-matrix/" class="md-tabs__link">
+        <a href="../sched-ext/" class="md-tabs__link">
+          
+  
+  
+  sched_ext
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../cheatsheet/" class="md-tabs__link">
           
   
   
@@ -278,6 +299,65 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../samples/" class="md-tabs__link">
+          
+  
+  
+  Samples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../architecture/plugin/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
   
 
       
@@ -359,15 +439,67 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../cheatsheet/" class="md-nav__link">
+      <a href="../getting-started/install/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Cheat Sheet
+    Install & Prerequisites
   
 
     
@@ -376,6 +508,70 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/hello/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First BPF Program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/how-it-works/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How the Plugin Works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -581,6 +777,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bpfpercpuhashmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BPFPerCpuHashMap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bpfhashofmaps-bpfarrayofmaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BPFHashOfMaps / BPFArrayOfMaps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bpfqueue" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -607,6 +825,17 @@
     <span class="md-ellipsis">
       
         BPFProgArray
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bpftaskstorage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BPFTaskStorage
       
     </span>
   </a>
@@ -652,10 +881,60 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Further reading
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../global-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Global Variables & Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -675,7 +954,35 @@
   <span class="md-ellipsis">
     
   
-    Shared maps
+    Shared Maps (@SharedFrom)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arenas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BPF Arenas (@InArena)
   
 
     
@@ -780,7 +1087,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../kprobes.md" class="md-nav__link">
+      <a href="../kprobes/" class="md-nav__link">
         
   
   
@@ -788,6 +1095,62 @@
     
   
     Kprobes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uprobes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uprobes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../attach-cookies-multi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Attach Cookies & Multi-Attach
   
 
     
@@ -836,14 +1199,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../sched_ext/" class="md-nav__link">
+      <a href="../tail-calls/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    sched_ext
+    Tail Calls
   
 
     
@@ -864,14 +1227,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../global-variables/" class="md-nav__link">
+      <a href="../map-of-maps/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Global Variables & Types
+    Map-of-Maps
   
 
     
@@ -892,14 +1255,70 @@
   
   
     <li class="md-nav__item">
-      <a href="../helpers/" class="md-nav__link">
+      <a href="../struct-ops/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    BPFJ Helpers
+    struct_ops in Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../profiling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Profiling
   
 
     
@@ -950,7 +1369,7 @@
   <span class="md-ellipsis">
     
   
-    Reference
+    sched_ext
   
 
     
@@ -963,6 +1382,289 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    sched_ext
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sched-ext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sched-ext/guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing a Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sched-ext/kernel-side/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kernelspace Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sched-ext/userspace/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Userspace Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sched-ext/callbacks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Callbacks Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sched-ext/cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sched-ext/chaos-scheduler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chaos Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sched-ext/fun-schedulers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fun Schedulers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -979,6 +1681,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../cheatsheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheat Sheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../feature-matrix/" class="md-nav__link">
         
   
@@ -987,6 +1717,90 @@
     
   
     Feature Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/annotations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations Catalog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/bpfj/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BPFJ Helpers Catalog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/javadoc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaDoc API
   
 
     
@@ -1035,14 +1849,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
+      <a href="../cookbook/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Changelog
+    Cookbook
   
 
     
@@ -1059,6 +1873,291 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Index & Selection Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/plugin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/processor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotation Processor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Classifier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1167,6 +2266,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bpfpercpuhashmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BPFPerCpuHashMap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bpfhashofmaps-bpfarrayofmaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BPFHashOfMaps / BPFArrayOfMaps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#bpfqueue" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1193,6 +2314,17 @@
     <span class="md-ellipsis">
       
         BPFProgArray
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bpftaskstorage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BPFTaskStorage
       
     </span>
   </a>
@@ -1238,6 +2370,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Further reading
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1259,9 +2413,14 @@
 
 
 <h1 id="bpf-maps">BPF Maps<a class="headerlink" href="#bpf-maps" title="Permanent link">&para;</a></h1>
+<p><strong>Blog series:</strong> <a href="https://mostlynerdless.de/blog/2024/01/12/hello-ebpf-recording-data-in-basic-ebpf-maps-2/">Part 2 — Recording data in basic eBPF maps</a> · <a href="https://mostlynerdless.de/blog/2024/03/12/hello-ebpf-ring-buffers-in-libbpf-6/">Part 6 — Ring buffers in libbpf</a> · <a href="https://mostlynerdless.de/blog/2024/05/21/hello-ebpf-global-variables-10/">Part 10 — Global variables</a><br />
+<strong>Javadoc:</strong> <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFHashMap.html"><code>BPFHashMap</code></a> · <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFArray.html"><code>BPFArray</code></a> · <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFRingBuffer.html"><code>BPFRingBuffer</code></a> · <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFPerCpuArray.html"><code>BPFPerCpuArray</code></a> · <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFPerCpuHashMap.html"><code>BPFPerCpuHashMap</code></a><br />
+<strong>Source:</strong> <a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFHashMap.java"><code>BPFHashMap.java</code></a> · <a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFArray.java"><code>BPFArray.java</code></a> · <a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFRingBuffer.java"><code>BPFRingBuffer.java</code></a> · <a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFPerCpuArray.java"><code>BPFPerCpuArray.java</code></a> · <a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFPerCpuHashMap.java"><code>BPFPerCpuHashMap.java</code></a><br />
+<strong>See also:</strong> <a href="./#bpfringbuffer">Ring Buffer</a> · <a href="../global-variables/">Global Variables</a> · <a href="../map-of-maps/">Map of Maps</a> · <a href="../shared-maps/">Shared Maps</a> · <a href="../tail-calls/">Tail Calls</a></p>
 <p>Maps are the primary mechanism for sharing data between BPF programs and user-space Java code.
 hello-ebpf provides typed Java wrappers for all major map types. Maps are declared as fields on
 your <code>@BPF</code> class and annotated with <code>@BPFMapDefinition</code>.</p>
+<p><img alt="eBPF map as bidirectional bridge between kernel and user space" src="../img/ebpf-maps.png" /></p>
 <h2 id="declaration-pattern">Declaration pattern<a class="headerlink" href="#declaration-pattern" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@BPF</span><span class="p">(</span><span class="n">license</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;GPL&quot;</span><span class="p">)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyProg</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">BPFProgram</span><span class="w"> </span><span class="p">{</span>
@@ -1333,7 +2492,7 @@ entries). Great for per-index counters or lookup tables.</p>
 <hr />
 <h2 id="bpfringbuffer">BPFRingBuffer<E><a class="headerlink" href="#bpfringbuffer" title="Permanent link">&para;</a></h2>
 <p><strong>When to use:</strong> Low-overhead, variable-size event streaming from BPF to user-space.
-Prefer over perf event arrays for new code (kernel ≥5.8).</p>
+Prefer over perf event arrays for new code.</p>
 <p><strong>Map type:</strong> <code>BPF_MAP_TYPE_RINGBUF</code></p>
 <p><strong>Declaration:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nd">@BPFMapDefinition</span><span class="p">(</span><span class="n">maxEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">24</span><span class="p">)</span><span class="w">   </span><span class="c1">// size in bytes, must be power of 2</span>
@@ -1350,7 +2509,7 @@ Prefer over perf event arrays for new code (kernel ≥5.8).</p>
 </code></pre></div></p>
 <p><strong>Java-side API:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">prog</span><span class="p">.</span><span class="na">events</span><span class="p">.</span><span class="na">setCallback</span><span class="p">((</span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;pid=&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">event</span><span class="p">.</span><span class="na">pid</span><span class="p">));</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">BPFProgram</span><span class="p">.</span><span class="na">ringBufferManager</span><span class="p">().</span><span class="na">consumeAll</span><span class="p">();</span><span class="w">   </span><span class="c1">// poll in a loop</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">prog</span><span class="p">.</span><span class="na">consumeAndThrow</span><span class="p">();</span><span class="w">   </span><span class="c1">// poll ring buffer (or prog.consumeAndSleep(intervalMs))</span>
 </code></pre></div></p>
 <hr />
 <h2 id="bpfpercpuarray">BPFPerCpuArray<V><a class="headerlink" href="#bpfpercpuarray" title="Permanent link">&para;</a></h2>
@@ -1370,21 +2529,59 @@ throughput. Aggregate values Java-side by summing across CPUs.</p>
 <h2 id="bpfbloomfilter">BPFBloomFilter<V><a class="headerlink" href="#bpfbloomfilter" title="Permanent link">&para;</a></h2>
 <p><strong>When to use:</strong> Probabilistic membership test. Zero false negatives; small false-positive rate.
 Useful for quick rejection of known-bad IPs or processes.</p>
-<p><strong>Map type:</strong> <code>BPF_MAP_TYPE_BLOOM_FILTER</code> (kernel ≥5.16)</p>
+<p><strong>Map type:</strong> <code>BPF_MAP_TYPE_BLOOM_FILTER</code></p>
 <p><strong>Declaration:</strong>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nd">@BPFMapDefinition</span><span class="p">(</span><span class="n">maxEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10_000</span><span class="p">)</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="kd">final</span><span class="w"> </span><span class="n">BPFBloomFilter</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">blocklist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BPFBloomFilter</span><span class="p">.</span><span class="na">newInstance</span><span class="p">();</span>
 </code></pre></div></p>
 <p><strong>BPF-side API:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">blocklist</span><span class="p">.</span><span class="na">bpf_peek</span><span class="p">(</span><span class="n">suspectIp</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="c1">// Definitely not in set — pass</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">XDP_PASS</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">blocklist</span><span class="p">.</span><span class="na">peek</span><span class="p">(</span><span class="n">suspectIp</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">    </span><span class="c1">// Probably in set — apply heavier check or drop</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">XDP_DROP</span><span class="p">;</span>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="p">}</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1">// Probably in set — apply heavier check or drop</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="k">return</span><span class="w"> </span><span class="n">XDP_DROP</span><span class="p">;</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1">// Definitely not in set — pass</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="k">return</span><span class="w"> </span><span class="n">XDP_PASS</span><span class="p">;</span>
 </code></pre></div></p>
 <p><strong>Java-side API:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">prog</span><span class="p">.</span><span class="na">blocklist</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="mh">0xC0A80001</span><span class="p">);</span><span class="w">   </span><span class="c1">// 192.168.0.1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">prog</span><span class="p">.</span><span class="na">blocklist</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="mh">0xC0A80001</span><span class="p">);</span><span class="w">   </span><span class="c1">// 192.168.0.1</span>
+</code></pre></div></p>
+<hr />
+<h2 id="bpfpercpuhashmap">BPFPerCpuHashMap<K, V><a class="headerlink" href="#bpfpercpuhashmap" title="Permanent link">&para;</a></h2>
+<p><strong>When to use:</strong> Per-CPU hash map for lock-free counters keyed by an arbitrary value. Each CPU
+has its own value slot; aggregate Java-side by summing across CPUs.</p>
+<p><strong>Map type:</strong> <code>BPF_MAP_TYPE_PERCPU_HASH</code></p>
+<p><strong>Declaration:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nd">@BPFMapDefinition</span><span class="p">(</span><span class="n">maxEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4096</span><span class="p">)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="kd">final</span><span class="w"> </span><span class="n">BPFPerCpuHashMap</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pidBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BPFPerCpuHashMap</span><span class="p">.</span><span class="na">newInstance</span><span class="p">();</span>
+</code></pre></div></p>
+<p><strong>BPF-side API:</strong> identical to <code>BPFHashMap</code> (<code>bpf_get</code>, <code>bpf_put</code>, <code>bpf_delete</code>).</p>
+<p><strong>Java-side API:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">perCpuValues</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prog</span><span class="p">.</span><span class="na">pidBytes</span><span class="p">.</span><span class="na">getAll</span><span class="p">(</span><span class="n">pid</span><span class="p">);</span><span class="w">   </span><span class="c1">// one value per CPU</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="kt">long</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">perCpuValues</span><span class="p">.</span><span class="na">stream</span><span class="p">().</span><span class="na">mapToLong</span><span class="p">(</span><span class="n">Long</span><span class="p">::</span><span class="n">longValue</span><span class="p">).</span><span class="na">sum</span><span class="p">();</span>
+</code></pre></div></p>
+<hr />
+<h2 id="bpfhashofmaps-bpfarrayofmaps">BPFHashOfMaps<K, InnerMap> / BPFArrayOfMaps<InnerMap><a class="headerlink" href="#bpfhashofmaps-bpfarrayofmaps" title="Permanent link">&para;</a></h2>
+<p><strong>When to use:</strong> A map whose values are themselves maps — e.g. per-CPU, per-connection, or
+per-user maps where each key needs its own independent state. See <a href="../map-of-maps/">Map-of-Maps</a>
+for full documentation.</p>
+<p><strong>Map types:</strong> <code>BPF_MAP_TYPE_HASH_OF_MAPS</code> / <code>BPF_MAP_TYPE_ARRAY_OF_MAPS</code></p>
+<p><strong>Declaration:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nd">@BPFMapDefinition</span><span class="p">(</span><span class="n">maxEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w">   </span><span class="c1">// inner-map template</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">BPFHashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">innerTemplate</span><span class="p">;</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="nd">@InnerMap</span><span class="p">(</span><span class="s">&quot;innerTemplate&quot;</span><span class="p">)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="nd">@BPFMapDefinition</span><span class="p">(</span><span class="n">maxEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">256</span><span class="p">)</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="n">BPFHashOfMaps</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">BPFHashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">outer</span><span class="p">;</span>
+</code></pre></div></p>
+<p><strong>BPF-side API:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">BPFHashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">inner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">outer</span><span class="p">.</span><span class="na">lookup</span><span class="p">(</span><span class="n">cpuId</span><span class="p">);</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inner</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">    </span><span class="n">inner</span><span class="p">.</span><span class="na">bpf_put</span><span class="p">(</span><span class="n">syscallNr</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><strong>Java-side API:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">prog</span><span class="p">.</span><span class="na">outer</span><span class="p">.</span><span class="na">register</span><span class="p">(</span><span class="n">cpuId</span><span class="p">,</span><span class="w"> </span><span class="n">innerMapHandle</span><span class="p">);</span><span class="w">   </span><span class="c1">// insert inner map fd</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">prog</span><span class="p">.</span><span class="na">outer</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">cpuId</span><span class="p">);</span><span class="w">                        </span><span class="c1">// retrieve fresh fd handle</span>
 </code></pre></div></p>
 <hr />
 <h2 id="bpfqueue">BPFQueue<V><a class="headerlink" href="#bpfqueue" title="Permanent link">&para;</a></h2>
@@ -1392,16 +2589,17 @@ Useful for quick rejection of known-bad IPs or processes.</p>
 when variable-length records are not needed.</p>
 <p><strong>Map type:</strong> <code>BPF_MAP_TYPE_QUEUE</code></p>
 <p><strong>Declaration:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nd">@BPFMapDefinition</span><span class="p">(</span><span class="n">maxEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">512</span><span class="p">)</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="kd">final</span><span class="w"> </span><span class="n">BPFQueue</span><span class="o">&lt;</span><span class="n">Event</span><span class="o">&gt;</span><span class="w"> </span><span class="n">queue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BPFQueue</span><span class="p">.</span><span class="na">newInstance</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nd">@BPFMapDefinition</span><span class="p">(</span><span class="n">maxEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">512</span><span class="p">)</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="kd">final</span><span class="w"> </span><span class="n">BPFQueue</span><span class="o">&lt;</span><span class="n">Event</span><span class="o">&gt;</span><span class="w"> </span><span class="n">queue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BPFQueue</span><span class="p">.</span><span class="na">newInstance</span><span class="p">();</span>
 </code></pre></div></p>
 <p><strong>BPF-side API:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">Event</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Event</span><span class="p">();</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="n">e</span><span class="p">.</span><span class="na">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BPFJ</span><span class="p">.</span><span class="na">currentPid</span><span class="p">();</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">queue</span><span class="p">.</span><span class="na">bpf_push</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">Event</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Event</span><span class="p">();</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">e</span><span class="p">.</span><span class="na">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BPFJ</span><span class="p">.</span><span class="na">currentPid</span><span class="p">();</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="n">queue</span><span class="p">.</span><span class="na">push</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
 </code></pre></div></p>
 <p><strong>Java-side API:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Event</span><span class="o">&gt;</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prog</span><span class="p">.</span><span class="na">queue</span><span class="p">.</span><span class="na">pop</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="n">Event</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prog</span><span class="p">.</span><span class="na">queue</span><span class="p">.</span><span class="na">pop</span><span class="p">();</span><span class="w">   </span><span class="c1">// returns null if empty</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div></p>
 <hr />
 <h2 id="bpfstack">BPFStack<V><a class="headerlink" href="#bpfstack" title="Permanent link">&para;</a></h2>
@@ -1414,37 +2612,81 @@ when variable-length records are not needed.</p>
 The array maps integer indices to loaded BPF programs.</p>
 <p><strong>Map type:</strong> <code>BPF_MAP_TYPE_PROG_ARRAY</code></p>
 <p><strong>Declaration:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nd">@BPFMapDefinition</span><span class="p">(</span><span class="n">maxEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="kd">final</span><span class="w"> </span><span class="n">BPFProgArray</span><span class="w"> </span><span class="n">jumptable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BPFProgArray</span><span class="p">.</span><span class="na">newInstance</span><span class="p">();</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nd">@BPFMapDefinition</span><span class="p">(</span><span class="n">maxEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="kd">final</span><span class="w"> </span><span class="n">BPFProgArray</span><span class="w"> </span><span class="n">jumptable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BPFProgArray</span><span class="p">.</span><span class="na">newInstance</span><span class="p">();</span>
 </code></pre></div></p>
 <p><strong>BPF-side API:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1">// In @BPFFunction</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">jumptable</span><span class="p">.</span><span class="na">bpf_tail_call</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">);</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1">// Execution continues here only if tail call fails (index out of range / map empty)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1">// In @BPFFunction</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="n">jumptable</span><span class="p">.</span><span class="na">bpf_tail_call</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">);</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c1">// Execution continues here only if tail call fails (index out of range / map empty)</span>
 </code></pre></div></p>
 <p><strong>Java-side setup:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">prog</span><span class="p">.</span><span class="na">jumptable</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">prog</span><span class="p">.</span><span class="na">getFd</span><span class="p">(</span><span class="s">&quot;handle_ipv4&quot;</span><span class="p">));</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">prog</span><span class="p">.</span><span class="na">jumptable</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">prog</span><span class="p">.</span><span class="na">getFd</span><span class="p">(</span><span class="s">&quot;handle_ipv6&quot;</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="n">prog</span><span class="p">.</span><span class="na">jumptable</span><span class="p">.</span><span class="na">register</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">prog</span><span class="p">.</span><span class="na">getProgramByName</span><span class="p">(</span><span class="s">&quot;handle_ipv4&quot;</span><span class="p">));</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="n">prog</span><span class="p">.</span><span class="na">jumptable</span><span class="p">.</span><span class="na">register</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">prog</span><span class="p">.</span><span class="na">getProgramByName</span><span class="p">(</span><span class="s">&quot;handle_ipv6&quot;</span><span class="p">));</span>
 </code></pre></div></p>
+<hr />
+<h2 id="bpftaskstorage">BPFTaskStorage<V><a class="headerlink" href="#bpftaskstorage" title="Permanent link">&para;</a></h2>
+<p><strong>When to use:</strong> Per-task state in <code>struct_ops</code> (sched_ext) programs. The kernel owns the
+lifecycle — entries are automatically removed when the task exits, no explicit delete needed.
+Safer than a hash map keyed by PID because there are no stale entries and lookup is O(1).</p>
+<p><strong>Map type:</strong> <code>BPF_MAP_TYPE_TASK_STORAGE</code><br />
+<strong>Kernel minimum:</strong> 5.11</p>
+<p><strong>Declaration:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="nd">@Type</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="kd">record</span> <span class="nc">TaskCtx</span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">wakeupCount</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">lastRunNs</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="nd">@BPFMapDefinition</span><span class="p">(</span><span class="n">maxEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">  </span><span class="c1">// maxEntries is ignored for task storage</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="n">BPFTaskStorage</span><span class="o">&lt;</span><span class="n">TaskCtx</span><span class="o">&gt;</span><span class="w"> </span><span class="n">taskCtx</span><span class="p">;</span>
+</code></pre></div></p>
+<p><strong>BPF-side API:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="c1">// In @BPFFunction</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">TaskCtx</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">taskCtx</span><span class="p">.</span><span class="na">bpf_get_or_create</span><span class="p">(</span><span class="n">p</span><span class="p">);</span><span class="w">  </span><span class="c1">// p is Ptr&lt;task_struct&gt;</span>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ctx</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span><span class="n">ctx</span><span class="p">.</span><span class="na">val</span><span class="p">().</span><span class="na">wakeupCount</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="p">}</span>
+</code></pre></div></p>
+<p><code>bpf_get_or_create</code> returns a pointer to the task's storage, creating it (zeroed) if it
+doesn't exist yet. No null check needed for the create path — it returns null only on OOM.</p>
+<p>The Java side cannot iterate task storage (kernel constraint). It can only be used from BPF
+programs attached to <code>struct_ops</code> entries.</p>
+<p><strong>Full example:</strong> <a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/TaskStorageScheduler.java">sched/TaskStorageScheduler.java</a> — FIFO scheduler with per-task wakeup counts.</p>
+<p>See <a href="../sched-ext/guide/#step-4-per-task-state-with-bpftaskstorage">sched_ext guide §4</a> for a complete walkthrough.</p>
 <hr />
 <h2 id="common-patterns">Common patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h2>
 <h3 id="initialise-a-map-entry-atomically">Initialise a map entry atomically<a class="headerlink" href="#initialise-a-map-entry-atomically" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1">// BPF side — safe increment even under concurrency</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counts</span><span class="p">.</span><span class="na">bpf_get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">    </span><span class="n">counts</span><span class="p">.</span><span class="na">bpf_put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">zero</span><span class="p">);</span>
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">    </span><span class="c1">// __sync_fetch_and_add via BPFJ if needed</span>
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">    </span><span class="n">val</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">val</span><span class="p">.</span><span class="na">val</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="c1">// BPF side — safe increment even under concurrency</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counts</span><span class="p">.</span><span class="na">bpf_get</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">val</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">    </span><span class="n">counts</span><span class="p">.</span><span class="na">bpf_put</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">zero</span><span class="p">);</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="w">    </span><span class="c1">// __sync_fetch_and_add via BPFJ if needed</span>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="w">    </span><span class="n">val</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">val</span><span class="p">.</span><span class="na">val</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="iterate-over-a-hash-map-from-java">Iterate over a hash map from Java<a class="headerlink" href="#iterate-over-a-hash-map-from-java" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="n">prog</span><span class="p">.</span><span class="na">counts</span><span class="p">.</span><span class="na">forEach</span><span class="p">((</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">printf</span><span class="p">(</span><span class="s">&quot;key=%d count=%d%n&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">    </span><span class="n">prog</span><span class="p">.</span><span class="na">counts</span><span class="p">.</span><span class="na">delete</span><span class="p">(</span><span class="n">k</span><span class="p">);</span><span class="w">   </span><span class="c1">// reset as we read</span>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="p">});</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="n">prog</span><span class="p">.</span><span class="na">counts</span><span class="p">.</span><span class="na">forEach</span><span class="p">((</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">printf</span><span class="p">(</span><span class="s">&quot;key=%d count=%d%n&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">    </span><span class="n">prog</span><span class="p">.</span><span class="na">counts</span><span class="p">.</span><span class="na">delete</span><span class="p">(</span><span class="n">k</span><span class="p">);</span><span class="w">   </span><span class="c1">// reset as we read</span>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="p">});</span>
 </code></pre></div>
+<hr />
+<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HashMapSample.java"><code>HashMapSample.java</code></a> — BPFHashMap for syscall counting</li>
+<li><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/RingSample.java"><code>RingSample.java</code></a> — BPFRingBuffer event streaming</li>
+<li><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloArrayOfMaps.java"><code>HelloArrayOfMaps.java</code></a> — BPFArrayOfMaps / BPFHashOfMaps</li>
+<li><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/PerCpuInnerMapSample.java"><code>PerCpuInnerMapSample.java</code></a> — per-CPU inner maps</li>
+</ul>
+<hr />
+<h2 id="further-reading">Further reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://docs.ebpf.io/linux/map-type/">BPF map types — docs.ebpf.io</a></li>
+<li><a href="https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_HASH/">BPF_MAP_TYPE_HASH — docs.ebpf.io</a></li>
+<li><a href="https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_RINGBUF/">BPF_MAP_TYPE_RINGBUF — docs.ebpf.io</a></li>
+<li><a href="https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_PERCPU_ARRAY/">BPF_MAP_TYPE_PERCPU_ARRAY — docs.ebpf.io</a></li>
+<li><a href="../global-variables/">Global Variables</a> · <a href="../map-of-maps/">Map of Maps</a> · <a href="../shared-maps/">Shared Maps</a></li>
+</ul>
 
 
 

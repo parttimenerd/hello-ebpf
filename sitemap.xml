@@ -2,102 +2,198 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/LICENSE-CC-BY-4.0/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/arenas/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/attach-cookies-multi/</loc>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/changelog/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/cheatsheet/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/cookbook/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/diagnostics/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/feature-matrix/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/global-variables/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/helpers/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/kprobes/</loc>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/lsm/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/map-of-maps/</loc>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/maps/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/profiling/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/sched_ext/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/scheduler-article/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/shared-maps/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/struct-ops/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/tail-calls/</loc>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/tc/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/timers/</loc>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/tracepoints/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/uprobes/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/userspace-scheduler/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
          <loc>https://parttimenerd.github.io/hello-ebpf/xdp/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
-         <loc>https://parttimenerd.github.io/hello-ebpf/superpowers/plans/2026-06-29-step0-report/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <loc>https://parttimenerd.github.io/hello-ebpf/architecture/contributing/</loc>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
-         <loc>https://parttimenerd.github.io/hello-ebpf/superpowers/plans/2026-06-29-userspace-scheduler/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <loc>https://parttimenerd.github.io/hello-ebpf/architecture/errors/</loc>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
-         <loc>https://parttimenerd.github.io/hello-ebpf/superpowers/plans/2026-06-30-directval/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <loc>https://parttimenerd.github.io/hello-ebpf/architecture/plugin/</loc>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
-         <loc>https://parttimenerd.github.io/hello-ebpf/superpowers/plans/2026-07-01-cookbook/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <loc>https://parttimenerd.github.io/hello-ebpf/architecture/processor/</loc>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
-         <loc>https://parttimenerd.github.io/hello-ebpf/superpowers/specs/2026-06-29-userspace-scheduler-design/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <loc>https://parttimenerd.github.io/hello-ebpf/assets/blog/CREDITS/</loc>
+         <lastmod>2026-07-06</lastmod>
     </url>
     <url>
-         <loc>https://parttimenerd.github.io/hello-ebpf/superpowers/specs/2026-06-30-directval-design/</loc>
-         <lastmod>2026-07-01</lastmod>
+         <loc>https://parttimenerd.github.io/hello-ebpf/assets/ebpf-io/CREDITS/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/getting-started/hello/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/getting-started/how-it-works/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/getting-started/install/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/reference/annotations/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/reference/bpfj/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/reference/javadoc/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/samples/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/sched-ext/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/sched-ext/callbacks/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/sched-ext/chaos-scheduler/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/sched-ext/cookbook/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/sched-ext/fun-schedulers/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/sched-ext/guide/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/sched-ext/kernel-side/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/sched-ext/sound-scheduler/</loc>
+         <lastmod>2026-07-06</lastmod>
+    </url>
+    <url>
+         <loc>https://parttimenerd.github.io/hello-ebpf/sched-ext/userspace/</loc>
+         <lastmod>2026-07-06</lastmod>
     </url>
 </urlset>

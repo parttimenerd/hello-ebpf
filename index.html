@@ -12,7 +12,7 @@
       
       
       
-        <link rel="next" href="cheatsheet/">
+        <link rel="next" href="getting-started/install/">
       
       
         
@@ -225,17 +225,18 @@
   
   
   
-    <li class="md-tabs__item">
-      <a href="cheatsheet/" class="md-tabs__link">
-        
-  
-  
     
+    
+      <li class="md-tabs__item">
+        <a href="getting-started/install/" class="md-tabs__link">
+          
   
-  Cheat Sheet
+  
+  Getting Started
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -267,7 +268,27 @@
     
     
       <li class="md-tabs__item">
-        <a href="feature-matrix/" class="md-tabs__link">
+        <a href="sched-ext/" class="md-tabs__link">
+          
+  
+  
+  sched_ext
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="cheatsheet/" class="md-tabs__link">
           
   
   
@@ -276,6 +297,65 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="samples/" class="md-tabs__link">
+          
+  
+  
+  Samples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="architecture/plugin/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
   
 
       
@@ -391,10 +471,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How it works
+        Features
       
     </span>
   </a>
@@ -416,7 +496,40 @@
   <a href="#quick-example-xdp-drop-every-3rd-packet" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick example — XDP drop every 3rd packet
+        Quick example: XDP drop every 3rd packet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example-custom-linux-scheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick example: custom Linux scheduler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Samples
       
     </span>
   </a>
@@ -481,15 +594,67 @@
   
   
   
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="cheatsheet/" class="md-nav__link">
+      <a href="getting-started/install/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Cheat Sheet
+    Install & Prerequisites
   
 
     
@@ -498,6 +663,70 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="getting-started/hello/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First BPF Program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="getting-started/how-it-works/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How the Plugin Works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -589,6 +818,34 @@
   
   
     <li class="md-nav__item">
+      <a href="global-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Global Variables & Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="shared-maps/" class="md-nav__link">
         
   
@@ -596,7 +853,35 @@
   <span class="md-ellipsis">
     
   
-    Shared maps
+    Shared Maps (@SharedFrom)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="arenas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BPF Arenas (@InArena)
   
 
     
@@ -701,7 +986,7 @@
   
   
     <li class="md-nav__item">
-      <a href="kprobes.md" class="md-nav__link">
+      <a href="kprobes/" class="md-nav__link">
         
   
   
@@ -709,6 +994,62 @@
     
   
     Kprobes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="uprobes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uprobes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="attach-cookies-multi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Attach Cookies & Multi-Attach
   
 
     
@@ -757,14 +1098,14 @@
   
   
     <li class="md-nav__item">
-      <a href="sched_ext/" class="md-nav__link">
+      <a href="tail-calls/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    sched_ext
+    Tail Calls
   
 
     
@@ -785,14 +1126,14 @@
   
   
     <li class="md-nav__item">
-      <a href="global-variables/" class="md-nav__link">
+      <a href="map-of-maps/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Global Variables & Types
+    Map-of-Maps
   
 
     
@@ -813,14 +1154,70 @@
   
   
     <li class="md-nav__item">
-      <a href="helpers/" class="md-nav__link">
+      <a href="struct-ops/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    BPFJ Helpers
+    struct_ops in Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="timers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="profiling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Profiling
   
 
     
@@ -871,7 +1268,7 @@
   <span class="md-ellipsis">
     
   
-    Reference
+    sched_ext
   
 
     
@@ -884,6 +1281,289 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    sched_ext
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sched-ext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sched-ext/guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing a Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sched-ext/kernel-side/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kernelspace Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sched-ext/userspace/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Userspace Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sched-ext/callbacks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Callbacks Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sched-ext/cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sched-ext/chaos-scheduler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chaos Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="sched-ext/fun-schedulers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fun Schedulers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -900,6 +1580,34 @@
   
   
     <li class="md-nav__item">
+      <a href="cheatsheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheat Sheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="feature-matrix/" class="md-nav__link">
         
   
@@ -908,6 +1616,90 @@
     
   
     Feature Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/annotations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations Catalog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/bpfj/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BPFJ Helpers Catalog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/javadoc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaDoc API
   
 
     
@@ -956,14 +1748,14 @@
   
   
     <li class="md-nav__item">
-      <a href="changelog/" class="md-nav__link">
+      <a href="cookbook/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Changelog
+    Cookbook
   
 
     
@@ -980,6 +1772,291 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Index & Selection Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture/plugin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture/processor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotation Processor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture/errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Classifier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1011,10 +2088,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#features" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How it works
+        Features
       
     </span>
   </a>
@@ -1036,7 +2113,40 @@
   <a href="#quick-example-xdp-drop-every-3rd-packet" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick example — XDP drop every 3rd packet
+        Quick example: XDP drop every 3rd packet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example-custom-linux-scheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick example: custom Linux scheduler
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Samples
       
     </span>
   </a>
@@ -1108,22 +2218,26 @@
 
 
 <h1 id="hello-ebpf">hello-ebpf<a class="headerlink" href="#hello-ebpf" title="Permanent link">&para;</a></h1>
-<p>hello-ebpf is a Java-to-eBPF compiler plugin that lets you write Linux kernel BPF programs entirely in Java.
-You annotate a Java class with <code>@BPF</code>, extend <code>BPFProgram</code>, and mark individual methods with <code>@BPFFunction</code>.
-A javac compiler plugin translates those method bodies to C, compiles them with clang, and bundles the resulting
-<code>.o</code> bytecode into your jar. At runtime, <code>BPFProgram.load(MyClass.class)</code> loads the program via libbpf.</p>
-<p>No C files, no Makefiles, no separate build step — just Java.</p>
-<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Your Java class
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>      │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>      │  javac + hello-ebpf compiler plugin
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>      ▼
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  Generated C  ──► clang ──► .o (embedded in jar)
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                                    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                            BPFProgram.load()
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                                    │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                               libbpf / kernel
-</code></pre></div>
+<p>hello-ebpf is the first and only Java library for eBPF that lets you write
+<strong>both the kernel-side BPF program and the user-space control code entirely in Java</strong> —
+no C files, no Makefiles, no separate build step.</p>
+<p>Annotate a class with <code>@BPF</code>, extend <code>BPFProgram</code>, and mark methods with <code>@BPFFunction</code>.
+The build toolchain translates those method bodies to C, compiles them with clang, and
+bundles the resulting <code>.o</code> into your jar. At runtime, <code>BPFProgram.load(MyClass.class)</code>
+loads the program via libbpf. Everything else — maps, ring buffers, global variables,
+scheduler policies — is plain Java.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bWs5GHYpYxg" title="hello-ebpf demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="xdp/">XDP</a>, <a href="tc/">TC</a>, <a href="kprobes/">kprobe/fentry</a>, <a href="tracepoints/">tracepoint</a>, <a href="uprobes/">uprobe</a>, <a href="lsm/">LSM</a> hooks</li>
+<li><a href="sched-ext/">sched_ext</a>: write a Linux CPU scheduler in Java, or run the policy entirely in <a href="sched-ext/userspace/">userspace</a></li>
+<li><a href="maps/">BPF maps</a>: <a href="maps/#bpfhashmap">hash</a>, <a href="maps/#bpfarray">array</a>, <a href="maps/#bpfringbuffer">ring buffer</a>, <a href="maps/#bpfpercpuarray">per-CPU</a>, <a href="sched-ext/cookbook/#per-task-storage">task storage</a>, <a href="map-of-maps/">map-of-maps</a>, <a href="shared-maps/">shared maps</a></li>
+<li><a href="global-variables/">Global variables</a>, <a href="tail-calls/">tail calls</a>, <a href="arenas/">BPF arenas</a>, <a href="timers/">timers</a>, <a href="struct-ops/">struct_ops</a>, <a href="attach-cookies-multi/">attach cookies</a></li>
+<li><a href="getting-started/how-it-works/#6-co-re-and-portability">CO-RE</a>: compile once, run on any kernel with BTF</li>
+<li>Human-readable <a href="diagnostics/">verifier diagnostics</a></li>
+</ul>
+<p><img alt="Annotation processor and compiler plugin pipeline" src="img/compiler-pipeline.png" /></p>
 <ol>
 <li>You write a class like <code>MyProgram extends BPFProgram</code>.</li>
 <li>Methods annotated <code>@BPFFunction</code> are extracted and translated to C by the compiler plugin.</li>
@@ -1131,6 +2245,15 @@ A javac compiler plugin translates those method bodies to C, compiles them with 
 <li>At runtime <code>BPFProgram.load(MyProgram.class)</code> reads the bundled <code>.o</code> and calls libbpf to load it into the kernel.</li>
 <li>Maps, ring buffers, and global variables are accessible from the Java side through a typed API.</li>
 </ol>
+<div class="admonition warning">
+<p class="admonition-title">BPF code runs in the kernel, not the JVM</p>
+<p><code>@BPFFunction</code> methods are compiled to BPF bytecode and verified by the Linux kernel before loading.
+They run under strict constraints that ordinary Java code does not: the BPF stack is limited to
+512 bytes, dynamic heap allocation is not available, loops must be bounded, and the kernel verifier
+rejects any program it cannot prove safe. Runtime exceptions, garbage collection, and JVM reflection
+do not apply inside <code>@BPFFunction</code> methods. If the verifier rejects your program, hello-ebpf prints
+a human-readable diagnostic — see <a href="diagnostics/">Diagnostics</a>.</p>
+</div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1142,7 +2265,7 @@ A javac compiler plugin translates those method bodies to C, compiles them with 
 <tbody>
 <tr>
 <td>Linux kernel</td>
-<td>6.17</td>
+<td>6.14</td>
 </tr>
 <tr>
 <td>clang / llvm</td>
@@ -1158,70 +2281,310 @@ A javac compiler plugin translates those method bodies to C, compiles them with 
 </tr>
 <tr>
 <td>Privileges</td>
-<td>root or CAP_BPF + CAP_NET_ADMIN</td>
+<td>root or CAP_BPF + CAP_PERFMON + CAP_NET_ADMIN</td>
 </tr>
 </tbody>
 </table>
 <p>Install the native dependencies on Debian/Ubuntu:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>clang-19<span class="w"> </span>llvm-19<span class="w"> </span>libbpf-dev<span class="w"> </span>linux-headers-<span class="k">$(</span>uname<span class="w"> </span>-r<span class="k">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>clang-19<span class="w"> </span>llvm-19<span class="w"> </span>libbpf-dev<span class="w"> </span>linux-headers-<span class="k">$(</span>uname<span class="w"> </span>-r<span class="k">)</span>
 </code></pre></div>
-<h2 id="quick-example-xdp-drop-every-3rd-packet">Quick example — XDP drop every 3rd packet<a class="headerlink" href="#quick-example-xdp-drop-every-3rd-packet" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.annotations.bpf.BPF</span><span class="p">;</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.annotations.bpf.BPFFunction</span><span class="p">;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.BPFProgram</span><span class="p">;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.GlobalVariable</span><span class="p">;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.XDPHook</span><span class="p">;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.type.Ptr</span><span class="p">;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="kn">import static</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.raw.Lib_1.*</span><span class="p">;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nd">@BPF</span><span class="p">(</span><span class="n">license</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;GPL&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DropEveryThird</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">BPFProgram</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">XDPHook</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="cm">/** Packet counter shared between BPF and Java. */</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">GlobalVariable</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">packetCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GlobalVariable</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="mi">0</span><span class="n">L</span><span class="p">);</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="nd">@Override</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span><span class="nd">@BPFFunction</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">xdpHandlePacket</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">xdp_md</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">        </span><span class="kt">long</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">packetCount</span><span class="p">.</span><span class="na">get</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">        </span><span class="n">packetCount</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">count</span><span class="p">);</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">        </span><span class="c1">// Drop every third packet</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">XDP_DROP</span><span class="p">;</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">XDP_PASS</span><span class="p">;</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">DropEveryThird</span><span class="w"> </span><span class="n">prog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BPFProgram</span><span class="p">.</span><span class="na">load</span><span class="p">(</span><span class="n">DropEveryThird</span><span class="p">.</span><span class="na">class</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">            </span><span class="n">prog</span><span class="p">.</span><span class="na">xdpAttach</span><span class="p">(</span><span class="s">&quot;eth0&quot;</span><span class="p">);</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">            </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;XDP program attached. Press Ctrl-C to stop.&quot;</span><span class="p">);</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">                </span><span class="n">Thread</span><span class="p">.</span><span class="na">sleep</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">                </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Packets seen: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">prog</span><span class="p">.</span><span class="na">packetCount</span><span class="p">.</span><span class="na">get</span><span class="p">());</span>
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="w">            </span><span class="p">}</span>
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="w">        </span><span class="p">}</span>
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="p">}</span>
+<p>See <a href="getting-started/install/">Install &amp; Prerequisites</a> to add hello-ebpf to your Maven project.</p>
+<h2 id="quick-example-xdp-drop-every-3rd-packet">Quick example: XDP drop every 3rd packet<a class="headerlink" href="#quick-example-xdp-drop-every-3rd-packet" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.annotations.bpf.BPF</span><span class="p">;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.annotations.bpf.BPFFunction</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.BPFProgram</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.GlobalVariable</span><span class="p">;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.XDPContext</span><span class="p">;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.XDPHook</span><span class="p">;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.runtime.XdpDefinitions.xdp_action</span><span class="p">;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nd">@BPF</span><span class="p">(</span><span class="n">license</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;GPL&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DropEveryThird</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">BPFProgram</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">XDPHook</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="cm">/** Packet counter shared between BPF and Java. */</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">GlobalVariable</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">packetCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GlobalVariable</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="mi">0</span><span class="n">L</span><span class="p">);</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="nd">@BPFFunction</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">xdp_action</span><span class="w"> </span><span class="nf">xdpHandlePacket</span><span class="p">(</span><span class="n">XDPContext</span><span class="w"> </span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">        </span><span class="kt">long</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">packetCount</span><span class="p">.</span><span class="na">get</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">        </span><span class="n">packetCount</span><span class="p">.</span><span class="na">set</span><span class="p">(</span><span class="n">count</span><span class="p">);</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">        </span><span class="c1">// Drop every third packet</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">count</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">xdp_action</span><span class="p">.</span><span class="na">XDP_DROP</span><span class="p">;</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">xdp_action</span><span class="p">.</span><span class="na">XDP_PASS</span><span class="p">;</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">DropEveryThird</span><span class="w"> </span><span class="n">prog</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BPFProgram</span><span class="p">.</span><span class="na">load</span><span class="p">(</span><span class="n">DropEveryThird</span><span class="p">.</span><span class="na">class</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">            </span><span class="n">prog</span><span class="p">.</span><span class="na">xdpAttach</span><span class="p">();</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">            </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;XDP program attached. Press Ctrl-C to stop.&quot;</span><span class="p">);</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">                </span><span class="n">Thread</span><span class="p">.</span><span class="na">sleep</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">                </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Packets seen: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">prog</span><span class="p">.</span><span class="na">packetCount</span><span class="p">.</span><span class="na">get</span><span class="p">());</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="p">}</span>
 </code></pre></div>
 <p>Build and run:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mvn<span class="w"> </span>package
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo<span class="w"> </span>java<span class="w"> </span>-cp<span class="w"> </span>target/myapp.jar<span class="w"> </span>DropEveryThird
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mvn<span class="w"> </span>package
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>java<span class="w"> </span>--enable-native-access<span class="o">=</span>ALL-UNNAMED<span class="w"> </span>-cp<span class="w"> </span>target/myapp.jar<span class="w"> </span>DropEveryThird
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Network interface</p>
-<p>Replace <code>eth0</code> with the actual interface name on your machine (<code>ip link</code> to list them).</p>
+<p><code>xdpAttach()</code> attaches to all non-loopback interfaces that are up. To attach to a
+specific interface, look up its index (from <code>ip link</code>) and call <code>xdpAttach(ifindex)</code>.</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">--enable-native-access</p>
+<p>hello-ebpf uses the Panama foreign-function API to call libbpf. Pass
+<code>--enable-native-access=ALL-UNNAMED</code> on every <code>java</code> invocation to suppress the
+module-system warning (required on JDK 24+).</p>
+</div>
+<p>See also: <a href="xdp/">XDP hook docs</a> · <a href="maps/">BPF Maps</a> · <a href="global-variables/">Global Variables</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/16Rv7IWGoDk" title="hello-ebpf XDP demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<h2 id="quick-example-custom-linux-scheduler">Quick example: custom Linux scheduler<a class="headerlink" href="#quick-example-custom-linux-scheduler" title="Permanent link">&para;</a></h2>
+<p>hello-ebpf can replace the Linux CPU scheduler with pure Java code via <a href="sched_ext/">sched_ext</a>.
+Here is <a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/MinimalScheduler.java"><code>MinimalScheduler.java</code></a> — the complete program, nothing omitted:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@BPF</span><span class="p">(</span><span class="n">license</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;GPL&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nd">@Property</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sched_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;minimal_scheduler&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nd">@Property</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;timeout_ms&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;10000&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MinimalScheduler</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">SchedulerBase</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Scheduler</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="c1">// SchedulerBase.init() creates the shared dispatch queue automatically</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">DispatchQueue</span><span class="w"> </span><span class="n">shared</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DispatchQueue</span><span class="p">.</span><span class="na">attach</span><span class="p">(</span><span class="n">SHARED_DSQ_ID</span><span class="p">);</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">enqueue</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">task_struct</span><span class="o">&gt;</span><span class="w"> </span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">enq_flags</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">        </span><span class="c1">// Put every task into the shared FIFO queue</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="n">shared</span><span class="p">.</span><span class="na">insertScaled</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">EnqFlags</span><span class="p">.</span><span class="na">passThrough</span><span class="p">(</span><span class="n">enq_flags</span><span class="p">));</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">dispatch</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">cpu</span><span class="p">,</span><span class="w"> </span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">task_struct</span><span class="o">&gt;</span><span class="w"> </span><span class="n">prev</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">        </span><span class="c1">// Each CPU pulls the next task from the shared queue</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">        </span><span class="n">shared</span><span class="p">.</span><span class="na">moveToLocal</span><span class="p">();</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="kd">var</span><span class="w"> </span><span class="n">program</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BPFProgram</span><span class="p">.</span><span class="na">load</span><span class="p">(</span><span class="n">MinimalScheduler</span><span class="p">.</span><span class="na">class</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">            </span><span class="n">program</span><span class="p">.</span><span class="na">runSchedulerLoop</span><span class="p">();</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>./run.sh<span class="w"> </span>MinimalScheduler
+</code></pre></div>
+<p>The scheduler runs until you press <code>Ctrl-C</code>, at which point the kernel falls back to the default scheduler. See <a href="sched_ext/">sched_ext documentation</a> for priority queues, per-CPU dispatch, and userspace scheduling policies.</p>
+<h2 id="history">History<a class="headerlink" href="#history" title="Permanent link">&para;</a></h2>
+<p>The project started in December 2023 as an experiment: could Java become a first-class
+language for eBPF, without wrapping C or shelling out to a separate toolchain?
+The first prototype, published with <a href="https://mostlynerdless.de/blog/2023/12/31/hello-ebpf-developing-ebpf-apps-in-java-1/">Part 1 of the blog series</a>,
+used a javac annotation processor to translate <code>@BPFFunction</code> method bodies to C.
+That core idea has stayed the same; the library has grown around it.</p>
+<p>By mid-2024 the compiler plugin could handle maps, ring buffers, global variables, XDP,
+TC, kprobes, tracepoints, and uprobes.
+<a href="https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/">Part 11</a>
+added CO-RE support by auto-generating 13,000 Java wrapper classes from kernel BTF,
+making programs portable across kernel versions without recompilation.</p>
+<p>The scheduler work began in
+<a href="https://mostlynerdless.de/blog/2024/09/10/hello-ebpf-writing-a-linux-scheduler-in-java-with-ebpf-15/">Part 15</a>
+with a BPF-side sched_ext scheduler, and culminated in a fully userspace scheduler
+where the scheduling policy runs entirely in Java (Parts 16–18).
+The 20-part blog series documents the whole journey.</p>
+<h2 id="samples">Samples<a class="headerlink" href="#samples" title="Permanent link">&para;</a></h2>
+<p>Ready-to-run programs in <a href="https://github.com/parttimenerd/hello-ebpf/tree/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples"><code>bpf-samples/</code></a>:</p>
+<table>
+<thead>
+<tr>
+<th>Sample</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloWorld.java">HelloWorld</a></td>
+<td>Print filenames on every <code>openat2</code> call</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HashMapSample.java">HashMapSample</a></td>
+<td>Count <code>openat2</code> calls per process using <code>BPFHashMap</code></td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/RingSample.java">RingSample</a></td>
+<td>Stream filename+pid events to userspace via ring buffer</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/SyscallCounter.java">SyscallCounter</a></td>
+<td>Count all syscalls over 5 s with a global variable</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/XDPDropEveryThirdPacket.java">XDPDropEveryThirdPacket</a></td>
+<td>Drop every third incoming packet at XDP</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/PacketCountByLength.java">PacketCountByLength</a></td>
+<td>Histogram of packet lengths using XDP</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/TCDropEveryThirdOutgoingPacket.java">TCDropEveryThirdOutgoingPacket</a></td>
+<td>Drop ~1/3 of outgoing packets via TC egress</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/TCFirewall.java">TCFirewall</a></td>
+<td>Block ingress traffic on ports specified at runtime</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/Firewall.java">Firewall</a></td>
+<td>Full XDP firewall with per-IP rules and ring-buffer event log</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/PacketLogger.java">PacketLogger</a></td>
+<td>Log packets via XDP + TC to a ring buffer</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/KProbeMultiCounter.java">KProbeMultiCounter</a></td>
+<td>One program attached to 20 syscall entries (<code>kprobe.multi</code>)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/LSMDemo.java">LSMDemo</a></td>
+<td>Observe <code>file_open</code>, <code>bpf</code>, <code>socket_create</code> LSM hooks</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/CGroupBlockHTTPEgress.java">CGroupBlockHTTPEgress</a></td>
+<td>Block all cgroup egress HTTP traffic</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/TimerDemo.java">TimerDemo</a></td>
+<td>Self-rearming 1-second BPF timer</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/TailCallDemo.java">TailCallDemo</a></td>
+<td>XDP tail calls via <code>BPFProgArray</code></td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/HelloCubicSample.java">HelloCubicSample</a></td>
+<td>Register a TCP congestion algorithm via <code>struct_ops</code></td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/CPUProfiler.java">CPUProfiler</a></td>
+<td>CPU profiler with stack-trace symbolisation</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/FeatureProbeSample.java">FeatureProbeSample</a></td>
+<td>Print kernel version and feature-probe table</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/MinimalScheduler.java">sched/MinimalScheduler</a></td>
+<td>Minimal FIFO sched_ext scheduler in Java</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandFifoSample.java">sched/RustlandFifoSample</a></td>
+<td>Minimal FIFO userspace scheduler (policy entirely in Java)</td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="samples/">full samples index</a> for all programs with hook types and descriptions.</p>
 <h2 id="blog-series">Blog series<a class="headerlink" href="#blog-series" title="Permanent link">&para;</a></h2>
-<p>This project is accompanied by an 18-part blog series that walks through each feature step by step:</p>
-<p><a href="https://mostlynerdless.de/blog/2024/02/11/writing-ebpf-programs-in-java-with-hello-ebpf-1-hello-world/">Writing eBPF programs in Java with hello-ebpf (Part 1: Hello World)</a></p>
-<p>The series covers XDP, TC, tracepoints, kprobes, maps, ring buffers, LSM, sched_ext, and more.</p>
+<p>This project is accompanied by a 20-part blog series on <a href="https://mostlynerdless.de/blog/">mostlynerdless.de</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Topic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="https://mostlynerdless.de/blog/2023/12/31/hello-ebpf-developing-ebpf-apps-in-java-1/">Hello World — first eBPF program in Java</a></td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="https://mostlynerdless.de/blog/2024/01/12/hello-ebpf-recording-data-in-basic-ebpf-maps-2/">eBPF maps — hash maps and counters</a></td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="https://mostlynerdless.de/blog/2024/01/29/hello-ebpf-recording-data-in-event-buffers-3/">Perf event buffers</a></td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="https://mostlynerdless.de/blog/2024/02/12/hello-ebpf-tail-calls-and-your-first-ebpf-application-4/">Tail calls and your first eBPF application</a></td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/">First steps with libbpf</a></td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="https://mostlynerdless.de/blog/2024/03/12/hello-ebpf-ring-buffers-in-libbpf-6/">Ring buffers</a></td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="https://mostlynerdless.de/blog/2024/03/22/hello-ebpf-auto-layouting-structs-7/">Auto-layouting structs</a></td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="https://mostlynerdless.de/blog/2024/04/09/hello-ebpf-generating-c-code-8/">Generating C code from Java</a></td>
+</tr>
+<tr>
+<td>9</td>
+<td><a href="https://mostlynerdless.de/blog/2024/04/22/hello-ebpf-xdp-based-packet-filter-9/">XDP-based packet filter</a></td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="https://mostlynerdless.de/blog/2024/05/21/hello-ebpf-global-variables-10/">Global variables</a></td>
+</tr>
+<tr>
+<td>11</td>
+<td><a href="https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/">BTF and 13,000 generated Java classes</a></td>
+</tr>
+<tr>
+<td>12</td>
+<td><a href="https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/">Write your eBPF application in pure Java</a></td>
+</tr>
+<tr>
+<td>13</td>
+<td><a href="https://mostlynerdless.de/blog/2024/08/13/hello-ebpf-a-packet-logger-in-pure-java-using-tc-and-xdp-hooks-13/">Packet logger with TC and XDP hooks</a></td>
+</tr>
+<tr>
+<td>14</td>
+<td><a href="https://mostlynerdless.de/blog/2024/08/27/hello-ebpf-building-a-lightning-fast-firewall-with-java-ebpf-14/">Lightning-fast firewall with Java &amp; eBPF</a></td>
+</tr>
+<tr>
+<td>15</td>
+<td><a href="https://mostlynerdless.de/blog/2024/09/10/hello-ebpf-writing-a-linux-scheduler-in-java-with-ebpf-15/">Writing a Linux scheduler in Java</a></td>
+</tr>
+<tr>
+<td>16</td>
+<td><a href="https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/">Controlling task scheduling from Java</a></td>
+</tr>
+<tr>
+<td>17</td>
+<td><a href="https://mostlynerdless.de/blog/2024/12/17/hello-ebpf-writing-a-lottery-scheduler-in-java-with-sched-ext-17/">Lottery scheduler with sched_ext</a></td>
+</tr>
+<tr>
+<td>18</td>
+<td><a href="https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/">Lottery scheduler in pure Java (bpf_for_each)</a></td>
+</tr>
+<tr>
+<td>19</td>
+<td><a href="https://mostlynerdless.de/blog/2025/02/25/helle-ebpf-concurrency-testing-using-custom-linux-schedulers-19/">Concurrency testing with custom schedulers</a></td>
+</tr>
+<tr>
+<td>20</td>
+<td><a href="https://mostlynerdless.de/blog/2025/03/25/hello-ebpf-a-scheduler-controlled-by-sound-20/">A scheduler controlled by sound</a></td>
+</tr>
+</tbody>
+</table>
 <h2 id="project-layout">Project layout<a class="headerlink" href="#project-layout" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>bpf-processor/   — javac compiler plugin (Java → C translation)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>bpf/             — runtime library (BPFProgram, map types, helpers)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>annotations/     — @BPF, @BPFFunction, @Type, @Size, …
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>samples/         — runnable sample programs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>bpf-processor/   # javac compiler plugin (Java to C translation)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>bpf/             # runtime library (BPFProgram, map types, helpers)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>annotations/     # @BPF, @BPFFunction, @Type, @Size, ...
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>samples/         # runnable sample programs
 </code></pre></div>
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
 <table>
@@ -1265,7 +2628,7 @@ A javac compiler plugin translates those method bodies to C, compiles them with 
 <td><code>SEC("tp/...")</code> programs</td>
 </tr>
 <tr>
-<td><a href="kprobes.md">kprobes</a></td>
+<td><a href="kprobes/">kprobes</a></td>
 <td><code>SEC("kprobe/...")</code> and <code>SEC("kretprobe/...")</code> programs</td>
 </tr>
 <tr>

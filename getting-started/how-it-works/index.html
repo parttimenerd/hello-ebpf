@@ -1,0 +1,2732 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://parttimenerd.github.io/hello-ebpf/getting-started/how-it-works/">
+      
+      
+        <link rel="prev" href="../hello/">
+      
+      
+        <link rel="next" href="../../maps/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>How the Plugin Works - hello-ebpf</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-the-plugin-works" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="hello-ebpf" class="md-header__button md-logo" aria-label="hello-ebpf" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            hello-ebpf
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              How the Plugin Works
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/parttimenerd/hello-ebpf" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    parttimenerd/hello-ebpf
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../install/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../maps/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../sched-ext/" class="md-tabs__link">
+          
+  
+  
+  sched_ext
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../cheatsheet/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../samples/" class="md-tabs__link">
+          
+  
+  
+  Samples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../architecture/plugin/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="hello-ebpf" class="md-nav__button md-logo" aria-label="hello-ebpf" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    hello-ebpf
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/parttimenerd/hello-ebpf" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    parttimenerd/hello-ebpf
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Install & Prerequisites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hello/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First BPF Program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How the Plugin Works
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How the Plugin Works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-two-build-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §1 The two build phases
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-what-the-plugin-translates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §2 What the plugin translates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-extending-the-plugin-builtinbpffunction-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §3 Extending the plugin — @BuiltinBPFFunction templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="§3 Extending the plugin — @BuiltinBPFFunction templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#placeholder-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Placeholder reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-adding-your-own-c-code-the-four-extension-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §4 Adding your own C code — the four extension hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="§4 Adding your own C code — the four extension hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-bpfinterfacebefore-after-inject-c-at-file-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. @BPFInterface(before=…, after=…) — inject C at file scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-bpfmapclassctemplate-javatemplate-define-a-new-map-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. @BPFMapClass(cTemplate=…, javaTemplate=…) — define a new map type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-bpfabstraction-zero-cost-compile-time-wrappers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. @BPFAbstraction — zero-cost compile-time wrappers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-alwaysinline-bpfinline-force-inline-a-bpffunction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. @AlwaysInline / @BPFInline — force-inline a @BPFFunction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-inspecting-the-generated-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §5 Inspecting the generated C
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-co-re-and-portability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §6 CO-RE and portability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-what-the-processor-and-plugin-do-not-touch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §7 What the processor and plugin do not touch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Further reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#talk-hello-ebpf-at-linux-plumbers-conference-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Talk: hello-ebpf at Linux Plumbers Conference 2024
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../maps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../global-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Global Variables & Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../shared-maps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared Maps (@SharedFrom)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../arenas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BPF Arenas (@InArena)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../xdp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XDP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tracepoints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tracepoints
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kprobes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kprobes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uprobes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uprobes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../attach-cookies-multi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Attach Cookies & Multi-Attach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lsm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LSM & Cgroup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tail-calls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tail Calls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../map-of-maps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Map-of-Maps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../struct-ops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    struct_ops in Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../timers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../profiling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Profiling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    sched_ext
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    sched_ext
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sched-ext/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sched-ext/guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing a Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sched-ext/kernel-side/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kernelspace Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sched-ext/userspace/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Userspace Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sched-ext/callbacks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Callbacks Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sched-ext/cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sched-ext/chaos-scheduler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chaos Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sched-ext/fun-schedulers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fun Schedulers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cheatsheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheat Sheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../feature-matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/annotations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations Catalog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/bpfj/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BPFJ Helpers Catalog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/javadoc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaDoc API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diagnostics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagnostics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Index & Selection Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/plugin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/processor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotation Processor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Classifier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-two-build-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §1 The two build phases
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-what-the-plugin-translates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §2 What the plugin translates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-extending-the-plugin-builtinbpffunction-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §3 Extending the plugin — @BuiltinBPFFunction templates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="§3 Extending the plugin — @BuiltinBPFFunction templates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#placeholder-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Placeholder reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-adding-your-own-c-code-the-four-extension-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §4 Adding your own C code — the four extension hooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="§4 Adding your own C code — the four extension hooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-bpfinterfacebefore-after-inject-c-at-file-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. @BPFInterface(before=…, after=…) — inject C at file scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-bpfmapclassctemplate-javatemplate-define-a-new-map-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. @BPFMapClass(cTemplate=…, javaTemplate=…) — define a new map type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-bpfabstraction-zero-cost-compile-time-wrappers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. @BPFAbstraction — zero-cost compile-time wrappers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-alwaysinline-bpfinline-force-inline-a-bpffunction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. @AlwaysInline / @BPFInline — force-inline a @BPFFunction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-inspecting-the-generated-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §5 Inspecting the generated C
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-co-re-and-portability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §6 CO-RE and portability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-what-the-processor-and-plugin-do-not-touch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        §7 What the processor and plugin do not touch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#further-reading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Further reading
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#talk-hello-ebpf-at-linux-plumbers-conference-2024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Talk: hello-ebpf at Linux Plumbers Conference 2024
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="how-the-plugin-works">How the Plugin Works<a class="headerlink" href="#how-the-plugin-works" title="Permanent link">&para;</a></h1>
+<p><strong>Blog series:</strong> <a href="https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/">Part 5 — First steps with libbpf</a> · <a href="https://mostlynerdless.de/blog/2024/04/09/hello-ebpf-generating-c-code-8/">Part 8 — Generating C code from Java</a> · <a href="https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/">Part 11 — BTF and 13,000 generated Java classes</a> · <a href="https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/">Part 12 — Write eBPF in pure Java</a><br />
+<strong>Talks:</strong> <a href="https://speakerdeck.com/parttimenerd/hello-ebpf-writing-ebpf-programs-directly-in-java">hello-ebpf: Writing eBPF Programs Directly in Java (LPC 2024)</a> · <a href="https://speakerdeck.com/parttimenerd/building-a-lightning-fast-firewall-with-java-and-ebpf-javazone-2024">Building a Lightning Fast Firewall with Java &amp; eBPF (JavaZone 2024)</a></p>
+<p><strong>Javadoc:</strong> <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html"><code>BPFProgram</code></a> · <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPF.html"><code>@BPF</code></a> · <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFFunction.html"><code>@BPFFunction</code></a> · <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Type.html"><code>@Type</code></a> · <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFMapDefinition.html"><code>@BPFMapDefinition</code></a></p>
+<p><img alt="Annotation processor and compiler plugin pipeline" src="../../img/compiler-pipeline.png" /></p>
+<p>The kernel BPF verifier operates on eBPF bytecode. The only production-quality
+compiler that targets that bytecode is clang. hello-ebpf does not bypass that
+requirement — it makes clang invisible. You write <code>@BPFFunction</code> methods in
+Java; the build toolchain translates them to C, invokes clang, and bundles the
+resulting <code>.o</code> into your jar before <code>javac</code> finishes.</p>
+<h2 id="1-the-two-build-phases">§1 The two build phases<a class="headerlink" href="#1-the-two-build-phases" title="Permanent link">&para;</a></h2>
+<p>A single <code>mvn package</code> run triggers two distinct javac phases for every
+<code>@BPF</code>-annotated class.</p>
+<p><strong>Phase 1 — Annotation processor (<code>bpf-processor</code>).</strong>
+Runs at round 1 of javac annotation processing
+(<code>bpf-processor/src/main/java/me/bechberger/ebpf/bpf/processor/Processor.java</code>).
+It discovers <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFMapDefinition.html"><code>@BPFMapDefinition</code></a> fields and <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Type.html"><code>@Type</code></a>-annotated
+records, resolves their BTF struct layouts via <code>TypeProcessor.java</code>, and writes a <code>.bpf.json</code> manifest
+that the compiler plugin reads in phase 2.</p>
+<p><strong>Phase 2 — Compiler plugin (<code>bpf-compiler-plugin</code>).</strong>
+Runs during the compilation pass, after annotation processing
+(<code>bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/CompilerPlugin.java</code>).
+For each <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPF.html"><code>@BPF</code></a> class it walks the AST of every <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFFunction.html"><code>@BPFFunction</code></a> method, translates
+Java constructs to C, and writes a <code>.bpf.c</code> source file. It then invokes clang,
+embeds the resulting <code>.o</code> as a jar resource, and replaces each <code>@BPFFunction</code>
+body with <code>throw new MethodIsBPFRelatedFunction()</code> so the JVM never executes it.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Your @BPF class
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>      │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>      │  annotation processor (bpf-processor)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>      ▼
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  .bpf.json manifest (BTF layouts, map defs)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>      │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>      │  compiler plugin (bpf-compiler-plugin)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>      ▼
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  generated .bpf.c  ──►  clang  ──►  .o (embedded in jar)
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>      │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>      │  BPFProgram.load(YourClass.class) at runtime
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>      ▼
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  libbpf ──► kernel verifier ──► attached BPF prog
+</code></pre></div>
+<h2 id="2-what-the-plugin-translates">§2 What the plugin translates<a class="headerlink" href="#2-what-the-plugin-translates" title="Permanent link">&para;</a></h2>
+<p>The compiler plugin covers the following Java-to-C mappings:</p>
+<ul>
+<li><code>int</code>/<code>long</code> → <code>__u32</code>/<code>__u64</code>; <code>@Unsigned</code> qualifiers applied where present.</li>
+<li><code>Ptr&lt;T&gt;</code> → C pointer <code>T *</code>.</li>
+<li><code>@InArena Ptr&lt;T&gt;</code> → <code>T __arena *</code> (BPF arena address space).</li>
+<li>Field access on BPF structs → CO-RE access via <code>BPF_CORE_READ</code>.</li>
+<li>BPF map operations (<code>bpf_get</code>, <code>put</code>, etc.) → corresponding kernel helper calls.</li>
+<li><code>@BPFFunction</code> calls within the same class → static C function calls.</li>
+</ul>
+<h2 id="3-extending-the-plugin-builtinbpffunction-templates">§3 Extending the plugin — <code>@BuiltinBPFFunction</code> templates<a class="headerlink" href="#3-extending-the-plugin-builtinbpffunction-templates" title="Permanent link">&para;</a></h2>
+<p><strong>Javadoc:</strong> <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BuiltinBPFFunction.html"><code>@BuiltinBPFFunction</code></a></p>
+<p>When a method in a <code>@BPFInterface</code> or map class cannot be expressed as a normal <code>@BPFFunction</code> body — because the C code is a single expression, involves a GNU statement expression, or needs to reference the receiver or a specific argument positionally — annotate it with <code>@BuiltinBPFFunction</code> and provide a C template string. The plugin substitutes <code>$</code>-placeholders at call sites and inlines the result directly.</p>
+<h3 id="placeholder-reference">Placeholder reference<a class="headerlink" href="#placeholder-reference" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Placeholder</th>
+<th>Expands to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$this</code></td>
+<td>The receiver expression (map variable name, context pointer, …)</td>
+</tr>
+<tr>
+<td><code>$arg1</code>, <code>$arg2</code>, …</td>
+<td>The n-th argument expression (1-based)</td>
+</tr>
+<tr>
+<td><code>$args</code></td>
+<td>All arguments, comma-separated</td>
+</tr>
+<tr>
+<td><code>$argsN_</code></td>
+<td>Arguments from the N-th onwards</td>
+</tr>
+<tr>
+<td><code>$pointery$argN</code></td>
+<td><code>&amp;argN</code> if it is a value type; <code>argN</code> if it is already a pointer or String</td>
+</tr>
+<tr>
+<td><code>$typeof$argN</code></td>
+<td><code>__typeof__(argN)</code> — useful in GNU statement expressions for temporary variables</td>
+</tr>
+<tr>
+<td><code>$sizeof$argN</code></td>
+<td><code>sizeof(argN)</code></td>
+</tr>
+<tr>
+<td><code>$deref$argN</code></td>
+<td><code>*(argN)</code></td>
+</tr>
+<tr>
+<td><code>$str$argN</code></td>
+<td>Raw string content of a <code>StringConstant</code> argument (no surrounding quotes)</td>
+</tr>
+<tr>
+<td><code>$strlen$argN</code></td>
+<td>Length of a <code>StringConstant</code> argument as an integer literal</td>
+</tr>
+<tr>
+<td><code>$T1</code>, <code>$T2</code>, …</td>
+<td>n-th generic type argument of the enclosing map class</td>
+</tr>
+<tr>
+<td><code>$funcN</code></td>
+<td>Promotes the n-th lambda argument to a named top-level C function; expands to that function's name</td>
+</tr>
+<tr>
+<td><code>$lambdaN:code</code></td>
+<td>Inline body of the n-th lambda argument</td>
+</tr>
+</tbody>
+</table>
+<p>A leading <code>!</code> in the template wraps the whole expression in <code>!(…)</code> — useful for helpers that return 0 on success.</p>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// Simple field access on the receiver</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nd">@BuiltinBPFFunction</span><span class="p">(</span><span class="s">&quot;($this-&gt;data)&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kt">int</span><span class="w"> </span><span class="nf">data</span><span class="p">();</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1">// Map lookup — $pointery wraps non-pointer keys in &amp; automatically</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nd">@BuiltinBPFFunction</span><span class="p">(</span><span class="s">&quot;bpf_map_lookup_elem(&amp;$this, $pointery$arg1)&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">bpf_get</span><span class="p">(</span><span class="n">K</span><span class="w"> </span><span class="n">key</span><span class="p">);</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1">// Map update, return value inverted to boolean</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nd">@BuiltinBPFFunction</span><span class="p">(</span><span class="s">&quot;!bpf_map_update_elem(&amp;$this, $pointery$arg1, $pointery$arg2, BPF_ANY)&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="kt">boolean</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="n">K</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">V</span><span class="w"> </span><span class="n">value</span><span class="p">);</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1">// GNU statement expression for atomic increment</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nd">@BuiltinBPFFunction</span><span class="p">(</span><span class="s">&quot;({ __typeof__($arg2) *___v = bpf_map_lookup_elem(&amp;$this, $pointery$arg1); &quot;</span><span class="w"> </span><span class="o">+</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">                    </span><span class="s">&quot;if (___v) __sync_fetch_and_add(___v, $arg2); })&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="kt">void</span><span class="w"> </span><span class="nf">bpf_increment</span><span class="p">(</span><span class="n">K</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">V</span><span class="w"> </span><span class="n">delta</span><span class="p">);</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1">// GNU statement expression for lookup-or-default</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nd">@BuiltinBPFFunction</span><span class="p">(</span><span class="s">&quot;({ __typeof__($arg2) *___v = bpf_map_lookup_elem(&amp;$this, $pointery$arg1); &quot;</span><span class="w"> </span><span class="o">+</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">                    </span><span class="s">&quot;___v ? *___v : $arg2; })&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="n">V</span><span class="w"> </span><span class="nf">bpf_getOrDefault</span><span class="p">(</span><span class="n">K</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">V</span><span class="w"> </span><span class="n">defaultValue</span><span class="p">);</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1">// Composite expression using a literal and a helper</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="nd">@BuiltinBPFFunction</span><span class="p">(</span><span class="s">&quot;scx_bpf_dsq_insert($arg1, 1 + scx_bpf_task_cpu($arg1), SCX_SLICE_DFL, $arg2)&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="kt">void</span><span class="w"> </span><span class="nf">insertOnCurrentCpu</span><span class="p">(</span><span class="n">task_struct</span><span class="w"> </span><span class="n">task</span><span class="p">,</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">slice</span><span class="p">);</span>
+</code></pre></div>
+<p>The template source and parser live in
+<code>bpf-compiler-plugin/src/main/java/me/bechberger/ebpf/bpf/compiler/MethodTemplate.java</code>.
+Real-world examples are in <code>BPFBaseMap.java</code>, <code>XDPContext.java</code>, and <code>TCContext.java</code>.</p>
+<h2 id="4-adding-your-own-c-code-the-four-extension-hooks">§4 Adding your own C code — the four extension hooks<a class="headerlink" href="#4-adding-your-own-c-code-the-four-extension-hooks" title="Permanent link">&para;</a></h2>
+<p><strong>Javadoc:</strong> <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFInterface.html"><code>@BPFInterface</code></a> · <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFMapClass.html"><code>@BPFMapClass</code></a> · <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFAbstraction.html"><code>@BPFAbstraction</code></a> · <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/AlwaysInline.html"><code>@AlwaysInline</code></a></p>
+<p>hello-ebpf exposes four annotation-driven hooks for injecting raw C into the generated <code>.bpf.c</code>. They are listed here in order of how often you'll need them.</p>
+<h3 id="1-bpfinterfacebefore-after-inject-c-at-file-scope">1. <code>@BPFInterface(before=…, after=…)</code> — inject C at file scope<a class="headerlink" href="#1-bpfinterfacebefore-after-inject-c-at-file-scope" title="Permanent link">&para;</a></h3>
+<p><code>@BPFInterface</code> turns a Java interface into a plugin-visible BPF interface. Any <code>@BPF</code> class that <code>implements</code> it gets the interface's default <code>@BPFFunction</code> methods compiled in. The <code>before</code> and <code>after</code> attributes let you inject verbatim C at the top or bottom of the generated file — the right place for <code>#define</code> macros, <code>#include</code> directives, helper C functions, or kfunc declarations that your <code>@BPFFunction</code> bodies need.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@BPFInterface</span><span class="p">(</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="n">before</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s">        #define MY_THRESHOLD 1024</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s">        static __always_inline int clamp_to_threshold(int v) {</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s">            return v &gt; MY_THRESHOLD ? MY_THRESHOLD : v;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s">        }</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s">        &quot;&quot;&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">MyHelpers</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nd">@BuiltinBPFFunction</span><span class="p">(</span><span class="s">&quot;clamp_to_threshold($arg1)&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="nd">@BPFFunction</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="k">default</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">clamp</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MethodIsBPFRelatedFunction</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">}</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1">// Then implement it on your @BPF class:</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="nd">@BPF</span><span class="p">(</span><span class="n">license</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;GPL&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="kd">public</span><span class="w"> </span><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyProg</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">BPFProgram</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">XDPHook</span><span class="p">,</span><span class="w"> </span><span class="n">MyHelpers</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="nd">@BPFFunction</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">xdpHandlePacket</span><span class="p">(</span><span class="n">Ptr</span><span class="o">&lt;</span><span class="n">xdp_md</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">clamp</span><span class="p">(</span><span class="n">ctx</span><span class="p">.</span><span class="na">val</span><span class="p">().</span><span class="na">data_end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="na">val</span><span class="p">().</span><span class="na">data</span><span class="p">);</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">        </span><span class="c1">// …</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">XDP_PASS</span><span class="p">;</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="p">}</span>
+</code></pre></div>
+<p>The generated <code>.bpf.c</code> will open with your <code>#define</code> and <code>clamp_to_threshold</code> function, and <code>clamp(…)</code> calls will expand to <code>clamp_to_threshold(…)</code> at every call site.</p>
+<p>Real-world uses: <code>SchedulerHelpers.java</code> (injects <code>scx_bpf_error</code> wrapper macro), <code>CGroupHook.java</code> (injects cgroup attach boilerplate).</p>
+<h3 id="2-bpfmapclassctemplate-javatemplate-define-a-new-map-type">2. <code>@BPFMapClass(cTemplate=…, javaTemplate=…)</code> — define a new map type<a class="headerlink" href="#2-bpfmapclassctemplate-javatemplate-define-a-new-map-type" title="Permanent link">&para;</a></h3>
+<p><code>@BPFMapClass</code> on a class that extends <code>BPFMap</code> (or any subclass) registers a new BPF map type. The plugin uses <code>cTemplate</code> to emit the map's C struct into <code>.bpf.c</code> whenever a field of this type is declared with <code>@BPFMapDefinition</code>, and <code>javaTemplate</code> to instantiate the Java wrapper at load time.</p>
+<p><strong>Placeholders in both templates:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Placeholder</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$field</code></td>
+<td>C variable name (the Java field name)</td>
+</tr>
+<tr>
+<td><code>$maxEntries</code></td>
+<td>The <code>maxEntries</code> value from <code>@BPFMapDefinition</code></td>
+</tr>
+<tr>
+<td><code>$class</code></td>
+<td>Fully-qualified Java class name</td>
+</tr>
+<tr>
+<td><code>$c1</code>, <code>$c2</code>, …</td>
+<td>C type names of the generic type parameters</td>
+</tr>
+<tr>
+<td><code>$b1</code>, <code>$b2</code>, …</td>
+<td><code>BPFType</code> expressions for the generic type parameters</td>
+</tr>
+<tr>
+<td><code>$j1</code>, <code>$j2</code>, …</td>
+<td>Java class names of the generic type parameters</td>
+</tr>
+<tr>
+<td><code>$fd</code></td>
+<td>Expression that creates the Java <code>FileDescriptor</code> for <code>javaTemplate</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@BPFMapClass</span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="n">cTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&quot;&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s">        struct {</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s">            __uint(type, BPF_MAP_TYPE_ARRAY);</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s">            __type(key, u32);</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s">            __type(value, $c1);</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s">            __uint(max_entries, $maxEntries);</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s">        } $field SEC(&quot;.maps&quot;);</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s">        &quot;&quot;&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="n">javaTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;new $class&lt;&gt;($fd, $b1, $maxEntries)&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">BPFArray</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">BPFBaseMap</span><span class="o">&lt;</span><span class="nd">@Unsigned</span><span class="w"> </span><span class="n">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">V</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">…</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>A <code>@BPFMapDefinition</code> field using this class:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nd">@BPFMapDefinition</span><span class="p">(</span><span class="n">maxEntries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">512</span><span class="p">)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">BPFArray</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">counters</span><span class="p">;</span>
+</code></pre></div>
+<p>…emits exactly the struct above with <code>$field = counters</code> and <code>$maxEntries = 512</code>.</p>
+<h3 id="3-bpfabstraction-zero-cost-compile-time-wrappers">3. <code>@BPFAbstraction</code> — zero-cost compile-time wrappers<a class="headerlink" href="#3-bpfabstraction-zero-cost-compile-time-wrappers" title="Permanent link">&para;</a></h3>
+<p><code>@BPFAbstraction</code> marks a class as a pure compile-time alias — it has no C representation at all. Locals and fields of this type are inlined away; every method call is rewritten via <code>@BuiltinBPFFunction</code> templates. Use it to give a friendly Java API to a kernel concept (a dispatch queue, a CPU mask, a flag set) without adding any runtime overhead.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nd">@BPFAbstraction</span><span class="p">(</span><span class="n">constructorPrependTo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;init&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DispatchQueue</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="c1">// Constructor: C side-effect + carrier expression</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nd">@BuiltinBPFFunction</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;scx_bpf_create_dsq($arg1, -1)&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">carrier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;$arg1&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nd">@NotUsableInJava</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">DispatchQueue</span><span class="p">(</span><span class="nd">@Unsigned</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MethodIsBPFRelatedFunction</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nd">@BuiltinBPFFunction</span><span class="p">(</span><span class="s">&quot;scx_bpf_dsq_move_to_local($this)&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nd">@NotUsableInJava</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">moveToLocal</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MethodIsBPFRelatedFunction</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">}</span>
+</code></pre></div>
+<p>In a <code>@BPF</code> class:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// Field declaration — no C struct member emitted</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kd">final</span><span class="w"> </span><span class="n">DispatchQueue</span><span class="w"> </span><span class="n">shared</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DispatchQueue</span><span class="p">(</span><span class="n">SHARED_DSQ_ID</span><span class="p">);</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1">// → injected into init() prologue:  scx_bpf_create_dsq(SHARED_DSQ_ID, -1);</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">// → everywhere &#39;shared&#39; appears:    SHARED_DSQ_ID</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">shared</span><span class="p">.</span><span class="na">moveToLocal</span><span class="p">();</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1">// → scx_bpf_dsq_move_to_local(SHARED_DSQ_ID)</span>
+</code></pre></div>
+<p><code>constructorPrependTo</code> names the <code>@BPFFunction</code> method into whose generated C body the constructor side-effect is injected (default <code>"init"</code>). Set it to <code>""</code> to require explicit construction inside a <code>@BPFFunction</code> instead.</p>
+<p>Real-world uses: <code>DispatchQueue.java</code>, <code>CpuMask.java</code>, <code>EnqFlags.java</code>, <code>KickFlags.java</code>.</p>
+<h3 id="4-alwaysinline-bpfinline-force-inline-a-bpffunction">4. <code>@AlwaysInline</code> / <code>@BPFInline</code> — force-inline a <code>@BPFFunction</code><a class="headerlink" href="#4-alwaysinline-bpfinline-force-inline-a-bpffunction" title="Permanent link">&para;</a></h3>
+<p>Adding <code>@AlwaysInline</code> (or its alias <code>@BPFInline</code>) to a <code>@BPFFunction</code> method causes the plugin to emit <code>static __always_inline</code> instead of <code>static</code> in the C output. The BPF verifier inlines <code>__always_inline</code> functions at the call site, which eliminates the function-call overhead and is required for some helper patterns that the verifier won't accept across a call boundary.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nd">@BPFFunction</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nd">@AlwaysInline</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kt">boolean</span><span class="w"> </span><span class="nf">shouldDrop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">nextPseudoRandomNumber</span><span class="p">()</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="5-inspecting-the-generated-c">§5 Inspecting the generated C<a class="headerlink" href="#5-inspecting-the-generated-c" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>target/generated-sources/annotations/me/bechberger/ebpf/.../YourClass.bpf.c
+</code></pre></div>
+<p>The file is plain C. Verifier errors reported by <code>dmesg</code> or libbpf refer to
+symbols defined in it. <code>bpftool prog dump xlated</code> output maps back to the same
+symbol names.</p>
+<h2 id="6-co-re-and-portability">§6 CO-RE and portability<a class="headerlink" href="#6-co-re-and-portability" title="Permanent link">&para;</a></h2>
+<p>The generated C uses <code>BPF_CORE_READ</code> for every struct field access. This macro
+emits BTF relocations into the <code>.o</code>; libbpf resolves them at load time against
+the running kernel's BTF. The result is a single <code>.o</code> that loads on any kernel
+≥ 5.2 that exports BTF (<code>CONFIG_DEBUG_INFO_BTF=y</code>), without recompilation or
+per-kernel headers. CO-RE handles field offset changes across kernel versions,
+but it cannot compensate for fields that have been removed or structs that have
+been fundamentally restructured — in those cases the load succeeds but reads
+return incorrect data. In practice this is rare for stable kernel ABI surfaces.</p>
+<p>hello-ebpf auto-generates ~13,000 Java wrapper classes from the kernel's BTF
+so you get typed access to every kernel struct without maintaining headers manually.</p>
+<p><img alt="BTF type tree for u32: TYPEDEF __u32 → INT unsigned int (4 bytes)" src="../../img/btf-u32-tree.png" /></p>
+<p><img alt="BTF type tree for ethhdr: 3 members with byte offsets → ARRAY → TYPEDEF → INT" src="../../img/btf-ethhdr.png" /></p>
+<h2 id="7-what-the-processor-and-plugin-do-not-touch">§7 What the processor and plugin do not touch<a class="headerlink" href="#7-what-the-processor-and-plugin-do-not-touch" title="Permanent link">&para;</a></h2>
+<p><code>main()</code> and all non-<code>@BPFFunction</code> methods run unchanged on the JVM. Map
+field access from Java (e.g. <code>myMap.get(key)</code>) uses the Panama/libbpf binding,
+not the BPF side. The two call paths — kernel eBPF program and Java user-space
+code — share the same file descriptor returned by <code>BPFProgram.load()</code>.</p>
+<hr />
+<p>For the error-classifier, diagnostic messages, and plugin extension points, see
+<a href="../../architecture/plugin/">Architecture: Compiler Plugin</a> and
+<a href="../../diagnostics/">Diagnostics</a>.</p>
+<hr />
+<h2 id="further-reading">Further reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../hello/">Your First BPF Program</a> — hands-on walkthrough using the pipeline</li>
+<li><a href="../../diagnostics/">Diagnostics</a> — reading verifier logs and error messages</li>
+<li><a href="../../cheatsheet/">Cheatsheet</a> — quick reference for annotations and helpers</li>
+<li><a href="https://speakerdeck.com/parttimenerd/hello-ebpf-writing-ebpf-programs-directly-in-java">hello-ebpf at LPC 2024 (slides)</a></li>
+</ul>
+<hr />
+<h2 id="talk-hello-ebpf-at-linux-plumbers-conference-2024">Talk: hello-ebpf at Linux Plumbers Conference 2024<a class="headerlink" href="#talk-hello-ebpf-at-linux-plumbers-conference-2024" title="Permanent link">&para;</a></h2>
+<p>The LPC talk covers the full compiler pipeline, annotation preprocessor, and BTF
+class generation in depth — good companion to this page.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bWs5GHYpYxg" title="hello-ebpf: Writing eBPF Programs Directly in Java — LPC 2024" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "content.code.annotate", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

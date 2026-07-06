@@ -1,0 +1,3018 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://parttimenerd.github.io/hello-ebpf/sched-ext/userspace/">
+      
+      
+        <link rel="prev" href="../kernel-side/">
+      
+      
+        <link rel="next" href="../callbacks/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Userspace Scheduler - hello-ebpf</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#userspace-scheduler" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="hello-ebpf" class="md-header__button md-logo" aria-label="hello-ebpf" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            hello-ebpf
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Userspace Scheduler
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/parttimenerd/hello-ebpf" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    parttimenerd/hello-ebpf
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/install/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../maps/" class="md-tabs__link">
+          
+  
+  
+  Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  sched_ext
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../cheatsheet/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../samples/" class="md-tabs__link">
+          
+  
+  
+  Samples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../architecture/plugin/" class="md-tabs__link">
+          
+  
+  
+  Architecture
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="hello-ebpf" class="md-nav__button md-logo" aria-label="hello-ebpf" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    hello-ebpf
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/parttimenerd/hello-ebpf" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    parttimenerd/hello-ebpf
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Install & Prerequisites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/hello/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First BPF Program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/how-it-works/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How the Plugin Works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../maps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../global-variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Global Variables & Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../shared-maps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Shared Maps (@SharedFrom)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../arenas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BPF Arenas (@InArena)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../xdp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    XDP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tracepoints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tracepoints
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kprobes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kprobes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../uprobes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Uprobes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../attach-cookies-multi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Attach Cookies & Multi-Attach
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../lsm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LSM & Cgroup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tail-calls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tail Calls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../map-of-maps/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Map-of-Maps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../struct-ops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    struct_ops in Java
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../timers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Timers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../profiling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Profiling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    sched_ext
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    sched_ext
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing a Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kernel-side/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kernelspace Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Userspace Scheduler
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Userspace Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-what-is-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. What is this
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-your-first-scheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Your first scheduler
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Your first scheduler">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#batch-schedule-callback-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch schedule() callback (Experimental)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persistent-queues-with-queuedtaskcopy-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persistent queues with QueuedTask.copy() (Experimental)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-interactive-vs-batch-partitioner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Interactive-vs-batch partitioner
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample-schedulers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample schedulers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Running
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Tuning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stats-cheap-always-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stats (cheap, always on)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#histograms-cheap-log2-bucketed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Histograms (cheap, log2-bucketed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jfr-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JFR events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-to-look-when-something-is-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to look when something is wrong
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-limitations-non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Limitations &amp; non-goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../callbacks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Callbacks Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chaos-scheduler/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chaos Scheduler
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fun-schedulers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fun Schedulers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cheatsheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheat Sheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../feature-matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature Matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/annotations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotations Catalog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/bpfj/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BPFJ Helpers Catalog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/javadoc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaDoc API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../diagnostics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Diagnostics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cookbook/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cookbook
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Index & Selection Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/plugin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compiler Plugin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/processor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Annotation Processor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error Classifier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-what-is-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. What is this
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-your-first-scheduler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Your first scheduler
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Your first scheduler">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#batch-schedule-callback-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Batch schedule() callback (Experimental)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#persistent-queues-with-queuedtaskcopy-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Persistent queues with QueuedTask.copy() (Experimental)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-interactive-vs-batch-partitioner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Interactive-vs-batch partitioner
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample-schedulers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample schedulers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Running
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Tuning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stats-cheap-always-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stats (cheap, always on)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#histograms-cheap-log2-bucketed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Histograms (cheap, log2-bucketed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jfr-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JFR events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-to-look-when-something-is-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to look when something is wrong
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-limitations-non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Limitations &amp; non-goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="userspace-scheduler">Userspace Scheduler<a class="headerlink" href="#userspace-scheduler" title="Permanent link">&para;</a></h1>
+<p><strong>Javadoc:</strong> <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/userspace/UserspaceScheduler.html"><code>UserspaceScheduler</code></a> · <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/QueuedTask.html"><code>QueuedTask</code></a> · <a href="https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/userspace/Opts.html"><code>Opts</code></a></p>
+<p><strong>See also:</strong> <a href="https://github.com/sched-ext/scx/tree/main/rust/scx_rustland_core">scx_rustland_core</a> (the Rust pattern this port is based on) · <a href="https://docs.kernel.org/scheduler/sched-ext.html">sched_ext kernel docs</a></p>
+<div class="admonition warning">
+<p class="admonition-title">Highly experimental</p>
+<p>The userspace scheduler is under active development and the API may change between
+releases. It has been tested on Linux 6.12–6.14 (kernel ≥ 6.12 required). If you
+hit issues, please <a href="https://github.com/parttimenerd/hello-ebpf/issues">open an issue</a>
+with the verifier log attached.</p>
+</div>
+<p>A userspace scheduler moves the scheduling policy to <strong>Java</strong>, running in user space.
+The BPF side is a thin transport: it forwards every queued task through a ring buffer,
+Java decides where it should run, and the decision flows back through a second ring
+buffer for the kernel to dispatch.</p>
+<p>This is the "rustland" pattern (cf. <code>scx_rustland_core</code>) ported to hello-ebpf: you write
+ordinary Java, the framework hides the BPF.</p>
+<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kernel                                  Java (your policy)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>──────                                  ──────────────────
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>task becomes runnable
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  ▼
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>UserspaceSchedulerBase.enqueue()        ┌─────────────────────┐
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  • framework PID? → FRAMEWORK_DSQ      │  runUntilExit()      │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  • kthread fast path? → SHARED_DSQ     │    loop              │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  • else → write QueuedTaskCtx          │      drainBatchOnce()│
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>      into queued ring buffer  ─────────►        policy(t)     │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                                        │        → cpu         │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>UserspaceSchedulerBase.dispatch()  ◄────┤      submitDispatch()│
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  • read DispatchedTaskCtx from         │      tick() / 1s     │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>      dispatched user ring buffer       └─────────────────────┘
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  • scx_bpf_dsq_insert(task, cpu)
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  • 50 ms stall fallback if Java stalls
+</code></pre></div>
+<p>There are <strong>two ring buffers</strong> between kernel and Java:</p>
+<ul>
+<li><strong><code>queued</code> (kernel→Java, <code>BPFRingBuffer</code>)</strong> — BPF <code>enqueue</code> writes a
+  <code>QueuedTaskCtx</code> record for every task that needs a scheduling decision. If
+  the ring is full the task falls back to <code>SHARED_DSQ</code> immediately
+  (<code>ringDropped</code> counter).</li>
+<li><strong><code>dispatched</code> (Java→kernel, <code>BPFUserRingBuffer</code>)</strong> — Java reserves a slot,
+  fills a <code>DispatchedTaskCtx</code> (pid, targetCpu, sliceNs, vtime), and commits.
+  BPF <code>dispatch</code> drains this ring on every <code>dispatch()</code> callback.</li>
+</ul>
+<p><strong>Fast paths that bypass Java entirely:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>BPF action</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task is a JVM thread (<code>frameworkPids</code> map hit)</td>
+<td>→ <code>FRAMEWORK_DSQ</code></td>
+<td>Drain thread must not wait on itself</td>
+</tr>
+<tr>
+<td><code>kswapd</code> / <code>khugepaged</code></td>
+<td>→ <code>SHARED_DSQ</code></td>
+<td>Memory reclaim must not stall</td>
+</tr>
+<tr>
+<td><code>selectCPU</code> finds an idle CPU</td>
+<td>dispatch immediately to <code>LOCAL</code></td>
+<td>No ring-trip at all</td>
+</tr>
+<tr>
+<td>Java stalls for &gt; 50 ms</td>
+<td>promote from <code>SHARED_DSQ</code></td>
+<td>Watchdog safety net</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The run loop (<code>runUntilExit</code>):</strong></p>
+<ol>
+<li>Load <code>UserspaceSchedulerBase</code> BPF program and attach as <code>struct_ops</code>.</li>
+<li>Seed JVM thread IDs (<code>/proc/self/task</code>) into the <code>frameworkPids</code> BPF hash map <em>before</em> attaching, so the drain thread is never routed through its own ring.</li>
+<li>Loop:</li>
+<li>Drain up to <code>batchSize</code> records from <code>queued</code> ring into a pre-allocated <code>QueuedTask[]</code> pool (zero allocation on hot path).</li>
+<li>Call <code>policy(t)</code> for each task; catch exceptions individually.</li>
+<li>Submit dispatch decisions via <code>submitDispatch</code>.</li>
+<li>Every ~1 s: rescan <code>/proc/self/task</code> for new JVM threads; call <code>tick()</code>.</li>
+<li>Exit when <code>requestExit()</code> is called or <code>isAttached()</code> returns false (kernel detached us).</li>
+</ol>
+<p><strong>Idle-CPU lookup</strong> (<code>ANY_CPU</code> path): the framework <code>mmap</code>s an arena-backed
+bitmap that BPF <code>updateIdle</code> keeps current. <code>pickIdleCpu()</code> reads that bitmap
+with zero syscalls, round-robins to spread load, and falls back to <code>ANY_CPU</code>
+if no idle CPU is found. You can also call <code>selectCpu(pid, prevCpu)</code> from
+<code>policy()</code> to ask the kernel's own <code>scx_bpf_select_cpu_dfl</code> for a recommendation.</p>
+<p><strong><code>enqCnt</code> stale-dispatch prevention:</strong> each task has a per-task <code>enqCnt</code>
+counter in BPF task storage, incremented on every <code>enqueue</code>. The ring record
+carries the counter value at enqueue time. When Java submits a dispatch, BPF
+checks whether the task's current <code>enqCnt</code> still matches — if the task was
+re-enqueued in the meantime the dispatch is silently cancelled (<code>ringCanceled</code>
+counter). This prevents dispatching a task to a stale CPU after it already
+woke and was re-queued.</p>
+<hr />
+<h2 id="1-what-is-this">1. What is this<a class="headerlink" href="#1-what-is-this" title="Permanent link">&para;</a></h2>
+<p><code>UserspaceScheduler</code> is an abstract class. You subclass it, override
+<code>policy(QueuedTask)</code> to return a CPU id (or <code>ANY_CPU</code>), and call <code>runUntilExit</code>. The
+framework handles BPF loading, struct_ops attach, task PID bookkeeping, ring-buffer
+drain, dispatch submission, the kernel watchdog handshake, JFR events, and stats.</p>
+<p>Use it when you want to prototype scheduling policies without touching C or the kernel,
+and you are willing to pay the userspace round-trip cost (single-digit microseconds at
+p50 on a quiet box).</p>
+<h2 id="2-requirements">2. Requirements<a class="headerlink" href="#2-requirements" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Linux kernel <strong>≥ 6.12</strong> built with <code>CONFIG_SCHED_CLASS_EXT=y</code>. Verify with
+  <code>ls /sys/kernel/sched_ext</code> — the directory must exist.</li>
+<li>Capabilities: <code>CAP_BPF</code>, <code>CAP_PERFMON</code>, <code>CAP_SYS_ADMIN</code>. The simplest path is
+  <code>sudo -E</code>.</li>
+<li>At most one sched_ext scheduler can be attached at a time. Stop any running
+  <code>scx_*</code> service first (<code>systemctl stop scx</code>).</li>
+<li><strong>ZGC is strongly recommended.</strong> Default G1 pauses on a multi-GB heap can exceed
+  the 30s task-stall watchdog under load. Run with <code>-XX:+UseZGC -XX:+ZGenerational</code>.
+  The framework warns if it does not detect ZGC at start unless
+  <code>Opts.verifyZgcOnStart = false</code>.</li>
+</ul>
+<h2 id="3-your-first-scheduler">3. Your first scheduler<a class="headerlink" href="#3-your-first-scheduler" title="Permanent link">&para;</a></h2>
+<p>A minimal FIFO scheduler is six lines of policy:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.QueuedTask</span><span class="p">;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.userspace.Opts</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.userspace.UserspaceScheduler</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyFifo</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">UserspaceScheduler</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">policy</span><span class="p">(</span><span class="n">QueuedTask</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ANY_CPU</span><span class="p">;</span><span class="w">       </span><span class="c1">// let BPF pick any idle CPU</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="k">new</span><span class="w"> </span><span class="n">MyFifo</span><span class="p">().</span><span class="na">runUntilExit</span><span class="p">(</span><span class="n">Opts</span><span class="p">.</span><span class="na">defaults</span><span class="p">());</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">}</span>
+</code></pre></div>
+<p><code>policy</code> runs <strong>once per queued task</strong> on the framework's drain thread. Return:</p>
+<ul>
+<li>a non-negative CPU id to pin the task to that CPU,</li>
+<li><code>ANY_CPU</code> (-1) to let the BPF transport place it on the shared DSQ and run on
+  any idle CPU.</li>
+</ul>
+<p>There is <strong>no <code>schedule</code> callback</strong> — the per-task <code>policy()</code> returning a CPU <em>is</em>
+the schedule. If you need periodic work (e.g. recompute weights) override
+<code>tick()</code>, which fires once per second.</p>
+<h3 id="batch-schedule-callback-experimental">Batch <code>schedule()</code> callback (<strong>Experimental</strong>)<a class="headerlink" href="#batch-schedule-callback-experimental" title="Permanent link">&para;</a></h3>
+<p>For algorithms that need to look at the full batch before assigning CPUs (e.g.
+deadline sorting across the whole batch), override <code>schedule(QueuedTask[], int)</code>
+instead of <code>policy()</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@Override</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">schedule</span><span class="p">(</span><span class="n">QueuedTask</span><span class="o">[]</span><span class="w"> </span><span class="n">tasks</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="c1">// Sort by some criteria across the whole batch</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="n">Arrays</span><span class="p">.</span><span class="na">sort</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">Comparator</span><span class="p">.</span><span class="na">comparingLong</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="na">sumExecRuntime</span><span class="p">));</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">        </span><span class="n">dispatchTask</span><span class="p">(</span><span class="n">tasks</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">ANY_CPU</span><span class="p">);</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">}</span>
+</code></pre></div>
+<p><code>dispatchTask(task, cpu)</code> dispatches a single task — call it once per task in
+the batch before returning. Every task in the array <strong>must</strong> be dispatched before
+<code>schedule()</code> returns (the kernel stall watchdog fires if any task waits &gt; 50 ms).</p>
+<h3 id="persistent-queues-with-queuedtaskcopy-experimental">Persistent queues with <code>QueuedTask.copy()</code> (<strong>Experimental</strong>)<a class="headerlink" href="#persistent-queues-with-queuedtaskcopy-experimental" title="Permanent link">&para;</a></h3>
+<p>The <code>QueuedTask[]</code> array is a <strong>flyweight pool</strong> — each entry is reused across
+batches. To store a task in a data structure that persists beyond the current
+<code>schedule()</code> call, use <code>QueuedTask.copy()</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">ArrayDeque</span><span class="o">&lt;</span><span class="n">QueuedTask</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deferred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayDeque</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nd">@Override</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">schedule</span><span class="p">(</span><span class="n">QueuedTask</span><span class="o">[]</span><span class="w"> </span><span class="n">tasks</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">        </span><span class="n">deferred</span><span class="p">.</span><span class="na">addLast</span><span class="p">(</span><span class="n">tasks</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="na">copy</span><span class="p">());</span><span class="w">   </span><span class="c1">// heap copy, safe to keep</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">deferred</span><span class="p">.</span><span class="na">isEmpty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">        </span><span class="n">dispatchTask</span><span class="p">(</span><span class="n">deferred</span><span class="p">.</span><span class="na">pollFirst</span><span class="p">(),</span><span class="w"> </span><span class="n">ANY_CPU</span><span class="p">);</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">}</span>
+</code></pre></div>
+<p>A copied <code>QueuedTask</code> is fully dispatchable via <code>dispatchTask()</code> in any future
+batch. The <code>enqCnt</code> stale-dispatch guard still applies — if the copied task was
+re-enqueued before you dispatch it, the dispatch is silently cancelled by the BPF
+transport and <code>ringCanceled</code> is incremented.</p>
+<hr />
+<h2 id="example-interactive-vs-batch-partitioner">Example: Interactive-vs-batch partitioner<a class="headerlink" href="#example-interactive-vs-batch-partitioner" title="Permanent link">&para;</a></h2>
+<p>The standout advantage of a userspace scheduler over a kernelspace one is <strong>access
+to the full Linux process tree</strong>. BPF can read <code>comm</code> (a 15-character kernel thread
+name), but it has no way to read <code>/proc/&lt;pid&gt;/cmdline</code> — the full command line
+including all arguments. A Java process whose <code>comm</code> is <code>java</code> can be identified
+as <code>gradle</code>, <code>mvn</code>, or <code>kotlinc</code> from its cmdline. That identification is
+impossible in BPF.</p>
+<p><code>CmdlineBoostSample</code> exploits this: it reads <code>/proc/&lt;pid&gt;/cmdline</code> once per new
+PID (cached), extracts the binary basename, and classifies each task as
+<em>interactive</em> or <em>batch</em>:</p>
+<ul>
+<li><strong>Interactive</strong> (shells, editors, terminals, browsers) → <code>ANY_CPU</code>: sched_ext picks
+  any idle CPU for minimum wake-up latency.</li>
+<li><strong>Batch</strong> (compilers, build tools, test runners) → pinned to the <strong>upper half</strong> of
+  available CPUs, leaving the lower half free for interactive work.</li>
+<li><strong>Everything else</strong> → <code>ANY_CPU</code>.</li>
+</ul>
+<p>The <code>tick()</code> callback runs once per second to purge dead PIDs from the cache by
+checking whether <code>/proc/&lt;pid&gt;</code> still exists — another thing BPF cannot do cheaply.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.QueuedTask</span><span class="p">;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.userspace.Opts</span><span class="p">;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">me.bechberger.ebpf.bpf.userspace.UserspaceScheduler</span><span class="p">;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.io.IOException</span><span class="p">;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.file.Files</span><span class="p">;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.nio.file.Path</span><span class="p">;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Iterator</span><span class="p">;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Map</span><span class="p">;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Set</span><span class="p">;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.concurrent.ConcurrentHashMap</span><span class="p">;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CmdlineBoostSample</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">UserspaceScheduler</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">INTERACTIVE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Set</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">            </span><span class="s">&quot;bash&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;sh&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;zsh&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;vim&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;nvim&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;emacs&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">            </span><span class="s">&quot;alacritty&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;kitty&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gnome-terminal&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;firefox&quot;</span><span class="p">);</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">BATCH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Set</span><span class="p">.</span><span class="na">of</span><span class="p">(</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">            </span><span class="s">&quot;gcc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;g++&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;clang&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;make&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ninja&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">            </span><span class="s">&quot;gradle&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mvn&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;javac&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;cargo&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;pytest&quot;</span><span class="p">);</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cmdlineCache</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="o">&gt;</span><span class="w">   </span><span class="n">lastSeen</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ConcurrentHashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">tickCount</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w">  </span><span class="n">batchRobin</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">policy</span><span class="p">(</span><span class="n">QueuedTask</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">bin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveBin</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="na">pid</span><span class="p">);</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">        </span><span class="n">lastSeen</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="na">pid</span><span class="p">,</span><span class="w"> </span><span class="n">tickCount</span><span class="p">);</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bin</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">INTERACTIVE</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">bin</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">ANY_CPU</span><span class="p">;</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bin</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">BATCH</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">bin</span><span class="p">))</span><span class="w">       </span><span class="k">return</span><span class="w"> </span><span class="n">nextBatchCpu</span><span class="p">();</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ANY_CPU</span><span class="p">;</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">    </span><span class="cm">/** Purge dead PIDs once per second. */</span>
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">    </span><span class="nd">@Override</span>
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="w">    </span><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">tick</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="w">        </span><span class="n">tickCount</span><span class="o">++</span><span class="p">;</span>
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="w">        </span><span class="n">Iterator</span><span class="o">&lt;</span><span class="n">Map</span><span class="p">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">Integer</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmdlineCache</span><span class="p">.</span><span class="na">entrySet</span><span class="p">().</span><span class="na">iterator</span><span class="p">();</span>
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a><span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="p">.</span><span class="na">hasNext</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a><span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">it</span><span class="p">.</span><span class="na">next</span><span class="p">().</span><span class="na">getKey</span><span class="p">();</span>
+<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a><span class="w">            </span><span class="kt">long</span><span class="w"> </span><span class="n">age</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tickCount</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lastSeen</span><span class="p">.</span><span class="na">getOrDefault</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="n">tickCount</span><span class="p">);</span>
+<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">age</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">Files</span><span class="p">.</span><span class="na">exists</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;/proc/&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">pid</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="w">                </span><span class="n">it</span><span class="p">.</span><span class="na">remove</span><span class="p">();</span>
+<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a><span class="w">                </span><span class="n">lastSeen</span><span class="p">.</span><span class="na">remove</span><span class="p">(</span><span class="n">pid</span><span class="p">);</span>
+<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a>
+<a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">resolveBin</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pid</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">cmdlineCache</span><span class="p">.</span><span class="na">computeIfAbsent</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a><span class="w">            </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a><span class="w">                </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Files</span><span class="p">.</span><span class="na">readAllBytes</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;/proc/&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;/cmdline&quot;</span><span class="p">));</span>
+<a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">raw</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a><span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a><span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">end</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">raw</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">raw</span><span class="o">[</span><span class="n">end</span><span class="o">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">end</span><span class="o">++</span><span class="p">;</span>
+<a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a><span class="w">                </span><span class="n">String</span><span class="w"> </span><span class="n">argv0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">end</span><span class="p">);</span>
+<a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a><span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">slash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argv0</span><span class="p">.</span><span class="na">lastIndexOf</span><span class="p">(</span><span class="sc">&#39;/&#39;</span><span class="p">);</span>
+<a id="__codelineno-4-61" name="__codelineno-4-61" href="#__codelineno-4-61"></a><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">slash</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">argv0</span><span class="p">.</span><span class="na">substring</span><span class="p">(</span><span class="n">slash</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">argv0</span><span class="p">;</span>
+<a id="__codelineno-4-62" name="__codelineno-4-62" href="#__codelineno-4-62"></a><span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-4-63" name="__codelineno-4-63" href="#__codelineno-4-63"></a><span class="w">        </span><span class="p">});</span>
+<a id="__codelineno-4-64" name="__codelineno-4-64" href="#__codelineno-4-64"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-65" name="__codelineno-4-65" href="#__codelineno-4-65"></a>
+<a id="__codelineno-4-66" name="__codelineno-4-66" href="#__codelineno-4-66"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">synchronized</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">nextBatchCpu</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-67" name="__codelineno-4-67" href="#__codelineno-4-67"></a><span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Runtime</span><span class="p">.</span><span class="na">getRuntime</span><span class="p">().</span><span class="na">availableProcessors</span><span class="p">();</span>
+<a id="__codelineno-4-68" name="__codelineno-4-68" href="#__codelineno-4-68"></a><span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">batchStart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<a id="__codelineno-4-69" name="__codelineno-4-69" href="#__codelineno-4-69"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">batchStart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">batchRobin</span><span class="o">++</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">batchStart</span><span class="p">));</span>
+<a id="__codelineno-4-70" name="__codelineno-4-70" href="#__codelineno-4-70"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-71" name="__codelineno-4-71" href="#__codelineno-4-71"></a><span class="p">}</span>
+</code></pre></div>
+<p>What's only possible here and not in kernelspace BPF:</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Userspace</th>
+<th>BPF</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read <code>/proc/&lt;pid&gt;/cmdline</code></td>
+<td><code>Files.readAllBytes(...)</code></td>
+<td>Not available</td>
+</tr>
+<tr>
+<td>Identify <code>java</code> as <code>gradle</code> vs <code>mvn</code></td>
+<td>argv[0] from cmdline</td>
+<td>comm is always <code>java</code></td>
+</tr>
+<tr>
+<td>Check <code>/proc/&lt;pid&gt;</code> exists</td>
+<td><code>Files.exists(...)</code></td>
+<td>Not available</td>
+</tr>
+<tr>
+<td><code>Runtime.availableProcessors()</code></td>
+<td>Yes</td>
+<td><code>scx_bpf_nr_cpu_ids()</code> (ids, not count)</td>
+</tr>
+<tr>
+<td>Arbitrary Java data structures</td>
+<td>Yes — <code>HashMap</code>, trees, etc.</td>
+<td>Stack-limited maps only</td>
+</tr>
+</tbody>
+</table>
+<p>Full source with CLI, stats, and shutdown hook:
+<a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CmdlineBoostSample.java"><code>CmdlineBoostSample.java</code></a></p>
+<hr />
+<h2 id="sample-schedulers">Sample schedulers<a class="headerlink" href="#sample-schedulers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scheduler</th>
+<th>What it demonstrates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandFifoSample.java"><code>RustlandFifoSample</code></a></td>
+<td>Minimal FIFO with periodic stats</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/WeightedRRSample.java"><code>WeightedRRSample</code></a></td>
+<td>Per-task state and <code>QueuedTask.weight</code></td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LotterySample.java"><code>LotterySample</code></a></td>
+<td>Weight-biased probabilistic CPU placement</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/VtimeSample.java"><code>VtimeSample</code></a></td>
+<td>Batch vtime ordering with <code>schedule()</code>, <code>TreeMap</code> sort (<strong>Experimental</strong>)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/RustlandJavaSample.java"><code>RustlandJavaSample</code></a></td>
+<td>Full scx_rustland port: <code>deadline = vtime + exec_runtime</code>, idle-CPU bitmap, interactive/batch separation (<strong>Experimental</strong>)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/FifoQueueSample.java"><code>FifoQueueSample</code></a></td>
+<td>Persistent <code>ArrayDeque</code> queue across batches using <code>QueuedTask.copy()</code> (<strong>Experimental</strong>)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/TwoQueueFifoSample.java"><code>TwoQueueFifoSample</code></a></td>
+<td>Two-tier FIFO: interactive (&lt; 10 ms exec) vs batch (<strong>Experimental</strong>)</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/CmdlineBoostSample.java"><code>CmdlineBoostSample</code></a></td>
+<td><code>/proc</code> reads, cmdline classification, CPU partitioning</td>
+</tr>
+<tr>
+<td><a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/ShowcaseScheduler.java"><code>ShowcaseScheduler</code></a></td>
+<td>Six-tier /proc-powered scheduler: cmdline + cgroup detection + I/O bytes/s + container CPU partition (<strong>Experimental</strong>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-running">4. Running<a class="headerlink" href="#4-running" title="Permanent link">&para;</a></h2>
+<p>Build and launch with elevated capabilities:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>-E<span class="w"> </span>java<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span>-XX:+UseZGC<span class="w"> </span>-XX:+ZGenerational<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>-cp<span class="w"> </span>bpf-samples.jar<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>me.bechberger.ebpf.samples.sched.RustlandFifoSample
+</code></pre></div>
+<p>Expected output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>RustlandFifoSample: attaching scheduler (Ctrl-C to detach)...
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>[stats] drained=312 dropped=0 disp=312/-0 cancel=0 stall=0 kicks=4
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>[stats] drained=648 dropped=0 disp=648/-0 cancel=0 stall=0 kicks=8
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>^C
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>==== Final stats ====
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>drained=911 dropped=0 disp=911/-0 cancel=0 stall=0 kicks=11
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>==== Histograms ====
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ringConsumeUs       count       distribution
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>[1, 1]                  3       |*                              |
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>[2, 3]                 24       |********                       |
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>[4, 7]                221       |*******************************|
+</code></pre></div>
+<p>Ctrl-C calls <code>requestExit()</code> via a shutdown hook; the run loop returns at the next
+batch boundary, the scheduler is detached, and the JVM exits cleanly.</p>
+<h2 id="5-tuning">5. Tuning<a class="headerlink" href="#5-tuning" title="Permanent link">&para;</a></h2>
+<p>All knobs are on <a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/Opts.java"><code>Opts</code></a>.
+The defaults are reasonable; only override what you have measured.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>batchSize</code></td>
+<td>256</td>
+<td>Max tasks drained per BPF→Java round trip. Higher = better throughput, worse tail latency.</td>
+</tr>
+<tr>
+<td><code>ringPollBudget</code></td>
+<td>1024</td>
+<td>Hard cap on ringbuf records consumed per <code>drainRaw</code> call.</td>
+</tr>
+<tr>
+<td><code>frameworkPidRescan</code></td>
+<td>5 s</td>
+<td>How often <code>/proc/self/task</code> is rescanned to re-pin JVM threads.</td>
+</tr>
+<tr>
+<td><code>policyExceptionBudgetPerSec</code></td>
+<td>100</td>
+<td>Soft budget — exceeding logs loudly but does not abort.</td>
+</tr>
+<tr>
+<td><code>verifyZgcOnStart</code></td>
+<td>true</td>
+<td>Warn if ZGC is not detected.</td>
+</tr>
+</tbody>
+</table>
+<p>JVM flags worth setting:</p>
+<ul>
+<li><code>-XX:+UseZGC -XX:+ZGenerational</code> — keeps GC pauses well under the watchdog.</li>
+<li><code>-Xmx&lt;reasonable&gt;</code> — a 32 GiB heap with G1 can pause for seconds. Don't.</li>
+<li><code>-XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints</code> — better JFR stacks if
+  you record the scheduler.</li>
+</ul>
+<h2 id="6-observability">6. Observability<a class="headerlink" href="#6-observability" title="Permanent link">&para;</a></h2>
+<h3 id="stats-cheap-always-on">Stats (cheap, always on)<a class="headerlink" href="#stats-cheap-always-on" title="Permanent link">&para;</a></h3>
+<p><code>scheduler.stats()</code> returns an immutable
+<a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/SchedStatsSnapshot.java"><code>SchedStatsSnapshot</code></a>
+with counters from both BPF and Java sides:</p>
+<ul>
+<li><code>ringEnqueued</code> — BPF wrote to queued ringbuf</li>
+<li><code>ringDropped</code> — ringbuf was full, task fell back to kernel-side handling</li>
+<li><code>ringDrained</code> — Java consumed from queued ringbuf</li>
+<li><code>ringCanceled</code> — Java consumed but <code>enqCnt</code> was stale, so it skipped dispatch</li>
+<li><code>dispatched</code> / <code>dispatchFailed</code> — kernel dispatch outcomes</li>
+<li><code>stallFallbacks</code> — tasks rescued by the BPF-side 50 ms stall fallback. When
+  the Java drain loop falls behind, the BPF side promotes waiting tasks from
+  <code>SHARED_DSQ</code> directly to the local CPU DSQ so they are not starved. A non-zero
+  count means the Java thread was too slow to drain: investigate GC pauses
+  (check <code>ringConsumeUs</code> histogram) or lock contention in the dispatch loop. A
+  handful of fallbacks during JVM startup is normal; sustained fallbacks are a bug.</li>
+<li><code>heartbeatKicks</code> — <code>SCX_KICK_IDLE</code> issued by the BPF heartbeat timer</li>
+</ul>
+<p><code>formatStats()</code> is a single-line render suitable for periodic stderr prints.</p>
+<h3 id="histograms-cheap-log2-bucketed">Histograms (cheap, log2-bucketed)<a class="headerlink" href="#histograms-cheap-log2-bucketed" title="Permanent link">&para;</a></h3>
+<p><code>scheduler.printHistograms(out)</code> dumps three log2 histograms:</p>
+<ul>
+<li><strong>ringConsumeUs</strong> — wall-clock time spent draining one batch (Java side).</li>
+<li><strong>roundTripUs</strong> — time between BPF enqueue (<code>stopTs</code>) and Java dispatch. Only
+  populated for tasks that previously ran (i.e. have a non-zero <code>stopTs</code>).</li>
+<li><strong>batchSize</strong> — number of tasks per drain.</li>
+</ul>
+<h3 id="jfr-events">JFR events<a class="headerlink" href="#jfr-events" title="Permanent link">&para;</a></h3>
+<p>Three thresholded events under category <code>hello-ebpf / userspace-scheduler</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Threshold</th>
+<th>Payload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hellobpf.userspace.Batch</code></td>
+<td>200 µs</td>
+<td>size, dispatched</td>
+</tr>
+<tr>
+<td><code>hellobpf.userspace.Dispatch</code></td>
+<td>100 µs</td>
+<td>pid, cpu, rc</td>
+</tr>
+<tr>
+<td><code>hellobpf.userspace.Tick</code></td>
+<td>500 µs</td>
+<td>heapUsedMb, frameworkPids</td>
+</tr>
+</tbody>
+</table>
+<p>These are off by default in <code>default.jfc</code> — enable them in your <code>.jfc</code> if you
+want them in long-running recordings.</p>
+<h3 id="where-to-look-when-something-is-wrong">Where to look when something is wrong<a class="headerlink" href="#where-to-look-when-something-is-wrong" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>First place to check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dispatched == 0</code> but <code>ringEnqueued &gt; 0</code></td>
+<td>Run loop is alive but <code>dispatchInternal</code> is failing — see <code>dispatchFailed</code>.</td>
+</tr>
+<tr>
+<td><code>stallFallbacks &gt; 0</code></td>
+<td>Java drain stalled past 50 ms. Check GC pauses (Tick events), or whether <code>policy()</code> is blocking.</td>
+</tr>
+<tr>
+<td>Scheduler kicked by kernel watchdog (<code>task X failed to run for 30s</code>)</td>
+<td>Run loop blocked. Check JFR for long Tick/Batch events. Most likely culprit: G1 GC pause on a large heap.</td>
+</tr>
+<tr>
+<td><code>ringDropped &gt; 0</code></td>
+<td>Java drain is too slow to keep up — increase <code>batchSize</code>, check <code>roundTripUs</code>.</td>
+</tr>
+<tr>
+<td><code>ringCanceled &gt; 0</code> consistently</td>
+<td>Tasks being rapidly re-enqueued before Java dispatched them. Often benign on a busy system.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-troubleshooting">7. Troubleshooting<a class="headerlink" href="#7-troubleshooting" title="Permanent link">&para;</a></h2>
+<p><strong><code>Cannot find /sys/kernel/sched_ext</code></strong> — kernel was not built with sched_ext, or the
+module is gated by a config you didn't enable. You need ≥ 6.12 with <code>CONFIG_SCHED_CLASS_EXT=y</code>.</p>
+<p><strong><code>operation not permitted</code> at attach</strong> — missing capabilities. Re-run with <code>sudo -E</code>.
+The framework needs <code>CAP_BPF + CAP_PERFMON + CAP_SYS_ADMIN</code>.</p>
+<p><strong><code>scheduler is already attached</code></strong> — another sched_ext scheduler is loaded.
+<code>systemctl stop scx</code> and any other scx user, then retry.</p>
+<p><strong>Verifier rejection at load</strong> — wrapped in a
+<a href="https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/userspace/UserspaceSchedulerStartupException.java"><code>UserspaceSchedulerStartupException</code></a>
+with the libbpf log attached. These are framework bugs — open an issue with the log.</p>
+<p><strong>Watchdog kills the scheduler after ~30 s under load</strong> — this is the
+<code>timeout_ms</code> task-stall watchdog. The Java run loop is not draining fast enough,
+typically because:</p>
+<ol>
+<li>GC pauses (run with ZGC).</li>
+<li><code>policy()</code> is blocking on I/O. It must not.</li>
+<li>The drain thread itself is a JVM thread that wasn't seeded into
+   <code>frameworkPids</code> before attach — this used to be a bug; current code seeds it.
+   If you see this on a clean build, file an issue.</li>
+</ol>
+<h2 id="8-limitations-non-goals">8. Limitations &amp; non-goals<a class="headerlink" href="#8-limitations-non-goals" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Single-process JVM only.</strong> The framework loads one BPF program; there can be
+  one userspace scheduler per machine.</li>
+<li><strong>No per-cgroup or per-cpuset policy.</strong> The transport is global. If you want
+  cgroup-aware scheduling, you do it inside <code>policy()</code> by reading
+  <code>/proc/&lt;pid&gt;/cgroup</code>.</li>
+<li><strong>No in-flight task migration.</strong> Once a task is dispatched, it runs on the CPU
+  you picked until the next sched_ext event (sleep, preemption, completion).</li>
+<li><strong>Not a replacement for in-kernel schedulers.</strong> Even with ZGC the userspace
+  round-trip adds 1–10 µs at p50 and significantly more at p99 under GC pressure.
+  Use it where flexibility &gt; microbenchmark latency.</li>
+<li><strong><code>policy()</code> runs on a single thread.</strong> No concurrency, no shared mutable state
+  to worry about — but also no parallelism. Decisions must be cheap (target: &lt; 1 µs
+  per call).</li>
+</ul>
+<hr />
+<p><em>Next: <a href="../callbacks/">Callbacks Reference</a></em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "content.code.annotate", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
