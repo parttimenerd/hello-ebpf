@@ -43,7 +43,10 @@ public final class TreeConstants {
             return Optional.empty();
         }
         var mt = trees.getTree(m);
-        if (mt == null || mt.getBody() == null) return Optional.empty();
+        if (mt == null || mt.getBody() == null) {
+            System.err.println("DEBUG_TREECONSTANTS: stringReturnLiteral mt=" + mt + " for " + m.getEnclosingElement() + "." + m.getSimpleName() + " mClass=" + m.getClass().getName());
+            return Optional.empty();
+        }
         var stmts = mt.getBody().getStatements();
         if (stmts.size() != 1) return Optional.empty();
         if (!(stmts.get(0) instanceof ReturnTree rt)) return Optional.empty();
