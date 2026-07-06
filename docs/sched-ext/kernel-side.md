@@ -18,7 +18,10 @@ The hello-ebpf kernelspace path builds on three types:
 **Blog series** — the kernel-side scheduler is introduced in
 [Part 15: Writing a Linux scheduler in Java with eBPF](https://mostlynerdless.de/blog/2024/09/10/hello-ebpf-writing-a-linux-scheduler-in-java-with-ebpf-15/)
 and the lottery variant in
-[Part 17: Writing a lottery scheduler in Java with sched_ext](https://mostlynerdless.de/blog/2024/12/17/hello-ebpf-writing-a-lottery-scheduler-in-java-with-sched-ext-17/).
+[Part 17: Writing a lottery scheduler in Java with sched_ext](https://mostlynerdless.de/blog/2024/12/17/hello-ebpf-writing-a-lottery-scheduler-in-java-with-sched-ext-17/).  
+**Talks:** [Writing a Linux Scheduler in Java with eBPF (eBPF Summit 2024)](https://speakerdeck.com/parttimenerd/writing-a-linux-scheduler-in-java-with-ebpf) · [Concurrency Testing Using Custom Linux Schedulers (p99conf 2025)](https://speakerdeck.com/parttimenerd/concurrency-testing-using-custom-linux-schedulers-p99conf)
+
+![hello-ebpf 3-layer architecture for schedulers: Java→C→Bytecode / sched-ext / Hardware](https://files.speakerdeck.com/presentations/23196bda93134fd39a46549087f9965f/preview_slide_17.jpg)
 
 ![Tasks flow from the scheduler into a global DSQ, then into per-CPU local queues](https://mostlynerdless.de/wp-content/uploads/2024/09/scheduler_dance-2000x1847.png)
 
@@ -584,6 +587,29 @@ BPF_PRINT_CODE=1 sudo ./run.sh MyScheduler
 
 This is useful for debugging compiler plugin output or verifying that helper methods
 are being inlined correctly.
+
+## Benchmarks and use cases
+
+### Scheduler latency benchmark
+
+These box-plots from [Part 15](https://mostlynerdless.de/blog/2024/09/10/hello-ebpf-writing-a-linux-scheduler-in-java-with-ebpf-15/)
+compare a hello-ebpf weighted sample scheduler against EEVDF (the default) and FIFO,
+measured as compilation time — a real workload sensitive to scheduling fairness.
+
+![Benchmark box-plot: Weighted Sample vs EEVDF vs FIFO scheduler (compilation time)](https://mostlynerdless.de/wp-content/uploads/2024/09/image-1.png)
+
+### Concurrency testing with custom schedulers
+
+Custom schedulers can also be used to make concurrency bugs more reproducible.
+By controlling task interleaving deterministically, you can force race conditions
+that would otherwise be probabilistic. See the p99conf 2025 talk:
+
+![CPU timeline showing tasks T0/T1/T2 interleaved — motivates deterministic scheduling](https://files.speakerdeck.com/presentations/14494d3b0cfe4804b55ff3e0664bc675/preview_slide_6.jpg)
+
+![Scheduler dance: tasks → Scheduler → Global Queue → Local Queues with work-stealing](https://files.speakerdeck.com/presentations/14494d3b0cfe4804b55ff3e0664bc675/preview_slide_18.jpg)
+
+**Blog post:** [Part 19 — Concurrency Testing Using Custom Linux Schedulers](https://mostlynerdless.de/blog/2025/02/25/helle-ebpf-concurrency-testing-using-custom-linux-schedulers-19/)  
+**Talk:** [Concurrency Testing Using Custom Linux Schedulers — p99conf 2025](https://speakerdeck.com/parttimenerd/concurrency-testing-using-custom-linux-schedulers-p99conf)
 
 ---
 

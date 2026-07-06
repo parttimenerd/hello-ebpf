@@ -13,6 +13,8 @@ your `@BPF` class and annotated with `@BPFMapDefinition`.
 
 ![eBPF map as bidirectional bridge between kernel and user space](https://mostlynerdless.de/wp-content/uploads/2024/01/ebpf_maps-2000x425.png)
 
+![BPF map data-sharing: eBPF Program ↔ BPF Map ↔ Userland Program with sample data](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_30.jpg)
+
 ## Declaration pattern
 
 ```java

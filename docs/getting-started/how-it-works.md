@@ -1,10 +1,15 @@
 # How the Plugin Works
 
-**Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) · [Part 8 — Generating C code from Java](https://mostlynerdless.de/blog/2024/04/09/hello-ebpf-generating-c-code-8/) · [Part 11 — BTF and 13,000 generated Java classes](https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/) · [Part 12 — Write eBPF in pure Java](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/)
+**Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) · [Part 8 — Generating C code from Java](https://mostlynerdless.de/blog/2024/04/09/hello-ebpf-generating-c-code-8/) · [Part 11 — BTF and 13,000 generated Java classes](https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/) · [Part 12 — Write eBPF in pure Java](https://mostlynerdless.de/blog/2024/07/30/hello-ebpf-write-your-ebpf-application-in-pure-java-12/)  
+**Talks:** [hello-ebpf: Writing eBPF Programs Directly in Java (LPC 2024)](https://speakerdeck.com/parttimenerd/hello-ebpf-writing-ebpf-programs-directly-in-java) · [Building a Lightning Fast Firewall with Java & eBPF (JavaZone 2024)](https://speakerdeck.com/parttimenerd/building-a-lightning-fast-firewall-with-java-and-ebpf-javazone-2024)
 
 **Javadoc:** [`BPFProgram`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html) · [`@BPF`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPF.html) · [`@BPFFunction`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFFunction.html) · [`@Type`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Type.html) · [`@BPFMapDefinition`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/BPFMapDefinition.html)
 
 ![Annotation processor and compiler plugin pipeline](https://mostlynerdless.de/wp-content/uploads/2024/07/compiler_pipeline-2000x1125.png)
+
+![hello-ebpf compiler pipeline: Java Code → Annotation Preprocessor → Java Compiler → AST → Plugin → BPF bytecode](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_54.jpg)
+
+![eBPF hooks across the full Linux network stack: XDP, TC, socket, tracepoints, kprobes](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_32.jpg)
 
 The kernel BPF verifier operates on eBPF bytecode. The only production-quality
 compiler that targets that bytecode is clang. hello-ebpf does not bypass that
@@ -268,6 +273,17 @@ the running kernel's BTF. The result is a single `.o` that loads on any kernel
 ≥ 5.2 that exports BTF (`CONFIG_DEBUG_INFO_BTF=y`), without recompilation or
 per-kernel headers.
 
+hello-ebpf auto-generates ~13,000 Java wrapper classes from the kernel's BTF
+so you get typed access to every kernel struct without maintaining headers manually.
+
+![Annotation preprocessor: GlobalVariable before/after expansion to C](https://files.speakerdeck.com/presentations/fa14b57b593b48b1a48c2767e5177eca/preview_slide_26.jpg)
+
+![VMLinux generation: BTF + Man Pages + Helper Docs → 13k Java Classes / BPFHelpers](https://files.speakerdeck.com/presentations/fa14b57b593b48b1a48c2767e5177eca/preview_slide_38.jpg)
+
+![BTF type tree for u32: TYPEDEF __u32 → INT unsigned int (4 bytes)](https://mostlynerdless.de/wp-content/uploads/2024/07/u32_tree-2000x377.png)
+
+![BTF type tree for ethhdr: 3 members with byte offsets → ARRAY → TYPEDEF → INT](https://mostlynerdless.de/wp-content/uploads/2024/07/ethhdr-2000x1111.png)
+
 ## §7 What the processor and plugin do not touch
 
 `main()` and all non-`@BPFFunction` methods run unchanged on the JVM. Map
@@ -280,3 +296,14 @@ code — share the same file descriptor returned by `BPFProgram.load()`.
 For the error-classifier, diagnostic messages, and plugin extension points, see
 [Architecture: Compiler Plugin](../architecture/plugin.md) and
 [Diagnostics](../diagnostics.md).
+
+---
+
+## Talk: hello-ebpf at Linux Plumbers Conference 2024
+
+The LPC talk covers the full compiler pipeline, annotation preprocessor, and BTF
+class generation in depth — good companion to this page.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bWs5GHYpYxg" title="hello-ebpf: Writing eBPF Programs Directly in Java — LPC 2024" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+![eBPF Ecosystem layered stack: Use Cases → Projects → SDKs → Kernel Runtime](https://files.speakerdeck.com/presentations/fa14b57b593b48b1a48c2767e5177eca/preview_slide_2.jpg)

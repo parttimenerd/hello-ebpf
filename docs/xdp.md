@@ -1,11 +1,14 @@
 # XDP — Express Data Path
 
-**Blog series:** [Part 9 — XDP-based packet filter](https://mostlynerdless.de/blog/2024/04/22/hello-ebpf-xdp-based-packet-filter-9/) · [Part 13 — Packet logger with TC and XDP](https://mostlynerdless.de/blog/2024/08/13/hello-ebpf-a-packet-logger-in-pure-java-using-tc-and-xdp-hooks-13/) · [Part 14 — Firewall with Java & eBPF](https://mostlynerdless.de/blog/2024/08/27/hello-ebpf-building-a-lightning-fast-firewall-with-java-ebpf-14/)
+**Blog series:** [Part 9 — XDP-based packet filter](https://mostlynerdless.de/blog/2024/04/22/hello-ebpf-xdp-based-packet-filter-9/) · [Part 13 — Packet logger with TC and XDP](https://mostlynerdless.de/blog/2024/08/13/hello-ebpf-a-packet-logger-in-pure-java-using-tc-and-xdp-hooks-13/) · [Part 14 — Firewall with Java & eBPF](https://mostlynerdless.de/blog/2024/08/27/hello-ebpf-building-a-lightning-fast-firewall-with-java-ebpf-14/)  
+**Talk:** [Building a Lightning Fast Firewall with Java & eBPF (JavaZone 2024)](https://speakerdeck.com/parttimenerd/building-a-lightning-fast-firewall-with-java-and-ebpf-javazone-2024)  
 **Javadoc:** [`XDPHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/XDPHook.html)
 **Source:** [`XDPHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/XDPHook.java)
 **See also:** [TC Hook](tc.md) · [BPF Maps](maps.md) · [Global Variables](global-variables.md)
 
 ![Java config/log component talking to the XDP kernel program](https://mostlynerdless.de/wp-content/uploads/2024/04/xdp_filter-1-2000x1005.png)
+
+![XDP hook position: NIC → XDP (red arrow) before Linux Network Stack → Application](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_50.jpg)
 
 XDP (eXpress Data Path) is the fastest hook point in the Linux network stack. BPF programs run
 directly in the network driver, before any SKB allocation, achieving multi-million-packets-per-second
@@ -158,6 +161,22 @@ public abstract class BlockIP extends BPFProgram implements XDPHook {
 - Process as much as possible inside the BPF program. Passing packets up to the kernel incurs SKB allocation overhead.
 - Use `BPFPerCpuArray` for counters to avoid inter-CPU synchronisation.
 - Return `XDP_DROP` as early as possible after the bounds checks.
+
+### Benchmark: XDP vs iptables
+
+These charts are from the JavaZone 2024 talk using Cloudflare's published data.
+XDP reaches ~10 Mpps — roughly 10× faster than iptables in PREROUTING, and even
+faster with NIC offloading.
+
+![Packet-dropping performance: iptables PREROUTING baseline (Cloudflare data)](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_10.jpg)
+
+![Same chart extended with XDP at ~10 Mpps — dramatic speed advantage over iptables](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_12.jpg)
+
+![XDP chart with "even faster with offloading" annotation for NIC-offloaded XDP](https://files.speakerdeck.com/presentations/6e75aaa3377e4650b6108f49a9241249/preview_slide_14.jpg)
+
+### Talk: Building a Lightning Fast Firewall with Java & eBPF
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/16Rv7IWGoDk" title="Building a Lightning Fast Firewall with Java & eBPF — JavaZone 2024" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ---
 
