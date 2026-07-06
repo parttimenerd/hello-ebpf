@@ -74,6 +74,12 @@ class HidBpfOpsSmokeTest {
                     "mapFd should be a valid file descriptor; got " + only.mapFd());
             assertNotEquals(0L, only.bpfLinkId(),
                     "bpfLinkId should be non-zero after attach; got " + only.bpfLinkId());
+        } catch (BPFProgram.BPFLoadError.StructOpsAttachFailed e) {
+            // errno=22 (EINVAL) means the kernel doesn't have CONFIG_HID_BPF=y or the
+            // hid_bpf_ops struct_ops type is not registered — treat as a skip.
+            assumeTrue(!e.getMessage().contains("errno=22"),
+                    "hid_bpf_ops struct_ops not available on this kernel (errno=22): " + e.getMessage());
+            throw e;
         }
     }
 }
