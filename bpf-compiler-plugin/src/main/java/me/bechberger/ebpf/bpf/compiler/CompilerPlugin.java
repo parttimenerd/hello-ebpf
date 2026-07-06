@@ -332,6 +332,12 @@ public class CompilerPlugin implements Plugin {
                 funcs.addAll(getBPFFunctionsForClass(e.getCompilationUnit()));
                 var impls = getBPFProgramImpls(e.getCompilationUnit());
                 var interfaces = getBPFInterfaces(e.getCompilationUnit());
+                // Eagerly trigger struct-ops synthesis for any @BPF class so that
+                // string/integer literals are resolved while the Trees API still
+                // has the current round's ASTs. Without this, the generated
+                // @BPFImpl class is compiled in a later round, at which point
+                // Trees.getTree() returns null for the prior round's methods.
+                eagerlyPrimeStructOpsCacheForBPFClasses(e.getCompilationUnit());
                 if (impls.isEmpty() && interfaces.isEmpty() && funcs.isEmpty()) {
                     return;
                 }
@@ -341,6 +347,31 @@ public class CompilerPlugin implements Plugin {
                 impls.forEach(CompilerPlugin.this::processBPFProgramImpl);
             }
         });
+    }
+
+    /**
+     * Walks all classes in the compilation unit and eagerly populates the
+     * struct-ops synthesis cache for any class annotated {@code @BPF}. Called
+     * in the ANALYZE phase so the Trees API still has the current-round ASTs;
+     * when the generated {@code @BPFImpl} class is later compiled in a fresh
+     * round, {@link #getStructOpsSynthesis} returns the cached result without
+     * needing to re-read method bodies.
+     */
+    private void eagerlyPrimeStructOpsCacheForBPFClasses(CompilationUnitTree cu) {
+        cu.accept(new com.sun.source.util.TreeScanner<Void, Void>() {
+            @Override
+            public Void visitClass(com.sun.source.tree.ClassTree node, Void p) {
+                var path = com.sun.source.util.TreePath.getPath(cu, node);
+                var el = trees.getElement(path);
+                if (el instanceof TypeElement te && te.getAnnotation(BPF.class) != null) {
+                    // Calling getStructOpsSynthesis here (while trees are live)
+                    // populates the cache; any @BPFImpl-triggered call later gets
+                    // a cache hit without needing the AST.
+                    getStructOpsSynthesis(te);
+                }
+                return super.visitClass(node, p);
+            }
+        }, null);
     }
 
     private boolean onlyThrowsExceptions(MethodTree method) {
