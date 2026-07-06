@@ -764,7 +764,7 @@ public class CompilerPlugin implements Plugin {
 
         var defines = declsWithDefines.stream().flatMap(e -> e.getValue().requiredDefines().stream()).collect(Collectors.toSet());
         var functionHeaders = declsWithDefines.stream().map(Map.Entry::getValue).filter(d -> d.addDefine).map(d -> d.decl.declarator()).toList();
-        var functionImplementations = declsWithDefines.stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().decl.toPrettyString()));
+        var functionImplementations = declsWithDefines.stream().collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().decl.toPrettyString(), (a, b) -> a, LinkedHashMap::new));
         // Synthetic lambdas lifted via $funcN belong with the interface body so they're
         // visible to consumers that paste the interface body into their own C code.
         var syntheticFnsCode = declsWithDefines.stream()
@@ -1104,6 +1104,7 @@ public class CompilerPlugin implements Plugin {
 
         var defaultCode = defaultCodeForMethod.entrySet().stream()
                 .filter(e -> !implementedMethodStrings.contains(e.getKey().toString()))
+                .sorted(Map.Entry.comparingByKey(Comparator.comparing(MethodSymbol::toString)))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.joining("\n\n"));
 
@@ -1307,7 +1308,7 @@ public class CompilerPlugin implements Plugin {
     }
 
     private Map<MethodSymbol, String> getInterfaceMethodsWithDefaultCode(Symbol.ClassSymbol superClassElement) {
-        var result = new HashMap<MethodSymbol, String>();
+        var result = new LinkedHashMap<MethodSymbol, String>();
         // Collect @BPFFunction implementations from concrete superclasses first (highest priority).
         // These are stored via @InternalMethodDefinition on the class method by processBPFFunction.
         // Walk from the most-derived class upward; the first (most-derived) definition wins.

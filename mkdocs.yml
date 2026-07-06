@@ -12,7 +12,7 @@ not_in_nav: |
   sched-ext/sound-scheduler.md
 theme:
   name: material
-features:
+  features:
     - navigation.tabs
     - navigation.sections
     - content.code.annotate

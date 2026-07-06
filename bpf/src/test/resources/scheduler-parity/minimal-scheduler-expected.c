@@ -41,19 +41,14 @@ __always_inline s32 selectCpuDfl(struct task_struct *p, s32 prev_cpu, s64 wake_f
 __always_inline s32 selectCpuFifoIdleOrFallback(struct task_struct *p, s32 prev_cpu, s64 wake_flags, u64 dsqId);
 __always_inline bool isSmaller(u64 a, u64 b);
 __always_inline int vtimeCharge(struct task_struct *p);
+__always_inline int vtimeCharge(struct task_struct *p) {
+  #line 241 "SchedulerHelpers.java"
+  (*(p)).scx.dsq_vtime += (((long)(SCX_SLICE_DFL) - BPF_CORE_READ(p, scx.slice)) * 100) / BPF_CORE_READ(p, scx.weight);
+  return 0;
+}
 __always_inline s64 scaleByTaskWeight(struct task_struct *p, s64 value) {
   #line 172 "SchedulerHelpers.java"
   return (value * BPF_CORE_READ(p, scx.weight)) / 100;
-}
-SEC("struct_ops/exit") void BPF_PROG(sched_exit, struct scx_exit_info *ei) {
-  #line 82 "SchedulerBase.java"
-  _exitCode = BPF_CORE_READ(ei, exit_code);
-  #line 83 "SchedulerBase.java"
-  _exitKind = (s64)(long)(BPF_CORE_READ(ei, kind));
-}
-__always_inline bool isSmaller(u64 a, u64 b) {
-  #line 230 "SchedulerHelpers.java"
-  return ((s64)(a - b)) < 0;
 }
 __always_inline bool isDescendantOf(struct task_struct *p, s32 targetTgid) {
   #line 130 "SchedulerHelpers.java"
@@ -75,6 +70,21 @@ __always_inline bool isDescendantOf(struct task_struct *p, s32 targetTgid) {
     cur = BPF_CORE_READ(cur, real_parent);
   }
   #line 136 "SchedulerHelpers.java"
+  return 0;
+}
+SEC("struct_ops/exit") void BPF_PROG(sched_exit, struct scx_exit_info *ei) {
+  #line 82 "SchedulerBase.java"
+  _exitCode = BPF_CORE_READ(ei, exit_code);
+  #line 83 "SchedulerBase.java"
+  _exitKind = (s64)(long)(BPF_CORE_READ(ei, kind));
+}
+__always_inline int dsqInsert(struct task_struct *p, s64 enq_flags) {
+  #line 187 "SchedulerHelpers.java"
+  u32 queued = scx_bpf_dsq_nr_queued(0L);
+  #line 188 "SchedulerHelpers.java"
+  s64 slice = queued > 0 ? (long)(SCX_SLICE_DFL) / queued : (long)(SCX_SLICE_DFL);
+  #line 189 "SchedulerHelpers.java"
+  scx_bpf_dsq_insert(p, 0L, slice, enq_flags);
   return 0;
 }
 #define SHARED_DSQ_ID 0L
@@ -99,29 +109,19 @@ __always_inline bool hasSchedulingConstraints(struct task_struct *p) {
   #line 100 "SchedulerHelpers.java"
   return ((BPF_CORE_READ(p, flags) & PF_KTHREAD) != 0) || (BPF_CORE_READ(p, nr_cpus_allowed) != scx_bpf_nr_cpu_ids());
 }
-__always_inline int dsqInsert(struct task_struct *p, s64 enq_flags) {
-  #line 187 "SchedulerHelpers.java"
-  u32 queued = scx_bpf_dsq_nr_queued(0L);
-  #line 188 "SchedulerHelpers.java"
-  s64 slice = queued > 0 ? (long)(SCX_SLICE_DFL) / queued : (long)(SCX_SLICE_DFL);
-  #line 189 "SchedulerHelpers.java"
-  scx_bpf_dsq_insert(p, 0L, slice, enq_flags);
-  return 0;
+__always_inline bool isMigrationDisabled(struct task_struct *p) {
+  #line 154 "SchedulerHelpers.java"
+  return (BPF_CORE_READ(p, nr_cpus_allowed) == 1) || (BPF_CORE_READ(p, migration_disabled) > 1);
+}
+__always_inline bool isSmaller(u64 a, u64 b) {
+  #line 230 "SchedulerHelpers.java"
+  return ((s64)(a - b)) < 0;
 }
 __always_inline s32 selectCpuDfl(struct task_struct *p, s32 prev_cpu, s64 wake_flags) {
   #line 200 "SchedulerHelpers.java"
   bool is_idle = 0;
   #line 201 "SchedulerHelpers.java"
   return scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &(is_idle));
-}
-__always_inline int vtimeCharge(struct task_struct *p) {
-  #line 241 "SchedulerHelpers.java"
-  (*(p)).scx.dsq_vtime += (((long)(SCX_SLICE_DFL) - BPF_CORE_READ(p, scx.slice)) * 100) / BPF_CORE_READ(p, scx.weight);
-  return 0;
-}
-__always_inline bool isMigrationDisabled(struct task_struct *p) {
-  #line 154 "SchedulerHelpers.java"
-  return (BPF_CORE_READ(p, nr_cpus_allowed) == 1) || (BPF_CORE_READ(p, migration_disabled) > 1);
 }
 char _license[] SEC("license") = "GPL";
 SEC("struct_ops/enqueue") void BPF_PROG(sched_enqueue, struct task_struct *p, __u64 enq_flags) {
@@ -138,7 +138,7 @@ struct sched_ext_ops sched_ops = {
     .dispatch = (void *)sched_dispatch,
     .init = (void *)sched_init,
     .exit = (void *)sched_exit,
+    .name = "minimal_scheduler",
     .timeout_ms = 10000,
     .flags = SCX_OPS_ENQ_LAST | SCX_OPS_KEEP_BUILTIN_IDLE | (0),
-    .name = "minimal_scheduler",
 };
