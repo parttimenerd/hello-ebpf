@@ -584,3 +584,7 @@ BPF_PRINT_CODE=1 sudo ./run.sh MyScheduler
 
 This is useful for debugging compiler plugin output or verifying that helper methods
 are being inlined correctly.
+
+---
+
+*Next: [Userspace Scheduler](userspace.md)*

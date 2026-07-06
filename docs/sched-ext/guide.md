@@ -283,3 +283,7 @@ The `bpf-samples` module contains progressively more complex schedulers:
 | [`TaskStorageScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/TaskStorageScheduler.java) | Per-task state via `BPFTaskStorage` |
 | [`PriorityScheduler`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/PriorityScheduler.java) | Multiple priority DSQs |
 | [`PerCpuSchedulerSample`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/PerCpuSchedulerSample.java) | Per-CPU DSQ layout via `PerCpuSchedulerBase` |
+
+---
+
+*Next: [Kernelspace Scheduler](kernel-side.md)*

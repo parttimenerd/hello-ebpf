@@ -1,6 +1,15 @@
 # sched_ext — Overview
 
-**Blog series:** [Part 15 — Write a custom scheduler in Java](https://mostlynerdless.de/blog/2024/10/17/hello-ebpf-writing-a-custom-scheduler-in-pure-java-15/) · [Part 16 — Userspace scheduler](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/) · [Part 17 — Lottery scheduler](https://mostlynerdless.de/blog/2024/12/13/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-17/) · [Part 18 — bpf_for_each lambda support](https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/)
+**Kernel docs:** [docs.kernel.org/scheduler/sched-ext.html](https://docs.kernel.org/scheduler/sched-ext.html) · **BPF program type:** [BPF_PROG_TYPE_STRUCT_OPS/sched_ext_ops](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_STRUCT_OPS/sched_ext_ops/)  
+**Blog series:** [Part 15 — Write a custom scheduler in Java](https://mostlynerdless.de/blog/2024/09/10/hello-ebpf-writing-a-linux-scheduler-in-java-with-ebpf-15/) · [Part 16 — Userspace scheduler](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/) · [Part 17 — Lottery scheduler](https://mostlynerdless.de/blog/2024/12/17/hello-ebpf-writing-a-lottery-scheduler-in-java-with-sched-ext-17/) · [Part 18 — bpf_for_each](https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/)  
+**Source:** [`SchedulerBase.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/SchedulerBase.java) · [`Scheduler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/Scheduler.java)
+
+It all started when I was naive enough to propose a talk at the eBPF Summit on writing
+Linux schedulers in Java — then I had to implement it. The result turned out to be
+genuinely useful: hello-ebpf can now replace the Linux CPU scheduler with pure Java code,
+all as a normal jar file, with no kernel patching required.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bWs5GHYpYxg" title="Writing a Linux Scheduler in Java with eBPF — eBPF Summit 2024" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 sched_ext is a Linux scheduling class introduced in kernel 6.11 that lets you implement
 CPU schedulers entirely in BPF. Instead of patching the kernel, you can prototype and
@@ -22,6 +31,10 @@ sched_ext lets you:
 - Deploy different schedulers per workload
 - Roll back instantly if a scheduler misbehaves (watchdog auto-detaches in `timeout_ms`)
 - Ship schedulers as ordinary jar files
+
+![CPU time-slicing: tasks A and B alternating on the CPU timeline](https://files.speakerdeck.com/presentations/23196bda93134fd39a46549087f9965f/preview_slide_10.jpg)
+
+![Global DSQ dispatching to per-CPU local queues via work-stealing](https://files.speakerdeck.com/presentations/3a45bfdc15384a939b3ead644ea09b40/preview_slide_60.jpg)
 
 ## Quick start
 
@@ -96,3 +109,11 @@ sched.waitWhileSchedulerIsAttachedProperly() // blocks until detached
 > and the system may become unresponsive. Always test in a VM first (e.g. via `vng`).
 > The `timeout_ms` watchdog auto-detaches a misbehaving scheduler, but only after the
 > timeout elapses — during which the system may be sluggish.
+
+The diagram below shows how dispatching works across the kernel and userspace scheduler paths:
+
+![Tasks flow from kernel enqueue through DSQs to CPU dispatch](https://mostlynerdless.de/wp-content/uploads/2024/12/task_control_diagram-2000x1680.png)
+
+---
+
+*Next: [Writing a Scheduler](guide.md)*

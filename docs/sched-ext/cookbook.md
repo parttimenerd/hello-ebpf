@@ -459,3 +459,7 @@ These schedulers run the scheduling policy entirely in Java. See
 | `FifoQueueSample` ⚗ | Persistent FIFO queue | `QueuedTask.copy()` across batches; `ArrayDeque` |
 | `TwoQueueFifoSample` ⚗ | Two-tier FIFO | Interactive (< 10 ms) vs batch queues |
 | `ShowcaseScheduler` ⚗ | Six-tier /proc-powered | cmdline + cgroup + I/O bytes; container CPU partition |
+
+---
+
+*Next: [Sound Scheduler](sound-scheduler.md)*

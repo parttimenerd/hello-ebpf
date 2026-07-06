@@ -2,6 +2,14 @@
 
 **Javadoc:** [`UserspaceScheduler`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/userspace/UserspaceScheduler.html) · [`QueuedTask`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/QueuedTask.html) · [`Opts`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/userspace/Opts.html)
 
+**See also:** [scx_rustland_core](https://github.com/sched-ext/scx/tree/main/rust/scx_rustland_core) (the Rust pattern this port is based on) · [sched_ext kernel docs](https://docs.kernel.org/scheduler/sched-ext.html)
+
+!!! warning "Highly experimental"
+    The userspace scheduler is under active development and the API may change between
+    releases. It has been tested on Linux 6.12–6.14 (kernel ≥ 6.12 required). If you
+    hit issues, please [open an issue](https://github.com/parttimenerd/hello-ebpf/issues)
+    with the verifier log attached.
+
 A userspace scheduler moves the scheduling policy to **Java**, running in user space.
 The BPF side is a thin transport: it forwards every queued task through a ring buffer,
 Java decides where it should run, and the decision flows back through a second ring
@@ -9,15 +17,6 @@ buffer for the kernel to dispatch.
 
 This is the "rustland" pattern (cf. `scx_rustland_core`) ported to hello-ebpf: you write
 ordinary Java, the framework hides the BPF.
-
-**Blog series** — the userspace scheduler is introduced in
-[Part 16: Control task scheduling with a custom scheduler written in Java](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/)
-and the userspace lottery variant in
-[Part 18: Writing a lottery scheduler in pure Java with BPF for-each support](https://mostlynerdless.de/blog/2024/12/27/hello-ebpf-writing-a-lottery-scheduler-in-pure-java-with-bpf-for-each-support-18/).
-
-![Tasks enqueue into a scheduling queue; CPUs ask for new tasks and return finished ones; a task-settings map controls policy](https://mostlynerdless.de/wp-content/uploads/2024/12/task_control_diagram-2000x1680.png)
-
----
 
 ## How it works
 
@@ -455,3 +454,7 @@ typically because:
 - **`policy()` runs on a single thread.** No concurrency, no shared mutable state
   to worry about — but also no parallelism. Decisions must be cheap (target: < 1 µs
   per call).
+
+---
+
+*Next: [Callbacks Reference](callbacks.md)*

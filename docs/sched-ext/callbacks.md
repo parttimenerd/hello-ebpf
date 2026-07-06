@@ -1,5 +1,9 @@
 # sched_ext — Callback Reference
 
+**Javadoc:** [`Scheduler`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/Scheduler.html) · [`SchedulerBase`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/SchedulerBase.html) · [`DispatchQueue`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/sched/DispatchQueue.html)  
+**BPF reference:** [sched_ext_ops — docs.ebpf.io](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_STRUCT_OPS/sched_ext_ops/) · [sched-ext kernel docs](https://docs.kernel.org/scheduler/sched-ext.html)  
+**Source:** [`Scheduler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/Scheduler.java) · [`SchedulerBase.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/SchedulerBase.java)
+
 ## How callbacks work
 
 Every sched_ext scheduler is a Java class that extends `SchedulerBase` and implements the
@@ -222,3 +226,7 @@ argument.
 
 Cgroup support requires the scheduler to declare it at load time. See the
 [sched-ext overview](index.md) for the full setup and an annotated example.
+
+---
+
+*Next: [Cookbook](cookbook.md)*

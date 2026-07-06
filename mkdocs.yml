@@ -50,6 +50,8 @@ nav:
     - Userspace Scheduler: sched-ext/userspace.md
     - Callbacks Reference: sched-ext/callbacks.md
     - Cookbook: sched-ext/cookbook.md
+    - Sound Scheduler: sched-ext/sound-scheduler.md
+    - Fun Schedulers: sched-ext/fun-schedulers.md
   - Reference:
     - Cheat Sheet: cheatsheet.md
     - Feature Matrix: feature-matrix.md
