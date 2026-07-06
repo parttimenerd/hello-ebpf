@@ -120,7 +120,7 @@ See also: [XDP hook docs](xdp.md) · [BPF Maps](maps.md) · [Global Variables](g
 ## Quick example: custom Linux scheduler
 
 hello-ebpf can replace the Linux CPU scheduler with pure Java code via [sched_ext](sched_ext.md).
-Here is the minimal FIFO scheduler — the complete program, nothing omitted:
+Here is [`MinimalScheduler.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/MinimalScheduler.java) — the complete program, nothing omitted:
 
 ```java
 @BPF(license = "GPL")
