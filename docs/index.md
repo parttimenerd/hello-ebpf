@@ -11,7 +11,28 @@ No C files, no Makefiles, no separate build step. Just Java.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/bWs5GHYpYxg" title="hello-ebpf demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-## How it works
+## Features
+
+- **XDP and TC hooks** -- attach packet filters and packet loggers to network interfaces
+- **kprobes, kretprobes, fentry, fexit** -- trace any kernel function entry or return
+- **Tracepoints and raw tracepoints** -- stable kernel hook points with typed context structs
+- **Uprobes and uretprobes** -- trace user-space function entry and return in any binary
+- **BPF LSM hooks** -- attach programmable security policies to LSM hook points
+- **sched_ext** -- write a complete Linux CPU scheduler in Java (kernel 6.11+)
+- **Userspace scheduler** -- run the scheduling policy in Java, BPF as a thin transport
+- **BPF maps** -- hash maps, arrays, ring buffers, per-CPU maps, task storage, and more
+- **Shared maps** -- share maps between cooperating BPF programs via `@SharedFrom`
+- **Map of maps** -- hash-of-maps and array-of-maps for dynamic program composition
+- **Global variables** -- typed `GlobalVariable<T>` readable and writable from both sides
+- **Tail calls** -- `@BPFTailCallTable` for chaining BPF programs
+- **BPF arenas** -- shared memory between BPF and Java via `BPFArena` and `@InArena`
+- **Timers** -- `bpf_timer` support for deferred callbacks inside BPF programs
+- **struct_ops** -- implement kernel struct_ops in Java (sched_ext, TCP CC, qdisc, HID)
+- **Attach cookies** -- per-attachment `u64` cookies with multi-kprobe and multi-uprobe
+- **CO-RE** -- compile once, run everywhere via BTF relocations; no per-kernel headers
+- **Verifier diagnostics** -- human-readable fix suggestions for common verifier rejections
+
+
 
 ```
 Your Java class
