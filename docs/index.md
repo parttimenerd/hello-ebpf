@@ -9,6 +9,26 @@ At runtime, `BPFProgram.load(MyClass.class)` loads the program via libbpf.
 
 No C files, no Makefiles, no separate build step. Just Java.
 
+## History
+
+The project started in December 2023 as a experiment: could Java become a first-class
+language for eBPF, without wrapping C or shelling out to a separate toolchain?
+The first prototype, published with [Part 1 of the blog series](https://mostlynerdless.de/blog/2023/12/31/hello-ebpf-developing-ebpf-apps-in-java-1/),
+used a javac annotation processor to translate `@BPFFunction` method bodies to C.
+That core idea has stayed the same; the library has grown around it.
+
+By mid-2024 the compiler plugin could handle maps, ring buffers, global variables, XDP,
+TC, kprobes, tracepoints, and uprobes.
+[Part 11](https://mostlynerdless.de/blog/2024/07/02/hello-ebpf-bpf-type-format-and-13-thousand-generated-java-classes-11/)
+added CO-RE support by auto-generating 13,000 Java wrapper classes from kernel BTF,
+making programs portable across kernel versions without recompilation.
+
+The scheduler work began in
+[Part 15](https://mostlynerdless.de/blog/2024/09/10/hello-ebpf-writing-a-linux-scheduler-in-java-with-ebpf-15/)
+with a BPF-side sched_ext scheduler, and culminated in a fully userspace scheduler
+where the scheduling policy runs entirely in Java (Part 16–18).
+The 20-part blog series documents the whole journey.
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/bWs5GHYpYxg" title="hello-ebpf demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Features
