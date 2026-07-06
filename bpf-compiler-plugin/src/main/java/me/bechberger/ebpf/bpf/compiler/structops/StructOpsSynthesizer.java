@@ -88,6 +88,9 @@ public final class StructOpsSynthesizer {
                 StructOpsLayout.Field field = layout.field(fieldName);
 
                 if ("data".equals(field.kind())) {
+                    // If this data field has a PROPERTY_OVERRIDE, skip renderDataInitializer:
+                    // the PROPERTY_OVERRIDES loop below will emit the placeholder directly.
+                    if (PROPERTY_OVERRIDES.containsKey(kind.kernelName() + "." + fieldName)) continue;
                     // Data field → literal initializer only; no synthesized program.
                     String line = renderDataInitializer(bpfClass, ifaceMethod, field);
                     if (line != null) initializerLines.add(line);
