@@ -77,7 +77,12 @@ bash: opening: /usr/share/bash-completion/bash_completion
 
 ## Block network ports (TC firewall)
 
-The second program uses a TC ingress hook to drop packets whose destination port is in a map populated from Java.
+The Linux network stack has two natural BPF hook points for packet filtering:
+
+- **XDP** runs at the network driver, before the kernel allocates a socket buffer. It is the fastest option but only covers ingress and is not available on all drivers.
+- **TC** (Traffic Control) runs after the kernel has allocated a socket buffer (`sk_buff`). It supports both ingress and egress, works on every interface including loopback and virtual interfaces, and gives you access to more packet metadata.
+
+This program attaches a **TC ingress** hook: the kernel calls `tcHandleIngress` for every packet arriving on any interface, before the packet is handed to the local network stack.
 
 ```java
 import me.bechberger.ebpf.annotations.bpf.BPF;
@@ -88,32 +93,33 @@ import me.bechberger.ebpf.type.Ptr;
 import static me.bechberger.ebpf.runtime.SkDefinitions.__sk_action;
 
 @BPF(license = "GPL")
-public abstract class TCFirewall extends BPFProgram implements TCHook, BasePacketParser {
+public abstract class TCFirewall extends BPFProgram
+        implements TCHook,          // (1)
+                   BasePacketParser { // (2)
 
-    /** Ports to block: key = destination port, value = 1. */
     @BPFMapDefinition(maxEntries = 256)
-    BPFHashMap<Integer, Integer> blockedPorts;
+    BPFHashMap<Integer, Integer> blockedPorts; // (3)
 
     @Override
-    public __sk_action tcHandleIngress(TCContext skb) {
+    public __sk_action tcHandleIngress(TCContext skb) { // (4)
         PacketInfo info = new PacketInfo();
-        if (parsePacket(skb, Ptr.of(info))) {
-            Ptr<Integer> blocked = blockedPorts.bpf_get(info.destinationPort);
+        if (parsePacket(skb, Ptr.of(info))) {           // (5)
+            Ptr<Integer> blocked = blockedPorts.bpf_get(info.destinationPort); // (6)
             if (blocked != null) {
-                return __sk_action.__SK_DROP;
+                return __sk_action.__SK_DROP;           // (7)
             }
         }
-        return __sk_action.__SK_PASS;
+        return __sk_action.__SK_PASS;                   // (8)
     }
 
     public static void main(String[] args) throws InterruptedException {
         try (TCFirewall program = BPFProgram.load(TCFirewall.class)) {
             for (String arg : args) {
                 int port = Integer.parseInt(arg);
-                program.blockedPorts.put(port, 1);
+                program.blockedPorts.put(port, 1);      // (9)
                 System.out.println("Blocking destination port " + port);
             }
-            program.tcAttachIngress();
+            program.tcAttachIngress();                  // (10)
             System.out.println("TC firewall running. Ctrl-C to stop.");
             while (true) Thread.sleep(1000);
         }
@@ -121,16 +127,49 @@ public abstract class TCFirewall extends BPFProgram implements TCHook, BasePacke
 }
 ```
 
-Run it, passing port numbers to block:
+| Marker | Meaning |
+|--------|---------|
+| (1) `implements TCHook` | Tells the compiler plugin to emit a `SEC("tc/ingress")` program for `tcHandleIngress` and a `SEC("tc/egress")` program for `tcHandleEgress` (if overridden). |
+| (2) `implements BasePacketParser` | Mixin that provides `parsePacket()` — a BPF-side helper that walks the raw bytes (Ethernet → IP → TCP/UDP) and fills a `PacketInfo` struct with source IP, destination IP, source port, destination port, and protocol. |
+| (3) `BPFHashMap<Integer, Integer> blockedPorts` | A BPF hash map shared between the kernel program and Java. The key is a destination port number; the value is unused (just `1`). The map lives in kernel memory; both sides can read and write it concurrently. `@BPFMapDefinition` instructs the compiler plugin to emit the map definition and the loader to pin it. |
+| (4) `tcHandleIngress(TCContext skb)` | Called by the kernel for every ingress packet. `TCContext` wraps the raw `__sk_buff` and adds ergonomic helpers (`length()`, `byteAt()`, …). Runs in softirq context — no sleeping, no allocation. |
+| (5) `parsePacket(skb, Ptr.of(info))` | Parses the packet in-place. Returns `false` if the packet is malformed, too short, or not IP. The `Ptr.of(info)` trick passes a pointer to the stack-allocated `PacketInfo` struct to the BPF helper — required because BPF programs cannot take addresses of local variables directly. |
+| (6) `blockedPorts.bpf_get(info.destinationPort)` | Hash-map lookup inside the BPF program. Returns a pointer to the map value (never a copy), or `null` if the key is absent. The pointer is valid only for the duration of the current BPF invocation. |
+| (7) `__SK_DROP` | Tells the TC subsystem to discard the packet. The `sk_buff` is freed and the packet never reaches the socket layer. |
+| (8) `__SK_PASS` | Tells TC to continue normal processing. Equivalent to `TC_ACT_OK`. |
+| (9) `program.blockedPorts.put(port, 1)` | Java-side map write. This takes effect immediately — the next packet that arrives after this line will see the new entry in the BPF program. No program reload, no restart needed. |
+| (10) `program.tcAttachIngress()` | Attaches the TC ingress program to every non-loopback network interface. Under the hood this creates a clsact qdisc (if not already present) and a BPF classifier on the ingress hook. |
+
+### Run it
+
+```sh
+sudo ./run.sh TCFirewall 80 443
+```
+
+Or with plain java:
 
 ```sh
 sudo java --enable-native-access=ALL-UNNAMED \
      -cp target/bpf-samples.jar me.bechberger.ebpf.samples.TCFirewall 80 443
 ```
 
-This drops all incoming HTTP and HTTPS traffic on every network interface. Unblocked ports pass through unchanged. The program detaches automatically when you press Ctrl-C because `BPFProgram` implements `AutoCloseable`.
+This drops all incoming HTTP (port 80) and HTTPS (port 443) traffic on every network interface. You can verify it works by opening a second terminal and running `curl http://example.com` — the connection will time out.
 
-For a full-featured firewall with per-IP rules, LRU caching, and ring-buffer event logging, see [`Firewall.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/Firewall.java).
+Unblocked ports pass through unchanged. When you press Ctrl-C, the `try`-with-resources calls `BPFProgram.close()`, which removes the TC classifier and deletes the clsact qdisc — the interface is left exactly as it was before.
+
+### How the map bridges kernel and Java
+
+```
+Java side                            BPF side (kernel)
+─────────────────────────────────    ────────────────────────────────
+program.blockedPorts.put(80, 1)  →   blockedPorts.bpf_get(destPort)
+program.blockedPorts.put(443, 1) →   returns non-null → __SK_DROP
+program.blockedPorts.remove(80)  →   next packet on port 80 passes
+```
+
+Both sides share the same kernel memory. The Java API translates `put`/`get`/`remove` into `bpf()` syscalls; the BPF side uses direct memory lookups with no syscall overhead.
+
+For a full-featured firewall with per-IP CIDR rules, LRU caching, and ring-buffer event logging streamed to Java, see [`Firewall.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/Firewall.java).
 
 ## What happened (both programs)
 
