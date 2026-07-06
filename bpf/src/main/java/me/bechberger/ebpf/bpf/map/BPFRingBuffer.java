@@ -405,7 +405,7 @@ public class BPFRingBuffer<E> extends BPFMap {
      *         reports a non-recoverable error.
      * @throws BPFRingBufferError if the second ring buffer handle could not be
      *         created or the underlying consume call failed non-trivially.
-     * @implNote This method is <b>single-consumer</b>; see the class-level note on
+     * <p><b>Implementation note:</b> This method is <b>single-consumer</b>; see the class-level note on
      *         {@code consumeRaw} for the concurrency contract.
      */
     public int consumeRaw(SegmentCallback cb, Object ctx) {
@@ -452,7 +452,7 @@ public class BPFRingBuffer<E> extends BPFMap {
      *         reports a non-recoverable error.
      * @throws BPFRingBufferError if the second ring buffer handle could not be
      *         created or the underlying consume call failed non-trivially.
-     * @implNote This method is <b>single-consumer</b>; see the class-level note on
+     * <p><b>Implementation note:</b> This method is <b>single-consumer</b>; see the class-level note on
      *         {@code consumeRaw} for the concurrency contract.
      */
     public int consumeRaw(AddressCallback cb, Object ctx) {

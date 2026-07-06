@@ -1926,11 +1926,8 @@ public abstract class BPFProgram implements AutoCloseable {
     /**
      * Read from the kernel debug trace pipe and print on stdout.
      *
-     * @param format optional function to format the output
-     *               <p>
-     *               Example
-     *               {@snippet *tracePrintLoop(f->f.format("pid {1}, msg = {5}"));
-     *}
+     * @param format optional function to format the output,
+     *               e.g. {@code tracePrintLoop(f -> f.format("pid {1}, msg = {5}"))}
      */
     public void tracePrintLoop(Function<TraceFields, @Nullable String> format) {
         TraceLog.getInstance().printLoop(format);
