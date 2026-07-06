@@ -9,6 +9,7 @@ import me.bechberger.ebpf.type.Ptr;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class UProbeMultiSmokeTest {
 
@@ -45,8 +46,15 @@ class UProbeMultiSmokeTest {
         long[]   cookies = { 0x11L, 0x22L, 0x33L };
 
         try (var prog = BPFProgram.load(UProg.class)) {
-            prog.attachUprobeMulti(prog.getProgramByName("onMany"),
-                    binaryPath, funcs, cookies, false);
+            try {
+                prog.attachUprobeMulti(prog.getProgramByName("onMany"),
+                        binaryPath, funcs, cookies, false);
+            } catch (BPFProgram.BPFAttachError e) {
+                // EINVAL (22) means uprobe multi-attach is not supported on this kernel
+                assumeTrue(e.getErrorCode() != 22,
+                        "uprobe multi-attach not available on this kernel (EINVAL): " + e.getMessage());
+                throw e;
+            }
             // /bin/ls hits all three of malloc/free/getenv.
             Runtime.getRuntime().exec(new String[]{"/bin/ls", "/"}).waitFor();
 
