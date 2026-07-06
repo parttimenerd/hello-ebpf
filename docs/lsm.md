@@ -130,11 +130,6 @@ public abstract class CGroupFilter extends BPFProgram implements CGroupHook {
 The context type is `__sk_buff` (same as TC). Return `CGroupAction.PASS` to allow or
 `CGroupAction.DROP` to drop.
 
-!!! warning "CGroupAction enum naming"
-    The `CGroupAction` enum members are inverted in the underlying BPF values: `DROP`
-    maps to `CGROUP_PASS` (1) and `PASS` maps to `CGROUP_DROP` (0) in C. Always use the
-    Java enum constants (`CGroupAction.PASS` / `CGroupAction.DROP`) — never use raw
-    integer literals.
 
 ### Attaching to a cgroup
 
