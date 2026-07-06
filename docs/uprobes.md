@@ -3,6 +3,7 @@
 **Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) (kprobe/uprobe attachment) · [Part 16 — Userspace scheduler with uprobes for lock detection](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/)
 **Javadoc:** [`BPFProgram.attachUprobe`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html) · [`ProbeContext`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/probe/ProbeContext.html)
 **Source:** [`BPFProgram.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/BPFProgram.java)
+**See also:** [Kprobes / Fentry](kprobes.md) · [Tracepoints](tracepoints.md) · [Profiling](profiling.md) · [BPF Maps](maps.md)
 
 Uprobes let you attach BPF programs to arbitrary user-space function entry and
 return points, without modifying the target binary. hello-ebpf provides both a
@@ -245,3 +246,11 @@ program.attachUprobe(prog, false, pid, libjvmPath,
 - [`JvmGcPauseTracer.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/JvmGcPauseTracer.java) — uprobe on JVM GC functions
 - [`StackSymbolizer.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/StackSymbolizer.java) — uretprobe + stack symbolization
 - [`sched/LockHolderBoostUprobes.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/sched/LockHolderBoostUprobes.java) — uprobes for lock contention detection
+
+---
+
+## Further reading
+
+- [uprobe/uretprobe program type — docs.ebpf.io](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_KPROBE/)
+- [bpf_probe_read_user — docs.ebpf.io](https://docs.ebpf.io/linux/helper-function/bpf_probe_read_user/)
+- [Kprobes / Fentry](kprobes.md) · [Profiling](profiling.md) · [Attach Cookies & Multi](attach-cookies-multi.md)

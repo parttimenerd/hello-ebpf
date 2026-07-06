@@ -2,6 +2,7 @@
 
 **Javadoc:** [`BPFArena`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFArena.html)
 **Source:** [`BPFArena.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFArena.java)
+**See also:** [BPF Maps](maps.md) · [Global Variables](global-variables.md) · [sched_ext](sched_ext.md)
 
 A `BPF_MAP_TYPE_ARENA` is a page-granular memory region backed by a BPF map.
 Both the BPF program and userspace address it directly — the BPF side through
@@ -153,7 +154,6 @@ public MemorySegment idleMaskView() {
 
 ## §5 Limitations
 
-- Kernel ≥ 6.9 required (`BPF_MAP_TYPE_ARENA` added in 6.9).
 - One arena per BPF class for now; the kernel supports multiple arenas and the
   auto-injection pass handles them independently, but the single-arena idiom is
   the tested path.
@@ -169,3 +169,10 @@ public MemorySegment idleMaskView() {
 ## Examples
 
 - [`sched/UserspaceSchedulerBase.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/UserspaceSchedulerBase.java) — arena-backed idle CPU bitmask in a scheduler
+
+---
+
+## Further reading
+
+- [BPF_MAP_TYPE_ARENA — docs.ebpf.io](https://docs.ebpf.io/linux/map-type/BPF_MAP_TYPE_ARENA/)
+- [BPF Maps](maps.md) · [Global Variables](global-variables.md)

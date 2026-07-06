@@ -3,6 +3,7 @@
 **Blog series:** [Part 20 — BPF LSM security hooks](https://mostlynerdless.de/blog/2025/01/27/helle-ebpf-writing-an-lsm-policy-in-pure-java-20/)
 **Javadoc:** [`LSMHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/LSMHook.html) · [`CGroupHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/CGroupHook.html)
 **Source:** [`LSMHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/LSMHook.java) · [`CGroupHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/CGroupHook.java)
+**See also:** [TC Hook](tc.md) · [XDP Hook](xdp.md) · [BPF Maps](maps.md)
 
 ## BPF LSM
 
@@ -12,7 +13,6 @@ security policies without recompiling the kernel.
 
 ### Prerequisites
 
-- Kernel ≥5.7
 - `CONFIG_BPF_LSM=y` in kernel config
 - `lsm=bpf` in kernel boot parameters (or `lsm=...,bpf` appended to existing list)
 
@@ -167,3 +167,11 @@ public static void main(String[] args) throws Exception {
 
 - [`LSMDemo.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/LSMDemo.java) — BPF LSM hook demo
 - [`CGroupBlockHTTPEgress.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf-samples/src/main/java/me/bechberger/ebpf/samples/CGroupBlockHTTPEgress.java) — cgroup egress filter
+
+---
+
+## Further reading
+
+- [BPF LSM program type — docs.ebpf.io](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_LSM/)
+- [Cgroup BPF programs — docs.ebpf.io](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_CGROUP_SKB/)
+- [TC Hook](tc.md) · [XDP Hook](xdp.md)

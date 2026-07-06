@@ -2,6 +2,7 @@
 
 **Javadoc:** [`BPFProgram`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html)
 **Source:** [`BPFProgram.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/BPFProgram.java)
+**See also:** [Getting started](getting-started/how-it-works.md) · [BPF Maps](maps.md)
 
 This page documents every error the hello-ebpf javac compiler plugin can emit, what causes
 each one, and how to fix it.
@@ -284,3 +285,10 @@ private int helper(int x) {
    ```java
    BPFProgram.load(MyProg.class, BPFProgram.LoadOptions.withVerifierLog());
    ```
+
+---
+
+## Further reading
+
+- [BPF verifier — docs.ebpf.io](https://docs.ebpf.io/linux/concepts/verifier/)
+- [Getting started: how it works](getting-started/how-it-works.md)

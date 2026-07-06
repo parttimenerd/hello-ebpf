@@ -2,6 +2,7 @@
 
 **Javadoc:** [`@KprobeMulti`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/KprobeMulti.html) · [`@UprobeMulti`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/UprobeMulti.html)
 **Source:** [`KprobeMulti.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/KprobeMulti.java) · [`UprobeMulti.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/UprobeMulti.java) · [`BPFProgram.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/BPFProgram.java)
+**See also:** [Kprobes / Fentry](kprobes.md) · [Uprobes](uprobes.md) · [BPF Maps](maps.md)
 
 Without attach cookies, a single BPF program attached to two different kernel
 functions cannot determine at runtime which entry point fired — all context
@@ -10,8 +11,7 @@ pointers look the same. Attach cookies solve this: each attachment carries a
 zero-cost disambiguation with no extra map lookups. Multi-attach compounds the
 benefit: instead of N separate `attachKProbe` calls (N syscalls, N BPF links),
 one `attachKProbeMulti` call wires the program to all N symbols atomically and
-returns a single `BPFLink` handle. Kernel support gates: kprobe cookies require
-kernel ≥ 5.15; `kprobe.multi` requires ≥ 5.18; `uprobe.multi` requires ≥ 6.6.
+returns a single `BPFLink` handle.
 
 Two related capabilities landed in `BPFProgram`:
 
@@ -110,3 +110,11 @@ Top 10:
 
 Each line shows the symbol name and the number of calls observed during the
 5-second window.
+
+---
+
+## Further reading
+
+- [kprobe.multi — docs.ebpf.io](https://docs.ebpf.io/linux/program-type/BPF_PROG_TYPE_KPROBE/)
+- [bpf_get_attach_cookie — docs.ebpf.io](https://docs.ebpf.io/linux/helper-function/bpf_get_attach_cookie/)
+- [Kprobes / Fentry](kprobes.md) · [Uprobes](uprobes.md)
