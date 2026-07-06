@@ -966,6 +966,7 @@ public class Processor extends AbstractProcessor {
             var cacheFolder = cache.getCacheFolder();
             var vmLinuxFile = cacheFolder.resolve("vmlinux.h");
             if (Files.exists(vmLinuxFile)) {
+                appendVmlinuxFallbacks(vmLinuxFile);
                 return vmLinuxFile;
             }
             var errorFile = cacheFolder.resolve("vmlinux_error.txt");
@@ -997,10 +998,62 @@ public class Processor extends AbstractProcessor {
                                 // };
                                 """);
             Files.writeString(vmLinuxFile, content);
+            appendVmlinuxFallbacks(vmLinuxFile);
             return vmLinuxFile;
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Appends fallback {@code __weak __ksym} declarations for kfuncs / macros that are
+     * present in kernel &ge; 6.11–6.15 but absent from the stock vmlinux.h on older
+     * CI runners (Ubuntu 24.04 ships kernel 6.8).  Each declaration is guarded so it
+     * is a no-op when the real kernel already defined the symbol.
+     * Safe to call on a vmlinux.h that already contains the fallbacks — the sentinel
+     * comment prevents double-appending.
+     */
+    private static void appendVmlinuxFallbacks(Path vmLinuxFile) throws IOException {
+        String current = Files.readString(vmLinuxFile);
+        if (current.contains("hello-ebpf fallbacks")) return;
+        String fallbacks = """
+
+/* ── hello-ebpf fallbacks: kfuncs/macros added in kernels 6.11-6.15 ── */
+
+/* __ulong: enum-backed map field annotation (kernel 6.14, bpf_helpers.h) */
+#ifndef ___bpf_concat
+#define ___bpf_concat(a, b) a ## b
+#endif
+#ifndef __ulong
+#define __ulong(name, val) enum { ___bpf_concat(__unique_value, __COUNTER__) = val } name
+#endif
+
+/* BPF arena kfuncs (kernel 6.14) */
+#ifndef bpf_arena_alloc_pages_declared__
+#define bpf_arena_alloc_pages_declared__
+extern void __attribute__((address_space(1))) *bpf_arena_alloc_pages(void *p__map, void __attribute__((address_space(1))) *addr__ign, __u32 page_cnt, int node_id, __u64 flags) __weak __ksym;
+extern void bpf_arena_free_pages(void *p__map, void __attribute__((address_space(1))) *ptr__ign, __u32 page_cnt) __weak __ksym;
+#endif
+
+/* sched_ext kfuncs added in kernel 6.11-6.15 */
+#ifndef scx_bpf_nr_cpu_ids_declared__
+#define scx_bpf_nr_cpu_ids_declared__
+extern __u32 scx_bpf_nr_cpu_ids(void) __weak __ksym;
+#endif
+#ifndef scx_bpf_dsq_nr_queued_declared__
+#define scx_bpf_dsq_nr_queued_declared__
+extern __s32 scx_bpf_dsq_nr_queued(__u64 dsq_id) __weak __ksym;
+#endif
+#ifndef scx_bpf_dsq_move_to_local_declared__
+#define scx_bpf_dsq_move_to_local_declared__
+extern bool scx_bpf_dsq_move_to_local(__u64 dsq_id) __weak __ksym;
+#endif
+#ifndef scx_bpf_kick_cpu_declared__
+#define scx_bpf_kick_cpu_declared__
+extern void scx_bpf_kick_cpu(__s32 cpu, __u64 flags) __weak __ksym;
+#endif
+""";
+        Files.writeString(vmLinuxFile, current + fallbacks);
     }
 
     public @Nullable Path getEBPFFolder() {
