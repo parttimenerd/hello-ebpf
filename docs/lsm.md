@@ -2,6 +2,7 @@
 
 **Blog series:** [Part 20 — BPF LSM security hooks](https://mostlynerdless.de/blog/2025/01/27/helle-ebpf-writing-an-lsm-policy-in-pure-java-20/)
 **Javadoc:** [`LSMHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/LSMHook.html) · [`CGroupHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/CGroupHook.html)
+**Source:** [`LSMHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/LSMHook.java) · [`CGroupHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/CGroupHook.java)
 
 ## BPF LSM
 

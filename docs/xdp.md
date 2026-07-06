@@ -2,6 +2,7 @@
 
 **Blog series:** [Part 9 — XDP-based packet filter](https://mostlynerdless.de/blog/2024/04/22/hello-ebpf-xdp-based-packet-filter-9/) · [Part 13 — Packet logger with TC and XDP](https://mostlynerdless.de/blog/2024/08/13/hello-ebpf-a-packet-logger-in-pure-java-using-tc-and-xdp-hooks-13/) · [Part 14 — Firewall with Java & eBPF](https://mostlynerdless.de/blog/2024/08/27/hello-ebpf-building-a-lightning-fast-firewall-with-java-ebpf-14/)
 **Javadoc:** [`XDPHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/XDPHook.html)
+**Source:** [`XDPHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/XDPHook.java)
 
 ![Java config/log component talking to the XDP kernel program](https://mostlynerdless.de/wp-content/uploads/2024/04/xdp_filter-1-2000x1005.png)
 

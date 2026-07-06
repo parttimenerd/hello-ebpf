@@ -2,6 +2,7 @@
 
 **Blog series:** [Part 13 — Packet logger with TC and XDP hooks](https://mostlynerdless.de/blog/2024/08/13/hello-ebpf-a-packet-logger-in-pure-java-using-tc-and-xdp-hooks-13/) · [Part 14 — Firewall with Java & eBPF](https://mostlynerdless.de/blog/2024/08/27/hello-ebpf-building-a-lightning-fast-firewall-with-java-ebpf-14/)
 **Javadoc:** [`TCHook`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/TCHook.html)
+**Source:** [`TCHook.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/TCHook.java)
 
 ![Linux network stack showing XDP (driver) and TC (after SKB allocation) hook points](https://mostlynerdless.de/wp-content/uploads/2024/08/network_stack-1.png)
 

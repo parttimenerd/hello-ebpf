@@ -2,6 +2,7 @@
 
 **Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/) (kprobe/uprobe attachment) · [Part 16 — Userspace scheduler with uprobes for lock detection](https://mostlynerdless.de/blog/2024/12/03/hello-ebpf-control-task-scheduling-with-a-custom-scheduler-written-in-java-16/)
 **Javadoc:** [`BPFProgram.attachUprobe`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/BPFProgram.html) · [`ProbeContext`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/probe/ProbeContext.html)
+**Source:** [`BPFProgram.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/BPFProgram.java)
 
 Uprobes let you attach BPF programs to arbitrary user-space function entry and
 return points, without modifying the target binary. hello-ebpf provides both a

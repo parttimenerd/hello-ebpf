@@ -1,6 +1,7 @@
 # Map-of-Maps (HASH_OF_MAPS, ARRAY_OF_MAPS)
 
 **Javadoc:** [`BPFHashOfMaps`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFHashOfMaps.html) · [`BPFArrayOfMaps`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFArrayOfMaps.html)
+**Source:** [`BPFHashOfMaps.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFHashOfMaps.java) · [`BPFArrayOfMaps.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFArrayOfMaps.java)
 
 Use a map-of-maps when you need a different map *per key* — e.g. per-CPU
 accounting, per-connection state, or per-user rate limits. A plain

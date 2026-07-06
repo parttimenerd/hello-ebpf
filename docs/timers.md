@@ -1,6 +1,7 @@
 # BPF Timers (`@BPFTimer`)
 
 **Javadoc:** [`BPFTimer`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFTimer.html)
+**Source:** [`BPFTimerMap.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFTimerMap.java)
 
 BPF timers let a BPF program schedule a callback that fires entirely inside the kernel,
 without leaving to userspace. The callback runs in softirq context and can re-arm itself,

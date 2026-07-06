@@ -1,6 +1,7 @@
 # Shared maps across BPF programs (`@SharedFrom`)
 
 **Javadoc:** [`@SharedFrom`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/bpf/SharedFrom.html)
+**Source:** [`SharedFrom.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/SharedFrom.java)
 
 A single BPF program can only see maps declared in its own ELF object. When
 two cooperating programs need to share state in the kernel — e.g. one program

@@ -1,5 +1,8 @@
 # BPF Maps
 
+**Javadoc:** [`BPFHashMap`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFHashMap.html) · [`BPFArray`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFArray.html) · [`BPFRingBuffer`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFRingBuffer.html) · [`BPFPerCpuArray`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFPerCpuArray.html) · [`BPFPerCpuHashMap`](https://parttimenerd.github.io/hello-ebpf/javadoc/bpf/me/bechberger/ebpf/bpf/map/BPFPerCpuHashMap.html)
+**Source:** [`BPFHashMap.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFHashMap.java) · [`BPFArray.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFArray.java) · [`BPFRingBuffer.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFRingBuffer.java) · [`BPFPerCpuArray.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFPerCpuArray.java) · [`BPFPerCpuHashMap.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/map/BPFPerCpuHashMap.java)
+
 Maps are the primary mechanism for sharing data between BPF programs and user-space Java code.
 hello-ebpf provides typed Java wrappers for all major map types. Maps are declared as fields on
 your `@BPF` class and annotated with `@BPFMapDefinition`.

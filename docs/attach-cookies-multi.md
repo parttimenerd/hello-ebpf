@@ -1,6 +1,7 @@
 # Attach cookies and multi-attach (kprobe.multi / uprobe.multi)
 
 **Javadoc:** [`@KprobeMulti`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/KprobeMulti.html) · [`@UprobeMulti`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/UprobeMulti.html)
+**Source:** [`KprobeMulti.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/KprobeMulti.java) · [`UprobeMulti.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/UprobeMulti.java) · [`BPFProgram.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/bpf/src/main/java/me/bechberger/ebpf/bpf/BPFProgram.java)
 
 Without attach cookies, a single BPF program attached to two different kernel
 functions cannot determine at runtime which entry point fired — all context

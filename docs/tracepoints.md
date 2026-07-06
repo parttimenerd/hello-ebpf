@@ -2,6 +2,7 @@
 
 **Blog series:** [Part 5 — First steps with libbpf](https://mostlynerdless.de/blog/2024/02/26/hello-ebpf-first-steps-with-libbpf-5/)
 **Javadoc:** [`@Tracepoint`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/Tracepoint.html) · [`@RawTracepoint`](https://parttimenerd.github.io/hello-ebpf/javadoc/annotations/me/bechberger/ebpf/annotations/RawTracepoint.html)
+**Source:** [`Tracepoint.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/Tracepoint.java) · [`RawTracepoint.java`](https://github.com/parttimenerd/hello-ebpf/blob/main/annotations/src/main/java/me/bechberger/ebpf/annotations/bpf/RawTracepoint.java)
 
 Tracepoints are stable, versioned hook points compiled into the kernel at strategic locations.
 Unlike kprobes they survive kernel version changes because their argument layout is guaranteed.
