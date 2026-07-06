@@ -442,12 +442,17 @@ public class CompilerPlugin implements Plugin {
      * errors are printed exactly once, not once per {@link #getEffectiveBPFFunction} call.
      */
     StructOpsSynthesizer.Result getStructOpsSynthesis(TypeElement bpfClass) {
+        // @BPFImpl classes are generated from a @BPF class. Synthesis must use the
+        // parent @BPF class's cached result so we don't re-synthesize in round 2
+        // when Trees are unavailable for the original source's method bodies.
+        if (bpfClass.getAnnotation(BPFImpl.class) != null) {
+            var superMirror = bpfClass.getSuperclass();
+            if (superMirror instanceof javax.lang.model.type.DeclaredType dt) {
+                bpfClass = (TypeElement) dt.asElement();
+            }
+        }
         String key = bpfClass.getQualifiedName().toString();
         var cached = structOpsCache.get(key);
-        System.err.println("DEBUG_CACHE: getStructOpsSynthesis key=" + key + " cached=" + (cached != null ? "HIT" : "MISS") + " cacheKeys=" + structOpsCache.keySet());
-        if (cached == null && key.contains("HelloCubicSample")) {
-            new RuntimeException("STACK at HelloCubicSample MISS").printStackTrace();
-        }
         if (cached != null) return cached;
         var env = createProcessingEnvironment();
         var kinds = StructOpsDiscovery.discover(bpfClass, env);
