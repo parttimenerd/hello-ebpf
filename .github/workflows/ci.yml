@@ -35,9 +35,18 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang-19 libbpf-dev linux-tools-common linux-tools-$(uname -r) linux-tools-generic gcc-multilib || true
       - name: Install bpftool from GitHub releases
         run: |
-          BPFTOOL_VER=$(curl -s https://api.github.com/repos/libbpf/bpftool/releases/latest | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
-          curl -sL "https://github.com/libbpf/bpftool/releases/download/v${BPFTOOL_VER}/bpftool-v${BPFTOOL_VER}-amd64.tar.gz" | sudo tar -xz -C /usr/local/bin/ bpftool
-          sudo chmod +x /usr/local/bin/bpftool
+          BPFTOOL_VER=$(curl -sf -H "Authorization: Bearer ${{ github.token }}" \
+            https://api.github.com/repos/libbpf/bpftool/releases/latest \
+            | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
+          if [ -z "$BPFTOOL_VER" ]; then
+            echo "Could not determine bpftool version, falling back to apt"
+            sudo apt-get install -y bpftool || sudo apt-get install -y linux-tools-generic
+          else
+            echo "Installing bpftool v${BPFTOOL_VER}"
+            curl -fsSL "https://github.com/libbpf/bpftool/releases/download/v${BPFTOOL_VER}/bpftool-v${BPFTOOL_VER}-amd64.tar.gz" \
+              | sudo tar -xz -C /usr/local/bin/ bpftool
+            sudo chmod +x /usr/local/bin/bpftool
+          fi
           echo "/usr/local/bin/bpftool" > .bpftool.path
 
       - name: Install reactor prerequisites (annotations + bpf-processor)
@@ -151,9 +160,18 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends clang libbpf-dev linux-tools-common linux-tools-$(uname -r) linux-tools-generic gcc-multilib || true
       - name: Install bpftool from GitHub releases
         run: |
-          BPFTOOL_VER=$(curl -s https://api.github.com/repos/libbpf/bpftool/releases/latest | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
-          curl -sL "https://github.com/libbpf/bpftool/releases/download/v${BPFTOOL_VER}/bpftool-v${BPFTOOL_VER}-amd64.tar.gz" | sudo tar -xz -C /usr/local/bin/ bpftool
-          sudo chmod +x /usr/local/bin/bpftool
+          BPFTOOL_VER=$(curl -sf -H "Authorization: Bearer ${{ github.token }}" \
+            https://api.github.com/repos/libbpf/bpftool/releases/latest \
+            | grep '"tag_name"' | sed 's/.*"v\([^"]*\)".*/\1/')
+          if [ -z "$BPFTOOL_VER" ]; then
+            echo "Could not determine bpftool version, falling back to apt"
+            sudo apt-get install -y bpftool || sudo apt-get install -y linux-tools-generic
+          else
+            echo "Installing bpftool v${BPFTOOL_VER}"
+            curl -fsSL "https://github.com/libbpf/bpftool/releases/download/v${BPFTOOL_VER}/bpftool-v${BPFTOOL_VER}-amd64.tar.gz" \
+              | sudo tar -xz -C /usr/local/bin/ bpftool
+            sudo chmod +x /usr/local/bin/bpftool
+          fi
           echo "/usr/local/bin/bpftool" > .bpftool.path
 
       - name: Install reactor prerequisites (annotations + bpf-processor)
