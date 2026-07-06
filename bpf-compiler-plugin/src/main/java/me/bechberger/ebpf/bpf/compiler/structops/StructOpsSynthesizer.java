@@ -301,6 +301,7 @@ public final class StructOpsSynthesizer {
                     ? TreeConstants.stringReturnLiteral(env, concrete)
                     : Optional.empty();
         if (literal.isEmpty()) {
+            System.err.println("DEBUG2: field=" + field.name() + " trees=" + trees + " concrete=" + (concrete != null ? concrete.getEnclosingElement() + "." + concrete.getSimpleName() : "null") + " treesGetTree=" + (trees != null && concrete != null ? trees.getTree(concrete) : "N/A"));
             env.getMessager().printMessage(
                     Diagnostic.Kind.ERROR,
                     "@StructOps data field '" + field.name()
